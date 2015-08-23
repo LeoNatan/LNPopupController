@@ -1,7 +1,6 @@
 #LNPopupController
 
-<img src="./Supplements/taps.gif" width="320"/> 
-<img src="./Supplements/swipes.gif" width="320"/>
+<img src="./Supplements/taps.gif" width="320"/> <img src="./Supplements/swipes.gif" width="320"/>
 
 `LNPopupController` is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.
 
@@ -127,6 +126,12 @@ Supplying long text for the title and/or subtitle will result in a scrolling tex
 <img src="./Supplements/scoll.gif"/>
 
 The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition out together with the bottom bar of the container controller. **Opening the popup while it is hidden due to `hidesBottomBarWhenPushed`.**
+
+<img src="./Supplements/hidesBottomBar_TabBar.gif" width="320"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="320"/>
+
+Status bar management of the popup content view controller is respected and applied when appropriate.
+
+<img src="./Supplements/statusbar_style.gif" width="320"/> <img src="./Supplements/statusbar_hidden.gif" width="320"/>
 
 ###Customization
 
