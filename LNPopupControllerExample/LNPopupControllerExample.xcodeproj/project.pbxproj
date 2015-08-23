@@ -112,11 +112,9 @@
 		39277A061B58228000293F95 /* LNPopupControllerExample */ = {
 			isa = PBXGroup;
 			children = (
-				39837A221B756F9B004D2DA9 /* Utils */,
-				397C560A1B74D45F007A67F0 /* Swift Bridging Header */,
-				397C56091B74D450007A67F0 /* LoremIpsum */,
-				397C560C1B74D747007A67F0 /* Demo Music Scene (Swift) */,
 				397C560B1B74D47D007A67F0 /* Demo Scene (Objective C) */,
+				397C560C1B74D747007A67F0 /* Demo Music Scene (Swift) */,
+				39837A221B756F9B004D2DA9 /* Utils */,
 				39277A071B58228000293F95 /* Supporting Files */,
 			);
 			path = LNPopupControllerExample;
@@ -125,13 +123,12 @@
 		39277A071B58228000293F95 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				397C560A1B74D45F007A67F0 /* Swift Bridging Header */,
 				39277A161B58228000293F95 /* Assets.xcassets */,
 				39277A1B1B58228000293F95 /* Info.plist */,
 				39277A0A1B58228000293F95 /* AppDelegate.h */,
 				39277A0B1B58228000293F95 /* AppDelegate.m */,
 				39277A081B58228000293F95 /* main.m */,
-				39F513F41B88F9E800F7C717 /* COSTouchVisualizerWindow.h */,
-				39F513F51B88F9E800F7C717 /* COSTouchVisualizerWindow.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -178,6 +175,8 @@
 		39837A221B756F9B004D2DA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				7B09DF521B899C24006E6088 /* COSTouchVisualizerWindow */,
+				397C56091B74D450007A67F0 /* LoremIpsum */,
 				39837A211B756F4C004D2DA9 /* RandomColors.h */,
 				39837A1F1B756F1A004D2DA9 /* RandomColors.m */,
 			);
@@ -190,6 +189,15 @@
 				39DB52F51B5823490061C589 /* LNPopupController.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7B09DF521B899C24006E6088 /* COSTouchVisualizerWindow */ = {
+			isa = PBXGroup;
+			children = (
+				39F513F41B88F9E800F7C717 /* COSTouchVisualizerWindow.h */,
+				39F513F51B88F9E800F7C717 /* COSTouchVisualizerWindow.m */,
+			);
+			name = COSTouchVisualizerWindow;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

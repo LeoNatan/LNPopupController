@@ -20,6 +20,6 @@
 @interface LNPopupItem ()
 
 @property (nonatomic, weak, setter=_setItemDelegate:, getter=_itemDelegate) id<_LNPopupItemDelegate> itemDelegate;
-@property (nonatomic, weak, setter=_setContainerController:, getter=_containerController) LNObjectKindOfType(UIViewController*) containerController;
+@property (nonatomic, weak, setter=_setContainerController:, getter=_containerController) LNObjectOfKind(UIViewController*) containerController;
 
 @end

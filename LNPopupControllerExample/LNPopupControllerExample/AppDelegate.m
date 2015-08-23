@@ -16,12 +16,14 @@
 
 - (BOOL)touchVisualizerWindowShouldShowFingertip:(COSTouchVisualizerWindow *)window
 {
-	return YES;
+//	return YES;
+	return NO;
 }
 
 - (BOOL)touchVisualizerWindowShouldAlwaysShowFingertip:(COSTouchVisualizerWindow *)window
 {
-	return YES;
+//	return YES;
+	return NO;
 }
 
 - (UIWindow *)window

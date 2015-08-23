@@ -11,10 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UINavigationItem ()
-
-@end
-
 /**
  *  An LNPopupItem object manages the buttons and text to be displayed in a popup bar. Each view controller in popup presentation must have an LNPopupItem object that contains the buttons and text it wants displayed in the popup bar.
  */

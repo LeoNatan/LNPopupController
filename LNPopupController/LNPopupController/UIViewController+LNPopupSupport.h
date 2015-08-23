@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 @property (nonatomic, retain, readonly) LNPopupItem* popupItem;
 
 /**
- *  Presents an interactive popup bar in the receiver's view hierarchy. The popup bar is attached to the receiver's docking view. @see -[UIViewController dockingViewForPopup]
+ *  Presents an interactive popup bar in the receiver's view hierarchy. The popup bar is attached to the receiver's docking view. @see -[UIViewController bottomDockingViewForPopup]
  *
  *  You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
  *
@@ -97,12 +97,12 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 /**
  *  The content view controller of the receiver. If no popopover presentation, the property will be nil.
  */
-@property (nullable, nonatomic, strong, readonly) LNObjectKindOfType(UIViewController*) popupContentViewController;
+@property (nullable, nonatomic, strong, readonly) LNObjectOfKind(UIViewController*) popupContentViewController;
 
 /**
  *  The popup presentation container view controller of the receiver. If the receiver is not part of a popover presentation, the property will be nil.
  */
-@property (nullable, nonatomic, weak, readonly) LNObjectKindOfType(UIViewController*) popupPresentationContainerViewController;
+@property (nullable, nonatomic, weak, readonly) LNObjectOfKind(UIViewController*) popupPresentationContainerViewController;
 
 @end
 
@@ -118,7 +118,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *
  *  @return A view to dock the popup bar to.
  */
-- (LNObjectKindOfType(UIView*))dockingViewForPopup;
+- (LNObjectOfKind(UIView*))bottomDockingViewForPopup;
 
 /**
  * Return the default frame for the docking view, when the popup is hidden or closed state.
@@ -127,7 +127,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *
  *  @return The default frame for the docking view.
  */
-- (CGRect)defaultFrameForDockingView;
+- (CGRect)defaultFrameForBottomDockingView;
 
 @end
 

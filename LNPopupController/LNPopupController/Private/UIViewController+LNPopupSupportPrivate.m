@@ -136,9 +136,9 @@ static NSString* const sTHed = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvbjo=";
 {
 	[self _ln_popup_viewDidLayoutSubviews];
 	
-	if(self.dockingViewForPopup == self._ln_bottomBarSupport)
+	if(self.bottomDockingViewForPopup == self._ln_bottomBarSupport)
 	{
-		self._ln_bottomBarSupport.frame = self.defaultFrameForDockingView;
+		self._ln_bottomBarSupport.frame = self.defaultFrameForBottomDockingView;
 		[self.view bringSubviewToFront:self._ln_bottomBarSupport];
 	}
 	else
@@ -167,7 +167,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	
 	dispatchMethod(controller, NSSelectorFromString(selName));
 	
-	[controller.childViewControllers enumerateObjectsUsingBlock:^(LNObjectKindOfType(UIViewController *) __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
+	[controller.childViewControllers enumerateObjectsUsingBlock:^(LNObjectOfKind(UIViewController *) __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
 		_LNPopupSupportFixInsetsForViewController(obj, NO);
 	}];
 	
@@ -183,12 +183,12 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 @interface UITabBarController (LNPopupSupportPrivate) @end
 @implementation UITabBarController (LNPopupSupportPrivate)
 
-- (nonnull UIView *)dockingViewForPopup
+- (nonnull UIView *)bottomDockingViewForPopup
 {
 	return self.tabBar;
 }
 
-- (CGRect)defaultFrameForDockingView
+- (CGRect)defaultFrameForBottomDockingView
 {
 	CGRect bottomBarFrame = self.tabBar.frame;
 	
@@ -307,12 +307,12 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	objc_setAssociatedObject(self, LNToolbarHiddenBeforeTransition, @(toolbarHidden), OBJC_ASSOCIATION_RETAIN);
 }
 
-- (nonnull UIView *)dockingViewForPopup
+- (nonnull UIView *)bottomDockingViewForPopup
 {
 	return self.toolbar;
 }
 
-- (CGRect)defaultFrameForDockingView
+- (CGRect)defaultFrameForBottomDockingView
 {
 	CGRect bottomBarFrame = self.toolbar.frame;
 	

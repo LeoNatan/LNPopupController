@@ -20,7 +20,7 @@
 
 @interface LNPopupController : NSObject
 
-- (instancetype)initWithContainerViewController:(LNObjectKindOfType(UIViewController*))containerController;
+- (instancetype)initWithContainerViewController:(LNObjectOfKind(UIViewController*))containerController;
 
 @property (nonatomic, weak) UIView* bottomBar;
 

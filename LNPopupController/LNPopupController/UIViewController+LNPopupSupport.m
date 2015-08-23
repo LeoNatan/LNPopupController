@@ -155,12 +155,12 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return rv;
 }
 
-- (nonnull UIView *)dockingViewForPopup
+- (nonnull UIView *)bottomDockingViewForPopup
 {
 	return self._ln_bottomBarSupport;
 }
 
-- (CGRect)defaultFrameForDockingView
+- (CGRect)defaultFrameForBottomDockingView
 {
 	return CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 0);
 }

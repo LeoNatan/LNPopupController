@@ -13,7 +13,7 @@ const CGFloat LNPopupBarHeight = 40.0;
 
 @implementation LNPopupBar
 {
-	UIView* _backgroundView;
+	UIToolbar* _backgroundView;
 	BOOL _delaysBarButtonItemLayout;
 	UIView* _titlesView;
 	__MarqueeLabel* _titleLabel;
@@ -83,40 +83,24 @@ const CGFloat LNPopupBarHeight = 40.0;
 
 - (UIBarStyle)barStyle
 {
-	if([_backgroundView respondsToSelector:_cmd])
-	{
-		return [(id<_LNPopupBarSupport>)_backgroundView barStyle];
-	}
-	
-	return UIBarStyleDefault;
+	return _backgroundView.barStyle;
 }
 
 - (void)setBarStyle:(UIBarStyle)barStyle
 {
-	if([_backgroundView respondsToSelector:_cmd])
-	{
-		[(id<_LNPopupBarSupport>)_backgroundView setBarStyle:barStyle];
-	}
+	_backgroundView.barStyle = barStyle;
 	
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
 }
 
 - (UIColor*)barTintColor
 {
-	if([_backgroundView respondsToSelector:_cmd])
-	{
-		return [(id<_LNPopupBarSupport>)_backgroundView barTintColor];
-	}
-	
-	return nil;
+	return _backgroundView.barTintColor;
 }
 
 - (void)setBarTintColor:(UIColor *)barTintColor
 {
-	if([_backgroundView respondsToSelector:_cmd])
-	{
-		[(id<_LNPopupBarSupport>)_backgroundView setBarTintColor:barTintColor];
-	}
+	_backgroundView.barTintColor = barTintColor;
 	
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
 }

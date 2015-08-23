@@ -63,7 +63,7 @@ static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 	return UIViewAnimationCurveEaseInOut;
 }
 
-- (nullable LNObjectKindOfType(UIViewController *))viewControllerForKey:(NSString *)key
+- (nullable LNObjectOfKind(UIViewController *))viewControllerForKey:(NSString *)key
 {
 	if([key isEqualToString:UITransitionContextFromViewControllerKey])
 	{
@@ -77,7 +77,7 @@ static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 	return nil;
 }
 
-- (nullable LNObjectKindOfType(UIView *))viewForKey:(NSString *)key
+- (nullable LNObjectOfKind(UIView *))viewForKey:(NSString *)key
 {
 	return nil;
 }
@@ -141,9 +141,9 @@ static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 
 @implementation LNPopupController
 {
-	__weak LNObjectKindOfType(UIViewController*) _containerController;
+	__weak LNObjectOfKind(UIViewController*) _containerController;
 	__weak LNPopupItem* _currentPopupItem;
-	__weak LNObjectKindOfType(UIViewController*) _currentContentController;
+	__weak LNObjectOfKind(UIViewController*) _currentContentController;
 	
 	BOOL _dismissalOverride;
 	
@@ -157,7 +157,7 @@ static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 	CGFloat _bottomBarOffset;
 }
 
-- (instancetype)initWithContainerViewController:(LNObjectKindOfType(UIViewController*))containerController
+- (instancetype)initWithContainerViewController:(LNObjectOfKind(UIViewController*))containerController
 {
 	self = [super init];
 	
@@ -174,12 +174,12 @@ static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 
 - (CGRect)_frameForOpenPopupBar
 {
-	return CGRectMake([_containerController defaultFrameForDockingView].origin.x, - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
+	return CGRectMake([_containerController defaultFrameForBottomDockingView].origin.x, - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
 }
 
 - (CGRect)_frameForClosedPopupBar
 {
-	return CGRectMake([_containerController defaultFrameForDockingView].origin.x, [_containerController defaultFrameForDockingView].origin.y - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
+	return CGRectMake([_containerController defaultFrameForBottomDockingView].origin.x, [_containerController defaultFrameForBottomDockingView].origin.y - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
 }
 
 - (void)_repositionPopupContent
@@ -248,7 +248,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		targetFrame = [self _frameForClosedPopupBar];
 	}
 	
-	_cachedDefaultFrame = [_containerController defaultFrameForDockingView];
+	_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView];
 	
 	_popupBar.frame = targetFrame;
 	
@@ -383,7 +383,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			[self _transitionToState:LNPopupPresentationStateTransitioning animated:YES completion:nil userOriginatedTransition:NO];
 			
-			_cachedDefaultFrame = [_containerController defaultFrameForDockingView];
+			_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView];
 			_cachedOpenPopupFrame = [self _frameForOpenPopupBar];
 			
 		}	break;
@@ -489,7 +489,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_currentContentController)
 	{
-		LNObjectKindOfType(UIViewController*) newContentController = _containerController.popupContentViewController;
+		LNObjectOfKind(UIViewController*) newContentController = _containerController.popupContentViewController;
 		
 		CGRect oldContentViewFrame = _currentContentController.view.frame;
 		
@@ -570,7 +570,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		_popupControllerState = LNPopupPresentationStateClosed;
 		_popupControllerTargetState = LNPopupPresentationStateClosed;
 		
-		_bottomBar = _containerController.dockingViewForPopup;
+		_bottomBar = _containerController.bottomDockingViewForPopup;
 		
 		_popupBar = [[LNPopupBar alloc] initWithFrame:CGRectZero];
 		_popupBar.hidden = NO;
@@ -665,7 +665,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				_popupControllerTargetState = LNPopupPresentationStateHidden;
 				_popupControllerState = LNPopupPresentationStateHidden;
 				
-				_bottomBar.frame = [_containerController defaultFrameForDockingView];
+				_bottomBar.frame = [_containerController defaultFrameForBottomDockingView];
 				_bottomBar = nil;
 				
 				[_popupBar removeFromSuperview];
