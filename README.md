@@ -142,7 +142,7 @@ Most of the framework is not exposed as public API. As need arises, more compone
 ##Acknowledgements
 
 The framework uses:
-* [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel) Copyright (c) 2011-2013 Charles Powell
+* [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel) Copyright (c) 2011-2015 Charles Powell
 
 Additionally, the demo project uses:
 

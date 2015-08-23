@@ -2,6 +2,10 @@
 //
 //  MarqueeLabel.h
 //  
+//  Created by Charles Powell on 1/31/11.
+//  Modifications for LNPopupController by Leo Natan.
+//  Copyright (c) 2011-2015 Charles Powell. All rights reserved.
+//
 
 #import <UIKit/UIKit.h>
 
