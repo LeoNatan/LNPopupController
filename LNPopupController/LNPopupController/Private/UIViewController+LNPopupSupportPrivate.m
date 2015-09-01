@@ -186,6 +186,11 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 @interface UITabBarController (LNPopupSupportPrivate) @end
 @implementation UITabBarController (LNPopupSupportPrivate)
 
+- (nullable UIView *)bottomDockingViewForPopup_nocreate
+{
+	return self.tabBar;
+}
+
 - (nonnull UIView *)bottomDockingViewForPopup
 {
 	return self.tabBar;
@@ -308,6 +313,11 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 - (void)setToolbarHiddenDuringTransition:(BOOL)toolbarHidden
 {
 	objc_setAssociatedObject(self, LNToolbarHiddenBeforeTransition, @(toolbarHidden), OBJC_ASSOCIATION_RETAIN);
+}
+
+- (nullable UIView *)bottomDockingViewForPopup_nocreate
+{
+	return self.toolbar;
 }
 
 - (nonnull UIView *)bottomDockingViewForPopup
