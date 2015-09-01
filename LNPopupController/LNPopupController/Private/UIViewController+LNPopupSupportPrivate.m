@@ -136,19 +136,22 @@ static NSString* const sTHed = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvbjo=";
 {
 	[self _ln_popup_viewDidLayoutSubviews];
 	
-	if(self.bottomDockingViewForPopup == self._ln_bottomBarSupport)
+	if(self.bottomDockingViewForPopup_nocreate != nil)
 	{
-		self._ln_bottomBarSupport.frame = self.defaultFrameForBottomDockingView;
-		[self.view bringSubviewToFront:self._ln_bottomBarSupport];
-	}
-	else
-	{
-		self._ln_bottomBarSupport.hidden = YES;
-	}
-	
-	if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden)
-	{
-		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
+		if(self.bottomDockingViewForPopup == self._ln_bottomBarSupport)
+		{
+			self._ln_bottomBarSupport.frame = self.defaultFrameForBottomDockingView;
+			[self.view bringSubviewToFront:self._ln_bottomBarSupport];
+		}
+		else
+		{
+			self._ln_bottomBarSupport.hidden = YES;
+		}
+		
+		if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden)
+		{
+			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
+		}
 	}
 }
 

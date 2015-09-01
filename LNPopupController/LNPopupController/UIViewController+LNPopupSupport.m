@@ -139,9 +139,14 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return rv;
 }
 
+- (_LNPopupBottomBarSupport *)_ln_bottomBarSupport_nocreate
+{
+	return objc_getAssociatedObject(self, _LNPopupBottomBarSupportKey);
+}
+
 - (_LNPopupBottomBarSupport *)_ln_bottomBarSupport
 {
-	_LNPopupBottomBarSupport* rv = objc_getAssociatedObject(self, _LNPopupBottomBarSupportKey);
+	_LNPopupBottomBarSupport* rv = [self _ln_bottomBarSupport_nocreate];
 	
 	if(rv == nil)
 	{
@@ -153,6 +158,12 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	}
 	
 	return rv;
+}
+
+
+- (nullable UIView *)bottomDockingViewForPopup_nocreate
+{
+	return self._ln_bottomBarSupport_nocreate;
 }
 
 - (nonnull UIView *)bottomDockingViewForPopup
