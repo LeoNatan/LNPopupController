@@ -84,7 +84,6 @@ class DemoAlbumTableViewController: UITableViewController {
     }
 
 	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-		
 		let popupContentController = storyboard?.instantiateViewControllerWithIdentifier("DemoMusicPlayerController") as! DemoMusicPlayerController
 		popupContentController.songTitle = titles[indexPath.row]
 		popupContentController.albumTitle = subtitles[indexPath.row]
@@ -92,5 +91,9 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.presentPopupBarWithContentViewController(popupContentController, animated: true, completion: nil)
 		
 		tableView.deselectRowAtIndexPath(indexPath, animated: true)
+	}
+	
+	override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+		cell.backgroundColor = UIColor.clearColor()
 	}
 }

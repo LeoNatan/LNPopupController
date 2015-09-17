@@ -278,21 +278,26 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(_popupControllerState == LNPopupPresentationStateClosed)
 	{
 		[contentController beginAppearanceTransition:YES animated:NO];
-		contentController.view.frame = _containerController.view.bounds;
-		contentController.view.clipsToBounds = NO;
-		contentController.view.autoresizingMask = UIViewAutoresizingNone;
-		if(CGColorGetAlpha(contentController.view.backgroundColor.CGColor) < 1.0)
-		{
-			//Support for iOS8, where this property was exposed as readonly.
-			[_popupContentView setValue:[UIBlurEffect effectWithStyle:_popupBar.barStyle == UIBarStyleDefault ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleDark] forKey:@"effect"];
-		}
-		else
-		{
-			[_popupContentView setValue:nil forKey:@"effect"];
-		}
-		
-		[_popupContentView.contentView addSubview:contentController.view];
-		[_popupContentView.contentView sendSubviewToBack:contentController.view];
+		[UIView performWithoutAnimation:^{
+			contentController.view.frame = _containerController.view.bounds;
+			contentController.view.clipsToBounds = NO;
+			contentController.view.autoresizingMask = UIViewAutoresizingNone;
+			if(CGColorGetAlpha(contentController.view.backgroundColor.CGColor) < 1.0)
+			{
+				//Support for iOS8, where this property was exposed as readonly.
+				[_popupContentView setValue:[UIBlurEffect effectWithStyle:_popupBar.barStyle == UIBarStyleDefault ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleDark] forKey:@"effect"];
+			}
+			else
+			{
+				[_popupContentView setValue:nil forKey:@"effect"];
+			}
+			
+			[_popupContentView.contentView addSubview:contentController.view];
+			[_popupContentView.contentView sendSubviewToBack:contentController.view];
+			
+			[_popupContentView.contentView setNeedsLayout];
+			[_popupContentView.contentView layoutIfNeeded];
+		}];
 		[contentController endAppearanceTransition];
 		
 		[_popupBar removeGestureRecognizer:_popupBarUserPresentPanGestureRecognizer];

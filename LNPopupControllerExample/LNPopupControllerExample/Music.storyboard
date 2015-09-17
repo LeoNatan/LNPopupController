@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8173.3" systemVersion="15A263e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="sTg-sL-qRq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="sTg-sL-qRq">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8142"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -210,11 +210,11 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="GbN-VS-Ku7">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="GbN-VS-Ku7">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
                                             <animations/>
                                             <constraints>
-                                                <constraint firstAttribute="width" secondItem="GbN-VS-Ku7" secondAttribute="height" multiplier="1:1" id="8b0-Xs-d2Z"/>
+                                                <constraint firstAttribute="width" secondItem="GbN-VS-Ku7" secondAttribute="height" multiplier="1:1" priority="900" id="8b0-Xs-d2Z"/>
                                             </constraints>
                                         </imageView>
                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="agL-Na-Ira">
@@ -296,6 +296,7 @@
                                                 <constraint firstItem="J5y-2Q-UKC" firstAttribute="centerX" secondItem="H22-aU-er7" secondAttribute="centerX" multiplier="1:11" id="lMV-0w-Bwp"/>
                                                 <constraint firstItem="NUn-Ji-OaJ" firstAttribute="centerY" secondItem="H22-aU-er7" secondAttribute="centerY" id="lhy-sp-61c"/>
                                                 <constraint firstItem="Ybz-gH-1dg" firstAttribute="centerY" secondItem="H22-aU-er7" secondAttribute="centerY" id="rgr-h8-VFw"/>
+                                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="wXA-uH-nTw"/>
                                                 <constraint firstItem="G3r-3b-TzQ" firstAttribute="centerX" secondItem="H22-aU-er7" secondAttribute="centerX" multiplier="1.5:1" id="yLx-A0-E95"/>
                                                 <constraint firstItem="WKP-As-s4G" firstAttribute="leading" secondItem="J5y-2Q-UKC" secondAttribute="trailing" id="zOV-ih-jRd"/>
                                             </constraints>
