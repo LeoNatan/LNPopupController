@@ -11,22 +11,16 @@
 #import "LNPopupControllerLongPressGestureDelegate.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupCloseButton.h"
-
-@interface LNPopupContentContainerView : UIVisualEffectView
-
-- (instancetype)initWithFrame:(CGRect)frame popupBarStyle:(UIBarStyle)popupBarStyle;
-
-@end
+#import "LNPopupContentView.h"
 
 @interface LNPopupController : NSObject
 
-- (instancetype)initWithContainerViewController:(LNObjectOfKind(UIViewController*))containerController;
+- (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController;
 
 @property (nonatomic, weak) UIView* bottomBar;
 
 @property (nonatomic, strong) LNPopupBar* popupBar;
-@property (nonatomic, strong) LNPopupContentContainerView* popupContentView;
-@property (nonatomic, strong) LNPopupCloseButton* popupCloseButton;
+@property (nonatomic, strong) LNPopupContentView* popupContentView;
 
 @property (nonatomic) LNPopupPresentationState popupControllerState;
 @property (nonatomic) LNPopupPresentationState popupControllerTargetState;
@@ -34,7 +28,6 @@
 @property (nonatomic, strong) UILongPressGestureRecognizer* popupBarLongPressGestureRecognizer;
 @property (nonatomic, strong) LNPopupControllerLongPressGestureDelegate* popupBarLongPressGestureRecognizerDelegate;
 @property (nonatomic, strong) UITapGestureRecognizer* popupBarTapGestureRecognizer;
-@property (nonatomic, strong) UIPanGestureRecognizer* popupBarUserPresentPanGestureRecognizer;
 @property (nonatomic) CGPoint lastPopupBarLocation;
 @property (nonatomic) CFTimeInterval lastSeenMovement;
 
@@ -46,7 +39,7 @@
 
 - (void)_movePopupBarAndContentToBottomBarSuperview;
 
-- (void)presentPopupBarAnimated:(BOOL)animated completion:(void(^)())completionBlock;
+- (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)())completionBlock;
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)())completionBlock;
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)())completionBlock;
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)())completionBlock;

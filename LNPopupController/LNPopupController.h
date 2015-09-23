@@ -6,6 +6,8 @@
 //  Copyright © 2015 Leo Natan. All rights reserved.
 //
 
-#import <LNPopupController/ModernObjCSupport.h>
+#import <LNPopupController/LNPopupContentView.h>
+#import <LNPopupController/LNPopupCloseButton.h>
 #import <LNPopupController/LNPopupItem.h>
+#import <LNPopupController/LNPopupBar.h>
 #import <LNPopupController/UIViewController+LNPopupSupport.h>

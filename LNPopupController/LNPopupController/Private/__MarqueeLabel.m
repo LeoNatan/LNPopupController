@@ -53,6 +53,11 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 
 @implementation __MarqueeLabel
 
++ (void)load
+{
+	[[__MarqueeLabel appearanceWhenContainedIn:[UIView class], nil] setBackgroundColor:[UIColor blueColor]];
+}
+
 #pragma mark - Class Methods and handlers
 
 + (void)restartLabelsOfController:(UIViewController *)controller {

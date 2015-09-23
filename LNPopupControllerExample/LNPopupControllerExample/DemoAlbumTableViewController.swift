@@ -80,6 +80,10 @@ class DemoAlbumTableViewController: UITableViewController {
 		cell.detailTextLabel?.text = subtitles[indexPath.row]
 		cell.detailTextLabel?.textColor = UIColor.whiteColor()
 		
+		let selectionView = UIView()
+		selectionView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.45)
+		cell.selectedBackgroundView = selectionView
+		
         return cell
     }
 

@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupContentView.h>
+#import <LNPopupController/LNPopupBar.h>
 #import <LNPopupController/LNPopupItem.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -57,8 +59,21 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  @param animated        Pass YES to animate the presentation; otherwise, pass NO.
  *  @param completion      The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify nil for this parameter.
  */
-
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)())completion;
+
+/**
+ *  Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view. @see -[UIViewController bottomDockingViewForPopup]
+ *
+ *  You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
+ *
+ *  The provided controller is retained by the system and will be released once a different controller is presented or when the popup bar is dismissed.
+ *
+ *  @param controller      The controller for popup presentation.
+ *  @param openPopup	   Pass YES to open the popup in the same animation
+ *  @param animated        Pass YES to animate the presentation; otherwise, pass NO.
+ *  @param completion      The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify nil for this parameter.
+ */
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)())completion;
 
 /**
  *  Opens the popup, displaying the content view controller's view.
@@ -85,24 +100,35 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)())completion;
 
 /**
+ *  The popup bar managed by the system. (read-only)
+ */
+@property (nonatomic, strong, readonly) LNPopupBar* popupBar;
+
+/**
  *  Call this method to update the popup bar appearance (style, tint color, etc.) according to its docking view. You should call this after updating the docking view.
+ *  If the popup bar's inheritsVisualStyleFromDockingView property is set to NO, this method has no effect. @see LNPopupBar.inheritsVisualStyleFromDockingView
  */
 - (void)updatePopupBarAppearance;
 
 /**
- *  The state of the popup presentation.
+ *  The popup content container view.
+ */
+@property (nonatomic, strong, readonly) LNPopupContentView* popupContentView;
+
+/**
+ *  The state of the popup presentation. (read-only)
  */
 @property (nonatomic, readonly) LNPopupPresentationState popupPresentationState;
 
 /**
- *  The content view controller of the receiver. If no popopover presentation, the property will be nil.
+ *  The content view controller of the receiver. If no popopover presentation, the property will be nil. (read-only)
  */
-@property (nullable, nonatomic, strong, readonly) LNObjectOfKind(UIViewController*) popupContentViewController;
+@property (nullable, nonatomic, strong, readonly) __kindof UIViewController* popupContentViewController;
 
 /**
- *  The popup presentation container view controller of the receiver. If the receiver is not part of a popover presentation, the property will be nil.
+ *  The popup presentation container view controller of the receiver. If the receiver is not part of a popover presentation, the property will be nil. (read-only)
  */
-@property (nullable, nonatomic, weak, readonly) LNObjectOfKind(UIViewController*) popupPresentationContainerViewController;
+@property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
 
 @end
 
@@ -118,7 +144,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *
  *  @return A view to dock the popup bar to.
  */
-- (LNObjectOfKind(UIView*))bottomDockingViewForPopup;
+- (__kindof UIView*)bottomDockingViewForPopup;
 
 /**
  * Return the default frame for the docking view, when the popup is hidden or closed state.

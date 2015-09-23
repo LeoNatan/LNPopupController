@@ -70,12 +70,19 @@ demoVC.popupItem.progress = 0.34;
 	
 [self.tabBarController presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
 ```
+
 You can present a new content controller while the popup bar is presented and when the popup itself is open.
 
 To open and close the popup programatically, use `openPopupAnimated:completion:` and `closePopupAnimated:completion:` respectively.
 
 ```objective-c
 [self.tabBarController openPopupAnimated:YES completion:nil];
+```
+
+Alternatively, you can present the popup bar and open the popup in one animation, using `presentPopupBarWithContentViewController:openPopup:animated:completion:`.
+
+```objective-c
+[self.tabBarController presentPopupBarWithContentViewController:demoVC openPopup:YES animated:YES completion:nil];
 ```
 
 To dismiss the popup bar, use `dismissPopupBarAnimated:completion:`.
@@ -135,13 +142,25 @@ Status bar management of the popup content view controller is respected and appl
 
 ###Customization
 
-Customization is currently very limited. I realize this isn't optimal, and plan to support customization in the future. Please open issues with specific use cases if this is important to you.
+Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContentView``` classes.
 
-Most of the framework is not exposed as public API. As need arises, more components will be opened.
+```LNPopupBar``` exposes API to customize the popup bar's appearance, either directly or through `UIAppearance` API.
+
+```objective-c
+[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
+[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setSubtitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]}];
+[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setBarStyle:UIBarStyleBlack];
+[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTintColor:[UIColor yellowColor]];
+```
+
+<img src="./Supplements/custom1.png"/>
+
+```LNPopupContentView``` gives access to the popup close button and the popup interaction gesture recognizer.
+
+**Note:** Be careful with modifying the popup interaction gesture recognizer. It is shared for interactively opening the popup by panning the popup bar (when it is closed), or interactively closing the popup interactively by panning the popup content view (when the popup is open). If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code.
 
 ##Known Limitations
 
-* Customization is limited
 * Navigation controller's `setToolbarHidden:` and `setToolbarHidden:animated:` are not supported
 
 ##Acknowledgements

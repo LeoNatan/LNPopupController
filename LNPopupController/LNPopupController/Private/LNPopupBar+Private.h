@@ -19,6 +19,16 @@ extern const CGFloat LNPopupBarHeight;
 
 @interface LNPopupBar ()
 
+@property (nonatomic, assign) UIBarStyle systemBarStyle;
+@property (nonatomic, strong) UIColor* systemTintColor;
+@property (nonatomic, strong) UIColor* systemBarTintColor;
+@property (nonatomic, strong) UIColor* systemBackgroundColor;
+
+@property(nonatomic, weak, readwrite) LNPopupItem* popupItem;
+
+@property (nonatomic, copy) NSString* title;
+@property (nonatomic, copy) NSString* subtitle;
+
 @property (nonatomic, strong) UIToolbar* toolbar;
 
 @property (nonatomic, strong) UIView* highlightView;

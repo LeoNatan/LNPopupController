@@ -13,7 +13,11 @@
 {
 	UIVisualEffectView* _effectView;
 	UIView* _highlightView;
-	UIImageView* _chevronImageView;
+}
+
+- (UIView*)backgroundView
+{
+	return _effectView;
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
@@ -49,13 +53,9 @@
 		self.layer.shadowOffset = CGSizeMake(0, 0);
 		self.layer.masksToBounds = NO;
 		
-		_chevronImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"DismissChevron" inBundle:[NSBundle bundleForClass:self.class] compatibleWithTraitCollection:nil]];
-		_chevronImageView.contentMode = UIViewContentModeCenter;
-		CGRect frame = self.bounds;
-		frame.origin.y += 1;
-		_chevronImageView.frame = frame;
-		_chevronImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-		[self addSubview:_chevronImageView];
+		[self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		
+		[self setImage:[UIImage imageNamed:@"DismissChevron" inBundle:[NSBundle bundleForClass:self.class] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
 	}
 	
 	return self;
@@ -104,16 +104,34 @@
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
+	
+	[self sendSubviewToBack:_effectView];
+	
+	CGFloat minSideSize = MIN(self.bounds.size.width, self.bounds.size.height);
+	
 	_effectView.frame = self.bounds;
 	CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
 	maskLayer.rasterizationScale = 2.0 * [UIScreen mainScreen].nativeScale;
 	maskLayer.shouldRasterize = YES;
 	
-	CGPathRef path = CGPathCreateWithEllipseInRect(self.bounds, NULL);
+	CGPathRef path = CGPathCreateWithRoundedRect(self.bounds, minSideSize / 2, minSideSize / 2, NULL);
 	maskLayer.path = path;
 	CGPathRelease(path);
 	
 	_effectView.layer.mask = maskLayer;
+	
+	CGRect imageFrame = self.imageView.frame;
+	imageFrame.origin.y += 1;
+	self.imageView.frame = imageFrame;
+}
+
+- (CGSize)sizeThatFits:(CGSize)size
+{
+	CGSize superSize = [super sizeThatFits:size];
+	superSize.width += 14;
+	superSize.height += 2;
+	
+	return superSize;
 }
 
 @end

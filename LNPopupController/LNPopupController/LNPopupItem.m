@@ -38,7 +38,7 @@ static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(rightBarButtonItems)) context:_LNPopupItemObservationContext];
 }
 
-- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable LNDictionaryOfType(NSString *,id) *)change context:(nullable void *)context
+- (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSString *, id> *)change context:(nullable void *)context
 {
 	if(context == _LNPopupItemObservationContext)
 	{

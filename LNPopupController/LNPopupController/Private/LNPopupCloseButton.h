@@ -9,4 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface LNPopupCloseButton : UIButton
+
+/**
+ *  The button’s background view. (read-only)
+ *  
+ *  Although this property is read-only, its own properties are read/write. Use these properties to configure the appearance and behavior of the button’s background view.
+ */
+@property (nonatomic, strong, readonly) UIVisualEffectView* backgroundView;
+
 @end

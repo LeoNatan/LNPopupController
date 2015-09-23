@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <LNPopupController/ModernObjCSupport.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,12 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  An array of custom bar button items to display on the left side of the popup bar.
  */
-@property(nullable,nonatomic,copy) LNArrayOfType(UIBarButtonItem*)* leftBarButtonItems;
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems;
 
 /**
  *  An array of custom bar button items to display on the right side of the popup bar.
  */
-@property(nullable,nonatomic,copy) LNArrayOfType(UIBarButtonItem*)* rightBarButtonItems;
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems;
 
 @end
 

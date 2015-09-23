@@ -170,7 +170,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	
 	dispatchMethod(controller, NSSelectorFromString(selName));
 	
-	[controller.childViewControllers enumerateObjectsUsingBlock:^(LNObjectOfKind(UIViewController *) __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
+	[controller.childViewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
 		_LNPopupSupportFixInsetsForViewController(obj, NO);
 	}];
 	

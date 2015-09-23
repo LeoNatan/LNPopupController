@@ -11,6 +11,8 @@
 
 const CGFloat LNPopupBarHeight = 40.0;
 
+const NSInteger LNBarStyleInherit = -1;
+
 @implementation LNPopupBar
 {
 	UIToolbar* _backgroundView;
@@ -19,7 +21,12 @@ const CGFloat LNPopupBarHeight = 40.0;
 	__MarqueeLabel* _titleLabel;
 	__MarqueeLabel* _subtitleLabel;
 	BOOL _needsLabelsLayout;
+	
+	UIColor* _userTintColor;
+	UIColor* _userBackgroundColor;
 }
+
+@synthesize barStyle = _userBarStyle, barTintColor = _userBarTintColor;
 
 - (void)setHighlighted:(BOOL)highlighted
 {
@@ -27,13 +34,15 @@ const CGFloat LNPopupBarHeight = 40.0;
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
-{
+{	
 	CGRect fullFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, LNPopupBarHeight);
 	
 	self = [super initWithFrame:frame];
 	
 	if(self)
 	{
+		_userBarStyle = LNBarStyleInherit;
+		
 		_backgroundView = [[UIToolbar alloc] initWithFrame:frame];
 		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[self addSubview:_backgroundView];
@@ -88,21 +97,117 @@ const CGFloat LNPopupBarHeight = 40.0;
 
 - (void)setBarStyle:(UIBarStyle)barStyle
 {
-	_backgroundView.barStyle = barStyle;
+	_userBarStyle = barStyle;
+	
+	_backgroundView.barStyle = _userBarStyle == LNBarStyleInherit ? _systemBarStyle : _userBarStyle;
 	
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+}
+
+- (UIColor *)tintColor
+{
+	return _userTintColor;
+}
+
+- (void)setTintColor:(UIColor *)tintColor
+{
+	_userTintColor = tintColor;
+	
+	[super setTintColor:_userTintColor ?: _systemTintColor];
 }
 
 - (UIColor*)barTintColor
 {
-	return _backgroundView.barTintColor;
+	return _userBarTintColor;
 }
 
 - (void)setBarTintColor:(UIColor *)barTintColor
 {
-	_backgroundView.barTintColor = barTintColor;
+	_userBarTintColor = barTintColor;
+	
+	_backgroundView.barTintColor = _userBarTintColor ?: _systemBarTintColor;
 	
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+}
+
+- (UIColor *)backgroundColor
+{
+	return _userBackgroundColor;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+	_userBackgroundColor = backgroundColor;
+	
+	[super setBackgroundColor:_userBackgroundColor ?: _systemBackgroundColor];
+}
+
+- (BOOL)isTranslucent
+{
+	return _backgroundView.isTranslucent;
+}
+
+- (void)setTranslucent:(BOOL)translucent
+{
+	_backgroundView.translucent = translucent;
+}
+
+- (UIImage *)backgroundImage
+{
+	return [_backgroundView backgroundImageForToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+}
+
+- (void)setBackgroundImage:(UIImage *)backgroundImage
+{
+	[_backgroundView setBackgroundImage:backgroundImage forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+}
+
+- (UIImage *)shadowImage
+{
+	return [_backgroundView shadowImageForToolbarPosition:UIBarPositionAny];
+}
+
+- (void)setShadowImage:(UIImage *)shadowImage
+{
+	[_backgroundView setShadowImage:shadowImage forToolbarPosition:UIBarPositionAny];
+}
+
+- (void)setTitleTextAttributes:(NSDictionary<NSString *,id> *)titleTextAttributes
+{
+	_titleTextAttributes = titleTextAttributes;
+}
+
+- (void)setSubtitleTextAttributes:(NSDictionary<NSString *,id> *)subtitleTextAttributes
+{
+	_subtitleTextAttributes = subtitleTextAttributes;
+}
+
+- (void)setSystemBackgroundColor:(UIColor *)systemBackgroundColor
+{
+	_systemBackgroundColor = systemBackgroundColor;
+	
+	[self setBackgroundColor:_userBackgroundColor];
+}
+
+- (void)setSystemBarStyle:(UIBarStyle)systemBarStyle
+{
+	_systemBarStyle = systemBarStyle;
+	
+	[self setBarStyle:_userBarStyle];
+}
+
+- (void)setSystemBarTintColor:(UIColor *)systemBarTintColor
+{
+	_systemBarTintColor = systemBarTintColor;
+	
+	[self setBarTintColor:_userBarTintColor];
+}
+
+- (void)setSystemTintColor:(UIColor *)systemTintColor
+{
+	_systemTintColor = systemTintColor;
+	
+	[self setTintColor:_userTintColor];
 }
 
 - (void)setTitle:(NSString *)title
@@ -122,13 +227,11 @@ const CGFloat LNPopupBarHeight = 40.0;
 - (__MarqueeLabel*)_newMarqueeLabel
 {
 	__MarqueeLabel* rv = [[__MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
-	rv.font = [UIFont systemFontOfSize:12];
 	rv.leadingBuffer = 5.0;
 	rv.trailingBuffer = 15.0;
 	rv.animationDelayBefore = 2.0;
 	rv.animationDelayAfter = 0.0;
 	rv.marqueeType = MLContinuous;
-	rv.textAlignment = NSTextAlignmentCenter;
 	return rv;
 }
 
@@ -163,11 +266,17 @@ const CGFloat LNPopupBarHeight = 40.0;
 				[_titlesView addSubview:_titleLabel];
 			}
 			
+			NSMutableDictionary* defaultTitleAttribures = [@{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: self.barStyle == UIBarStyleDefault ? [UIColor blackColor] : [UIColor whiteColor]} mutableCopy];
+			[defaultTitleAttribures addEntriesFromDictionary:_titleTextAttributes];
+			
+			NSMutableDictionary* defaultSubtitleAttribures = [@{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: self.barStyle == UIBarStyleDefault ? [UIColor grayColor] : [UIColor whiteColor]} mutableCopy];
+			[defaultSubtitleAttribures addEntriesFromDictionary:_subtitleTextAttributes];
+			
 			BOOL reset = NO;
 			
 			if([_titleLabel.text isEqualToString:_title] == NO)
 			{
-				_titleLabel.text = _title;
+				_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:defaultTitleAttribures];
 				reset = YES;
 			}
 			
@@ -179,7 +288,7 @@ const CGFloat LNPopupBarHeight = 40.0;
 			
 			if([_subtitleLabel.text isEqualToString:_subtitle] == NO)
 			{
-				_subtitleLabel.text = _subtitle;
+				_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:defaultSubtitleAttribures];
 				reset = YES;
 			}
 			
@@ -264,13 +373,13 @@ const CGFloat LNPopupBarHeight = 40.0;
 {
 	if(self.barStyle == UIBarStyleDefault)
 	{
-		_titleLabel.textColor = [UIColor blackColor];
-		_subtitleLabel.textColor = [UIColor grayColor];
+		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor blackColor];
+		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor blackColor];
 	}
 	else
 	{
-		_titleLabel.textColor = [UIColor whiteColor];
-		_subtitleLabel.textColor = [UIColor whiteColor];
+		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor whiteColor];
+		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor whiteColor];
 	}
 }
 
