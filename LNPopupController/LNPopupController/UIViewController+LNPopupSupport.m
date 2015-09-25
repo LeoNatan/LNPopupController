@@ -137,6 +137,11 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return objc_getAssociatedObject(self, _LNPopupControllerKey);
 }
 
+- (UIView *)viewForPopupInteractionGestureRecognizer
+{
+	return self.view;
+}
+
 @end
 
 @implementation UIViewController (LNCustomContainerPopupSupport)

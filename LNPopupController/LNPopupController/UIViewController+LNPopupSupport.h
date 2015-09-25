@@ -130,26 +130,35 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  */
 @property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
 
+/**
+ *  Return the view to which the popup interaction gesture recognizer will be added to.
+ *
+ *  A default implementation is provided, where the popupContentView is returned. @see UIViewController.popupContentView
+ *
+ *  @return The view to which the popup interaction gesture recognizer will be added to.
+ */
+- (__kindof UIView*)viewForPopupInteractionGestureRecognizer;
+
 @end
 
 /**
- * Popup presentation containment support in custom container view controller subclasses.
+ *  Popup presentation containment support in custom container view controller subclasses.
  */
 @interface UIViewController (LNCustomContainerPopupSupport)
 /**
- * Retrun a view to dock the popup bar to.
+ *  Return a view to dock the popup bar to.
  *
- * A default implementation is provided for UIViewController, UINavigationController and UITabBarController.
- * The default implmentation for UIViewController returns an invisible UIView, for UINavigationController returns the toolbar and for UITabBarController returns the tab bar.
+ *  A default implementation is provided for UIViewController, UINavigationController and UITabBarController.
+ *  The default implmentation for UIViewController returns an invisible UIView docked to the bottom, for UINavigationController returns the toolbar and for UITabBarController returns the tab bar.
  *
  *  @return A view to dock the popup bar to.
  */
 - (__kindof UIView*)bottomDockingViewForPopup;
 
 /**
- * Return the default frame for the docking view, when the popup is hidden or closed state.
+ *  Return the default frame for the docking view, when the popup is hidden or closed state.
  *
- * A default implementation is provided for UIViewController, UINavigationController and UITabBarController. 
+ *  A default implementation is provided for UIViewController, UINavigationController and UITabBarController.
  *
  *  @return The default frame for the docking view.
  */

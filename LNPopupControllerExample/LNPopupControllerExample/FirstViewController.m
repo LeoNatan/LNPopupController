@@ -89,6 +89,8 @@
 	[super viewDidLoad];
 	
 	self.view.backgroundColor = LNRandomLightColor();
+	
+	self.navigationController.popupContentView.popupCloseButton.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated

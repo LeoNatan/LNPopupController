@@ -312,7 +312,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[contentController endAppearanceTransition];
 		
 		[_popupBar removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-		[contentController.view addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+		[contentController.viewForPopupInteractionGestureRecognizer addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 	}
 	
 	_popupControllerState = LNPopupPresentationStateTransitioning;
@@ -333,7 +333,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			 [contentController.view removeFromSuperview];
 			 [contentController endAppearanceTransition];
 			 
-			 [contentController.view removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+			 [contentController.viewForPopupInteractionGestureRecognizer removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 			 [_popupBar addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 			 
 			 [_popupBar _setTitleViewMarqueesPaused:NO];
