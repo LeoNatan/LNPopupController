@@ -229,8 +229,7 @@ const NSInteger LNBarStyleInherit = -1;
 	__MarqueeLabel* rv = [[__MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
 	rv.leadingBuffer = 5.0;
 	rv.trailingBuffer = 15.0;
-	rv.animationDelayBefore = 2.0;
-	rv.animationDelayAfter = 0.0;
+	rv.animationDelay = 2.0;
 	rv.marqueeType = MLContinuous;
 	return rv;
 }
@@ -266,10 +265,13 @@ const NSInteger LNBarStyleInherit = -1;
 				[_titlesView addSubview:_titleLabel];
 			}
 			
-			NSMutableDictionary* defaultTitleAttribures = [@{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: self.barStyle == UIBarStyleDefault ? [UIColor blackColor] : [UIColor whiteColor]} mutableCopy];
+			NSMutableParagraphStyle* paragraph = [NSMutableParagraphStyle new];
+			paragraph.alignment = NSTextAlignmentCenter;
+			
+			NSMutableDictionary* defaultTitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: self.barStyle == UIBarStyleDefault ? [UIColor blackColor] : [UIColor whiteColor]} mutableCopy];
 			[defaultTitleAttribures addEntriesFromDictionary:_titleTextAttributes];
 			
-			NSMutableDictionary* defaultSubtitleAttribures = [@{NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: self.barStyle == UIBarStyleDefault ? [UIColor grayColor] : [UIColor whiteColor]} mutableCopy];
+			NSMutableDictionary* defaultSubtitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: self.barStyle == UIBarStyleDefault ? [UIColor grayColor] : [UIColor whiteColor]} mutableCopy];
 			[defaultSubtitleAttribures addEntriesFromDictionary:_subtitleTextAttributes];
 			
 			BOOL reset = NO;
@@ -277,6 +279,7 @@ const NSInteger LNBarStyleInherit = -1;
 			if([_titleLabel.text isEqualToString:_title] == NO)
 			{
 				_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:defaultTitleAttribures];
+				_titleLabel.textAlignment = [defaultTitleAttribures[NSParagraphStyleAttributeName] alignment];
 				reset = YES;
 			}
 			
@@ -289,6 +292,7 @@ const NSInteger LNBarStyleInherit = -1;
 			if([_subtitleLabel.text isEqualToString:_subtitle] == NO)
 			{
 				_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:defaultSubtitleAttribures];
+				_subtitleLabel.textAlignment = [defaultSubtitleAttribures[NSParagraphStyleAttributeName] alignment];
 				reset = YES;
 			}
 			
