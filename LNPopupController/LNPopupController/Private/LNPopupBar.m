@@ -276,7 +276,7 @@ const NSInteger LNBarStyleInherit = -1;
 			
 			BOOL reset = NO;
 			
-			if([_titleLabel.text isEqualToString:_title] == NO)
+			if([_titleLabel.text isEqualToString:_title] == NO && _title != nil)
 			{
 				_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:defaultTitleAttribures];
 				_titleLabel.textAlignment = [defaultTitleAttribures[NSParagraphStyleAttributeName] alignment];
@@ -289,7 +289,7 @@ const NSInteger LNBarStyleInherit = -1;
 				[_titlesView addSubview:_subtitleLabel];
 			}
 			
-			if([_subtitleLabel.text isEqualToString:_subtitle] == NO)
+			if([_subtitleLabel.text isEqualToString:_subtitle] == NO && _subtitle != nil)
 			{
 				_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:defaultSubtitleAttribures];
 				_subtitleLabel.textAlignment = [defaultSubtitleAttribures[NSParagraphStyleAttributeName] alignment];
