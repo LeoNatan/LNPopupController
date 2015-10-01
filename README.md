@@ -23,11 +23,11 @@ Check the demo projects for how to use the framework in various scenarios. It co
 
 ###Features
 
-* Available for iOS 8 and above, available as Xcode dynamic framework
+* Available for iOS 8 and above<sup>1</sup>, available as Xcode dynamic framework
 * Good citizen in modern UIKit world
-* Modern Objective C syntax<sup>1</sup> for better Swift interoperability
+* Modern Objective C syntax for better Swift interoperability
 
-<sup>1</sup> The project includes macros to allow compilation on Xcode 6. Once Xcode 7 GM is released, I will remove these macros.
+<sup>1</sup> The framework is available for iOS 8 and above. **The included demo project has a deployment target of iOS 9 and above**, and may crash with certain features enabled on iOS 8 simulator or devices.
 
 ##Adding to Your Project
 
