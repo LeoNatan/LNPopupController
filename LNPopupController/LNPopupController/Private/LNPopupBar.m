@@ -279,7 +279,6 @@ const NSInteger LNBarStyleInherit = -1;
 			if([_titleLabel.text isEqualToString:_title] == NO && _title != nil)
 			{
 				_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:defaultTitleAttribures];
-				_titleLabel.textAlignment = [defaultTitleAttribures[NSParagraphStyleAttributeName] alignment];
 				reset = YES;
 			}
 			
@@ -292,7 +291,6 @@ const NSInteger LNBarStyleInherit = -1;
 			if([_subtitleLabel.text isEqualToString:_subtitle] == NO && _subtitle != nil)
 			{
 				_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:defaultSubtitleAttribures];
-				_subtitleLabel.textAlignment = [defaultSubtitleAttribures[NSParagraphStyleAttributeName] alignment];
 				reset = YES;
 			}
 			

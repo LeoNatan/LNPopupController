@@ -166,11 +166,22 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     return (CAReplicatorLayer *)self.layer;
 }
 
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
+    // Do NOT call super, to prevent UILabel superclass from drawing into context
+    // Label drawing is handled by sublabel and CAReplicatorLayer layer class
+}
+
 - (void)forwardPropertiesToSubLabel {
+    /*
+     Note that this method is currently ONLY called from awakeFromNib, i.e. when
+     text properties are set via a Storyboard. As the Storyboard/IB doesn't currently
+     support attributed strings, there's no need to "forward" the super attributedString value.
+     */
+    
     // Since we're a UILabel, we actually do implement all of UILabel's properties.
     // We don't care about these values, we just want to forward them on to our sublabel.
     NSArray *properties = @[@"baselineAdjustment", @"enabled", @"highlighted", @"highlightedTextColor",
-                            @"minimumFontSize", @"shadowOffset", @"textAlignment",
+                            @"minimumFontSize", @"textAlignment",
                             @"userInteractionEnabled", @"adjustsFontSizeToFitWidth",
                             @"lineBreakMode", @"numberOfLines"];
     
@@ -180,13 +191,11 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     self.subLabel.textColor = super.textColor;
     self.subLabel.backgroundColor = (super.backgroundColor == nil ? [UIColor clearColor] : super.backgroundColor);
     self.subLabel.shadowColor = super.shadowColor;
+    self.subLabel.shadowOffset = super.shadowOffset;
     for (NSString *property in properties) {
         id val = [super valueForKey:property];
         [self.subLabel setValue:val forKey:property];
     }
-    
-    // Clear super to prevent double-drawing
-    super.attributedText = nil;
 }
 
 - (void)setupLabel {
@@ -263,7 +272,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 }
 
 -(void)didMoveToSuperview {
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 #pragma mark - MarqueeLabel Heavy Lifting
@@ -272,7 +281,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 {
     [super layoutSubviews];
     
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow {
@@ -283,15 +292,15 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 
 - (void)didMoveToWindow {
     if (self.window) {
-        [self updateSublabelAndLocations];
+        [self updateSublabel];
     }
 }
 
-- (void)updateSublabelAndLocations {
-    [self updateSublabelAndLocationsAndBeginScroll:YES];
+- (void)updateSublabel {
+    [self updateSublabelAndBeginScroll:YES];
 }
 
-- (void)updateSublabelAndLocationsAndBeginScroll:(BOOL)beginScroll {
+- (void)updateSublabelAndBeginScroll:(BOOL)beginScroll {
     if (!self.subLabel.text || !self.superview) {
         return;
     }
@@ -392,7 +401,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
             
             break;
         }
-        
+            
         case MLLeftRight:
         {
             self.homeLabelFrame = CGRectIntegral(CGRectMake(self.leadingBuffer, 0.0f, expectedLabelSize.width, expectedLabelSize.height));
@@ -412,7 +421,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
             
             break;
         }
-        
+            
         default:
         {
             // Something strange has happened
@@ -438,8 +447,8 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     // Get size of subLabel
     expectedLabelSize = [self.subLabel sizeThatFits:maximumLabelSize];
-    // Sanitize width to 8192 (largest width a UILabel will draw)
-    expectedLabelSize.width = ceil(MIN(expectedLabelSize.width, 8192.0f));
+    // Sanitize width to 5461.0f (largest width a UILabel will draw on an iPhone 6S Plus)
+    expectedLabelSize.width = ceil(MIN(expectedLabelSize.width, 5461.0f));
     // Adjust to own height (make text baseline match normal label)
     expectedLabelSize.height = self.bounds.size.height;
     
@@ -532,7 +541,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     // Set Duration
     [CATransaction setAnimationDuration:(2.0 * (delayAmount + interval))];
-
+    
     // Create animation for gradient, if needed
     if (self.fadeLength != 0.0f) {
         CAKeyframeAnimation *gradAnim = [self keyFrameAnimationForGradientFadeLength:self.fadeLength
@@ -561,7 +570,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         }
     };
     
-
+    
     // Create animation for position
     CGPoint homeOrigin = self.homeLabelFrame.origin;
     CGPoint awayOrigin = MLOffsetCGPoint(self.homeLabelFrame.origin, self.awayOffset);
@@ -851,7 +860,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
                        @[transp, opaque, opaque, transp],           // 7)
                        @[transp, opaque, opaque, transp],           // 8)
                        @[opaque, opaque, opaque, transp]            // 9)
-                     ];
+                       ];
             break;
     }
     
@@ -1031,7 +1040,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     // Check if device is running iOS 8.0.X
     if(SYSTEM_VERSION_IS_8_0_X) {
         // If so, force update because layoutSubviews is not called
-        [self updateSublabelAndLocations];
+        [self updateSublabel];
     }
 }
 
@@ -1041,7 +1050,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     // Check if device is running iOS 8.0.X
     if(SYSTEM_VERSION_IS_8_0_X) {
         // If so, force update because layoutSubviews is not called
-        [self updateSublabelAndLocations];
+        [self updateSublabel];
     }
     
 }
@@ -1062,7 +1071,8 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         return;
     }
     self.subLabel.text = text;
-    [self updateSublabelAndLocations];
+    super.text = text;
+    [self updateSublabel];
 }
 
 - (NSAttributedString *)attributedText {
@@ -1074,7 +1084,8 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         return;
     }
     self.subLabel.attributedText = attributedText;
-    [self updateSublabelAndLocations];
+    super.attributedText = attributedText;
+    [self updateSublabel];
 }
 
 - (UIFont *)font {
@@ -1087,7 +1098,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     }
     self.subLabel.font = font;
     super.font = font;
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 - (UIColor *)textColor {
@@ -1199,7 +1210,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     _scrollDuration = 0.0f;
     _rate = rate;
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 - (void)setScrollDuration:(CGFloat)lengthOfScroll {
@@ -1209,7 +1220,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     _rate = 0.0f;
     _scrollDuration = lengthOfScroll;
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 - (void)setAnimationCurve:(UIViewAnimationOptions)animationCurve {
@@ -1230,7 +1241,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     // Do not allow negative values
     _leadingBuffer = fabs(leadingBuffer);
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 - (void)setTrailingBuffer:(CGFloat)trailingBuffer {
@@ -1240,7 +1251,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     // Do not allow negative values
     _trailingBuffer = fabs(trailingBuffer);
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 - (void)setContinuousMarqueeExtraBuffer:(CGFloat)continuousMarqueeExtraBuffer {
@@ -1258,7 +1269,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     _fadeLength = fadeLength;
     
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 - (void)setTapToScroll:(BOOL)tapToScroll {
@@ -1287,7 +1298,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     _marqueeType = marqueeType;
     
-    [self updateSublabelAndLocations];
+    [self updateSublabel];
 }
 
 - (void)setLabelize:(BOOL)labelize {
@@ -1297,7 +1308,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     _labelize = labelize;
     
-    [self updateSublabelAndLocationsAndBeginScroll:YES];
+    [self updateSublabelAndBeginScroll:YES];
 }
 
 - (void)setHoldScrolling:(BOOL)holdScrolling {
@@ -1414,6 +1425,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
         df0 = [self derivativeYValueForCurveAt:t0 withControlPoints:controlPoints];
         // Check if derivative is small or zero ( http://en.wikipedia.org/wiki/Newton's_method#Failure_analysis )
         if (fabs(df0) < 1e-6) {
+            NSLog(@"MarqueeLabel: Newton's Method failure, small/zero derivative!");
             break;
         }
         // Else recalculate t1
@@ -1433,9 +1445,9 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
     
     // Per http://en.wikipedia.org/wiki/Bezier_curve#Cubic_B.C3.A9zier_curves
     return  powf((1 - t),3) * P0.y +
-            3.0f * powf(1 - t, 2) * t * P1.y +
-            3.0f * (1 - t) * powf(t, 2) * P2.y +
-            powf(t, 3) * P3.y;
+    3.0f * powf(1 - t, 2) * t * P1.y +
+    3.0f * (1 - t) * powf(t, 2) * P2.y +
+    powf(t, 3) * P3.y;
     
 }
 
@@ -1448,9 +1460,9 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
     
     // Per http://en.wikipedia.org/wiki/Bezier_curve#Cubic_B.C3.A9zier_curves
     return  powf((1 - t),3) * P0.x +
-            3.0f * powf(1 - t, 2) * t * P1.x +
-            3.0f * (1 - t) * powf(t, 2) * P2.x +
-            powf(t, 3) * P3.x;
+    3.0f * powf(1 - t, 2) * t * P1.x +
+    3.0f * (1 - t) * powf(t, 2) * P2.x +
+    powf(t, 3) * P3.x;
     
 }
 
@@ -1462,8 +1474,8 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
     CGPoint P3 = [controlPoints[3] CGPointValue];
     
     return  powf(t, 2) * (-3.0f * P0.y - 9.0f * P1.y - 9.0f * P2.y + 3.0f * P3.y) +
-            t * (6.0f * P0.y + 6.0f * P2.y) +
-            (-3.0f * P0.y + 3.0f * P1.y);
+    t * (6.0f * P0.y + 6.0f * P2.y) +
+    (-3.0f * P0.y + 3.0f * P1.y);
 }
 
 - (NSArray *)controlPoints
