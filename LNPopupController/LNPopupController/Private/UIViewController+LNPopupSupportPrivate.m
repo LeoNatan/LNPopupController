@@ -58,6 +58,14 @@ static NSString* const sTHed = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvbjo=";
 		m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarHidden));
 		method_exchangeImplementations(m1, m2);
 		
+		m1 = class_getInstanceMethod([self class], @selector(viewWillTransitionToSize:withTransitionCoordinator:));
+		m2 = class_getInstanceMethod([self class], @selector(_ln_viewWillTransitionToSize:withTransitionCoordinator:));
+		method_exchangeImplementations(m1, m2);
+		
+		m1 = class_getInstanceMethod([self class], @selector(willTransitionToTraitCollection:withTransitionCoordinator:));
+		m2 = class_getInstanceMethod([self class], @selector(_ln_willTransitionToTraitCollection:withTransitionCoordinator:));
+		method_exchangeImplementations(m1, m2);
+		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:sCoOvBase64 options:0] encoding:NSUTF8StringEncoding];
 		
@@ -66,6 +74,26 @@ static NSString* const sTHed = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvbjo=";
 		method_exchangeImplementations(m1, m2);
 #endif
 	});
+}
+
+- (void)_ln_viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	if(self._ln_popupController_nocreate)
+	{
+		[self.popupContentViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	}
+	
+	[self _ln_viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
+- (void)_ln_willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	if(self._ln_popupController_nocreate)
+	{
+		[self.popupContentViewController willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+	}
+	
+	[self _ln_willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 }
 
 - (nullable UIViewController *)_ln_common_childViewControllerForStatusBarHidden
@@ -240,6 +268,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
+
 - (UIEdgeInsets)a:(UIViewController*)controller b:(BOOL*)absolute
 {
 	UIEdgeInsets rv = [self _ln_common_a:controller b:absolute];

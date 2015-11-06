@@ -51,6 +51,11 @@
 	}
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
 - (BOOL)prefersStatusBarHidden
 {
 //	return YES;
@@ -89,8 +94,9 @@
 	[super viewDidLoad];
 	
 	self.view.backgroundColor = LNRandomLightColor();
-	
-	self.navigationController.popupContentView.popupCloseButton.hidden = YES;
+
+#warning Enable this code to demonstrate disabling the popup close button.
+//	self.navigationController.popupContentView.popupCloseButton.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated

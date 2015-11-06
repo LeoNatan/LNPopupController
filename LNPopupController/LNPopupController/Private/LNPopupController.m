@@ -10,8 +10,6 @@
 #import "LNPopupItem+Private.h"
 @import ObjectiveC;
 
-static NSString* const _mcvc = @"bXV0YWJsZUNoaWxkVmlld0NvbnRyb2xsZXJz";
-
 static const CFTimeInterval LNPopupBarGesturePanThreshold = 0.1;
 static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 
@@ -521,10 +519,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[newContentController endAppearanceTransition];
 		
 		[_currentContentController beginAppearanceTransition:NO animated:NO];
-		[_currentContentController willMoveToParentViewController:nil];
 		[_currentContentController.view removeFromSuperview];
 		[_currentContentController endAppearanceTransition];
-		[_currentContentController removeFromParentViewController];
 		
 		_currentContentController = newContentController;
 	}
@@ -557,16 +553,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[_popupBar.superview insertSubview:self.popupContentView belowSubview:_popupBar];
 }
 
-- (void)_fixChildControllersHierarchyIfNeeded
-{
-	if([_containerController isKindOfClass:[UINavigationController class]])
-	{
-		NSMutableArray* arr = [_containerController valueForKey:[[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:_mcvc options:0] encoding:NSUTF8StringEncoding]];
-		[arr removeObject:_containerController.popupContentViewController];
-		[arr insertObject:_containerController.popupContentViewController atIndex:0];
-	}
-}
-
 - (LNPopupContentView *)popupContentView
 {
 	if(_popupContentView)
@@ -594,11 +580,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
-	
-	[_containerController addChildViewController:_containerController.popupContentViewController];
-	[_containerController.popupContentViewController didMoveToParentViewController:_containerController];
-	
-	[self _fixChildControllersHierarchyIfNeeded];
 	
 	_LNPopupTransitionCoordinator* coordinator = [_LNPopupTransitionCoordinator new];
 	[_containerController.popupContentViewController willTransitionToTraitCollection:_containerController.traitCollection withTransitionCoordinator:coordinator];
@@ -723,8 +704,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
 				[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 				
-				[_currentContentController willMoveToParentViewController:nil];
-				[_currentContentController removeFromParentViewController];
 				_currentContentController = nil;
 				
 				_effectiveStatusBarUpdateController = nil;
