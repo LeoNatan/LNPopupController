@@ -29,11 +29,11 @@
 		394A85C91B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */; };
 		39A9249A1B58530A003C1C19 /* LNPopupController.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A924991B5852ED003C1C19 /* LNPopupController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85B71B6304F5004FFC61 /* LNPopupItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		46ECC2AF1BF31025005CE96C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 46ECC2AE1BF31025005CE96C /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LNPopupControllerAssets.xcassets; sourceTree = SOURCE_ROOT; };
-		390B304A1B6AC98C009ACD03 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupContentView.h; sourceTree = "<group>"; };
 		39314A501B6AE7A400574D3C /* __MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = __MarqueeLabel.h; sourceTree = "<group>"; };
 		39314A511B6AE7A400574D3C /* __MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = __MarqueeLabel.m; sourceTree = "<group>"; };
@@ -57,6 +57,7 @@
 		394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+LNPopupSupportPrivate.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		39A924991B5852ED003C1C19 /* LNPopupController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupController.h; sourceTree = "<group>"; };
 		39DB52E51B5823330061C589 /* LNPopupController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LNPopupController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		46ECC2AE1BF31025005CE96C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +98,6 @@
 		39DB52DB1B5823330061C589 = {
 			isa = PBXGroup;
 			children = (
-				390B304A1B6AC98C009ACD03 /* Info.plist */,
 				39A924991B5852ED003C1C19 /* LNPopupController.h */,
 				39DB52E71B5823330061C589 /* LNPopupController */,
 				39DB52E61B5823330061C589 /* Products */,
@@ -122,6 +122,7 @@
 				394A85B71B6304F5004FFC61 /* LNPopupItem.h */,
 				3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */,
 				390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */,
+				46ECC2AE1BF31025005CE96C /* Info.plist */,
 			);
 			path = LNPopupController;
 			sourceTree = "<group>";
@@ -205,6 +206,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46ECC2AF1BF31025005CE96C /* Info.plist in Resources */,
 				390B30491B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
