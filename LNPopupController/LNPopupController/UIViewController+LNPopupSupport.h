@@ -102,7 +102,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 /**
  *  The popup bar managed by the system. (read-only)
  */
-@property (nonatomic, strong, readonly) LNPopupBar* popupBar;
+@property (nullable, nonatomic, strong, readonly) LNPopupBar* popupBar;
 
 /**
  *  Call this method to update the popup bar appearance (style, tint color, etc.) according to its docking view. You should call this after updating the docking view.
