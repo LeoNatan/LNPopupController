@@ -19,7 +19,7 @@ The contents of the popup bar is built dynamically using the popup item objects 
 
 Generally, it is recommended to present the popup bar on the outermost container controller. So if you have a view controller container in a navigation controller, which is in turn contained in a tab bar controller, it is recommended to present the popup bar on the tab bar controller.
 
-Check the demo projects for how to use the framework in various scenarios. It contains example in Swift and Objective C. **The demo project is only available for Xcode 7 and above, due to use of modern Swift syntax and Storyboard features. The framework is available for Xcode 6 as well. **
+Check the demo projects for how to use the framework in various scenarios. It contains example in Swift and Objective C.
 
 ###Features
 
@@ -39,7 +39,7 @@ Add the following to your Cartfile:
 
 ###Manual
 
-Drag the `LNPopupController.xcodeproj` project to your project, and add `LNNotificationsUI.framework` to **Embedded Binaries** in your project target's **General** tab. Xcode should sort everything else on its own.
+Drag the `LNPopupController.xcodeproj` project to your project, and add `LNPopupController.framework` to **Embedded Binaries** in your project target's **General** tab. Xcode should sort everything else on its own.
 
 ##Using the Framework
 
@@ -53,12 +53,6 @@ Import the module in your project:
 
 ```objective-c
 @import LNPopupController;
-```
-
-Alternatively, you can import the umbrella header:
-
-```objective-c
-#import <LNPopupController/LNPopupController.h>
 ```
 
 ###Popup Items
