@@ -29,7 +29,6 @@
 		394A85C91B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */; };
 		39A9249A1B58530A003C1C19 /* LNPopupController.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A924991B5852ED003C1C19 /* LNPopupController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85B71B6304F5004FFC61 /* LNPopupItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		46ECC2AF1BF31025005CE96C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 46ECC2AE1BF31025005CE96C /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -176,7 +175,7 @@
 		39DB52DC1B5823330061C589 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Leo Natan";
 				TargetAttributes = {
 					39DB52E41B5823330061C589 = {
@@ -206,7 +205,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				46ECC2AF1BF31025005CE96C /* Info.plist in Resources */,
 				390B30491B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
