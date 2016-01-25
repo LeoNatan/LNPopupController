@@ -121,7 +121,7 @@
 	_effectView.layer.mask = maskLayer;
 	
 	CGRect imageFrame = self.imageView.frame;
-	imageFrame.origin.y += 1;
+	imageFrame.origin.y += 0.5;
 	self.imageView.frame = imageFrame;
 }
 
