@@ -37,7 +37,7 @@ static NSString* const sTHed = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvbjo=";
 @end
 
 @interface UIViewController ()
-- (UIEdgeInsets)a:(UIViewController*)controller b:(BOOL*)absolute;
+- (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute;
 @end
 @interface UIViewController (LNPopupLayout) @end
 @implementation UIViewController (LNPopupLayout)
@@ -138,9 +138,9 @@ static NSString* const sTHed = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvbjo=";
 	[self _sCoOvIns:insets];
 }
 
-- (UIEdgeInsets)_ln_common_a:(UIViewController*)controller b:(BOOL*)absolute
+- (UIEdgeInsets)_ln_common_eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
 {
-	UIEdgeInsets insets = [self a:controller b:absolute];
+	UIEdgeInsets insets = [self eIFCVC:controller iAA:absolute];
 	
 	if(controller == self.popupContentViewController)
 	{
@@ -249,7 +249,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		NSString* selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:edInsBase64 options:0] encoding:NSUTF8StringEncoding];
 		
 		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(a:b:));
+		m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
 		method_exchangeImplementations(m1, m2);
 		
 		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:hBWTiEBase64 options:0] encoding:NSUTF8StringEncoding];
@@ -269,9 +269,9 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 
 #ifndef LNPopupControllerEnforceStrictClean
 
-- (UIEdgeInsets)a:(UIViewController*)controller b:(BOOL*)absolute
+- (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
 {
-	UIEdgeInsets rv = [self _ln_common_a:controller b:absolute];
+	UIEdgeInsets rv = [self _ln_common_eIFCVC:controller iAA:absolute];
 	
 	if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden && [[self valueForKey:@"isBarHidden"] isEqualToNumber:@YES])
 	{
@@ -386,7 +386,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		NSString* selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:edInsBase64 options:0] encoding:NSUTF8StringEncoding];
 		
 		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(a:b:));
+		m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
 		method_exchangeImplementations(m1, m2);
 		
 		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:sTHed options:0] encoding:NSUTF8StringEncoding];
@@ -436,9 +436,9 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
-- (UIEdgeInsets)a:(UIViewController*)controller b:(BOOL*)absolute
+- (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
 {
-	UIEdgeInsets rv = [self _ln_common_a:controller b:absolute];
+	UIEdgeInsets rv = [self _ln_common_eIFCVC:controller iAA:absolute];
 	
 	if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden && self.isToolbarHidden)
 	{
