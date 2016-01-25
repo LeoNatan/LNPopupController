@@ -112,7 +112,7 @@
 		39277A061B58228000293F95 /* LNPopupControllerExample */ = {
 			isa = PBXGroup;
 			children = (
-				397C560B1B74D47D007A67F0 /* Demo Scene (Objective C) */,
+				397C560B1B74D47D007A67F0 /* Demo Scene (Objective-C) */,
 				397C560C1B74D747007A67F0 /* Demo Music Scene (Swift) */,
 				39837A221B756F9B004D2DA9 /* Utils */,
 				39277A071B58228000293F95 /* Supporting Files */,
@@ -150,14 +150,14 @@
 			name = "Swift Bridging Header";
 			sourceTree = "<group>";
 		};
-		397C560B1B74D47D007A67F0 /* Demo Scene (Objective C) */ = {
+		397C560B1B74D47D007A67F0 /* Demo Scene (Objective-C) */ = {
 			isa = PBXGroup;
 			children = (
 				39277A131B58228000293F95 /* Main.storyboard */,
 				39277A0D1B58228000293F95 /* FirstViewController.h */,
 				3988E3571B59C3000039C09B /* FirstViewController.m */,
 			);
-			name = "Demo Scene (Objective C)";
+			name = "Demo Scene (Objective-C)";
 			sourceTree = "<group>";
 		};
 		397C560C1B74D747007A67F0 /* Demo Music Scene (Swift) */ = {
@@ -410,6 +410,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -426,6 +427,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
