@@ -213,6 +213,10 @@ static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 	CGRect popupCloseButtonFrame = self.popupContentView.popupCloseButton.frame;
 	popupCloseButtonFrame.origin.x = 12;
 	popupCloseButtonFrame.origin.y = 12 + ([UIApplication sharedApplication].isStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
+	if([_currentContentController isKindOfClass:[UINavigationController class]] && [(UINavigationController*)_currentContentController isNavigationBarHidden] == NO)
+	{
+		popupCloseButtonFrame.origin.y += CGRectGetHeight([(UINavigationController*)_currentContentController navigationBar].bounds);
+	}
 	
 	if(! CGRectEqualToRect(self.popupContentView.popupCloseButton.frame, popupCloseButtonFrame))
 	{

@@ -121,7 +121,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 @property (nonatomic, readonly) LNPopupPresentationState popupPresentationState;
 
 /**
- *  The content view controller of the receiver. If no popopover presentation, the property will be nil. (read-only)
+ *  The content view controller of the receiver. If there is no popover presentation, the property will be nil. (read-only)
  */
 @property (nullable, nonatomic, strong, readonly) __kindof UIViewController* popupContentViewController;
 
