@@ -13,6 +13,6 @@
 	<key>LSRequiresIPhoneOS</key>
     <true/>
     <key>CFBundlePackageType</key>
-    <string>BNDL</string>
+    <string>FMWK</string>
 </dict>
 </plist>
