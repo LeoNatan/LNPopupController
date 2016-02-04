@@ -51,6 +51,10 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 		Method m2 = class_getInstanceMethod([self class], @selector(_ln_popup_viewDidLayoutSubviews));
 		method_exchangeImplementations(m1, m2);
 		
+		m1 = class_getInstanceMethod([self class], @selector(setNeedsStatusBarAppearanceUpdate));
+		m2 = class_getInstanceMethod([self class], @selector(_ln_setNeedsStatusBarAppearanceUpdate));
+		method_exchangeImplementations(m1, m2);
+		
 		m1 = class_getInstanceMethod([self class], @selector(childViewControllerForStatusBarStyle));
 		m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarStyle));
 		method_exchangeImplementations(m1, m2);
@@ -80,6 +84,18 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 		method_exchangeImplementations(m1, m2);
 #endif
 	});
+}
+
+- (void)_ln_setNeedsStatusBarAppearanceUpdate
+{
+	if(self.popupPresentationContainerViewController)
+	{
+		[self.popupPresentationContainerViewController setNeedsStatusBarAppearanceUpdate];
+	}
+	else
+	{
+		[self _ln_setNeedsStatusBarAppearanceUpdate];
+	}
 }
 
 - (void)_ln_viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
