@@ -11,10 +11,10 @@
 #import <QuartzCore/QuartzCore.h>
 
 // Notification strings
-NSString *const kMarqueeLabelControllerRestartNotification = @"MarqueeLabelViewControllerRestart";
-NSString *const kMarqueeLabelShouldLabelizeNotification = @"MarqueeLabelShouldLabelizeNotification";
-NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAnimateNotification";
-NSString *const kMarqueeLabelAnimationCompletionBlock = @"MarqueeLabelAnimationCompletionBlock";
+NSString *const kLNPCMarqueeLabelControllerRestartNotification = @"MarqueeLabelViewControllerRestart";
+NSString *const kLNPCMarqueeLabelShouldLabelizeNotification = @"MarqueeLabelShouldLabelizeNotification";
+NSString *const kLNPCMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAnimateNotification";
+NSString *const kLNPCMarqueeLabelAnimationCompletionBlock = @"MarqueeLabelAnimationCompletionBlock";
 
 // Animation completion block
 typedef void(^MLAnimationCompletionBlock)(BOOL finished);
@@ -46,7 +46,7 @@ typedef void(^MLAnimationCompletionBlock)(BOOL finished);
 
 // Support
 @property (nonatomic, strong) NSArray *gradientColors;
-CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
+CGPoint LNPCMLOffsetCGPoint(CGPoint point, CGFloat offset);
 
 @end
 
@@ -57,7 +57,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 
 + (void)restartLabelsOfController:(UIViewController *)controller {
     [__MarqueeLabel notifyController:controller
-                       withMessage:kMarqueeLabelControllerRestartNotification];
+                       withMessage:kLNPCMarqueeLabelControllerRestartNotification];
 }
 
 + (void)controllerViewWillAppear:(UIViewController *)controller {
@@ -74,12 +74,12 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 
 + (void)controllerLabelsShouldLabelize:(UIViewController *)controller {
     [__MarqueeLabel notifyController:controller
-                       withMessage:kMarqueeLabelShouldLabelizeNotification];
+                       withMessage:kLNPCMarqueeLabelShouldLabelizeNotification];
 }
 
 + (void)controllerLabelsShouldAnimate:(UIViewController *)controller {
     [__MarqueeLabel notifyController:controller
-                       withMessage:kMarqueeLabelShouldAnimateNotification];
+                       withMessage:kLNPCMarqueeLabelShouldAnimateNotification];
 }
 
 + (void)notifyController:(UIViewController *)controller withMessage:(NSString *)message
@@ -226,9 +226,9 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     // Add notification observers
     // Custom class notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewControllerShouldRestart:) name:kMarqueeLabelControllerRestartNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldLabelize:) name:kMarqueeLabelShouldLabelizeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldAnimate:) name:kMarqueeLabelShouldAnimateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewControllerShouldRestart:) name:kLNPCMarqueeLabelControllerRestartNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldLabelize:) name:kLNPCMarqueeLabelShouldLabelizeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldAnimate:) name:kLNPCMarqueeLabelShouldAnimateNotification object:nil];
     
     // UINavigationController view controller change notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observedViewControllerChange:) name:@"UINavigationControllerDidShowViewControllerNotification" object:nil];
@@ -573,7 +573,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     // Create animation for position
     CGPoint homeOrigin = self.homeLabelFrame.origin;
-    CGPoint awayOrigin = MLOffsetCGPoint(self.homeLabelFrame.origin, self.awayOffset);
+    CGPoint awayOrigin = LNPCMLOffsetCGPoint(self.homeLabelFrame.origin, self.awayOffset);
     NSArray *values = @[[NSValue valueWithCGPoint:homeOrigin],      // Initial location, home
                         [NSValue valueWithCGPoint:homeOrigin],      // Initial delay, at home
                         [NSValue valueWithCGPoint:awayOrigin],      // Animation to away
@@ -585,7 +585,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
                                                               interval:interval
                                                                  delay:delayAmount];
     // Add completion block
-    [awayAnim setValue:completionBlock forKey:kMarqueeLabelAnimationCompletionBlock];
+    [awayAnim setValue:completionBlock forKey:kLNPCMarqueeLabelAnimationCompletionBlock];
     
     // Add animation
     [self.subLabel.layer addAnimation:awayAnim forKey:@"position"];
@@ -641,7 +641,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     // Create animation for sublabel positions
     CGPoint homeOrigin = self.homeLabelFrame.origin;
-    CGPoint awayOrigin = MLOffsetCGPoint(self.homeLabelFrame.origin, self.awayOffset);
+    CGPoint awayOrigin = LNPCMLOffsetCGPoint(self.homeLabelFrame.origin, self.awayOffset);
     NSArray *values = @[[NSValue valueWithCGPoint:homeOrigin],      // Initial location, home
                         [NSValue valueWithCGPoint:homeOrigin],      // Initial delay, at home
                         [NSValue valueWithCGPoint:awayOrigin]];     // Animation to home
@@ -651,7 +651,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
                                                               interval:interval
                                                                  delay:delayAmount];
     // Attach completion block
-    [awayAnim setValue:completionBlock forKey:kMarqueeLabelAnimationCompletionBlock];
+    [awayAnim setValue:completionBlock forKey:kLNPCMarqueeLabelAnimationCompletionBlock];
     
     // Add animation
     [self.subLabel.layer addAnimation:awayAnim forKey:@"position"];
@@ -950,7 +950,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 }
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    MLAnimationCompletionBlock completionBlock = [anim valueForKey:kMarqueeLabelAnimationCompletionBlock];
+    MLAnimationCompletionBlock completionBlock = [anim valueForKey:kLNPCMarqueeLabelAnimationCompletionBlock];
     if (completionBlock) {
         completionBlock(flag);
     }
@@ -1354,7 +1354,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 
 #pragma mark - Helpers
 
-CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
+CGPoint LNPCMLOffsetCGPoint(CGPoint point, CGFloat offset) {
     return CGPointMake(point.x + offset, point.y);
 }
 
