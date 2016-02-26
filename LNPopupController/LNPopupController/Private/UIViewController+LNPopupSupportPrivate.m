@@ -154,7 +154,7 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 {
 	if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden && ![self isKindOfClass:[UITabBarController class]] && ![self isKindOfClass:[UINavigationController class]])
 	{
-		insets.bottom += self._ln_popupController_nocreate.popupBar.frame.size.height;
+		insets.bottom += self.defaultFrameForBottomDockingView.size.height + self._ln_popupController_nocreate.popupBar.frame.size.height;
 	}
 	
 	[self _sCoOvIns:insets];

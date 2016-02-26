@@ -181,12 +181,14 @@ static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 
 - (CGRect)_frameForOpenPopupBar
 {
-	return CGRectMake([_containerController defaultFrameForBottomDockingView].origin.x, - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
+	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView];
+	return CGRectMake(defaultFrame.origin.x, - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
 }
 
 - (CGRect)_frameForClosedPopupBar
 {
-	return CGRectMake([_containerController defaultFrameForBottomDockingView].origin.x, [_containerController defaultFrameForBottomDockingView].origin.y - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
+	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView];
+	return CGRectMake(defaultFrame.origin.x, defaultFrame.origin.y - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
 }
 
 - (void)_repositionPopupContent
@@ -218,7 +220,7 @@ static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 		popupCloseButtonFrame.origin.y += CGRectGetHeight([(UINavigationController*)_currentContentController navigationBar].bounds);
 	}
 	
-	if(! CGRectEqualToRect(self.popupContentView.popupCloseButton.frame, popupCloseButtonFrame))
+	if(!CGRectEqualToRect(self.popupContentView.popupCloseButton.frame, popupCloseButtonFrame))
 	{
 		[UIView animateWithDuration:0.2 animations:^{
 			self.popupContentView.popupCloseButton.frame = popupCloseButtonFrame;
@@ -551,9 +553,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_movePopupBarAndContentToBottomBarSuperview
 {
+	NSAssert(_bottomBar.superview != nil, @"Bottom docking view must have a superview before presenting popup.");
 	[_popupBar removeFromSuperview];
 	[_bottomBar.superview insertSubview:_popupBar belowSubview:_bottomBar];
-	
+	[_popupBar.superview bringSubviewToFront:_popupBar];
+	[_popupBar.superview bringSubviewToFront:_bottomBar];
 	[_popupBar.superview insertSubview:self.popupContentView belowSubview:_popupBar];
 }
 
@@ -628,6 +632,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			CGRect barFrame = _popupBar.frame;
 			barFrame.size.height = LNPopupBarHeight;
 			_popupBar.frame = barFrame;
+			_popupBar.frame = [self _frameForClosedPopupBar];
 			
 			_LNPopupSupportFixInsetsForViewController(_containerController, YES);
 			
