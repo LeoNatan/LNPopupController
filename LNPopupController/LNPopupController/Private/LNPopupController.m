@@ -644,7 +644,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			}
 		} completion:^(BOOL finished)
 		 {
-			if(completionBlock != nil)
+			if(completionBlock != nil && !open)
 			{
 				completionBlock();
 			}
@@ -658,8 +658,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		{
 			[self openPopupAnimated:animated completion:completionBlock];
 		}
-		
-		if(completionBlock != nil)
+		else if(completionBlock != nil)
 		{
 			completionBlock();
 		}
