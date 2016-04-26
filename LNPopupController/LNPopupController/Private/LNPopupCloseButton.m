@@ -86,7 +86,8 @@
 	[self _setHighlighted:NO animated:YES];
 }
 
-- (void)_setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+- (void)_setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
 	dispatch_block_t alphaBlock = ^{
 		_highlightView.alpha = highlighted ? 1.0 : 0.0;
 		_highlightView.alpha = highlighted ? 1.0 : 0.0;

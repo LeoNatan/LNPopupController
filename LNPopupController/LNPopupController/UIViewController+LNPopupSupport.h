@@ -156,7 +156,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 - (__kindof UIView*)bottomDockingViewForPopup;
 
 /**
- *  Return the default frame for the docking view, when the popup is hidden or closed state.
+ *  Return the default frame for the docking view, when the popup is in hidden or closed state.
  *
  *  A default implementation is provided for UIViewController, UINavigationController and UITabBarController.
  *
