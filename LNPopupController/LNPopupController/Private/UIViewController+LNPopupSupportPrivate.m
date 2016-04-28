@@ -433,6 +433,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	});
 }
 
+#ifndef LNPopupControllerEnforceStrictClean
 //Support for `hidesBottomBarWhenPushed`.
 - (void)_sTH:(BOOL)arg1 e:(unsigned int)arg2 d:(double)arg3;
 {
@@ -469,7 +470,6 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	}];
 }
 
-#ifndef LNPopupControllerEnforceStrictClean
 - (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
 {
 	UIEdgeInsets rv = [self _ln_common_eIFCVC:controller iAA:absolute];
@@ -491,6 +491,37 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 - (nullable UIViewController *)_ln_childViewControllerForStatusBarStyle
 {
 	return [self _ln_common_childViewControllerForStatusBarStyle];
+}
+
+@end
+
+@interface UISplitViewController (LNPopupSupportPrivate) @end
+@implementation UISplitViewController (LNPopupSupportPrivate)
+
++ (void)load
+{
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		Method m1 = class_getInstanceMethod([self class], @selector(viewDidLayoutSubviews));
+		Method m2 = class_getInstanceMethod([self class], @selector(_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple));
+		method_exchangeImplementations(m1, m2);
+	});
+}
+
+- (void)_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple
+{
+	[self _ln_popup_viewDidLayoutSubviews_SplitViewNastyApple];
+	
+	if(self.bottomDockingViewForPopup_nocreate != nil)
+	{
+		//Apple forgot to call the super implementation of viewDidLayoutSubviews, but we need that to layout the popup bar correctly.
+		struct objc_super superInfo = {
+			self,
+			[UIViewController class]
+		};
+		void (*super_call)(struct objc_super*, SEL) = (void (*)(struct objc_super*, SEL))objc_msgSendSuper;
+		super_call(&superInfo, @selector(viewDidLayoutSubviews));
+	}
 }
 
 @end

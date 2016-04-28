@@ -112,7 +112,7 @@
 	
 	_effectView.frame = self.bounds;
 	CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-	maskLayer.rasterizationScale = 2.0 * [UIScreen mainScreen].nativeScale;
+	maskLayer.rasterizationScale = [UIScreen mainScreen].nativeScale;
 	maskLayer.shouldRasterize = YES;
 	
 	CGPathRef path = CGPathCreateWithRoundedRect(self.bounds, minSideSize / 2, minSideSize / 2, NULL);

@@ -298,14 +298,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			contentController.view.frame = _containerController.view.bounds;
 			contentController.view.clipsToBounds = NO;
 			contentController.view.autoresizingMask = UIViewAutoresizingNone;
+			
 			if(CGColorGetAlpha(contentController.view.backgroundColor.CGColor) < 1.0)
 			{
 				//Support for iOS8, where this property was exposed as readonly.
 				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:_popupBar.barStyle == UIBarStyleDefault ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleDark] forKey:@"effect"];
+				self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.2;
 			}
 			else
 			{
 				[self.popupContentView setValue:nil forKey:@"effect"];
+				self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.1;
 			}
 			
 			[self.popupContentView.contentView addSubview:contentController.view];
@@ -555,7 +558,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_movePopupBarAndContentToBottomBarSuperview
 {
-	NSAssert(_bottomBar.superview != nil, @"Bottom docking view must have a superview before presenting popup.");
+//	NSAssert(_bottomBar.superview != nil, @"Bottom docking view must have a superview before presenting popup.");
 	[_popupBar removeFromSuperview];
 	[_bottomBar.superview insertSubview:_popupBar belowSubview:_bottomBar];
 	[_popupBar.superview bringSubviewToFront:_popupBar];
@@ -577,7 +580,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupContentView.contentView.preservesSuperviewLayoutMargins = YES;
 	
 	_popupContentView.popupCloseButton = [[LNPopupCloseButton alloc] initWithFrame: CGRectMake(0, 0, 0, 0)];
-	_popupContentView.popupCloseButton.clipsToBounds = YES;
 	[_popupContentView.popupCloseButton addTarget:self action:@selector(_closePopupContent) forControlEvents:UIControlEventTouchUpInside];
 	[_popupContentView.contentView addSubview:self.popupContentView.popupCloseButton];
 	

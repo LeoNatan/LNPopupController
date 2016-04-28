@@ -32,7 +32,7 @@ class DemoMusicPlayerController: UIViewController {
 		}
 		
 		
-		timer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: "_timerTicked:", userInfo: nil, repeats: true)
+		timer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 	}
 	
 	var songTitle: String = "" {

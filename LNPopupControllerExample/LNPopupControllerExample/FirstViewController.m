@@ -11,6 +11,19 @@
 #import "LoremIpsum.h"
 #import "RandomColors.h"
 
+@interface WhatsUpSplitViewController : UISplitViewController
+
+@end
+
+@implementation WhatsUpSplitViewController
+
+- (void)viewDidLayoutSubviews
+{
+	[super viewDidLayoutSubviews];
+}
+
+@end
+
 @interface DemoGalleryController : UITableViewController @end
 @implementation DemoGalleryController
 
@@ -77,19 +90,23 @@
 @implementation FirstViewController
 {
 	__weak IBOutlet UIButton *_galleryButton;
-	
+	__weak IBOutlet UIButton *_nextButton;
 }
 
-#warning Enable this code to demonstrate popup bar customization
+// TODO: Uncomment this code to demonstrate popup bar customization
+
 //+ (void)load
 //{
-//	NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-//	paragraphStyle.alignment = NSTextAlignmentRight;
-//	
-//	[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setTitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
-//	[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setSubtitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]}];
-//	[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setBarStyle:UIBarStyleBlack];
-//	[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setTintColor:[UIColor yellowColor]];
+//	static dispatch_once_t onceToken;
+//	dispatch_once(&onceToken, ^{
+//		NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+//		paragraphStyle.alignment = NSTextAlignmentRight;
+//		
+//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setTitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
+//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setSubtitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]}];
+//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setBarStyle:UIBarStyleBlack];
+//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setTintColor:[UIColor yellowColor]];
+//	});
 //}
 
 - (void)viewDidLoad
@@ -98,7 +115,8 @@
 	
 	self.view.backgroundColor = LNRandomLightColor();
 
-#warning Enable this code to demonstrate disabling the popup close button.
+// TODO: Uncomment this code to demonstrate disabling the popup close button.
+	
 //	self.navigationController.popupContentView.popupCloseButton.hidden = YES;
 }
 
@@ -108,7 +126,11 @@
 	
 	//Ugly hack to fix tab bar tint color.
 	self.tabBarController.view.tintColor = [UIColor redColor];
-	_galleryButton.hidden = self.parentViewController != nil;
+	//Ugly hack to fix split view controller tint color.
+	self.splitViewController.view.tintColor = [UIColor redColor];
+	
+	_galleryButton.hidden = self.parentViewController != nil && [self.parentViewController isKindOfClass:[UISplitViewController class]] == NO;
+	_nextButton.hidden = self.splitViewController != nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -133,14 +155,29 @@
 
 - (IBAction)_presentBar:(id)sender
 {
-	UIViewController* targetVC = self.tabBarController;
+	//All this logic is just so I can use the same controllers over and over in all examples. :-)
+	
+	if(sender == nil &&
+	   self.navigationController == nil &&
+	   self.splitViewController != nil &&
+	   self != self.splitViewController.viewControllers.firstObject)
+	{
+		return;
+	}
+	
+	UIViewController* targetVC = self.navigationController == nil ? self.splitViewController : nil;
+	
 	if(targetVC == nil)
 	{
-		targetVC = self.navigationController;
-		
+		targetVC = self.tabBarController;
 		if(targetVC == nil)
 		{
-			targetVC = self;
+			targetVC = self.navigationController;
+			
+			if(targetVC == nil)
+			{
+				targetVC = self;
+			}
 		}
 	}
 	
