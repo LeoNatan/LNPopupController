@@ -13,6 +13,9 @@ static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
 @implementation LNPopupItem
 
+@synthesize accessibilityProgressLabel = _accessibilityProgressLabel;
+@synthesize accessibilityProgressValue = _accessibilityProgressValue;
+
 - (instancetype)init
 {
 	self = [super init];
@@ -24,6 +27,10 @@ static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(progress)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(leftBarButtonItems)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(rightBarButtonItems)) options:0 context:_LNPopupItemObservationContext];
+		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityLabel)) options:0 context:_LNPopupItemObservationContext];
+		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityHint)) options:0 context:_LNPopupItemObservationContext];
+		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityProgressLabel)) options:0 context:_LNPopupItemObservationContext];
+		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityProgressValue)) options:0 context:_LNPopupItemObservationContext];
 	}
 	
 	return self;
@@ -36,6 +43,10 @@ static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(progress)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(leftBarButtonItems)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(rightBarButtonItems)) context:_LNPopupItemObservationContext];
+	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityLabel)) context:_LNPopupItemObservationContext];
+	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityHint)) context:_LNPopupItemObservationContext];
+	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityProgressLabel)) context:_LNPopupItemObservationContext];
+	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityProgressValue)) context:_LNPopupItemObservationContext];
 }
 
 - (void)observeValueForKeyPath:(nullable NSString *)keyPath ofObject:(nullable id)object change:(nullable NSDictionary<NSString *, id> *)change context:(nullable void *)context

@@ -48,19 +48,30 @@
 
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection
 {
+	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"play"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
+	UIBarButtonItem* more = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"action"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+	more.accessibilityLabel = NSLocalizedString(@"More", @"");
+	
 	if(collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 	{
-		self.popupItem.leftBarButtonItems = @[ [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"prev"] style:UIBarButtonItemStylePlain target:nil action:NULL],
-											   [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"play"] style:UIBarButtonItemStylePlain target:nil action:NULL],
-											   [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nextFwd"] style:UIBarButtonItemStylePlain target:nil action:NULL]];
+		UIBarButtonItem* prev = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"prev"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+		prev.accessibilityLabel = NSLocalizedString(@"Previous Track", @"");
+		UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nextFwd"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+		next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
 		
-		self.popupItem.rightBarButtonItems = @[ [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"next"] style:UIBarButtonItemStylePlain target:nil action:NULL],
-												[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"action"] style:UIBarButtonItemStylePlain target:nil action:NULL]];
+		self.popupItem.leftBarButtonItems = @[ prev, play, next ];
+		
+		UIBarButtonItem* upnext = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"next"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+		upnext.accessibilityLabel = NSLocalizedString(@"Up Next", @"");
+		upnext.accessibilityHint = NSLocalizedString(@"Double Tap to Show Up Next List", @"");
+		
+		self.popupItem.rightBarButtonItems = @[ upnext, more ];
 	}
 	else
 	{
-		self.popupItem.leftBarButtonItems = @[ [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"play"] style:UIBarButtonItemStylePlain target:nil action:NULL] ];
-		self.popupItem.rightBarButtonItems = @[ [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"action"] style:UIBarButtonItemStylePlain target:nil action:NULL] ];
+		self.popupItem.leftBarButtonItems = @[ play ];
+		self.popupItem.rightBarButtonItems = @[ more ];
 	}
 }
 
@@ -191,6 +202,12 @@
 	demoVC.popupItem.title = [LoremIpsum sentence];
 	demoVC.popupItem.subtitle = [LoremIpsum sentence];
 	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
+	
+	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
+	demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");
+	
+	targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
+	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
 }

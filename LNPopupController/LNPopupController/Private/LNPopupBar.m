@@ -53,13 +53,6 @@ const NSInteger LNBarStyleInherit = -1;
 		_toolbar.layer.masksToBounds = YES;
 		[self addSubview:_toolbar];
 		
-		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-		_progressView.translatesAutoresizingMaskIntoConstraints = NO;
-		_progressView.trackImage = [UIImage alloc];
-		[_toolbar addSubview:_progressView];
-		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(1)]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
-		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_progressView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
-		
 		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_highlightView.userInteractionEnabled = NO;
@@ -70,10 +63,23 @@ const NSInteger LNBarStyleInherit = -1;
 		_titlesView = [[UIView alloc] initWithFrame:fullFrame];
 		_titlesView.userInteractionEnabled = NO;
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
+		
+		_titlesView.accessibilityTraits = UIAccessibilityTraitButton;
+		_titlesView.isAccessibilityElement = YES;
+		
 		[self _layoutTitles];
 		[self.toolbar addSubview:_titlesView];
 		
+		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
+		_progressView.translatesAutoresizingMaskIntoConstraints = NO;
+		_progressView.trackImage = [UIImage alloc];
+		[_toolbar addSubview:_progressView];
+		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(1)]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
+		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_progressView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
+		
 		_needsLabelsLayout = YES;
+		
+		self.accessibilityLabel = @"Popup Asshole";
 	}
 	
 	return self;
@@ -224,6 +230,34 @@ const NSInteger LNBarStyleInherit = -1;
 	[self _setNeedsTitleLayout];
 }
 
+- (void)setAccessibilityCenterHint:(NSString *)accessibilityCenterHint
+{
+	_accessibilityCenterHint = accessibilityCenterHint;
+	
+	[self _setNeedsAccessibilityUpdate];
+}
+
+- (void)setAccessibilityCenterLabel:(NSString *)accessibilityCenterLabel
+{
+	_accessibilityCenterLabel = accessibilityCenterLabel;
+	
+	[self _setNeedsAccessibilityUpdate];
+}
+
+- (void)setAccessibilityProgressLabel:(NSString *)accessibilityProgressLabel
+{
+	_accessibilityProgressLabel = accessibilityProgressLabel;
+	
+	_progressView.accessibilityLabel = accessibilityProgressLabel;
+}
+
+- (void)setAccessibilityProgressValue:(NSString *)accessibilityProgressValue
+{
+	_accessibilityProgressValue = accessibilityProgressValue;
+	
+	_progressView.accessibilityValue = accessibilityProgressValue;
+}
+
 - (__MarqueeLabel*)_newMarqueeLabel
 {
 	__MarqueeLabel* rv = [[__MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
@@ -313,21 +347,6 @@ const NSInteger LNBarStyleInherit = -1;
 			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
 			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
 			
-			if(_needsLabelsLayout == YES)
-			{
-//				NSTimeInterval titleDuration = [_titleLabel animationDuration];
-//				NSTimeInterval subtitleDuration = [_subtitleLabel animationDuration];
-//				
-//				if(_titleLabel.animationDuration < _subtitleLabel.animationDuration)
-//				{
-//					_titleLabel.animationDelayAfter = -20; //(subtitleDuration - titleDuration);
-//				}
-//				else
-//				{
-//					_subtitleLabel.animationDelayAfter = - 20;//(subtitleDuration - titleDuration);
-//				}
-			}
-			
 			_subtitleLabel.frame = subtitleLabelFrame;
 			_subtitleLabel.hidden = NO;
 			
@@ -349,10 +368,43 @@ const NSInteger LNBarStyleInherit = -1;
 			}
 		}
 		
+		[self _setNeedsAccessibilityUpdate];
+		
 		_titleLabel.frame = titleLabelFrame;
 		
 		_needsLabelsLayout = NO;
 	});
+}
+
+- (void)_setNeedsAccessibilityUpdate
+{
+	if(_accessibilityCenterLabel.length > 0)
+	{
+		_titlesView.accessibilityLabel = _accessibilityCenterLabel;
+	}
+	else
+	{
+		NSMutableString* accessibilityLabel = [NSMutableString new];
+		if(_title.length > 0)
+		{
+			[accessibilityLabel appendString:_title];
+			[accessibilityLabel appendString:@"\n"];
+		}
+		if(_subtitle.length > 0)
+		{
+			[accessibilityLabel appendString:_subtitle];
+		}
+		_titlesView.accessibilityLabel = accessibilityLabel;
+	}
+	
+	if(_accessibilityCenterHint.length > 0)
+	{
+		_titlesView.accessibilityHint = _accessibilityCenterHint;
+	}
+	else
+	{
+		_titlesView.accessibilityHint = NSLocalizedString(@"Double tap to open.", @"");
+	}
 }
 
 - (void)_setNeedsTitleLayout

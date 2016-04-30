@@ -345,10 +345,16 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			 [_popupBar addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 			 
 			 [_popupBar _setTitleViewMarqueesPaused:NO];
+			 
+			 _popupContentView.accessibilityViewIsModal = NO;
+			 UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
 		 }
 		 else if(state == LNPopupPresentationStateOpen)
 		 {
 			 [_popupBar _setTitleViewMarqueesPaused:YES];
+			 
+			 _popupContentView.accessibilityViewIsModal = YES;
+			 UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _popupContentView.popupCloseButton);
 		 }
 		 
 		 _popupControllerState = state;
@@ -480,6 +486,26 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}];
 }
 
+- (void)_reconfigure_accessibilityLavel
+{
+	_popupBar.accessibilityCenterLabel = _currentPopupItem.accessibilityLabel;
+}
+
+- (void)_reconfigure_accessibilityHint
+{
+	_popupBar.accessibilityCenterHint = _currentPopupItem.accessibilityHint;
+}
+
+- (void)_reconfigure_accessibilityProgressLabel
+{
+	_popupBar.accessibilityProgressLabel = _currentPopupItem.accessibilityProgressLabel;
+}
+
+- (void)_reconfigure_accessibilityProgressValue
+{
+	_popupBar.accessibilityProgressValue = _currentPopupItem.accessibilityProgressValue;
+}
+
 - (void)_reconfigureBarItems
 {
 	[_popupBar _delayBarButtonLayout];
@@ -534,9 +560,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_currentContentController endAppearanceTransition];
 		
 		_currentContentController = newContentController;
+		
+		if(_popupControllerState == LNPopupPresentationStateOpen)
+		{
+			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
+		}
 	}
 	
-	NSArray<NSString*>* keys = @[@"title", @"subtitle", @"progress", @"leftBarButtonItems"];
+	NSArray<NSString*>* keys = @[@"title", @"subtitle", @"progress", @"leftBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
 	[keys enumerateObjectsUsingBlock:^(NSString * __nonnull key, NSUInteger idx, BOOL * __nonnull stop) {
 		[self _popupItem:_currentPopupItem didChangeValueForKey:key];
 	}];
