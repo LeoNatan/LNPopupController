@@ -278,14 +278,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_transitionToState:(LNPopupPresentationState)state animated:(BOOL)animated completion:(void(^)())completion userOriginatedTransition:(BOOL)userOriginatedTransition
 {
-	if(state == _popupControllerState)
-	{
-		return;
-	}
-	
 	if(userOriginatedTransition == YES && _popupControllerState == LNPopupPresentationStateTransitioning)
 	{
 		NSLog(@"The popup controller is already in transition. Will ignore this transition request.");
+		return;
+	}
+	
+	if(state == _popupControllerState)
+	{
 		return;
 	}
 	
@@ -386,7 +386,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	switch (tgr.state) {
 		case UIGestureRecognizerStateEnded:
 		{
-			[self _transitionToState:LNPopupPresentationStateOpen animated:YES completion:nil userOriginatedTransition:NO];
+			[self _transitionToState:LNPopupPresentationStateTransitioning animated:NO completion:^{
+				[_containerController.view setNeedsLayout];
+				[_containerController.view layoutIfNeeded];
+				[self _transitionToState:LNPopupPresentationStateOpen animated:YES completion:nil userOriginatedTransition:NO];
+			} userOriginatedTransition:NO];
 		}	break;
 		default:
 			break;
@@ -702,7 +706,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)())completionBlock
 {
-	[self _transitionToState:LNPopupPresentationStateOpen animated:animated completion:completionBlock userOriginatedTransition:YES];
+	[self _transitionToState:LNPopupPresentationStateTransitioning animated:NO completion:^{
+		[_containerController.view setNeedsLayout];
+		[_containerController.view layoutIfNeeded];
+		[self _transitionToState:LNPopupPresentationStateOpen animated:animated completion:completionBlock userOriginatedTransition:NO];
+	} userOriginatedTransition:YES];
 }
 
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)())completionBlock
