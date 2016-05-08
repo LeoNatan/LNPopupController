@@ -182,13 +182,13 @@ static const CGFloat        LNPopupBarGestureSnapOffset = 40;
 
 - (CGRect)_frameForOpenPopupBar
 {
-	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView];
+	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 	return CGRectMake(defaultFrame.origin.x, - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
 }
 
 - (CGRect)_frameForClosedPopupBar
 {
-	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView];
+	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 	return CGRectMake(defaultFrame.origin.x, defaultFrame.origin.y - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
 }
 
@@ -264,7 +264,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		targetFrame = [self _frameForClosedPopupBar];
 	}
 	
-	_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView];
+	_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 	
 	_popupBar.frame = targetFrame;
 	
@@ -327,14 +327,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupControllerTargetState = state;
 	
 	[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent animations:^
-	{
-		if(state == LNPopupPresentationStateClosed)
-		{
-			[contentController beginAppearanceTransition:NO animated:YES];
-		}
-		
-		[self _setContentToState:state];
-	} completion:^(BOOL finished)
+	 {
+		 if(state == LNPopupPresentationStateClosed)
+		 {
+			 [contentController beginAppearanceTransition:NO animated:YES];
+		 }
+		 
+		 [self _setContentToState:state];
+	 } completion:^(BOOL finished)
 	 {
 		 if(state == LNPopupPresentationStateClosed)
 		 {
@@ -417,7 +417,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			[self _transitionToState:LNPopupPresentationStateTransitioning animated:YES completion:nil userOriginatedTransition:NO];
 			
-			_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView];
+			_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 			_cachedOpenPopupFrame = [self _frameForOpenPopupBar];
 			
 		}	break;
@@ -439,7 +439,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				
 				[_containerController setNeedsStatusBarAppearanceUpdate];
 			}
- 			
+			
 		}	break;
 		case UIGestureRecognizerStateCancelled:
 		case UIGestureRecognizerStateEnded:
@@ -447,8 +447,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			BOOL panThreshold = CACurrentMediaTime() - _lastSeenMovement <= LNPopupBarGesturePanThreshold;
 			BOOL heightTreshold = [self _percentFromPopupBar] > LNPopupBarGestureHeightPercentThreshold;
 			BOOL isPanUp = [pgr velocityInView:_containerController.view].y < 0;
-            BOOL hasPassedOffset = [pgr translationInView:_popupBar.superview].y <= LNPopupBarGestureSnapOffset;
-            
+			BOOL hasPassedOffset = [pgr translationInView:_popupBar.superview].y <= LNPopupBarGestureSnapOffset;
+			
 			if((panThreshold || heightTreshold) && (isPanUp || hasPassedOffset))
 			{
 				[self _transitionToState:LNPopupPresentationStateOpen animated:YES completion:nil userOriginatedTransition:NO];
@@ -593,7 +593,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_movePopupBarAndContentToBottomBarSuperview
 {
-//	NSAssert(_bottomBar.superview != nil, @"Bottom docking view must have a superview before presenting popup.");
+	//	NSAssert(_bottomBar.superview != nil, @"Bottom docking view must have a superview before presenting popup.");
 	[_popupBar removeFromSuperview];
 	[_bottomBar.superview insertSubview:_popupBar belowSubview:_bottomBar];
 	[_popupBar.superview bringSubviewToFront:_popupBar];
@@ -639,7 +639,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		_popupControllerState = LNPopupPresentationStateClosed;
 		_popupControllerTargetState = LNPopupPresentationStateClosed;
 		
-		_bottomBar = _containerController.bottomDockingViewForPopup;
+		_bottomBar = _containerController.bottomDockingViewForPopup_internalOrDeveloper;
 		
 		_popupBar = [[LNPopupBar alloc] initWithFrame:CGRectZero];
 		_popupBar.hidden = NO;
@@ -667,25 +667,25 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[self _reconfigureContent];
 		
 		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^
-		{
-			CGRect barFrame = _popupBar.frame;
-			barFrame.size.height = LNPopupBarHeight;
-			_popupBar.frame = barFrame;
-			_popupBar.frame = [self _frameForClosedPopupBar];
-			
-			_LNPopupSupportFixInsetsForViewController(_containerController, YES);
-			
-			if(open)
-			{
-				[self openPopupAnimated:animated completion:completionBlock];
-			}
-		} completion:^(BOOL finished)
 		 {
-			if(completionBlock != nil && !open)
-			{
-				completionBlock();
-			}
-		}];
+			 CGRect barFrame = _popupBar.frame;
+			 barFrame.size.height = LNPopupBarHeight;
+			 _popupBar.frame = barFrame;
+			 _popupBar.frame = [self _frameForClosedPopupBar];
+			 
+			 _LNPopupSupportFixInsetsForViewController(_containerController, YES);
+			 
+			 if(open)
+			 {
+				 [self openPopupAnimated:animated completion:completionBlock];
+			 }
+		 } completion:^(BOOL finished)
+		 {
+			 if(completionBlock != nil && !open)
+			 {
+				 completionBlock();
+			 }
+		 }];
 	}
 	else
 	{
@@ -725,45 +725,45 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		void (^dismissalAnimationCompletionBlock)() = ^
 		{
 			[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^
-			{
-				CGRect barFrame = _popupBar.frame;
-				barFrame.size.height = 0;
-				_popupBar.frame = barFrame;
-				
-				_LNPopupSupportFixInsetsForViewController(_containerController, YES);
-			} completion:^(BOOL finished)
-			{
-				_popupControllerTargetState = LNPopupPresentationStateHidden;
-				_popupControllerState = LNPopupPresentationStateHidden;
-				
-				_bottomBar.frame = [_containerController defaultFrameForBottomDockingView];
-				_bottomBar = nil;
-				
-				[_popupBar removeFromSuperview];
-				_popupBar = nil;
-				
-				[self.popupContentView removeFromSuperview];
-				self.popupContentView = nil;
-				
-				_popupBarLongPressGestureRecognizerDelegate = nil;
-				_popupBarLongPressGestureRecognizer = nil;
-				_popupBarTapGestureRecognizer = nil;
-				self.popupContentView.popupInteractionGestureRecognizer = nil;
-				
-				_LNPopupSupportFixInsetsForViewController(_containerController, YES);
-				
-				[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-				[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-				
-				_currentContentController = nil;
-				
-				_effectiveStatusBarUpdateController = nil;
-				
-				if(completionBlock != nil)
-				{
-					completionBlock();
-				}
-			}];
+			 {
+				 CGRect barFrame = _popupBar.frame;
+				 barFrame.size.height = 0;
+				 _popupBar.frame = barFrame;
+				 
+				 _LNPopupSupportFixInsetsForViewController(_containerController, YES);
+			 } completion:^(BOOL finished)
+			 {
+				 _popupControllerTargetState = LNPopupPresentationStateHidden;
+				 _popupControllerState = LNPopupPresentationStateHidden;
+				 
+				 _bottomBar.frame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
+				 _bottomBar = nil;
+				 
+				 [_popupBar removeFromSuperview];
+				 _popupBar = nil;
+				 
+				 [self.popupContentView removeFromSuperview];
+				 self.popupContentView = nil;
+				 
+				 _popupBarLongPressGestureRecognizerDelegate = nil;
+				 _popupBarLongPressGestureRecognizer = nil;
+				 _popupBarTapGestureRecognizer = nil;
+				 self.popupContentView.popupInteractionGestureRecognizer = nil;
+				 
+				 _LNPopupSupportFixInsetsForViewController(_containerController, YES);
+				 
+				 [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+				 [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+				 
+				 _currentContentController = nil;
+				 
+				 _effectiveStatusBarUpdateController = nil;
+				 
+				 if(completionBlock != nil)
+				 {
+					 completionBlock();
+				 }
+			 }];
 		};
 		
 		if(_popupControllerTargetState != LNPopupPresentationStateClosed)

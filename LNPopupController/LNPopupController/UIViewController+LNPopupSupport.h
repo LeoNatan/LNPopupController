@@ -146,17 +146,17 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  */
 @interface UIViewController (LNCustomContainerPopupSupport)
 /**
- *  Return a view to dock the popup bar to.
+ *  Return a view to dock the popup bar to, or nil to use the system-provided view.
  *
  *  A default implementation is provided for UIViewController, UINavigationController and UITabBarController.
  *  The default implmentation for UIViewController returns an invisible UIView docked to the bottom, for UINavigationController returns the toolbar and for UITabBarController returns the tab bar.
  *
- *  @return A view to dock the popup bar to.
+ *  @return Return a view to dock the popup bar to, or nil to use the default one.
  */
-- (__kindof UIView*)bottomDockingViewForPopup;
+- (nullable __kindof UIView*)bottomDockingViewForPopup;
 
 /**
- *  Return the default frame for the docking view, when the popup is in hidden or closed state.
+ *  Return the default frame for the docking view, when the popup is in hidden or closed state. If bottomDockingViewForPopup returns nil, this method is not called, and the default system-provided frame is used.
  *
  *  A default implementation is provided for UIViewController, UINavigationController and UITabBarController.
  *
