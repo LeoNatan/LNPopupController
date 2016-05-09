@@ -434,7 +434,6 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		m2 = class_getInstanceMethod([self class], @selector(_sTH:e:d:));
 		method_exchangeImplementations(m1, m2);
 #endif
-		
 	});
 }
 
@@ -507,9 +506,12 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		Method m1 = class_getInstanceMethod([self class], @selector(viewDidLayoutSubviews));
-		Method m2 = class_getInstanceMethod([self class], @selector(_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple));
-		method_exchangeImplementations(m1, m2);
+		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)
+		{
+			Method m1 = class_getInstanceMethod([self class], @selector(viewDidLayoutSubviews));
+			Method m2 = class_getInstanceMethod([self class], @selector(_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple));
+			method_exchangeImplementations(m1, m2);
+		}
 	});
 }
 
