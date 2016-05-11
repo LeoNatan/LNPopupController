@@ -148,7 +148,9 @@ Status bar management of the popup content view controller is respected and appl
 
 Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContentView``` classes.
 
-```LNPopupBar``` exposes API to customize the popup bar's appearance, either directly or through `UIAppearance` API.
+####Popup Bar Customization
+
+```LNPopupBar``` exposes API to customize the popup bar's appearance, either through `UIAppearance` API or directly to popup bar objects.
 
 ```objective-c
 [[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
@@ -159,9 +161,11 @@ Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContent
 
 <img src="./Supplements/custom1.png"/>
 
-```LNPopupContentView``` gives access to the popup close button and the popup interaction gesture recognizer.
+####Popup Content View and Gesture Customization
 
-**Note:** Be careful with modifying the popup interaction gesture recognizer. It is shared for interactively opening the popup by panning the popup bar (when it is closed), or interactively closing the popup interactively by panning the popup content view (when the popup is open). If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code.
+```LNPopupContentView``` exposes access to the popup close button and the popup interaction gesture recognizer.
+
+**Note:** Modify the popup interaction gesture recognizer with care. It is shared between opening the popup content, by panning the popup bar up (when the popup bar is closed), and closing the popup content, by panning the popup content view (when the popup bar is open). If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code.
 
 ###Accessibility
 
