@@ -56,6 +56,8 @@
 		[self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 		
 		[self setImage:[UIImage imageNamed:@"DismissChevron" inBundle:[NSBundle bundleForClass:self.class] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+		
+		self.accessibilityLabel = NSLocalizedString(@"Close", @"");
 	}
 	
 	return self;
@@ -112,7 +114,7 @@
 	
 	_effectView.frame = self.bounds;
 	CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-	maskLayer.rasterizationScale = 2.0 * [UIScreen mainScreen].nativeScale;
+	maskLayer.rasterizationScale = [UIScreen mainScreen].nativeScale;
 	maskLayer.shouldRasterize = YES;
 	
 	CGPathRef path = CGPathCreateWithRoundedRect(self.bounds, minSideSize / 2, minSideSize / 2, NULL);

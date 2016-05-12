@@ -46,4 +46,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface LNPopupItem (Accessibility)
+
+/**
+ *  The accessibility label of the progress, in a localized string.
+ */
+@property (nonatomic, copy, nullable) NSString* accessibilityProgressLabel;
+
+/**
+ *  The accessibility value of the progress, in a localized string.
+ */
+@property (nonatomic, copy, nullable) NSString* accessibilityProgressValue;
+
+@end
+
 NS_ASSUME_NONNULL_END

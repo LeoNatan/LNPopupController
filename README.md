@@ -4,6 +4,8 @@
 
 `LNPopupController` is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.
 
+<span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BR68NJEJXGWL6" title="Donate to this project using PayPal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal Donation Button" /></a></span>
+
 See a video [here](https://vimeo.com/137020302).
 
 Once a popup bar is presented with a content view controller, the user can swipe or tap the popup at any point to present the content controller. After finishing, the user dismisses the popup by either swiping or tapping the Dismiss button.
@@ -146,7 +148,9 @@ Status bar management of the popup content view controller is respected and appl
 
 Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContentView``` classes.
 
-```LNPopupBar``` exposes API to customize the popup bar's appearance, either directly or through `UIAppearance` API.
+####Popup Bar Customization
+
+```LNPopupBar``` exposes API to customize the popup bar's appearance, either through `UIAppearance` API or directly to popup bar objects.
 
 ```objective-c
 [[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
@@ -157,13 +161,50 @@ Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContent
 
 <img src="./Supplements/custom1.png"/>
 
-```LNPopupContentView``` gives access to the popup close button and the popup interaction gesture recognizer.
+####Popup Content View and Gesture Customization
 
-**Note:** Be careful with modifying the popup interaction gesture recognizer. It is shared for interactively opening the popup by panning the popup bar (when it is closed), or interactively closing the popup interactively by panning the popup content view (when the popup is open). If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code.
+```LNPopupContentView``` exposes access to the popup close button and the popup interaction gesture recognizer.
+
+**Note:** Modify the popup interaction gesture recognizer with care. It is shared between opening the popup content, by panning the popup bar up (when the popup bar is closed), and closing the popup content, by panning the popup content view (when the popup bar is open). If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code.
+
+###Accessibility
+
+The framework supports accessibility and will honor accessibility labels, hints and values. By default, the accessibility label of the popup bar is the title and subtitle provided by the popup item.
+
+<img src="./Supplements/default_bar_accessibility_label.png"/>
+
+To modify the accessibility label and hint of the popup bar, set the `accessibilityLabel` and `accessibilityHint` properties of the `LNPopupItem` object of the popup content view controller.
+
+```objc
+demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
+demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");
+```
+
+To add accessibility labels and hints to buttons, set the `accessibilityLabel` and `accessibilityHint` properties of the `UIBarButtonItem` objects.
+
+```objc
+UIBarButtonItem* upNext = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"next"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+upNext.accessibilityLabel = NSLocalizedString(@"Up Next", @"");
+upNext.accessibilityHint = NSLocalizedString(@"Double Tap to Show Up Next List", @"");
+```
+To modify the accessibility label and hint of the popup close button, set the `accessibilityLabel` and `accessibilityHint` properties of the `LNPopupCloseButton` object of the popup container view controller.
+
+```objc
+targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
+targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
+```
+
+To modify the accessibility label and value of the popup bar progress view, set the `accessibilityProgressLabel` and `accessibilityProgressValue` properties of the `LNPopupItem` object of the popup content view controller.
+
+```swift
+demoVC.popupItem.accessibilityProgressLabel = NSLocalizedString("Custom accessibility progress label", comment: "")
+demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.stringFromTimeInterval(NSTimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.stringFromTimeInterval(totalTime)!)"
+```
 
 ##Known Limitations
 
-* Navigation controller's `setToolbarHidden:` and `setToolbarHidden:animated:` are not supported
+* Navigation controller's `setToolbarHidden:` and `setToolbarHidden:animated:` are not supported.
+* Hidden tab bars are not supported by the framework, nor by Apple. **Do not hide the tab bar using `.hidden = YES`!**
 
 ##Acknowledgements
 
