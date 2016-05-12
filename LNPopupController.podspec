@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'LNPopupController'
-  s.version               = '1.4.1'
+  s.version               = '1.4.5'
   s.license               = 'MIT'
   s.summary               = 'A framework for presenting view controllers as popups of other view controllers.'
   s.description           = 'LNPopupController is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.'
