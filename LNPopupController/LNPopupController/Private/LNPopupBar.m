@@ -78,8 +78,6 @@ const NSInteger LNBarStyleInherit = -1;
 		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_progressView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
 		
 		_needsLabelsLayout = YES;
-		
-		self.accessibilityLabel = @"Popup Asshole";
 	}
 	
 	return self;
