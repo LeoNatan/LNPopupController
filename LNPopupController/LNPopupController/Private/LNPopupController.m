@@ -447,9 +447,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			BOOL panThreshold = CACurrentMediaTime() - _lastSeenMovement <= LNPopupBarGesturePanThreshold;
 			BOOL heightTreshold = [self _percentFromPopupBar] > LNPopupBarGestureHeightPercentThreshold;
 			BOOL isPanUp = [pgr velocityInView:_containerController.view].y < 0;
-			BOOL hasPassedOffset = [pgr translationInView:_popupBar.superview].y <= LNPopupBarGestureSnapOffset;
+			BOOL isPanDown = [pgr velocityInView:_containerController.view].y > 0;
+			BOOL hasPassedOffset = abs([pgr translationInView:_popupBar.superview].y) <= LNPopupBarGestureSnapOffset;
 			
-			if((panThreshold || heightTreshold) && (isPanUp || hasPassedOffset))
+			if((panThreshold || heightTreshold) && (isPanUp || hasPassedOffset) && !isPanDown)
 			{
 				[self _transitionToState:LNPopupPresentationStateOpen animated:YES completion:nil userOriginatedTransition:NO];
 			}
