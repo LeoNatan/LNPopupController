@@ -207,7 +207,12 @@ static const CGFloat        LNPopupBarGestureSnapOffset = 40;
 	CGRect contentFrame = _containerController.view.bounds;
 	contentFrame.origin.x = _popupBar.frame.origin.x;
 	contentFrame.origin.y = _popupBar.frame.origin.y + _popupBar.frame.size.height;
-	contentFrame.size.height = relativeViewForContentView.frame.origin.y - (_popupBar.frame.origin.y + _popupBar.frame.size.height);
+
+	// This rounds the height to the nearest fractional pixel size supported by the main screen of the
+	// current device. It fixes an issue where the view doesn't quite touch all the way to the bottom bar
+	CGFloat screenScale = _containerController.view.window.screen.scale;
+	CGFloat fractionalHeight = relativeViewForContentView.frame.origin.y - (_popupBar.frame.origin.y + _popupBar.frame.size.height);
+	contentFrame.size.height = ceil(fractionalHeight * screenScale) / screenScale;
 	
 	self.popupContentView.frame = contentFrame;
 	_containerController.popupContentViewController.view.frame = _containerController.view.bounds;
