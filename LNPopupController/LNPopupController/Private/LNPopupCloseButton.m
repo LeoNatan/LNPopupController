@@ -15,7 +15,7 @@
 	UIView* _highlightView;
 }
 
-- (UIView*)backgroundView
+- (UIVisualEffectView*)backgroundView
 {
 	return _effectView;
 }

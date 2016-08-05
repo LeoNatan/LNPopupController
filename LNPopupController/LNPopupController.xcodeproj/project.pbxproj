@@ -70,7 +70,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3947E1AB1B61CDD70001178B /* Private Implementation */ = {
+		3947E1AB1B61CDD70001178B /* Implementation */ = {
 			isa = PBXGroup;
 			children = (
 				39314A501B6AE7A400574D3C /* __MarqueeLabel.h */,
@@ -80,8 +80,8 @@
 				3947E1B81B6300370001178B /* LNPopupBar+Private.h */,
 				3947E1A41B61CD650001178B /* LNPopupBar.m */,
 				3947E1A81B61CDA40001178B /* LNPopupCloseButton.m */,
-				3947E1AC1B61CDEA0001178B /* LNPopupControllerLongPressGestureDelegate.h */,
 				3947E1AD1B61CDEA0001178B /* LNPopupControllerLongPressGestureDelegate.m */,
+				3947E1AC1B61CDEA0001178B /* LNPopupControllerLongPressGestureDelegate.h */,
 				3947E1B01B61CE4A0001178B /* LNPopupController.h */,
 				3947E1B11B61CE4A0001178B /* LNPopupController.m */,
 				394A85BB1B6306AE004FFC61 /* LNPopupItem+Private.h */,
@@ -90,7 +90,7 @@
 				394A85C71B63FB96004FFC61 /* UIViewController+LNPopupSupportPrivate.h */,
 				394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */,
 			);
-			name = "Private Implementation";
+			name = Implementation;
 			path = Private;
 			sourceTree = "<group>";
 		};
@@ -114,7 +114,7 @@
 		39DB52E71B5823330061C589 /* LNPopupController */ = {
 			isa = PBXGroup;
 			children = (
-				3947E1AB1B61CDD70001178B /* Private Implementation */,
+				3947E1AB1B61CDD70001178B /* Implementation */,
 				3947E1A71B61CDA40001178B /* LNPopupCloseButton.h */,
 				390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */,
 				394A85B51B630409004FFC61 /* LNPopupBar.h */,
@@ -175,7 +175,7 @@
 		39DB52DC1B5823330061C589 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Leo Natan";
 				TargetAttributes = {
 					39DB52E41B5823330061C589 = {
@@ -244,8 +244,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -293,8 +295,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
