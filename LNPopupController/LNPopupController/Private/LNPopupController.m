@@ -10,9 +10,7 @@
 #import "LNPopupItem+Private.h"
 @import ObjectiveC;
 
-static const CFTimeInterval LNPopupBarGesturePanThreshold = 0.1;
 static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
-static const CGFloat        LNPopupBarGestureSnapOffset = 40;
 static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 
 @interface _LNPopupTransitionCoordinator : NSObject <UIViewControllerTransitionCoordinator> @end
@@ -161,6 +159,7 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 	BOOL _dismissGestureStarted;
 	CGFloat _dismissStartingOffset;
 	CGFloat _dismissScrollViewStartingContentOffset;
+	LNPopupPresentationState _stateBeforeDismissStarted;
 	
 	BOOL _dismissalOverride;
 	
@@ -456,6 +455,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				_statusBarTresholdDir = _popupControllerState == LNPopupPresentationStateOpen ? 1 : -1;
 				_tresholdToPassForStatusBarUpdate = -10;
 				
+				_stateBeforeDismissStarted = _popupControllerState;
+				
 				[self _transitionToState:LNPopupPresentationStateTransitioning animated:YES completion:nil transitionOriginatedByUser:NO];
 				
 				_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
@@ -498,19 +499,28 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		{
 			if(_dismissGestureStarted == YES)
 			{
-				BOOL panThreshold = CACurrentMediaTime() - _lastSeenMovement <= LNPopupBarGesturePanThreshold;
-				BOOL heightTreshold = [self _percentFromPopupBar] > LNPopupBarGestureHeightPercentThreshold;
-				BOOL isPanUp = [pgr velocityInView:_containerController.view].y < 0;
-				BOOL hasPassedOffset = [pgr translationInView:_popupBar.superview].y <= LNPopupBarGestureSnapOffset;
+				LNPopupPresentationState targetState = _stateBeforeDismissStarted;
 				
-				if((panThreshold || heightTreshold) && (isPanUp || hasPassedOffset))
+				CGFloat barTransitionPercent = [self _percentFromPopupBar];
+				BOOL hasPassedHeighThreshold = _stateBeforeDismissStarted == LNPopupPresentationStateClosed ? barTransitionPercent > LNPopupBarGestureHeightPercentThreshold : barTransitionPercent < (1.0 - LNPopupBarGestureHeightPercentThreshold);
+				BOOL isPanUp = [pgr velocityInView:_containerController.view].y < 0;
+				BOOL isPanDown = [pgr velocityInView:_containerController.view].y > 0;
+				
+
+				if(isPanUp)
 				{
-					[self _transitionToState:LNPopupPresentationStateOpen animated:YES completion:nil transitionOriginatedByUser:NO];
+					targetState = LNPopupPresentationStateOpen;
 				}
-				else
+				else if(isPanDown)
 				{
-					[self _transitionToState:LNPopupPresentationStateClosed animated:YES completion:nil transitionOriginatedByUser:NO];
+					targetState = LNPopupPresentationStateClosed;
 				}
+				else if(hasPassedHeighThreshold)
+				{
+					targetState = _stateBeforeDismissStarted == LNPopupPresentationStateClosed ? LNPopupPresentationStateOpen : LNPopupPresentationStateClosed;
+				}
+				
+				[self _transitionToState:targetState animated:YES completion:nil transitionOriginatedByUser:NO];
 			}
 			
 			_dismissGestureStarted = NO;
