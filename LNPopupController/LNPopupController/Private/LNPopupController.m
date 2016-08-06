@@ -272,7 +272,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		targetFrame = [self _frameForOpenPopupBar];
 	}
-	else if(state == LNPopupPresentationStateClosed)
+	else if(state == LNPopupPresentationStateClosed || (state == LNPopupPresentationStateTransitioning && _popupControllerTargetState == LNPopupPresentationStateHidden))
 	{
 		targetFrame = [self _frameForClosedPopupBar];
 	}
@@ -728,7 +728,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		_dismissalOverride = NO;
 		
-		_popupControllerState = LNPopupPresentationStateClosed;
+		if(open)
+		{
+			_popupControllerState = LNPopupPresentationStateClosed;
+		}
+		else
+		{
+			_popupControllerState = LNPopupPresentationStateTransitioning;
+		}
 		_popupControllerTargetState = LNPopupPresentationStateClosed;
 		
 		_bottomBar = _containerController.bottomDockingViewForPopup_internalOrDeveloper;
@@ -775,6 +782,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			 }
 		 } completion:^(BOOL finished)
 		 {
+			 _popupControllerState = LNPopupPresentationStateClosed;
+			 
 			 if(completionBlock != nil && !open)
 			 {
 				 completionBlock();
@@ -818,6 +827,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		void (^dismissalAnimationCompletionBlock)() = ^
 		{
+			_popupControllerState = LNPopupPresentationStateTransitioning;
+			_popupControllerTargetState = LNPopupPresentationStateHidden;
+			
 			[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^
 			 {
 				 CGRect barFrame = _popupBar.frame;
@@ -827,7 +839,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				 _LNPopupSupportFixInsetsForViewController(_containerController, YES);
 			 } completion:^(BOOL finished)
 			 {
-				 _popupControllerTargetState = LNPopupPresentationStateHidden;
 				 _popupControllerState = LNPopupPresentationStateHidden;
 				 
 				 _bottomBar.frame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
