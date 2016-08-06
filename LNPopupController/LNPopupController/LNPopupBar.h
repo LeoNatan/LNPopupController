@@ -24,13 +24,13 @@ extern const NSInteger LNBarStyleInherit;
 @property(nullable, nonatomic, weak, readonly) LNPopupItem* popupItem;
 
 /**
- *  An array of custom bar button items to display on the left side.
+ *  An array of custom bar button items to display on the left side. (read-only)
  */
-@property (nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems;
+@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* leftBarButtonItems;
 /**
- *  An array of custom bar button items to display on the right side.
+ *  An array of custom bar button items to display on the right side. (read-only)
  */
-@property (nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems;
+@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* rightBarButtonItems;
 
 /**
  *  A Boolean value indicating whether the popup bar is translucent (YES) or not (NO).

@@ -41,6 +41,9 @@ extern const CGFloat LNPopupBarHeight;
 @property (nonatomic, copy) NSString* accessibilityProgressLabel;
 @property (nonatomic, copy) NSString* accessibilityProgressValue;
 
+@property (nonatomic, copy, readwrite) NSArray<UIBarButtonItem*>* leftBarButtonItems;
+@property (nonatomic, copy, readwrite) NSArray<UIBarButtonItem*>* rightBarButtonItems;
+
 - (void)_delayBarButtonLayout;
 - (void)_layoutBarButtonItems;
 

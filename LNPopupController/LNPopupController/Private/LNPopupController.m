@@ -150,8 +150,7 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 
 @end
 
-
-@interface LNPopupController () <_LNPopupItemDelegate, UIGestureRecognizerDelegate> @end
+@interface LNPopupController () <_LNPopupItemDelegate, UIGestureRecognizerDelegate, UIViewControllerPreviewingDelegate> @end
 
 @implementation LNPopupController
 {
@@ -727,6 +726,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		_popupBar = [[LNPopupBar alloc] initWithFrame:CGRectZero];
 		_popupBar.hidden = NO;
 		
+		[_containerController registerForPreviewingWithDelegate:self sourceView:_popupBar];
+		
 		[self _movePopupBarAndContentToBottomBarSuperview];
 		[self _configurePopupBarFromBottomBar];
 		
@@ -880,6 +881,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
+	if([NSStringFromClass(otherGestureRecognizer.class) containsString:@"Reveal"])
+	{
+		return NO;
+	}
+	
 	if(_popupControllerState != LNPopupPresentationStateOpen)
 	{
 		return YES;
@@ -896,6 +902,18 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	return YES;
+}
+
+#pragma mark UIViewControllerPreviewingDelegate
+
+- (nullable UIViewController *)previewingContext:(id <UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
+{
+	return [_containerController previewingViewControllerForPopupBar];
+}
+
+- (void)previewingContext:(id <UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit
+{
+	[_containerController commitPopupBarPreviewingViewController:viewControllerToCommit];
 }
 
 @end

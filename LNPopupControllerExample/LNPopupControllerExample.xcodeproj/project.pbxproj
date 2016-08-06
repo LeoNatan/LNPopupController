@@ -19,6 +19,7 @@
 		39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
 		39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A251B759721004D2DA9 /* PortraitTabBarController.swift */; };
 		3988E3581B59C3000039C09B /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3988E3571B59C3000039C09B /* FirstViewController.m */; };
+		399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399748711D5652250079492B /* DemoPopupContentViewController.m */; };
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39F513F61B88F9E800F7C717 /* COSTouchVisualizerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F513F51B88F9E800F7C717 /* COSTouchVisualizerWindow.m */; };
@@ -74,6 +75,8 @@
 		39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoMusicPlayerController.swift; sourceTree = "<group>"; };
 		39837A251B759721004D2DA9 /* PortraitTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitTabBarController.swift; sourceTree = "<group>"; };
 		3988E3571B59C3000039C09B /* FirstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		399748701D5652250079492B /* DemoPopupContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoPopupContentViewController.h; sourceTree = "<group>"; };
+		399748711D5652250079492B /* DemoPopupContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoPopupContentViewController.m; sourceTree = "<group>"; };
 		39A134DA1B73FFC0003AB4C5 /* LNPopupControllerExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupControllerExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
 		39F513F41B88F9E800F7C717 /* COSTouchVisualizerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = COSTouchVisualizerWindow.h; sourceTree = "<group>"; };
@@ -156,6 +159,8 @@
 				39277A131B58228000293F95 /* Main.storyboard */,
 				39277A0D1B58228000293F95 /* FirstViewController.h */,
 				3988E3571B59C3000039C09B /* FirstViewController.m */,
+				399748701D5652250079492B /* DemoPopupContentViewController.h */,
+				399748711D5652250079492B /* DemoPopupContentViewController.m */,
 			);
 			name = "Demo Scene (Objective-C)";
 			sourceTree = "<group>";
@@ -298,6 +303,7 @@
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
 				39277A091B58228000293F95 /* main.m in Sources */,
 				39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */,
+				399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */,
 				3988E3581B59C3000039C09B /* FirstViewController.m in Sources */,
 				39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */,
 				397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */,

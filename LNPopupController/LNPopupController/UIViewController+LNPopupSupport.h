@@ -38,7 +38,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 /**
  *  Popup presentation support for UIViewController subclasses.
  */
-@interface UIViewController (LNPopupSupport)
+@interface UIViewController (LNPopupContent)
 
 /**
  *  The popup item used to represent the view controller in a popup presentation. (read-only)
@@ -47,6 +47,19 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  The default behavior is to create a popup item that displays the view controller's title.
  */
 @property (nonatomic, retain, readonly) LNPopupItem* popupItem;
+
+/**
+ *  Return the view to which the popup interaction gesture recognizer will be added to.
+ *
+ *  The default implementation returns the controller's view. @see UIViewController.popupContentView
+ *
+ *  @return The view to which the popup interaction gesture recognizer will be added to.
+ */
+- (__kindof UIView*)viewForPopupInteractionGestureRecognizer;
+
+@end
+
+@interface UIViewController (LNPopupPresentation)
 
 /**
  *  Presents an interactive popup bar in the receiver's view hierarchy. The popup bar is attached to the receiver's docking view. @see -[UIViewController bottomDockingViewForPopup]
@@ -111,7 +124,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 - (void)updatePopupBarAppearance;
 
 /**
- *  The popup content container view.
+ *  The popup content container view. (read-only)
  */
 @property (nonatomic, strong, readonly) LNPopupContentView* popupContentView;
 
@@ -131,20 +144,29 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 @property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
 
 /**
- *  Return the view to which the popup interaction gesture recognizer will be added to.
+ *  Called when the user performs a peek action on the popup bar.
  *
- *  A default implementation is provided, where the popupContentView is returned. @see UIViewController.popupContentView
+ *  The default implementation returns nil, thus no preview is displayed.
  *
- *  @return The view to which the popup interaction gesture recognizer will be added to.
+ *  @return The view controller whose view you want to provide as the preview (peek), or nil to disable preview..
  */
-- (__kindof UIView*)viewForPopupInteractionGestureRecognizer;
+
+- (UIViewController*)previewingViewControllerForPopupBar;
+
+/**
+ *  Called when the user performs a pop action on the popup bar.
+ *
+ *  The default implementation does not commit the view controller.
+ */
+
+- (void)commitPopupBarPreviewingViewController:(UIViewController*)viewController;
 
 @end
 
 /**
  *  Popup presentation containment support in custom container view controller subclasses.
  */
-@interface UIViewController (LNCustomContainerPopupSupport)
+@interface UIViewController (LNPopupCustomContainer)
 /**
  *  Return a view to dock the popup bar to, or nil to use the system-provided view.
  *

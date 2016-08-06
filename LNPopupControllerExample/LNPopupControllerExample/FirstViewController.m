@@ -8,6 +8,7 @@
 
 @import LNPopupController;
 #import "FirstViewController.h"
+#import "DemoPopupContentViewController.h"
 #import "LoremIpsum.h"
 #import "RandomColors.h"
 
@@ -30,70 +31,6 @@
 - (IBAction)unwindToGallery:(UIStoryboardSegue *)unwindSegue
 {
 	//No-op
-}
-
-@end
-
-@interface DemoPopupContentViewController : UIViewController @end
-@implementation DemoPopupContentViewController
-
-- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self _setPopupItemButtonsWithTraitCollection:newCollection];
-	} completion:nil];
-	
-	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
-}
-
-- (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection
-{
-	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"play"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
-	UIBarButtonItem* more = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"action"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-	more.accessibilityLabel = NSLocalizedString(@"More", @"");
-	
-	if(collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
-	{
-		UIBarButtonItem* prev = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"prev"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-		prev.accessibilityLabel = NSLocalizedString(@"Previous Track", @"");
-		UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nextFwd"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-		next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
-		
-		self.popupItem.leftBarButtonItems = @[ prev, play, next ];
-		
-		UIBarButtonItem* upnext = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"next"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-		upnext.accessibilityLabel = NSLocalizedString(@"Up Next", @"");
-		upnext.accessibilityHint = NSLocalizedString(@"Double Tap to Show Up Next List", @"");
-		
-		self.popupItem.rightBarButtonItems = @[ upnext, more ];
-	}
-	else
-	{
-		self.popupItem.leftBarButtonItems = @[ play ];
-		self.popupItem.rightBarButtonItems = @[ more ];
-	}
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-//	return YES;
-	return self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact;
-}
-
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
-	return UIStatusBarStyleLightContent;
-}
-
-- (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
-{
-	return UIStatusBarAnimationFade;
 }
 
 @end
@@ -231,6 +168,32 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	[segue.destinationViewController setHidesBottomBarWhenPushed:YES];
+}
+
+- (UIViewController *)previewingViewControllerForPopupBar
+{
+	UIBlurEffect* blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+	
+	UIViewController* vc = [UIViewController new];
+	vc.view = [[UIVisualEffectView alloc] initWithEffect:blur];
+	vc.view.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.0];
+	vc.preferredContentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height / 2);
+	
+	UILabel* label = [UILabel new];
+	label.text = @"Hello from\n3D Touch!";
+	label.numberOfLines = 0;
+	label.textColor = [UIColor blackColor];
+	label.font = [UIFont systemFontOfSize:50 weight:UIFontWeightBlack];
+	[label sizeToFit];
+	label.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
+	
+	UIVisualEffectView* vib = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect effectForBlurEffect:blur]];
+	vib.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+	[vib.contentView addSubview:label];
+	
+	[[(UIVisualEffectView*)vc.view contentView] addSubview:vib];
+	
+	return vc;
 }
 
 @end

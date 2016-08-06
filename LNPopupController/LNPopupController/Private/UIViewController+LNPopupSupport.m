@@ -142,6 +142,15 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return self.view;
 }
 
+- (UIViewController*)previewingViewControllerForPopupBar
+{
+	return nil;
+}
+
+- (void)commitPopupBarPreviewingViewController:(UIViewController*)viewController
+{
+}
+
 @end
 
 @implementation UIViewController (LNCustomContainerPopupSupport)
