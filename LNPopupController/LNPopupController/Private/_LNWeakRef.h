@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNWeakRef : NSObject
 
-@property (nonatomic, weak) id object;
+@property (nonatomic, weak, readonly) id object;
 
 + (instancetype)refWithObject:(id)object;
 

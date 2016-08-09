@@ -35,6 +35,30 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 	LNPopupPresentationStateOpen,
 };
 
+@protocol LNPopupBarPreviewingDelegate <NSObject>
+
+@required
+/**
+ *  Called when the user performs a peek action on the popup bar.
+ *
+ *  The default implementation returns nil, thus no preview is displayed.
+ *
+ *  @return The view controller whose view you want to provide as the preview (peek), or nil to disable preview..
+ */
+
+- (UIViewController*)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar;
+
+@optional
+/**
+ *  Called when the user performs a pop action on the popup bar.
+ *
+ *  The default implementation does not commit the view controller.
+ */
+
+- (void)popupBar:(LNPopupBar*)popupBar commitPreviewingViewController:(UIViewController*)viewController;
+
+@end
+
 /**
  *  Popup presentation support for UIViewController subclasses.
  */
@@ -143,23 +167,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  */
 @property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
 
-/**
- *  Called when the user performs a peek action on the popup bar.
- *
- *  The default implementation returns nil, thus no preview is displayed.
- *
- *  @return The view controller whose view you want to provide as the preview (peek), or nil to disable preview..
- */
-
-- (UIViewController*)previewingViewControllerForPopupBar;
-
-/**
- *  Called when the user performs a pop action on the popup bar.
- *
- *  The default implementation does not commit the view controller.
- */
-
-- (void)commitPopupBarPreviewingViewController:(UIViewController*)viewController;
+@property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> popupBarPreviewingDelegate;
 
 @end
 

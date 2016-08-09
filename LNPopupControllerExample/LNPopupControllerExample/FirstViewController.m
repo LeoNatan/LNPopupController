@@ -35,6 +35,10 @@
 
 @end
 
+@interface FirstViewController () <LNPopupBarPreviewingDelegate>
+
+@end
+
 @implementation FirstViewController
 {
 	__weak IBOutlet UIButton *_galleryButton;
@@ -146,6 +150,8 @@
 	targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
+	targetVC.popupBarPreviewingDelegate = self;
+	
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
 }
 
@@ -170,7 +176,9 @@
 	[segue.destinationViewController setHidesBottomBarWhenPushed:YES];
 }
 
-- (UIViewController *)previewingViewControllerForPopupBar
+#pragma mark LNPopupBarPreviewingDelegate
+
+- (UIViewController *)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar
 {
 	UIBlurEffect* blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
 	

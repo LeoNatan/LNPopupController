@@ -929,12 +929,15 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (nullable UIViewController *)previewingContext:(id <UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
 {
-	return [_containerController previewingViewControllerForPopupBar];
+	return [_containerController.popupBarPreviewingDelegate previewingViewControllerForPopupBar:_containerController.popupBar];
 }
 
 - (void)previewingContext:(id <UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit
 {
-	[_containerController commitPopupBarPreviewingViewController:viewControllerToCommit];
+	if([_containerController.popupBarPreviewingDelegate respondsToSelector:@selector(popupBar:commitPreviewingViewController:)])
+	{
+		[_containerController.popupBarPreviewingDelegate popupBar:_containerController.popupBar commitPreviewingViewController:viewControllerToCommit];
+	}
 }
 
 @end

@@ -14,6 +14,7 @@
 static const void* _LNPopupItemKey = &_LNPopupItemKey;
 static const void* _LNPopupControllerKey = &_LNPopupControllerKey;
 const void* _LNPopupPresentationContainerViewControllerKey = &_LNPopupPresentationContainerViewControllerKey;
+const void* _LNPopupBarPreviewingDelegateKey = &_LNPopupBarPreviewingDelegateKey;
 const void* _LNPopupContentViewControllerKey = &_LNPopupContentViewControllerKey;
 static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
@@ -142,13 +143,17 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return self.view;
 }
 
-- (UIViewController*)previewingViewControllerForPopupBar
+- (id<LNPopupBarPreviewingDelegate>)popupBarPreviewingDelegate
 {
-	return nil;
+	return [(_LNWeakRef*)objc_getAssociatedObject(self, _LNPopupBarPreviewingDelegateKey) object];
 }
 
-- (void)commitPopupBarPreviewingViewController:(UIViewController*)viewController
+- (void)setPopupBarPreviewingDelegate:(id<LNPopupBarPreviewingDelegate>)popupBarPreviewingDelegate
 {
+	[self willChangeValueForKey:@"popupBarPreviewingDelegate"];
+	_LNWeakRef* weakRef = [_LNWeakRef refWithObject:popupBarPreviewingDelegate];
+	objc_setAssociatedObject(self, _LNPopupBarPreviewingDelegateKey, weakRef, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	[self didChangeValueForKey:@"popupBarPreviewingDelegate"];
 }
 
 @end

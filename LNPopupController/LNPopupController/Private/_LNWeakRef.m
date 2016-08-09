@@ -12,8 +12,13 @@
 
 + (instancetype)refWithObject:(id)object
 {
+	if(object == nil)
+	{
+		return nil;
+	}
+	
 	_LNWeakRef* rv = [self new];
-	rv.object = object;
+	rv->_object = object;
 	
 	return rv;
 }
