@@ -125,7 +125,7 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 
 @interface LNPopupContentView ()
 
-- (instancetype)initWithFrame:(CGRect)frame popupBarStyle:(UIBarStyle)popupBarStyle;
+- (instancetype)initWithFrame:(CGRect)frame;
 
 @property (nonatomic, strong, readwrite) UIPanGestureRecognizer* popupInteractionGestureRecognizer;
 @property (nonatomic, strong, readwrite) LNPopupCloseButton* popupCloseButton;
@@ -135,11 +135,6 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 @implementation LNPopupContentView
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
-{
-	return [self initWithFrame:frame popupBarStyle:UIBarStyleDefault];
-}
-
-- (nonnull instancetype)initWithFrame:(CGRect)frame popupBarStyle:(UIBarStyle)popupBarStyle
 {
 	self = [super initWithEffect:nil];
 	if(self) { self.frame = frame; }
@@ -315,7 +310,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			if(CGColorGetAlpha(contentController.view.backgroundColor.CGColor) < 1.0)
 			{
 				//Support for iOS8, where this property was exposed as readonly.
-				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:_popupBar.barStyle == UIBarStyleDefault ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleDark] forKey:@"effect"];
+				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:_popupBar.backgroundStyle] forKey:@"effect"];
 				self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.2;
 			}
 			else
@@ -679,7 +674,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return _popupContentView;
 	}
 	
-	self.popupContentView = [[LNPopupContentView alloc] initWithFrame:_containerController.view.bounds popupBarStyle:_popupBar.barStyle];
+	self.popupContentView = [[LNPopupContentView alloc] initWithFrame:_containerController.view.bounds];
 	_popupContentView.layer.masksToBounds = YES;
 	
 	_popupContentView.preservesSuperviewLayoutMargins = YES;
@@ -770,7 +765,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^
 		 {
 			 CGRect barFrame = _popupBar.frame;
-			 barFrame.size.height = LNPopupBarHeight;
+			 barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(_popupBar.barStyle));
 			 _popupBar.frame = barFrame;
 			 _popupBar.frame = [self _frameForClosedPopupBar];
 			 

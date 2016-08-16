@@ -8,7 +8,12 @@
 
 #import "LNPopupBar.h"
 
-extern const CGFloat LNPopupBarHeight;
+extern const CGFloat LNPopupBarHeightCompact;
+extern const CGFloat LNPopupBarHeightProminent;
+
+extern CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style);
+extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style);
+
 
 @protocol _LNPopupBarSupport <NSObject>
 

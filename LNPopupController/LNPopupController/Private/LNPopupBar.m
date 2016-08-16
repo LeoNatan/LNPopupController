@@ -9,13 +9,14 @@
 #import "LNPopupBar+Private.h"
 #import "__MarqueeLabel.h"
 
-const CGFloat LNPopupBarHeight = 40.0;
+const CGFloat LNPopupBarHeightCompact = 40.0;
+const CGFloat LNPopupBarHeightProminent = 60.0;
 
-const NSInteger LNBarStyleInherit = -1;
+const NSInteger LNBackgroundStyleInherit = -1;
 
 @implementation LNPopupBar
 {
-	UIToolbar* _backgroundView;
+	UIVisualEffectView* _backgroundView;
 	BOOL _delaysBarButtonItemLayout;
 	UIView* _titlesView;
 	__MarqueeLabel* _titleLabel;
@@ -24,9 +25,31 @@ const NSInteger LNBarStyleInherit = -1;
 	
 	UIColor* _userTintColor;
 	UIColor* _userBackgroundColor;
+	
+	UIBlurEffectStyle _actualBackgroundStyle;
 }
 
-@synthesize barStyle = _userBarStyle, barTintColor = _userBarTintColor;
+CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style)
+{
+	return style == LNPopupBarStyleCompact ? LNPopupBarHeightCompact : LNPopupBarHeightProminent;
+}
+
+LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
+{
+	LNPopupBarStyle rv = style;
+	if(rv == LNPopupBarStyleDefault)
+	{
+		rv = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion > 9 ? LNPopupBarStyleProminent : LNPopupBarStyleCompact;
+	}
+	return rv;
+}
+
+UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
+{
+	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
+}
+
+@synthesize backgroundStyle = _userBackgroundStyle, barTintColor = _userBarTintColor;
 
 - (void)setHighlighted:(BOOL)highlighted
 {
@@ -34,22 +57,22 @@ const NSInteger LNBarStyleInherit = -1;
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
-{	
-	CGRect fullFrame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, LNPopupBarHeight);
-	
+{
 	self = [super initWithFrame:frame];
 	
 	if(self)
 	{
-		_userBarStyle = LNBarStyleInherit;
+		_userBackgroundStyle = LNBackgroundStyleInherit;
 		
-		_backgroundView = [[UIToolbar alloc] initWithFrame:frame];
+		_backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
 		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[self addSubview:_backgroundView];
 		
-		_toolbar = [[UIToolbar alloc] initWithFrame:fullFrame];
+		[self setBackgroundStyle:LNBackgroundStyleInherit];
+		
+		_toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
 		[_toolbar setBackgroundImage:[UIImage alloc] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
-		_toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_toolbar.layer.masksToBounds = YES;
 		[self addSubview:_toolbar];
 		
@@ -60,7 +83,7 @@ const NSInteger LNBarStyleInherit = -1;
 		_highlightView.hidden = YES;
 		[self addSubview:_highlightView];
 		
-		_titlesView = [[UIView alloc] initWithFrame:fullFrame];
+		_titlesView = [[UIView alloc] initWithFrame:self.bounds];
 		_titlesView.userInteractionEnabled = NO;
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
 		
@@ -94,16 +117,31 @@ const NSInteger LNBarStyleInherit = -1;
 	[self _layoutTitles];
 }
 
-- (UIBarStyle)barStyle
+- (UIBlurEffectStyle)backgroundStyle
 {
-	return _backgroundView.barStyle;
+	return _userBackgroundStyle;
 }
 
-- (void)setBarStyle:(UIBarStyle)barStyle
+- (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
 {
-	_userBarStyle = barStyle;
+	_userBackgroundStyle = backgroundStyle;
 	
-	_backgroundView.barStyle = _userBarStyle == LNBarStyleInherit ? _systemBarStyle : _userBarStyle;
+	LNPopupBarStyle resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(self.barStyle);
+	
+	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, resolvedStyle) : _userBackgroundStyle;
+	_backgroundView.effect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
+	
+	if(_userBackgroundStyle == LNBackgroundStyleInherit)
+	{
+		if(_actualBackgroundStyle == UIBlurEffectStyleDark)
+		{
+			_backgroundView.backgroundColor = [UIColor clearColor];
+		}
+		else if(_actualBackgroundStyle == UIBlurEffectStyleLight)
+		{
+			_backgroundView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.45];
+		}
+	}
 	
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
 }
@@ -129,7 +167,7 @@ const NSInteger LNBarStyleInherit = -1;
 {
 	_userBarTintColor = barTintColor;
 	
-	_backgroundView.barTintColor = _userBarTintColor ?: _systemBarTintColor;
+	_backgroundView.tintColor = _userBarTintColor ?: _systemBarTintColor;
 	
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
 }
@@ -144,36 +182,6 @@ const NSInteger LNBarStyleInherit = -1;
 	_userBackgroundColor = backgroundColor;
 	
 	[super setBackgroundColor:_userBackgroundColor ?: _systemBackgroundColor];
-}
-
-- (BOOL)isTranslucent
-{
-	return _backgroundView.isTranslucent;
-}
-
-- (void)setTranslucent:(BOOL)translucent
-{
-	_backgroundView.translucent = translucent;
-}
-
-- (UIImage *)backgroundImage
-{
-	return [_backgroundView backgroundImageForToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
-}
-
-- (void)setBackgroundImage:(UIImage *)backgroundImage
-{
-	[_backgroundView setBackgroundImage:backgroundImage forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
-}
-
-- (UIImage *)shadowImage
-{
-	return [_backgroundView shadowImageForToolbarPosition:UIBarPositionAny];
-}
-
-- (void)setShadowImage:(UIImage *)shadowImage
-{
-	[_backgroundView setShadowImage:shadowImage forToolbarPosition:UIBarPositionAny];
 }
 
 - (void)setTitleTextAttributes:(NSDictionary<NSString *,id> *)titleTextAttributes
@@ -197,7 +205,7 @@ const NSInteger LNBarStyleInherit = -1;
 {
 	_systemBarStyle = systemBarStyle;
 	
-	[self setBarStyle:_userBarStyle];
+	[self setBackgroundStyle:_userBackgroundStyle];
 }
 
 - (void)setSystemBarTintColor:(UIColor *)systemBarTintColor
@@ -300,10 +308,12 @@ const NSInteger LNBarStyleInherit = -1;
 			NSMutableParagraphStyle* paragraph = [NSMutableParagraphStyle new];
 			paragraph.alignment = NSTextAlignmentCenter;
 			
-			NSMutableDictionary* defaultTitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: self.barStyle == UIBarStyleDefault ? [UIColor blackColor] : [UIColor whiteColor]} mutableCopy];
+			LNPopupBarStyle resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(self.barStyle);
+			
+			NSMutableDictionary* defaultTitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: [UIFont systemFontOfSize:resolvedStyle == LNPopupBarStyleProminent ? 16 : 12], NSForegroundColorAttributeName: _actualBackgroundStyle != UIBlurEffectStyleDark ? [UIColor blackColor] : [UIColor whiteColor]} mutableCopy];
 			[defaultTitleAttribures addEntriesFromDictionary:_titleTextAttributes];
 			
-			NSMutableDictionary* defaultSubtitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: self.barStyle == UIBarStyleDefault ? [UIColor grayColor] : [UIColor whiteColor]} mutableCopy];
+			NSMutableDictionary* defaultSubtitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: [UIFont systemFontOfSize:12], NSForegroundColorAttributeName: _actualBackgroundStyle != UIBlurEffectStyleDark ? [UIColor greenColor] : [UIColor whiteColor]} mutableCopy];
 			[defaultSubtitleAttribures addEntriesFromDictionary:_subtitleTextAttributes];
 			
 			BOOL reset = NO;
@@ -336,11 +346,13 @@ const NSInteger LNBarStyleInherit = -1;
 		[self _setTitleLableFontsAccordingToBarStyleAndTint];
 		
 		CGRect titleLabelFrame = _titlesView.bounds;
-		titleLabelFrame.size.height = 40;
+		
+		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.barStyle));
+		titleLabelFrame.size.height = barHeight;
 		if(_subtitle.length > 0)
 		{
 			CGRect subtitleLabelFrame = _titlesView.bounds;
-			subtitleLabelFrame.size.height = 40;
+			subtitleLabelFrame.size.height = barHeight;
 			
 			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
 			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
@@ -423,7 +435,7 @@ const NSInteger LNBarStyleInherit = -1;
 
 - (void)_setTitleLableFontsAccordingToBarStyleAndTint
 {
-	if(self.barStyle == UIBarStyleDefault)
+	if(_actualBackgroundStyle != UIBlurEffectStyleDark)
 	{
 		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor blackColor];
 		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor blackColor];
