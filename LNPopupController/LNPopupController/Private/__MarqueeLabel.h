@@ -11,14 +11,14 @@
 
 /** An enum that defines the types of `MarqueeLabel` scrolling */
 typedef NS_ENUM(NSUInteger, MarqueeType) {
-    /** Scrolls left first, then back right to the original position. */
-    MLLeftRight = 0,
-    /** Scrolls right first, then back left to the original position. */
-    MLRightLeft,
-    /** Continuously scrolls left (with a pause at the original position if animationDelay is set). See the `trailingBuffer` property to define a spacing between the repeating strings.*/
-    MLContinuous,
-    /** Continuously scrolls right (with a pause at the original position if animationDelay is set). See the `trailingBuffer` property to define a spacing between the repeating strings.*/
-    MLContinuousReverse
+	/** Scrolls left first, then back right to the original position. */
+	MLLeftRight = 0,
+	/** Scrolls right first, then back left to the original position. */
+	MLRightLeft = 1,
+	/** Continuously scrolls left (with a pause at the original position if animationDelay is set). See the `trailingBuffer` property to define a spacing between the repeating strings.*/
+	MLContinuous = 2,
+	/** Continuously scrolls right (with a pause at the original position if animationDelay is set). See the `trailingBuffer` property to define a spacing between the repeating strings.*/
+	MLContinuousReverse = 3
 };
 
 
@@ -31,6 +31,7 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
  for label scrolling direction/looping, speed/rate, and other options.
  */
 
+IB_DESIGNABLE
 @interface __MarqueeLabel : UILabel
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -38,12 +39,11 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Returns a newly initialized `MarqueeLabel` instance.
-
  The default scroll duration of 7.0 seconds and fade length of 0.0 are used.
  
  @param frame A rectangle specifying the initial location and size of the view in its superview's coordinates. Text (for the given font, font size, etc.) that does not fit in this frame will automatically scroll.
  @return An initialized `MarqueeLabel` object or nil if the object couldn't be created.
-*/
+ */
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
@@ -94,10 +94,10 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
  
  Allowable options:
  
-    - `UIViewAnimationOptionCurveEaseInOut`
-    - `UIViewAnimationOptionCurveEaseIn`
-    - `UIViewAnimationOptionCurveEaseOut`
-    - `UIViewAnimationOptionCurveLinear`
+ - `UIViewAnimationOptionCurveEaseInOut`
+ - `UIViewAnimationOptionCurveEaseIn`
+ - `UIViewAnimationOptionCurveEaseOut`
+ - `UIViewAnimationOptionCurveLinear`
  
  Defaults to `UIViewAnimationOptionCurveEaseInOut`.
  */
@@ -109,7 +109,7 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
  
  When set to `YES` the `MarqueeLabel` will behave like a normal UILabel, and  will not begin scrolling when the text is
  larger than the specified frame. The change takes effect immediately, removing any in-flight animation as well as any
- current edge fade. Note that the `MarqueeLabel` will respect the current values of the `lineBreakMode` and `textAlignment` 
+ current edge fade. Note that the `MarqueeLabel` will respect the current values of the `lineBreakMode` and `textAlignment`
  properties while labelized.
  
  To simply prevent automatic scrolling, use the `holdScrolling` property.
@@ -129,7 +129,7 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
 
 /** A boolean property that sets whether the `MarqueeLabel` should hold (prevent) label scrolling.
  
- When set to `YES`, the `MarqueeLabel` will not automatically scroll even its text is larger than the specified frame, 
+ When set to `YES`, the `MarqueeLabel` will not automatically scroll even its text is larger than the specified frame,
  although the specified edge fades will remain.
  
  To set the `MarqueeLabel` to act like a normal UILabel, use the `labelize` property.
@@ -175,9 +175,11 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
  @see textAlignment
  */
 
-
+#if TARGET_INTERFACE_BUILDER
+@property (nonatomic, assign) IBInspectable NSInteger marqueeType;
+#else
 @property (nonatomic, assign) MarqueeType marqueeType;
-
+#endif
 
 /** Defines the duration of the scrolling animation.
  
@@ -250,7 +252,7 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
 /**
  @deprecated Use `trailingBuffer` instead. Values set to this property are simply forwarded to `trailingBuffer`.
  */
- 
+
 @property (nonatomic, assign) CGFloat continuousMarqueeExtraBuffer DEPRECATED_ATTRIBUTE;
 
 
@@ -276,13 +278,27 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
 /// @name Animation control
 ////////////////////////////////////////////////////////////////////////////////
 
-/** Immediately resets the label to the home position, and restarts the scroll animation if the appropriate conditions are met.
+/** Immediately resets the label to the home position, cancelling any in-flight scroll animation, and restarts the scroll animation if the appropriate conditions are met.
  
  @see resetLabel
  @see triggerScrollStart
  */
 
 - (void)restartLabel;
+
+
+/** Immediately resets the label to the home position, cancelling any in-flight scroll animation.
+ 
+ The text is immediately returned to the home position. Scrolling will not resume automatically after a call to this method.
+ To re-initiate scrolling use a call to `restartLabel` or `triggerScrollStart`, or make a change to a UILabel property such as text, bounds/frame,
+ font, font size, etc.
+ 
+ @see restartLabel
+ @see triggerScrollStart
+ @since Available in 2.4.0 and later.
+ */
+
+- (void)shutdownLabel;
 
 
 /** Resets the label text, recalculating the scroll animation.
@@ -297,15 +313,18 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
 - (void)resetLabel;
 
 
-/** Pauses the text scrolling animation, at any point during the animation.
+/** Pauses the text scrolling animation, at any point during an in-progress animation.
  
+ @note This method has no effect if a scroll animation is NOT already in progress. To prevent automatic scrolling on a newly-initialized label prior to its presentation onscreen, see the `holdScrolling` property.
+ 
+ @see holdScrolling
  @see unpauseLabel
  */
 
 - (void)pauseLabel;
 
 
-/** Un-pauses a previously paused text scrolling animation
+/** Un-pauses a previously paused text scrolling animation. This method has no effect if the label was not previously paused using `pauseLabel`.
  
  @see pauseLabel
  */
@@ -319,7 +338,7 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
  method will not force a label with a string that fits inside the label bounds (i.e. that would not automatically scroll) to begin a scroll
  animation.
  
- Upon the completion of the first forced scroll animation, the receiver will not automatically continue to scroll unless the conditions 
+ Upon the completion of the first forced scroll animation, the receiver will not automatically continue to scroll unless the conditions
  preventing scrolling have been removed.
  
  @note This method has no effect if called during an already in-flight scroll animation.
@@ -355,7 +374,7 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
  @param finished A Boolean that indicates whether or not the scroll animation actually finished before the completion handler was called.
  @since Available in 1.5.0 and later.
  
- @warning This method will be called, and the `finished` parameter will be `NO`, when any property changes are made that would cause the label 
+ @warning This method will be called, and the `finished` parameter will be `NO`, when any property changes are made that would cause the label
  scrolling to be automatically reset. This includes changes to label text and font/font size changes.
  */
 
@@ -390,7 +409,7 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
  The scrolling animation of these instances will be automatically restarted. This is equivalent to calling `restartLabel` on all affected
  instances.
  
- There is currently no functional difference between this method and `controllerViewDidAppear:` or `controllerViewWillAppear:`. The methods may 
+ There is currently no functional difference between this method and `controllerViewDidAppear:` or `controllerViewWillAppear:`. The methods may
  be used interchangeably.
  
  @warning View controllers that appear with animation (such as from underneath a modal-style controller) can cause some `MarqueeLabel` text
