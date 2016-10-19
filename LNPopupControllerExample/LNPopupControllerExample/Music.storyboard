@@ -1,10 +1,14 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9046" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="sTg-sL-qRq">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11535.1" systemVersion="16B2548a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9035"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11523"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Portrait Tab Bar Controller-->
@@ -15,8 +19,7 @@
                     <tabBar key="tabBar" contentMode="scaleToFill" id="7rm-Dn-iNB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="yVZ-Nv-QXJ" kind="relationship" relationship="viewControllers" id="bbJ-PD-Lnf"/>
@@ -37,7 +40,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Gmu-0O-wzk">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </navigationBar>
                     <connections>
                         <segue destination="1lI-95-UbP" kind="relationship" relationship="rootViewController" id="IKD-oX-Nxq"/>
@@ -52,64 +54,55 @@
             <objects>
                 <tableViewController id="1lI-95-UbP" customClass="DemoAlbumTableViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="white" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Jfh-tG-VZ8">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <animations/>
-                        <color key="backgroundColor" red="0.46824919871794879" green="0.35455159831676863" blue="0.42750818819559616" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="separatorColor" red="1" green="1" blue="1" alpha="0.4048491379310345" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.46824919871794879" green="0.35455159831676863" blue="0.42750818819559616" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="separatorColor" red="1" green="1" blue="1" alpha="0.4048491379310345" colorSpace="custom" customColorSpace="sRGB"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="ZYs-3T-f9s">
-                            <rect key="frame" x="0.0" y="64" width="600" height="146"/>
+                            <rect key="frame" x="0.0" y="64" width="414" height="146"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="Zg4-Ff-lwN">
                                     <rect key="frame" x="8" y="16" width="100" height="100"/>
-                                    <animations/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="100" id="gPQ-pl-be0"/>
                                         <constraint firstAttribute="width" secondItem="Zg4-Ff-lwN" secondAttribute="height" multiplier="1:1" id="yXd-8a-cMi"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Album" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QtT-k6-dvX">
-                                    <rect key="frame" x="116" y="16" width="141.5" height="30"/>
-                                    <animations/>
+                                    <rect key="frame" x="116" y="16" width="141.66666666666669" height="30"/>
                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="25"/>
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Artist" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yzf-ha-aWg">
                                     <rect key="frame" x="116" y="46" width="82" height="18"/>
-                                    <animations/>
                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wQU-mc-TWu">
-                                    <rect key="frame" x="579" y="116" width="13" height="18"/>
-                                    <animations/>
-                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <rect key="frame" x="393" y="116" width="13" height="18"/>
+                                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <state key="normal" image="action"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qss-OD-AYp">
-                                    <rect key="frame" x="531" y="115" width="13" height="19"/>
-                                    <animations/>
-                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <rect key="frame" x="345" y="115" width="13" height="19"/>
+                                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <state key="normal" image="share"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6dE-Gr-Snz">
-                                    <rect key="frame" x="476" y="116" width="20" height="18"/>
-                                    <animations/>
-                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <rect key="frame" x="290" y="116" width="20" height="18"/>
+                                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <state key="normal" image="lovec"/>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fah-86-TAW">
-                                    <rect key="frame" x="424" y="116" width="17" height="18"/>
-                                    <animations/>
-                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <rect key="frame" x="238" y="116" width="17" height="18"/>
+                                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <state key="normal" image="add"/>
                                 </button>
                             </subviews>
-                            <animations/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="fah-86-TAW" firstAttribute="bottom" secondItem="6dE-Gr-Snz" secondAttribute="bottom" id="1ZK-wQ-kbn"/>
                                 <constraint firstAttribute="leadingMargin" secondItem="Zg4-Ff-lwN" secondAttribute="leading" id="3i9-Jb-UDE"/>
@@ -128,45 +121,39 @@
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="QTf-qT-ihQ">
-                            <rect key="frame" x="0.0" y="282" width="600" height="0.0"/>
+                            <rect key="frame" x="0.0" y="282" width="414" height="0.0"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <animations/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MusicCell" textLabel="tKl-KM-lNG" detailTextLabel="RSt-Vz-4n5" imageView="HTm-AH-96L" style="IBUITableViewCellStyleSubtitle" id="McV-oN-Mrx" customClass="MusicCell" customModule="LNPopupControllerExample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="238" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="174" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="McV-oN-Mrx" id="Efo-NR-jhI">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tKl-KM-lNG">
-                                            <rect key="frame" x="74" y="6" width="30" height="18"/>
+                                            <rect key="frame" x="74" y="7" width="30" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <animations/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="RSt-Vz-4n5">
-                                            <rect key="frame" x="74" y="24" width="40.5" height="13.5"/>
+                                            <rect key="frame" x="74" y="25" width="40.666666666666664" height="13.333333333333334"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <animations/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="genre1" id="HTm-AH-96L">
-                                            <rect key="frame" x="15" y="0.0" width="44" height="43.5"/>
+                                            <rect key="frame" x="15" y="0.0" width="44" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <animations/>
                                         </imageView>
                                     </subviews>
-                                    <animations/>
                                 </tableViewCellContentView>
-                                <animations/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -202,7 +189,6 @@
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="wjO-8w-zjN">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
-                                <animations/>
                             </imageView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7fu-KI-2bq">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
@@ -212,15 +198,13 @@
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="GbN-VS-Ku7">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
-                                            <animations/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="GbN-VS-Ku7" secondAttribute="height" multiplier="1:1" priority="900" id="8b0-Xs-d2Z"/>
                                             </constraints>
                                         </imageView>
                                         <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="agL-Na-Ira">
                                             <rect key="frame" x="0.0" y="414" width="414" height="2"/>
-                                            <animations/>
-                                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="2" id="bjr-4z-vdU"/>
                                             </constraints>
@@ -229,54 +213,45 @@
                                             <rect key="frame" x="0.0" y="416" width="414" height="320"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0S5-XB-lxq" userLabel="Play">
-                                                    <rect key="frame" x="197.5" y="147.5" width="19" height="25"/>
-                                                    <animations/>
-                                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <rect key="frame" x="197.66666666666666" y="147.66666666666663" width="19" height="25"/>
+                                                    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="nowPlaying_pause"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J5y-2Q-UKC" userLabel="Love">
                                                     <rect key="frame" x="9" y="151" width="20" height="18"/>
-                                                    <animations/>
-                                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="lovec"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ybz-gH-1dg" userLabel="List">
-                                                    <rect key="frame" x="385.5" y="151" width="16" height="18"/>
-                                                    <animations/>
-                                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <rect key="frame" x="385.66666666666669" y="151" width="16" height="18"/>
+                                                    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="next"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G3r-3b-TzQ" userLabel="Next">
                                                     <rect key="frame" x="296" y="151" width="28" height="18"/>
-                                                    <animations/>
-                                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="nowPlaying_next"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NUn-Ji-OaJ" userLabel="Prev">
-                                                    <rect key="frame" x="89" y="151" width="29" height="18"/>
-                                                    <animations/>
-                                                    <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <rect key="frame" x="89.666666666666671" y="151" width="28" height="18"/>
+                                                    <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <state key="normal" image="nowPlaying_prev"/>
                                                 </button>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" minimumValueImage="volDown" maximumValueImage="volUp" translatesAutoresizingMaskIntoConstraints="NO" id="WKP-As-s4G">
-                                                    <rect key="frame" x="27" y="225" width="360.5" height="31"/>
-                                                    <animations/>
+                                                    <rect key="frame" x="27" y="225" width="360.66666666666669" height="31"/>
                                                 </slider>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Song" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0s0-5w-Hzt">
                                                     <rect key="frame" x="8" y="38" width="398" height="29"/>
-                                                    <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Album" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9sE-Hl-Dbl">
                                                     <rect key="frame" x="8" y="71" width="398" height="16"/>
-                                                    <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <animations/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstItem="0s0-5w-Hzt" firstAttribute="centerX" secondItem="H22-aU-er7" secondAttribute="centerX" id="1Jp-dX-LfD"/>
                                                 <constraint firstItem="Ybz-gH-1dg" firstAttribute="centerX" secondItem="H22-aU-er7" secondAttribute="centerX" multiplier="1.9:1" id="1eH-GN-nca"/>
@@ -302,8 +277,7 @@
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <animations/>
-                                    <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="tintColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="H22-aU-er7" secondAttribute="bottom" id="BIA-vx-Syi"/>
                                         <constraint firstAttribute="trailing" secondItem="agL-Na-Ira" secondAttribute="trailing" id="HQV-5H-D2z"/>
@@ -317,12 +291,10 @@
                                         <constraint firstItem="agL-Na-Ira" firstAttribute="top" secondItem="GbN-VS-Ku7" secondAttribute="bottom" id="w73-Ce-Zvr"/>
                                     </constraints>
                                 </view>
-                                <animations/>
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
                         </subviews>
-                        <animations/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="wjO-8w-zjN" firstAttribute="leading" secondItem="O4Z-D5-ZUb" secondAttribute="leading" id="9Fp-fR-zwj"/>
                             <constraint firstItem="7fu-KI-2bq" firstAttribute="leading" secondItem="O4Z-D5-ZUb" secondAttribute="leading" id="Avl-Ys-03G"/>
@@ -334,7 +306,6 @@
                             <constraint firstAttribute="bottom" secondItem="wjO-8w-zjN" secondAttribute="bottom" id="wQG-x5-reh"/>
                         </constraints>
                     </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                     <connections>
                         <outlet property="albumNameLabel" destination="9sE-Hl-Dbl" id="4l6-I9-vpf"/>
                         <outlet property="progressView" destination="agL-Na-Ira" id="auQ-tk-5mL"/>
@@ -353,7 +324,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DVk-h5-a3S">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </navigationBar>
                     <connections>
                         <segue destination="1lI-95-UbP" kind="relationship" relationship="rootViewController" id="v0s-BZ-lGy"/>
@@ -371,7 +341,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uG5-sG-lf4">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </navigationBar>
                     <connections>
                         <segue destination="1lI-95-UbP" kind="relationship" relationship="rootViewController" id="8Zm-ca-Hsg"/>
@@ -390,7 +359,6 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="pUY-Qq-0Gw">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <animations/>
                     </navigationBar>
                     <connections>
                         <segue destination="1lI-95-UbP" kind="relationship" relationship="rootViewController" id="ABc-SJ-NGd"/>
@@ -411,9 +379,9 @@
         <image name="lovec" width="20" height="18"/>
         <image name="musicTab" width="32" height="32"/>
         <image name="next" width="16" height="10"/>
-        <image name="nowPlaying_next" width="28" height="17"/>
+        <image name="nowPlaying_next" width="28" height="18"/>
         <image name="nowPlaying_pause" width="19" height="25"/>
-        <image name="nowPlaying_prev" width="29" height="17"/>
+        <image name="nowPlaying_prev" width="28" height="17"/>
         <image name="recents" width="25" height="25"/>
         <image name="share" width="13" height="19"/>
         <image name="volDown" width="7" height="9"/>
@@ -422,5 +390,5 @@
     <inferredMetricsTieBreakers>
         <segue reference="IKD-oX-Nxq"/>
     </inferredMetricsTieBreakers>
-    <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+    <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

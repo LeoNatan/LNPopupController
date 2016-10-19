@@ -175,11 +175,12 @@
 		39DB52DC1B5823330061C589 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Leo Natan";
 				TargetAttributes = {
 					39DB52E41B5823330061C589 = {
 						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0810;
 					};
 				};
 			};
@@ -331,6 +332,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -343,6 +345,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupController;
 				PRODUCT_NAME = LNPopupController;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -350,6 +353,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -361,6 +365,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupController;
 				PRODUCT_NAME = LNPopupController;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

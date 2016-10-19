@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LNPopupController
 
 class DemoMusicPlayerController: UIViewController {
 
@@ -14,24 +15,24 @@ class DemoMusicPlayerController: UIViewController {
 	@IBOutlet weak var albumNameLabel: UILabel!
 	@IBOutlet weak var progressView: UIProgressView!
 	
-	let accessibilityDateComponentsFormatter = NSDateComponentsFormatter()
+	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 	
-	var timer : NSTimer?
+	var timer : Timer?
 	
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 
-		let pause = UIBarButtonItem(image: UIImage(named: "pause"), style: .Plain, target: nil, action: nil)
+		let pause = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: nil, action: nil)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-		let more = UIBarButtonItem(image: UIImage(named: "action"), style: .Plain, target: nil, action: nil)
+		let more = UIBarButtonItem(image: UIImage(named: "action"), style: .plain, target: nil, action: nil)
 		more.accessibilityLabel = NSLocalizedString("More", comment: "")
 		
-		if UIScreen.mainScreen().traitCollection.userInterfaceIdiom == .Pad {
-			let prev = UIBarButtonItem(image: UIImage(named: "prev"), style: .Plain, target: nil, action: nil)
+		if UIScreen.main.traitCollection.userInterfaceIdiom == .pad {
+			let prev = UIBarButtonItem(image: UIImage(named: "prev"), style: .plain, target: nil, action: nil)
 			prev.accessibilityLabel = NSLocalizedString("Previous Track", comment: "")
-			let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .Plain, target: nil, action: nil)
+			let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
 			next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
-			let list = UIBarButtonItem(image: UIImage(named: "next"), style: .Plain, target: nil, action: nil)
+			let list = UIBarButtonItem(image: UIImage(named: "next"), style: .plain, target: nil, action: nil)
 			list.accessibilityLabel = NSLocalizedString("Up Next", comment: "")
 			list.accessibilityHint = NSLocalizedString("Double Tap to Show Up Next List", comment: "")
 			
@@ -43,14 +44,14 @@ class DemoMusicPlayerController: UIViewController {
 			self.popupItem.rightBarButtonItems = [ more ]
 		}
 		
-		accessibilityDateComponentsFormatter.unitsStyle = .SpellOut
+		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
 		
-		timer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
+		timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 	}
 	
 	var songTitle: String = "" {
 		didSet {
-			if isViewLoaded() {
+			if isViewLoaded {
 				songNameLabel.text = songTitle
 			}
 			
@@ -59,7 +60,7 @@ class DemoMusicPlayerController: UIViewController {
 	}
 	var albumTitle: String = "" {
 		didSet {
-			if isViewLoaded() {
+			if isViewLoaded {
 				albumNameLabel.text = albumTitle
 			}
 			popupItem.subtitle = albumTitle
@@ -73,22 +74,22 @@ class DemoMusicPlayerController: UIViewController {
 		albumNameLabel.text = albumTitle
 	}
 
-	override func preferredStatusBarStyle() -> UIStatusBarStyle {
-		return .LightContent
+	override var preferredStatusBarStyle : UIStatusBarStyle {
+		return .lightContent
 	}
 	
-	func _timerTicked(timer: NSTimer) {
+	func _timerTicked(_ timer: Timer) {
 		popupItem.progress += 0.0002;
 		popupItem.accessibilityProgressLabel = NSLocalizedString("Playback Progress", comment: "")
 		
-		let totalTime = NSTimeInterval(250)
-		popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.stringFromTimeInterval(NSTimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.stringFromTimeInterval(totalTime)!)"
+		let totalTime = TimeInterval(250)
+		popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: TimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: totalTime)!)"
 		
 		progressView.progress = popupItem.progress
 		
 		if popupItem.progress >= 1.0 {
 			timer.invalidate()
-			popupPresentationContainerViewController?.dismissPopupBarAnimated(true, completion: nil)
+			popupPresentationContainer?.dismissPopupBar(animated: true, completion: nil)
 		}
 	}
 }
