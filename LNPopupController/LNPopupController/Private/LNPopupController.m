@@ -10,6 +10,10 @@
 #import "LNPopupItem+Private.h"
 @import ObjectiveC;
 
+void __LNPopupControllerOutOfWindowHierarchy()
+{
+}
+
 static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 
@@ -211,9 +215,17 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 	contentFrame.origin.x = _popupBar.frame.origin.x;
 	contentFrame.origin.y = _popupBar.frame.origin.y + _popupBar.frame.size.height;
 
-	// This rounds the height to the nearest fractional pixel size supported by the main screen of the
-	// current device. It fixes an issue where the view doesn't quite touch all the way to the bottom bar
-	CGFloat screenScale = _containerController.view.window.screen.scale;
+	CGFloat screenScale;
+	if(_containerController.view.window != nil)
+	{
+		screenScale = _containerController.view.window.screen.scale;
+	}
+	else
+	{
+		NSLog(@"LNPopupController: The popup is not part of a window hierarchy and you may see unexpected results. Always present the popup bar once the containing controller has been presented and it's view has appeared. Break on __LNPopupControllerOutOfWindowHierarchy to debug.");
+		__LNPopupControllerOutOfWindowHierarchy();
+		screenScale = [UIScreen mainScreen].scale;
+	}
 	CGFloat fractionalHeight = relativeViewForContentView.frame.origin.y - (_popupBar.frame.origin.y + _popupBar.frame.size.height);
 	contentFrame.size.height = ceil(fractionalHeight * screenScale) / screenScale;
 	
@@ -288,7 +300,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	if(transitionOriginatedByUser == YES && _popupControllerState == LNPopupPresentationStateTransitioning)
 	{
-		NSLog(@"The popup controller is already in transition. Will ignore this transition request.");
+		NSLog(@"LNPopupController: The popup controller is already in transition. Will ignore this transition request.");
 		return;
 	}
 	
@@ -903,6 +915,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	if(_popupControllerState != LNPopupPresentationStateOpen)
+	{
+		return YES;
+	}
+	
+	return NO;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+	//This is to disable gesture recognizers in the superview while dragging the popup bar. This is mostly to fix issues when the bar is part of a scroll view scene, such as `UITableViewController` / `UITableView`.
+	if([_popupBar.superview.gestureRecognizers containsObject:otherGestureRecognizer])
 	{
 		return YES;
 	}
