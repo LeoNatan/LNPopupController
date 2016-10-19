@@ -684,8 +684,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[_popupContentView.popupCloseButton addTarget:self action:@selector(_closePopupContent) forControlEvents:UIControlEventTouchUpInside];
 	[_popupContentView.contentView addSubview:self.popupContentView.popupCloseButton];
 	
-	self.popupContentView.popupInteractionGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
-	self.popupContentView.popupInteractionGestureRecognizer.delegate = self;
+	_popupContentView.popupInteractionGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
+	_popupContentView.popupInteractionGestureRecognizer.delegate = self;
 	
 	return _popupContentView;
 }

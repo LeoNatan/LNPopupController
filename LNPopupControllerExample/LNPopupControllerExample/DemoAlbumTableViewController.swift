@@ -94,7 +94,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		popupContentController.albumTitle = subtitles[(indexPath as NSIndexPath).row]
 		
 		popupContentController.popupItem.accessibilityHint = NSLocalizedString("Double Tap to Expand the Mini Player", comment: "")
-		tabBarController?.popupContentView.popupCloseButton?.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
+		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
 		

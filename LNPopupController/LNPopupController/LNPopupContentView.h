@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The popup close button. (read-only)
  */
-@property (nullable, nonatomic, strong, readonly) LNPopupCloseButton* popupCloseButton;
+@property (nonatomic, strong, readonly) LNPopupCloseButton* popupCloseButton;
 
 @end
 

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface LNPopupCloseButton : UIButton
 
 /**
@@ -18,3 +20,4 @@
 @property (nonatomic, strong, readonly) UIVisualEffectView* backgroundView;
 
 @end
+NS_ASSUME_NONNULL_END
