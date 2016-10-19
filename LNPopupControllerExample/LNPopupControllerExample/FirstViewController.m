@@ -12,19 +12,6 @@
 #import "LoremIpsum.h"
 #import "RandomColors.h"
 
-@interface WhatsUpSplitViewController : UISplitViewController
-
-@end
-
-@implementation WhatsUpSplitViewController
-
-- (void)viewDidLayoutSubviews
-{
-	[super viewDidLayoutSubviews];
-}
-
-@end
-
 @interface DemoGalleryController : UITableViewController @end
 @implementation DemoGalleryController
 

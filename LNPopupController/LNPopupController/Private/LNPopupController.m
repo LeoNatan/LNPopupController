@@ -673,6 +673,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	//	NSAssert(_bottomBar.superview != nil, @"Bottom docking view must have a superview before presenting popup.");
 	[_popupBar removeFromSuperview];
+	
+	if([_bottomBar.superview isKindOfClass:[UIScrollView class]])
+	{
+		NSLog(@"Attempted to present popup bar %@ on top of a UIScrollView subclass %@. This is unsupported and may result in unexpected behavior.", _popupBar, _bottomBar.superview);
+	}
+	
 	[_bottomBar.superview insertSubview:_popupBar belowSubview:_bottomBar];
 	[_popupBar.superview bringSubviewToFront:_popupBar];
 	[_popupBar.superview bringSubviewToFront:_bottomBar];
