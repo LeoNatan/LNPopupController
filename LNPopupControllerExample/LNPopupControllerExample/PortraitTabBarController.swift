@@ -13,5 +13,13 @@ class PortraitTabBarController: UITabBarController {
 	override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
 		return .portrait
 	}
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		if ProcessInfo.processInfo.operatingSystemVersion.majorVersion > 9 {
+//			tabBar.isTranslucent = false
+		}
+	}
 
 }

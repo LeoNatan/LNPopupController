@@ -129,6 +129,7 @@
 	demoVC.view.backgroundColor = LNRandomDarkColor();
 	demoVC.popupItem.title = [LoremIpsum sentence];
 	demoVC.popupItem.subtitle = [LoremIpsum sentence];
+	demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
 	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
 	
 	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
@@ -144,7 +145,7 @@
 
 - (IBAction)_dismissBar:(id)sender
 {
-	UIViewController* targetVC = self.tabBarController;
+	__kindof UIViewController* targetVC = self.tabBarController;
 	if(targetVC == nil)
 	{
 		targetVC = self.navigationController;
@@ -153,6 +154,14 @@
 		{
 			targetVC = self;
 		}
+		else
+		{
+			[[targetVC toolbar] setTranslucent:NO];
+		}
+	}
+	else
+	{
+		[[targetVC tabBar] setTranslucent:NO];
 	}
 	
 	[targetVC dismissPopupBarAnimated:YES completion:nil];

@@ -393,11 +393,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	switch (lpgr.state) {
 		case UIGestureRecognizerStateBegan:
-			[_popupBar setHighlighted:YES];
+			[_popupBar setHighlighted:YES animated:YES];
 			break;
 		case UIGestureRecognizerStateCancelled:
 		case UIGestureRecognizerStateEnded:
-			[_popupBar setHighlighted:NO];
+			[_popupBar setHighlighted:NO animated:YES];
 			break;
 		default:
 			break;
@@ -557,6 +557,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar.subtitle = _currentPopupItem.subtitle;
 }
 
+- (void)_reconfigure_image
+{
+	_popupBar.image = _currentPopupItem.image;
+}
+
 - (void)_reconfigure_progress
 {
 	[UIView performWithoutAnimation:^{
@@ -649,7 +654,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	NSArray<NSString*>* keys = @[@"title", @"subtitle", @"progress", @"leftBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
+	NSArray<NSString*>* keys = @[@"title", @"subtitle", @"image", @"progress", @"leftBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
 	[keys enumerateObjectsUsingBlock:^(NSString * __nonnull key, NSUInteger idx, BOOL * __nonnull stop) {
 		[self _popupItem:_currentPopupItem didChangeValueForKey:key];
 	}];

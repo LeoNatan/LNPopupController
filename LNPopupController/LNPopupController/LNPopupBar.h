@@ -63,6 +63,10 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
  *  You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in NSAttributedString.h.
  */
 @property(nullable, nonatomic, copy) NSDictionary<NSString*, id>* subtitleTextAttributes UI_APPEARANCE_SELECTOR;
+/**
+ * When enabled, the title and subtitle marquee scroll will be coordinated, and if either the title or subtitle of the current popup item change, the animation will reset so the two can scroll together. Enabled by default.
+ */
+@property(nonatomic, assign) BOOL coordinateMarqueeScroll;
 
 @end
 

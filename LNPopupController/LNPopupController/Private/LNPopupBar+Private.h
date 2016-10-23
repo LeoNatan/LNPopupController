@@ -34,10 +34,12 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, copy) NSString* title;
 @property (nonatomic, copy) NSString* subtitle;
 
+@property (nonatomic, strong) UIImage* image;
+
 @property (nonatomic, strong) UIToolbar* toolbar;
 
 @property (nonatomic, strong) UIView* highlightView;
-- (void)setHighlighted:(BOOL)highlighted;
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 
 @property (nonatomic, strong) UIProgressView* progressView;
 

@@ -15,6 +15,9 @@ class DemoMusicPlayerController: UIViewController {
 	@IBOutlet weak var albumNameLabel: UILabel!
 	@IBOutlet weak var progressView: UIProgressView!
 	
+	@IBOutlet weak var backgroundImageView: UIImageView!
+	@IBOutlet weak var albumArtImageView: UIImageView!
+	
 	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 	
 	var timer : Timer?
@@ -24,25 +27,11 @@ class DemoMusicPlayerController: UIViewController {
 
 		let pause = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: nil, action: nil)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-		let more = UIBarButtonItem(image: UIImage(named: "action"), style: .plain, target: nil, action: nil)
-		more.accessibilityLabel = NSLocalizedString("More", comment: "")
+		let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
+		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
-		if UIScreen.main.traitCollection.userInterfaceIdiom == .pad {
-			let prev = UIBarButtonItem(image: UIImage(named: "prev"), style: .plain, target: nil, action: nil)
-			prev.accessibilityLabel = NSLocalizedString("Previous Track", comment: "")
-			let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
-			next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
-			let list = UIBarButtonItem(image: UIImage(named: "next"), style: .plain, target: nil, action: nil)
-			list.accessibilityLabel = NSLocalizedString("Up Next", comment: "")
-			list.accessibilityHint = NSLocalizedString("Double Tap to Show Up Next List", comment: "")
-			
-			self.popupItem.leftBarButtonItems = [ prev, pause, next ]
-			self.popupItem.rightBarButtonItems = [ list, more ]
-		}
-		else {
-			self.popupItem.leftBarButtonItems = [ pause ]
-			self.popupItem.rightBarButtonItems = [ more ]
-		}
+		self.popupItem.leftBarButtonItems = [ pause ]
+		self.popupItem.rightBarButtonItems = [ next ]
 		
 		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
 		
@@ -63,7 +52,18 @@ class DemoMusicPlayerController: UIViewController {
 			if isViewLoaded {
 				albumNameLabel.text = albumTitle
 			}
-			popupItem.subtitle = albumTitle
+			if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 9 {
+				popupItem.subtitle = albumTitle
+			}
+		}
+	}
+	var albumArt: UIImage = UIImage() {
+		didSet {
+			if isViewLoaded {
+				backgroundImageView.image = albumArt
+				albumArtImageView.image = albumArt
+			}
+			popupItem.image = albumArt
 		}
 	}
 	
@@ -72,6 +72,8 @@ class DemoMusicPlayerController: UIViewController {
 
 		songNameLabel.text = songTitle
 		albumNameLabel.text = albumTitle
+		backgroundImageView.image = albumArt
+		albumArtImageView.image = albumArt
 	}
 
 	override var preferredStatusBarStyle : UIStatusBarStyle {

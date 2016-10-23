@@ -27,6 +27,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nullable, nonatomic, copy) NSString* subtitle;
 
+
+/**
+ * The popup item's image.
+ *
+ * The image will only be displayed on prominent stype popup bars.
+ */
+@property (nullable, nonatomic, strong) UIImage* image;
+
 /**
  *  The popup item's progress.
  *
@@ -36,6 +44,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  An array of custom bar button items to display on the left side of the popup bar.
+ *
+ * For prominent style bars, these buttons are presented on the right side, but before @c rightBarButtonItems.
  */
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems;
 

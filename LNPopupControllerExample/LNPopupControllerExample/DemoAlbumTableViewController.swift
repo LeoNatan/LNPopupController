@@ -92,11 +92,13 @@ class DemoAlbumTableViewController: UITableViewController {
 		let popupContentController = storyboard?.instantiateViewController(withIdentifier: "DemoMusicPlayerController") as! DemoMusicPlayerController
 		popupContentController.songTitle = titles[(indexPath as NSIndexPath).row]
 		popupContentController.albumTitle = subtitles[(indexPath as NSIndexPath).row]
+		popupContentController.albumArt = images[(indexPath as NSIndexPath).row]
 		
 		popupContentController.popupItem.accessibilityHint = NSLocalizedString("Double Tap to Expand the Mini Player", comment: "")
 		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
+		tabBarController?.popupBar?.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}

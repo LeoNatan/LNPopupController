@@ -175,7 +175,7 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 	
 	if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden)
 	{
-		insets.bottom += self._ln_popupController_nocreate.popupBar.frame.size.height;
+		insets.bottom += self._ln_popupController_nocreate.popupBar.bounds.size.height;
 	}
 	
 	return insets;
@@ -193,11 +193,6 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 	return [self _vCUSB];
 }
 #endif
-
-//- (void)updateViewConstraints
-//{
-//
-//}
 
 - (void)_ln_popup_viewDidLayoutSubviews
 {
