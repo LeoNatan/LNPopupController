@@ -156,6 +156,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
 		
+		_marqueeScrollEnabled = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion < 10;
 		_coordinateMarqueeScroll = YES;
 	}
 	
@@ -353,12 +354,12 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 
 - (UILabel<__MarqueeLabelType>*)_newMarqueeLabel
 {
-//	if(_resolvedStyle == LNPopupBarStyleProminent)
-//	{
-//		__FakeMarqueeLabel* rv = [[__FakeMarqueeLabel alloc] initWithFrame:_titlesView.bounds];
-//		rv.minimumScaleFactor = 1.0;
-//		return rv;
-//	}
+	if(_marqueeScrollEnabled == NO)
+	{
+		__FakeMarqueeLabel* rv = [[__FakeMarqueeLabel alloc] initWithFrame:_titlesView.bounds];
+		rv.minimumScaleFactor = 1.0;
+		return rv;
+	}
 	
 	__MarqueeLabel* rv = [[__MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
 	rv.leadingBuffer = 5.0;
@@ -405,7 +406,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 			 }
 		 }];
 		
-		rightMargin = firstRightItemView.frame.origin.x - (_resolvedStyle == LNPopupBarStyleProminent ? 2 : 10);
+		rightMargin = firstRightItemView.frame.origin.x - (_resolvedStyle == LNPopupBarStyleProminent ? 5 : 10);
 		
 		CGRect frame = _titlesView.frame;
 		frame.origin.x = leftMargin;
@@ -696,6 +697,13 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	{
 		[self _layoutBarButtonItems];
 	}
+}
+
+- (void)setMarqueeScrollEnabled:(BOOL)marqueeScrollEnabled
+{
+	_marqueeScrollEnabled = marqueeScrollEnabled;
+	
+	[self _setNeedsTitleLayout];
 }
 
 - (void)_removeAnimationFromBarItems
