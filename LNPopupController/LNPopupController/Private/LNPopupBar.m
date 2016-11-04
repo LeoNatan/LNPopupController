@@ -206,7 +206,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		}
 		else if(_actualBackgroundStyle == UIBlurEffectStyleLight)
 		{
-			_backgroundView.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:0.5];
+			_backgroundView.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:_resolvedStyle == LNPopupBarStyleProminent ? 0.5 : 0.0];
 		}
 	}
 	
@@ -372,12 +372,12 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 - (void)_layoutTitles
 {
 	dispatch_async(dispatch_get_main_queue(), ^{
-		__block CGFloat leftMargin = 10;
+		__block CGFloat leftMargin = 20;
 		CGFloat rightMargin = self.bounds.size.width;
 		
 		if(_resolvedStyle == LNPopupBarStyleProminent)
 		{
-			leftMargin += 10 + (_imageView.hidden ? 0 : _imageView.bounds.size.width) + 17.5;
+			leftMargin += (_imageView.hidden ? 0 : _imageView.bounds.size.width) + 17.5;
 		}
 		
 		__block UIView* firstRightItemView = nil;
@@ -406,7 +406,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 			 }
 		 }];
 		
-		rightMargin = firstRightItemView.frame.origin.x - (_resolvedStyle == LNPopupBarStyleProminent ? 5 : 10);
+		rightMargin = (firstRightItemView == nil ? self.bounds.size.width - 10 : firstRightItemView.frame.origin.x) - (_resolvedStyle == LNPopupBarStyleProminent ? 5 : 10);
 		
 		CGRect frame = _titlesView.frame;
 		frame.origin.x = leftMargin;
