@@ -906,7 +906,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		_popupBar = [[LNPopupBar alloc] initWithFrame:CGRectZero];
 		_popupBar.hidden = NO;
 		
-		[_containerController registerForPreviewingWithDelegate:self sourceView:_popupBar];
+		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)
+		{
+			[_containerController registerForPreviewingWithDelegate:self sourceView:_popupBar];
+		}
 		
 		[self _movePopupBarAndContentToBottomBarSuperview];
 		[self _configurePopupBarFromBottomBar];
