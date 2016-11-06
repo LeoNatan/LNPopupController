@@ -196,7 +196,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	_userBackgroundStyle = backgroundStyle;
 	
 	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle) : _userBackgroundStyle;
-	_backgroundView.effect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
+	[_backgroundView setValue:[UIBlurEffect effectWithStyle:_actualBackgroundStyle] forKey:@"effect"];
 	
 	if(_userBackgroundStyle == LNBackgroundStyleInherit)
 	{
@@ -476,8 +476,16 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 			CGRect subtitleLabelFrame = _titlesView.bounds;
 			subtitleLabelFrame.size.height = barHeight;
 			
-			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
-			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
+			if(_resolvedStyle == LNPopupBarStyleProminent)
+			{
+				titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2.1;
+				subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 1.5;
+			}
+			else
+			{
+				titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
+				subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
+			}
 			
 			_subtitleLabel.frame = subtitleLabelFrame;
 			_subtitleLabel.hidden = NO;
