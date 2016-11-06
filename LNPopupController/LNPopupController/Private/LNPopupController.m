@@ -131,13 +131,12 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 
 #pragma mark Popup Content View
 
-@interface LNPopupContentView () <UIScrollViewDelegate>
+@interface LNPopupContentView ()
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
 @property (nonatomic, strong, readwrite) UIPanGestureRecognizer* popupInteractionGestureRecognizer;
 @property (nonatomic, strong, readwrite) LNPopupCloseButton* popupCloseButton;
-//@property (nonatomic, strong) UIScrollView* scrollView;
 @property (nonatomic, strong) UIVisualEffectView* effectView;
 
 @end
@@ -150,19 +149,9 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 	
 	if(self)
 	{
-//		_scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-//		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//		_scrollView.showsVerticalScrollIndicator = NO;
-//		_scrollView.showsHorizontalScrollIndicator = NO;
-//		_scrollView.alwaysBounceVertical = YES;
-//		_scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
-//		_scrollView.delegate = self;
-//		[self addSubview:_scrollView];
-		
 		_effectView = [[UIVisualEffectView alloc] initWithEffect:nil];
 		_effectView.frame = self.bounds;
 		_effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//		[_scrollView addSubview:_effectView];
 		[self addSubview:_effectView];
 	}
 	
@@ -173,9 +162,6 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 {
 	[super layoutSubviews];
 	
-//	_scrollView.contentInset = UIEdgeInsetsZero;
-//	_scrollView.frame = self.bounds;
-//	_scrollView.contentSize = self.bounds.size;
 	_effectView.frame = self.bounds;
 }
 
