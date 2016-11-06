@@ -16,6 +16,7 @@ static const void* _LNPopupControllerKey = &_LNPopupControllerKey;
 const void* _LNPopupPresentationContainerViewControllerKey = &_LNPopupPresentationContainerViewControllerKey;
 const void* _LNPopupBarPreviewingDelegateKey = &_LNPopupBarPreviewingDelegateKey;
 const void* _LNPopupContentViewControllerKey = &_LNPopupContentViewControllerKey;
+static const void* _LNPopupInteractionStyleKey = &_LNPopupInteractionStyleKey;
 static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
 #pragma clang diagnostic push
@@ -131,6 +132,16 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 - (LNPopupContentView *)popupContentView
 {
 	return self._ln_popupController.popupContentView;
+}
+
+- (LNPopupInteractionStyle)popupInteractionStyle
+{
+	return [objc_getAssociatedObject(self, _LNPopupInteractionStyleKey) unsignedIntegerValue];
+}
+
+- (void)setPopupInteractionStyle:(LNPopupInteractionStyle)popupInteractionStyle
+{
+	objc_setAssociatedObject(self, _LNPopupInteractionStyleKey, @(popupInteractionStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (LNPopupController*)_ln_popupController_nocreate

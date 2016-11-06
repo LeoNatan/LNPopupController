@@ -21,6 +21,7 @@
 
 @property (nonatomic, strong) LNPopupBar* popupBar;
 @property (nonatomic, strong) LNPopupContentView* popupContentView;
+@property (nonatomic, strong) UIScrollView* popupContentContainerView;
 
 @property (nonatomic) LNPopupPresentationState popupControllerState;
 @property (nonatomic) LNPopupPresentationState popupControllerTargetState;

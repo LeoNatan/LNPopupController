@@ -14,6 +14,29 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
+ * The interaction style of the popup.
+ */
+typedef NS_ENUM(NSUInteger, LNPopupInteractionStyle) {
+	/**
+	 * Use the most appropriate interaction style the current operating system version; uses snap style for iOS 10 and above, otherwise drag
+	 */
+	LNPopupInteractionStyleDefault,
+	
+	/**
+	 * Drag interaction style
+	 */
+	LNPopupInteractionStyleDrag,
+	/**
+	 * Snap interaction style
+	 */
+	LNPopupInteractionStyleSnap,
+	/**
+	 * No interaction
+	 */
+	LNPopupInteractionStyleNone = 0xFFFF
+};
+
+/**
  *  The state of the popup presentation.
  */
 typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
@@ -135,6 +158,11 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  @param completion      The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify nil for this parameter.
  */
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)())completion;
+
+/**
+ *  The popup bar interaction style. (read-only)
+ */
+@property (nonatomic, assign, readonly) LNPopupInteractionStyle popupInteractionStyle;
 
 /**
  *  The popup bar managed by the system. (read-only)
