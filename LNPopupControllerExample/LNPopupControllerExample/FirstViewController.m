@@ -154,14 +154,6 @@
 		{
 			targetVC = self;
 		}
-		else
-		{
-			[[targetVC toolbar] setTranslucent:NO];
-		}
-	}
-	else
-	{
-		[[targetVC tabBar] setTranslucent:NO];
 	}
 	
 	[targetVC dismissPopupBarAnimated:YES completion:nil];
