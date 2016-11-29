@@ -291,9 +291,10 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	CGRect popupCloseButtonFrame = self.popupContentView.popupCloseButton.frame;
 	popupCloseButtonFrame.origin.x = 12;
 	popupCloseButtonFrame.origin.y = 12 + ([UIApplication sharedApplication].isStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
-	if([_currentContentController isKindOfClass:[UINavigationController class]] && [(UINavigationController*)_currentContentController isNavigationBarHidden] == NO)
+	UINavigationBar* possibleBar = (id)[[_currentContentController view] hitTest:popupCloseButtonFrame.origin withEvent:nil];
+	if([possibleBar isKindOfClass:[UINavigationBar class]])
 	{
-		popupCloseButtonFrame.origin.y += CGRectGetHeight([(UINavigationController*)_currentContentController navigationBar].bounds);
+		popupCloseButtonFrame.origin.y += CGRectGetHeight(possibleBar.bounds);
 	}
 	
 	if(!CGRectEqualToRect(self.popupContentView.popupCloseButton.frame, popupCloseButtonFrame))

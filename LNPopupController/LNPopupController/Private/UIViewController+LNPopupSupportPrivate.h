@@ -28,6 +28,8 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* viewController,
 @property (nonnull, nonatomic, strong, readonly, getter=_ln_bottomBarSupport) _LNPopupBottomBarSupport* bottomBarSupport;
 - (nullable _LNPopupBottomBarSupport *)_ln_bottomBarSupport_nocreate;
 
+- (BOOL)_isContainedInPopupController;
+
 - (nullable UIView *)bottomDockingViewForPopup_nocreateOrDeveloper;
 - (nonnull UIView *)bottomDockingViewForPopup_internalOrDeveloper;
 
