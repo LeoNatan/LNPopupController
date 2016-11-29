@@ -84,6 +84,16 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return self._ln_popupController_nocreate.popupControllerState;
 }
 
+- (BOOL)_isContainedInPopupController
+{
+	if(self.popupPresentationContainerViewController != nil)
+	{
+		return YES;
+	}
+	
+	return [self.parentViewController _isContainedInPopupController];
+}
+
 - (UIViewController *)popupPresentationContainerViewController
 {
 	return [(_LNWeakRef*)objc_getAssociatedObject(self, _LNPopupPresentationContainerViewControllerKey) object];

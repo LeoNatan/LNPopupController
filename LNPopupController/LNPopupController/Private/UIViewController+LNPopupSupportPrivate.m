@@ -183,7 +183,7 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 
 - (BOOL)_vCUSB
 {
-	if(self.popupPresentationContainerViewController != nil)
+	if ([self _isContainedInPopupController])
 	{
 		UIViewController* statusBarVC = [self childViewControllerForStatusBarHidden] ?: self;
 		
