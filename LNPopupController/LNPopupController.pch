@@ -1,0 +1,27 @@
+//
+//  LNPopupController.pch
+//  LNPopupController
+//
+//  Created by Leo Natan on 10/11/2016.
+//  Copyright © 2016 Leo Natan. All rights reserved.
+//
+
+#ifndef LNPopupController_pch
+#define LNPopupController_pch
+
+#define MarqueeLabel __MarqueeLabel
+#define MarqueeType __MarqueeType
+#define MLLeftRight __MLLeftRight
+#define MLRightLeft __MLRightLeft
+#define MLContinuous __MLContinuous
+#define MLContinuousReverse __MLContinuousReverse
+
+
+#define LNChevronView __LNChevronView
+#define LNChevronViewState __LNChevronViewState
+#define LNChevronViewStateUp __LNChevronViewStateUp
+#define LNChevronViewStateFlat __LNChevronViewStateFlat
+#define LNChevronViewStateDown __LNChevronViewStateDown
+
+
+#endif /* LNPopupController_pch */

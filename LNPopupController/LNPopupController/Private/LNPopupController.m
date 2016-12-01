@@ -8,6 +8,7 @@
 
 #import "LNPopupController.h"
 #import "LNPopupItem+Private.h"
+#import "LNPopupCloseButton+Private.h"
 @import ObjectiveC;
 
 void __LNPopupControllerOutOfWindowHierarchy()
@@ -197,6 +198,16 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	return rv;
 }
 
+LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPopupCloseButtonStyle style)
+{
+	LNPopupCloseButtonStyle rv = style;
+	if(rv == LNPopupCloseButtonStyleDefault)
+	{
+		rv = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion > 9 ? LNPopupCloseButtonStyleChevron : LNPopupCloseButtonStyleRound;
+	}
+	return rv;
+}
+
 #pragma mark Popup Controller
 
 @interface LNPopupController () <_LNPopupItemDelegate, UIGestureRecognizerDelegate, UIViewControllerPreviewingDelegate> @end
@@ -222,6 +233,9 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	CGFloat _statusBarTresholdDir;
 	
 	CGFloat _bottomBarOffset;
+	
+	NSLayoutConstraint* _popupCloseButtonTopConstraint;
+	NSLayoutConstraint* _popupCloseButtonHorizontalConstraint;
 }
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
@@ -287,22 +301,7 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	self.popupContentView.frame = contentFrame;
 	_containerController.popupContentViewController.view.frame = _containerController.view.bounds;
 	
-	[self.popupContentView.popupCloseButton sizeToFit];
-	CGRect popupCloseButtonFrame = self.popupContentView.popupCloseButton.frame;
-	popupCloseButtonFrame.origin.x = 12;
-	popupCloseButtonFrame.origin.y = 12 + ([UIApplication sharedApplication].isStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
-	UINavigationBar* possibleBar = (id)[[_currentContentController view] hitTest:popupCloseButtonFrame.origin withEvent:nil];
-	if([possibleBar isKindOfClass:[UINavigationBar class]])
-	{
-		popupCloseButtonFrame.origin.y += CGRectGetHeight(possibleBar.bounds);
-	}
-	
-	if(!CGRectEqualToRect(self.popupContentView.popupCloseButton.frame, popupCloseButtonFrame))
-	{
-		[UIView animateWithDuration:0.2 animations:^{
-			self.popupContentView.popupCloseButton.frame = popupCloseButtonFrame;
-		}];
-	}
+	[self _repositionPopupCloseButton];
 }
 
 static CGFloat __saturate(CGFloat x)
@@ -379,12 +378,18 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			{
 				//Support for iOS8, where this property was exposed as readonly.
 				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:_popupBar.backgroundStyle] forKey:@"effect"];
-				self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.2;
+				if(self.popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound)
+				{
+					self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.2;
+				}
 			}
 			else
 			{
 				[self.popupContentView setValue:nil forKey:@"effect"];
-				self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.1;
+				if(self.popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound)
+				{
+					self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.1;
+				}
 			}
 			
 			[self.popupContentView.contentView addSubview:contentController.view];
@@ -596,6 +601,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[_containerController setNeedsStatusBarAppearanceUpdate];
 		}
 		
+		[_popupContentView.popupCloseButton _setButtonContainerTransitioning];
+		
 		if(resolvedStyle == LNPopupInteractionStyleSnap && realTargetCenterY / _popupBar.superview.bounds.size.height > 0.375)
 		{
 			_dismissGestureStarted = NO;
@@ -604,7 +611,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			pgr.enabled = YES;
 			
 			_popupControllerTargetState = LNPopupPresentationStateClosed;
-			[self _transitionToState:_popupControllerTargetState animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateClosed ? YES : NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+			[self _transitionToState:_popupControllerTargetState animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateClosed ? YES : NO allowPopupBarAlphaModification:YES completion:^ {
+				[_popupContentView.popupCloseButton _setButtonContainerStationary];
+			} transitionOriginatedByUser:NO];
 		}
 	}
 }
@@ -639,6 +648,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			}
 		}
 		
+		[_popupContentView.popupCloseButton _setButtonContainerStationary];
 		[self _transitionToState:targetState animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
 	}
 	
@@ -822,6 +832,62 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[_popupBar.superview insertSubview:self.popupContentView belowSubview:_popupBar];
 }
 
+- (void)_repositionPopupCloseButton
+{
+	CGFloat startingTopConstant = _popupCloseButtonTopConstraint.constant;
+	
+	_popupCloseButtonTopConstraint.constant = _popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 8;
+	_popupCloseButtonTopConstraint.constant += ([UIApplication sharedApplication].isStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
+	
+	UINavigationBar* possibleBar = (id)[[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
+	if([possibleBar isKindOfClass:[UINavigationBar class]])
+	{
+		_popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
+	}
+	
+	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
+	{
+		[_popupContentView setNeedsUpdateConstraints];
+		[UIView animateWithDuration:0.2 animations:^{
+			[_popupContentView layoutIfNeeded];
+		}];
+	}
+}
+
+- (void)_setUpCloseButtonForPopupContentView
+{
+	[_popupContentView.popupCloseButton removeFromSuperview];
+	_popupContentView.popupCloseButton = nil;
+
+	LNPopupCloseButtonStyle buttonStyle = _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(_popupContentView.popupCloseButtonStyle);
+	
+	if(buttonStyle != LNPopupCloseButtonStyleNone)
+	{
+		_popupContentView.popupCloseButton = [[LNPopupCloseButton alloc] initWithStyle:buttonStyle];
+		_popupContentView.popupCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
+		[_popupContentView.popupCloseButton addTarget:self action:@selector(_closePopupContent) forControlEvents:UIControlEventTouchUpInside];
+		[_popupContentView.contentView addSubview:self.popupContentView.popupCloseButton];
+		
+		[_popupContentView.popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+		[_popupContentView.popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		[_popupContentView.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+		[_popupContentView.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		
+		_popupCloseButtonTopConstraint = [_popupContentView.popupCloseButton.topAnchor constraintEqualToAnchor:_popupContentView.topAnchor constant:buttonStyle == LNPopupCloseButtonStyleRound ? 12 : 8];
+		_popupCloseButtonTopConstraint.active = YES;
+		
+		if(buttonStyle == LNPopupCloseButtonStyleRound)
+		{
+			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.leadingAnchor constraintEqualToAnchor:_popupContentView.leadingAnchor constant:12];
+		}
+		else
+		{
+			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.centerXAnchor constraintEqualToAnchor:_popupContentView.centerXAnchor];
+		}
+		_popupCloseButtonHorizontalConstraint.active = YES;
+	}
+}
+
 - (LNPopupContentView *)popupContentView
 {
 	if(_popupContentView)
@@ -831,18 +897,31 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	self.popupContentView = [[LNPopupContentView alloc] initWithFrame:_containerController.view.bounds];
 	_popupContentView.layer.masksToBounds = YES;
+	[_popupContentView addObserver:self forKeyPath:@"popupCloseButtonStyle" options:NSKeyValueObservingOptionInitial context:NULL];
 	
 	_popupContentView.preservesSuperviewLayoutMargins = YES;
 	_popupContentView.contentView.preservesSuperviewLayoutMargins = YES;
-	
-	_popupContentView.popupCloseButton = [[LNPopupCloseButton alloc] initWithFrame: CGRectMake(0, 0, 0, 0)];
-	[_popupContentView.popupCloseButton addTarget:self action:@selector(_closePopupContent) forControlEvents:UIControlEventTouchUpInside];
-	[_popupContentView.contentView addSubview:self.popupContentView.popupCloseButton];
 	
 	_popupContentView.popupInteractionGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
 	_popupContentView.popupInteractionGestureRecognizer.delegate = self;
 	
 	return _popupContentView;
+}
+
+- (void)dealloc
+{
+	[_popupContentView removeObserver:self forKeyPath:@"popupCloseButtonStyle"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+	if([keyPath isEqualToString:@"popupCloseButtonStyle"] && object == _popupContentView)
+	{
+		[UIView performWithoutAnimation:^{
+			[self _setUpCloseButtonForPopupContentView];
+			[self _repositionPopupCloseButton];
+		}];
+	}
 }
 
 - (void)_fixupGestureRecognizersForController:(UIViewController*)vc

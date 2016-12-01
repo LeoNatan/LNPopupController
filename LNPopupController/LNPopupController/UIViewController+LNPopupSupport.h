@@ -14,11 +14,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- * The interaction style of the popup.
+ * Available interaction styles with the popup bar and popup content view.
  */
 typedef NS_ENUM(NSUInteger, LNPopupInteractionStyle) {
 	/**
-	 * Use the most appropriate interaction style the current operating system version; uses snap style for iOS 10 and above, otherwise drag
+	 * Use the most appropriate interaction style for the current operating system version; uses snap style for iOS 10 and above, otherwise drag.
 	 */
 	LNPopupInteractionStyleDefault,
 	

@@ -3,11 +3,10 @@
 //  MarqueeLabel.m
 //
 //  Created by Charles Powell on 1/31/11.
-//  Modifications for LNPopupController by Leo Natan.
 //  Copyright (c) 2011-2015 Charles Powell. All rights reserved.
 //
 
-#import "__MarqueeLabel.h"
+#import "MarqueeLabel.h"
 #import <QuartzCore/QuartzCore.h>
 
 // Notification strings
@@ -36,7 +35,7 @@ typedef void(^MLAnimationCompletionBlock)(BOOL finished);
 - (CGFloat)durationPercentageForPositionPercentage:(CGFloat)positionPercentage withDuration:(NSTimeInterval)duration;
 @end
 
-@interface __MarqueeLabel()
+@interface MarqueeLabel()
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
 // iOS 10 SDK has CAAnimationDelegate a formal protocol
 <CAAnimationDelegate>
@@ -59,34 +58,34 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 @end
 
 
-@implementation __MarqueeLabel
+@implementation MarqueeLabel
 
 #pragma mark - Class Methods and handlers
 
 + (void)restartLabelsOfController:(UIViewController *)controller {
-	[__MarqueeLabel notifyController:controller
+	[MarqueeLabel notifyController:controller
 					   withMessage:kMarqueeLabelControllerRestartNotification];
 }
 
 + (void)controllerViewWillAppear:(UIViewController *)controller {
-	[__MarqueeLabel restartLabelsOfController:controller];
+	[MarqueeLabel restartLabelsOfController:controller];
 }
 
 + (void)controllerViewDidAppear:(UIViewController *)controller {
-	[__MarqueeLabel restartLabelsOfController:controller];
+	[MarqueeLabel restartLabelsOfController:controller];
 }
 
 + (void)controllerViewAppearing:(UIViewController *)controller {
-	[__MarqueeLabel restartLabelsOfController:controller];
+	[MarqueeLabel restartLabelsOfController:controller];
 }
 
 + (void)controllerLabelsShouldLabelize:(UIViewController *)controller {
-	[__MarqueeLabel notifyController:controller
+	[MarqueeLabel notifyController:controller
 					   withMessage:kMarqueeLabelShouldLabelizeNotification];
 }
 
 + (void)controllerLabelsShouldAnimate:(UIViewController *)controller {
-	[__MarqueeLabel notifyController:controller
+	[MarqueeLabel notifyController:controller
 					   withMessage:kMarqueeLabelShouldAnimateNotification];
 }
 

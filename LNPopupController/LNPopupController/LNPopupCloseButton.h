@@ -8,9 +8,39 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * Available styles for the popup close button
+ */
+typedef NS_ENUM(NSUInteger, LNPopupCloseButtonStyle) {
+	/**
+	 * Use the most appropriate close button style for the current operating system version; uses cehvron button style for iOS 10 and above, otherwise round button.
+	 */
+	LNPopupCloseButtonStyleDefault,
+	
+	/**
+	 * Round close button style
+	 */
+	LNPopupCloseButtonStyleRound,
+	/**
+	 * Chevron close button style
+	 */
+	LNPopupCloseButtonStyleChevron,
+	/**
+	 * No close button
+	 */
+	LNPopupCloseButtonStyleNone = 0xFFFF
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LNPopupCloseButton : UIButton
+
+/**
+ *  The button’s style. (read-only)
+ *
+ *  The current style of the popup close button. In order to change the button's style, set the `popupCloseButtonStyle` property of the content view.
+ */
+@property (nonatomic, readonly) LNPopupCloseButtonStyle style;
 
 /**
  *  The button’s background view. (read-only)

@@ -15,11 +15,11 @@ extern const NSInteger LNBackgroundStyleInherit;
 
 
 /**
- * The style of the popup bar.
+ * Available styles for the popup bar 
  */
 typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 	/**
-	 * Use the most appropriate style the current operating system version; uses prominent style for iOS 10 and above, otherwise compact
+	 * Use the most appropriate style for the current operating system version; uses prominent style for iOS 10 and above, otherwise compact.
 	 */
 	LNPopupBarStyleDefault,
 	

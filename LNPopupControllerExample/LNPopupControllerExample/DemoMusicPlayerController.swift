@@ -15,7 +15,6 @@ class DemoMusicPlayerController: UIViewController {
 	@IBOutlet weak var albumNameLabel: UILabel!
 	@IBOutlet weak var progressView: UIProgressView!
 	
-	@IBOutlet weak var backgroundImageView: UIImageView!
 	@IBOutlet weak var albumArtImageView: UIImageView!
 	
 	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
@@ -60,7 +59,6 @@ class DemoMusicPlayerController: UIViewController {
 	var albumArt: UIImage = UIImage() {
 		didSet {
 			if isViewLoaded {
-				backgroundImageView.image = albumArt
 				albumArtImageView.image = albumArt
 			}
 			popupItem.image = albumArt
@@ -72,12 +70,7 @@ class DemoMusicPlayerController: UIViewController {
 
 		songNameLabel.text = songTitle
 		albumNameLabel.text = albumTitle
-		backgroundImageView.image = albumArt
 		albumArtImageView.image = albumArt
-	}
-
-	override var preferredStatusBarStyle : UIStatusBarStyle {
-		return .lightContent
 	}
 	
 	func _timerTicked(_ timer: Timer) {

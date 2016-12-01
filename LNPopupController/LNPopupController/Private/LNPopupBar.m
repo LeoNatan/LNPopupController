@@ -7,7 +7,7 @@
 //
 
 #import "LNPopupBar+Private.h"
-#import "__MarqueeLabel.h"
+#import "MarqueeLabel.h"
 
 @protocol __MarqueeLabelType <NSObject>
 
@@ -30,7 +30,7 @@
 
 @end
 
-@interface __MarqueeLabel () <__MarqueeLabelType> @end
+@interface MarqueeLabel () <__MarqueeLabelType> @end
 
 const CGFloat LNPopupBarHeightCompact = 40.0;
 const CGFloat LNPopupBarHeightProminent = 64.0;
@@ -361,7 +361,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		return rv;
 	}
 	
-	__MarqueeLabel* rv = [[__MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
+	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
 	rv.leadingBuffer = 5.0;
 	rv.trailingBuffer = 15.0;
 	rv.animationDelay = 2.0;

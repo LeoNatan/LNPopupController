@@ -27,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nullable, nonatomic, copy) NSString* subtitle;
 
-
 /**
  * The popup item's image.
  *
