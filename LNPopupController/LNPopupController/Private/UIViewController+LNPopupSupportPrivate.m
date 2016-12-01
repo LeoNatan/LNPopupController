@@ -164,9 +164,9 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 {
 	UIEdgeInsets insets = [self eIFCVC:controller iAA:absolute];
 	
-	if(controller == self.popupContentViewController)
+	if([controller _isContainedInPopupController])
 	{
-		insets.top = controller.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
+		insets.top += controller.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
 		insets.bottom = 0;
 		*absolute = YES;
 		
