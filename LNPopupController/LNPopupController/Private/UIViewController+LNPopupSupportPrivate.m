@@ -118,11 +118,37 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 	[self _ln_willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 }
 
+- (UIViewController*)_findChildInPopupPresentation
+{
+	if(self._ln_popupController_nocreate)
+	{
+		return self;
+	}
+	
+	__block UIViewController* vc = nil;
+	
+	[self.childViewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		vc = [obj _findChildInPopupPresentation];
+		if(vc != nil)
+		{
+			*stop = YES;
+		}
+	}];
+	
+	return vc;
+}
+
 - (nullable UIViewController *)_ln_common_childViewControllerForStatusBarHidden
 {
-	if(self._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateClosed && self._ln_popupController_nocreate.popupBar.center.y < -10)
+	UIViewController* vcToCheckForPopupPresentation = self;
+	if([self isKindOfClass:[UISplitViewController class]])
 	{
-		return self.popupContentViewController;
+		vcToCheckForPopupPresentation = [self _findChildInPopupPresentation];
+	}
+	
+	if(vcToCheckForPopupPresentation._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateClosed && vcToCheckForPopupPresentation._ln_popupController_nocreate.popupBar.center.y < -10)
+	{
+		return vcToCheckForPopupPresentation.popupContentViewController;
 	}
 	
 	return [self _ln_childViewControllerForStatusBarHidden];
@@ -130,9 +156,15 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 
 - (nullable UIViewController *)_ln_common_childViewControllerForStatusBarStyle
 {
-	if(self._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateClosed && self._ln_popupController_nocreate.popupBar.center.y < -10)
+	UIViewController* vcToCheckForPopupPresentation = self;
+	if([self isKindOfClass:[UISplitViewController class]])
 	{
-		return self.popupContentViewController;
+		vcToCheckForPopupPresentation = [self _findChildInPopupPresentation];
+	}
+	
+	if(vcToCheckForPopupPresentation._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateClosed && vcToCheckForPopupPresentation._ln_popupController_nocreate.popupBar.center.y < -10)
+	{
+		return vcToCheckForPopupPresentation.popupContentViewController;
 	}
 	
 	return [self _ln_childViewControllerForStatusBarStyle];
