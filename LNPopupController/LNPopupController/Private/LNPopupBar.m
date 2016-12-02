@@ -107,7 +107,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[self addSubview:_backgroundView];
 		
-		[self setBackgroundStyle:LNBackgroundStyleInherit];
+		[self _innerSetBackgroundStyle:LNBackgroundStyleInherit];
 		
 		_toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
 		[_toolbar setBackgroundImage:[UIImage alloc] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
@@ -191,7 +191,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	return _userBackgroundStyle;
 }
 
-- (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
+- (void)_innerSetBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
 {
 	_userBackgroundStyle = backgroundStyle;
 	
@@ -211,6 +211,11 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	}
 	
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+}
+
+- (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
+{
+	[self _innerSetBackgroundStyle:backgroundStyle];
 }
 
 - (UIColor *)tintColor
@@ -272,7 +277,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 {
 	_systemBarStyle = systemBarStyle;
 	
-	[self setBackgroundStyle:_userBackgroundStyle];
+	[self _innerSetBackgroundStyle:_userBackgroundStyle];
 }
 
 - (void)setSystemBarTintColor:(UIColor *)systemBarTintColor
