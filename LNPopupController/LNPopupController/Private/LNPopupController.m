@@ -178,8 +178,6 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-	NSLog(@"%@", NSStringFromCGPoint(scrollView.contentOffset));
-	
 	if(scrollView.contentOffset.y > 0)
 	{
 		scrollView.contentOffset = CGPointZero;
@@ -455,7 +453,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		 }
 		 
 		 _popupControllerState = state;
-		 
+
 		 if(completion)
 		 {
 			 completion();
@@ -1019,7 +1017,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			 }
 		 } completion:^(BOOL finished)
 		 {
-			 _popupControllerState = LNPopupPresentationStateClosed;
+			 if(!open)
+			 {
+				 _popupControllerState = LNPopupPresentationStateClosed;
+			 }
 			 
 			 if(completionBlock != nil && !open)
 			 {
