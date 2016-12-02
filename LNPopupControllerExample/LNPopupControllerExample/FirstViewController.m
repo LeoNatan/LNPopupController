@@ -64,9 +64,9 @@
 	[super viewWillAppear:animated];
 	
 	//Ugly hack to fix tab bar tint color.
-	self.tabBarController.view.tintColor = [UIColor redColor];
+	self.tabBarController.view.tintColor = self.view.tintColor;
 	//Ugly hack to fix split view controller tint color.
-	self.splitViewController.view.tintColor = [UIColor redColor];
+	self.splitViewController.view.tintColor = self.view.tintColor;
 	
 	_galleryButton.hidden = self.parentViewController != nil && [self.parentViewController isKindOfClass:[UISplitViewController class]] == NO;
 	_nextButton.hidden = self.splitViewController != nil;

@@ -24,7 +24,7 @@ class DemoAlbumTableViewController: UITableViewController {
 	}
 	
     override func viewDidLoad() {
-		tabBarController?.view.tintColor = UIColor.red
+		tabBarController?.view.tintColor = view.tintColor
 		
         super.viewDidLoad()
 		

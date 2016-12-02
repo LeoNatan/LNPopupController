@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16C53a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11761" systemVersion="16C53a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -59,7 +59,7 @@
                         <color key="backgroundColor" red="0.46824919871794879" green="0.35455159831676863" blue="0.42750818819559616" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="separatorColor" red="1" green="1" blue="1" alpha="0.4048491379310345" colorSpace="custom" customColorSpace="sRGB"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="ZYs-3T-f9s">
-                            <rect key="frame" x="0.0" y="64" width="414" height="128"/>
+                            <rect key="frame" x="0.0" y="0.0" width="600" height="128"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="Zg4-Ff-lwN">
@@ -87,7 +87,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wQU-mc-TWu">
-                                    <rect key="frame" x="387" y="98" width="19" height="18"/>
+                                    <rect key="frame" x="573" y="98" width="19" height="18"/>
                                     <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <state key="normal" image="action"/>
                                 </button>
@@ -105,13 +105,13 @@
                             </constraints>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="QTf-qT-ihQ">
-                            <rect key="frame" x="0.0" y="280" width="414" height="0.0"/>
+                            <rect key="frame" x="0.0" y="216" width="600" height="0.0"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MusicCell" textLabel="tKl-KM-lNG" detailTextLabel="RSt-Vz-4n5" imageView="HTm-AH-96L" rowHeight="60" style="IBUITableViewCellStyleSubtitle" id="McV-oN-Mrx" customClass="MusicCell" customModule="LNPopupControllerExample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="156" width="414" height="60"/>
+                                <rect key="frame" x="0.0" y="156" width="600" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="McV-oN-Mrx" id="Efo-NR-jhI">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="59"/>
@@ -173,10 +173,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="MuE-h9-SPk">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="z6U-ni-Nun">
-                                        <rect key="frame" x="32" y="55" width="350" height="350"/>
+                                        <rect key="frame" x="32" y="55" width="536" height="311"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="z6U-ni-Nun" secondAttribute="height" multiplier="1:1" priority="900" id="Ctr-Um-N7r"/>
                                         </constraints>
@@ -187,7 +187,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </imageView>
                                     <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Tla-r7-MhO">
-                                        <rect key="frame" x="32" y="437" width="350" height="2.6666666666666856"/>
+                                        <rect key="frame" x="32" y="398" width="536" height="3"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -195,33 +195,33 @@
                                         </constraints>
                                     </progressView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nb0-7M-pIY">
-                                        <rect key="frame" x="0.0" y="438.66666666666674" width="414" height="297.33333333333326"/>
+                                        <rect key="frame" x="0.0" y="400" width="600" height="200"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LWB-Xh-Mmz" userLabel="Play">
-                                                <rect key="frame" x="185" y="127.33333333333331" width="44" height="44"/>
+                                                <rect key="frame" x="278" y="79" width="44" height="44"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_pause"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XxZ-bx-TSy" userLabel="Next">
-                                                <rect key="frame" x="288" y="127.33333333333331" width="44" height="44"/>
+                                                <rect key="frame" x="428" y="79" width="44" height="44"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_next"/>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nzz-jH-JK8" userLabel="Prev">
-                                                <rect key="frame" x="82" y="127.33333333333331" width="44" height="44"/>
+                                                <rect key="frame" x="129" y="79" width="44" height="44"/>
                                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <state key="normal" image="nowPlaying_prev"/>
                                             </button>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" minimumValueImage="volDown" maximumValueImage="volUp" translatesAutoresizingMaskIntoConstraints="NO" id="tJO-MG-Efp">
-                                                <rect key="frame" x="30" y="208.66666666666669" width="354" height="31"/>
+                                                <rect key="frame" x="30" y="136" width="540" height="31"/>
                                             </slider>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Song" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eEh-cM-UQb">
-                                                <rect key="frame" x="32" y="35.333333333333314" width="350" height="27.666666666666686"/>
+                                                <rect key="frame" x="32" y="19" width="536" height="28"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="23"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Demo Album" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CEG-dC-vQ2">
-                                                <rect key="frame" x="32" y="67" width="350" height="26.333333333333314"/>
+                                                <rect key="frame" x="32" y="51" width="536" height="27"/>
                                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
                                                 <color key="textColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
