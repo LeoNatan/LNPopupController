@@ -1083,6 +1083,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				 
 				 [self.popupContentView removeFromSuperview];
 				 self.popupContentView.popupInteractionGestureRecognizer = nil;
+				 [self.popupContentView removeObserver:self forKeyPath:@"popupCloseButtonStyle"];
 				 self.popupContentView = nil;
 				 
 				 _popupBarLongPressGestureRecognizerDelegate = nil;
