@@ -343,6 +343,13 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	[self _updateAccessibility];
 }
 
+- (void)setAccessibilityImageLabel:(NSString *)accessibilityImageLabel
+{
+	_accessibilityImageLabel = accessibilityImageLabel;
+	
+	_imageView.accessibilityLabel = accessibilityImageLabel;
+}
+
 - (void)setAccessibilityProgressLabel:(NSString *)accessibilityProgressLabel
 {
 	_accessibilityProgressLabel = accessibilityProgressLabel;

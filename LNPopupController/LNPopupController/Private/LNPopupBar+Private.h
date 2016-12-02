@@ -45,6 +45,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @property (nonatomic, copy) NSString* accessibilityCenterLabel;
 @property (nonatomic, copy) NSString* accessibilityCenterHint;
+@property (nonatomic, copy) NSString* accessibilityImageLabel;
 @property (nonatomic, copy) NSString* accessibilityProgressLabel;
 @property (nonatomic, copy) NSString* accessibilityProgressValue;
 

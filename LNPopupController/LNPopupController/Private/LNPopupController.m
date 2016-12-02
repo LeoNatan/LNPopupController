@@ -721,6 +721,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar.accessibilityCenterHint = _currentPopupItem.accessibilityHint;
 }
 
+- (void)_reconfigure_accessibilityImageLabel
+{
+	_popupBar.accessibilityImageLabel = _currentPopupItem.accessibilityImageLabel;
+}
+
 - (void)_reconfigure_accessibilityProgressLabel
 {
 	_popupBar.accessibilityProgressLabel = _currentPopupItem.accessibilityProgressLabel;
@@ -796,7 +801,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	NSArray<NSString*>* keys = @[@"title", @"subtitle", @"image", @"progress", @"leftBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
+	NSArray<NSString*>* keys = @[@"title", @"subtitle", @"image", @"progress", @"leftBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityImageLabel", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
 	[keys enumerateObjectsUsingBlock:^(NSString * __nonnull key, NSUInteger idx, BOOL * __nonnull stop) {
 		[self _popupItem:_currentPopupItem didChangeValueForKey:key];
 	}];

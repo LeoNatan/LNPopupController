@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * The popup item's image.
  *
- * The image will only be displayed on prominent stype popup bars.
+ * The image will only be displayed on prominent style popup bars.
  */
 @property (nullable, nonatomic, strong) UIImage* image;
 
@@ -56,6 +56,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface LNPopupItem (Accessibility)
+
+/**
+ *  The accessibility label of the image, in a localized string.
+ */
+@property (nonatomic, copy, nullable) NSString* accessibilityImageLabel;
 
 /**
  *  The accessibility label of the progress, in a localized string.

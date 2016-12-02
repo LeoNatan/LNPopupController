@@ -62,6 +62,7 @@ class DemoMusicPlayerController: UIViewController {
 				albumArtImageView.image = albumArt
 			}
 			popupItem.image = albumArt
+			popupItem.accessibilityImageLabel = NSLocalizedString("Album Art", comment: "")
 		}
 	}
 	
