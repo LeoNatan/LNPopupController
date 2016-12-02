@@ -8,7 +8,12 @@
 
 #import "LNPopupBar.h"
 
-extern const CGFloat LNPopupBarHeight;
+extern const CGFloat LNPopupBarHeightCompact;
+extern const CGFloat LNPopupBarHeightProminent;
+
+extern CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style);
+extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style);
+
 
 @protocol _LNPopupBarSupport <NSObject>
 
@@ -29,15 +34,18 @@ extern const CGFloat LNPopupBarHeight;
 @property (nonatomic, copy) NSString* title;
 @property (nonatomic, copy) NSString* subtitle;
 
+@property (nonatomic, strong) UIImage* image;
+
 @property (nonatomic, strong) UIToolbar* toolbar;
 
 @property (nonatomic, strong) UIView* highlightView;
-- (void)setHighlighted:(BOOL)highlighted;
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 
 @property (nonatomic, strong) UIProgressView* progressView;
 
 @property (nonatomic, copy) NSString* accessibilityCenterLabel;
 @property (nonatomic, copy) NSString* accessibilityCenterHint;
+@property (nonatomic, copy) NSString* accessibilityImageLabel;
 @property (nonatomic, copy) NSString* accessibilityProgressLabel;
 @property (nonatomic, copy) NSString* accessibilityProgressValue;
 

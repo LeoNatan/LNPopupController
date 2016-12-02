@@ -1,6 +1,6 @@
 #LNPopupController
 
-<img src="./Supplements/taps.gif" width="320"/> <img src="./Supplements/swipes.gif" width="320"/>
+<img src="./Supplements/Artwork.png" width=256/>
 
 `LNPopupController` is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.
 
@@ -10,28 +10,32 @@
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/issues) [![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/badges/shields.svg)](https://github.com/LeoNatan/LNPopupController/issues?q=is%3Aissue+is%3Aclosed) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/graphs/contributors)
 
-See a video [here](https://vimeo.com/137020302).
+<img src="./Supplements/open_modern_popup.gif" width="320"/> <img src="./Supplements/close_modern_popup.gif" width="320"/>
 
-Once a popup bar is presented with a content view controller, the user can swipe or tap the popup at any point to present the content controller. After finishing, the user dismisses the popup by either swiping or tapping the Dismiss button.
+<img src="./Supplements/taps.gif" width="320"/> <img src="./Supplements/swipes.gif" width="320"/>
 
-The framework is intended to be very generic and work in most situations, so it was implemented as a category over `UIViewController`. Each view controller can present a popup bar, docked to a bottom view. 
+See a video of the modern popup look & feel [here](https://vimeo.com/194064291) and a video of the classic popup look & feel [here](https://vimeo.com/137020302).
+
+Once a popup bar is presented with a content view controller, the user can swipe or tap the popup at any point to present the content controller. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
+
+The framework is intended to be very generic and work in most situations, so it is implemented as a category over `UIViewController`. Each view controller can present a popup bar, docked to a bottom view. 
 For `UITabBarController` subclasses, the default dock view is the tab bar. 
 For `UINavigationController` subclasses, the default dock view is the toolbar.
-For other classes, the popup bar is presented at the bottom of the screen. Subclasses can provide their own docking view.
+For other classes, the popup bar is presented at the bottom of the screen. View controller subclasses can provide their own docking views.
 
-The framework will attempt to correct the bottom layout guide of the container controller and its child controllers as the popup bar is presented and dismissed.
+The framework attempts to correct the top and bottom layout guides of the container controller and its child controllers as the popup bar is presented and dismissed.
 
 The contents of the popup bar is built dynamically using the popup item objects (instances of the `LNPopupItem` class) associated with the popup content view controllers. To change the contents of the popup bar, you must therefore configure the popup items of your view controllers.
 
 Generally, it is recommended to present the popup bar on the outermost container controller. So if you have a view controller container in a navigation controller, which is in turn contained in a tab bar controller, it is recommended to present the popup bar on the tab bar controller.
 
-Check the demo projects for how to use the framework in various scenarios. It contains example in Swift and Objective C.
+Check the demo project for many common use cases of the framework in various scenarios. It contains examples in Swift and Objective C.
 
 ###Features
 
-* Available for iOS 8 and above<sup>1</sup>, available as Xcode dynamic framework
+* Available for iOS 8 and above<sup>1</sup>, available as an Xcode dynamic framework
 * Good citizen in modern UIKit world
-* Modern Objective C syntax for better Swift interoperability
+* Modern Objective C syntax for best Swift interoperability
 
 <sup>1</sup> The framework is available for iOS 8 and above. **The included demo project has a deployment target of iOS 9 and above**, and may crash with certain features enabled on iOS 8 simulator or devices.
 
@@ -128,17 +132,53 @@ Any `UIViewController` subclasses can be popup container view controllers. The p
 }
 ``` 
 
-###Popup Bar Appearance and Behavior
+###Appearance and Behavior
+
+####Modern Look and Feel
+
+`LNPopupController` provides two distinct style of popup look and feel, one based on iOS 10 Music app look and feel, and one based on iOS 9 look and feel. Popup bar styles are arbitrarily labeled "prominent" for iOS 10 style popup bar and "compact" for iOS 9 style. Popup interaction styles are labeled "snap" for iOS 10 style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for iOS 10 style chevron close button and "round" for iOS 9 style close buttons. For each, there is a "default" style for choosing the most suitable one for the current operating system version.
+
+The defaults for iOS 10 are:
+* Prominent bar style
+* Snap interaction style
+* Chevron close button style
+
+The defaults for iOS 9 are:
+* Compact bar style
+* Drag interaction style
+* Round close button style
+
+Customizing the popup bar style is achieved by setting the popup bar's `barStyle` property.
+
+```swift
+navigationController.popupBar.barStyle = .compact
+```
+
+Customizing the popup interaction style is achieved by setting the popup presentation containing controller's `popupInteractionStyle` property.
+
+```swift
+navigationController.popupInteractionStyle = .drag
+```
+
+Customizing the popup close button style is achieved by setting the popup content view's `popupCloseButtonStyle` property.
+
+```swift
+navigationController.popupContentView.popupCloseButtonStyle = .round
+```
+
+To disable the popup close button, set the `popupCloseButtonStyle` to `LNPopupCloseButtonStyleNone` / `.none`.
+
+####Popup Bar Appearance
 
 For navigation and tab bar controller popup containers, the style of the popup bar is determined according to the bottom bar's appearance. For other container controllers, the style is the default style. For each style, title and button colors will be adjusted accordingly.
 
 To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, use the `updatePopupBarAppearance` method.
 
-<img src="./Supplements/bar_style.gif"/>
+<img src="./Supplements/modern_bar_style.gif" width="320"/> <img src="./Supplements/bar_style.gif" width="320"/>
 
 Supplying long text for the title and/or subtitle will result in a scrolling text. Otherwise, the text will be centered.
 
-<img src="./Supplements/scoll.gif"/>
+<img src="./Supplements/modern_no_scroll.gif" width="320"/> <img src="./Supplements/scoll.gif" width="320"/>
 
 The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition out together with the bottom bar of the container controller. **Opening the popup while it is hidden due to `hidesBottomBarWhenPushed` is not supported and may produce undefined behavior.**
 
@@ -163,7 +203,7 @@ Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContent
 [[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTintColor:[UIColor yellowColor]];
 ```
 
-<img src="./Supplements/custom1.png"/>
+<img src="./Supplements/modern_custom.png" width="320"/> <img src="./Supplements/custom1.png" width="320"/>
 
 ####Popup Content View and Gesture Customization
 
@@ -201,6 +241,7 @@ targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString
 To modify the accessibility label and value of the popup bar progress view, set the `accessibilityProgressLabel` and `accessibilityProgressValue` properties of the `LNPopupItem` object of the popup content view controller.
 
 ```swift
+demoVC.popupItem.accessibilityImageLabel = NSLocalizedString("Custom image label", comment: "")
 demoVC.popupItem.accessibilityProgressLabel = NSLocalizedString("Custom accessibility progress label", comment: "")
 demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.stringFromTimeInterval(NSTimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.stringFromTimeInterval(totalTime)!)"
 ```

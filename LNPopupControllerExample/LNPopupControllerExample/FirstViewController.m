@@ -12,19 +12,6 @@
 #import "LoremIpsum.h"
 #import "RandomColors.h"
 
-@interface WhatsUpSplitViewController : UISplitViewController
-
-@end
-
-@implementation WhatsUpSplitViewController
-
-- (void)viewDidLayoutSubviews
-{
-	[super viewDidLayoutSubviews];
-}
-
-@end
-
 @interface DemoGalleryController : UITableViewController @end
 @implementation DemoGalleryController
 
@@ -53,10 +40,11 @@
 //	dispatch_once(&onceToken, ^{
 //		NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 //		paragraphStyle.alignment = NSTextAlignmentRight;
+//		paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
 //		
 //		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setTitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
 //		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setSubtitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]}];
-//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setBarStyle:UIBarStyleBlack];
+//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setBackgroundStyle:UIBlurEffectStyleDark];
 //		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setTintColor:[UIColor yellowColor]];
 //	});
 //}
@@ -69,7 +57,7 @@
 
 // TODO: Uncomment this code to demonstrate disabling the popup close button.
 	
-//	self.navigationController.popupContentView.popupCloseButton.hidden = YES;
+//	self.navigationController.popupContentView.popupCloseButtonStyle = LNPopupCloseButtonStyleNone;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -77,9 +65,9 @@
 	[super viewWillAppear:animated];
 	
 	//Ugly hack to fix tab bar tint color.
-	self.tabBarController.view.tintColor = [UIColor redColor];
+	self.tabBarController.view.tintColor = self.view.tintColor;
 	//Ugly hack to fix split view controller tint color.
-	self.splitViewController.view.tintColor = [UIColor redColor];
+	self.splitViewController.view.tintColor = self.view.tintColor;
 	
 	_galleryButton.hidden = self.parentViewController != nil && [self.parentViewController isKindOfClass:[UISplitViewController class]] == NO;
 	_nextButton.hidden = self.splitViewController != nil;
@@ -95,7 +83,7 @@
 - (IBAction)_changeBarStyle:(id)sender
 {
 	self.navigationController.toolbar.barStyle = 1 - self.navigationController.toolbar.barStyle;
-	self.navigationController.toolbar.tintColor = self.navigationController.toolbar.barStyle ? LNRandomLightColor() : LNRandomDarkColor();
+	self.navigationController.toolbar.tintColor = self.navigationController.toolbar.barStyle ? LNRandomLightColor() : self.view.tintColor;
 	[self.navigationController.toolbar.items enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		obj.tintColor = self.navigationController.toolbar.tintColor;
 	}];
@@ -142,6 +130,7 @@
 	demoVC.view.backgroundColor = LNRandomDarkColor();
 	demoVC.popupItem.title = [LoremIpsum sentence];
 	demoVC.popupItem.subtitle = [LoremIpsum sentence];
+	demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
 	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
 	
 	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
@@ -157,7 +146,7 @@
 
 - (IBAction)_dismissBar:(id)sender
 {
-	UIViewController* targetVC = self.tabBarController;
+	__kindof UIViewController* targetVC = self.tabBarController;
 	if(targetVC == nil)
 	{
 		targetVC = self.navigationController;

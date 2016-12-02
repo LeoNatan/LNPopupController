@@ -11,7 +11,27 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern const NSInteger LNBarStyleInherit;
+extern const NSInteger LNBackgroundStyleInherit;
+
+
+/**
+ * Available styles for the popup bar 
+ */
+typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
+	/**
+	 * Use the most appropriate style for the current operating system version; uses prominent style for iOS 10 and above, otherwise compact.
+	 */
+	LNPopupBarStyleDefault,
+	
+	/**
+	 * Compact bar style
+	 */
+	LNPopupBarStyleCompact,
+	/**
+	 * Prominent bar style
+	 */
+	LNPopupBarStyleProminent
+};
 
 /**
  *  A popup bar is a control that displays popup information. Content is popuplated from LNPopupItem items.
@@ -27,46 +47,51 @@ extern const NSInteger LNBarStyleInherit;
  *  An array of custom bar button items to display on the left side. (read-only)
  */
 @property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* leftBarButtonItems;
+
 /**
  *  An array of custom bar button items to display on the right side. (read-only)
  */
 @property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* rightBarButtonItems;
 
 /**
- *  A Boolean value indicating whether the popup bar is translucent (YES) or not (NO).
+ *  The popup bar style. (read-only)
  */
-@property (nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign, readonly) LNPopupBarStyle barStyle;
+
 /**
- *  The popup bar style that specifies its appearance. 
- *  Use LNBarStyleInherit value to inherit the docking view's bar style if possible.
+ *  The popup bar background style that specifies its appearance.
+ *  Use LNBackgroundStyleInherit value to inherit the docking view's bar style if possible.
  */
-@property (nonatomic, assign) UIBarStyle barStyle UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIBlurEffectStyle backgroundStyle UI_APPEARANCE_SELECTOR;
+
 /**
  *  The tint color to apply to the popup bar background.
  */
 @property (nullable, nonatomic, strong) UIColor* barTintColor UI_APPEARANCE_SELECTOR;
-/**
- *  The background image to use
- */
-@property (nullable, nonatomic, strong) UIImage* backgroundImage UI_APPEARANCE_SELECTOR;
-/**
- *  The shadow image to be used for the popup bar.
- *
- *  The default value is nil, which corresponds to the default shadow image. When non-nil, this property represents a custom shadow image to show instead of the default. For a custom shadow image to be shown, a custom background image must also be set with the setBackgroundImage: method. If the default background image is used, then the default shadow image will be used regardless of the value of this property.
- */
-@property(nullable, nonatomic, strong) UIImage* shadowImage UI_APPEARANCE_SELECTOR;
+
 /**
  *  Display attributes for the popup bar’s title text.
  *
  *  You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in NSAttributedString.h.
  */
 @property(nullable, nonatomic, copy) NSDictionary<NSString*, id>* titleTextAttributes UI_APPEARANCE_SELECTOR;
+
 /**
  *  Display attributes for the popup bar’s subtitle text.
  *
  *  You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in NSAttributedString.h.
  */
 @property(nullable, nonatomic, copy) NSDictionary<NSString*, id>* subtitleTextAttributes UI_APPEARANCE_SELECTOR;
+
+/**
+ * When enabled, titles and subtitles that are longer than the space available will scroll text over time. By default, this is set to @c false for iOS 10 and above, or @c true otherwise.
+ */
+@property(nonatomic, assign) BOOL marqueeScrollEnabled;
+
+/**
+ * When enabled, the title and subtitle marquee scroll will be coordinated, and if either the title or subtitle of the current popup item change, the animation will reset so the two can scroll together. Enabled by default.
+ */
+@property(nonatomic, assign) BOOL coordinateMarqueeScroll;
 
 @end
 

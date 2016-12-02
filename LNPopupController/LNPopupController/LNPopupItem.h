@@ -28,6 +28,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy) NSString* subtitle;
 
 /**
+ * The popup item's image.
+ *
+ * The image will only be displayed on prominent style popup bars.
+ */
+@property (nullable, nonatomic, strong) UIImage* image;
+
+/**
  *  The popup item's progress.
  *
  *  The current progress is represented by a floating-point value between 0.0 and 1.0, inclusive, where 1.0 indicates the completion of the task. The default value is 0.0. Values less than 0.0 and greater than 1.0 are pinned to those limits.
@@ -36,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  An array of custom bar button items to display on the left side of the popup bar.
+ *
+ * For prominent style bars, these buttons are presented on the right side, but before @c rightBarButtonItems.
  */
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems;
 
@@ -47,6 +56,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface LNPopupItem (Accessibility)
+
+/**
+ *  The accessibility label of the image, in a localized string.
+ */
+@property (nonatomic, copy, nullable) NSString* accessibilityImageLabel;
 
 /**
  *  The accessibility label of the progress, in a localized string.

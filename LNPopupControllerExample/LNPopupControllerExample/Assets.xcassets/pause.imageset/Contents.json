@@ -2,7 +2,6 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "MiniPlayerPauseIcon.png",
       "scale" : "1x"
     },
     {
@@ -11,7 +10,7 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "MiniPlayerPauseIcon@3x.png",
+      "filename" : "pause-mini@3x.png",
       "scale" : "3x"
     }
   ],

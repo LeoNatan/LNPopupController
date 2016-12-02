@@ -13,6 +13,7 @@ static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
 @implementation LNPopupItem
 
+@synthesize accessibilityImageLabel = _accessibilityImageLabel;
 @synthesize accessibilityProgressLabel = _accessibilityProgressLabel;
 @synthesize accessibilityProgressValue = _accessibilityProgressValue;
 
@@ -24,11 +25,13 @@ static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 	{
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(title)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(subtitle)) options:0 context:_LNPopupItemObservationContext];
+		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(image)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(progress)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(leftBarButtonItems)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(rightBarButtonItems)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityLabel)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityHint)) options:0 context:_LNPopupItemObservationContext];
+		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityImageLabel)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityProgressLabel)) options:0 context:_LNPopupItemObservationContext];
 		[self addObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityProgressValue)) options:0 context:_LNPopupItemObservationContext];
 	}
@@ -40,11 +43,13 @@ static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 {
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(title)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(subtitle)) context:_LNPopupItemObservationContext];
+	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(image)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(progress)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(leftBarButtonItems)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(rightBarButtonItems)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityLabel)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityHint)) context:_LNPopupItemObservationContext];
+	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityImageLabel)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityProgressLabel)) context:_LNPopupItemObservationContext];
 	[self removeObserver:self forKeyPath:NSStringFromSelector(@selector(accessibilityProgressValue)) context:_LNPopupItemObservationContext];
 }

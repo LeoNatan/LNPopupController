@@ -8,10 +8,17 @@
 
 #import "LNPopupController.h"
 #import "LNPopupItem+Private.h"
+#import "LNPopupCloseButton+Private.h"
 @import ObjectiveC;
+
+void __LNPopupControllerOutOfWindowHierarchy()
+{
+}
 
 static const CFTimeInterval LNPopupBarGestureHeightPercentThreshold = 0.2;
 static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
+
+#pragma mark Popup Transition Coordinator
 
 @interface _LNPopupTransitionCoordinator : NSObject <UIViewControllerTransitionCoordinator> @end
 @implementation _LNPopupTransitionCoordinator
@@ -123,12 +130,15 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 
 @end
 
+#pragma mark Popup Content View
+
 @interface LNPopupContentView ()
 
-- (instancetype)initWithFrame:(CGRect)frame popupBarStyle:(UIBarStyle)popupBarStyle;
+- (instancetype)initWithFrame:(CGRect)frame;
 
 @property (nonatomic, strong, readwrite) UIPanGestureRecognizer* popupInteractionGestureRecognizer;
 @property (nonatomic, strong, readwrite) LNPopupCloseButton* popupCloseButton;
+@property (nonatomic, strong) UIVisualEffectView* effectView;
 
 @end
 
@@ -136,17 +146,69 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
 {
-	return [self initWithFrame:frame popupBarStyle:UIBarStyleDefault];
-}
-
-- (nonnull instancetype)initWithFrame:(CGRect)frame popupBarStyle:(UIBarStyle)popupBarStyle
-{
-	self = [super initWithEffect:nil];
-	if(self) { self.frame = frame; }
+	self = [super initWithFrame:frame];
+	
+	if(self)
+	{
+		_effectView = [[UIVisualEffectView alloc] initWithEffect:nil];
+		_effectView.frame = self.bounds;
+		_effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		[self addSubview:_effectView];
+	}
+	
 	return self;
 }
 
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	
+	_effectView.frame = self.bounds;
+}
+
+- (UIView *)contentView
+{
+	return _effectView.contentView;
+}
+
+- (void)setEffect:(UIVisualEffect*)effect
+{
+	[_effectView setEffect:effect];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+	NSLog(@"%@", NSStringFromCGPoint(scrollView.contentOffset));
+	
+	if(scrollView.contentOffset.y > 0)
+	{
+		scrollView.contentOffset = CGPointZero;
+	}
+}
+
 @end
+
+LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style)
+{
+	LNPopupInteractionStyle rv = style;
+	if(rv == LNPopupInteractionStyleDefault)
+	{
+		rv = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion > 9 ? LNPopupInteractionStyleSnap : LNPopupInteractionStyleDrag;
+	}
+	return rv;
+}
+
+LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPopupCloseButtonStyle style)
+{
+	LNPopupCloseButtonStyle rv = style;
+	if(rv == LNPopupCloseButtonStyleDefault)
+	{
+		rv = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion > 9 ? LNPopupCloseButtonStyleChevron : LNPopupCloseButtonStyleRound;
+	}
+	return rv;
+}
+
+#pragma mark Popup Controller
 
 @interface LNPopupController () <_LNPopupItemDelegate, UIGestureRecognizerDelegate, UIViewControllerPreviewingDelegate> @end
 
@@ -171,6 +233,9 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 	CGFloat _statusBarTresholdDir;
 	
 	CGFloat _bottomBarOffset;
+	
+	NSLayoutConstraint* _popupCloseButtonTopConstraint;
+	NSLayoutConstraint* _popupCloseButtonHorizontalConstraint;
 }
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
@@ -200,14 +265,17 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 	return CGRectMake(defaultFrame.origin.x, defaultFrame.origin.y - _popupBar.frame.size.height, _containerController.view.bounds.size.width, _popupBar.frame.size.height);
 }
 
-- (void)_repositionPopupContent
+- (void)_repositionPopupContentMovingBottomBar:(BOOL)bottomBar
 {
 	UIView* relativeViewForContentView = _bottomBar;
 	
 	CGFloat percent = [self _percentFromPopupBarForBottomBarDisplacement];
-	CGRect bottomBarFrame = _cachedDefaultFrame;
-	bottomBarFrame.origin.y += (percent * bottomBarFrame.size.height);
-	_bottomBar.frame = bottomBarFrame;
+	if(bottomBar)
+	{
+		CGRect bottomBarFrame = _cachedDefaultFrame;
+		bottomBarFrame.origin.y += (percent * bottomBarFrame.size.height);
+		_bottomBar.frame = bottomBarFrame;
+	}
 	
 	[_popupBar.toolbar setAlpha:1.0 - percent];
 	[_popupBar.progressView setAlpha:1.0 - percent];
@@ -215,32 +283,25 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 100;
 	CGRect contentFrame = _containerController.view.bounds;
 	contentFrame.origin.x = _popupBar.frame.origin.x;
 	contentFrame.origin.y = _popupBar.frame.origin.y + _popupBar.frame.size.height;
-
-	// This rounds the height to the nearest fractional pixel size supported by the main screen of the
-	// current device. It fixes an issue where the view doesn't quite touch all the way to the bottom bar
-	CGFloat screenScale = _containerController.view.window.screen.scale;
+	
+	CGFloat screenScale;
+	if(_containerController.view.window != nil)
+	{
+		screenScale = _containerController.view.window.screen.scale;
+	}
+	else
+	{
+		NSLog(@"LNPopupController: The popup is not part of a window hierarchy and you may see unexpected results. Always present the popup bar once the containing controller has been presented and it's view has appeared. Break on __LNPopupControllerOutOfWindowHierarchy to debug.");
+		__LNPopupControllerOutOfWindowHierarchy();
+		screenScale = [UIScreen mainScreen].scale;
+	}
 	CGFloat fractionalHeight = relativeViewForContentView.frame.origin.y - (_popupBar.frame.origin.y + _popupBar.frame.size.height);
 	contentFrame.size.height = ceil(fractionalHeight * screenScale) / screenScale;
 	
 	self.popupContentView.frame = contentFrame;
 	_containerController.popupContentViewController.view.frame = _containerController.view.bounds;
 	
-	[self.popupContentView.popupCloseButton sizeToFit];
-	CGRect popupCloseButtonFrame = self.popupContentView.popupCloseButton.frame;
-	popupCloseButtonFrame.origin.x = 12;
-	popupCloseButtonFrame.origin.y = 12 + ([UIApplication sharedApplication].isStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
-	UINavigationBar* possibleBar = (id)[[_currentContentController view] hitTest:popupCloseButtonFrame.origin withEvent:nil];
-	if([possibleBar isKindOfClass:[UINavigationBar class]])
-	{
-		popupCloseButtonFrame.origin.y += CGRectGetHeight(possibleBar.bounds);
-	}
-	
-	if(!CGRectEqualToRect(self.popupContentView.popupCloseButton.frame, popupCloseButtonFrame))
-	{
-		[UIView animateWithDuration:0.2 animations:^{
-			self.popupContentView.popupCloseButton.frame = popupCloseButtonFrame;
-		}];
-	}
+	[self _repositionPopupCloseButton];
 }
 
 static CGFloat __saturate(CGFloat x)
@@ -287,14 +348,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_containerController setNeedsStatusBarAppearanceUpdate];
 	}
 	
-	[self _repositionPopupContent];
+	[self _repositionPopupContentMovingBottomBar:YES];
 }
 
-- (void)_transitionToState:(LNPopupPresentationState)state animated:(BOOL)animated completion:(void(^)())completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
+- (void)_transitionToState:(LNPopupPresentationState)state animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)())completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
 {
 	if(transitionOriginatedByUser == YES && _popupControllerState == LNPopupPresentationStateTransitioning)
 	{
-		NSLog(@"The popup controller is already in transition. Will ignore this transition request.");
+		NSLog(@"LNPopupController: The popup controller is already in transition. Will ignore this transition request.");
 		return;
 	}
 	
@@ -316,13 +377,19 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			if(CGColorGetAlpha(contentController.view.backgroundColor.CGColor) < 1.0)
 			{
 				//Support for iOS8, where this property was exposed as readonly.
-				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:_popupBar.barStyle == UIBarStyleDefault ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleDark] forKey:@"effect"];
-				self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.2;
+				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:_popupBar.backgroundStyle] forKey:@"effect"];
+				if(self.popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound)
+				{
+					self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.2;
+				}
 			}
 			else
 			{
 				[self.popupContentView setValue:nil forKey:@"effect"];
-				self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.1;
+				if(self.popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound)
+				{
+					self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.1;
+				}
 			}
 			
 			[self.popupContentView.contentView addSubview:contentController.view];
@@ -337,8 +404,19 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupControllerState = LNPopupPresentationStateTransitioning;
 	_popupControllerTargetState = state;
 	
-	[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent animations:^
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	
+	void (^updatePopupBarAlpha)(void) = ^ {
+		if(allowBarAlpha && resolvedStyle == LNPopupInteractionStyleSnap)
+		{
+			_popupBar.alpha = state < LNPopupPresentationStateTransitioning;
+		}
+	};
+	
+	[UIView animateWithDuration:animated ? resolvedStyle == LNPopupInteractionStyleSnap ? 0.75 : 0.5 : 0.0 delay:0.0 usingSpringWithDamping:spring ? 0.8 : 1.0 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^
 	 {
+		 updatePopupBarAlpha();
+		 
 		 if(state == LNPopupPresentationStateClosed)
 		 {
 			 [contentController beginAppearanceTransition:NO animated:YES];
@@ -347,6 +425,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		 [self _setContentToState:state];
 	 } completion:^(BOOL finished)
 	 {
+		 updatePopupBarAlpha();
+		 
 		 if(state == LNPopupPresentationStateClosed)
 		 {
 			 [contentController.view removeFromSuperview];
@@ -387,11 +467,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	switch (lpgr.state) {
 		case UIGestureRecognizerStateBegan:
-			[_popupBar setHighlighted:YES];
+			[_popupBar setHighlighted:YES animated:YES];
 			break;
 		case UIGestureRecognizerStateCancelled:
 		case UIGestureRecognizerStateEnded:
-			[_popupBar setHighlighted:NO];
+			[_popupBar setHighlighted:NO animated:YES];
 			break;
 		default:
 			break;
@@ -403,15 +483,176 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	switch (tgr.state) {
 		case UIGestureRecognizerStateEnded:
 		{
-			[self _transitionToState:LNPopupPresentationStateTransitioning animated:NO completion:^{
+			[self _transitionToState:LNPopupPresentationStateTransitioning animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:NO completion:^{
 				[_containerController.view setNeedsLayout];
 				[_containerController.view layoutIfNeeded];
-				[self _transitionToState:LNPopupPresentationStateOpen animated:YES completion:nil transitionOriginatedByUser:NO];
+				[self _transitionToState:LNPopupPresentationStateOpen animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
 			} transitionOriginatedByUser:NO];
 		}	break;
 		default:
 			break;
 	}
+}
+
+- (void)_popupBarPresentationByUserPanGestureHandler_began:(UIPanGestureRecognizer*)pgr
+{
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	
+	if(resolvedStyle == LNPopupInteractionStyleSnap)
+	{
+		if((_popupControllerState == LNPopupPresentationStateClosed && [pgr velocityInView:_popupBar].y < 0))
+		{
+			pgr.enabled = NO;
+			pgr.enabled = YES;
+			
+			_popupControllerTargetState = LNPopupPresentationStateOpen;
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+				[self _transitionToState:_popupControllerTargetState animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateClosed ? YES : NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+			});
+		}
+		else if((_popupControllerState == LNPopupPresentationStateClosed && [pgr velocityInView:_popupBar].y > 0))
+		{
+			pgr.enabled = NO;
+			pgr.enabled = YES;
+		}
+	}
+}
+
+- (void)_popupBarPresentationByUserPanGestureHandler_changed:(UIPanGestureRecognizer*)pgr
+{
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	
+	if(pgr != _popupContentView.popupInteractionGestureRecognizer)
+	{
+		UIScrollView* possibleScrollView = (id)pgr.view;
+		if([possibleScrollView isKindOfClass:[UIScrollView class]])
+		{
+			if(_dismissGestureStarted == NO && possibleScrollView.contentOffset.y > - (possibleScrollView.contentInset.top + LNPopupBarDeveloperPanGestureThreshold))
+			{
+				return;
+			}
+			
+			if(_dismissGestureStarted == NO)
+			{
+				_dismissScrollViewStartingContentOffset = possibleScrollView.contentOffset.y;
+			}
+			
+			if(possibleScrollView.contentOffset.y < - (possibleScrollView.contentInset.top + LNPopupBarDeveloperPanGestureThreshold))
+			{
+				possibleScrollView.contentOffset = CGPointMake(possibleScrollView.contentOffset.x, _dismissScrollViewStartingContentOffset);
+			}
+		}
+	}
+	
+	if(_dismissGestureStarted == NO)
+	{
+		_lastSeenMovement = CACurrentMediaTime();
+		_popupBarLongPressGestureRecognizer.enabled = NO;
+		_popupBarLongPressGestureRecognizer.enabled = YES;
+		_lastPopupBarLocation = _popupBar.center;
+		
+		_statusBarTresholdDir = _popupControllerState == LNPopupPresentationStateOpen ? 1 : -1;
+		_tresholdToPassForStatusBarUpdate = -10;
+		
+		_stateBeforeDismissStarted = _popupControllerState;
+		
+		[self _transitionToState:LNPopupPresentationStateTransitioning animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+		
+		_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
+		_cachedOpenPopupFrame = [self _frameForOpenPopupBar];
+		
+		_dismissGestureStarted = YES;
+		
+		if(pgr != _popupContentView.popupInteractionGestureRecognizer)
+		{
+			_dismissStartingOffset = [pgr translationInView:_popupBar.superview].y;
+		}
+		else
+		{
+			_dismissStartingOffset = 0;
+		}
+	}
+	
+	if(_dismissGestureStarted == YES)
+	{
+		CGFloat targetCenterY = MIN(_lastPopupBarLocation.y + [pgr translationInView:_popupBar.superview].y, _cachedDefaultFrame.origin.y - _popupBar.frame.size.height / 2) - _dismissStartingOffset;
+		targetCenterY = MAX(targetCenterY, _cachedOpenPopupFrame.origin.y + _popupBar.frame.size.height / 2);
+		
+		CGFloat realTargetCenterY = targetCenterY;
+		
+		if(resolvedStyle == LNPopupInteractionStyleSnap)
+		{
+			//Rubber band the pull gesture in snap mode.
+			CGFloat c = 0.55, x = targetCenterY, d = _popupBar.superview.bounds.size.height / 5;
+			targetCenterY = (1.0 - (1.0 / ((x * c / d) + 1.0))) * d;
+		}
+		
+		CGFloat currentCenterY = _popupBar.center.y;
+		
+		_popupBar.center = CGPointMake(_popupBar.center.x, targetCenterY);
+		[self _repositionPopupContentMovingBottomBar:resolvedStyle == LNPopupInteractionStyleDrag];
+		_lastSeenMovement = CACurrentMediaTime();
+		
+		if((_statusBarTresholdDir == 1 && currentCenterY < targetCenterY && targetCenterY >= _tresholdToPassForStatusBarUpdate)
+		   || (_statusBarTresholdDir == -1 && currentCenterY > targetCenterY && targetCenterY < _tresholdToPassForStatusBarUpdate))
+		{
+			_statusBarTresholdDir = -_statusBarTresholdDir;
+			
+			[_containerController setNeedsStatusBarAppearanceUpdate];
+		}
+		
+		[_popupContentView.popupCloseButton _setButtonContainerTransitioning];
+		
+		if(resolvedStyle == LNPopupInteractionStyleSnap && realTargetCenterY / _popupBar.superview.bounds.size.height > 0.375)
+		{
+			_dismissGestureStarted = NO;
+			
+			pgr.enabled = NO;
+			pgr.enabled = YES;
+			
+			_popupControllerTargetState = LNPopupPresentationStateClosed;
+			[self _transitionToState:_popupControllerTargetState animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateClosed ? YES : NO allowPopupBarAlphaModification:YES completion:^ {
+				[_popupContentView.popupCloseButton _setButtonContainerStationary];
+			} transitionOriginatedByUser:NO];
+		}
+	}
+}
+
+- (void)_popupBarPresentationByUserPanGestureHandler_endedOrCancelled:(UIPanGestureRecognizer*)pgr
+{
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	
+	if(_dismissGestureStarted == YES)
+	{
+		LNPopupPresentationState targetState = _stateBeforeDismissStarted;
+		
+		if(resolvedStyle == LNPopupInteractionStyleDrag)
+		{
+			CGFloat barTransitionPercent = [self _percentFromPopupBar];
+			BOOL hasPassedHeighThreshold = _stateBeforeDismissStarted == LNPopupPresentationStateClosed ? barTransitionPercent > LNPopupBarGestureHeightPercentThreshold : barTransitionPercent < (1.0 - LNPopupBarGestureHeightPercentThreshold);
+			BOOL isPanUp = [pgr velocityInView:_containerController.view].y < 0;
+			BOOL isPanDown = [pgr velocityInView:_containerController.view].y > 0;
+			
+			
+			if(isPanUp)
+			{
+				targetState = LNPopupPresentationStateOpen;
+			}
+			else if(isPanDown)
+			{
+				targetState = LNPopupPresentationStateClosed;
+			}
+			else if(hasPassedHeighThreshold)
+			{
+				targetState = _stateBeforeDismissStarted == LNPopupPresentationStateClosed ? LNPopupPresentationStateOpen : LNPopupPresentationStateClosed;
+			}
+		}
+		
+		[_popupContentView.popupCloseButton _setButtonContainerStationary];
+		[self _transitionToState:targetState animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+	}
+	
+	_dismissGestureStarted = NO;
 }
 
 - (void)_popupBarPresentationByUserPanGestureHandler:(UIPanGestureRecognizer*)pgr
@@ -421,111 +662,18 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	switch (pgr.state) {
+	switch (pgr.state)
+	{
+		case UIGestureRecognizerStateBegan:
+			[self _popupBarPresentationByUserPanGestureHandler_began:pgr];
+			break;
 		case UIGestureRecognizerStateChanged:
-		{
-			if(pgr != _popupContentView.popupInteractionGestureRecognizer)
-			{
-				UIScrollView* possibleScrollView = (id)pgr.view;
-				if([possibleScrollView isKindOfClass:[UIScrollView class]])
-				{
-					if(_dismissGestureStarted == NO && possibleScrollView.contentOffset.y > - (possibleScrollView.contentInset.top + LNPopupBarDeveloperPanGestureThreshold))
-					{
-						return;
-					}
-					
-					if(_dismissGestureStarted == NO)
-					{
-						_dismissScrollViewStartingContentOffset = possibleScrollView.contentOffset.y;
-					}
-					
-					if(possibleScrollView.contentOffset.y < - (possibleScrollView.contentInset.top + LNPopupBarDeveloperPanGestureThreshold))
-					{
-						possibleScrollView.contentOffset = CGPointMake(possibleScrollView.contentOffset.x, _dismissScrollViewStartingContentOffset);
-					}
-				}
-			}
-			
-			if(_dismissGestureStarted == NO)
-			{
-				_lastSeenMovement = CACurrentMediaTime();
-				_popupBarLongPressGestureRecognizer.enabled = NO;
-				_popupBarLongPressGestureRecognizer.enabled = YES;
-				_lastPopupBarLocation = _popupBar.center;
-				
-				_statusBarTresholdDir = _popupControllerState == LNPopupPresentationStateOpen ? 1 : -1;
-				_tresholdToPassForStatusBarUpdate = -10;
-				
-				_stateBeforeDismissStarted = _popupControllerState;
-				
-				[self _transitionToState:LNPopupPresentationStateTransitioning animated:YES completion:nil transitionOriginatedByUser:NO];
-				
-				_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
-				_cachedOpenPopupFrame = [self _frameForOpenPopupBar];
-				
-				_dismissGestureStarted = YES;
-				
-				if(pgr != _popupContentView.popupInteractionGestureRecognizer)
-				{
-					_dismissStartingOffset = [pgr translationInView:_popupBar.superview].y;
-				}
-				else
-				{
-					_dismissStartingOffset = 0;
-				}
-			}
-			
-			if(_dismissGestureStarted == YES)
-			{
-				CGFloat targetCenterY = MIN(_lastPopupBarLocation.y + [pgr translationInView:_popupBar.superview].y, _cachedDefaultFrame.origin.y - _popupBar.frame.size.height / 2) - _dismissStartingOffset;
-				targetCenterY = MAX(targetCenterY, _cachedOpenPopupFrame.origin.y + _popupBar.frame.size.height / 2);
-				
-				CGFloat currentCenterY = _popupBar.center.y;
-				
-				_popupBar.center = CGPointMake(_popupBar.center.x, targetCenterY);
-				[self _repositionPopupContent];
-				_lastSeenMovement = CACurrentMediaTime();
-				
-				if((_statusBarTresholdDir == 1 && currentCenterY < targetCenterY && targetCenterY >= _tresholdToPassForStatusBarUpdate)
-				   || (_statusBarTresholdDir == -1 && currentCenterY > targetCenterY && targetCenterY < _tresholdToPassForStatusBarUpdate))
-				{
-					_statusBarTresholdDir = -_statusBarTresholdDir;
-					
-					[_containerController setNeedsStatusBarAppearanceUpdate];
-				}
-			}
-		}	break;
-		case UIGestureRecognizerStateCancelled:
+			[self _popupBarPresentationByUserPanGestureHandler_changed:pgr];
+			break;
 		case UIGestureRecognizerStateEnded:
-		{
-			if(_dismissGestureStarted == YES)
-			{
-				LNPopupPresentationState targetState = _stateBeforeDismissStarted;
-				
-				CGFloat barTransitionPercent = [self _percentFromPopupBar];
-				BOOL hasPassedHeighThreshold = _stateBeforeDismissStarted == LNPopupPresentationStateClosed ? barTransitionPercent > LNPopupBarGestureHeightPercentThreshold : barTransitionPercent < (1.0 - LNPopupBarGestureHeightPercentThreshold);
-				BOOL isPanUp = [pgr velocityInView:_containerController.view].y < 0;
-				BOOL isPanDown = [pgr velocityInView:_containerController.view].y > 0;
-				
-
-				if(isPanUp)
-				{
-					targetState = LNPopupPresentationStateOpen;
-				}
-				else if(isPanDown)
-				{
-					targetState = LNPopupPresentationStateClosed;
-				}
-				else if(hasPassedHeighThreshold)
-				{
-					targetState = _stateBeforeDismissStarted == LNPopupPresentationStateClosed ? LNPopupPresentationStateOpen : LNPopupPresentationStateClosed;
-				}
-				
-				[self _transitionToState:targetState animated:YES completion:nil transitionOriginatedByUser:NO];
-			}
-			
-			_dismissGestureStarted = NO;
-		}	break;
+		case UIGestureRecognizerStateCancelled:
+			[self _popupBarPresentationByUserPanGestureHandler_endedOrCancelled:pgr];
+			break;
 		default:
 			break;
 	}
@@ -551,6 +699,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar.subtitle = _currentPopupItem.subtitle;
 }
 
+- (void)_reconfigure_image
+{
+	_popupBar.image = _currentPopupItem.image;
+}
+
 - (void)_reconfigure_progress
 {
 	[UIView performWithoutAnimation:^{
@@ -566,6 +719,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 - (void)_reconfigure_accessibilityHint
 {
 	_popupBar.accessibilityCenterHint = _currentPopupItem.accessibilityHint;
+}
+
+- (void)_reconfigure_accessibilityImageLabel
+{
+	_popupBar.accessibilityImageLabel = _currentPopupItem.accessibilityImageLabel;
 }
 
 - (void)_reconfigure_accessibilityProgressLabel
@@ -643,7 +801,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	NSArray<NSString*>* keys = @[@"title", @"subtitle", @"progress", @"leftBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
+	NSArray<NSString*>* keys = @[@"title", @"subtitle", @"image", @"progress", @"leftBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityImageLabel", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
 	[keys enumerateObjectsUsingBlock:^(NSString * __nonnull key, NSUInteger idx, BOOL * __nonnull stop) {
 		[self _popupItem:_currentPopupItem didChangeValueForKey:key];
 	}];
@@ -667,10 +825,72 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	//	NSAssert(_bottomBar.superview != nil, @"Bottom docking view must have a superview before presenting popup.");
 	[_popupBar removeFromSuperview];
+	
+	if([_bottomBar.superview isKindOfClass:[UIScrollView class]])
+	{
+		NSLog(@"Attempted to present popup bar %@ on top of a UIScrollView subclass %@. This is unsupported and may result in unexpected behavior.", _popupBar, _bottomBar.superview);
+	}
+	
 	[_bottomBar.superview insertSubview:_popupBar belowSubview:_bottomBar];
 	[_popupBar.superview bringSubviewToFront:_popupBar];
 	[_popupBar.superview bringSubviewToFront:_bottomBar];
 	[_popupBar.superview insertSubview:self.popupContentView belowSubview:_popupBar];
+}
+
+- (void)_repositionPopupCloseButton
+{
+	CGFloat startingTopConstant = _popupCloseButtonTopConstraint.constant;
+	
+	_popupCloseButtonTopConstraint.constant = _popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 8;
+	_popupCloseButtonTopConstraint.constant += ([UIApplication sharedApplication].isStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
+	
+	UINavigationBar* possibleBar = (id)[[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
+	if([possibleBar isKindOfClass:[UINavigationBar class]])
+	{
+		_popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
+	}
+	
+	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
+	{
+		[_popupContentView setNeedsUpdateConstraints];
+		[UIView animateWithDuration:0.2 animations:^{
+			[_popupContentView layoutIfNeeded];
+		}];
+	}
+}
+
+- (void)_setUpCloseButtonForPopupContentView
+{
+	[_popupContentView.popupCloseButton removeFromSuperview];
+	_popupContentView.popupCloseButton = nil;
+
+	LNPopupCloseButtonStyle buttonStyle = _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(_popupContentView.popupCloseButtonStyle);
+	
+	if(buttonStyle != LNPopupCloseButtonStyleNone)
+	{
+		_popupContentView.popupCloseButton = [[LNPopupCloseButton alloc] initWithStyle:buttonStyle];
+		_popupContentView.popupCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
+		[_popupContentView.popupCloseButton addTarget:self action:@selector(_closePopupContent) forControlEvents:UIControlEventTouchUpInside];
+		[_popupContentView.contentView addSubview:self.popupContentView.popupCloseButton];
+		
+		[_popupContentView.popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+		[_popupContentView.popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		[_popupContentView.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+		[_popupContentView.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		
+		_popupCloseButtonTopConstraint = [_popupContentView.popupCloseButton.topAnchor constraintEqualToAnchor:_popupContentView.topAnchor constant:buttonStyle == LNPopupCloseButtonStyleRound ? 12 : 8];
+		_popupCloseButtonTopConstraint.active = YES;
+		
+		if(buttonStyle == LNPopupCloseButtonStyleRound)
+		{
+			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.leadingAnchor constraintEqualToAnchor:_popupContentView.leadingAnchor constant:12];
+		}
+		else
+		{
+			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.centerXAnchor constraintEqualToAnchor:_popupContentView.centerXAnchor];
+		}
+		_popupCloseButtonHorizontalConstraint.active = YES;
+	}
 }
 
 - (LNPopupContentView *)popupContentView
@@ -680,20 +900,33 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return _popupContentView;
 	}
 	
-	self.popupContentView = [[LNPopupContentView alloc] initWithFrame:_containerController.view.bounds popupBarStyle:_popupBar.barStyle];
+	self.popupContentView = [[LNPopupContentView alloc] initWithFrame:_containerController.view.bounds];
 	_popupContentView.layer.masksToBounds = YES;
+	[_popupContentView addObserver:self forKeyPath:@"popupCloseButtonStyle" options:NSKeyValueObservingOptionInitial context:NULL];
 	
 	_popupContentView.preservesSuperviewLayoutMargins = YES;
 	_popupContentView.contentView.preservesSuperviewLayoutMargins = YES;
 	
-	_popupContentView.popupCloseButton = [[LNPopupCloseButton alloc] initWithFrame: CGRectMake(0, 0, 0, 0)];
-	[_popupContentView.popupCloseButton addTarget:self action:@selector(_closePopupContent) forControlEvents:UIControlEventTouchUpInside];
-	[_popupContentView.contentView addSubview:self.popupContentView.popupCloseButton];
-	
-	self.popupContentView.popupInteractionGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
-	self.popupContentView.popupInteractionGestureRecognizer.delegate = self;
+	_popupContentView.popupInteractionGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
+	_popupContentView.popupInteractionGestureRecognizer.delegate = self;
 	
 	return _popupContentView;
+}
+
+- (void)dealloc
+{
+	[_popupContentView removeObserver:self forKeyPath:@"popupCloseButtonStyle"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+	if([keyPath isEqualToString:@"popupCloseButtonStyle"] && object == _popupContentView)
+	{
+		[UIView performWithoutAnimation:^{
+			[self _setUpCloseButtonForPopupContentView];
+			[self _repositionPopupCloseButton];
+		}];
+	}
 }
 
 - (void)_fixupGestureRecognizersForController:(UIViewController*)vc
@@ -774,7 +1007,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^
 		 {
 			 CGRect barFrame = _popupBar.frame;
-			 barFrame.size.height = LNPopupBarHeight;
+			 barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(_popupBar.barStyle));
 			 _popupBar.frame = barFrame;
 			 _popupBar.frame = [self _frameForClosedPopupBar];
 			 
@@ -813,16 +1046,18 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)())completionBlock
 {
-	[self _transitionToState:LNPopupPresentationStateTransitioning animated:NO completion:^{
+	[self _transitionToState:LNPopupPresentationStateTransitioning animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:^{
 		[_containerController.view setNeedsLayout];
 		[_containerController.view layoutIfNeeded];
-		[self _transitionToState:LNPopupPresentationStateOpen animated:animated completion:completionBlock transitionOriginatedByUser:NO];
+		[self _transitionToState:LNPopupPresentationStateOpen animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:NO];
 	} transitionOriginatedByUser:YES];
 }
 
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)())completionBlock
 {
-	[self _transitionToState:LNPopupPresentationStateClosed animated:animated completion:completionBlock transitionOriginatedByUser:YES];
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	
+	[self _transitionToState:LNPopupPresentationStateClosed animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:YES];
 }
 
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)())completionBlock
@@ -852,12 +1087,13 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				 _popupBar = nil;
 				 
 				 [self.popupContentView removeFromSuperview];
+				 self.popupContentView.popupInteractionGestureRecognizer = nil;
+				 [self.popupContentView removeObserver:self forKeyPath:@"popupCloseButtonStyle"];
 				 self.popupContentView = nil;
 				 
 				 _popupBarLongPressGestureRecognizerDelegate = nil;
 				 _popupBarLongPressGestureRecognizer = nil;
 				 _popupBarTapGestureRecognizer = nil;
-				 self.popupContentView.popupInteractionGestureRecognizer = nil;
 				 
 				 _LNPopupSupportFixInsetsForViewController(_containerController, YES);
 				 
@@ -881,7 +1117,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			_dismissalOverride = YES;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
-			[self _transitionToState:LNPopupPresentationStateClosed animated:animated completion:dismissalAnimationCompletionBlock transitionOriginatedByUser:NO];
+			
+			LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+			
+			[self _transitionToState:LNPopupPresentationStateClosed animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES completion:dismissalAnimationCompletionBlock transitionOriginatedByUser:NO];
 		}
 		else
 		{
@@ -919,12 +1158,28 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return NO;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+	//This is to disable gesture recognizers in the superview while dragging the popup bar. This is mostly to fix issues when the bar is part of a scroll view scene, such as `UITableViewController` / `UITableView`.
+	if([_popupBar.superview.gestureRecognizers containsObject:otherGestureRecognizer])
+	{
+		return YES;
+	}
+	
+	return NO;
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
 	if(_popupControllerState != LNPopupPresentationStateOpen)
 	{
 		return NO;
 	}
+	
+//	if(otherGestureRecognizer.view == _popupContentView.scrollView)
+//	{
+//		return NO;
+//	}
 	
 	return YES;
 }

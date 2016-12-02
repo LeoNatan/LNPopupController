@@ -29,29 +29,11 @@
 {
 	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"play"] style:UIBarButtonItemStylePlain target:nil action:NULL];
 	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
-	UIBarButtonItem* more = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"action"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-	more.accessibilityLabel = NSLocalizedString(@"More", @"");
+	UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nextFwd"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+	next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
 	
-	if(collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
-	{
-		UIBarButtonItem* prev = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"prev"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-		prev.accessibilityLabel = NSLocalizedString(@"Previous Track", @"");
-		UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nextFwd"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-		next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
-		
-		self.popupItem.leftBarButtonItems = @[ prev, play, next ];
-		
-		UIBarButtonItem* upnext = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"next"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-		upnext.accessibilityLabel = NSLocalizedString(@"Up Next", @"");
-		upnext.accessibilityHint = NSLocalizedString(@"Double Tap to Show Up Next List", @"");
-		
-		self.popupItem.rightBarButtonItems = @[ upnext, more ];
-	}
-	else
-	{
-		self.popupItem.leftBarButtonItems = @[ play ];
-		self.popupItem.rightBarButtonItems = @[ more ];
-	}
+	self.popupItem.leftBarButtonItems = @[ play ];
+	self.popupItem.rightBarButtonItems = @[ next ];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator

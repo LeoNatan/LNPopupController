@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import LNPopupController
 
 class DemoAlbumTableViewController: UITableViewController {
 
@@ -23,7 +24,7 @@ class DemoAlbumTableViewController: UITableViewController {
 	}
 	
     override func viewDidLoad() {
-		tabBarController?.view.tintColor = UIColor.redColor()
+		tabBarController?.view.tintColor = view.tintColor
 		
         super.viewDidLoad()
 		
@@ -44,63 +45,65 @@ class DemoAlbumTableViewController: UITableViewController {
 		tableView.scrollIndicatorInsets = insets
 	}
 
-	override func viewWillAppear(animated: Bool) {
+	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		tableView.setContentOffset(CGPointMake(0, -tableView.contentInset.top), animated: false)
+		tableView.setContentOffset(CGPoint(x: 0, y: -tableView.contentInset.top), animated: false)
 	}
 	
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 30
     }
 	
-	override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 		return 2
 	}
 	
-	override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		let separator = UIView(frame: CGRectMake(0, 0, tableView.bounds.size.width, 1 / UIScreen.mainScreen().scale))
-		separator.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
-		separator.autoresizingMask = .FlexibleWidth
-		let view = UIView(frame: CGRectMake(0, 0, tableView.bounds.size.width, 2))
+	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let separator = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 1 / UIScreen.main.scale))
+		separator.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+		separator.autoresizingMask = .flexibleWidth
+		let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 2))
 		view.addSubview(separator)
 		return view
 	}
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MusicCell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell", for: indexPath)
 
-		cell.imageView?.image = images[indexPath.row]
-		cell.textLabel?.text = titles[indexPath.row]
-		cell.textLabel?.textColor = UIColor.whiteColor()
-		cell.detailTextLabel?.text = subtitles[indexPath.row]
-		cell.detailTextLabel?.textColor = UIColor.whiteColor()
+		cell.imageView?.image = images[(indexPath as NSIndexPath).row]
+		cell.textLabel?.text = titles[(indexPath as NSIndexPath).row]
+		cell.textLabel?.textColor = UIColor.white
+		cell.detailTextLabel?.text = subtitles[(indexPath as NSIndexPath).row]
+		cell.detailTextLabel?.textColor = UIColor.white
 		
 		let selectionView = UIView()
-		selectionView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.45)
+		selectionView.backgroundColor = UIColor.white.withAlphaComponent(0.45)
 		cell.selectedBackgroundView = selectionView
 		
         return cell
     }
 
-	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-		let popupContentController = storyboard?.instantiateViewControllerWithIdentifier("DemoMusicPlayerController") as! DemoMusicPlayerController
-		popupContentController.songTitle = titles[indexPath.row]
-		popupContentController.albumTitle = subtitles[indexPath.row]
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		let popupContentController = storyboard?.instantiateViewController(withIdentifier: "DemoMusicPlayerController") as! DemoMusicPlayerController
+		popupContentController.songTitle = titles[(indexPath as NSIndexPath).row]
+		popupContentController.albumTitle = subtitles[(indexPath as NSIndexPath).row]
+		popupContentController.albumArt = images[(indexPath as NSIndexPath).row]
 		
 		popupContentController.popupItem.accessibilityHint = NSLocalizedString("Double Tap to Expand the Mini Player", comment: "")
-		tabBarController?.popupContentView.popupCloseButton?.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
+		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
-		tabBarController?.presentPopupBarWithContentViewController(popupContentController, animated: true, completion: nil)
+		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
+		tabBarController?.popupBar?.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
 		
-		tableView.deselectRowAtIndexPath(indexPath, animated: true)
+		tableView.deselectRow(at: indexPath, animated: true)
 	}
 	
-	override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-		cell.backgroundColor = UIColor.clearColor()
+	override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		cell.backgroundColor = UIColor.clear
 	}
 }
