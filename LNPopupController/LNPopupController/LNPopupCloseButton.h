@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The button’s background view. (read-only)
  *  
+ *  The value of this property will be `nil` if `style` is not set to `LNPopupCloseButtonStyleRound`.
+ *  
  *  Although this property is read-only, its own properties are read/write. Use these properties to configure the appearance and behavior of the button’s background view.
  */
 @property (nonatomic, strong, readonly) UIVisualEffectView* backgroundView;
