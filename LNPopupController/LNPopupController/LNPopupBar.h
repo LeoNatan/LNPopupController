@@ -54,9 +54,9 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 @property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* rightBarButtonItems;
 
 /**
- *  The popup bar style. (read-only)
+ *  The popup bar style.
  */
-@property (nonatomic, assign, readonly) LNPopupBarStyle barStyle;
+@property (nonatomic, assign) LNPopupBarStyle barStyle UI_APPEARANCE_SELECTOR;
 
 /**
  *  The popup bar background style that specifies its appearance.

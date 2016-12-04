@@ -81,6 +81,20 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 
 @synthesize backgroundStyle = _userBackgroundStyle, barTintColor = _userBarTintColor;
 
+- (void)setBarStyle:(LNPopupBarStyle)barStyle
+{
+	if(_barStyle != barStyle)
+	{
+		_barStyle = barStyle;
+		
+		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
+		
+		[self _layoutBarButtonItems];
+		_needsLabelsLayout = YES;
+		[self setNeedsLayout];
+	}
+}
+
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
 	id block = ^ { self.highlightView.alpha = highlighted ? 1.0 : 0.0; };
@@ -579,9 +593,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 {
 	BOOL previouslyHidden = _imageView.hidden;
 	
-	LNPopupBarStyle resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
-	
-	if(resolvedStyle == LNPopupBarStyleCompact)
+	if(_resolvedStyle == LNPopupBarStyleCompact)
 	{
 		_imageView.hidden = YES;
 		

@@ -925,6 +925,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self _repositionPopupCloseButton];
 		}];
 	}
+	else if([keyPath isEqualToString:@"barStyle"] && object == _popupBar)
+	{
+		CGRect barFrame = _popupBar.frame;
+		CGFloat currentHeight = barFrame.size.height;
+		barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(_popupBar.barStyle));
+		barFrame.origin.y -= (barFrame.size.height - currentHeight);
+		_popupBar.frame = barFrame;
+	}
 }
 
 - (void)_fixupGestureRecognizersForController:(UIViewController*)vc
@@ -974,6 +982,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		_popupBar = [[LNPopupBar alloc] initWithFrame:CGRectZero];
 		_popupBar.hidden = NO;
+		[_popupBar addObserver:self forKeyPath:@"barStyle" options:0 context:NULL];
 		
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)
 		{
@@ -1085,6 +1094,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				 _bottomBar = nil;
 				 
 				 [_popupBar removeFromSuperview];
+				 [_popupBar removeObserver:self forKeyPath:@"barStyle" context:NULL];
 				 _popupBar = nil;
 				 
 				 [self.popupContentView removeFromSuperview];
