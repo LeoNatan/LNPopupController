@@ -409,6 +409,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		{
 			_popupBar.alpha = state < LNPopupPresentationStateTransitioning;
 		}
+		else
+		{
+			_popupBar.alpha = 1.0;
+		}
 	};
 	
 	[UIView animateWithDuration:animated ? resolvedStyle == LNPopupInteractionStyleSnap ? 0.75 : 0.5 : 0.0 delay:0.0 usingSpringWithDamping:spring ? 0.8 : 1.0 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^
@@ -1153,6 +1157,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 }
 
 #pragma mark UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	return resolvedStyle != LNPopupInteractionStyleNone;
+}
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {

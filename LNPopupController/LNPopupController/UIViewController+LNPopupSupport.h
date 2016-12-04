@@ -160,9 +160,9 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)())completion;
 
 /**
- *  The popup bar interaction style. (read-only)
+ *  The popup bar interaction style.
  */
-@property (nonatomic, assign, readonly) LNPopupInteractionStyle popupInteractionStyle;
+@property (nonatomic, assign) LNPopupInteractionStyle popupInteractionStyle;
 
 /**
  *  The popup bar managed by the system. (read-only)
