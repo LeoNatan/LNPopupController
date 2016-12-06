@@ -208,7 +208,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 #pragma mark Popup Controller
 
-@interface LNPopupController () <_LNPopupItemDelegate, UIGestureRecognizerDelegate, UIViewControllerPreviewingDelegate> @end
+@interface LNPopupController () <_LNPopupItemDelegate, UIGestureRecognizerDelegate, UIViewControllerPreviewingDelegate, _LNPopupBarDelegate> @end
 
 @implementation LNPopupController
 {
@@ -929,14 +929,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self _repositionPopupCloseButton];
 		}];
 	}
-	else if([keyPath isEqualToString:@"barStyle"] && object == _popupBar)
-	{
-		CGRect barFrame = _popupBar.frame;
-		CGFloat currentHeight = barFrame.size.height;
-		barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(_popupBar.barStyle));
-		barFrame.origin.y -= (barFrame.size.height - currentHeight);
-		_popupBar.frame = barFrame;
-	}
 }
 
 - (void)_fixupGestureRecognizersForController:(UIViewController*)vc
@@ -986,7 +978,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		_popupBar = [[LNPopupBar alloc] initWithFrame:CGRectZero];
 		_popupBar.hidden = NO;
-		[_popupBar addObserver:self forKeyPath:@"barStyle" options:0 context:NULL];
+		_popupBar._barDelegate = self;
 		
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)
 		{
@@ -1098,7 +1090,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				 _bottomBar = nil;
 				 
 				 [_popupBar removeFromSuperview];
-				 [_popupBar removeObserver:self forKeyPath:@"barStyle" context:NULL];
 				 _popupBar = nil;
 				 
 				 [self.popupContentView removeFromSuperview];
@@ -1218,6 +1209,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		[_containerController.popupBarPreviewingDelegate popupBar:_containerController.popupBar commitPreviewingViewController:viewControllerToCommit];
 	}
+}
+
+#pragma mark _LNPopupBarDelegate
+
+- (void)_popupBarStyleDidChange:(LNPopupBar*)bar
+{
+	CGRect barFrame = _popupBar.frame;
+	CGFloat currentHeight = barFrame.size.height;
+	barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(_popupBar.barStyle));
+	barFrame.origin.y -= (barFrame.size.height - currentHeight);
+	_popupBar.frame = barFrame;
 }
 
 @end

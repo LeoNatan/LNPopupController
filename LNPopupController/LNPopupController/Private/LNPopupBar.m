@@ -92,6 +92,8 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		[self _layoutBarButtonItems];
 		_needsLabelsLayout = YES;
 		[self setNeedsLayout];
+		
+		[self._barDelegate _popupBarStyleDidChange:self];
 	}
 }
 

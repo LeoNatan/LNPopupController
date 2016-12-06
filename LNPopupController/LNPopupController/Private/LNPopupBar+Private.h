@@ -14,6 +14,11 @@ extern const CGFloat LNPopupBarHeightProminent;
 extern CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style);
 extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style);
 
+@protocol _LNPopupBarDelegate <NSObject>
+
+- (void)_popupBarStyleDidChange:(LNPopupBar*)bar;
+
+@end
 
 @protocol _LNPopupBarSupport <NSObject>
 
@@ -29,7 +34,9 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, strong) UIColor* systemBarTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
 
-@property(nonatomic, weak, readwrite) LNPopupItem* popupItem;
+@property (nonatomic, weak, readwrite) LNPopupItem* popupItem;
+
+@property (nonatomic, weak) id<_LNPopupBarDelegate> _barDelegate;
 
 @property (nonatomic, copy) NSString* title;
 @property (nonatomic, copy) NSString* subtitle;
