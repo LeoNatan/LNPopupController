@@ -251,13 +251,21 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	return _userBarTintColor;
 }
 
-- (void)setBarTintColor:(UIColor *)barTintColor
+- (void)_internalSetBarTintColor:(UIColor*)barTintColor
 {
 	_userBarTintColor = barTintColor;
 	
-	_backgroundView.tintColor = _userBarTintColor ?: _systemBarTintColor;
+	UIColor* colorToUse = _userBarTintColor ?: _systemBarTintColor;
+	
+	self.backgroundColor = [colorToUse colorWithAlphaComponent:1.0];
+	[_backgroundView setHidden:self.backgroundColor != nil];
 	
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+}
+
+- (void)setBarTintColor:(UIColor *)barTintColor
+{
+	[self _internalSetBarTintColor:barTintColor];
 }
 
 - (UIColor *)backgroundColor
@@ -265,11 +273,16 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	return _userBackgroundColor;
 }
 
-- (void)setBackgroundColor:(UIColor *)backgroundColor
+- (void)_internalSetBackgroundColor:(UIColor *)backgroundColor
 {
 	_userBackgroundColor = backgroundColor;
 	
 	[super setBackgroundColor:_userBackgroundColor ?: _systemBackgroundColor];
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor
+{
+	[self _internalSetBackgroundColor:backgroundColor];
 }
 
 - (void)setTitleTextAttributes:(NSDictionary<NSString *,id> *)titleTextAttributes
@@ -286,7 +299,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 {
 	_systemBackgroundColor = systemBackgroundColor;
 	
-	[self setBackgroundColor:_userBackgroundColor];
+	[self _internalSetBackgroundColor:_userBackgroundColor];
 }
 
 - (void)setSystemBarStyle:(UIBarStyle)systemBarStyle
@@ -300,7 +313,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 {
 	_systemBarTintColor = systemBarTintColor;
 	
-	[self setBarTintColor:_userBarTintColor];
+	[self _internalSetBarTintColor:_userBarTintColor];
 }
 
 - (void)setSystemTintColor:(UIColor *)systemTintColor
