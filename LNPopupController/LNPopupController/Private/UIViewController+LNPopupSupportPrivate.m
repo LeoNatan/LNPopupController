@@ -21,6 +21,7 @@ static NSString* const hBWTiEBase64 = @"X2hpZGVCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxp
 static NSString* const sBWTiEBase64 = @"X3Nob3dCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0Og==";
 static NSString* const sTHedBase64 = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvbjo=";
 static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQmFy";
+static NSString* const hSNBDSfc64 = @"X2hpZGVTaG93TmF2aWdhdGlvbkJhckRpZFN0b3A6ZmluaXNoZWQ6Y29udGV4dDo=";
 #endif
 
 /**
@@ -229,10 +230,6 @@ static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQ
 - (void)_ln_popup_viewDidLayoutSubviews
 {
 	[self _ln_popup_viewDidLayoutSubviews];
-	
-	[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
-	[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
-	[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
 	
 	if(self.bottomDockingViewForPopup_nocreateOrDeveloper != nil)
 	{
@@ -452,6 +449,10 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarHidden));
 		method_exchangeImplementations(m1, m2);
 		
+		m1 = class_getInstanceMethod([self class], @selector(setNavigationBarHidden:animated:)),
+		m2 = class_getInstanceMethod([self class], @selector(_ln_setNavigationBarHidden:animated:)),
+		method_exchangeImplementations(m1, m2);
+		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:edInsBase64 options:0] encoding:NSUTF8StringEncoding];
 		
@@ -463,6 +464,12 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		
 		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
 		m2 = class_getInstanceMethod([self class], @selector(_sTH:e:d:));
+		method_exchangeImplementations(m1, m2);
+		
+		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:hSNBDSfc64 options:0] encoding:NSUTF8StringEncoding];
+		
+		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
+		m2 = class_getInstanceMethod([self class], @selector(hSNBDS:f:c:));
 		method_exchangeImplementations(m1, m2);
 #endif
 	});
@@ -516,6 +523,14 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	
 	return rv;
 }
+
+- (void)hSNBDS:(id)arg1 f:(id)arg2 c:(id)arg3;
+{
+	[self hSNBDS:arg1 f:arg2 c:arg3];
+	
+	[self _layoutPopupBarOrder];
+}
+
 #endif
 
 - (nullable UIViewController *)_ln_childViewControllerForStatusBarHidden
@@ -526,6 +541,20 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 - (nullable UIViewController *)_ln_childViewControllerForStatusBarStyle
 {
 	return [self _ln_common_childViewControllerForStatusBarStyle];
+}
+
+- (void)_layoutPopupBarOrder
+{
+	[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
+	[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
+	[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
+}
+
+- (void)_ln_setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
+{
+	[self _ln_setNavigationBarHidden:hidden animated:animated];
+	
+	[self _layoutPopupBarOrder];
 }
 
 @end
