@@ -253,7 +253,7 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 ##Known Limitations
 
 * Navigation controller's `setToolbarHidden:` and `setToolbarHidden:animated:` are not supported.
-* Hidden tab bars are not supported by the framework, nor by Apple. **Do not hide the tab bar using `.hidden = YES`!**
+* Manually hiding tab bars is not supported by the framework or by Apple. **Do not hide the tab bar using `tabBar.hidden = YES`.**
 
 ##Acknowledgements
 
