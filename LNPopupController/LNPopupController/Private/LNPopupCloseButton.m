@@ -38,6 +38,12 @@
 		
 		self.accessibilityLabel = NSLocalizedString(@"Close", @"");
 		
+		[self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		[self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+		
+		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+		
 		return self;
 	}
 	
@@ -160,11 +166,7 @@
 {
 	if(_style == LNPopupCloseButtonStyleRound)
 	{
-		CGSize superSize = [super sizeThatFits:size];
-		superSize.width += 14;
-		superSize.height += 2;
-		
-		return superSize;
+		return CGSizeMake(24, 24);
 	}
 	else
 	{
