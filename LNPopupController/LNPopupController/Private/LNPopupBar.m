@@ -9,6 +9,23 @@
 #import "LNPopupBar+Private.h"
 #import "MarqueeLabel.h"
 
+@interface _LNPopupToolbar : UIToolbar @end
+@implementation _LNPopupToolbar
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+	UIView* rv = [super hitTest:point withEvent:event];
+	
+	if(rv != nil && rv != self)
+	{
+		return CGRectContainsPoint(CGRectInset(rv.frame, -20, 20), point) ? rv : self;
+	}
+	
+	return rv;
+}
+
+@end
+
 @protocol __MarqueeLabelType <NSObject>
 
 - (void)resetLabel;
@@ -125,7 +142,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		
 		[self _innerSetBackgroundStyle:LNBackgroundStyleInherit];
 		
-		_toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
+		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:self.bounds];
 		[_toolbar setBackgroundImage:[UIImage alloc] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
 		_toolbar.layer.masksToBounds = YES;
