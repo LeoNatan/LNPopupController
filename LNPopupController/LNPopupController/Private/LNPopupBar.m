@@ -7,6 +7,7 @@
 //
 
 #import "LNPopupBar+Private.h"
+#import "LNPopupCustomBarViewController+Private.h"
 #import "MarqueeLabel.h"
 
 @interface _LNPopupToolbar : UIToolbar @end
@@ -21,8 +22,6 @@
 		CGRect frameInBarCoords = [self convertRect:rv.bounds fromView:rv];
 		CGRect instetFrame = CGRectInset(frameInBarCoords, 2, 0);
 
-		NSLog(@"frame: %@\npoint: %@\ncontained: %@\n\n", NSStringFromCGRect(instetFrame), NSStringFromCGPoint(point), @(CGRectContainsPoint(instetFrame, point)));
-		
 		return CGRectContainsPoint(instetFrame, point) ? rv : self;
 	}
 	
@@ -81,8 +80,10 @@ const NSInteger LNBackgroundStyleInherit = -1;
 	UIView* _shadowView;
 }
 
-CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style)
+CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC)
 {
+	if(customBarVC) return customBarVC.preferredContentSize.height;
+	
 	return style == LNPopupBarStyleCompact ? LNPopupBarHeightCompact : LNPopupBarHeightProminent;
 }
 
@@ -103,8 +104,18 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 
 @synthesize backgroundStyle = _userBackgroundStyle, barTintColor = _userBarTintColor;
 
+- (void)setHidden:(BOOL)hidden
+{
+	[super setHidden:hidden];
+}
+
 - (void)setBarStyle:(LNPopupBarStyle)barStyle
 {
+	if(_customBarViewController == nil && barStyle == LNPopupBarStyleCustom)
+	{
+		barStyle = LNPopupBarStyleDefault;
+	}
+	
 	if(_barStyle != barStyle)
 	{
 		_barStyle = barStyle;
@@ -208,7 +219,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	[_backgroundView setFrame:self.bounds];
 	
 	[UIView performWithoutAnimation:^{
-		_toolbar.frame = CGRectMake(0, 0, self.bounds.size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle));
+		_toolbar.frame = CGRectMake(0, 0, self.bounds.size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController));
 		[_toolbar layoutIfNeeded];
 	}];
 	
@@ -532,7 +543,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		
 		CGRect titleLabelFrame = _titlesView.bounds;
 		
-		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle);
+		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
 		titleLabelFrame.size.height = barHeight;
 		if(_subtitle.length > 0)
 		{
@@ -746,6 +757,36 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	[self _setNeedsTitleLayout];
 	
 	_delaysBarButtonItemLayout = NO;
+}
+
+- (void)_updateViewsAfterCustomBarViewControllerUpdate
+{
+	BOOL hide = _customBarViewController != nil;
+	_toolbar.hidden = hide;
+	_titlesView.hidden = hide;
+}
+
+- (void)setCustomBarViewController:(LNPopupCustomBarViewController*)customBarViewController
+{
+	if(_customBarViewController != customBarViewController)
+	{
+		_customBarViewController.containingPopupBar = nil;
+		[_customBarViewController.view removeFromSuperview];
+		
+		_customBarViewController = customBarViewController;
+		_customBarViewController.containingPopupBar = self;
+		
+		_customBarViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
+		[self addSubview:_customBarViewController.view];
+		[NSLayoutConstraint activateConstraints:@[[self.topAnchor constraintEqualToAnchor:_customBarViewController.view.topAnchor],
+												  [self.leftAnchor constraintEqualToAnchor:_customBarViewController.view.leftAnchor],
+												  [self.rightAnchor constraintEqualToAnchor:_customBarViewController.view.rightAnchor],
+												  [self.bottomAnchor constraintEqualToAnchor:_customBarViewController.view.bottomAnchor]]];
+		
+		[self _updateViewsAfterCustomBarViewControllerUpdate];
+		
+		[self setBarStyle:LNPopupBarStyleCustom];
+	}
 }
 
 - (void)setLeftBarButtonItems:(NSArray *)leftBarButtonItems

@@ -136,7 +136,7 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
 - (LNPopupBar *)popupBar
 {
-	return self._ln_popupController.popupBar;
+	return self._ln_popupController.popupBarStorage;
 }
 
 - (LNPopupContentView *)popupContentView

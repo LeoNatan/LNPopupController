@@ -20,6 +20,7 @@
 @property (nonatomic, weak) UIView* bottomBar;
 
 @property (nonatomic, strong) LNPopupBar* popupBar;
+@property (nonatomic, strong, readonly) LNPopupBar* popupBarStorage;
 @property (nonatomic, strong) LNPopupContentView* popupContentView;
 @property (nonatomic, strong) UIScrollView* popupContentContainerView;
 

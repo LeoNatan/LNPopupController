@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <LNPopupController/LNPopupItem.h>
+#import <LNPOpupController/LNPopupCustomBarViewController.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 extern const NSInteger LNBackgroundStyleInherit;
-
 
 /**
  * Available styles for the popup bar 
@@ -30,8 +30,38 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 	/**
 	 * Prominent bar style
 	 */
-	LNPopupBarStyleProminent
+	LNPopupBarStyleProminent,
+	/**
+	 * Custom bar style
+	 *
+	 * Do not set this style directly. Instead set LNPopupBar.customBarViewController and the framework will use this style.
+	 */
+	LNPopupBarStyleCustom
 };
+
+@protocol LNPopupBarPreviewingDelegate <NSObject>
+
+@required
+
+/**
+ *  Called when the user performs a peek action on the popup bar.
+ *
+ *  The default implementation returns nil, thus no preview is displayed.
+ *
+ *  @return The view controller whose view you want to provide as the preview (peek), or nil to disable preview.
+ */
+- (nullable UIViewController*)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar;
+
+@optional
+
+/**
+ *  Called when the user performs a pop action on the popup bar.
+ *
+ *  The default implementation does not commit the view controller.
+ */
+- (void)popupBar:(LNPopupBar*)popupBar commitPreviewingViewController:(UIViewController*)viewController;
+
+@end
 
 /**
  *  A popup bar is a control that displays popup information. Content is popuplated from LNPopupItem items.
@@ -92,6 +122,17 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
  * When enabled, the title and subtitle marquee scroll will be coordinated, and if either the title or subtitle of the current popup item change, the animation will reset so the two can scroll together. Enabled by default.
  */
 @property(nonatomic, assign) BOOL coordinateMarqueeScroll;
+
+/**
+ * The previowing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the LNPopupBarPreviewingDelegate protocol.
+ */
+@property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> previewingDelegate;
+
+/**
+ * Set this property with an LNPopupCustomBarViewController subclass object to provide a popup bar with custom content.
+ */
+
+@property (nullable, nonatomic, strong) LNPopupCustomBarViewController* customBarViewController;
 
 @end
 

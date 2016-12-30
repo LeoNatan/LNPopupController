@@ -139,7 +139,7 @@
 	targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
-	targetVC.popupBarPreviewingDelegate = self;
+	targetVC.popupBar.previewingDelegate = self;
 	
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
 }

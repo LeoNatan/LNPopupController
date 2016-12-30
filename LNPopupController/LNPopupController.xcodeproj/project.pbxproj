@@ -10,10 +10,10 @@
 		390B30491B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */; };
 		390DD0111BB2EAC30064DB4A /* LNPopupContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		391481BA1DCFA514002416D1 /* LNChevronView.m in Sources */ = {isa = PBXBuildFile; fileRef = 391481B81DCFA514002416D1 /* LNChevronView.m */; };
-		391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */ = {isa = PBXBuildFile; fileRef = 391481B91DCFA514002416D1 /* LNChevronView.h */; };
+		391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */ = {isa = PBXBuildFile; fileRef = 391481B91DCFA514002416D1 /* LNChevronView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		39314A521B6AE7A400574D3C /* MarqueeLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 39314A501B6AE7A400574D3C /* MarqueeLabel.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		39314A531B6AE7A400574D3C /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 39314A511B6AE7A400574D3C /* MarqueeLabel.m */; };
-		3934A9F51DD4C935004B073A /* LNPopupController.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3934A9F41DD4C935004B073A /* LNPopupController.pch */; };
+		3934A9F51DD4C935004B073A /* LNPopupController.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3934A9F41DD4C935004B073A /* LNPopupController.pch */; settings = {ATTRIBUTES = (Private, ); }; };
 		3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */; };
 		3947E1A61B61CD650001178B /* LNPopupBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A41B61CD650001178B /* LNPopupBar.m */; };
@@ -30,6 +30,9 @@
 		394A85C11B630992004FFC61 /* _LNWeakRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85BF1B630992004FFC61 /* _LNWeakRef.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		394A85C21B630992004FFC61 /* _LNWeakRef.m in Sources */ = {isa = PBXBuildFile; fileRef = 394A85C01B630992004FFC61 /* _LNWeakRef.m */; };
 		394A85C91B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */; };
+		39599BAA1E02CD65008EE386 /* LNPopupCustomBarViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 39599BA81E02CD65008EE386 /* LNPopupCustomBarViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		39599BAB1E02CD65008EE386 /* LNPopupCustomBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39599BA91E02CD65008EE386 /* LNPopupCustomBarViewController.m */; };
+		39599BAD1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 39599BAC1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		39A9249A1B58530A003C1C19 /* LNPopupController.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A924991B5852ED003C1C19 /* LNPopupController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85B71B6304F5004FFC61 /* LNPopupItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -61,6 +64,9 @@
 		394A85C01B630992004FFC61 /* _LNWeakRef.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _LNWeakRef.m; sourceTree = "<group>"; };
 		394A85C71B63FB96004FFC61 /* UIViewController+LNPopupSupportPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LNPopupSupportPrivate.h"; sourceTree = "<group>"; };
 		394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+LNPopupSupportPrivate.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		39599BA81E02CD65008EE386 /* LNPopupCustomBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupCustomBarViewController.h; sourceTree = "<group>"; };
+		39599BA91E02CD65008EE386 /* LNPopupCustomBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNPopupCustomBarViewController.m; sourceTree = "<group>"; };
+		39599BAC1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LNPopupCustomBarViewController+Private.h"; sourceTree = "<group>"; };
 		39A924991B5852ED003C1C19 /* LNPopupController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupController.h; sourceTree = "<group>"; };
 		39DB52E51B5823330061C589 /* LNPopupController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LNPopupController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46ECC2AE1BF31025005CE96C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
@@ -97,6 +103,8 @@
 				3947E1B11B61CE4A0001178B /* LNPopupController.m */,
 				394A85BB1B6306AE004FFC61 /* LNPopupItem+Private.h */,
 				394A85B81B6304F5004FFC61 /* LNPopupItem.m */,
+				39599BAC1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h */,
+				39599BA91E02CD65008EE386 /* LNPopupCustomBarViewController.m */,
 				3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */,
 				394A85C71B63FB96004FFC61 /* UIViewController+LNPopupSupportPrivate.h */,
 				394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */,
@@ -129,6 +137,7 @@
 				3947E1A71B61CDA40001178B /* LNPopupCloseButton.h */,
 				390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */,
 				394A85B51B630409004FFC61 /* LNPopupBar.h */,
+				39599BA81E02CD65008EE386 /* LNPopupCustomBarViewController.h */,
 				394A85B71B6304F5004FFC61 /* LNPopupItem.h */,
 				3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */,
 				390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */,
@@ -145,15 +154,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				39A9249A1B58530A003C1C19 /* LNPopupController.h in Headers */,
-				391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */,
 				3947E1A91B61CDA40001178B /* LNPopupCloseButton.h in Headers */,
 				390DD0111BB2EAC30064DB4A /* LNPopupContentView.h in Headers */,
 				394A85B61B630409004FFC61 /* LNPopupBar.h in Headers */,
+				39599BAA1E02CD65008EE386 /* LNPopupCustomBarViewController.h in Headers */,
 				39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */,
 				3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */,
 				39314A521B6AE7A400574D3C /* MarqueeLabel.h in Headers */,
-				3934A9F51DD4C935004B073A /* LNPopupController.pch in Headers */,
 				3947E1AE1B61CDEA0001178B /* LNPopupControllerLongPressGestureDelegate.h in Headers */,
+				391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */,
+				39599BAD1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h in Headers */,
+				3934A9F51DD4C935004B073A /* LNPopupController.pch in Headers */,
 				394A85C11B630992004FFC61 /* _LNWeakRef.h in Headers */,
 				394A85BD1B6306AE004FFC61 /* LNPopupItem+Private.h in Headers */,
 				3947E1B21B61CE4A0001178B /* LNPopupController.h in Headers */,
@@ -240,6 +251,7 @@
 				3947E1A61B61CD650001178B /* LNPopupBar.m in Sources */,
 				394A85C91B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m in Sources */,
 				3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.m in Sources */,
+				39599BAB1E02CD65008EE386 /* LNPopupCustomBarViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

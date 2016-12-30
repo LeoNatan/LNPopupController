@@ -428,7 +428,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	
 	if(self.isToolbarHiddenDuringTransition)
 	{
-		bottomBarFrame.origin = CGPointMake(bottomBarFrame.origin.x, self.view.bounds.size.height);
+		bottomBarFrame.origin = CGPointMake(-bottomBarFrame.size.width, self.view.bounds.size.height);
 	}
 	else
 	{
@@ -478,8 +478,10 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 
 #ifndef LNPopupControllerEnforceStrictClean
 //Support for `hidesBottomBarWhenPushed`.
-- (void)_sTH:(BOOL)arg1 e:(unsigned int)arg2 d:(double)arg3;
+- (void)_sTH:(BOOL)arg1 e:(unsigned int)arg2 d:(CGFloat)arg3;
 {
+	BOOL prevToolbarHiddenDuringTransition = self.isToolbarHiddenDuringTransition;
+	
 	//During transition, the toolbar is displayed throught the entire animation, despite what `isToolbarHidden` may indicate.
 	[self setToolbarHiddenDuringTransition:(self.isToolbarHidden == arg1 && arg1 == YES)];
 	
@@ -498,11 +500,9 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	[[self transitionCoordinator] animateAlongsideTransitionInView:self._ln_popupController_nocreate.popupBar.superview animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		//During the transition, animate the popup bar and content together with the toolbar transition.
 		
-		
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		
-		[self setToolbarHiddenDuringTransition:arg1];
+		[self setToolbarHiddenDuringTransition: context.cancelled ? prevToolbarHiddenDuringTransition : arg1];
 		//Position the popup bar and content to the superview of the toolbar for the transition.
 		
 		[self._ln_popupController_nocreate _movePopupBarAndContentToBottomBarSuperview];

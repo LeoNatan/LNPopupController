@@ -98,7 +98,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
-		tabBarController?.popupBar?.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
+		tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
