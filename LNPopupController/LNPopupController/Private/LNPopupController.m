@@ -227,8 +227,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	CGRect _cachedDefaultFrame;
 	CGRect _cachedOpenPopupFrame;
 	
-	CGFloat _tresholdToPassForStatusBarUpdate;
-	CGFloat _statusBarTresholdDir;
+	CGFloat _statusBarThresholdDir;
 	
 	CGFloat _bottomBarOffset;
 	
@@ -520,6 +519,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
+- (CGFloat)rubberbandFromHeight:(CGFloat)height
+{
+	CGFloat c = 0.55, x = height, d = _popupBar.superview.bounds.size.height / 5;
+	return (1.0 - (1.0 / ((x * c / d) + 1.0))) * d;
+}
+
 - (void)_popupBarPresentationByUserPanGestureHandler_changed:(UIPanGestureRecognizer*)pgr
 {
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
@@ -546,15 +551,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	if(_dismissGestureStarted == NO)
+	if(_dismissGestureStarted == NO && (resolvedStyle == LNPopupInteractionStyleDrag || _popupControllerState > LNPopupPresentationStateClosed))
 	{
 		_lastSeenMovement = CACurrentMediaTime();
 		_popupBarLongPressGestureRecognizer.enabled = NO;
 		_popupBarLongPressGestureRecognizer.enabled = YES;
 		_lastPopupBarLocation = _popupBar.center;
 		
-		_statusBarTresholdDir = _popupControllerState == LNPopupPresentationStateOpen ? 1 : -1;
-		_tresholdToPassForStatusBarUpdate = -10;
+		_statusBarThresholdDir = _popupControllerState == LNPopupPresentationStateOpen ? 1 : -1;
 		
 		_stateBeforeDismissStarted = _popupControllerState;
 		
@@ -584,9 +588,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(resolvedStyle == LNPopupInteractionStyleSnap)
 		{
-			//Rubber band the pull gesture in snap mode.
-			CGFloat c = 0.55, x = targetCenterY, d = _popupBar.superview.bounds.size.height / 5;
-			targetCenterY = (1.0 - (1.0 / ((x * c / d) + 1.0))) * d;
+			//Rubberband the pull gesture in snap mode.
+			targetCenterY = [self rubberbandFromHeight:targetCenterY];
+			
+			//Offset the rubberband pull so that it starts where it should.
+			targetCenterY -= (_popupBar.frame.size.height / 2) + [self rubberbandFromHeight:_popupBar.frame.size.height / -2];
 		}
 		
 		CGFloat currentCenterY = _popupBar.center.y;
@@ -595,17 +601,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[self _repositionPopupContentMovingBottomBar:resolvedStyle == LNPopupInteractionStyleDrag];
 		_lastSeenMovement = CACurrentMediaTime();
 		
-		if((_statusBarTresholdDir == 1 && currentCenterY < targetCenterY && targetCenterY >= _tresholdToPassForStatusBarUpdate)
-		   || (_statusBarTresholdDir == -1 && currentCenterY > targetCenterY && targetCenterY < _tresholdToPassForStatusBarUpdate))
-		{
-			_statusBarTresholdDir = -_statusBarTresholdDir;
-			
-			[_containerController setNeedsStatusBarAppearanceUpdate];
-		}
-		
 		[_popupContentView.popupCloseButton _setButtonContainerTransitioning];
 		
-		if(resolvedStyle == LNPopupInteractionStyleSnap && realTargetCenterY / _popupBar.superview.bounds.size.height > 0.375)
+		if(resolvedStyle == LNPopupInteractionStyleSnap && realTargetCenterY / _popupBar.superview.bounds.size.height > 0.275)
 		{
 			_dismissGestureStarted = NO;
 			
@@ -616,6 +614,18 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self _transitionToState:_popupControllerTargetState animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateClosed ? YES : NO allowPopupBarAlphaModification:YES completion:^ {
 				[_popupContentView.popupCloseButton _setButtonContainerStationary];
 			} transitionOriginatedByUser:NO];
+		}
+		
+		CGFloat statusBarHeightThreshold = UIApplication.sharedApplication.statusBarFrame.size.height / 2;
+		
+		if((_statusBarThresholdDir == 1 && currentCenterY < targetCenterY && _popupContentView.frame.origin.y >= statusBarHeightThreshold)
+		   || (_statusBarThresholdDir == -1 && currentCenterY > targetCenterY && _popupContentView.frame.origin.y < statusBarHeightThreshold))
+		{
+			_statusBarThresholdDir = -_statusBarThresholdDir;
+			
+			[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:^{
+				[_containerController setNeedsStatusBarAppearanceUpdate];
+			} completion:nil];
 		}
 	}
 }
