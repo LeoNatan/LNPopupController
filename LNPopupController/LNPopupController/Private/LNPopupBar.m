@@ -18,7 +18,12 @@
 	
 	if(rv != nil && rv != self)
 	{
-		return CGRectContainsPoint(CGRectInset(rv.frame, -20, 20), point) ? rv : self;
+		CGRect frameInBarCoords = [self convertRect:rv.bounds fromView:rv];
+		CGRect instetFrame = CGRectInset(frameInBarCoords, 2, 0);
+
+		NSLog(@"frame: %@\npoint: %@\ncontained: %@\n\n", NSStringFromCGRect(instetFrame), NSStringFromCGPoint(point), @(CGRectContainsPoint(instetFrame, point)));
+		
+		return CGRectContainsPoint(instetFrame, point) ? rv : self;
 	}
 	
 	return rv;
