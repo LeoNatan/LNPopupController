@@ -14,7 +14,7 @@ In case of a bug report, provide the steps necessary to reproduce the issue. If 
 If possible, please provide a small demo project, reproducing the issue - this would be a appreciated.
 -->
 
-#### OS and Xcode Versions
+#### Device, OS and Xcode Versions
 <!---
-Provide the OS and Xcode versions you are using.
+Provide the OS and Xcode versions you are using, and the device / simulator you tested on.
 -->
