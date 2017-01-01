@@ -185,6 +185,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		
 		_imageView = [UIImageView new];
 		_imageView.autoresizingMask = UIViewAutoresizingNone;
+		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
 		_imageView.isAccessibilityElement = YES;
 		_imageView.layer.cornerRadius = 3;
