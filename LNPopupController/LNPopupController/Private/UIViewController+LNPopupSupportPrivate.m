@@ -288,7 +288,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	return self.tabBar;
 }
 
-- (nullable UIView *)bottomDockingViewForPopup
+- (nullable UIView *)bottomDockingViewForPopupBar
 {
 	return self.tabBar;
 }
@@ -437,7 +437,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	return self.toolbar;
 }
 
-- (nullable UIView *)bottomDockingViewForPopup
+- (nullable UIView *)bottomDockingViewForPopupBar
 {
 	return self.toolbar;
 }

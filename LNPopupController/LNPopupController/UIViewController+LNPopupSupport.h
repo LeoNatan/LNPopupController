@@ -85,7 +85,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 @interface UIViewController (LNPopupPresentation)
 
 /**
- *  Presents an interactive popup bar in the receiver's view hierarchy. The popup bar is attached to the receiver's docking view. @see -[UIViewController bottomDockingViewForPopup]
+ *  Presents an interactive popup bar in the receiver's view hierarchy. The popup bar is attached to the receiver's docking view. @see -[UIViewController bottomDockingViewForPopupBar]
  *
  *  You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
  *
@@ -98,7 +98,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)())completion;
 
 /**
- *  Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view. @see -[UIViewController bottomDockingViewForPopup]
+ *  Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view. @see -[UIViewController bottomDockingViewForPopupBar]
  *
  *  You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
  *
@@ -184,14 +184,20 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  A default implementation is provided for UIViewController, UINavigationController and UITabBarController.
  *  The default implmentation for UIViewController returns an invisible UIView docked to the bottom, for UINavigationController returns the toolbar and for UITabBarController returns the tab bar.
  */
-@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopup;
+@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopupBar;
 
 /**
- *  Return the default frame for the docking view, when the popup is in hidden or closed state. If bottomDockingViewForPopup returns nil, this method is not called, and the default system-provided frame is used.
+ *  Return the default frame for the docking view, when the popup is in hidden or closed state. If bottomDockingViewForPopupBar returns nil, this method is not called, and the default system-provided frame is used.
  *
  *  A default implementation is provided for UIViewController, UINavigationController and UITabBarController.
  */
 @property (nonatomic, readonly) CGRect defaultFrameForBottomDockingView;
+
+@end
+
+@interface UIViewController (Deprecations)
+
+@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopup NS_UNAVAILABLE;
 
 @end
 
