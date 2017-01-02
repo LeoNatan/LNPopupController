@@ -126,6 +126,11 @@
 		return;
 	}
 	
+	if(targetVC == self.navigationController && self.navigationController.viewControllers.count > 1)
+	{
+		return;
+	}
+	
 	DemoPopupContentViewController* demoVC = [DemoPopupContentViewController new];
 	demoVC.view.backgroundColor = LNRandomDarkColor();
 	demoVC.popupItem.title = [LoremIpsum sentence];

@@ -12,6 +12,7 @@
 @import ObjectiveC;
 
 static const void* LNToolbarHiddenBeforeTransition = &LNToolbarHiddenBeforeTransition;
+static const void* LNToolbarBuggy = &LNToolbarBuggy;
 
 #ifndef LNPopupControllerEnforceStrictClean
 static NSString* const sCoOvBase64 = @"X3NldENvbnRlbnRPdmVybGF5SW5zZXRzOg==";
@@ -412,6 +413,25 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	objc_setAssociatedObject(self, LNToolbarHiddenBeforeTransition, @(toolbarHidden), OBJC_ASSOCIATION_RETAIN);
 }
 
+- (BOOL)isToolbarBuggy
+{
+	NSNumber* isHidden = objc_getAssociatedObject(self, LNToolbarBuggy);
+	
+	if(isHidden == nil)
+	{
+		return NO;
+	}
+	
+	return isHidden.boolValue;
+}
+
+- (void)setToolbarBuggy:(BOOL)toolbarHidden
+{
+	NSLog(@"b:%@", @(toolbarHidden));
+	
+	objc_setAssociatedObject(self, LNToolbarBuggy, @(toolbarHidden), OBJC_ASSOCIATION_RETAIN);
+}
+
 - (nullable UIView *)bottomDockingViewForPopup_nocreate
 {
 	return self.toolbar;
@@ -426,9 +446,13 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 {
 	CGRect bottomBarFrame = self.toolbar.frame;
 	
-	if(self.isToolbarHiddenDuringTransition)
+	if(self.isToolbarHiddenDuringTransition && self.isToolbarBuggy)
 	{
 		bottomBarFrame.origin = CGPointMake(-bottomBarFrame.size.width, self.view.bounds.size.height);
+	}
+	else if(self.isToolbarHiddenDuringTransition)
+	{
+		bottomBarFrame.origin = CGPointMake(bottomBarFrame.origin.x, self.view.bounds.size.height);
 	}
 	else
 	{
@@ -502,7 +526,9 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self setToolbarHiddenDuringTransition: context.cancelled ? prevToolbarHiddenDuringTransition : arg1];
+		[self setToolbarBuggy:context.isCancelled && context.percentComplete == 0.0];
+		
+		[self setToolbarHiddenDuringTransition: context.isCancelled ? prevToolbarHiddenDuringTransition : arg1];
 		//Position the popup bar and content to the superview of the toolbar for the transition.
 		
 		[self._ln_popupController_nocreate _movePopupBarAndContentToBottomBarSuperview];
