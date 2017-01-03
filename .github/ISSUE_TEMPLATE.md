@@ -11,7 +11,7 @@ Provide a clear and concise description of your problem. In case of an enhanceme
 #### Steps to Reproduce
 <!---
 In case of a bug report, provide the steps necessary to reproduce the issue. If you are seeing a regression, try to provide the last known version where the issue did not reproduce.
-If possible, please provide a small demo project, reproducing the issue - this would be a appreciated.
+If possible, please provide a small demo project that reproduces the issue, or attach a video with the reproduction - this would be very appreciated.
 -->
 
 #### Device, OS and Xcode Versions
