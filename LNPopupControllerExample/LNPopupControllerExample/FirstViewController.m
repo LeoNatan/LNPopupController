@@ -69,7 +69,7 @@
 	//Ugly hack to fix split view controller tint color.
 	self.splitViewController.view.tintColor = self.view.tintColor;
 	
-	_galleryButton.hidden = self.parentViewController != nil && [self.parentViewController isKindOfClass:[UISplitViewController class]] == NO;
+	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
 	_nextButton.hidden = self.splitViewController != nil;
 }
 
@@ -126,7 +126,7 @@
 		return;
 	}
 	
-	if(targetVC == self.navigationController && self.navigationController.viewControllers.count > 1)
+	if(targetVC == self.navigationController && self.navigationController.viewControllers.count > 1 && self.splitViewController == nil)
 	{
 		return;
 	}

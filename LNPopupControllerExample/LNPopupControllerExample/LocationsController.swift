@@ -17,6 +17,12 @@ class LocationsController: UITableViewController {
 		}
 	}
 	
+	override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+		get {
+			return .slide
+		}
+	}
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		

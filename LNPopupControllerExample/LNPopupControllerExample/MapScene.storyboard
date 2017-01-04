@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -23,6 +24,34 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" showsScale="YES" showsTraffic="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0EZ-UY-PPz">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </mapView>
+                            <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-d1-mBI">
+                                <rect key="frame" x="16" y="60" width="33" height="33"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="3Gn-n8-hKm">
+                                    <rect key="frame" x="0.0" y="0.0" width="33" height="33"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dOj-8I-c7R">
+                                            <rect key="frame" x="0.0" y="0.0" width="33" height="33"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <state key="normal" image="back"/>
+                                            <connections>
+                                                <action selector="backButtonTapped:" destination="ZEq-0J-wEi" eventType="touchUpInside" id="ewO-gG-Sjy"/>
+                                                <segue destination="RgK-1F-W7f" kind="unwind" unwindAction="unwindToGallery:" id="ttM-k1-hYQ"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="33" id="Ivf-su-R5N"/>
+                                    <constraint firstAttribute="height" constant="33" id="nLJ-eD-32h"/>
+                                </constraints>
+                                <blurEffect style="light"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </visualEffectView>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z3u-Zt-das">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="QsL-UP-eFz">
@@ -37,11 +66,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="5u8-d1-mBI" firstAttribute="top" secondItem="ZTe-ob-gbn" secondAttribute="bottom" constant="40" id="8AO-7m-vxX"/>
                             <constraint firstItem="z3u-Zt-das" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="Fq2-iK-jr4"/>
                             <constraint firstAttribute="trailing" secondItem="0EZ-UY-PPz" secondAttribute="trailing" id="JEU-0t-Dly"/>
                             <constraint firstAttribute="bottom" secondItem="0EZ-UY-PPz" secondAttribute="bottom" id="Oaq-1M-eOS"/>
                             <constraint firstItem="z3u-Zt-das" firstAttribute="top" secondItem="0EZ-UY-PPz" secondAttribute="top" id="WW9-4i-E54"/>
                             <constraint firstAttribute="top" secondItem="0EZ-UY-PPz" secondAttribute="top" id="XPh-Id-rKE"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="5u8-d1-mBI" secondAttribute="leading" id="bmi-kg-d43"/>
                             <constraint firstItem="0EZ-UY-PPz" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="j0s-0J-ar3"/>
                             <constraint firstAttribute="trailing" secondItem="z3u-Zt-das" secondAttribute="trailing" id="x5N-H0-EZ4"/>
                         </constraints>
@@ -52,6 +83,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZdB-FL-LqA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="RgK-1F-W7f" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-415.19999999999999" y="-18.440779610194905"/>
         </scene>
@@ -216,7 +248,6 @@
         <!--Custom Map Bar View Controller-->
         <scene sceneID="mUz-MU-rok">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="V9R-uO-lit" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="CustomMapBarViewController" id="WOb-qg-R9w" customClass="CustomMapBarViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oc7-cj-ghp"/>
@@ -264,8 +295,13 @@
                         <outlet property="searchBar" destination="zJz-wK-6yg" id="xdW-aw-H1J"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="V9R-uO-lit" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1157.5999999999999" y="-9.4452773613193415"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="back" width="128" height="128"/>
+    </resources>
+    <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>

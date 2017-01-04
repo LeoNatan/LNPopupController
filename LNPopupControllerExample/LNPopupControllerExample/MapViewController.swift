@@ -23,6 +23,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		
 		popupBar.customBarViewController = customMapBar
 		popupContentView.popupCloseButtonStyle = .none
+		popupInteractionStyle = .snap
 		
 		popupContentVC = storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController
 		popupContentVC.tableView.backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
@@ -38,5 +39,8 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		}
 		
 		return false;
+	}
+	
+	@IBAction @objc private func backButtonTapped(_ sender: Any) {
 	}
 }
