@@ -51,6 +51,10 @@ Add the following to your Cartfile:
 
 Drag the `LNPopupController.xcodeproj` project to your project, and add `LNPopupController.framework` to **Embedded Binaries** in your project target's **General** tab. Xcode should sort everything else on its own.
 
+###CocoaPods
+
+CocoaPods is not supported. There are many reasons for this. Instead of CocoaPods, use Carthage. You can continue using CocoaPods for for your other dependencies and Carthage for `LNPopupController`.
+
 ##Using the Framework
 
 ###Swift
@@ -64,10 +68,6 @@ Import the module in your project:
 ```objective-c
 @import LNPopupController;
 ```
-
-###CocoaPods
-
-CocoaPods is not supported. There are many reasons for this. Instead of CocoaPods, use Carthage. You can continue using CocoaPods for for your other dependencies and Carthage for `LNPopupController`.
 
 ###Popup Items
 
