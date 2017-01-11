@@ -538,7 +538,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				_dismissScrollViewStartingContentOffset = possibleScrollView.contentOffset.y;
 			}
 			
-			if(possibleScrollView.contentOffset.y < - (possibleScrollView.contentInset.top + LNPopupBarDeveloperPanGestureThreshold))
+			if(_popupBar.frame.origin.y > _cachedOpenPopupFrame.origin.y)
 			{
 				possibleScrollView.contentOffset = CGPointMake(possibleScrollView.contentOffset.x, _dismissScrollViewStartingContentOffset);
 			}
@@ -617,7 +617,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		{
 			_statusBarThresholdDir = -_statusBarThresholdDir;
 			
-			[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:^{
+			[UIView animateWithDuration:0.3 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:^{
 				[_containerController setNeedsStatusBarAppearanceUpdate];
 			} completion:nil];
 		}
@@ -975,7 +975,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_fixupGestureRecognizersForController:(UIViewController*)vc
 {
-	[vc.view.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+	[vc.viewForPopupInteractionGestureRecognizer.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		if([obj isKindOfClass:[UIPanGestureRecognizer class]] && obj != _popupContentView.popupInteractionGestureRecognizer)
 		{
 			[obj addTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
@@ -985,7 +985,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_cleanupGestureRecognizersForController:(UIViewController*)vc
 {
-	[vc.view.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+	[vc.viewForPopupInteractionGestureRecognizer.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		if([obj isKindOfClass:[UIPanGestureRecognizer class]] && obj != _popupContentView.popupInteractionGestureRecognizer)
 		{
 			[obj removeTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
@@ -1227,11 +1227,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		return NO;
 	}
-	
-//	if(otherGestureRecognizer.view == _popupContentView.scrollView)
-//	{
-//		return NO;
-//	}
 	
 	return YES;
 }
