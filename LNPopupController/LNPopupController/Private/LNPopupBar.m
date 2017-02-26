@@ -357,6 +357,13 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	[self setTintColor:_userTintColor];
 }
 
+- (void)setSystemShadowColor:(UIColor *)systemShadowColor
+{
+	_systemShadowColor = systemShadowColor;
+	
+	_shadowView.backgroundColor = systemShadowColor;
+}
+
 - (void)setTitle:(NSString *)title
 {
 	_title = [title copy];

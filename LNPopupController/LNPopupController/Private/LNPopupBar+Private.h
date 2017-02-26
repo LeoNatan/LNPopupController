@@ -33,6 +33,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, strong) UIColor* systemTintColor;
 @property (nonatomic, strong) UIColor* systemBarTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
+@property (nonatomic, strong) UIColor* systemShadowColor;
 
 @property (nonatomic, weak, readwrite) LNPopupItem* popupItem;
 
