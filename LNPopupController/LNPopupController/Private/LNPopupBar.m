@@ -470,11 +470,11 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 			 
 			 if(_resolvedStyle == LNPopupBarStyleCompact)
 			 {
-				 leftMargin = itemView.frame.origin.x + itemView.frame.size.width + 10;
+				 leftMargin = MAX(itemView.frame.origin.x + itemView.frame.size.width + 10, leftMargin);
 			 }
-			 else if(firstRightItemView == nil)
+			 else
 			 {
-				 firstRightItemView = itemView;
+				 firstRightItemView = (firstRightItemView == nil || itemView.frame.origin.x < firstRightItemView.frame.origin.x) ? itemView : firstRightItemView;
 			 }
 		 }];
 		
@@ -482,10 +482,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		 {
 			 UIView* itemView = [barButtonItem valueForKey:@"view"];
 			 
-			 if(firstRightItemView == nil)
-			 {
-				 firstRightItemView = itemView;
-			 }
+			 firstRightItemView = (firstRightItemView == nil || itemView.frame.origin.x < firstRightItemView.frame.origin.x) ? itemView : firstRightItemView;
 		 }];
 		
 		rightMargin = (firstRightItemView == nil ? self.bounds.size.width - 10 : firstRightItemView.frame.origin.x) - (_resolvedStyle == LNPopupBarStyleProminent ? 5 : 10);
