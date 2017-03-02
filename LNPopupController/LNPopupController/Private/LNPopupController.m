@@ -548,9 +548,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(_dismissGestureStarted == NO && (resolvedStyle == LNPopupInteractionStyleDrag || _popupControllerState > LNPopupPresentationStateClosed))
 	{
 		_lastSeenMovement = CACurrentMediaTime();
-		BOOL prevState = self.popupBar.highlightGestureRecognizer.enabled;
-		self.popupBar.highlightGestureRecognizer.enabled = NO;
-		self.popupBar.highlightGestureRecognizer.enabled = prevState;
+		BOOL prevState = self.popupBar.barHighlightGestureRecognizer.enabled;
+		self.popupBar.barHighlightGestureRecognizer.enabled = NO;
+		self.popupBar.barHighlightGestureRecognizer.enabled = prevState;
 		_lastPopupBarLocation = self.popupBar.center;
 		
 		_statusBarThresholdDir = _popupControllerState == LNPopupPresentationStateOpen ? 1 : -1;
@@ -938,17 +938,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar = [LNPopupBar new];
 	_popupBar.hidden = YES;
 	_popupBar._barDelegate = self;
-	_popupBar.openGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
-	[_popupBar addGestureRecognizer:_popupBar.openGestureRecognizer];
+	_popupBar.popupOpenGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
+	[_popupBar addGestureRecognizer:_popupBar.popupOpenGestureRecognizer];
 	
 	_popupBarLongPressGestureRecognizerDelegate = [LNPopupControllerLongPressGestureDelegate new];
-	_popupBar.highlightGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
-	_popupBar.highlightGestureRecognizer.minimumPressDuration = 0;
-	_popupBar.highlightGestureRecognizer.cancelsTouchesInView = NO;
-	_popupBar.highlightGestureRecognizer.delaysTouchesBegan = NO;
-	_popupBar.highlightGestureRecognizer.delaysTouchesEnded = NO;
-	_popupBar.highlightGestureRecognizer.delegate = _popupBarLongPressGestureRecognizerDelegate;
-	[_popupBar addGestureRecognizer:_popupBar.highlightGestureRecognizer];
+	_popupBar.barHighlightGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
+	_popupBar.barHighlightGestureRecognizer.minimumPressDuration = 0;
+	_popupBar.barHighlightGestureRecognizer.cancelsTouchesInView = NO;
+	_popupBar.barHighlightGestureRecognizer.delaysTouchesBegan = NO;
+	_popupBar.barHighlightGestureRecognizer.delaysTouchesEnded = NO;
+	_popupBar.barHighlightGestureRecognizer.delegate = _popupBarLongPressGestureRecognizerDelegate;
+	[_popupBar addGestureRecognizer:_popupBar.barHighlightGestureRecognizer];
 	
 	return _popupBar;
 }

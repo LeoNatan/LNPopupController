@@ -126,12 +126,12 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 /**
  *  The gesture recognizer responsible for opening the popup when the user taps on the popup bar. (read-only)
  */
-@property (nonatomic, strong, readonly) UITapGestureRecognizer* openGestureRecognizer;
+@property (nonatomic, strong, readonly) UITapGestureRecognizer* popupOpenGestureRecognizer;
 
 /**
  *  The gesture recognizer responsible for highlighting the popup bar when the user touches on the popup bar. (read-only)
  */
-@property (nonatomic, strong, readonly) UILongPressGestureRecognizer* highlightGestureRecognizer;
+@property (nonatomic, strong, readonly) UILongPressGestureRecognizer* barHighlightGestureRecognizer;
 
 /**
  * The previowing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the LNPopupBarPreviewingDelegate protocol.
