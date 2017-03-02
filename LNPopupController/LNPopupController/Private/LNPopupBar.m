@@ -501,7 +501,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 			}
 			
 			NSMutableParagraphStyle* paragraph = [NSMutableParagraphStyle new];
-			if(_resolvedStyle == LNPopupBarHeightCompact)
+			if(_resolvedStyle == LNPopupBarStyleCompact)
 			{
 				paragraph.alignment = NSTextAlignmentCenter;
 			}
