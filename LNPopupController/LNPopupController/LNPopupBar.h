@@ -104,24 +104,34 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
  *
  *  You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in NSAttributedString.h.
  */
-@property(nullable, nonatomic, copy) NSDictionary<NSString*, id>* titleTextAttributes UI_APPEARANCE_SELECTOR;
+@property (nullable, nonatomic, copy) NSDictionary<NSString*, id>* titleTextAttributes UI_APPEARANCE_SELECTOR;
 
 /**
  *  Display attributes for the popup bar’s subtitle text.
  *
  *  You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in NSAttributedString.h.
  */
-@property(nullable, nonatomic, copy) NSDictionary<NSString*, id>* subtitleTextAttributes UI_APPEARANCE_SELECTOR;
+@property (nullable, nonatomic, copy) NSDictionary<NSString*, id>* subtitleTextAttributes UI_APPEARANCE_SELECTOR;
 
 /**
  * When enabled, titles and subtitles that are longer than the space available will scroll text over time. By default, this is set to @c false for iOS 10 and above, or @c true otherwise.
  */
-@property(nonatomic, assign) BOOL marqueeScrollEnabled;
+@property (nonatomic, assign) BOOL marqueeScrollEnabled;
 
 /**
  * When enabled, the title and subtitle marquee scroll will be coordinated, and if either the title or subtitle of the current popup item change, the animation will reset so the two can scroll together. Enabled by default.
  */
-@property(nonatomic, assign) BOOL coordinateMarqueeScroll;
+@property (nonatomic, assign) BOOL coordinateMarqueeScroll;
+
+/**
+ *  The gesture recognizer responsible for opening the popup when the user taps on the popup bar. (read-only)
+ */
+@property (nonatomic, strong, readonly) UITapGestureRecognizer* openGestureRecognizer;
+
+/**
+ *  The gesture recognizer responsible for highlighting the popup bar when the user touches on the popup bar. (read-only)
+ */
+@property (nonatomic, strong, readonly) UILongPressGestureRecognizer* highlightGestureRecognizer;
 
 /**
  * The previowing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the LNPopupBarPreviewingDelegate protocol.
@@ -131,7 +141,6 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 /**
  * Set this property with an LNPopupCustomBarViewController subclass object to provide a popup bar with custom content.
  */
-
 @property (nullable, nonatomic, strong) LNPopupCustomBarViewController* customBarViewController;
 
 @end

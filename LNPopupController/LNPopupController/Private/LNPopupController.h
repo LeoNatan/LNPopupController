@@ -27,9 +27,7 @@
 @property (nonatomic) LNPopupPresentationState popupControllerState;
 @property (nonatomic) LNPopupPresentationState popupControllerTargetState;
 
-@property (nonatomic, strong) UILongPressGestureRecognizer* popupBarLongPressGestureRecognizer;
 @property (nonatomic, strong) LNPopupControllerLongPressGestureDelegate* popupBarLongPressGestureRecognizerDelegate;
-@property (nonatomic, strong) UITapGestureRecognizer* popupBarTapGestureRecognizer;
 @property (nonatomic) CGPoint lastPopupBarLocation;
 @property (nonatomic) CFTimeInterval lastSeenMovement;
 

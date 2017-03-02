@@ -60,6 +60,10 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, copy, readwrite) NSArray<UIBarButtonItem*>* leftBarButtonItems;
 @property (nonatomic, copy, readwrite) NSArray<UIBarButtonItem*>* rightBarButtonItems;
 
+@property (nonatomic, strong, readwrite) UITapGestureRecognizer* openGestureRecognizer;
+@property (nonatomic, strong, readwrite) UILongPressGestureRecognizer* highlightGestureRecognizer;
+
+
 - (void)_delayBarButtonLayout;
 - (void)_layoutBarButtonItems;
 
