@@ -190,9 +190,18 @@ static NSString* const hSNBDSfc64 = @"X2hpZGVTaG93TmF2aWdhdGlvbkJhckRpZFN0b3A6Zm
 	if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden && ![self isKindOfClass:[UITabBarController class]] && ![self isKindOfClass:[UINavigationController class]])
 	{
 		insets.bottom += self.defaultFrameForBottomDockingView_internalOrDeveloper.size.height + self._ln_popupController_nocreate.popupBar.frame.size.height;
+    
 	}
 	
+    
+    
 	[self _sCoOvIns:insets];
+    
+    if ([self isKindOfClass:[UITableViewController class]]){
+        UITableViewController *__weak tblVC = (UITableViewController *)self;
+        tblVC.tableView.contentInset = UIEdgeInsetsMake(insets.top, 0, insets.bottom, 0);
+        tblVC.tableView.scrollIndicatorInsets = tblVC.tableView.contentInset;
+    }
 }
 
 - (UIEdgeInsets)_ln_common_eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute

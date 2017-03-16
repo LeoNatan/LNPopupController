@@ -41,8 +41,8 @@ class DemoAlbumTableViewController: UITableViewController {
 		super.viewDidLayoutSubviews()
 		
 		let insets = UIEdgeInsetsMake(topLayoutGuide.length, 0, bottomLayoutGuide.length, 0)
-		tableView.contentInset = insets
-		tableView.scrollIndicatorInsets = insets
+//		tableView.contentInset = insets
+//		tableView.scrollIndicatorInsets = insets
 	}
 
 	override func viewWillAppear(_ animated: Bool) {

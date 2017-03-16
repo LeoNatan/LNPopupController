@@ -851,7 +851,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		NSString* str2 = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:bVsVbC options:0] encoding:NSUTF8StringEncoding];
 		
-		self.popupBar.systemShadowColor = [_bottomBar valueForKeyPath:str2];
+        UIView *backgroundView = [_bottomBar valueForKey:str1];
+    
+        if ([backgroundView respondsToSelector:NSSelectorFromString(@"shadowView")]){
+        
+            self.popupBar.systemShadowColor = [_bottomBar valueForKeyPath:str2];
+        }
+    
+	
 	}
 #endif
 }
@@ -913,6 +920,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_popupContentView.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		[_popupContentView.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 		
+    if ([_popupContentView respondsToSelector:@selector(topAnchor)])
+        {
+    
 		_popupCloseButtonTopConstraint = [_popupContentView.popupCloseButton.topAnchor constraintEqualToAnchor:_popupContentView.topAnchor constant:buttonStyle == LNPopupCloseButtonStyleRound ? 12 : 8];
 		_popupCloseButtonTopConstraint.active = YES;
 		
@@ -925,6 +935,47 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.centerXAnchor constraintEqualToAnchor:_popupContentView.centerXAnchor];
 		}
 		_popupCloseButtonHorizontalConstraint.active = YES;
+        }else
+            {
+            
+            
+            _popupCloseButtonTopConstraint = [NSLayoutConstraint constraintWithItem:_popupContentView.popupCloseButton
+                                                                          attribute:NSLayoutAttributeTop
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:_popupContentView
+                                                                          attribute:NSLayoutAttributeTop
+                                                                         multiplier:1.0f
+                                                                           constant:buttonStyle == LNPopupCloseButtonStyleRound ? 12 : 8];
+            
+            _popupCloseButtonTopConstraint.active = YES;
+            
+            if(buttonStyle == LNPopupCloseButtonStyleRound)
+                {
+                _popupCloseButtonHorizontalConstraint = [NSLayoutConstraint constraintWithItem:_popupContentView.popupCloseButton
+                                                                                     attribute:NSLayoutAttributeLeading
+                                                                                     relatedBy:NSLayoutRelationEqual
+                                                                                        toItem:_popupContentView
+                                                                                     attribute:NSLayoutAttributeLeading
+                                                                                    multiplier:1.0f
+                                                                                      constant:12];
+                }
+            else
+                {
+                _popupCloseButtonHorizontalConstraint = [NSLayoutConstraint constraintWithItem:_popupContentView.popupCloseButton
+                                                                                     attribute:NSLayoutAttributeCenterX
+                                                                                     relatedBy:NSLayoutRelationEqual
+                                                                                        toItem:_popupContentView
+                                                                                     attribute:NSLayoutAttributeCenterX
+                                                                                    multiplier:1.0f
+                                                                                      constant:0];
+                }
+            _popupCloseButtonHorizontalConstraint.active = YES;
+            [_popupContentView addConstraints:@[_popupCloseButtonTopConstraint,_popupCloseButtonHorizontalConstraint]];
+            [_popupContentView updateConstraintsIfNeeded];
+            [_popupContentView layoutIfNeeded];
+            
+            
+        }
 	}
 }
 
