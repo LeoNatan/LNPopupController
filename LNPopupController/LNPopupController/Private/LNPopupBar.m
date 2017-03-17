@@ -783,10 +783,15 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		
 		_customBarViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
 		[self addSubview:_customBarViewController.view];
-		[NSLayoutConstraint activateConstraints:@[[self.topAnchor constraintEqualToAnchor:_customBarViewController.view.topAnchor],
-												  [self.leftAnchor constraintEqualToAnchor:_customBarViewController.view.leftAnchor],
-												  [self.rightAnchor constraintEqualToAnchor:_customBarViewController.view.rightAnchor],
-												  [self.bottomAnchor constraintEqualToAnchor:_customBarViewController.view.bottomAnchor]]];
+		
+		UIView* vv = _customBarViewController.view;
+		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[vv]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(vv)]];
+		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[vv]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(vv)]];
+		
+//		[NSLayoutConstraint activateConstraints:@[[self.topAnchor constraintEqualToAnchor:_customBarViewController.view.topAnchor],
+//												  [self.leftAnchor constraintEqualToAnchor:_customBarViewController.view.leftAnchor],
+//												  [self.rightAnchor constraintEqualToAnchor:_customBarViewController.view.rightAnchor],
+//												  [self.bottomAnchor constraintEqualToAnchor:_customBarViewController.view.bottomAnchor]]];
 		
 		[self _updateViewsAfterCustomBarViewControllerUpdate];
 		

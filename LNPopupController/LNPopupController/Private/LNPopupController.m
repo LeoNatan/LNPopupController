@@ -851,7 +851,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		NSString* str2 = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:bVsVbC options:0] encoding:NSUTF8StringEncoding];
 		
-		self.popupBar.systemShadowColor = [_bottomBar valueForKeyPath:str2];
+		@try
+		{
+			self.popupBar.systemShadowColor = [_bottomBar valueForKeyPath:str2];
+		}
+		@catch(NSException* e)
+		{
+			self.popupBar.systemShadowColor = [UIColor lightGrayColor];
+		}
 	}
 #endif
 }
@@ -913,18 +920,21 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_popupContentView.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		[_popupContentView.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 		
-		_popupCloseButtonTopConstraint = [_popupContentView.popupCloseButton.topAnchor constraintEqualToAnchor:_popupContentView.topAnchor constant:buttonStyle == LNPopupCloseButtonStyleRound ? 12 : 8];
-		_popupCloseButtonTopConstraint.active = YES;
+		_popupCloseButtonTopConstraint = [NSLayoutConstraint constraintWithItem:_popupContentView.popupCloseButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_popupContentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:buttonStyle == LNPopupCloseButtonStyleRound ? 12 : 8];
+//		_popupCloseButtonTopConstraint = [_popupContentView.popupCloseButton.topAnchor constraintEqualToAnchor:_popupContentView.topAnchor constant:buttonStyle == LNPopupCloseButtonStyleRound ? 12 : 8];
 		
 		if(buttonStyle == LNPopupCloseButtonStyleRound)
 		{
-			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.leadingAnchor constraintEqualToAnchor:_popupContentView.leadingAnchor constant:12];
+			_popupCloseButtonHorizontalConstraint = [NSLayoutConstraint constraintWithItem:_popupContentView.popupCloseButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:_popupContentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:12];
+//			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.leadingAnchor constraintEqualToAnchor:_popupContentView.leadingAnchor constant:12];
 		}
 		else
 		{
-			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.centerXAnchor constraintEqualToAnchor:_popupContentView.centerXAnchor];
+			_popupCloseButtonHorizontalConstraint = [NSLayoutConstraint constraintWithItem:_popupContentView.popupCloseButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:_popupContentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+//			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.centerXAnchor constraintEqualToAnchor:_popupContentView.centerXAnchor];
 		}
-		_popupCloseButtonHorizontalConstraint.active = YES;
+		
+		[NSLayoutConstraint activateConstraints:@[_popupCloseButtonTopConstraint, _popupCloseButtonHorizontalConstraint]];
 	}
 }
 

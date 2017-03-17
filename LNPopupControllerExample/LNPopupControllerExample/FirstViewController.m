@@ -11,14 +11,12 @@
 #import "DemoPopupContentViewController.h"
 #import "LoremIpsum.h"
 #import "RandomColors.h"
+#import "SettingsTableViewController.h"
 
 @interface DemoGalleryController : UITableViewController @end
 @implementation DemoGalleryController
 
-- (IBAction)unwindToGallery:(UIStoryboardSegue *)unwindSegue
-{
-	//No-op
-}
+- (IBAction)unwindToGallery:(UIStoryboardSegue *)unwindSegue { }
 
 @end
 
@@ -32,32 +30,11 @@
 	__weak IBOutlet UIButton *_nextButton;
 }
 
-// TODO: Uncomment this code to demonstrate popup bar customization
-
-//+ (void)load
-//{
-//	static dispatch_once_t onceToken;
-//	dispatch_once(&onceToken, ^{
-//		NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-//		paragraphStyle.alignment = NSTextAlignmentRight;
-//		paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
-//		
-//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setTitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
-//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setSubtitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]}];
-//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setBackgroundStyle:UIBlurEffectStyleDark];
-//		[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UIViewController class]]] setTintColor:[UIColor yellowColor]];
-//	});
-//}
-
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
 	
 	self.view.backgroundColor = LNRandomLightColor();
-
-// TODO: Uncomment this code to demonstrate disabling the popup close button.
-	
-//	self.navigationController.popupContentView.popupCloseButtonStyle = LNPopupCloseButtonStyleNone;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -145,6 +122,28 @@
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
 	targetVC.popupBar.previewingDelegate = self;
+	
+	targetVC.popupBar.barStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
+	targetVC.popupInteractionStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsInteractionStyle] unsignedIntegerValue];
+	targetVC.popupContentView.popupCloseButtonStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsCloseButtonStyle] unsignedIntegerValue];
+	
+	NSNumber* marqueeEnabledSetting = [[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsMarqueeStyle];
+	if(marqueeEnabledSetting && [marqueeEnabledSetting isEqualToNumber:@0] == NO)
+	{
+		targetVC.popupBar.marqueeScrollEnabled = [marqueeEnabledSetting unsignedIntegerValue] - 1;
+	}
+	
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsEnableCustomizations])
+	{
+		NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		paragraphStyle.alignment = NSTextAlignmentRight;
+		paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+		
+		[targetVC.popupBar setTitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
+		[targetVC.popupBar setSubtitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]}];
+		[targetVC.popupBar setBackgroundStyle:UIBlurEffectStyleDark];
+		[targetVC.popupBar setTintColor:[UIColor yellowColor]];
+	}
 	
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
 }
