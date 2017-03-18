@@ -73,6 +73,10 @@ static NSString* const hSNBDSfc64 = @"X2hpZGVTaG93TmF2aWdhdGlvbkJhckRpZFN0b3A6Zm
 		m2 = class_getInstanceMethod([self class], @selector(_ln_willTransitionToTraitCollection:withTransitionCoordinator:));
 		method_exchangeImplementations(m1, m2);
 		
+		m1 = class_getInstanceMethod([self class], @selector(presentViewController:animated:completion:));
+		m2 = class_getInstanceMethod([self class], @selector(_ln_presentViewController:animated:completion:));
+		method_exchangeImplementations(m1, m2);
+		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:vCUSBBase64 options:0] encoding:NSUTF8StringEncoding];
 		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
@@ -86,6 +90,18 @@ static NSString* const hSNBDSfc64 = @"X2hpZGVTaG93TmF2aWdhdGlvbkJhckRpZFN0b3A6Zm
 		method_exchangeImplementations(m1, m2);
 #endif
 	});
+}
+
+- (void)_ln_presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
+{
+	if(self.popupPresentationContainerViewController)
+	{
+		[self.popupPresentationContainerViewController presentViewController:viewControllerToPresent animated:flag completion:completion];
+	}
+	else
+	{
+		[self _ln_presentViewController:viewControllerToPresent animated:flag completion:completion];
+	}
 }
 
 - (void)_ln_setNeedsStatusBarAppearanceUpdate
