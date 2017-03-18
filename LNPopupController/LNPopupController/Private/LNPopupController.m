@@ -872,6 +872,28 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[self.popupBar.superview insertSubview:self.popupContentView belowSubview:self.popupBar];
 }
 
+- (UIView*)_view:(UIView*)view selfOrSuperviewKindOfClass:(Class)aClass
+{
+	if([view isKindOfClass:aClass])
+	{
+		return view;
+	}
+	
+	UIView* superview = view.superview;
+	
+	while(superview != nil)
+	{
+		if([superview isKindOfClass:aClass])
+		{
+			return superview;
+		}
+		
+		superview = superview.superview;
+	}
+	
+	return nil;
+}
+
 - (void)_repositionPopupCloseButton
 {
 	CGFloat startingTopConstant = _popupCloseButtonTopConstraint.constant;
@@ -879,8 +901,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupCloseButtonTopConstraint.constant = _popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 8;
 	_popupCloseButtonTopConstraint.constant += ([UIApplication sharedApplication].isStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
 	
-	UINavigationBar* possibleBar = (id)[[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
-	if([possibleBar isKindOfClass:[UINavigationBar class]])
+	id hitTest = [[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
+	UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
+	if(possibleBar)
 	{
 		_popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
 	}
