@@ -1,6 +1,8 @@
 <!---
-Please fill this template before submitting an issue. This helps me determine the issue cause much quicker.
+Please fill this template before submitting an issue. This helps determine the issue cause much quicker.
 If you are filing an enhancement request, you only need to fill the description section and can safely remove the other sections.
+
+Note: If you are using a fork with CocoaPods, please make sure it is up-to-date with the latest version before opening an issue!
 -->
 
 #### Description
