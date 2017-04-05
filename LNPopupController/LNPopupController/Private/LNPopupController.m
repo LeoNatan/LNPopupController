@@ -851,7 +851,15 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		NSString* str2 = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:bVsVbC options:0] encoding:NSUTF8StringEncoding];
 		
-		self.popupBar.systemShadowColor = [_bottomBar valueForKeyPath:str2];
+		
+		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 10)
+		{
+			self.popupBar.systemShadowColor = [_bottomBar valueForKeyPath:str2];
+		}
+		else
+		{
+			self.popupBar.systemShadowColor = [UIColor lightGrayColor];
+		}
 	}
 #endif
 }
