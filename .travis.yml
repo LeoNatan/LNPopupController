@@ -1,0 +1,9 @@
+osx_image: xcode8.3
+language: objective-c
+env:
+  - DEST='platform=iOS Simulator,name=iPhone 7 Plus,OS=10.3'
+  - DEST='platform=iOS Simulator,name=iPhone 6S Plus,OS=9.3'
+install:
+  - xcodebuild -project LNPopupControllerExample/LNPopupControllerExample.xcodeproj -scheme LNPopupControllerExample -sdk iphonesimulator build-for-testing
+script:
+  - xcodebuild -project LNPopupControllerExample/LNPopupControllerExample.xcodeproj -scheme LNPopupControllerExample -sdk iphonesimulator test-without-building -destination "$DEST"

@@ -2,7 +2,7 @@
 //  SettingsTableViewController.h
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan (Wix) on 18/03/2017.
+//  Created by Leo Natan on 18/03/2017.
 //  Copyright © 2017 Leo Natan. All rights reserved.
 //
 
