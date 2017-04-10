@@ -32,6 +32,9 @@
 @end
 
 @interface LNPopupControllerExampleUITests : XCTestCase
+{
+	XCUIApplication* app;
+}
 
 @end
 
@@ -45,7 +48,9 @@
     // In UI tests it is usually best to stop immediately when a failure occurs.
     self.continueAfterFailure = NO;
     // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
-    [[[XCUIApplication alloc] init] launch];
+	app = [XCUIApplication new];
+	
+    [app launch];
     
     // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
 }
@@ -55,7 +60,7 @@
     [super tearDown];
 }
 
-- (void)_openCustomizationsAndRestForApp:(XCUIApplication*)app
+- (void)_openCustomizationsAndReset
 {
 	[app.navigationBars[@"LNPopupController"].buttons[@"Item"] tap];
 	
@@ -63,93 +68,90 @@
 	[settingsNavigationBar.buttons[@"Reset"] tap];
 }
 
-- (void)_closeCustomizationsForApp:(XCUIApplication*)app
+- (void)_closeCustomizations
 {
 	XCUIElement *settingsNavigationBar = app.navigationBars[@"Settings"];
 	[settingsNavigationBar.buttons[@"Done"] tap];
 }
 
-- (void)_resetCustomizationsForApp:(XCUIApplication*)app
+- (void)_resetCustomizations
 {
-	[self _openCustomizationsAndRestForApp:app];
-	[self _closeCustomizationsForApp:app];
+	[self _openCustomizationsAndReset];
+	 [self _closeCustomizations];
 }
 
-- (void)_openPopupWithSwipeForApp:(XCUIApplication*)app
+- (void)_openPopupWithSwipe
 {
 	[app.buttons[@"PopupBarView"] swipeUp];
 }
 
-- (void)_openPopupWithTapForApp:(XCUIApplication*)app
+- (void)_openPopupWithTap
 {
 	[app.buttons[@"PopupBarView"] forceTap];
 }
 
-- (void)_closePopupWithSwipeForApp:(XCUIApplication*)app
+- (void)_closePopupWithSwipe
 {
 	XCUICoordinate* coord1 = [app coordinateWithNormalizedOffset:CGVectorMake(0.5, 0.5)];
 	XCUICoordinate* coord2 = [coord1 coordinateWithOffset:CGVectorMake(0, 400)];
 	[coord1 pressForDuration:0 thenDragToCoordinate:coord2];
 }
 
-- (void)_closePopupWithCloseButtonTapForApp:(XCUIApplication*)app
+- (void)_closePopupWithCloseButtonTap
 {
 	[app.buttons[@"Close"] tap];
 }
 
-- (void)_setupForSanityTestingForApp:(XCUIApplication*)app
+- (void)_setupForSanityTesting
 {
-	[self _resetCustomizationsForApp:app];
+	[self _resetCustomizations];
 	
 	[app.tables.cells.staticTexts[@"Tab Bar Controller + Navigation Controller"] tap];
 }
 
+- (void)_makeFinalAssertion
+{
+	XCTAssert(app.buttons[@"Next ▸"].isHittable);
+}
+
 - (void)testPopupBarOpensBySwipeClosesBySwipe
 {
-	XCUIApplication *app = [[XCUIApplication alloc] init];
+	[self _setupForSanityTesting];
 	
-	[self _setupForSanityTestingForApp:app];
+	[self _openPopupWithSwipe];
+	[self _closePopupWithSwipe];
 	
-	[self _openPopupWithSwipeForApp:app];
-	[self _closePopupWithSwipeForApp:app];
-	
-	XCTAssert(app.buttons[@"Gallery"].isHittable);
+	[self _makeFinalAssertion];
 }
 
 - (void)testPopupBarOpensBySwipeClosesByButtonTap
 {
-	XCUIApplication *app = [[XCUIApplication alloc] init];
+	[self _setupForSanityTesting];
 	
-	[self _setupForSanityTestingForApp:app];
+	[self _openPopupWithSwipe];
+	[self _closePopupWithCloseButtonTap];
 	
-	[self _openPopupWithSwipeForApp:app];
-	[self _closePopupWithCloseButtonTapForApp:app];
-	
-	XCTAssert(app.buttons[@"Gallery"].isHittable);
+	[self _makeFinalAssertion];
 }
 
 - (void)testPopupBarOpensByTapClosesBySwipe
 {
-	XCUIApplication *app = [[XCUIApplication alloc] init];
+	[self _setupForSanityTesting];
 	
-	[self _setupForSanityTestingForApp:app];
+	[self _openPopupWithTap];
+	[self _closePopupWithSwipe];
 	
-	[self _openPopupWithTapForApp:app];
-	[self _closePopupWithSwipeForApp:app];
-	
-	XCTAssert(app.buttons[@"Gallery"].isHittable);
+	[self _makeFinalAssertion];
 }
 
 - (void)testPopupBarOpensByTapClosesByButtonTap
 {
-	XCUIApplication *app = [[XCUIApplication alloc] init];
+	[self _setupForSanityTesting];
 	
-	[self _setupForSanityTestingForApp:app];
+	[self _openPopupWithTap];
+	[self _closePopupWithCloseButtonTap];
 	
-	[self _openPopupWithTapForApp:app];
-	[self _closePopupWithCloseButtonTapForApp:app];
-	
-	XCTAssert(app.buttons[@"Gallery"].isHittable);
+	[self _makeFinalAssertion];
 }
 
 @end
