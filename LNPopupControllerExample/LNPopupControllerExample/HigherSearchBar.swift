@@ -2,7 +2,7 @@
 //  HigherSearchBar.swift
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan (Wix) on 30/12/2016.
+//  Created by Leo Natan on 30/12/2016.
 //  Copyright © 2016 Leo Natan. All rights reserved.
 //
 

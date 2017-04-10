@@ -29,6 +29,7 @@
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39F513F61B88F9E800F7C717 /* COSTouchVisualizerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F513F51B88F9E800F7C717 /* COSTouchVisualizerWindow.m */; };
+		39F611CB1E9AD9E6002859BA /* LNPopupControllerExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F611CA1E9AD9E6002859BA /* LNPopupControllerExampleUITests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 39DB52E41B5823330061C589;
 			remoteInfo = LNPopupController;
+		};
+		39F611CD1E9AD9E6002859BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 392779FC1B58228000293F95 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 39277A031B58228000293F95;
+			remoteInfo = LNPopupControllerExample;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -94,6 +102,9 @@
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
 		39F513F41B88F9E800F7C717 /* COSTouchVisualizerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = COSTouchVisualizerWindow.h; sourceTree = "<group>"; };
 		39F513F51B88F9E800F7C717 /* COSTouchVisualizerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = COSTouchVisualizerWindow.m; sourceTree = "<group>"; };
+		39F611C81E9AD9E5002859BA /* LNPopupControllerExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LNPopupControllerExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		39F611CA1E9AD9E6002859BA /* LNPopupControllerExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupControllerExampleUITests.m; sourceTree = "<group>"; };
+		39F611CC1E9AD9E6002859BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +113,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39F611C51E9AD9E5002859BA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +140,7 @@
 			children = (
 				39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */,
 				39277A061B58228000293F95 /* LNPopupControllerExample */,
+				39F611C91E9AD9E6002859BA /* LNPopupControllerExampleUITests */,
 				39277A051B58228000293F95 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				39277A041B58228000293F95 /* LNPopupControllerExample.app */,
+				39F611C81E9AD9E5002859BA /* LNPopupControllerExampleUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -232,6 +252,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		39F611C91E9AD9E6002859BA /* LNPopupControllerExampleUITests */ = {
+			isa = PBXGroup;
+			children = (
+				39F611CA1E9AD9E6002859BA /* LNPopupControllerExampleUITests.m */,
+				39F611CC1E9AD9E6002859BA /* Info.plist */,
+			);
+			path = LNPopupControllerExampleUITests;
+			sourceTree = "<group>";
+		};
 		7B09DF521B899C24006E6088 /* COSTouchVisualizerWindow */ = {
 			isa = PBXGroup;
 			children = (
@@ -263,6 +292,24 @@
 			productReference = 39277A041B58228000293F95 /* LNPopupControllerExample.app */;
 			productType = "com.apple.product-type.application";
 		};
+		39F611C71E9AD9E5002859BA /* LNPopupControllerExampleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39F611D11E9AD9E6002859BA /* Build configuration list for PBXNativeTarget "LNPopupControllerExampleUITests" */;
+			buildPhases = (
+				39F611C41E9AD9E5002859BA /* Sources */,
+				39F611C51E9AD9E5002859BA /* Frameworks */,
+				39F611C61E9AD9E5002859BA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				39F611CE1E9AD9E6002859BA /* PBXTargetDependency */,
+			);
+			name = LNPopupControllerExampleUITests;
+			productName = LNPopupControllerExampleUITests;
+			productReference = 39F611C81E9AD9E5002859BA /* LNPopupControllerExampleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -277,6 +324,11 @@
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = S9QFG2VH2E;
 						LastSwiftMigration = 0810;
+					};
+					39F611C71E9AD9E5002859BA = {
+						CreatedOnToolsVersion = 8.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 39277A031B58228000293F95;
 					};
 				};
 			};
@@ -300,6 +352,7 @@
 			projectRoot = "";
 			targets = (
 				39277A031B58228000293F95 /* LNPopupControllerExample */,
+				39F611C71E9AD9E5002859BA /* LNPopupControllerExampleUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -323,6 +376,13 @@
 				393F23231E16BF1D000E969D /* MapScene.storyboard in Resources */,
 				39277A171B58228000293F95 /* Assets.xcassets in Resources */,
 				39277A151B58228000293F95 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39F611C61E9AD9E5002859BA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +412,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		39F611C41E9AD9E5002859BA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39F611CB1E9AD9E6002859BA /* LNPopupControllerExampleUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -359,6 +427,11 @@
 			isa = PBXTargetDependency;
 			name = LNPopupController;
 			targetProxy = 39DB61821B8891EE001BFF8F /* PBXContainerItemProxy */;
+		};
+		39F611CE1E9AD9E6002859BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 39277A031B58228000293F95 /* LNPopupControllerExample */;
+			targetProxy = 39F611CD1E9AD9E6002859BA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -504,6 +577,38 @@
 			};
 			name = Release;
 		};
+		39F611CF1E9AD9E6002859BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				INFOPLIST_FILE = LNPopupControllerExampleUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = LNPopupControllerExample;
+			};
+			name = Debug;
+		};
+		39F611D01E9AD9E6002859BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				INFOPLIST_FILE = LNPopupControllerExampleUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = LNPopupControllerExample;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -524,6 +629,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		39F611D11E9AD9E6002859BA /* Build configuration list for PBXNativeTarget "LNPopupControllerExampleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39F611CF1E9AD9E6002859BA /* Debug */,
+				39F611D01E9AD9E6002859BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
