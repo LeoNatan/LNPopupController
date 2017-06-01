@@ -78,6 +78,8 @@ const NSInteger LNBackgroundStyleInherit = -1;
 	UIImageView* _imageView;
 	
 	UIView* _shadowView;
+    
+    NSArray<__kindof NSLayoutConstraint *> * _progressViewVerticalConstraints;
 }
 
 CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC)
@@ -174,13 +176,15 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
 		
 		[self _setNeedsTitleLayout];
-		[_backgroundView addSubview:_titlesView];
+		[_backgroundView.contentView addSubview:_titlesView];
 		
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
 		_progressView.translatesAutoresizingMaskIntoConstraints = NO;
 		_progressView.trackImage = [UIImage alloc];
 		[self addSubview:_progressView];
-		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(2)]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
+        
+        [self _updateProgressStyle];
+        
 		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_progressView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
 		
 		_needsLabelsLayout = YES;
@@ -215,6 +219,18 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	}
 	
 	return self;
+}
+
+- (void)_updateProgressStyle
+{
+    if (LNPopupBarProgressStyleTop == self.progressStyle) {
+        _progressViewVerticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_progressView(2)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)];
+        
+    }
+    else{
+        _progressViewVerticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(2)]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)];
+    }
+    [self addConstraints:_progressViewVerticalConstraints];
 }
 
 - (void)layoutSubviews
@@ -345,6 +361,17 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	_systemBarStyle = systemBarStyle;
 	
 	[self _innerSetBackgroundStyle:_userBackgroundStyle];
+}
+
+- (void)setProgressStyle:(LNPopupBarProgressStyle)progressStyle
+{
+    if (_progressStyle != progressStyle) {
+        _progressStyle = progressStyle;
+        [self removeConstraints:_progressViewVerticalConstraints];
+        [self _updateProgressStyle];
+    }
+    _progressStyle = progressStyle;
+    
 }
 
 - (void)setSystemBarTintColor:(UIColor *)systemBarTintColor
