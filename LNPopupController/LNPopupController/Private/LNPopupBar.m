@@ -183,7 +183,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		_progressView.trackImage = [UIImage alloc];
 		[self addSubview:_progressView];
         
-        [self _updateProgressStyle];
+        [self _updateProgressViewPosition];
         
 		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_progressView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
 		
@@ -221,9 +221,10 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	return self;
 }
 
-- (void)_updateProgressStyle
+- (void)_updateProgressViewPosition
 {
-    if (LNPopupBarProgressStyleTop == self.progressStyle) {
+    if (LNPopupBarProgressViewPositionTop == self.progressViewPosition)
+    {
         _progressViewVerticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_progressView(2)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)];
         
     }
@@ -363,14 +364,14 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	[self _innerSetBackgroundStyle:_userBackgroundStyle];
 }
 
-- (void)setProgressStyle:(LNPopupBarProgressStyle)progressStyle
+- (void)setProgressViewPosition:(LNPopupBarProgressViewPosition)progressViewPosition
 {
-    if (_progressStyle != progressStyle) {
-        _progressStyle = progressStyle;
+    if (_progressViewPosition != progressViewPosition) {
+        _progressViewPosition = progressViewPosition;
         [self removeConstraints:_progressViewVerticalConstraints];
-        [self _updateProgressStyle];
+        [self _updateProgressViewPosition];
     }
-    _progressStyle = progressStyle;
+    _progressViewPosition = progressViewPosition;
     
 }
 

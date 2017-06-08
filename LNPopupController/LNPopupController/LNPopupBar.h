@@ -39,15 +39,15 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 	LNPopupBarStyleCustom
 };
 
-typedef NS_ENUM(NSUInteger, LNPopupBarProgressStyle) {
+typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewPosition) {
     /**
      * progress view will on the bottom of bar
      */
-    LNPopupBarProgressStyleBottom,
+    LNPopupBarProgressViewPositionBottom,
     /**
      * progress view will on the top of bar.
      */
-    LNPopupBarProgressStyleTop,
+    LNPopupBarProgressViewPositionTop,
     
     
 };
@@ -104,7 +104,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressStyle) {
 /**
  *  The popup bar's progress style.
  */
-@property (nonatomic, assign) LNPopupBarProgressStyle progressStyle;
+@property (nonatomic, assign) LNPopupBarProgressViewPosition progressViewPosition;
 
 /**
  *  The popup bar background style that specifies its appearance.
