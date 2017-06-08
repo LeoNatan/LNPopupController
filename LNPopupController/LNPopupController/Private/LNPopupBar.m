@@ -179,10 +179,10 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		[_backgroundView.contentView addSubview:_titlesView];
 		
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-		_progressView.translatesAutoresizingMaskIntoConstraints = NO;
-		_progressView.trackImage = [UIImage alloc];
-		[self addSubview:_progressView];
-        
+        _progressView.translatesAutoresizingMaskIntoConstraints = NO;
+        _progressView.trackImage = [UIImage alloc];
+        [self addSubview:_progressView];
+
         [self _updateProgressViewPosition];
         
 		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_progressView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
@@ -226,7 +226,6 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
     if (LNPopupBarProgressViewPositionTop == self.progressViewPosition)
     {
         _progressViewVerticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_progressView(2)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)];
-        
     }
     else{
         _progressViewVerticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(2)]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)];
