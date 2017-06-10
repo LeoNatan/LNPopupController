@@ -27,12 +27,11 @@
 
 - (void)viewDidLoad
 {
-	self.preferredContentSize = CGSizeMake(-1, 80);
+	self.preferredContentSize = CGSizeMake(0, 80);
 }
 
 - (void)popupItemDidUpdate
 {
-	NSLog(@"popupItemDidUpdate");
 }
 
 @end
