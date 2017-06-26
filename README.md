@@ -248,7 +248,7 @@ demoVC.popupItem.accessibilityProgressLabel = NSLocalizedString("Custom accessib
 demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.stringFromTimeInterval(NSTimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.stringFromTimeInterval(totalTime)!)"
 ```
 
-## Known Limitations
+## Notes
 
 * Navigation controller's `setToolbarHidden:` and `setToolbarHidden:animated:` are not supported.
 * Manually hiding tab bars is not supported by the framework or by Apple. **Do not hide the tab bar using `tabBar.hidden = YES`.**
