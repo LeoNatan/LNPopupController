@@ -1272,6 +1272,16 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return YES;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if([touch.view isKindOfClass:[UIControl class]])
+    {
+        return NO;
+    }
+
+    return YES;
+}
+
 #pragma mark UIViewControllerPreviewingDelegate
 
 - (nullable UIViewController *)previewingContext:(id <UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
