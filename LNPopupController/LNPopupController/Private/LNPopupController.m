@@ -1244,6 +1244,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (nullable UIViewController *)previewingContext:(id <UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
 {
+	self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
+	self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
+	
 	return [_containerController.popupBar.previewingDelegate previewingViewControllerForPopupBar:_containerController.popupBar];
 }
 
