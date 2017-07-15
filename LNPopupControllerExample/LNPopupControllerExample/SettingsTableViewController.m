@@ -10,6 +10,7 @@
 
 NSString* const PopupSettingsBarStyle = @"PopupSettingsBarStyle";
 NSString* const PopupSettingsInteractionStyle = @"PopupSettingsInteractionStyle";
+NSString* const PopupSettingsProgressViewStyle = @"PopupSettingsProgressViewStyle";
 NSString* const PopupSettingsCloseButtonStyle = @"PopupSettingsCloseButtonStyle";
 NSString* const PopupSettingsMarqueeStyle = @"PopupSettingsMarqueeStyle";
 NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomizations";
@@ -26,7 +27,7 @@ NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomi
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	_sectionToKeyMapping = @{@0: PopupSettingsBarStyle, @1: PopupSettingsInteractionStyle, @2: PopupSettingsCloseButtonStyle, @3: PopupSettingsMarqueeStyle};
+	_sectionToKeyMapping = @{@0: PopupSettingsBarStyle, @1: PopupSettingsInteractionStyle, @2: PopupSettingsProgressViewStyle, @3: PopupSettingsCloseButtonStyle, @4: PopupSettingsMarqueeStyle};
 }
 
 - (void)didReceiveMemoryWarning {

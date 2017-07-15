@@ -10,6 +10,7 @@
 
 extern NSString* const PopupSettingsBarStyle;
 extern NSString* const PopupSettingsInteractionStyle;
+extern NSString* const PopupSettingsProgressViewStyle;
 extern NSString* const PopupSettingsCloseButtonStyle;
 extern NSString* const PopupSettingsMarqueeStyle;
 extern NSString* const PopupSettingsEnableCustomizations;

@@ -138,17 +138,21 @@ Any `UIViewController` subclasses can be popup container view controllers. The p
 
 #### Modern Look and Feel
 
-`LNPopupController` provides two distinct style of popup look and feel, one based on iOS 10 Music app look and feel, and one based on iOS 9 look and feel. Popup bar styles are arbitrarily labeled "prominent" for iOS 10 style popup bar and "compact" for iOS 9 style. Popup interaction styles are labeled "snap" for iOS 10 style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for iOS 10 style chevron close button and "round" for iOS 9 style close buttons. For each, there is a "default" style for choosing the most suitable one for the current operating system version.
+`LNPopupController` provides two distinct style of popup look and feel, one based on modern Music app look and feel, and one based on iOS 9 look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9 style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9 style close buttons. For each, there is a "default" style for choosing the most suitable one for the current operating system version.
 
-The defaults for iOS 10 are:
+The defaults for iOS 10 and later are:
 * Prominent bar style
 * Snap interaction style
 * Chevron close button style
+* No progress view style
 
 The defaults for iOS 9 are:
 * Compact bar style
 * Drag interaction style
 * Round close button style
+* Bottom progress view style
+
+##### Bar Style
 
 Customizing the popup bar style is achieved by setting the popup bar's `barStyle` property.
 
@@ -156,11 +160,25 @@ Customizing the popup bar style is achieved by setting the popup bar's `barStyle
 navigationController.popupBar.barStyle = .compact
 ```
 
+##### Interaction Style
+
 Customizing the popup interaction style is achieved by setting the popup presentation containing controller's `popupInteractionStyle` property.
 
 ```swift
 navigationController.popupInteractionStyle = .drag
 ```
+
+##### Progress View Style
+
+Customizing the popup bar progress view style is achieved by setting the popup bar's `progressViewStyle` property.
+
+```swift
+navigationController.popupBar.progressViewStyle = .top
+```
+
+To hide the progress view, set the `progressViewStyle` to `LNPopupBarProgressViewStyleNone` / `.none`.
+
+##### Close Button Style
 
 Customizing the popup close button style is achieved by setting the popup content view's `popupCloseButtonStyle` property.
 
@@ -168,7 +186,7 @@ Customizing the popup close button style is achieved by setting the popup conten
 navigationController.popupContentView.popupCloseButtonStyle = .round
 ```
 
-To disable the popup close button, set the `popupCloseButtonStyle` to `LNPopupCloseButtonStyleNone` / `.none`.
+To hide the popup close button, set the `popupCloseButtonStyle` to `LNPopupCloseButtonStyleNone` / `.none`.
 
 #### Popup Bar Appearance
 
