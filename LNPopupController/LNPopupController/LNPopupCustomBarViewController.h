@@ -20,6 +20,11 @@
 @property (nonatomic, assign) BOOL wantsDefaultTapGestureRecognizer;
 @property (nonatomic, assign) BOOL wantsDefaultPanGestureRecognizer;
 
+/*
+ * The preferredContentSize is used for height calculation of the popup bar.
+ */
+@property (nonatomic, assign) CGSize preferredContentSize;
+
 /**
  * Called by the framework to notify the popup content view controller that one or more keys of the the popup item have been updated, or the entire popup item has changed.
  */

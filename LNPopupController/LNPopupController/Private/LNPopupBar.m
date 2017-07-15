@@ -823,15 +823,25 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 	_titlesView.hidden = hide;
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+	if([keyPath isEqualToString:@"preferredContentSize"] == YES && object == _customBarViewController)
+	{
+		[self._barDelegate _popupBarStyleDidChange:self];
+	}
+}
+
 - (void)setCustomBarViewController:(LNPopupCustomBarViewController*)customBarViewController
 {
 	if(_customBarViewController != customBarViewController)
 	{
 		_customBarViewController.containingPopupBar = nil;
 		[_customBarViewController.view removeFromSuperview];
+		[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];
 		
 		_customBarViewController = customBarViewController;
 		_customBarViewController.containingPopupBar = self;
+		[_customBarViewController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
 		
 		_customBarViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
 		[self addSubview:_customBarViewController.view];
@@ -880,6 +890,11 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		 UIView* itemView = [barButtonItem valueForKey:@"view"];
 		 [itemView.layer removeAllAnimations];
 	 }];
+}
+
+- (void)dealloc
+{
+	[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];
 }
 
 @end
