@@ -1101,6 +1101,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		[self _reconfigureContent];
 		
+		[self.popupBar setNeedsLayout];
+		[self.popupBar layoutIfNeeded];
+		
 		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^
 		 {
 			 CGRect barFrame = self.popupBar.frame;
