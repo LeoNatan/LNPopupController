@@ -345,6 +345,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_transitionToState:(LNPopupPresentationState)state animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
 {
+	if(_dismissalOverride)
+	{
+		return;
+	}
+	
 	if(transitionOriginatedByUser == YES && _popupControllerState == LNPopupPresentationStateTransitioning)
 	{
 		NSLog(@"LNPopupController: The popup controller is already in transition. Will ignore this transition request.");
@@ -391,7 +396,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self.popupContentView.contentView layoutIfNeeded];
 		}];
 		[contentController endAppearanceTransition];
-	};;
+	};
 	
 	_popupControllerState = LNPopupPresentationStateTransitioning;
 	_popupControllerTargetState = state;
@@ -401,6 +406,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	void (^updatePopupBarAlpha)(void) = ^ {
 		if(allowBarAlpha && resolvedStyle == LNPopupInteractionStyleSnap)
 		{
+			CGRect frame = self.popupBar.frame;
+			frame.size.height = state < LNPopupPresentationStateTransitioning ? _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.customBarViewController) : 0.0;
+			self.popupBar.frame = frame;
 			self.popupBar.alpha = state < LNPopupPresentationStateTransitioning;
 		}
 		else
@@ -409,14 +417,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	};
 	
-	if(_popupControllerTargetState == LNPopupPresentationStateOpen)
-	{
-		//When opening the popup, let it disappear right away on snap behavior.
-		updatePopupBarAlpha();
-	}
+//	if(_popupControllerTargetState == LNPopupPresentationStateOpen)
+//	{
+//		//When opening the popup, let it disappear right away on snap behavior.
+//		updatePopupBarAlpha();
+//	}
 	[UIView animateWithDuration:animated ? resolvedStyle == LNPopupInteractionStyleSnap ? 0.75 : 0.5 : 0.0 delay:0.0 usingSpringWithDamping:spring ? 0.8 : 1.0 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^
 	 {
-		 updatePopupBarAlpha();
+		 if(state != LNPopupPresentationStateTransitioning)
+		 {
+			 updatePopupBarAlpha();
+		 }
 		 
 		 if(state == LNPopupPresentationStateClosed)
 		 {
@@ -426,7 +437,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		 [self _setContentToState:state];
 	 } completion:^(BOOL finished)
 	 {
-		 updatePopupBarAlpha();
+		 if(state != LNPopupPresentationStateTransitioning)
+		 {
+			 updatePopupBarAlpha();
+		 }
 		 
 		 if(state == LNPopupPresentationStateClosed)
 		 {
@@ -1244,10 +1258,25 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (nullable UIViewController *)previewingContext:(id <UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location
 {
-	self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
-	self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
+	if(_popupControllerState != LNPopupPresentationStateClosed)
+	{
+		return nil;
+	}
 	
-	return [_containerController.popupBar.previewingDelegate previewingViewControllerForPopupBar:_containerController.popupBar];
+	UIViewController* rv = [_containerController.popupBar.previewingDelegate previewingViewControllerForPopupBar:_containerController.popupBar];
+	
+	if(rv)
+	{
+		//REALLY disable interaction if a preview view controller is about to be presented.
+		_dismissalOverride = YES;
+		self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+			_dismissalOverride = NO;
+			self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
+		});
+	}
+	
+	return rv;
 }
 
 - (void)previewingContext:(id <UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit

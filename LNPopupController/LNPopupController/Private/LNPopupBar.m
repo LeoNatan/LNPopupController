@@ -232,6 +232,7 @@ UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle,
 		_coordinateMarqueeScroll = YES;
 		
 		self.isAccessibilityElement = NO;
+		self.clipsToBounds = YES;
 	}
 	
 	return self;
