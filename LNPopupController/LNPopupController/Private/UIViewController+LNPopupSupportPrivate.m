@@ -443,8 +443,6 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 
 - (void)setToolbarBuggy:(BOOL)toolbarHidden
 {
-	NSLog(@"b:%@", @(toolbarHidden));
-	
 	objc_setAssociatedObject(self, LNToolbarBuggy, @(toolbarHidden), OBJC_ASSOCIATION_RETAIN);
 }
 
