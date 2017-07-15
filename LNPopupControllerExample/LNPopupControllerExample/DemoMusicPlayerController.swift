@@ -74,7 +74,7 @@ class DemoMusicPlayerController: UIViewController {
 		albumArtImageView.image = albumArt
 	}
 	
-	func _timerTicked(_ timer: Timer) {
+	@objc func _timerTicked(_ timer: Timer) {
 		popupItem.progress += 0.0002;
 		popupItem.accessibilityProgressLabel = NSLocalizedString("Playback Progress", comment: "")
 		

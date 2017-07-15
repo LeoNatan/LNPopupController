@@ -28,6 +28,13 @@
 	return rv;
 }
 
+- (void)layoutSubviews
+{
+	[UIView performWithoutAnimation:^{
+		[super layoutSubviews];
+	}];
+}
+
 @end
 
 @protocol __MarqueeLabelType <NSObject>

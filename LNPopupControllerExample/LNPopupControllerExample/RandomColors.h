@@ -8,5 +8,5 @@
 
 @import UIKit;
 
-extern UIColor* LNRandomDarkColor();
-extern UIColor* LNRandomLightColor();
+extern UIColor* LNRandomDarkColor(void);
+extern UIColor* LNRandomLightColor(void);

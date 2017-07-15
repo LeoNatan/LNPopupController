@@ -9,6 +9,9 @@
 #import "LNPopupController.h"
 #import "LNPopupItem+Private.h"
 #import "LNPopupCloseButton+Private.h"
+#import "LNPopupOpenTapGesutreRecognizer.h"
+#import "LNPopupLongPressGesutreRecognizer.h"
+#import "LNPopupInteractionPanGestureRecognizer.h"
 @import ObjectiveC;
 
 void __LNPopupControllerOutOfWindowHierarchy()
@@ -128,6 +131,10 @@ static const CGFloat		LNPopupBarDeveloperPanGestureThreshold = 0;
 - (void)notifyWhenInteractionEndsUsingBlock: (void (^)(id <UIViewControllerTransitionCoordinatorContext>context))handler
 { }
 
+- (void) notifyWhenInteractionChangesUsingBlock:(nonnull void (^)(id<UIViewControllerTransitionCoordinatorContext> _Nonnull))handler
+{ }
+
+
 @end
 
 #pragma mark Popup Content View
@@ -212,7 +219,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 @implementation LNPopupController
 {
-	__weak __kindof UIViewController* _containerController;
 	__weak LNPopupItem* _currentPopupItem;
 	__weak __kindof UIViewController* _currentContentController;
 	
@@ -337,7 +343,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[self _repositionPopupContentMovingBottomBar:YES];
 }
 
-- (void)_transitionToState:(LNPopupPresentationState)state animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)())completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
+- (void)_transitionToState:(LNPopupPresentationState)state animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
 {
 	if(transitionOriginatedByUser == YES && _popupControllerState == LNPopupPresentationStateTransitioning)
 	{
@@ -403,6 +409,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	};
 	
+	if(_popupControllerTargetState == LNPopupPresentationStateOpen)
+	{
+		//When opening the popup, let it disappear right away on snap behavior.
+		updatePopupBarAlpha();
+	}
 	[UIView animateWithDuration:animated ? resolvedStyle == LNPopupInteractionStyleSnap ? 0.75 : 0.5 : 0.0 delay:0.0 usingSpringWithDamping:spring ? 0.8 : 1.0 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^
 	 {
 		 updatePopupBarAlpha();
@@ -969,16 +980,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar = [LNPopupBar new];
 	_popupBar.hidden = YES;
 	_popupBar._barDelegate = self;
-	_popupBar.popupOpenGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
+	_popupBar.popupOpenGestureRecognizer = [[LNPopupOpenTapGesutreRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
 	[_popupBar addGestureRecognizer:_popupBar.popupOpenGestureRecognizer];
 	
-	_popupBarLongPressGestureRecognizerDelegate = [LNPopupControllerLongPressGestureDelegate new];
-	_popupBar.barHighlightGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
+	_popupBar.barHighlightGestureRecognizer = [[LNPopupLongPressGesutreRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
 	_popupBar.barHighlightGestureRecognizer.minimumPressDuration = 0;
 	_popupBar.barHighlightGestureRecognizer.cancelsTouchesInView = NO;
 	_popupBar.barHighlightGestureRecognizer.delaysTouchesBegan = NO;
 	_popupBar.barHighlightGestureRecognizer.delaysTouchesEnded = NO;
-	_popupBar.barHighlightGestureRecognizer.delegate = _popupBarLongPressGestureRecognizerDelegate;
 	[_popupBar addGestureRecognizer:_popupBar.barHighlightGestureRecognizer];
 	
 	return _popupBar;
@@ -1008,7 +1017,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupContentView.preservesSuperviewLayoutMargins = YES;
 	_popupContentView.contentView.preservesSuperviewLayoutMargins = YES;
 	
-	_popupContentView.popupInteractionGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
+	_popupContentView.popupInteractionGestureRecognizer = [[LNPopupInteractionPanGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:) popupController:self];
 	_popupContentView.popupInteractionGestureRecognizer.delegate = self;
 	
 	return _popupContentView;
@@ -1050,7 +1059,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}];
 }
 
-- (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)())completionBlock
+- (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -1135,7 +1144,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_currentContentController = _containerController.popupContentViewController;
 }
 
-- (void)openPopupAnimated:(BOOL)animated completion:(void(^)())completionBlock
+- (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
 	[self _transitionToState:LNPopupPresentationStateTransitioning animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:^{
 		[_containerController.view setNeedsLayout];
@@ -1144,18 +1153,18 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	} transitionOriginatedByUser:YES];
 }
 
-- (void)closePopupAnimated:(BOOL)animated completion:(void(^)())completionBlock
+- (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 	
 	[self _transitionToState:LNPopupPresentationStateClosed animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:YES];
 }
 
-- (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)())completionBlock
+- (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
 	if(_popupControllerState != LNPopupPresentationStateHidden)
 	{
-		void (^dismissalAnimationCompletionBlock)() = ^
+		void (^dismissalAnimationCompletionBlock)(void) = ^
 		{
 			_popupControllerState = LNPopupPresentationStateTransitioning;
 			_popupControllerTargetState = LNPopupPresentationStateHidden;
@@ -1226,50 +1235,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 - (void)_applicationWillEnterForeground
 {
 	[self.popupBar _setTitleViewMarqueesPaused:NO];
-}
-
-#pragma mark UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
-	return resolvedStyle != LNPopupInteractionStyleNone;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-	if([NSStringFromClass(otherGestureRecognizer.class) containsString:@"Reveal"])
-	{
-		return NO;
-	}
-	
-	if(_popupControllerState != LNPopupPresentationStateOpen)
-	{
-		return YES;
-	}
-	
-	return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-	//This is to disable gesture recognizers in the superview while dragging the popup bar. This is mostly to fix issues when the bar is part of a scroll view scene, such as `UITableViewController` / `UITableView`.
-	if([self.popupBar.superview.gestureRecognizers containsObject:otherGestureRecognizer])
-	{
-		return YES;
-	}
-	
-	return NO;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-	if(_popupControllerState != LNPopupPresentationStateOpen)
-	{
-		return NO;
-	}
-	
-	return YES;
 }
 
 #pragma mark UIViewControllerPreviewingDelegate

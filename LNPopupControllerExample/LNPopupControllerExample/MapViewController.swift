@@ -41,6 +41,6 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		return false;
 	}
 	
-	@IBAction @objc private func backButtonTapped(_ sender: Any) {
+	@IBAction private func backButtonTapped(_ sender: Any) {
 	}
 }

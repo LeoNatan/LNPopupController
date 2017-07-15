@@ -126,7 +126,7 @@ IB_DESIGNABLE
 	_state = state;
 	
 	CGFloat angle = self.bounds.size.height / self.bounds.size.width * _LNChevronAngleCoefficient;
-	void (^transition)() = ^() {
+	void (^transition)(void) = ^() {
 		_leftView.transform = CGAffineTransformMakeRotation(-state * angle * M_PI / 180.0);
 		_rightView.transform = CGAffineTransformMakeRotation(state * angle * M_PI / 180.0);
 	};

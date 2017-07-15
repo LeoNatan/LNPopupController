@@ -95,7 +95,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  @param animated        Pass YES to animate the presentation; otherwise, pass NO.
  *  @param completion      The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify nil for this parameter.
  */
-- (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)())completion;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)(void))completion;
 
 /**
  *  Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view. @see -[UIViewController bottomDockingViewForPopupBar]
@@ -109,7 +109,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  @param animated        Pass YES to animate the presentation; otherwise, pass NO.
  *  @param completion      The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify nil for this parameter.
  */
-- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)())completion;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completion;
 
 /**
  *  Opens the popup, displaying the content view controller's view.
@@ -117,7 +117,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  @param animated        Pass YES to animate; otherwise, pass NO.
  *  @param completion      The block to execute after the popup is opened. This block has no return value and takes no parameters. You may specify nil for this parameter.
  */
-- (void)openPopupAnimated:(BOOL)animated completion:(nullable void(^)())completion;
+- (void)openPopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion;
 
 /**
  *  Closes the popup, hiding the content view controller's view.
@@ -125,7 +125,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  @param animated        Pass YES to animate; otherwise, pass NO.
  *  @param completion      The block to execute after the popup is closed. This block has no return value and takes no parameters. You may specify nil for this parameter.
  */
-- (void)closePopupAnimated:(BOOL)animated completion:(nullable void(^)())completion;
+- (void)closePopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion;
 
 /**
  *  Dismisses the popup presentation, closing the popup if open and dismissing the popup bar.
@@ -133,7 +133,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  *  @param animated        Pass YES to animate; otherwise, pass NO.
  *  @param completion      The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify nil for this parameter.
  */
-- (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)())completion;
+- (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)(void))completion;
 
 /**
  *  The popup bar interaction style.
