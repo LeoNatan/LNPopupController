@@ -228,6 +228,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	LNPopupPresentationState _stateBeforeDismissStarted;
 	
 	BOOL _dismissalOverride;
+	BOOL _forceTouchOverride;
 	
 	//Cached for performance during panning the popup content
 	CGRect _cachedDefaultFrame;
@@ -345,7 +346,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_transitionToState:(LNPopupPresentationState)state animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
 {
-	if(_dismissalOverride)
+	if(_forceTouchOverride)
 	{
 		return;
 	}
@@ -689,7 +690,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarPresentationByUserPanGestureHandler:(UIPanGestureRecognizer*)pgr
 {
-	if(_dismissalOverride)
+	if(_dismissalOverride || _forceTouchOverride)
 	{
 		return;
 	}
@@ -1226,14 +1227,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(_popupControllerTargetState != LNPopupPresentationStateClosed)
 		{
-			self.popupBarStorage.hidden = YES;
+//			self.popupBarStorage.hidden = YES;
 			_dismissalOverride = YES;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			
 			LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 			
-			[self _transitionToState:LNPopupPresentationStateClosed animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES completion:dismissalAnimationCompletionBlock transitionOriginatedByUser:NO];
+			[self _transitionToState:LNPopupPresentationStateClosed animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap allowPopupBarAlphaModification:YES completion:dismissalAnimationCompletionBlock transitionOriginatedByUser:NO];
 		}
 		else
 		{
@@ -1268,10 +1269,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(rv)
 	{
 		//REALLY disable interaction if a preview view controller is about to be presented.
-		_dismissalOverride = YES;
+		_forceTouchOverride = YES;
 		self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-			_dismissalOverride = NO;
+			_forceTouchOverride = NO;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 		});
 	}
