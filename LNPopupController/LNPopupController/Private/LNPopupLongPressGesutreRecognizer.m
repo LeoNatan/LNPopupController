@@ -67,7 +67,9 @@
 
 - (void)setDelegate:(id<UIGestureRecognizerDelegate>)delegate
 {
+	_actualDelegate = [LNPopupControllerLongPressGestureDelegate new];
 	_actualDelegate.forwardedDelegate = delegate;
+	[super setDelegate:_actualDelegate];
 }
 
 @end

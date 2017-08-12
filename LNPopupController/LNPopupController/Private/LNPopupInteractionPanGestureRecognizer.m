@@ -125,7 +125,9 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (void)setDelegate:(id<UIGestureRecognizerDelegate>)delegate
 {
+	_actualDelegate = [[LNPopupInteractionPanGestureRecognizerDelegate alloc] initWithPopupController:[_actualDelegate valueForKey:@"popupController"]];
 	_actualDelegate.forwardedDelegate = delegate;
+	[super setDelegate:_actualDelegate];
 }
 
 @end

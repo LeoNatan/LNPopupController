@@ -20,9 +20,21 @@
 	return [self.forwardedDelegate respondsToSelector:aSelector];
 }
 
-- (id)forwardingTargetForSelector:(SEL)aSelector
+- (void)forwardInvocation:(NSInvocation *)anInvocation
 {
-	return self.forwardedDelegate;
+	[anInvocation invokeWithTarget:self.forwardedDelegate];
+}
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
+{
+	NSMethodSignature* ms = [super methodSignatureForSelector:aSelector];
+	
+	if(ms)
+	{
+		return ms;
+	}
+	
+	return [self.forwardedDelegate methodSignatureForSelector:aSelector];
 }
 
 @end

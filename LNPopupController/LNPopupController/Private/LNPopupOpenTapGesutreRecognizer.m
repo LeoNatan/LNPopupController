@@ -57,7 +57,9 @@
 
 - (void)setDelegate:(id<UIGestureRecognizerDelegate>)delegate
 {
+	_actualDelegate = [LNPopupOpenTapGesutreRecognizerForwardingDelegate new];
 	_actualDelegate.forwardedDelegate = delegate;
+	[super setDelegate:_actualDelegate];
 }
 
 @end
