@@ -1,9 +1,0 @@
-osx_image: xcode8.3
-language: objective-c
-env:
-  - DEST='platform=iOS Simulator,name=iPhone 7 Plus,OS=10.3.1'
-  - DEST='platform=iOS Simulator,name=iPhone 6S Plus,OS=9.3'
-script:
-  - set -o pipefail
-  - xcodebuild -project LNPopupControllerExample/LNPopupControllerExample.xcodeproj -scheme LNPopupControllerExample -sdk iphonesimulator build-for-testing | xcpretty -c
-  - xcodebuild -project LNPopupControllerExample/LNPopupControllerExample.xcodeproj -scheme LNPopupControllerExample -sdk iphonesimulator test-without-building -destination "$DEST" | xcpretty -c
