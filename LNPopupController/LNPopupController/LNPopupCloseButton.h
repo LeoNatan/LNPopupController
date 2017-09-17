@@ -13,7 +13,7 @@
  */
 typedef NS_ENUM(NSUInteger, LNPopupCloseButtonStyle) {
 	/**
-	 * Use the most appropriate close button style for the current operating system version; uses cehvron button style for iOS 10 and above, otherwise round button.
+	 * Use the most appropriate close button style for the current operating system version—uses cehvron button style for iOS 10 and above, otherwise round button.
 	 */
 	LNPopupCloseButtonStyleDefault,
 	
@@ -36,18 +36,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LNPopupCloseButton : UIButton
 
 /**
- *  The button’s style. (read-only)
+ * The current style of the popup close button. (read-only)
  *
- *  The current style of the popup close button. In order to change the button's style, set the `popupCloseButtonStyle` property of the content view.
+ * @note In order to change the button's style, set the @c popupCloseButtonStyle property of the content view.
  */
 @property (nonatomic, readonly) LNPopupCloseButtonStyle style;
 
 /**
- *  The button’s background view. (read-only)
- *  
- *  The value of this property will be `nil` if `style` is not set to `LNPopupCloseButtonStyleRound`.
- *  
- *  Although this property is read-only, its own properties are read/write. Use these properties to configure the appearance and behavior of the button’s background view.
+ * The button’s background view. (read-only)
+ * 
+ * The value of this property will be @c nil if @c style is not set to @c LNPopupCloseButtonStyleRound.
+ * 
+ * @note Although this property is read-only, its own properties are read/write. Use these properties to configure the appearance and behavior of the button’s background view.
  */
 @property (nonatomic, strong, readonly) UIVisualEffectView* backgroundView;
 

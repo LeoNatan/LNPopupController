@@ -231,6 +231,16 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return nil;
 }
 
+- (UIEdgeInsets)insetsForBottomDockingView
+{
+	if (@available(iOS 11.0, *))
+	{
+		return UIEdgeInsetsMake(0, 0, self.view.superview.safeAreaInsets.bottom, 0);
+	} else {
+		return UIEdgeInsetsZero;
+	}
+}
+
 - (CGRect)defaultFrameForBottomDockingView
 {
 	return CGRectZero;

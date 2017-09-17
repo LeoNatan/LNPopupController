@@ -200,10 +200,9 @@ Supplying long text for the title and/or subtitle will result in a scrolling tex
 
 <img src="./Supplements/modern_no_scroll.gif" width="320"/> <img src="./Supplements/scoll.gif" width="320"/>
 
-The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition out together with the bottom bar of the container controller. **Opening the popup while it is hidden due to `hidesBottomBarWhenPushed` is not supported and may produce undefined behavior.**
+The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition to the bottom of the container controller view. Using `setToolbarHidden:` and `setToolbarHidden:animated:` is also supported.
 
 <img src="./Supplements/hidesBottomBar_TabBar.gif" width="320"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="320"/>
-
 Status bar management of the popup content view controller is respected and applied when appropriate.
 
 <img src="./Supplements/statusbar_style.gif" width="320"/> <img src="./Supplements/statusbar_hidden.gif" width="320"/>
@@ -268,7 +267,6 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 
 ## Notes
 
-* Navigation controller's `setToolbarHidden:` and `setToolbarHidden:animated:` are not supported.
 * Manually hiding tab bars is not supported by the framework or by Apple. **Do not hide the tab bar using `tabBar.hidden = YES`.**
 
 ## Acknowledgements

@@ -115,6 +115,22 @@
 	demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
 	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
 	
+	UILabel* topLabel = [UILabel new];
+	topLabel.text = NSLocalizedString(@"Top", @"");
+	topLabel.textColor = [UIColor whiteColor];
+	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
+	[demoVC.view addSubview:topLabel];
+	[NSLayoutConstraint activateConstraints:@[[topLabel.topAnchor constraintEqualToAnchor:demoVC.topLayoutGuide.bottomAnchor],
+											  [topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]]];
+	
+	UILabel* bottomLabel = [UILabel new];
+	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
+	bottomLabel.textColor = [UIColor whiteColor];
+	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
+	[demoVC.view addSubview:bottomLabel];
+	[NSLayoutConstraint activateConstraints:@[[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.bottomLayoutGuide.topAnchor],
+											  [bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]]];
+	
 	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
 	demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");
 	

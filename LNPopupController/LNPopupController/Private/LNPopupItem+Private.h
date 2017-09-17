@@ -20,17 +20,17 @@
 @interface LNPopupItem ()
 
 /**
- *  The accessibility label of the image, in a localized string.
+ * The accessibility label of the image, in a localized string.
  */
 @property (nonatomic, copy) NSString* accessibilityImageLabel;
 
 /**
- *  The accessibility label of the progress, in a localized string.
+ * The accessibility label of the progress, in a localized string.
  */
 @property (nonatomic, copy) NSString* accessibilityProgressLabel;
 
 /**
- *  The accessibility value of the progress, in a localized string.
+ * The accessibility value of the progress, in a localized string.
  */
 @property (nonatomic, copy) NSString* accessibilityProgressValue;
 
