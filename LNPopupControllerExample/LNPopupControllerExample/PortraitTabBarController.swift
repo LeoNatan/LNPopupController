@@ -18,7 +18,7 @@ class PortraitTabBarController: UITabBarController {
 		super.viewDidLoad()
 		
 		if ProcessInfo.processInfo.operatingSystemVersion.majorVersion > 9 {
-//			tabBar.isTranslucent = false
+			tabBar.isTranslucent = false
 		}
 	}
 

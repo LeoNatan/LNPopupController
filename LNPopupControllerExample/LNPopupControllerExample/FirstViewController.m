@@ -118,6 +118,7 @@
 	UILabel* topLabel = [UILabel new];
 	topLabel.text = NSLocalizedString(@"Top", @"");
 	topLabel.textColor = [UIColor whiteColor];
+	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:topLabel];
 	[NSLayoutConstraint activateConstraints:@[[topLabel.topAnchor constraintEqualToAnchor:demoVC.topLayoutGuide.bottomAnchor],
@@ -126,6 +127,7 @@
 	UILabel* bottomLabel = [UILabel new];
 	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
 	bottomLabel.textColor = [UIColor whiteColor];
+	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:bottomLabel];
 	[NSLayoutConstraint activateConstraints:@[[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.bottomLayoutGuide.topAnchor],
@@ -160,7 +162,7 @@
 		[targetVC.popupBar setBackgroundStyle:UIBlurEffectStyleDark];
 		[targetVC.popupBar setTintColor:[UIColor yellowColor]];
 	}
-	
+
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
 }
 

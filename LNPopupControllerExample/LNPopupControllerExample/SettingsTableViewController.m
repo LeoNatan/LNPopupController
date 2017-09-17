@@ -30,7 +30,8 @@ NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomi
 	_sectionToKeyMapping = @{@0: PopupSettingsBarStyle, @1: PopupSettingsInteractionStyle, @2: PopupSettingsProgressViewStyle, @3: PopupSettingsCloseButtonStyle, @4: PopupSettingsMarqueeStyle};
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
