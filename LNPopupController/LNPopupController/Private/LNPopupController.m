@@ -1060,14 +1060,25 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
+static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, void (^block)(UIView* view))
+{
+	block(view);
+	
+	[view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		__LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(obj, block);
+	}];
+}
+
 - (void)_fixupGestureRecognizersForController:(UIViewController*)vc
 {
-	[vc.viewForPopupInteractionGestureRecognizer.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		if([obj isKindOfClass:[UIPanGestureRecognizer class]] && obj != _popupContentView.popupInteractionGestureRecognizer)
-		{
-			[obj addTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
-		}
-	}];
+	__LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(vc.viewForPopupInteractionGestureRecognizer, ^(UIView *view) {
+		[view.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+			if([obj isKindOfClass:[UIPanGestureRecognizer class]] && obj != _popupContentView.popupInteractionGestureRecognizer)
+			{
+				[obj addTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
+			}
+		}];
+	});
 }
 
 - (void)_cleanupGestureRecognizersForController:(UIViewController*)vc
