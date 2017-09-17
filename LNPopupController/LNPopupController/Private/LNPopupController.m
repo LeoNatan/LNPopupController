@@ -313,14 +313,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (CGFloat)_percentFromPopupBar
 {
-	return 1 - (self.popupBar.center.y / _cachedDefaultFrame.origin.y);
+	return 1 - (CGRectGetMaxY(self.popupBar.frame) / _cachedDefaultFrame.origin.y);
 }
 
 - (CGFloat)_percentFromPopupBarForBottomBarDisplacement
 {
 	CGFloat percent = [self _percentFromPopupBar];
 	
-	return __smoothstep(0.05, 1.0, percent);
+	return __smoothstep(0.00, 1.0, percent);
 }
 
 - (void)_setContentToState:(LNPopupPresentationState)state
