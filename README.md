@@ -43,6 +43,8 @@ Add the following to your Cartfile:
 
 ```github "LeoNatan/LNPopupController"```
 
+Make sure you follow the Carthage integration instructions [here](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos).
+
 ### Manual
 
 Drag the `LNPopupController.xcodeproj` project to your project, and add `LNPopupController.framework` to **Embedded Binaries** in your project target's **General** tab. Xcode should sort everything else on its own.
