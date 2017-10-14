@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13526" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment version="4128" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13524"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Segues with Peek and Pop" minToolsVersion="7.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -30,7 +30,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Tab Bar Controller + Navigation Controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="7FA-3I-y3z">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -53,7 +53,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Tab Bar Controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="4WM-5E-jJw">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -76,7 +76,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Navigation Controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="EXy-Xb-dWO">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -99,7 +99,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="View Controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="9s3-H0-xJU">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -122,7 +122,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Split View Controller (Master)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Nfv-xp-DFu">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -145,7 +145,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Split View Controller (Global)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="rpx-bu-B1q">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -172,7 +172,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Apple Music" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="KHO-fT-c7X">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -199,7 +199,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Maps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="rWD-1P-SlK">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -307,7 +307,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Correct bottom layout guide." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N4q-gh-14d">
-                                <rect key="frame" x="92" y="658.66666666666652" width="230.33333333333331" height="20.333333333333371"/>
+                                <rect key="frame" x="92.000000000000014" y="658.66666666666663" width="230.33333333333337" height="20.333333333333371"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -450,7 +450,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Default" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Xjk-jF-du0">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -467,7 +467,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Compact" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="SWu-ne-rE3">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -484,7 +484,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Prominent" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="X5r-Xe-g2j">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -505,7 +505,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Default" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="TwD-hj-oWM">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -522,7 +522,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Drag" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Peh-hx-OVr">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -539,7 +539,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Snap" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="xfY-x8-2n1">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -556,7 +556,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="None" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="F5o-Yq-uuI">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -577,7 +577,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Default" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Cwj-Fj-6bc">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -594,7 +594,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Bottom" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Z2Y-Jz-8Ls">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -611,7 +611,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Top" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Me2-qd-DRi">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -628,7 +628,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="None" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="txy-GR-wAU">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -649,7 +649,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Default" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="dz8-Jf-jzl">
-                                                    <rect key="frame" x="20" y="0.0" width="379" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.666666666666664"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
