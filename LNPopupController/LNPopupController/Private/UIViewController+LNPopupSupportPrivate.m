@@ -38,6 +38,8 @@ static NSString* const vSAIFSBase64 = @"X3ZpZXdTYWZlQXJlYUluc2V0c0Zyb21TY2VuZQ==
 static NSString* const uCOIFPINBase64 = @"X3VwZGF0ZUNvbnRlbnRPdmVybGF5SW5zZXRzRnJvbVBhcmVudElmTmVjZXNzYXJ5";
 //_setContentOverlayInsets:andLeftMargin:rightMargin:
 static NSString* const sCOIaLMrMBase64 = @"X3NldENvbnRlbnRPdmVybGF5SW5zZXRzOmFuZExlZnRNYXJnaW46cmlnaHRNYXJnaW46";
+//_updateLayoutForStatusBarAndInterfaceOrientation
+static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVyZmFjZU9yaWVudGF0aW9u";
 #endif
 
 /**
@@ -98,6 +100,12 @@ static NSString* const sCOIaLMrMBase64 = @"X3NldENvbnRlbnRPdmVybGF5SW5zZXRzOmFuZ
 		NSString* selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:vCUSBBase64 options:0] encoding:NSUTF8StringEncoding];
 		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
 		m2 = class_getInstanceMethod([self class], @selector(_vCUSB));
+		method_exchangeImplementations(m1, m2);
+		
+		//_updateLayoutForStatusBarAndInterfaceOrientation
+		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:uLFSBAIO options:0] encoding:NSUTF8StringEncoding];
+		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
+		m2 = class_getInstanceMethod([self class], @selector(_uLFSBAIO));
 		method_exchangeImplementations(m1, m2);
 		
 		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
@@ -265,6 +273,28 @@ static NSString* const sCOIaLMrMBase64 = @"X3NldENvbnRlbnRPdmVybGF5SW5zZXRzOmFuZ
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
+//_updateLayoutForStatusBarAndInterfaceOrientation
+- (void)_common_uLFSBAIO
+{
+	if(self.popupContentViewController)
+	{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[UIView animateWithDuration:5.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options: UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
+				[self.popupContentViewController _uLFSBAIO];
+				[self._ln_popupController_nocreate _repositionPopupCloseButton];
+			} completion:nil];
+		});
+	}
+}
+
+//_updateLayoutForStatusBarAndInterfaceOrientation
+- (void)_uLFSBAIO
+{
+	[self _uLFSBAIO];
+	
+	[self _common_uLFSBAIO];
+}
+
 //_updateContentOverlayInsetsFromParentIfNecessary
 - (void)_uCOIFPIN
 {
@@ -518,7 +548,6 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		{
 			//_edgeInsetsForChildViewController:insetsAreAbsolute:
 			selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:edInsBase64 options:0] encoding:NSUTF8StringEncoding];
-			
 			m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
 			m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
 			method_exchangeImplementations(m1, m2);
@@ -526,22 +555,34 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		
 		//_hideBarWithTransition:isExplicit:
 		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:hBWTiEBase64 options:0] encoding:NSUTF8StringEncoding];
-		
 		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
 		m2 = class_getInstanceMethod([self class], @selector(hBWT:iE:));
 		method_exchangeImplementations(m1, m2);
 		
 		//_showBarWithTransition:isExplicit:
 		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:sBWTiEBase64 options:0] encoding:NSUTF8StringEncoding];
-		
 		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
 		m2 = class_getInstanceMethod([self class], @selector(sBWT:iE:));
+		method_exchangeImplementations(m1, m2);
+		
+		//_updateLayoutForStatusBarAndInterfaceOrientation
+		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:uLFSBAIO options:0] encoding:NSUTF8StringEncoding];
+		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
+		m2 = class_getInstanceMethod([self class], @selector(_uLFSBAIO));
 		method_exchangeImplementations(m1, m2);
 #endif
 	});
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
+
+//_updateLayoutForStatusBarAndInterfaceOrientation
+- (void)_uLFSBAIO
+{
+	[self _uLFSBAIO];
+	
+	[self _common_uLFSBAIO];
+}
 
 //_edgeInsetsForChildViewController:insetsAreAbsolute:
 - (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
@@ -690,11 +731,26 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
 		m2 = class_getInstanceMethod([self class], @selector(hSNBDS:f:c:));
 		method_exchangeImplementations(m1, m2);
+		
+		//_updateLayoutForStatusBarAndInterfaceOrientation
+		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:uLFSBAIO options:0] encoding:NSUTF8StringEncoding];
+		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
+		m2 = class_getInstanceMethod([self class], @selector(_uLFSBAIO));
+		method_exchangeImplementations(m1, m2);
 #endif
 	});
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
+
+//_updateLayoutForStatusBarAndInterfaceOrientation
+- (void)_uLFSBAIO
+{
+	[self _uLFSBAIO];
+	
+	[self _common_uLFSBAIO];
+}
+
 //Support for `hidesBottomBarWhenPushed`.
 //_setToolbarHidden:edge:duration:
 - (void)_sTH:(BOOL)arg1 e:(unsigned int)arg2 d:(CGFloat)arg3;
