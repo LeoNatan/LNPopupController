@@ -312,6 +312,18 @@ static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVy
 			{
 				//When not on iPhone X, add the status bar height as a top safe area inset.
 				insets.top = self.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
+				UINavigationController* nvc = (id)self.parentViewController;
+				if([nvc isKindOfClass:[UINavigationController class]] && nvc.isNavigationBarHidden == NO)
+				{
+					if((self.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop)
+					{
+						insets.top += nvc.navigationBar.bounds.size.height;
+					}
+					else
+					{
+						insets.top = 0;
+					}
+				}
 			}
 		}
 	}
@@ -449,10 +461,6 @@ static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVy
 
 void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOOL layout, CGFloat additionalSafeAreaInsetsBottom)
 {
-//	if (@available(iOS 11.0, *)) {
-//		return;
-//	}
-	
 #ifndef LNPopupControllerEnforceStrictClean
 	static NSString* selName;
 	static dispatch_once_t onceToken;
@@ -544,14 +552,12 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
-//		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
-		{
-			//_edgeInsetsForChildViewController:insetsAreAbsolute:
-			selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:edInsBase64 options:0] encoding:NSUTF8StringEncoding];
-			m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-			m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
-			method_exchangeImplementations(m1, m2);
-		}
+		
+		//_edgeInsetsForChildViewController:insetsAreAbsolute:
+		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:edInsBase64 options:0] encoding:NSUTF8StringEncoding];
+		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
+		m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
+		method_exchangeImplementations(m1, m2);
 		
 		//_hideBarWithTransition:isExplicit:
 		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:hBWTiEBase64 options:0] encoding:NSUTF8StringEncoding];
@@ -708,15 +714,12 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
-//		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
-		{
-			//_edgeInsetsForChildViewController:insetsAreAbsolute:
-			selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:edInsBase64 options:0] encoding:NSUTF8StringEncoding];
-			
-			m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-			m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
-			method_exchangeImplementations(m1, m2);
-		}
+		//_edgeInsetsForChildViewController:insetsAreAbsolute:
+		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:edInsBase64 options:0] encoding:NSUTF8StringEncoding];
+		
+		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
+		m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
+		method_exchangeImplementations(m1, m2);
 		
 		//_setToolbarHidden:edge:duration:
 		selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:sTHedBase64 options:0] encoding:NSUTF8StringEncoding];
