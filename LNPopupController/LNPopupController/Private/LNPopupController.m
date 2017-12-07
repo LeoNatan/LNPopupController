@@ -572,6 +572,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				possibleScrollView.contentOffset = CGPointMake(possibleScrollView.contentOffset.x, _dismissScrollViewStartingContentOffset);
 			}
 		}
+		else
+		{
+			return;
+		}
 	}
 	
 	if(_dismissGestureStarted == NO && (resolvedStyle == LNPopupInteractionStyleDrag || _popupControllerState > LNPopupPresentationStateClosed))
