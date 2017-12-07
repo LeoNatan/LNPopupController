@@ -82,8 +82,6 @@ const NSInteger LNBackgroundStyleInherit = -1;
 	
 	UIBlurEffectStyle _actualBackgroundStyle;
 	
-	UIImageView* _imageView;
-	
 	UIView* _shadowView;
     
     NSArray<__kindof NSLayoutConstraint *> * _progressViewVerticalConstraints;

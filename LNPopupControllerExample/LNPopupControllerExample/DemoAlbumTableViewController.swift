@@ -101,6 +101,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
 		tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
+		tabBarController?.popupBar.imageView.layer.cornerRadius = 5
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
