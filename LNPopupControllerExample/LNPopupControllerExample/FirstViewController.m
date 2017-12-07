@@ -108,7 +108,8 @@
 		return;
 	}
 	
-	DemoPopupContentViewController* demoVC = [DemoPopupContentViewController new];
+//	UIViewController* demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
+	UIViewController* demoVC = [DemoPopupContentViewController new];
 	demoVC.view.backgroundColor = LNRandomDarkColor();
 	demoVC.popupItem.title = [LoremIpsum sentence];
 	demoVC.popupItem.subtitle = [LoremIpsum sentence];
