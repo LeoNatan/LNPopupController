@@ -1,6 +1,13 @@
 # Change Log
 
-## [v2.5.2](https://github.com/LeoNatan/LNPopupController/tree/v2.5.2) (2017-12-08)
+## [v2.5.3](https://github.com/LeoNatan/LNPopupController/tree/v2.5.3) (2017-12-17)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.2...v2.5.3)
+
+**Fixed Bugs**
+
+- Safe area issue [\#194](https://github.com/LeoNatan/LNPopupController/issues/194)
+
+## [v2.5.2](https://github.com/LeoNatan/LNPopupController/tree/v2.5.2) (2017-12-07)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.1...v2.5.2)
 
 **Enhancements**
@@ -9,7 +16,6 @@
 
 **Fixed Bugs**
 
-- Safe area issue [\#194](https://github.com/LeoNatan/LNPopupController/issues/194)
 - gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer: doesn't do much [\#186](https://github.com/LeoNatan/LNPopupController/issues/186)
 
 ## [v2.5.1](https://github.com/LeoNatan/LNPopupController/tree/v2.5.1) (2017-10-15)
@@ -274,11 +280,6 @@
 
 - Popup Content Controller with Navigation bar - UI issue [\#41](https://github.com/LeoNatan/LNPopupController/issues/41)
 - Info.plist is missing CFBundleShortVersionString [\#33](https://github.com/LeoNatan/LNPopupController/issues/33)
-
-**Closed Issues**
-
-- Properly remove and fully deallocate content view controller upon dismissing popup bar [\#38](https://github.com/LeoNatan/LNPopupController/issues/38)
-- Opening LNPopupController programmatically gives me a "see through" window [\#35](https://github.com/LeoNatan/LNPopupController/issues/35)
 
 ## [v1.2](https://github.com/LeoNatan/LNPopupController/tree/v1.2) (2015-12-27)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v1.1...v1.2)
