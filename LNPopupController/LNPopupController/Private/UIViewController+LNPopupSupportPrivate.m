@@ -306,23 +306,21 @@ static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVy
 {
 	if([self _isContainedInPopupController])
 	{
-		if (@available(iOS 11.0, *)) {
+		if (@available(iOS 11.0, *))
+		{
 			insets = self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
-			if(self.view.window.safeAreaInsets.top == 0)
+			insets.top = self.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
+			
+			UINavigationController* nvc = (id)self.parentViewController;
+			if([nvc isKindOfClass:[UINavigationController class]] && nvc.isNavigationBarHidden == NO)
 			{
-				//When not on iPhone X, add the status bar height as a top safe area inset.
-				insets.top = self.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
-				UINavigationController* nvc = (id)self.parentViewController;
-				if([nvc isKindOfClass:[UINavigationController class]] && nvc.isNavigationBarHidden == NO)
+				if((self.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop)
 				{
-					if((self.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop)
-					{
-						insets.top += nvc.navigationBar.bounds.size.height;
-					}
-					else
-					{
-						insets.top = 0;
-					}
+					insets.top += nvc.navigationBar.bounds.size.height;
+				}
+				else
+				{
+					insets.top = 0;
 				}
 			}
 		}
