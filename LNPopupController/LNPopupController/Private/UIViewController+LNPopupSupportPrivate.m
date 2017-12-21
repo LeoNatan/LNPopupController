@@ -309,7 +309,7 @@ static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVy
 		if (@available(iOS 11.0, *))
 		{
 			insets = self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
-			insets.top = self.view.window.safeAreaInsets.top; //self.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
+			insets.top = MAX(self.view.window.safeAreaInsets.top, self.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0);
 			insets.bottom = self.view.window.safeAreaInsets.bottom;
 			
 			UINavigationController* nvc = self.navigationController;
