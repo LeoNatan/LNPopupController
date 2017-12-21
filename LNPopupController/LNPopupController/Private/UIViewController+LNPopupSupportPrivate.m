@@ -309,21 +309,46 @@ static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVy
 		if (@available(iOS 11.0, *))
 		{
 			insets = self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
-			insets.top = self.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
+			insets.top = self.view.window.safeAreaInsets.top; //self.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
+			insets.bottom = self.view.window.safeAreaInsets.bottom;
 			
-			UINavigationController* nvc = (id)self.parentViewController;
-			if([nvc isKindOfClass:[UINavigationController class]] && nvc.isNavigationBarHidden == NO)
+			UINavigationController* nvc = self.navigationController;
+			if(nvc != nil)
 			{
 				if((self.edgesForExtendedLayout & UIRectEdgeTop) == UIRectEdgeTop)
 				{
-					insets.top += nvc.navigationBar.bounds.size.height;
+					insets.top += !nvc.isNavigationBarHidden * nvc.navigationBar.bounds.size.height;
 				}
 				else
 				{
-					insets.top = 0;
+					insets.top = nvc.isNavigationBarHidden ? insets.top : 0;
+				}
+				
+				if((self.edgesForExtendedLayout & UIRectEdgeBottom) == UIRectEdgeBottom)
+				{
+					insets.bottom += !nvc.isToolbarHidden * nvc.toolbar.bounds.size.height;
+				}
+				else
+				{
+					insets.bottom = nvc.isToolbarHidden ? insets.bottom : 0;
+				}
+			}
+			
+			UITabBarController* tvc = self.tabBarController;
+			if(tvc != nil && tvc.tabBar.window != nil)
+			{
+				if((self.edgesForExtendedLayout & UIRectEdgeBottom) == UIRectEdgeBottom)
+				{
+					insets.bottom = tvc.tabBar.bounds.size.height;
+				}
+				else
+				{
+					insets.bottom = 0;
 				}
 			}
 		}
+		
+		NSLog(@"insets: %@", NSStringFromUIEdgeInsets(insets));
 	}
 	
 	[self _sCOI:insets aLM:l rM:r];
