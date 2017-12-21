@@ -347,8 +347,6 @@ static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVy
 				}
 			}
 		}
-		
-		NSLog(@"insets: %@", NSStringFromUIEdgeInsets(insets));
 	}
 	
 	[self _sCOI:insets aLM:l rM:r];
