@@ -10,6 +10,7 @@
 #import "LNPopupController.h"
 
 @import ObjectiveC;
+@import Darwin;
 
 static const void* LNToolbarHiddenBeforeTransition = &LNToolbarHiddenBeforeTransition;
 static const void* LNToolbarBuggy = &LNToolbarBuggy;
@@ -40,6 +41,19 @@ static NSString* const uCOIFPINBase64 = @"X3VwZGF0ZUNvbnRlbnRPdmVybGF5SW5zZXRzRn
 static NSString* const sCOIaLMrMBase64 = @"X3NldENvbnRlbnRPdmVybGF5SW5zZXRzOmFuZExlZnRNYXJnaW46cmlnaHRNYXJnaW46";
 //_updateLayoutForStatusBarAndInterfaceOrientation
 static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVyZmFjZU9yaWVudGF0aW9u";
+//_accessibilitySpeakThisViewController
+static NSString* const aSTVC = @"X2FjY2Vzc2liaWxpdHlTcGVha1RoaXNWaWV3Q29udHJvbGxlcg==";
+//UIViewControllerAccessibility
+static NSString* const uiVCA = @"VUlWaWV3Q29udHJvbGxlckFjY2Vzc2liaWxpdHk=";
+//UINavigationControllerAccessibility
+static NSString* const uiNVCA = @"VUlOYXZpZ2F0aW9uQ29udHJvbGxlckFjY2Vzc2liaWxpdHk=";
+//UITabBarControllerAccessibility
+static NSString* const uiTBCA = @"VUlUYWJCYXJDb250cm9sbGVyQWNjZXNzaWJpbGl0eQ==";
+
+static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
+static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
+static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
+
 #endif
 
 /**
@@ -55,6 +69,44 @@ static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVy
 }
 
 @end
+
+#ifndef LNPopupControllerEnforceStrictClean
+static id __accessibilityBundleLoadObserver;
+__attribute__((constructor))
+static void __accessibilityBundleLoadHandler()
+{
+	__accessibilityBundleLoadObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSBundleDidLoadNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+		NSBundle* bundle = note.object;
+		if([bundle.bundleURL.lastPathComponent isEqualToString:@"UIKit.axbundle"] == NO)
+		{
+			return;
+		}
+		
+		NSString* selName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:aSTVC options:0] encoding:NSUTF8StringEncoding];
+		
+		NSString* clsName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:uiVCA options:0] encoding:NSUTF8StringEncoding];
+		Method m1 = class_getInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
+		__orig_uiVCA_aSTVC = (void*)method_getImplementation(m1);
+		Method m2 = class_getInstanceMethod([UIViewController class], NSSelectorFromString(@"_aSTVC"));
+		method_exchangeImplementations(m1, m2);
+		
+		clsName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:uiNVCA options:0] encoding:NSUTF8StringEncoding];
+		m1 = class_getInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
+		__orig_uiNVCA_aSTVC = (void*)method_getImplementation(m1);
+		m2 = class_getInstanceMethod([UINavigationController class], NSSelectorFromString(@"_aSTVC"));
+		method_exchangeImplementations(m1, m2);
+		
+		clsName = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:uiTBCA options:0] encoding:NSUTF8StringEncoding];
+		m1 = class_getInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
+		__orig_uiTBCA_aSTVC = (void*)method_getImplementation(m1);
+		m2 = class_getInstanceMethod([UITabBarController class], NSSelectorFromString(@"_aSTVC"));
+		method_exchangeImplementations(m1, m2);
+		
+		[[NSNotificationCenter defaultCenter] removeObserver:__accessibilityBundleLoadObserver];
+		__accessibilityBundleLoadObserver = nil;
+	}];
+}
+#endif
 
 @interface UIViewController ()
 //_edgeInsetsForChildViewController:insetsAreAbsolute:
@@ -273,6 +325,18 @@ static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVy
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
+
+//_accessibilitySpeakThisViewController
+- (UIViewController*)_aSTVC
+{
+	if(self.popupContentViewController && self.popupPresentationState == LNPopupPresentationStateOpen)
+	{
+		return self.popupContentViewController;
+	}
+	
+	return __orig_uiVCA_aSTVC(self, _cmd);
+}
+
 //_updateLayoutForStatusBarAndInterfaceOrientation
 - (void)_common_uLFSBAIO
 {
@@ -603,6 +667,17 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 
 #ifndef LNPopupControllerEnforceStrictClean
 
+//_accessibilitySpeakThisViewController
+- (UIViewController*)_aSTVC
+{
+	if(self.popupContentViewController && self.popupPresentationState == LNPopupPresentationStateOpen)
+	{
+		return self.popupContentViewController;
+	}
+	
+	return __orig_uiTBCA_aSTVC(self, _cmd);
+}
+
 //_updateLayoutForStatusBarAndInterfaceOrientation
 - (void)_uLFSBAIO
 {
@@ -766,6 +841,17 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
+
+//_accessibilitySpeakThisViewController
+- (UIViewController*)_aSTVC
+{
+	if(self.popupContentViewController && self.popupPresentationState == LNPopupPresentationStateOpen)
+	{
+		return self.popupContentViewController;
+	}
+	
+	return __orig_uiNVCA_aSTVC(self, _cmd);
+}
 
 //_updateLayoutForStatusBarAndInterfaceOrientation
 - (void)_uLFSBAIO

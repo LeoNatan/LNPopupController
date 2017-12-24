@@ -186,6 +186,8 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		
 		_titlesView = [[UIView alloc] initWithFrame:self.bounds];
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
+		_titlesView.accessibilityTraits = UIAccessibilityTraitButton;
+		_titlesView.isAccessibilityElement = YES;
 		
 		_backgroundView.accessibilityTraits = UIAccessibilityTraitButton;
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
@@ -541,6 +543,7 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		CGRect frame = _titlesView.frame;
 		frame.origin.x = leftMargin;
 		frame.size.width = rightMargin - leftMargin;
+		frame.size.height = self.bounds.size.height;
 		_titlesView.frame = frame;
 		
 		if(_needsLabelsLayout == YES)
