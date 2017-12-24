@@ -1,11 +1,15 @@
 # Change Log
 
-## [v2.5.3](https://github.com/LeoNatan/LNPopupController/tree/v2.5.3) (2017-12-17)
-[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.2...v2.5.3)
+## [v2.5.4](https://github.com/LeoNatan/LNPopupController/tree/v2.5.4) (2017-12-24)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.3...v2.5.4)
 
 **Fixed Bugs**
 
+- Accessibility - "Speak Screen" reads the view behind [\#202](https://github.com/LeoNatan/LNPopupController/issues/202)
 - Safe area issue [\#194](https://github.com/LeoNatan/LNPopupController/issues/194)
+
+## [v2.5.3](https://github.com/LeoNatan/LNPopupController/tree/v2.5.3) (2017-12-17)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.2...v2.5.3)
 
 ## [v2.5.2](https://github.com/LeoNatan/LNPopupController/tree/v2.5.2) (2017-12-07)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.1...v2.5.2)
