@@ -212,6 +212,10 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		_imageView.isAccessibilityElement = YES;
 		_imageView.layer.cornerRadius = 3;
 		_imageView.layer.masksToBounds = YES;
+        if (@available(iOS 11, *)) {
+            // support smart invert and therefore do not invert image view colors
+            _imageView.accessibilityIgnoresInvertColors = YES;
+        }
 		
 		[self addSubview:_imageView];
 		
