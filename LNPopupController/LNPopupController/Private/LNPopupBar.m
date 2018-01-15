@@ -559,6 +559,11 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		[self.leftBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem* barButtonItem, NSUInteger idx, BOOL* stop)
 		 {
 			 UIView* itemView = [barButtonItem valueForKey:@"view"];
+			 //_UITAMICAdaptorView
+			 if([itemView.superview isKindOfClass:NSClassFromString(_LNPopupDecodeBase64String(@"X1VJVEFNSUNBZGFwdG9yVmlldw=="))])
+			 {
+				 itemView = itemView.superview;
+			 }
 			 
 			 if(_resolvedStyle == LNPopupBarStyleCompact)
 			 {
@@ -573,6 +578,10 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		[self.rightBarButtonItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIBarButtonItem* barButtonItem, NSUInteger idx, BOOL* stop)
 		 {
 			 UIView* itemView = [barButtonItem valueForKey:@"view"];
+			 if([itemView.superview isKindOfClass:NSClassFromString(_LNPopupDecodeBase64String(@"X1VJVEFNSUNBZGFwdG9yVmlldw=="))])
+			 {
+				 itemView = itemView.superview;
+			 }
 			 
 			 firstRightItemView = (firstRightItemView == nil || itemView.frame.origin.x < firstRightItemView.frame.origin.x) ? itemView : firstRightItemView;
 		 }];
