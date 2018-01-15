@@ -89,9 +89,14 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @interface LNPopupBar : UIView <UIAppearanceContainer>
 
 /**
+ * If @c YES, the popup bar will automatically inherit its style from the bottom docking view.
+ */
+@property (nonatomic, assign) BOOL inheritsVisualStyleFromDockingView UI_APPEARANCE_SELECTOR;
+
+/**
  * The currently displayed popup item. (read-only)
  */
-@property(nullable, nonatomic, weak, readonly) LNPopupItem* popupItem;
+@property (nullable, nonatomic, weak, readonly) LNPopupItem* popupItem;
 
 /**
  * An array of custom bar button items to display on the left side. (read-only)
@@ -129,6 +134,11 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
  * The tint color to apply to the popup bar background.
  */
 @property (nullable, nonatomic, strong) UIColor* barTintColor UI_APPEARANCE_SELECTOR;
+
+/**
+ * A Boolean value that indicates whether the popup bar is translucent (@c YES) or not (@c NO).
+ */
+@property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
 
 /**
  * Display attributes for the popup bar’s title text.

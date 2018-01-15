@@ -24,6 +24,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @property (nonatomic, assign) UIBarStyle barStyle;
 @property (nonatomic, retain) UIColor* barTintColor;
+@property(nonatomic, assign, getter=isTranslucent) BOOL translucent;
 
 @end
 

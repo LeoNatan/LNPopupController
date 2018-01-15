@@ -12,6 +12,7 @@
 #import "LNPopupOpenTapGesutreRecognizer.h"
 #import "LNPopupLongPressGesutreRecognizer.h"
 #import "LNPopupInteractionPanGestureRecognizer.h"
+#import "_LNPopupBase64Utils.h"
 @import ObjectiveC;
 
 void __LNPopupControllerOutOfWindowHierarchy()
@@ -862,6 +863,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_configurePopupBarFromBottomBar
 {
+	if(self.popupBar.inheritsVisualStyleFromDockingView == NO)
+	{
+		return;
+	}
+	
 	if([_bottomBar respondsToSelector:@selector(barStyle)])
 	{
 		[self.popupBar setSystemBarStyle:[(id<_LNPopupBarSupport>)_bottomBar barStyle]];
@@ -873,18 +879,22 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	self.popupBar.systemBackgroundColor = _bottomBar.backgroundColor;
 	
+	if([_bottomBar respondsToSelector:@selector(isTranslucent)])
+	{
+		self.popupBar.translucent = [(id<_LNPopupBarSupport>)_bottomBar isTranslucent];
+	}
+	
 #ifndef LNPopupControllerEnforceStrictClean
 	//backgroundView
 	static NSString* const bV = @"X2JhY2tncm91bmRWaWV3";
 	//backgroundView.shadowView.backgroundColor
 	static NSString* const bVsVbC = @"YmFja2dyb3VuZFZpZXcuc2hhZG93Vmlldy5iYWNrZ3JvdW5kQ29sb3I=";
 	
-	NSString* str1 = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:bV options:0] encoding:NSUTF8StringEncoding];
+	NSString* str1 = _LNPopupDecodeBase64String(bV);
 	
 	if([_bottomBar respondsToSelector:NSSelectorFromString(str1)])
 	{
-		NSString* str2 = [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:bVsVbC options:0] encoding:NSUTF8StringEncoding];
-		
+		NSString* str2 = _LNPopupDecodeBase64String(bVsVbC);
 		
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 10)
 		{

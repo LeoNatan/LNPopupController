@@ -9,6 +9,7 @@
 #import "LNPopupBar+Private.h"
 #import "LNPopupCustomBarViewController+Private.h"
 #import "MarqueeLabel.h"
+#import "_LNPopupBase64Utils.h"
 
 @interface _LNPopupToolbar : UIToolbar @end
 @implementation _LNPopupToolbar
@@ -81,6 +82,7 @@ const NSInteger LNBackgroundStyleInherit = -1;
 	UIColor* _userBackgroundColor;
 	
 	UIBlurEffectStyle _actualBackgroundStyle;
+	UIBlurEffect* _customBlurEffect;
 	
 	UIView* _shadowView;
     
@@ -169,12 +171,18 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	{
 		self.preservesSuperviewLayoutMargins = YES;
 		
+		_inheritsVisualStyleFromDockingView = YES;
+		
 		_userBackgroundStyle = LNBackgroundStyleInherit;
+		
+		_translucent = YES;
 		
 		_backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
 		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
+		
+		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
 		
 		[self _innerSetBackgroundStyle:LNBackgroundStyleInherit];
 		
@@ -230,8 +238,6 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		_highlightView.alpha = 0.0;
 		[self addSubview:_highlightView];
 		
-		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
-		
 		_marqueeScrollEnabled = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion < 10;
 		_coordinateMarqueeScroll = YES;
 		
@@ -275,8 +281,7 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	[self bringSubviewToFront:_titlesView];
 	[self bringSubviewToFront:_shadowView];
 	
-	_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
-	_shadowView.hidden = _resolvedStyle == LNPopupBarStyleProminent;
+	_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.nativeScale);
 	
 	[self _layoutImageView];
 	[self _layoutTitles];
@@ -292,7 +297,14 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	_userBackgroundStyle = backgroundStyle;
 	
 	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle) : _userBackgroundStyle;
-	[_backgroundView setValue:[UIBlurEffect effectWithStyle:_actualBackgroundStyle] forKey:@"effect"];
+#ifndef LNPopupControllerEnforceStrictClean
+	//_UICustomBlurEffect
+	_customBlurEffect = [NSClassFromString(_LNPopupDecodeBase64String(@"X1VJQ3VzdG9tQmx1ckVmZmVjdA==")) effectWithStyle:_actualBackgroundStyle];
+#else
+	_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
+#endif
+	
+	[_backgroundView setValue:_customBlurEffect forKey:@"effect"];
 	
 	if(_userBackgroundStyle == LNBackgroundStyleInherit)
 	{
@@ -306,6 +318,10 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		}
 	}
 	
+	//Recalculate bar tint color
+	[self _internalSetBarTintColor:_userBarTintColor];
+	
+	//Recalculate labels
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
 }
 
@@ -335,12 +351,22 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 {
 	_userBarTintColor = barTintColor;
 	
-	UIColor* colorToUse = _userBarTintColor ?: _systemBarTintColor;
+	UIColor* colorToUse = [_userBarTintColor ?: _systemBarTintColor colorWithAlphaComponent:0.67];
 	
-	self.backgroundColor = [colorToUse colorWithAlphaComponent:1.0];
-	[_backgroundView setHidden:self.backgroundColor != nil];
-	
-	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+	if(_translucent == NO)
+	{
+		colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : (_actualBackgroundStyle == UIBlurEffectStyleLight || _actualBackgroundStyle == UIBlurEffectStyleExtraLight) ? [UIColor whiteColor] : [UIColor blackColor];
+	}
+//#ifndef LNPopupControllerEnforceStrictClean
+//	[_customBlurEffect setValue:[colorToUse colorWithAlphaComponent:1.0] forKey:@"colorTint"];
+//	//colorTintAlpha
+//	[_customBlurEffect setValue:@0.67 forKey:_LNPopupDecodeBase64String(@"Y29sb3JUaW50QWxwaGE=")];
+//
+//	_backgroundView.effect = _customBlurEffect;
+//#else
+	self.backgroundColor = colorToUse;
+//	[_backgroundView setHidden:self.backgroundColor != nil];
+//#endif
 }
 
 - (void)setBarTintColor:(UIColor *)barTintColor
@@ -419,6 +445,15 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	_systemShadowColor = systemShadowColor;
 	
 	_shadowView.backgroundColor = systemShadowColor;
+}
+
+- (void)setTranslucent:(BOOL)translucent
+{
+	_translucent = translucent;
+	
+	_backgroundView.hidden = _translucent == NO;
+	
+	[self _internalSetBarTintColor:_userBarTintColor];
 }
 
 - (void)setTitle:(NSString *)title
