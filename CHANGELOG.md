@@ -1,5 +1,12 @@
 # Change Log
 
+## [v2.5.6](https://github.com/LeoNatan/LNPopupController/tree/v2.5.6) (2018-01-15)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.5...v2.5.6)
+
+**Fixed Bugs**
+
+- The layout of the bar is broken if use custom view for \*BarButtonItems [\#189](https://github.com/LeoNatan/LNPopupController/issues/189)
+
 ## [v2.5.5](https://github.com/LeoNatan/LNPopupController/tree/v2.5.5) (2018-01-15)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.4...v2.5.5)
 
