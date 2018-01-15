@@ -1,5 +1,22 @@
 # Change Log
 
+## [v2.5.5](https://github.com/LeoNatan/LNPopupController/tree/v2.5.5) (2018-01-15)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.4...v2.5.5)
+
+**Enhancements**
+
+- Translucency of popup bar [\#208](https://github.com/LeoNatan/LNPopupController/issues/208)
+- Separation hair on the top/bottom of bar [\#207](https://github.com/LeoNatan/LNPopupController/issues/207)
+- Custom PopupBar [\#73](https://github.com/LeoNatan/LNPopupController/issues/73)
+
+**Fixed Bugs**
+
+- Bar tint color does not preserve translucency [\#210](https://github.com/LeoNatan/LNPopupController/issues/210)
+
+**Merged Pull Requests**
+
+- Support smart invert and therefore do not invert image view colors [\#203](https://github.com/LeoNatan/LNPopupController/pull/203) ([funkenstrahlen](https://github.com/funkenstrahlen))
+
 ## [v2.5.4](https://github.com/LeoNatan/LNPopupController/tree/v2.5.4) (2017-12-24)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.3...v2.5.4)
 
