@@ -28,7 +28,9 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		popupContentVC = storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController
 		popupContentVC.tableView.backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
 		
-		presentPopupBar(withContentViewController: popupContentVC, animated: false, completion: nil)
+		DispatchQueue.main.async {
+			self.presentPopupBar(withContentViewController: self.popupContentVC, animated: false, completion: nil)
+		}
 	}
 	
 	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {

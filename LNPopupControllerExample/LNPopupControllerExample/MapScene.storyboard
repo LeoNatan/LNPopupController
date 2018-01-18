@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ZEq-0J-wEi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ZEq-0J-wEi">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,10 +15,6 @@
         <scene sceneID="3w6-78-LuP">
             <objects>
                 <viewController id="ZEq-0J-wEi" customClass="MapViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ZTe-ob-gbn"/>
-                        <viewControllerLayoutGuide type="bottom" id="jqq-9T-mTx"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Mjn-jY-G6a">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -26,7 +23,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </mapView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-d1-mBI">
-                                <rect key="frame" x="16" y="60" width="33" height="33"/>
+                                <rect key="frame" x="16" y="40" width="33" height="33"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="3Gn-n8-hKm">
                                     <rect key="frame" x="0.0" y="0.0" width="33" height="33"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -49,7 +46,10 @@
                                 <blurEffect style="light"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="5"/>
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </visualEffectView>
@@ -59,24 +59,23 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="kBT-SN-8Vv"/>
-                                </constraints>
                                 <blurEffect style="light"/>
                             </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="5u8-d1-mBI" firstAttribute="top" secondItem="ZTe-ob-gbn" secondAttribute="bottom" constant="40" id="8AO-7m-vxX"/>
-                            <constraint firstItem="z3u-Zt-das" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="Fq2-iK-jr4"/>
-                            <constraint firstAttribute="trailing" secondItem="0EZ-UY-PPz" secondAttribute="trailing" id="JEU-0t-Dly"/>
+                            <constraint firstItem="5u8-d1-mBI" firstAttribute="top" secondItem="ttR-e1-b3Y" secondAttribute="top" constant="20" id="8AO-7m-vxX"/>
+                            <constraint firstItem="z3u-Zt-das" firstAttribute="leading" secondItem="ttR-e1-b3Y" secondAttribute="leading" id="Fq2-iK-jr4"/>
+                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="trailing" secondItem="0EZ-UY-PPz" secondAttribute="trailing" id="JEU-0t-Dly"/>
                             <constraint firstAttribute="bottom" secondItem="0EZ-UY-PPz" secondAttribute="bottom" id="Oaq-1M-eOS"/>
                             <constraint firstItem="z3u-Zt-das" firstAttribute="top" secondItem="0EZ-UY-PPz" secondAttribute="top" id="WW9-4i-E54"/>
                             <constraint firstAttribute="top" secondItem="0EZ-UY-PPz" secondAttribute="top" id="XPh-Id-rKE"/>
                             <constraint firstAttribute="leadingMargin" secondItem="5u8-d1-mBI" secondAttribute="leading" id="bmi-kg-d43"/>
-                            <constraint firstItem="0EZ-UY-PPz" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="j0s-0J-ar3"/>
-                            <constraint firstAttribute="trailing" secondItem="z3u-Zt-das" secondAttribute="trailing" id="x5N-H0-EZ4"/>
+                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="top" secondItem="z3u-Zt-das" secondAttribute="bottom" id="h6S-f1-Ygg"/>
+                            <constraint firstItem="0EZ-UY-PPz" firstAttribute="leading" secondItem="ttR-e1-b3Y" secondAttribute="leading" id="j0s-0J-ar3"/>
+                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="trailing" secondItem="z3u-Zt-das" secondAttribute="trailing" id="x5N-H0-EZ4"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="ttR-e1-b3Y"/>
                     </view>
                     <navigationItem key="navigationItem" id="FqG-7m-AwO"/>
                     <connections>
@@ -250,10 +249,6 @@
         <scene sceneID="mUz-MU-rok">
             <objects>
                 <viewController storyboardIdentifier="CustomMapBarViewController" id="WOb-qg-R9w" customClass="CustomMapBarViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="oc7-cj-ghp"/>
-                        <viewControllerLayoutGuide type="bottom" id="DyH-Ln-TVF"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="MVX-6E-FSc">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -284,10 +279,11 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="top" secondItem="ieN-GE-1ur" secondAttribute="top" id="3Ac-LP-UkZ"/>
-                            <constraint firstItem="ieN-GE-1ur" firstAttribute="leading" secondItem="MVX-6E-FSc" secondAttribute="leading" id="85g-1O-5d9"/>
+                            <constraint firstItem="ieN-GE-1ur" firstAttribute="leading" secondItem="ldy-mW-kXZ" secondAttribute="leading" id="85g-1O-5d9"/>
                             <constraint firstAttribute="bottom" secondItem="ieN-GE-1ur" secondAttribute="bottom" id="ACo-kn-ucL"/>
-                            <constraint firstAttribute="trailing" secondItem="ieN-GE-1ur" secondAttribute="trailing" id="Xvr-sX-sTg"/>
+                            <constraint firstItem="ldy-mW-kXZ" firstAttribute="trailing" secondItem="ieN-GE-1ur" secondAttribute="trailing" id="Xvr-sX-sTg"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="ldy-mW-kXZ"/>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

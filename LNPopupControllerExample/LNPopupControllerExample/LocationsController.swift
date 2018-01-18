@@ -10,19 +10,7 @@ import UIKit
 
 class LocationsController: UITableViewController {
 	@IBOutlet weak var searchBar: HigherSearchBar!
-	
-	override var prefersStatusBarHidden: Bool {
-		get {
-			return true
-		}
-	}
-	
-	override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
-		get {
-			return .slide
-		}
-	}
-	
+		
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
