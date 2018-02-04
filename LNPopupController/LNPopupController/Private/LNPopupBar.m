@@ -297,12 +297,26 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	_userBackgroundStyle = backgroundStyle;
 	
 	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle) : _userBackgroundStyle;
+
+	Class customBlurEffectClass = NSClassFromString(_LNPopupDecodeBase64String(@"X1VJQ3VzdG9tQmx1ckVmZmVjdA=="));
+	BOOL attemptCustomBlurEffect = NO;
 #ifndef LNPopupControllerEnforceStrictClean
-	//_UICustomBlurEffect
-	_customBlurEffect = [NSClassFromString(_LNPopupDecodeBase64String(@"X1VJQ3VzdG9tQmx1ckVmZmVjdA==")) effectWithStyle:_actualBackgroundStyle];
-#else
-	_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
+	if(customBlurEffectClass != nil)
+	{
+		attemptCustomBlurEffect = YES;
+	}
 #endif
+	
+	if(attemptCustomBlurEffect)
+	{
+		//_UICustomBlurEffect
+		_customBlurEffect = [customBlurEffectClass effectWithStyle:_actualBackgroundStyle];
+	}
+	
+	if(_customBlurEffect == nil)
+	{
+		_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
+	}
 	
 	[_backgroundView setValue:_customBlurEffect forKey:@"effect"];
 	
