@@ -298,25 +298,7 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	
 	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle) : _userBackgroundStyle;
 
-	Class customBlurEffectClass = NSClassFromString(_LNPopupDecodeBase64String(@"X1VJQ3VzdG9tQmx1ckVmZmVjdA=="));
-	BOOL attemptCustomBlurEffect = NO;
-#ifndef LNPopupControllerEnforceStrictClean
-	if(customBlurEffectClass != nil)
-	{
-		attemptCustomBlurEffect = YES;
-	}
-#endif
-	
-	if(attemptCustomBlurEffect)
-	{
-		//_UICustomBlurEffect
-		_customBlurEffect = [customBlurEffectClass effectWithStyle:_actualBackgroundStyle];
-	}
-	
-	if(_customBlurEffect == nil)
-	{
-		_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
-	}
+	_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
 	
 	[_backgroundView setValue:_customBlurEffect forKey:@"effect"];
 	
@@ -371,16 +353,8 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	{
 		colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : (_actualBackgroundStyle == UIBlurEffectStyleLight || _actualBackgroundStyle == UIBlurEffectStyleExtraLight) ? [UIColor whiteColor] : [UIColor blackColor];
 	}
-//#ifndef LNPopupControllerEnforceStrictClean
-//	[_customBlurEffect setValue:[colorToUse colorWithAlphaComponent:1.0] forKey:@"colorTint"];
-//	//colorTintAlpha
-//	[_customBlurEffect setValue:@0.67 forKey:_LNPopupDecodeBase64String(@"Y29sb3JUaW50QWxwaGE=")];
-//
-//	_backgroundView.effect = _customBlurEffect;
-//#else
+	
 	self.backgroundColor = colorToUse;
-//	[_backgroundView setHidden:self.backgroundColor != nil];
-//#endif
 }
 
 - (void)setBarTintColor:(UIColor *)barTintColor
