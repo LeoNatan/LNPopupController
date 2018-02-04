@@ -225,7 +225,7 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
             _imageView.accessibilityIgnoresInvertColors = YES;
         }
 		
-		[self addSubview:_imageView];
+		[_toolbar addSubview:_imageView];
 		
 		_shadowView = [UIView new];
 		_shadowView.backgroundColor = [UIColor colorWithWhite:169.0 / 255.0 alpha:1.0];
