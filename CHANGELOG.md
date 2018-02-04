@@ -1,12 +1,18 @@
 # Change Log
 
+## [v2.5.8](https://github.com/LeoNatan/LNPopupController/tree/v2.5.8) (2018-02-04)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.7...v2.5.8)
+
+**Fixed Bugs**
+
+- Crashes on iOS 9.3.5 [\#219](https://github.com/LeoNatan/LNPopupController/issues/219)
+
 ## [v2.5.7](https://github.com/LeoNatan/LNPopupController/tree/v2.5.7) (2018-02-04)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.6...v2.5.7)
 
 **Fixed Bugs**
 
 - Change imageView's alpha in Popup Bar while transitioning [\#220](https://github.com/LeoNatan/LNPopupController/issues/220)
-- Crashes on iOS 9.3.5 [\#219](https://github.com/LeoNatan/LNPopupController/issues/219)
 
 ## [v2.5.6](https://github.com/LeoNatan/LNPopupController/tree/v2.5.6) (2018-01-15)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.5...v2.5.6)
