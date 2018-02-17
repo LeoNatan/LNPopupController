@@ -1,5 +1,21 @@
 # Change Log
 
+## [v2.5.9](https://github.com/LeoNatan/LNPopupController/tree/v2.5.9) (2018-02-18)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.8...v2.5.9)
+
+**Enhancements**
+
+- RTL support [\#228](https://github.com/LeoNatan/LNPopupController/issues/228)
+
+**Fixed Bugs**
+
+- iPhone X landscape labels' overlapping on image [\#229](https://github.com/LeoNatan/LNPopupController/issues/229)
+
+**Closed Issues**
+
+- \[Enhancement\] Shrinking back viewcontroller [\#230](https://github.com/LeoNatan/LNPopupController/issues/230)
+- \[Help\] How to know when PopupContent is presented [\#221](https://github.com/LeoNatan/LNPopupController/issues/221)
+
 ## [v2.5.8](https://github.com/LeoNatan/LNPopupController/tree/v2.5.8) (2018-02-04)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.7...v2.5.8)
 
