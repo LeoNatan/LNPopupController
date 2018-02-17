@@ -5,3 +5,4 @@
 @import LNPopupController;
 #import "LoremIpsum.h"
 #import "RandomColors.h"
+#import "SettingsTableViewController.h"

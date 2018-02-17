@@ -23,13 +23,19 @@ class DemoMusicPlayerController: UIViewController {
 	
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
-
+		
 		let pause = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: nil, action: nil)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
 		let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
-		self.popupItem.rightBarButtonItems = [ pause, next ]
+		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact || ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10 {
+			popupItem.leftBarButtonItems = [ pause ]
+			popupItem.rightBarButtonItems = [ next ]
+		}
+		else {
+			popupItem.rightBarButtonItems = [ pause, next ]
+		}
 		
 		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
 		

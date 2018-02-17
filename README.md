@@ -214,7 +214,7 @@ The framework has full right-to-left support.
 <img src="./Supplements/rtl_english.png" width="320"/> <img src="./Supplements/rtl_hebrew.png" width="320"/>
 
 By default, the popup bar will follow the system's user interface layout direction, but will preserve the bar button items' order.
-To customize this behavior, modify the popup bar's `semanticContentAttribute` and `barItem sSemanticContentAttribute` properties.
+To customize this behavior, modify the popup bar's `semanticContentAttribute` and `barItemsSemanticContentAttribute` properties.
 
 
 ### Customization
