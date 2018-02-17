@@ -207,6 +207,16 @@ Status bar management of the popup content view controller is respected and appl
 
 <img src="./Supplements/statusbar_style.gif" width="320"/> <img src="./Supplements/statusbar_hidden.gif" width="320"/>
 
+#### Full Right-to-Left Support
+
+The framework has full right-to-left support.
+
+<img src="./Supplements/rtl_english.png" width="320"/> <img src="./Supplements/rtl_hebrew.png" width="320"/>
+
+By default, the popup bar will follow the system's user interface layout direction, but will preserve the bar button items' order.
+To customize this behavior, modify the popup bar's `semanticContentAttribute` and `barItem sSemanticContentAttribute` properties.
+
+
 ### Customization
 
 Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContentView``` classes.

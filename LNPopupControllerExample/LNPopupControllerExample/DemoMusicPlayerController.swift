@@ -29,8 +29,7 @@ class DemoMusicPlayerController: UIViewController {
 		let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
-		self.popupItem.leftBarButtonItems = [ pause ]
-		self.popupItem.rightBarButtonItems = [ next ]
+		self.popupItem.rightBarButtonItems = [ pause, next ]
 		
 		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
 		
