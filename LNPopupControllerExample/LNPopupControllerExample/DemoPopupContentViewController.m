@@ -7,6 +7,7 @@
 //
 
 #import "DemoPopupContentViewController.h"
+#import "SettingsTableViewController.h"
 
 @import LNPopupController;
 
@@ -36,8 +37,17 @@
 	next.accessibilityIdentifier = @"NextButton";
 	next.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	self.popupItem.leftBarButtonItems = @[ play ];
-	self.popupItem.rightBarButtonItems = @[ next ];
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact
+	   || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10)
+	{
+		self.popupItem.leftBarButtonItems = @[ play ];
+		self.popupItem.rightBarButtonItems = @[ next ];
+	}
+	else
+	{
+		self.popupItem.rightBarButtonItems = @[ play, next ];
+		self.popupItem.leftBarButtonItems = nil;
+	}
 }
 
 - (BOOL)prefersStatusBarHidden

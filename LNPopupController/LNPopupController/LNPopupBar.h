@@ -155,6 +155,15 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @property (nullable, nonatomic, copy) NSDictionary<NSString*, id>* subtitleTextAttributes UI_APPEARANCE_SELECTOR;
 
 /**
+ * A semantic description of the bar items, used to determine the order of bar items when switching between left-to-right and right-to-left layouts.
+ *
+ * Defaults to @c UISemanticContentAttributePlayback
+ *
+ * See also @c UIView.semanticContentAttribute
+ */
+@property (nonatomic) UISemanticContentAttribute barItemsSemanticContentAttribute;
+
+/**
  * When enabled, titles and subtitles that are longer than the space available will scroll text over time. By default, this is set to @c false for iOS 10 and above, @c true otherwise.
  */
 @property (nonatomic, assign) BOOL marqueeScrollEnabled;

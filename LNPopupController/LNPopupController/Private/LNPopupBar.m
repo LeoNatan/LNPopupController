@@ -31,9 +31,43 @@
 
 - (void)layoutSubviews
 {
-	[UIView performWithoutAnimation:^{
-		[super layoutSubviews];
+	[super layoutSubviews];
+	
+	//On iOS 11 reset the semantic content attribute to make sure it propagades to all subviews.
+	if(@available(iOS 11, *))
+	{
+		[self setSemanticContentAttribute:self.semanticContentAttribute];
+	}
+}
+
+- (void)_deepSetSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute toView:(UIView*)view startingFromView:(UIView*)staringView;
+{
+	if(view == staringView)
+	{
+		[super setSemanticContentAttribute:semanticContentAttribute];
+	}
+	else
+	{
+		NSLog(@"View: %@", view);
+		[view setSemanticContentAttribute:semanticContentAttribute];
+	}
+	
+	[view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		[self _deepSetSemanticContentAttribute:semanticContentAttribute toView:obj startingFromView:staringView];
 	}];
+}
+
+- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute
+{
+	if(@available(iOS 11, *))
+	{
+		//On iOS 11, due to a bug in UIKit, the semantic content attribute must be propagaded recursively to all subviews, so that the system behaves correctly.
+		[self _deepSetSemanticContentAttribute:semanticContentAttribute toView:self startingFromView:self];
+	}
+	else
+	{
+		[super setSemanticContentAttribute:semanticContentAttribute];
+	}
 }
 
 @end
@@ -190,6 +224,7 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		[_toolbar setBackgroundImage:[UIImage alloc] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
 		_toolbar.layer.masksToBounds = YES;
+
 		[self addSubview:_toolbar];
 		
 		_titlesView = [[UIView alloc] initWithFrame:self.bounds];
@@ -241,6 +276,9 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		_marqueeScrollEnabled = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion < 10;
 		_coordinateMarqueeScroll = YES;
 		
+		self.semanticContentAttribute = UISemanticContentAttributeUnspecified;
+		self.barItemsSemanticContentAttribute = UISemanticContentAttributePlayback;
+		
 		self.isAccessibilityElement = NO;
 		self.clipsToBounds = YES;
 	}
@@ -271,20 +309,22 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	
 	[_backgroundView setFrame:self.bounds];
 	
+	[self _layoutImageView];
+	
 	[UIView performWithoutAnimation:^{
 		_toolbar.frame = CGRectMake(0, 0, self.bounds.size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController));
 		[_toolbar layoutIfNeeded];
+		
+		[self bringSubviewToFront:_highlightView];
+		[self bringSubviewToFront:_toolbar];
+		//	[_toolbar bringSubviewToFront:_imageView];
+		//	[_toolbar bringSubviewToFront:_titlesView];
+		[self bringSubviewToFront:_shadowView];
+		
+		_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.nativeScale);
+		
+		[self _layoutTitles];
 	}];
-	
-	[self bringSubviewToFront:_highlightView];
-	[self bringSubviewToFront:_imageView];
-	[self bringSubviewToFront:_titlesView];
-	[self bringSubviewToFront:_shadowView];
-	
-	_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.nativeScale);
-	
-	[self _layoutImageView];
-	[self _layoutTitles];
 }
 
 - (UIBlurEffectStyle)backgroundStyle
@@ -514,6 +554,32 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	_progressView.accessibilityValue = accessibilityProgressValue;
 }
 
+- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute
+{
+	[super setSemanticContentAttribute:semanticContentAttribute];
+	_toolbar.semanticContentAttribute = semanticContentAttribute;
+	
+	[self setNeedsLayout];
+	
+	//On iOS 10 and below, there is a bug when setting a UIToolbar's semanticContentAttribute which may cause incorrect layout. So lets trigger 
+	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 10)
+	{
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[_toolbar setNeedsLayout];
+			[_toolbar layoutIfNeeded];
+		});
+	}
+}
+
+- (void)setBarItemsSemanticContentAttribute:(UISemanticContentAttribute)barItemsSemanticContentAttribute
+{
+	_barItemsSemanticContentAttribute = barItemsSemanticContentAttribute;
+	
+	[self _layoutBarButtonItems];
+	
+	[self setNeedsLayout];
+}
+
 - (UILabel<__MarqueeLabelType>*)_newMarqueeLabel
 {
 	if(_marqueeScrollEnabled == NO)
@@ -531,158 +597,232 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	return rv;
 }
 
+- (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem
+{
+	UIView* itemView = [barButtonItem valueForKey:@"view"];
+	//_UITAMICAdaptorView
+	if([itemView.superview isKindOfClass:NSClassFromString(_LNPopupDecodeBase64String(@"X1VJVEFNSUNBZGFwdG9yVmlldw=="))])
+	{
+		itemView = itemView.superview;
+	}
+	
+	return itemView;
+}
+
+- (void)_getLeftmostView:(UIView* __strong *)leftmostView rightmostView:(UIView* __strong *)rightmostView fromBarButtonItems:(NSArray<UIBarButtonItem*>*)barButtonItems
+{
+	[barButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
+		UIView* itemView = [self _viewForBarButtonItem:barButtonItem];
+		
+		if(itemView == nil)
+		{
+			return;
+		}
+		
+		*leftmostView = *leftmostView == nil ? itemView : itemView.frame.origin.x < (*leftmostView).frame.origin.x ? itemView : *leftmostView;
+		*rightmostView = *rightmostView == nil ? itemView : itemView.frame.origin.x > (*rightmostView).frame.origin.x ? itemView : *rightmostView;
+	}];
+}
+
+- (void)_updateTitleInsetsForCompactBar:(UIEdgeInsets*)titleInsets
+{
+	UIView* leftmostViewLeft;
+	UIView* rightmostViewLeft;
+	[self _getLeftmostView:&leftmostViewLeft rightmostView:&rightmostViewLeft fromBarButtonItems:self.leftBarButtonItems];
+	
+	UIView* leftmostViewRight;
+	UIView* rightmostViewRight;
+	[self _getLeftmostView:&leftmostViewRight rightmostView:&rightmostViewRight fromBarButtonItems:self.rightBarButtonItems];
+	
+	CGFloat widthLeft = rightmostViewLeft.frame.origin.x + rightmostViewLeft.frame.size.width - leftmostViewLeft.frame.origin.x;
+	CGFloat widthRight = rightmostViewRight.frame.origin.x + rightmostViewRight.frame.size.width - leftmostViewRight.frame.origin.x;
+	
+	if(@available(iOS 11, *))
+	{
+		widthLeft += self.window.safeAreaInsets.left;
+		widthRight += self.window.safeAreaInsets.right;
+	}
+	else
+	{
+		widthLeft += 1.5 * self.layoutMargins.left;
+		widthRight += 1.5 * self.layoutMargins.right;
+	}
+	
+	//The added padding is for iOS 10 and below, or for certain conditions where iOS 11 won't put its own padding
+	titleInsets->left = widthLeft;
+	titleInsets->right = widthRight;
+}
+
+- (void)_updateTitleInsetsForProminentBar:(UIEdgeInsets*)titleInsets
+{
+	UIView* leftmostView;
+	UIView* rightmostView;
+	
+	NSMutableArray* allItems = [NSMutableArray new];
+	[allItems addObjectsFromArray:self.leftBarButtonItems];
+	[allItems addObjectsFromArray:self.rightBarButtonItems];
+	
+	[self _getLeftmostView:&leftmostView rightmostView:&rightmostView fromBarButtonItems:allItems];
+	
+	CGFloat width = rightmostView.frame.origin.x + rightmostView.frame.size.width - leftmostView.frame.origin.x;
+	if(@available(iOS 11, *))
+	{
+		width += self.window.safeAreaInsets.right;
+	}
+	else
+	{
+		width += 2 * self.layoutMargins.right;
+	}
+	titleInsets->right += width;
+}
+
 - (void)_layoutTitles
 {
-	dispatch_async(dispatch_get_main_queue(), ^{
-		__block CGFloat leftMargin = 20;
-		CGFloat rightMargin = self.bounds.size.width;
+	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
+	UIEdgeInsets titleInsets = UIEdgeInsetsZero;
+	
+	CGFloat imageLeading;
+	
+	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		imageLeading = self.layoutMargins.left;
+		if (@available(iOS 11.0, *)) {
+			imageLeading = MAX(self.window.safeAreaInsets.left, imageLeading);
+		}
+	}
+	else
+	{
+		imageLeading = self.layoutMargins.right;
+		if (@available(iOS 11.0, *)) {
+			imageLeading = MAX(self.window.safeAreaInsets.right, imageLeading);
+		}
+	}
+	
+	if(_resolvedStyle == LNPopupBarStyleProminent)
+	{
+		titleInsets.left = _imageView.hidden ? 0 : imageLeading + _imageView.frame.size.width + 17.5;
 		
-		if(_resolvedStyle == LNPopupBarStyleProminent)
+		[self _updateTitleInsetsForProminentBar:&titleInsets];
+	}
+	else
+	{
+		[self _updateTitleInsetsForCompactBar:&titleInsets];
+	}
+	
+	titleInsets.left = MAX(titleInsets.left, self.layoutMargins.left);
+	titleInsets.right = MAX(titleInsets.right, self.layoutMargins.right);
+	
+	CGRect frame = _titlesView.frame;
+	frame.size.width = self.bounds.size.width - titleInsets.left - titleInsets.right;
+	frame.size.height = self.bounds.size.height;
+	frame.origin.x = layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight ? titleInsets.left : titleInsets.right;
+	
+	_titlesView.frame = frame;
+	
+	if(_needsLabelsLayout == YES)
+	{
+		if(_titleLabel == nil)
 		{
-			leftMargin += (_imageView.hidden ? 0 : _imageView.bounds.size.width) + 17.5;
+			_titleLabel = [self _newMarqueeLabel];
+			[_titlesView addSubview:_titleLabel];
 		}
 		
-		__block UIView* firstRightItemView = nil;
-		
-		[self.leftBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem* barButtonItem, NSUInteger idx, BOOL* stop)
-		 {
-			 UIView* itemView = [barButtonItem valueForKey:@"view"];
-			 //_UITAMICAdaptorView
-			 if([itemView.superview isKindOfClass:NSClassFromString(_LNPopupDecodeBase64String(@"X1VJVEFNSUNBZGFwdG9yVmlldw=="))])
-			 {
-				 itemView = itemView.superview;
-			 }
-			 
-			 if(_resolvedStyle == LNPopupBarStyleCompact)
-			 {
-				 leftMargin = MAX(itemView.frame.origin.x + itemView.frame.size.width + 10, leftMargin);
-			 }
-			 else
-			 {
-				 firstRightItemView = (firstRightItemView == nil || itemView.frame.origin.x < firstRightItemView.frame.origin.x) ? itemView : firstRightItemView;
-			 }
-		 }];
-		
-		[self.rightBarButtonItems enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIBarButtonItem* barButtonItem, NSUInteger idx, BOOL* stop)
-		 {
-			 UIView* itemView = [barButtonItem valueForKey:@"view"];
-			 if([itemView.superview isKindOfClass:NSClassFromString(_LNPopupDecodeBase64String(@"X1VJVEFNSUNBZGFwdG9yVmlldw=="))])
-			 {
-				 itemView = itemView.superview;
-			 }
-			 
-			 firstRightItemView = (firstRightItemView == nil || itemView.frame.origin.x < firstRightItemView.frame.origin.x) ? itemView : firstRightItemView;
-		 }];
-		
-		rightMargin = (firstRightItemView == nil ? self.bounds.size.width - 10 : firstRightItemView.frame.origin.x) - (_resolvedStyle == LNPopupBarStyleProminent ? 5 : 10);
-		
-		CGRect frame = _titlesView.frame;
-		frame.origin.x = leftMargin;
-		frame.size.width = rightMargin - leftMargin;
-		frame.size.height = self.bounds.size.height;
-		_titlesView.frame = frame;
-		
-		if(_needsLabelsLayout == YES)
+		NSMutableParagraphStyle* paragraph = [NSMutableParagraphStyle new];
+		if(_resolvedStyle == LNPopupBarStyleCompact)
 		{
-			if(_titleLabel == nil)
-			{
-				_titleLabel = [self _newMarqueeLabel];
-				[_titlesView addSubview:_titleLabel];
-			}
-			
-			NSMutableParagraphStyle* paragraph = [NSMutableParagraphStyle new];
-			if(_resolvedStyle == LNPopupBarStyleCompact)
-			{
-				paragraph.alignment = NSTextAlignmentCenter;
-			}
-			else
-			{
-				paragraph.alignment = NSTextAlignmentLeft;
-				paragraph.lineBreakMode = NSLineBreakByTruncatingTail;
-			}
-			
-			NSMutableDictionary* defaultTitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12]} mutableCopy];
-			[defaultTitleAttribures addEntriesFromDictionary:_titleTextAttributes];
-			
-			NSMutableDictionary* defaultSubtitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: [UIFont systemFontOfSize:12]} mutableCopy];
-			[defaultSubtitleAttribures addEntriesFromDictionary:_subtitleTextAttributes];
-			
-			BOOL reset = NO;
-			
-			if([_titleLabel.text isEqualToString:_title] == NO && _title != nil)
-			{
-				_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:defaultTitleAttribures];
-				reset = YES;
-			}
-			
-			if(_subtitleLabel == nil)
-			{
-				_subtitleLabel = [self _newMarqueeLabel];
-				[_titlesView addSubview:_subtitleLabel];
-			}
-			
-			if([_subtitleLabel.text isEqualToString:_subtitle] == NO && _subtitle != nil)
-			{
-				_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:defaultSubtitleAttribures];
-				reset = YES;
-			}
-			
-			if(reset)
-			{
-				[_titleLabel resetLabel];
-				[_subtitleLabel resetLabel];
-			}
-		}
-		
-		[self _setTitleLableFontsAccordingToBarStyleAndTint];
-		
-		CGRect titleLabelFrame = _titlesView.bounds;
-		
-		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
-		titleLabelFrame.size.height = barHeight;
-		if(_subtitle.length > 0)
-		{
-			CGRect subtitleLabelFrame = _titlesView.bounds;
-			subtitleLabelFrame.size.height = barHeight;
-			
-			if(_resolvedStyle == LNPopupBarStyleProminent)
-			{
-				titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2.1;
-				subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 1.5;
-			}
-			else
-			{
-				titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
-				subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
-			}
-			
-			_subtitleLabel.frame = subtitleLabelFrame;
-			_subtitleLabel.hidden = NO;
-			
-			if(_needsLabelsLayout == YES)
-			{
-				if([_subtitleLabel isPaused] && [_titleLabel isPaused] == NO)
-				{
-					[_subtitleLabel unpauseLabel];
-				}
-			}
+			paragraph.alignment = NSTextAlignmentCenter;
 		}
 		else
 		{
-			if(_needsLabelsLayout == YES)
-			{
-				[_subtitleLabel resetLabel];
-				[_subtitleLabel pauseLabel];
-				_subtitleLabel.hidden = YES;
-			}
+			paragraph.alignment = NSTextAlignmentLeft;
 		}
 		
-		[self _updateAccessibility];
+		if(_marqueeScrollEnabled == NO)
+		{
+			paragraph.lineBreakMode = NSLineBreakByTruncatingTail;
+		}
 		
-		_titleLabel.frame = titleLabelFrame;
+		NSMutableDictionary* defaultTitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12]} mutableCopy];
+		[defaultTitleAttribures addEntriesFromDictionary:_titleTextAttributes];
 		
-		_needsLabelsLayout = NO;
-	});
+		NSMutableDictionary* defaultSubtitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:14 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12]} mutableCopy];
+		[defaultSubtitleAttribures addEntriesFromDictionary:_subtitleTextAttributes];
+		
+		BOOL reset = NO;
+		
+		if([_titleLabel.text isEqualToString:_title] == NO && _title != nil)
+		{
+			_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:defaultTitleAttribures];
+			reset = YES;
+		}
+		
+		if(_subtitleLabel == nil)
+		{
+			_subtitleLabel = [self _newMarqueeLabel];
+			[_titlesView addSubview:_subtitleLabel];
+		}
+		
+		if([_subtitleLabel.text isEqualToString:_subtitle] == NO && _subtitle != nil)
+		{
+			_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:defaultSubtitleAttribures];
+			reset = YES;
+		}
+		
+		if(reset)
+		{
+			[_titleLabel resetLabel];
+			[_subtitleLabel resetLabel];
+		}
+	}
+	
+	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+	
+	CGRect titleLabelFrame = _titlesView.bounds;
+	
+	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
+	titleLabelFrame.size.height = barHeight;
+	if(_subtitle.length > 0)
+	{
+		CGRect subtitleLabelFrame = _titlesView.bounds;
+		subtitleLabelFrame.size.height = barHeight;
+		
+		if(_resolvedStyle == LNPopupBarStyleProminent)
+		{
+			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2.1;
+			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 1.5;
+		}
+		else
+		{
+			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
+			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
+		}
+		
+		_subtitleLabel.frame = subtitleLabelFrame;
+		_subtitleLabel.hidden = NO;
+		
+		if(_needsLabelsLayout == YES)
+		{
+			if([_subtitleLabel isPaused] && [_titleLabel isPaused] == NO)
+			{
+				[_subtitleLabel unpauseLabel];
+			}
+		}
+	}
+	else
+	{
+		if(_needsLabelsLayout == YES)
+		{
+			[_subtitleLabel resetLabel];
+			[_subtitleLabel pauseLabel];
+			_subtitleLabel.hidden = YES;
+		}
+	}
+	
+	[self _updateAccessibility];
+	
+	_titleLabel.frame = titleLabelFrame;
+	
+	_needsLabelsLayout = NO;
 }
 
 - (void)_updateAccessibility
@@ -746,12 +886,27 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	_imageView.image = _image;
 	_imageView.hidden = _image == nil;
 	
-	CGFloat safeLeading = self.layoutMargins.left;
-	if (@available(iOS 11.0, *)) {
-		safeLeading = MAX(self.safeAreaInsets.left, safeLeading);
+	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
+	
+	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		CGFloat safeLeading = self.layoutMargins.left;
+		if (@available(iOS 11.0, *)) {
+			safeLeading = MAX(self.window.safeAreaInsets.left, safeLeading);
+		}
+		
+		_imageView.center = CGPointMake(safeLeading + LNPopupBarProminentImageWidth / 2, LNPopupBarHeightProminent / 2);
+	}
+	else
+	{
+		CGFloat safeLeading = self.layoutMargins.right;
+		if (@available(iOS 11.0, *)) {
+			safeLeading = MAX(self.window.safeAreaInsets.right, safeLeading);
+		}
+		
+		_imageView.center = CGPointMake(self.bounds.size.width - safeLeading - LNPopupBarProminentImageWidth / 2, LNPopupBarHeightProminent / 2);
 	}
 	
-	_imageView.center = CGPointMake(safeLeading + LNPopupBarProminentImageWidth / 2, LNPopupBarHeightProminent / 2);
 	_imageView.bounds = CGRectMake(0, 0, LNPopupBarProminentImageWidth, LNPopupBarProminentImageWidth);
 	
 	if(previouslyHidden != _imageView.hidden)
@@ -801,56 +956,45 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 
 - (void)_layoutBarButtonItems
 {
-	NSMutableArray* items = [NSMutableArray new];
-	
-	UIBarButtonItem* fixed = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-	fixed.width = _resolvedStyle == LNPopupBarStyleProminent ? 2 : -2;
-	[items addObject:fixed];
-	
-	CGFloat spacerWidth = 6;
-	if(self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+	if(self.leftBarButtonItems.count + self.rightBarButtonItems.count == 0)
 	{
-		spacerWidth = 12;
+		return;
 	}
 	
-	UIBarButtonItem* spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
+	UIUserInterfaceLayoutDirection barItemsLayoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:_barItemsSemanticContentAttribute];
+	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
+
+	BOOL normalButtonsOrder = layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight || barItemsLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+	
+	NSEnumerationOptions enumerationOptions = normalButtonsOrder ? 0 : NSEnumerationReverse;
 	
 	LNPopupBarStyle resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
+	
+	NSMutableArray* items = [NSMutableArray new];
+	
+	UIBarButtonItem* flexibleSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
+	flexibleSpacer.tag = 666;
 	if(resolvedStyle == LNPopupBarStyleProminent || resolvedStyle == LNPopupBarStyleCustom)
 	{
-		[items addObject:spacer];
+		[items addObject:flexibleSpacer];
 	}
 	
-	[_leftBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
+	[self.leftBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
 		[items addObject:barButtonItem];
-		
-		if(resolvedStyle == LNPopupBarStyleProminent || idx != _leftBarButtonItems.count - 1)
-		{
-			UIBarButtonItem* spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-			spacer.width = spacerWidth;
-			[items addObject:spacer];
-		}
 	}];
 	
 	if(resolvedStyle == LNPopupBarStyleCompact)
 	{
-		[items addObject:spacer];
+		[items addObject:flexibleSpacer];
 	}
 
-	[_rightBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
+	[self.rightBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
 		[items addObject:barButtonItem];
-		
-		if(idx != _rightBarButtonItems.count - 1)
-		{
-			UIBarButtonItem* spacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-			spacer.width = spacerWidth;
-			[items addObject:spacer];
-		}
 	}];
 	
-	fixed = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-	fixed.width = _resolvedStyle == LNPopupBarStyleProminent ? 2 : -2;
-	[items addObject:fixed];
+	UIBarButtonItem* fixedSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
+	fixedSpacer.width = _resolvedStyle == LNPopupBarStyleProminent ? 2 : -2;
+	[items addObject:fixedSpacer];
 	
 	[_toolbar setItems:items animated:YES];
 	
