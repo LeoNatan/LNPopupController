@@ -145,14 +145,14 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
  *
  * You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in @c NSAttributedString.h.
  */
-@property (nullable, nonatomic, copy) NSDictionary<NSString*, id>* titleTextAttributes UI_APPEARANCE_SELECTOR;
+@property (nullable, nonatomic, copy) NSDictionary<NSAttributedStringKey, id>* titleTextAttributes UI_APPEARANCE_SELECTOR;
 
 /**
  * Display attributes for the popup bar’s subtitle text.
  *
  * You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in @c NSAttributedString.h.
  */
-@property (nullable, nonatomic, copy) NSDictionary<NSString*, id>* subtitleTextAttributes UI_APPEARANCE_SELECTOR;
+@property (nullable, nonatomic, copy) NSDictionary<NSAttributedStringKey, id>* subtitleTextAttributes UI_APPEARANCE_SELECTOR;
 
 /**
  * A semantic description of the bar items, used to determine the order of bar items when switching between left-to-right and right-to-left layouts.

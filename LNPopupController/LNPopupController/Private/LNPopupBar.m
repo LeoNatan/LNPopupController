@@ -734,7 +734,7 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		}
 		else
 		{
-			paragraph.alignment = NSTextAlignmentLeft;
+			paragraph.alignment = NSTextAlignmentNatural;
 		}
 		
 		if(_marqueeScrollEnabled == NO)
