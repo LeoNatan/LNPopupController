@@ -8,9 +8,9 @@
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/graphs/contributors) [![Carthage compatible](https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-<img src="./Supplements/open_modern_popup.gif" width="320"/> <img src="./Supplements/close_modern_popup.gif" width="320"/>
+<img src="./Supplements/open_modern_popup.gif" width="360"/> <img src="./Supplements/close_modern_popup.gif" width="360"/>
 
-<img src="./Supplements/taps.gif" width="320"/> <img src="./Supplements/swipes.gif" width="320"/>
+<img src="./Supplements/taps.gif" width="360"/> <img src="./Supplements/swipes.gif" width="360"/>
 
 See a video of the modern popup look & feel [here](https://vimeo.com/194064291) and a video of the classic popup look & feel [here](https://vimeo.com/137020302).
 
@@ -194,36 +194,45 @@ For navigation and tab bar controller popup containers, the style of the popup b
 
 To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, use the `updatePopupBarAppearance` method.
 
-<img src="./Supplements/modern_bar_style.gif" width="320"/> <img src="./Supplements/bar_style.gif" width="320"/>
+<img src="./Supplements/modern_bar_style.gif" width="360"/> <img src="./Supplements/bar_style.gif" width="360"/>
 
 Supplying long text for the title and/or subtitle will result in a scrolling text. Otherwise, the text will be centered.
 
-<img src="./Supplements/modern_no_scroll.gif" width="320"/> <img src="./Supplements/scoll.gif" width="320"/>
+<img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scoll.gif" width="360"/>
 
 The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition to the bottom of the container controller view. Using `setToolbarHidden:` and `setToolbarHidden:animated:` is also supported.
 
-<img src="./Supplements/hidesBottomBar_TabBar.gif" width="320"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="320"/>
+<img src="./Supplements/hidesBottomBar_TabBar.gif" width="360"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="360"/>
 Status bar management of the popup content view controller is respected and applied when appropriate.
 
-<img src="./Supplements/statusbar_style.gif" width="320"/> <img src="./Supplements/statusbar_hidden.gif" width="320"/>
+<img src="./Supplements/statusbar_style.gif" width="360"/> <img src="./Supplements/statusbar_hidden.gif" width="360"/>
+
+#### Interaction Gesture Recognizer
+
+```LNPopupContentView``` exposes access to the popup interaction gesture recognizer in the way of the `popupInteractionGestureRecognizer` property. This gesture recognizer is shared between opening the popup content, by panning the popup bar up (when the popup bar is closed), and closing the popup content, by panning the popup content view (when the popup bar is open).
+
+When opening the popup, the system queries the `viewForPopupInteractionGestureRecognizer` property of the popup content view controller to determine to which view to add the interaction gesture recognizer. By default, the property returns the controller's root view. Override the property's getter to change this behavior.
+
+You can implement the delegate of the interaction gesture recognizer in order to influence its behavior, such as preventing popup interaction when the user is interacting with other controls or views inside the popup content.
+
+**Note:** If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code. Instead, consider implementing the gesture recognizer's delegate instead and provide custom logic to disable the interaction.
 
 #### Full Right-to-Left Support
 
 The framework has full right-to-left support.
 
-<img src="./Supplements/rtl_english.png" width="320"/> <img src="./Supplements/rtl_hebrew.png" width="320"/>
+<img src="./Supplements/rtl_english.png" width="360"/> <img src="./Supplements/rtl_hebrew.png" width="360"/>
 
 By default, the popup bar will follow the system's user interface layout direction, but will preserve the bar button items' order.
-To customize this behavior, modify the popup bar's `semanticContentAttribute` and `barItemsSemanticContentAttribute` properties.
-
+To customize this behavior, modify the popup bar's ```semanticContentAttribute``` and ```barItemsSemanticContentAttribute``` properties.
 
 ### Customization
 
-Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContentView``` classes.
+Customization can be achieved through the ```LNPopupBar```, ```LNPopupContentView``` and ```LNPopupCustomBarViewController``` classes.
 
 #### Popup Bar Customization
 
-```LNPopupBar``` exposes API to customize the popup bar's appearance, either through `UIAppearance` API or directly to popup bar objects.
+```LNPopupBar``` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on popup bar objects.
 
 ```objective-c
 [[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
@@ -232,13 +241,21 @@ Customization can be achieved through the ```LNPopupBar``` and ```LNPopupContent
 [[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTintColor:[UIColor yellowColor]];
 ```
 
-<img src="./Supplements/modern_custom.png" width="320"/> <img src="./Supplements/custom1.png" width="320"/>
+<img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/>
 
-#### Popup Content View and Gesture Customization
+#### Custom Popup Bar
 
-```LNPopupContentView``` exposes access to the popup close button and the popup interaction gesture recognizer.
+The framework supports implementing custom popup bars.
 
-**Note:** Modify the popup interaction gesture recognizer with care. It is shared between opening the popup content, by panning the popup bar up (when the popup bar is closed), and closing the popup content, by panning the popup content view (when the popup bar is open). If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code.
+<img src="./Supplements/custom_bar.png" width="360"/>
+
+To implement a custom popup bar, subclass ```LNPopupCustomBarViewController```.
+
+In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's ```preferredContentSize``` property with the preferred popup bar height. Override `wantsDefaultTapGestureRecognizer` and/or `wantsDefaultPanGestureRecognizer` to disable adding the default gesture recognizers.
+
+In your subclass implement the `popupItemDidUpdate` method to be notified on updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
+
+Finally, set the `customBarViewController` property of the popup bar object to an instance of your ```LNPopupCustomBarViewController``` subclass. This will change the bar style to ```LNPopupBarStyleCustom```/```custom```.
 
 ### Accessibility
 

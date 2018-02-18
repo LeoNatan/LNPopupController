@@ -27,6 +27,16 @@
 	return [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 }
 
+- (BOOL)wantsDefaultTapGestureRecognizer
+{
+	return YES;
+}
+
+- (BOOL)wantsDefaultPanGestureRecognizer
+{
+	return YES;
+}
+
 - (void)setPreferredContentSize:(CGSize)preferredContentSize
 {
 	[super setPreferredContentSize:preferredContentSize];

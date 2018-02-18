@@ -73,11 +73,11 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 @property (nonatomic, retain, readonly) LNPopupItem* popupItem;
 
 /**
- * Return the view to which the popup interaction gesture recognizer will be added to.
+ * Return the view to which the popup interaction gesture recognizer should be added to.
  *
  * The default implementation returns the controller's view. @see @c UIViewController.popupContentView
  *
- * @return The view to which the popup interaction gesture recognizer will be added to.
+ * @return The view to which the popup interaction gesture recognizer should be added to.
  */
 @property (nonatomic, strong, readonly) __kindof UIView* viewForPopupInteractionGestureRecognizer;
 

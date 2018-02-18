@@ -17,8 +17,19 @@
  */
 @property (nonatomic, weak, readonly) LNPopupBar* containingPopupBar;
 
-@property (nonatomic, assign) BOOL wantsDefaultTapGestureRecognizer;
-@property (nonatomic, assign) BOOL wantsDefaultPanGestureRecognizer;
+/**
+ * Indicates whether the default tap gesture recognizer should be added to the popup bar.
+ *
+ * Defaults to @c YES.
+ */
+@property (nonatomic, assign, readonly) BOOL wantsDefaultTapGestureRecognizer;
+
+/**
+ * Indicates whether the default pan gesture recognizer should be added to the popup bar.
+ *
+ * Defaults to @c YES.
+ */
+@property (nonatomic, assign, readonly) BOOL wantsDefaultPanGestureRecognizer;
 
 /*
  * The @c preferredContentSize is used for height calculation of the popup bar.

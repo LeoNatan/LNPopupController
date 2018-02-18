@@ -11,11 +11,16 @@ import UIKit
 class CustomMapBarViewController: LNPopupCustomBarViewController {
 	@IBOutlet weak var searchBar: HigherSearchBar!
 	
+	override var wantsDefaultPanGestureRecognizer: Bool {
+		get {
+			return false;
+		}
+	}
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		preferredContentSize = CGSize(width: -1, height: 65)
-		wantsDefaultPanGestureRecognizer = false
 	}
 	
 	override func popupItemDidUpdate() {
