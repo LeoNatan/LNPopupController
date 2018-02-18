@@ -1,6 +1,13 @@
 # Change Log
 
-## [v2.5.9](https://github.com/LeoNatan/LNPopupController/tree/v2.5.9) (2018-02-18)
+## [v2.5.10](https://github.com/LeoNatan/LNPopupController/tree/v2.5.10) (2018-02-18)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.9...v2.5.10)
+
+**Enhancements**
+
+- Update the documentation with RTL information and custom popup bars [\#231](https://github.com/LeoNatan/LNPopupController/issues/231)
+
+## [v2.5.9](https://github.com/LeoNatan/LNPopupController/tree/v2.5.9) (2018-02-17)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.8...v2.5.9)
 
 **Enhancements**
