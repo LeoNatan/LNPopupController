@@ -17,6 +17,8 @@
 #define MLRightLeft __MLRightLeft
 #define MLContinuous __MLContinuous
 #define MLContinuousReverse __MLContinuousReverse
+#define MLLeft __MLLeft
+#define MLRight __MLRight
 #define GradientSetupAnimation __GradientSetupAnimation
 
 #define LNChevronView __LNChevronView

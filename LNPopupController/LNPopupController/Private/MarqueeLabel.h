@@ -1,7 +1,7 @@
 
 //
 //  MarqueeLabel.h
-//
+//  
 //  Created by Charles Powell on 1/31/11.
 //  Copyright (c) 2011-2015 Charles Powell. All rights reserved.
 //
@@ -10,14 +10,18 @@
 
 /** An enum that defines the types of `MarqueeLabel` scrolling */
 typedef NS_ENUM(NSUInteger, MarqueeType) {
-	/** Scrolls left first, then back right to the original position. */
-	MLLeftRight = 0,
-	/** Scrolls right first, then back left to the original position. */
-	MLRightLeft = 1,
-	/** Continuously scrolls left (with a pause at the original position if animationDelay is set). See the `trailingBuffer` property to define a spacing between the repeating strings.*/
-	MLContinuous = 2,
-	/** Continuously scrolls right (with a pause at the original position if animationDelay is set). See the `trailingBuffer` property to define a spacing between the repeating strings.*/
-	MLContinuousReverse = 3
+    /** Scrolls left first, then back right to the original position. */
+    MLLeftRight = 0,
+    /** Scrolls right first, then back left to the original position. */
+    MLRightLeft = 1,
+    /** Continuously scrolls left (with a pause at the original position if animationDelay is set). See the `trailingBuffer` property to define a spacing between the repeating strings.*/
+    MLContinuous = 2,
+    /** Continuously scrolls right (with a pause at the original position if animationDelay is set). See the `trailingBuffer` property to define a spacing between the repeating strings.*/
+    MLContinuousReverse = 3,
+    /** Scrolls left first, then does not return to the original position. */
+    MLLeft = 4,
+    /** Scrolls right first, then does not return to the original position. */
+    MLRight = 5
 };
 
 
@@ -31,19 +35,19 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
  */
 
 IB_DESIGNABLE
-@interface MarqueeLabel : UILabel
+@interface MarqueeLabel : UILabel <CAAnimationDelegate>
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @name Creating MarqueeLabels
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Returns a newly initialized `MarqueeLabel` instance.
- 
+
  The default scroll duration of 7.0 seconds and fade length of 0.0 are used.
  
  @param frame A rectangle specifying the initial location and size of the view in its superview's coordinates. Text (for the given font, font size, etc.) that does not fit in this frame will automatically scroll.
  @return An initialized `MarqueeLabel` object or nil if the object couldn't be created.
- */
+*/
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
@@ -94,10 +98,10 @@ IB_DESIGNABLE
  
  Allowable options:
  
- - `UIViewAnimationOptionCurveEaseInOut`
- - `UIViewAnimationOptionCurveEaseIn`
- - `UIViewAnimationOptionCurveEaseOut`
- - `UIViewAnimationOptionCurveLinear`
+    - `UIViewAnimationOptionCurveEaseInOut`
+    - `UIViewAnimationOptionCurveEaseIn`
+    - `UIViewAnimationOptionCurveEaseOut`
+    - `UIViewAnimationOptionCurveLinear`
  
  Defaults to `UIViewAnimationOptionCurveEaseInOut`.
  */
@@ -109,7 +113,7 @@ IB_DESIGNABLE
  
  When set to `YES` the `MarqueeLabel` will behave like a normal UILabel, and  will not begin scrolling when the text is
  larger than the specified frame. The change takes effect immediately, removing any in-flight animation as well as any
- current edge fade. Note that the `MarqueeLabel` will respect the current values of the `lineBreakMode` and `textAlignment`
+ current edge fade. Note that the `MarqueeLabel` will respect the current values of the `lineBreakMode` and `textAlignment` 
  properties while labelized.
  
  To simply prevent automatic scrolling, use the `holdScrolling` property.
@@ -129,7 +133,7 @@ IB_DESIGNABLE
 
 /** A boolean property that sets whether the `MarqueeLabel` should hold (prevent) label scrolling.
  
- When set to `YES`, the `MarqueeLabel` will not automatically scroll even its text is larger than the specified frame,
+ When set to `YES`, the `MarqueeLabel` will not automatically scroll even its text is larger than the specified frame, 
  although the specified edge fades will remain.
  
  To set the `MarqueeLabel` to act like a normal UILabel, use the `labelize` property.
@@ -252,7 +256,7 @@ IB_DESIGNABLE
 /**
  @deprecated Use `trailingBuffer` instead. Values set to this property are simply forwarded to `trailingBuffer`.
  */
-
+ 
 @property (nonatomic, assign) CGFloat continuousMarqueeExtraBuffer DEPRECATED_ATTRIBUTE;
 
 
@@ -273,7 +277,7 @@ IB_DESIGNABLE
 @property (nonatomic, assign) IBInspectable CGFloat animationDelay;
 
 
-/** The read-only duration of the scroll animation (not including delay).
+/** The read-only duration of the scroll animation (not including delay). 
  
  The value of this property is calculated when using the `scrollRate` property to set label animation speed. The value of this property
  is equal to the value of `scrollDuration` property when using the `scrollDuration` property to set label animation speed.
@@ -301,7 +305,7 @@ IB_DESIGNABLE
 
 /** Immediately resets the label to the home position, cancelling any in-flight scroll animation.
  
- The text is immediately returned to the home position. Scrolling will not resume automatically after a call to this method.
+ The text is immediately returned to the home position. Scrolling will not resume automatically after a call to this method. 
  To re-initiate scrolling use a call to `restartLabel` or `triggerScrollStart`, or make a change to a UILabel property such as text, bounds/frame,
  font, font size, etc.
  
@@ -350,7 +354,7 @@ IB_DESIGNABLE
  method will not force a label with a string that fits inside the label bounds (i.e. that would not automatically scroll) to begin a scroll
  animation.
  
- Upon the completion of the first forced scroll animation, the receiver will not automatically continue to scroll unless the conditions
+ Upon the completion of the first forced scroll animation, the receiver will not automatically continue to scroll unless the conditions 
  preventing scrolling have been removed.
  
  @note This method has no effect if called during an already in-flight scroll animation.
@@ -386,7 +390,7 @@ IB_DESIGNABLE
  @param finished A Boolean that indicates whether or not the scroll animation actually finished before the completion handler was called.
  @since Available in 1.5.0 and later.
  
- @warning This method will be called, and the `finished` parameter will be `NO`, when any property changes are made that would cause the label
+ @warning This method will be called, and the `finished` parameter will be `NO`, when any property changes are made that would cause the label 
  scrolling to be automatically reset. This includes changes to label text and font/font size changes.
  */
 
@@ -421,7 +425,7 @@ IB_DESIGNABLE
  The scrolling animation of these instances will be automatically restarted. This is equivalent to calling `restartLabel` on all affected
  instances.
  
- There is currently no functional difference between this method and `controllerViewDidAppear:` or `controllerViewWillAppear:`. The methods may
+ There is currently no functional difference between this method and `controllerViewDidAppear:` or `controllerViewWillAppear:`. The methods may 
  be used interchangeably.
  
  @warning View controllers that appear with animation (such as from underneath a modal-style controller) can cause some `MarqueeLabel` text
@@ -498,4 +502,5 @@ IB_DESIGNABLE
 
 
 @end
+
 
