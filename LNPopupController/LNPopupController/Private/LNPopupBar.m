@@ -48,7 +48,6 @@
 	}
 	else
 	{
-		NSLog(@"View: %@", view);
 		[view setSemanticContentAttribute:semanticContentAttribute];
 	}
 	
