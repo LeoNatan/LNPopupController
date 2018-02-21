@@ -1,5 +1,12 @@
 # Change Log
 
+## [v2.5.11](https://github.com/LeoNatan/LNPopupController/tree/v2.5.11) (2018-02-21)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.10...v2.5.11)
+
+**Closed Issues**
+
+- customBarViewController is nil after dismissPopupBar but still retained by LNPopupBar [\#232](https://github.com/LeoNatan/LNPopupController/issues/232)
+
 ## [v2.5.10](https://github.com/LeoNatan/LNPopupController/tree/v2.5.10) (2018-02-18)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.9...v2.5.10)
 
