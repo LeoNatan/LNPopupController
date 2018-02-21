@@ -65,8 +65,8 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 		self.popupContentViewController.popupPresentationContainerViewController = nil;
 		self.popupContentViewController = nil;
 		
-		//No longer need to retain the popup controller after dismissing.
-		objc_setAssociatedObject(self, _LNPopupControllerKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		//The LNPopupController is no longer released here.
+		//There should be one popup controller per presenting controller per instance.
 		
 		if(completionBlock)
 		{

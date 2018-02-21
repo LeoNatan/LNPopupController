@@ -1021,6 +1021,12 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 {
 	if(_customBarViewController != customBarViewController)
 	{
+		if (customBarViewController.containingPopupBar)
+		{
+			//Cleanly move the custom bar view controller from the previos popup bar.
+			customBarViewController.containingPopupBar.customBarViewController = nil;
+		}
+		
 		_customBarViewController.containingPopupBar = nil;
 		[_customBarViewController.view removeFromSuperview];
 		[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];

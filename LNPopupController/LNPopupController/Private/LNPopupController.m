@@ -242,6 +242,8 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	
 	NSLayoutConstraint* _popupCloseButtonTopConstraint;
 	NSLayoutConstraint* _popupCloseButtonHorizontalConstraint;
+	
+	id<UIViewControllerPreviewing> _previewingContext;
 }
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
@@ -1073,6 +1075,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)dealloc
 {
+	//Cannot use self.popupBar in this method because it returns nil when the popup state is LNPopupPresentationStateHidden.
+	
+	if(_previewingContext)
+	{
+		[_containerController unregisterForPreviewingWithContext:_previewingContext];
+	}
+	
+	if(_popupBar)
+	{
+		[_popupBar removeFromSuperview];
+	}
 	[_popupContentView removeObserver:self forKeyPath:@"popupCloseButtonStyle"];
 }
 
@@ -1147,7 +1160,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)
 		{
-			[_containerController registerForPreviewingWithDelegate:self sourceView:self.popupBar];
+			_previewingContext = [_containerController registerForPreviewingWithDelegate:self sourceView:self.popupBarStorage];
 		}
 		
 		[self _movePopupBarAndContentToBottomBarSuperview];
