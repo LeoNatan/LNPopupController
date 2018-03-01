@@ -99,6 +99,20 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)(void))completion;
 
 /**
+ * Presents an interactive popup bar in the receiver's view hierarchy. The popup bar is attached to the receiver's docking view. @see @c -[UIViewController bottomDockingViewForPopupBar]
+ *
+ * You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
+ *
+ * The provided controller is retained by the system and will be released once a different controller is presented or when the popup bar is dismissed.
+ *
+ * @param controller      The controller for popup presentation.
+ * @param animated        Pass @c YES to animate the presentation; otherwise, pass @c NO.
+ * @param delay           Pass a double to create animation delay, optional.
+ * @param completion      The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify @c nil for this parameter.
+ */
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated delay:(double)delay completion:(nullable void(^)(void))completion;
+
+/**
  * Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view. @see @c -[UIViewController bottomDockingViewForPopupBar]
  *
  * You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
@@ -106,11 +120,12 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  * The provided controller is retained by the system and will be released once a different controller is presented or when the popup bar is dismissed.
  *
  * @param controller      The controller for popup presentation.
- * @param openPopup	   	  Pass @c YES to open the popup in the same animation; otherwise, pass @c NO.
+ * @param openPopup             Pass @c YES to open the popup in the same animation; otherwise, pass @c NO.
  * @param animated        Pass @c YES to animate the presentation; otherwise, pass @c NO.
+ * @param delay           Pass a double to create animation delay, optional.
  * @param completion      The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify @c nil for this parameter.
  */
-- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completion;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated delay:(double)delay completion:(nullable void(^)(void))completion;
 
 /**
  * Opens the popup, displaying the content view controller's view.

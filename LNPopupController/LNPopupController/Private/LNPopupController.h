@@ -41,7 +41,7 @@
 
 - (void)_repositionPopupCloseButton;
 
-- (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock;
+- (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open delay:(double)delay completion:(void(^)(void))completionBlock;
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;

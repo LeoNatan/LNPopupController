@@ -30,7 +30,7 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
 @implementation UIViewController (LNPopupSupport)
 
-- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completionBlock;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated delay:(double)delay completion:(nullable void(^)(void))completionBlock;
 {
 	if(controller == nil)
 	{
@@ -40,12 +40,17 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	self.popupContentViewController = controller;
 	controller.popupPresentationContainerViewController = self;
 	
-	[self._ln_popupController presentPopupBarAnimated:animated openPopup:openPopup completion:completionBlock];
+    [self._ln_popupController presentPopupBarAnimated:animated openPopup:openPopup delay:delay completion:completionBlock];
 }
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self presentPopupBarWithContentViewController:controller openPopup:NO animated:animated completion:completionBlock];
+    [self presentPopupBarWithContentViewController:controller openPopup:NO animated:animated delay:0 completion:completionBlock];
+}
+
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated delay:(double)delay completion:(void(^)(void))completionBlock
+{
+    [self presentPopupBarWithContentViewController:controller openPopup:NO animated:animated delay:delay completion:completionBlock];
 }
 
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
