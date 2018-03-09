@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ZEq-0J-wEi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14105" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ZEq-0J-wEi">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,11 +19,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsScale="YES" showsTraffic="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0EZ-UY-PPz">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" mapType="standard" showsScale="YES" showsTraffic="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0EZ-UY-PPz">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </mapView>
-                            <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-d1-mBI">
-                                <rect key="frame" x="16" y="40" width="33" height="33"/>
+                            <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-d1-mBI" userLabel="Back Button">
+                                <rect key="frame" x="20" y="40" width="33" height="33"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="3Gn-n8-hKm">
                                     <rect key="frame" x="0.0" y="0.0" width="33" height="33"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -49,11 +49,11 @@
                                         <integer key="value" value="10"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
-                                        <integer key="value" value="1"/>
+                                        <real key="value" value="0.33300000000000002"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </visualEffectView>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z3u-Zt-das">
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z3u-Zt-das" userLabel="Top Safe Area Mask">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="QsL-UP-eFz">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
@@ -61,19 +61,31 @@
                                 </view>
                                 <blurEffect style="light"/>
                             </visualEffectView>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTi-HK-yCs" userLabel="Bottom Safe Area Mask">
+                                <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ffk-ch-Xax">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                </view>
+                                <blurEffect style="extraLight"/>
+                            </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="fTi-HK-yCs" secondAttribute="bottom" id="53b-6h-61m"/>
+                            <constraint firstAttribute="trailing" secondItem="z3u-Zt-das" secondAttribute="trailing" id="5g0-iP-rZr"/>
                             <constraint firstItem="5u8-d1-mBI" firstAttribute="top" secondItem="ttR-e1-b3Y" secondAttribute="top" constant="20" id="8AO-7m-vxX"/>
-                            <constraint firstItem="z3u-Zt-das" firstAttribute="leading" secondItem="ttR-e1-b3Y" secondAttribute="leading" id="Fq2-iK-jr4"/>
-                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="trailing" secondItem="0EZ-UY-PPz" secondAttribute="trailing" id="JEU-0t-Dly"/>
-                            <constraint firstAttribute="bottom" secondItem="0EZ-UY-PPz" secondAttribute="bottom" id="Oaq-1M-eOS"/>
-                            <constraint firstItem="z3u-Zt-das" firstAttribute="top" secondItem="0EZ-UY-PPz" secondAttribute="top" id="WW9-4i-E54"/>
-                            <constraint firstAttribute="top" secondItem="0EZ-UY-PPz" secondAttribute="top" id="XPh-Id-rKE"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="5u8-d1-mBI" secondAttribute="leading" id="bmi-kg-d43"/>
-                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="top" secondItem="z3u-Zt-das" secondAttribute="bottom" id="h6S-f1-Ygg"/>
-                            <constraint firstItem="0EZ-UY-PPz" firstAttribute="leading" secondItem="ttR-e1-b3Y" secondAttribute="leading" id="j0s-0J-ar3"/>
-                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="trailing" secondItem="z3u-Zt-das" secondAttribute="trailing" id="x5N-H0-EZ4"/>
+                            <constraint firstItem="fTi-HK-yCs" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="9KY-CO-k2N"/>
+                            <constraint firstAttribute="bottom" secondItem="0EZ-UY-PPz" secondAttribute="bottom" id="N7c-ke-EAK"/>
+                            <constraint firstItem="z3u-Zt-das" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="OyN-F7-yvr"/>
+                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="bottom" secondItem="fTi-HK-yCs" secondAttribute="top" id="SqU-Rg-Diz"/>
+                            <constraint firstItem="0EZ-UY-PPz" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="Wu3-sg-B75"/>
+                            <constraint firstItem="0EZ-UY-PPz" firstAttribute="top" secondItem="Mjn-jY-G6a" secondAttribute="top" id="X5B-e0-JAK"/>
+                            <constraint firstItem="5u8-d1-mBI" firstAttribute="leading" secondItem="ttR-e1-b3Y" secondAttribute="leading" constant="20" id="bmi-kg-d43"/>
+                            <constraint firstItem="z3u-Zt-das" firstAttribute="top" secondItem="Mjn-jY-G6a" secondAttribute="top" id="dfX-n3-ch3"/>
+                            <constraint firstAttribute="trailing" secondItem="fTi-HK-yCs" secondAttribute="trailing" id="ei5-QK-t3A"/>
+                            <constraint firstAttribute="trailing" secondItem="0EZ-UY-PPz" secondAttribute="trailing" id="gmU-UH-plU"/>
+                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="top" secondItem="z3u-Zt-das" secondAttribute="bottom" id="xiS-Dz-Wxg"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ttR-e1-b3Y"/>
                     </view>
@@ -91,27 +103,27 @@
         <scene sceneID="QnM-zG-mBj">
             <objects>
                 <tableViewController storyboardIdentifier="PopupContentController" id="i0p-MR-604" customClass="LocationsController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="90" sectionHeaderHeight="28" sectionFooterHeight="28" id="aJL-nE-WRG">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="90" sectionHeaderHeight="28" sectionFooterHeight="28" id="aJL-nE-WRG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <inset key="scrollIndicatorInsets" minX="0.0" minY="50" maxX="0.0" maxY="0.0"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="pNG-dh-qzg">
+                        <view key="tableHeaderView" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="pNG-dh-qzg">
                             <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for a place or address" translatesAutoresizingMaskIntoConstraints="NO" id="l4J-iT-MKq" customClass="HigherSearchBar" customModule="LNPopupControllerExample" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
+                                    <rect key="frame" x="-2" y="0.0" width="379" height="65"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="65" id="inZ-NR-YbV"/>
                                     </constraints>
-                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 </searchBar>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="trailing" secondItem="l4J-iT-MKq" secondAttribute="trailing" id="Yzw-KL-iIp"/>
-                                <constraint firstItem="l4J-iT-MKq" firstAttribute="leading" secondItem="pNG-dh-qzg" secondAttribute="leading" id="hb9-Mc-IHi"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="l4J-iT-MKq" secondAttribute="trailing" constant="-10" id="Yzw-KL-iIp"/>
+                                <constraint firstItem="l4J-iT-MKq" firstAttribute="leading" secondItem="pNG-dh-qzg" secondAttribute="leadingMargin" constant="-10" id="hb9-Mc-IHi"/>
                                 <constraint firstItem="l4J-iT-MKq" firstAttribute="centerY" secondItem="pNG-dh-qzg" secondAttribute="centerY" id="zfG-mO-IpY"/>
                             </constraints>
                         </view>
@@ -253,35 +265,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ieN-GE-1ur">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="tZE-I0-k1z">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for a place or address" translatesAutoresizingMaskIntoConstraints="NO" id="zJz-wK-6yg" customClass="HigherSearchBar" customModule="LNPopupControllerExample" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="65"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="65" id="eDH-mI-Dgf"/>
-                                            </constraints>
-                                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
-                                        </searchBar>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="zJz-wK-6yg" secondAttribute="trailing" id="K25-bG-kZE"/>
-                                        <constraint firstItem="zJz-wK-6yg" firstAttribute="centerY" secondItem="tZE-I0-k1z" secondAttribute="centerY" id="hBn-o1-yNP"/>
-                                        <constraint firstItem="zJz-wK-6yg" firstAttribute="leading" secondItem="tZE-I0-k1z" secondAttribute="leading" id="ubG-BA-2mt"/>
-                                    </constraints>
-                                </view>
-                                <blurEffect style="light"/>
-                            </visualEffectView>
+                            <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for a place or address" translatesAutoresizingMaskIntoConstraints="NO" id="zJz-wK-6yg" customClass="HigherSearchBar" customModule="LNPopupControllerExample" customModuleProvider="target">
+                                <rect key="frame" x="6" y="0.0" width="363" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="eDH-mI-Dgf"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="top" secondItem="ieN-GE-1ur" secondAttribute="top" id="3Ac-LP-UkZ"/>
-                            <constraint firstItem="ieN-GE-1ur" firstAttribute="leading" secondItem="ldy-mW-kXZ" secondAttribute="leading" id="85g-1O-5d9"/>
-                            <constraint firstAttribute="bottom" secondItem="ieN-GE-1ur" secondAttribute="bottom" id="ACo-kn-ucL"/>
-                            <constraint firstItem="ldy-mW-kXZ" firstAttribute="trailing" secondItem="ieN-GE-1ur" secondAttribute="trailing" id="Xvr-sX-sTg"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="zJz-wK-6yg" secondAttribute="trailing" constant="-10" id="EvB-p6-GVc"/>
+                            <constraint firstAttribute="top" secondItem="zJz-wK-6yg" secondAttribute="top" id="V8B-bo-le0"/>
+                            <constraint firstItem="zJz-wK-6yg" firstAttribute="leading" secondItem="MVX-6E-FSc" secondAttribute="leadingMargin" constant="-10" id="WBI-yr-XwK"/>
+                            <constraint firstAttribute="bottom" secondItem="zJz-wK-6yg" secondAttribute="bottom" id="j8J-rw-bjh"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ldy-mW-kXZ"/>
                     </view>

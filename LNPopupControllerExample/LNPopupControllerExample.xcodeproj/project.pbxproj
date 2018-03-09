@@ -158,9 +158,9 @@
 			isa = PBXGroup;
 			children = (
 				39277A131B58228000293F95 /* Main.storyboard */,
-				397C560B1B74D47D007A67F0 /* Demo Scene (Objective-C) */,
-				397C560C1B74D747007A67F0 /* Demo Music Scene (Swift) */,
-				393F23211E16BEF5000E969D /* Demo Custom Pupup Bar Scene (Swift) */,
+				397C560B1B74D47D007A67F0 /* Demo - Testing Scene (Objective-C) */,
+				397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */,
+				393F23211E16BEF5000E969D /* Demo - Custom Pupup Bar Scene (Swift) */,
 				3908C3491E7C9E8A00451B5D /* Settings */,
 				39837A221B756F9B004D2DA9 /* Utils */,
 				39277A071B58228000293F95 /* Supporting Files */,
@@ -181,7 +181,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		393F23211E16BEF5000E969D /* Demo Custom Pupup Bar Scene (Swift) */ = {
+		393F23211E16BEF5000E969D /* Demo - Custom Pupup Bar Scene (Swift) */ = {
 			isa = PBXGroup;
 			children = (
 				393F23221E16BF1D000E969D /* MapScene.storyboard */,
@@ -190,7 +190,7 @@
 				393F23281E16CF90000E969D /* LocationsController.swift */,
 				393F232A1E16D1E4000E969D /* HigherSearchBar.swift */,
 			);
-			name = "Demo Custom Pupup Bar Scene (Swift)";
+			name = "Demo - Custom Pupup Bar Scene (Swift)";
 			sourceTree = "<group>";
 		};
 		397C56091B74D450007A67F0 /* LoremIpsum */ = {
@@ -210,7 +210,7 @@
 			name = "Swift Bridging Header";
 			sourceTree = "<group>";
 		};
-		397C560B1B74D47D007A67F0 /* Demo Scene (Objective-C) */ = {
+		397C560B1B74D47D007A67F0 /* Demo - Testing Scene (Objective-C) */ = {
 			isa = PBXGroup;
 			children = (
 				39277A0D1B58228000293F95 /* FirstViewController.h */,
@@ -218,10 +218,10 @@
 				399748701D5652250079492B /* DemoPopupContentViewController.h */,
 				399748711D5652250079492B /* DemoPopupContentViewController.m */,
 			);
-			name = "Demo Scene (Objective-C)";
+			name = "Demo - Testing Scene (Objective-C)";
 			sourceTree = "<group>";
 		};
-		397C560C1B74D747007A67F0 /* Demo Music Scene (Swift) */ = {
+		397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */ = {
 			isa = PBXGroup;
 			children = (
 				397C560D1B74DA66007A67F0 /* Music.storyboard */,
@@ -230,7 +230,7 @@
 				397C56291B753A45007A67F0 /* MusicCell.swift */,
 				39837A251B759721004D2DA9 /* PortraitTabBarController.swift */,
 			);
-			name = "Demo Music Scene (Swift)";
+			name = "Demo - Music Scene (Swift)";
 			sourceTree = "<group>";
 		};
 		39837A221B756F9B004D2DA9 /* Utils */ = {
@@ -540,7 +540,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -586,7 +585,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;

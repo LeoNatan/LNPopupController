@@ -10,7 +10,7 @@ import UIKit
 
 @IBDesignable
 class HigherSearchBar: UISearchBar {
-	func _searchFieldHeight() -> CGFloat {
+	@objc func _searchFieldHeight() -> CGFloat {
 		return 35;
 	}
 }
