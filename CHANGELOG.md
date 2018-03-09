@@ -1,9 +1,17 @@
 # Change Log
 
+## [2.5.12](https://github.com/LeoNatan/LNPopupController/tree/2.5.12) (2018-03-09)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.11...2.5.12)
+
+**Fixed Bugs**
+
+- Bug with presenting PopupBar [\#244](https://github.com/LeoNatan/LNPopupController/issues/244)
+- iOS 10.2 tableview footer is not resizing when music toolbar is present [\#235](https://github.com/LeoNatan/LNPopupController/issues/235)
+
 ## [v2.5.11](https://github.com/LeoNatan/LNPopupController/tree/v2.5.11) (2018-02-21)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.10...v2.5.11)
 
-**Closed Issues**
+**Fixed Bugs**
 
 - customBarViewController is nil after dismissPopupBar but still retained by LNPopupBar [\#232](https://github.com/LeoNatan/LNPopupController/issues/232)
 
@@ -24,11 +32,6 @@
 **Fixed Bugs**
 
 - iPhone X landscape labels' overlapping on image [\#229](https://github.com/LeoNatan/LNPopupController/issues/229)
-
-**Closed Issues**
-
-- \[Enhancement\] Shrinking back viewcontroller [\#230](https://github.com/LeoNatan/LNPopupController/issues/230)
-- \[Help\] How to know when PopupContent is presented [\#221](https://github.com/LeoNatan/LNPopupController/issues/221)
 
 ## [v2.5.8](https://github.com/LeoNatan/LNPopupController/tree/v2.5.8) (2018-02-04)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/v2.5.7...v2.5.8)
