@@ -27,7 +27,7 @@ fi
 echo "Updating CHANGELOG"
 
 github_changelog_generator --future-release "$1" --no-verbose
-/usr/libexec/PlistBuddy LNPopupController/Info.plist -c "Set CFBundleShortVersionString $1" -c "Set CFBundleVersion $1"
+/usr/libexec/PlistBuddy LNPopupController/Info.plist -c "Set CFBundleShortVersionString $1" -c "Set CFBundleVersion 1"
 
 git add -A
 git commit -m "$1"
