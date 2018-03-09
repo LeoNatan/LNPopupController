@@ -1,5 +1,15 @@
 # Change Log
 
+## [2.5.15](https://github.com/LeoNatan/LNPopupController/tree/2.5.15) (2018-03-09)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.14...2.5.15)
+
+**Fixed Bugs**
+
+- More hidden bottom bar woes [\#246](https://github.com/LeoNatan/LNPopupController/issues/246)
+
+## [2.5.14](https://github.com/LeoNatan/LNPopupController/tree/2.5.14) (2018-03-09)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.13...2.5.14)
+
 ## [2.5.13](https://github.com/LeoNatan/LNPopupController/tree/2.5.13) (2018-03-09)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.12...2.5.13)
 
