@@ -690,14 +690,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 //_edgeInsetsForChildViewController:insetsAreAbsolute:
 - (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
 {
-	UIEdgeInsets rv = [self _ln_common_eIFCVC:controller iAA:absolute];
-	
-	if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden && [[self valueForKey:@"isBarHidden"] isEqualToNumber:@YES])
-	{
-		rv.bottom -= self._ln_popupController_nocreate.popupBar.frame.size.height;
-	}
-	
-	return rv;
+	return [self _ln_common_eIFCVC:controller iAA:absolute];
 }
 
 - (void)__repositionPopupBarToClosed_hack
@@ -905,14 +898,7 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 //_edgeInsetsForChildViewController:insetsAreAbsolute:
 - (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
 {
-	UIEdgeInsets rv = [self _ln_common_eIFCVC:controller iAA:absolute];
-	
-	if(self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden && self.isToolbarHidden)
-	{
-		rv.bottom -= self._ln_popupController_nocreate.popupBar.frame.size.height;
-	}
-	
-	return rv;
+	return [self _ln_common_eIFCVC:controller iAA:absolute];
 }
 
 //_hideShowNavigationBarDidStop:finished:context:
