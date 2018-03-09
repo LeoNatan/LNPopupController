@@ -276,9 +276,12 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 - (void)_repositionPopupContentMovingBottomBar:(BOOL)bottomBar
 {
-	UIView* relativeViewForContentView = _bottomBar;
-	
 	CGFloat percent = [self _percentFromPopupBarForBottomBarDisplacement];
+	
+	
+	CGFloat barHeight = (_bottomBar.isHidden ? 0 : _bottomBar.bounds.size.height) + _cachedInsets.bottom;
+	CGFloat heightForContent = _containerController.view.bounds.size.height - (1.0 - percent) * barHeight;
+	
 	if(bottomBar)
 	{
 		CGRect bottomBarFrame = _cachedDefaultFrame;
@@ -294,7 +297,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	contentFrame.origin.x = self.popupBar.frame.origin.x;
 	contentFrame.origin.y = self.popupBar.frame.origin.y + self.popupBar.frame.size.height;
 	
-	CGFloat fractionalHeight = relativeViewForContentView.frame.origin.y - (self.popupBar.frame.origin.y + self.popupBar.frame.size.height);
+	CGFloat fractionalHeight = heightForContent - (self.popupBar.frame.origin.y + self.popupBar.frame.size.height);
 	contentFrame.size.height = ceil(fractionalHeight);
 	
 	self.popupContentView.frame = contentFrame;
@@ -326,11 +329,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return __smoothstep(0.00, 1.0, percent);
 }
 
-- (BOOL)_isPresenterNavControllerWithHiddenToolbar
-{
-	return [_containerController isKindOfClass:[UINavigationController class]] && [(UINavigationController*)_containerController isToolbarHidden];
-}
-
 - (void)_setContentToState:(LNPopupPresentationState)state
 {
 	CGRect targetFrame = self.popupBar.frame;
@@ -353,7 +351,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_containerController setNeedsStatusBarAppearanceUpdate];
 	}
 	
-	[self _repositionPopupContentMovingBottomBar:!self._isPresenterNavControllerWithHiddenToolbar];
+	[self _repositionPopupContentMovingBottomBar:YES];
 }
 
 - (void)_transitionToState:(LNPopupPresentationState)state animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
@@ -640,7 +638,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		CGFloat currentCenterY = self.popupBar.center.y;
 		
 		self.popupBar.center = CGPointMake(self.popupBar.center.x, targetCenterY);
-		[self _repositionPopupContentMovingBottomBar:resolvedStyle == LNPopupInteractionStyleDrag && !self._isPresenterNavControllerWithHiddenToolbar];
+		[self _repositionPopupContentMovingBottomBar:resolvedStyle == LNPopupInteractionStyleDrag];
 		_lastSeenMovement = CACurrentMediaTime();
 		
 		[_popupContentView.popupCloseButton _setButtonContainerTransitioning];
