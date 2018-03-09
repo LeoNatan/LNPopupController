@@ -922,18 +922,27 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_movePopupBarAndContentToBottomBarSuperview
 {
-	//	NSAssert(_bottomBar.superview != nil, @"Bottom docking view must have a superview before presenting popup.");
 	[self.popupBar removeFromSuperview];
+	[self.popupContentView removeFromSuperview];
 	
 	if([_bottomBar.superview isKindOfClass:[UIScrollView class]])
 	{
 		NSLog(@"Attempted to present popup bar %@ on top of a UIScrollView subclass %@. This is unsupported and may result in unexpected behavior.", self.popupBar, _bottomBar.superview);
 	}
 	
-	[_bottomBar.superview insertSubview:self.popupBar belowSubview:_bottomBar];
-	[self.popupBar.superview bringSubviewToFront:self.popupBar];
-	[self.popupBar.superview bringSubviewToFront:_bottomBar];
-	[self.popupBar.superview insertSubview:self.popupContentView belowSubview:self.popupBar];
+	if(_bottomBar.superview != nil)
+	{
+		[_bottomBar.superview insertSubview:self.popupBar belowSubview:_bottomBar];
+		[self.popupBar.superview bringSubviewToFront:self.popupBar];
+		[self.popupBar.superview bringSubviewToFront:_bottomBar];
+		[self.popupBar.superview insertSubview:self.popupContentView belowSubview:self.popupBar];
+	}
+	else
+	{
+		[_containerController.view addSubview:self.popupBar];
+		[_containerController.view bringSubviewToFront:self.popupBar];
+		[_containerController.view insertSubview:self.popupContentView belowSubview:self.popupBar];
+	}
 }
 
 - (UIView*)_view:(UIView*)view selfOrSuperviewKindOfClass:(Class)aClass
