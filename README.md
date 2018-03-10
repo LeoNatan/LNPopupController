@@ -203,6 +203,7 @@ Supplying long text for the title and/or subtitle will result in a scrolling tex
 The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition to the bottom of the container controller view. Using `setToolbarHidden:` and `setToolbarHidden:animated:` is also supported.
 
 <img src="./Supplements/hidesBottomBar_TabBar.gif" width="360"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="360"/>
+
 Status bar management of the popup content view controller is respected and applied when appropriate.
 
 <img src="./Supplements/statusbar_style.gif" width="360"/> <img src="./Supplements/statusbar_hidden.gif" width="360"/>
