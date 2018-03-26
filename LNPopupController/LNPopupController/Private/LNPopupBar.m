@@ -589,8 +589,8 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	}
 	
 	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
-	rv.leadingBuffer = 5.0;
-	rv.trailingBuffer = 15.0;
+	rv.leadingBuffer = 0.0;
+	rv.trailingBuffer = 20.0;
 	rv.animationDelay = 2.0;
 	rv.marqueeType = MLContinuous;
 	return rv;
