@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.5.16](https://github.com/LeoNatan/LNPopupController/tree/2.5.16) (2018-03-26)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.15...2.5.16)
+
+**Fixed Bugs**
+
+- Compact bar does not layout titles correctly. [\#247](https://github.com/LeoNatan/LNPopupController/issues/247)
+
 ## [2.5.15](https://github.com/LeoNatan/LNPopupController/tree/2.5.15) (2018-03-09)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.14...2.5.15)
 
