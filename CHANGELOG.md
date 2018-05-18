@@ -1,11 +1,20 @@
 # Change Log
 
+## [2.5.18](https://github.com/LeoNatan/LNPopupController/tree/2.5.18) (2018-05-18)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.17...2.5.18)
+
+**Fixed Bugs**
+
+- Popup View Controller Cannot Swipe Down or Freezes [\#261](https://github.com/LeoNatan/LNPopupController/issues/261)
+- Labels overlapping buttons when UIBarButtonItem has custom view in it [\#260](https://github.com/LeoNatan/LNPopupController/issues/260)
+- Chevron not hidden when navigation controller bar is hidden [\#254](https://github.com/LeoNatan/LNPopupController/issues/254)
+
 ## [2.5.17](https://github.com/LeoNatan/LNPopupController/tree/2.5.17) (2018-05-18)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.16...2.5.17)
 
 **Fixed Bugs**
 
-- Question regarding opening animation completion [\#264](https://github.com/LeoNatan/LNPopupController/issues/264)
+- Navigation bar is updated without animation on status bar hiding/showing [\#264](https://github.com/LeoNatan/LNPopupController/issues/264)
 
 ## [2.5.16](https://github.com/LeoNatan/LNPopupController/tree/2.5.16) (2018-03-26)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.15...2.5.16)
