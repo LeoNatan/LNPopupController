@@ -1,5 +1,17 @@
 # Change Log
 
+## [2.5.17](https://github.com/LeoNatan/LNPopupController/tree/2.5.17) (2018-05-18)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.16...2.5.17)
+
+**Fixed Bugs**
+
+- Question regarding opening animation completion [\#264](https://github.com/LeoNatan/LNPopupController/issues/264)
+
+**Closed Issues**
+
+- dismissPopupBarAnimated does not call completionBlock when popupControllerState is hidden [\#258](https://github.com/LeoNatan/LNPopupController/issues/258)
+- Updating progressBar [\#257](https://github.com/LeoNatan/LNPopupController/issues/257)
+
 ## [2.5.16](https://github.com/LeoNatan/LNPopupController/tree/2.5.16) (2018-03-26)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.15...2.5.16)
 
