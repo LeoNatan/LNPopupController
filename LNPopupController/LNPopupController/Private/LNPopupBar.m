@@ -632,9 +632,37 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	UIView* leftmostViewRight;
 	UIView* rightmostViewRight;
 	[self _getLeftmostView:&leftmostViewRight rightmostView:&rightmostViewRight fromBarButtonItems:self.rightBarButtonItems];
+
+	if(@available(iOS 11, *))
+	{
+		[leftmostViewLeft.superview layoutIfNeeded];
+		[rightmostViewLeft.superview layoutIfNeeded];
+		[leftmostViewRight.superview layoutIfNeeded];
+		[rightmostViewRight.superview layoutIfNeeded];
+	}
+	else
+	{
+		[leftmostViewLeft sizeToFit];
+		[rightmostViewLeft sizeToFit];
+		[leftmostViewRight sizeToFit];
+		[rightmostViewRight sizeToFit];
+	}
 	
-	CGFloat widthLeft = rightmostViewLeft.frame.origin.x + rightmostViewLeft.frame.size.width - leftmostViewLeft.frame.origin.x;
-	CGFloat widthRight = rightmostViewRight.frame.origin.x + rightmostViewRight.frame.size.width - leftmostViewRight.frame.origin.x;
+	CGRect leftmostViewLeftFrame = leftmostViewLeft.frame;
+	CGRect rightmostViewLeftFrame = rightmostViewLeft.frame;
+	CGRect leftmostViewRightFrame = leftmostViewRight.frame;
+	CGRect rightmostViewRightFrame = rightmostViewRight.frame;
+	
+	if(@available(iOS 11, *))
+	{
+		leftmostViewLeftFrame = [self convertRect:leftmostViewLeftFrame fromView:leftmostViewLeft];
+		rightmostViewLeftFrame = [self convertRect:rightmostViewLeftFrame fromView:rightmostViewLeft];
+		leftmostViewRightFrame = [self convertRect:leftmostViewRightFrame fromView:leftmostViewRight];
+		rightmostViewRightFrame = [self convertRect:rightmostViewRightFrame fromView:rightmostViewRight];
+	}
+	
+	CGFloat widthLeft = rightmostViewLeftFrame.origin.x + rightmostViewLeftFrame.size.width - leftmostViewLeftFrame.origin.x;
+	CGFloat widthRight = rightmostViewRightFrame.origin.x + rightmostViewRightFrame.size.width - leftmostViewRightFrame.origin.x;
 	
 	if(@available(iOS 11, *))
 	{
@@ -663,7 +691,26 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	
 	[self _getLeftmostView:&leftmostView rightmostView:&rightmostView fromBarButtonItems:allItems];
 	
-	CGFloat width = rightmostView.frame.origin.x + rightmostView.frame.size.width - leftmostView.frame.origin.x;
+	if(@available(iOS 11, *))
+	{
+		[leftmostView.superview layoutIfNeeded];
+		[rightmostView.superview layoutIfNeeded];
+	}
+	else
+	{
+		[leftmostView sizeToFit];
+		[rightmostView sizeToFit];
+	}
+	
+	CGRect leftmostViewFrame = leftmostView.frame;
+	CGRect rightmostViewFrame = rightmostView.frame;
+	if(@available(iOS 11, *))
+	{
+		leftmostViewFrame = [self convertRect:leftmostViewFrame fromView:leftmostView];
+		rightmostViewFrame = [self convertRect:rightmostViewFrame fromView:rightmostView];
+	}
+	
+	CGFloat width = rightmostViewFrame.origin.x + rightmostViewFrame.size.width - leftmostViewFrame.origin.x;
 	if(@available(iOS 11, *))
 	{
 		width += self.window.safeAreaInsets.right;
