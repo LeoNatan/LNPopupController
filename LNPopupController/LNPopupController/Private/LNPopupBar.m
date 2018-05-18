@@ -696,29 +696,11 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		[leftmostView.superview layoutIfNeeded];
 		[rightmostView.superview layoutIfNeeded];
 	}
-	else
-	{
-		[leftmostView sizeToFit];
-		[rightmostView sizeToFit];
-	}
 	
-	CGRect leftmostViewFrame = leftmostView.frame;
-	CGRect rightmostViewFrame = rightmostView.frame;
-	if(@available(iOS 11, *))
-	{
-		leftmostViewFrame = [self convertRect:leftmostViewFrame fromView:leftmostView];
-		rightmostViewFrame = [self convertRect:rightmostViewFrame fromView:rightmostView];
-	}
+	CGRect leftmostViewFrame = [self convertRect:leftmostView.bounds fromView:leftmostView];
 	
-	CGFloat width = rightmostViewFrame.origin.x + rightmostViewFrame.size.width - leftmostViewFrame.origin.x;
-	if(@available(iOS 11, *))
-	{
-		width += self.window.safeAreaInsets.right;
-	}
-	else
-	{
-		width += 2 * self.layoutMargins.right;
-	}
+	CGFloat width = self.bounds.size.width - leftmostViewFrame.origin.x;
+	
 	titleInsets->right += width;
 }
 
