@@ -441,6 +441,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		 }
 		 
 		 [self _setContentToState:state];
+		 [_containerController.view layoutIfNeeded];
 	 } completion:^(BOOL finished)
 	 {
 		 if(state != LNPopupPresentationStateTransitioning)
