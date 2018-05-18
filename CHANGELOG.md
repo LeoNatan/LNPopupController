@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.5.19](https://github.com/LeoNatan/LNPopupController/tree/2.5.19) (2018-05-18)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.18...2.5.19)
+
+**Closed Issues**
+
+- Navigation Bar and Status Bar Issue [\#267](https://github.com/LeoNatan/LNPopupController/issues/267)
+
 ## [2.5.18](https://github.com/LeoNatan/LNPopupController/tree/2.5.18) (2018-05-18)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.17...2.5.18)
 
