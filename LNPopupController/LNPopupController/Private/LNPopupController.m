@@ -256,6 +256,9 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		
 		_popupControllerState = LNPopupPresentationStateHidden;
 		_popupControllerTargetState = LNPopupPresentationStateHidden;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 	}
 	
 	return self;
@@ -371,17 +374,15 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	UIViewController* contentController = _containerController.popupContentViewController;
-	
 	if(_popupControllerState == LNPopupPresentationStateClosed)
 	{
-		[contentController beginAppearanceTransition:YES animated:NO];
+		[_currentContentController beginAppearanceTransition:YES animated:NO];
 		[UIView performWithoutAnimation:^{
-			contentController.view.frame = _containerController.view.bounds;
-			contentController.view.clipsToBounds = NO;
-			contentController.view.autoresizingMask = UIViewAutoresizingNone;
+			_currentContentController.view.frame = _containerController.view.bounds;
+			_currentContentController.view.clipsToBounds = NO;
+			_currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 			
-			if(CGColorGetAlpha(contentController.view.backgroundColor.CGColor) < 1.0)
+			if(CGColorGetAlpha(_currentContentController.view.backgroundColor.CGColor) < 1.0)
 			{
 				//Support for iOS8, where this property was exposed as readonly.
 				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:self.popupBar.backgroundStyle] forKey:@"effect"];
@@ -399,13 +400,13 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				}
 			}
 			
-			[self.popupContentView.contentView addSubview:contentController.view];
-			[self.popupContentView.contentView sendSubviewToBack:contentController.view];
+			[self.popupContentView.contentView addSubview:_currentContentController.view];
+			[self.popupContentView.contentView sendSubviewToBack:_currentContentController.view];
 			
 			[self.popupContentView.contentView setNeedsLayout];
 			[self.popupContentView.contentView layoutIfNeeded];
 		}];
-		[contentController endAppearanceTransition];
+		[_currentContentController endAppearanceTransition];
 	};
 	
 	_popupControllerState = LNPopupPresentationStateTransitioning;
@@ -436,7 +437,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		 
 		 if(state == LNPopupPresentationStateClosed)
 		 {
-			 [contentController beginAppearanceTransition:NO animated:YES];
+			 [_currentContentController beginAppearanceTransition:NO animated:YES];
 		 }
 		 
 		 [self _setContentToState:state];
@@ -450,12 +451,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		 
 		 if(state == LNPopupPresentationStateClosed)
 		 {
-			 [contentController.view removeFromSuperview];
-			 [contentController endAppearanceTransition];
+			 [_currentContentController.view removeFromSuperview];
+			 [_currentContentController endAppearanceTransition];
 			 
-			 [self _cleanupGestureRecognizersForController:contentController];
+			 [self _cleanupGestureRecognizersForController:_currentContentController];
 			 
-			 [contentController.viewForPopupInteractionGestureRecognizer removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+			 [_currentContentController.viewForPopupInteractionGestureRecognizer removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 			 [self.popupBar addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 			 
 			 [self.popupBar _setTitleViewMarqueesPaused:NO];
@@ -468,8 +469,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			 [self.popupBar _setTitleViewMarqueesPaused:YES];
 			 
 			 [self.popupBar removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-			 [contentController.viewForPopupInteractionGestureRecognizer addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-			 [self _fixupGestureRecognizersForController:contentController];
+			 [_currentContentController.viewForPopupInteractionGestureRecognizer addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+			 [self _fixupGestureRecognizersForController:_currentContentController];
 			 
 			 _popupContentView.accessibilityViewIsModal = YES;
 			 UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _popupContentView.popupCloseButton);
@@ -1145,9 +1146,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
-	
 	_LNPopupTransitionCoordinator* coordinator = [_LNPopupTransitionCoordinator new];
 	[_containerController.popupContentViewController willTransitionToTraitCollection:_containerController.traitCollection withTransitionCoordinator:coordinator];
 	[_containerController.popupContentViewController viewWillTransitionToSize:_containerController.view.bounds.size withTransitionCoordinator:coordinator];
@@ -1264,8 +1262,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				 self.popupBar.frame = barFrame;
 				 
 				 _LNPopupSupportFixInsetsForViewController(_containerController, YES, - oldHeight);
-			 } completion:^(BOOL finished)
-			 {
+			 } completion:^(BOOL finished) {
 				 _popupControllerState = LNPopupPresentationStateHidden;
 				 
 				 CGRect bottomBarFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
@@ -1282,9 +1279,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				 self.popupContentView = nil;
 				 
 				 _LNPopupSupportFixInsetsForViewController(_containerController, YES, 0);
-				 
-				 [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-				 [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 				 
 				 _currentContentController = nil;
 				 
@@ -1324,7 +1318,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)_applicationWillEnterForeground
 {
-	[self.popupBar _setTitleViewMarqueesPaused:NO];
+	[self.popupBar _setTitleViewMarqueesPaused:_popupControllerState != LNPopupPresentationStateClosed];
 }
 
 #pragma mark UIViewControllerPreviewingDelegate
