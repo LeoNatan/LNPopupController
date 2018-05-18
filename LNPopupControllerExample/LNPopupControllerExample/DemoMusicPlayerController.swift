@@ -38,8 +38,6 @@ class DemoMusicPlayerController: UIViewController {
 		}
 		
 		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
-		
-		timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 	}
 	
 	var songTitle: String = "" {
@@ -77,6 +75,8 @@ class DemoMusicPlayerController: UIViewController {
 		songNameLabel.text = songTitle
 		albumNameLabel.text = albumTitle
 		albumArtImageView.image = albumArt
+		
+		timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 	}
 	
 	@objc func _timerTicked(_ timer: Timer) {
