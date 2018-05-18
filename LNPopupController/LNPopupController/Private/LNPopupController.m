@@ -278,7 +278,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 {
 	CGFloat percent = [self _percentFromPopupBarForBottomBarDisplacement];
 	
-	
 	CGFloat barHeight = (_bottomBar.isHidden ? 0 : _bottomBar.bounds.size.height) + _cachedInsets.bottom;
 	CGFloat heightForContent = _containerController.view.bounds.size.height - (1.0 - percent) * barHeight;
 	
@@ -297,7 +296,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	contentFrame.origin.x = self.popupBar.frame.origin.x;
 	contentFrame.origin.y = self.popupBar.frame.origin.y + self.popupBar.frame.size.height;
 	
-	CGFloat fractionalHeight = heightForContent - (self.popupBar.frame.origin.y + self.popupBar.frame.size.height);
+	CGFloat fractionalHeight = MAX(heightForContent - (self.popupBar.frame.origin.y + self.popupBar.frame.size.height), 0);
 	contentFrame.size.height = ceil(fractionalHeight);
 	
 	self.popupContentView.frame = contentFrame;
