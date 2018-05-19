@@ -221,7 +221,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 @implementation LNPopupController
 {
 	__weak LNPopupItem* _currentPopupItem;
-	__weak __kindof UIViewController* _currentContentController;
+	__kindof UIViewController* _currentContentController;
 	
 	BOOL _dismissGestureStarted;
 	CGFloat _dismissStartingOffset;
@@ -832,28 +832,41 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		CGRect oldContentViewFrame = _currentContentController.view.frame;
 		
-		[newContentController beginAppearanceTransition:YES animated:NO];
+		if(_popupControllerState > LNPopupPresentationStateClosed)
+		{
+			[oldContentController beginAppearanceTransition:NO animated:NO];
+			[newContentController beginAppearanceTransition:YES animated:NO];
+		}
+		
 		_LNPopupTransitionCoordinator* coordinator = [_LNPopupTransitionCoordinator new];
 		[newContentController willTransitionToTraitCollection:_containerController.traitCollection withTransitionCoordinator:coordinator];
 		[newContentController viewWillTransitionToSize:_containerController.view.bounds.size withTransitionCoordinator:coordinator];
 		newContentController.view.frame = oldContentViewFrame;
 		newContentController.view.clipsToBounds = NO;
-		[self.popupContentView.contentView insertSubview:newContentController.view belowSubview:oldContentController.view];
-		[newContentController endAppearanceTransition];
-		
-		[oldContentController beginAppearanceTransition:NO animated:NO];
-		[oldContentController.view removeFromSuperview];
-		[oldContentController endAppearanceTransition];
-		
-		_currentContentController = newContentController;
-		
-		if(_popupControllerState == LNPopupPresentationStateOpen)
+		if(oldContentController != nil)
 		{
+			[self.popupContentView.contentView insertSubview:newContentController.view belowSubview:oldContentController.view];
+		}
+		else
+		{
+			[self.popupContentView.contentView addSubview:newContentController.view];
+			[self.popupContentView.contentView sendSubviewToBack:newContentController.view];
+		}
+		
+		[oldContentController.view removeFromSuperview];
+		
+		if(_popupControllerState > LNPopupPresentationStateClosed)
+		{
+			[oldContentController endAppearanceTransition];
+			[newContentController endAppearanceTransition];
+	
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
 			
 			[self _cleanupGestureRecognizersForController:oldContentController];
-			[self _fixupGestureRecognizersForController:_currentContentController];
+			[self _fixupGestureRecognizersForController:newContentController];
 		}
+		
+		_currentContentController = newContentController;
 	}
 	
 	if(self.popupBar.customBarViewController != nil)
