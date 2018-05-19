@@ -1,5 +1,12 @@
 # Change Log
 
+## [2.5.20](https://github.com/LeoNatan/LNPopupController/tree/2.5.20) (2018-05-19)
+[Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.19...2.5.20)
+
+**Fixed Bugs**
+
+- viewWillAppear and viewDidAppear called twice  [\#268](https://github.com/LeoNatan/LNPopupController/issues/268)
+
 ## [2.5.19](https://github.com/LeoNatan/LNPopupController/tree/2.5.19) (2018-05-18)
 [Full Changelog](https://github.com/LeoNatan/LNPopupController/compare/2.5.18...2.5.19)
 
