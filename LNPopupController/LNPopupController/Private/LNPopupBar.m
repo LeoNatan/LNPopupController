@@ -605,6 +605,8 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		itemView = itemView.superview;
 	}
 	
+//	itemView.backgroundColor = UIColor.greenColor;
+	
 	return itemView;
 }
 
@@ -640,40 +642,30 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		[leftmostViewRight.superview layoutIfNeeded];
 		[rightmostViewRight.superview layoutIfNeeded];
 	}
-	else
+	
+	CGRect rightmostViewLeftFrame = CGRectZero;
+	if(rightmostViewLeft != nil)
 	{
-		[leftmostViewLeft sizeToFit];
-		[rightmostViewLeft sizeToFit];
-		[leftmostViewRight sizeToFit];
-		[rightmostViewRight sizeToFit];
+		rightmostViewLeftFrame = [self convertRect:rightmostViewLeft.bounds fromView:rightmostViewLeft];
 	}
 	
-	CGRect leftmostViewLeftFrame = leftmostViewLeft.frame;
-	CGRect rightmostViewLeftFrame = rightmostViewLeft.frame;
-	CGRect leftmostViewRightFrame = leftmostViewRight.frame;
-	CGRect rightmostViewRightFrame = rightmostViewRight.frame;
-	
-	if(@available(iOS 11, *))
+	CGRect leftmostViewRightFrame = CGRectMake(self.bounds.size.width, 0, 0, 0);
+	if(leftmostViewRight != nil)
 	{
-		leftmostViewLeftFrame = [self convertRect:leftmostViewLeftFrame fromView:leftmostViewLeft];
-		rightmostViewLeftFrame = [self convertRect:rightmostViewLeftFrame fromView:rightmostViewLeft];
-		leftmostViewRightFrame = [self convertRect:leftmostViewRightFrame fromView:leftmostViewRight];
-		rightmostViewRightFrame = [self convertRect:rightmostViewRightFrame fromView:rightmostViewRight];
+		leftmostViewRightFrame = [self convertRect:leftmostViewRight.bounds fromView:leftmostViewRight];
 	}
 	
-	CGFloat widthLeft = rightmostViewLeftFrame.origin.x + rightmostViewLeftFrame.size.width - leftmostViewLeftFrame.origin.x;
-	CGFloat widthRight = rightmostViewRightFrame.origin.x + rightmostViewRightFrame.size.width - leftmostViewRightFrame.origin.x;
+	CGFloat widthLeft = rightmostViewLeftFrame.origin.x + rightmostViewLeftFrame.size.width;
+	CGFloat widthRight = self.bounds.size.width - leftmostViewRightFrame.origin.x;
 	
-	if(@available(iOS 11, *))
+	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
 	{
-		widthLeft += self.window.safeAreaInsets.left;
-		widthRight += self.window.safeAreaInsets.right;
+		widthLeft += 8;
+		widthRight += 8;
 	}
-	else
-	{
-		widthLeft += 1.5 * self.layoutMargins.left;
-		widthRight += 1.5 * self.layoutMargins.right;
-	}
+	
+	widthLeft = MAX(widthLeft, self.layoutMargins.left);
+	widthRight = MAX(widthRight, self.layoutMargins.right);
 	
 	//The added padding is for iOS 10 and below, or for certain conditions where iOS 11 won't put its own padding
 	titleInsets->left = widthLeft;
@@ -697,9 +689,21 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		[rightmostView.superview layoutIfNeeded];
 	}
 	
-	CGRect leftmostViewFrame = [self convertRect:leftmostView.bounds fromView:leftmostView];
+	CGRect leftmostViewFrame = CGRectMake(self.bounds.size.width, 0, 0, 0);
+	if(leftmostView != nil)
+	{
+		leftmostViewFrame = [self convertRect:leftmostView.bounds fromView:leftmostView];
+		
+		//Account for an additional size iOS 11 adds to bar button items.
+		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 11 && [leftmostView isKindOfClass:NSClassFromString(_LNPopupDecodeBase64String(@"X1VJQnV0dG9uQmFyQnV0dG9u"))])
+		{
+			leftmostViewFrame.origin.x += (self.layoutMargins.left / 2);
+		}
+	}
 	
 	CGFloat width = self.bounds.size.width - leftmostViewFrame.origin.x;
+	
+	width = MAX(width, self.layoutMargins.right);
 	
 	titleInsets->right += width;
 }
