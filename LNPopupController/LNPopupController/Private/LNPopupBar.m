@@ -627,14 +627,25 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 
 - (void)_updateTitleInsetsForCompactBar:(UIEdgeInsets*)titleInsets
 {
+	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
+	
 	UIView* leftmostViewLeft;
 	UIView* rightmostViewLeft;
-	[self _getLeftmostView:&leftmostViewLeft rightmostView:&rightmostViewLeft fromBarButtonItems:self.leftBarButtonItems];
 	
 	UIView* leftmostViewRight;
 	UIView* rightmostViewRight;
-	[self _getLeftmostView:&leftmostViewRight rightmostView:&rightmostViewRight fromBarButtonItems:self.rightBarButtonItems];
-
+	
+	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		[self _getLeftmostView:&leftmostViewLeft rightmostView:&rightmostViewLeft fromBarButtonItems:self.leftBarButtonItems];
+		[self _getLeftmostView:&leftmostViewRight rightmostView:&rightmostViewRight fromBarButtonItems:self.rightBarButtonItems];
+	}
+	else
+	{
+		[self _getLeftmostView:&rightmostViewLeft rightmostView:&leftmostViewLeft fromBarButtonItems:self.leftBarButtonItems];
+		[self _getLeftmostView:&rightmostViewRight rightmostView:&leftmostViewRight fromBarButtonItems:self.rightBarButtonItems];
+	}
+	
 	if(@available(iOS 11, *))
 	{
 		[leftmostViewLeft.superview layoutIfNeeded];
@@ -655,8 +666,19 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		leftmostViewRightFrame = [self convertRect:leftmostViewRight.bounds fromView:leftmostViewRight];
 	}
 	
-	CGFloat widthLeft = rightmostViewLeftFrame.origin.x + rightmostViewLeftFrame.size.width;
-	CGFloat widthRight = self.bounds.size.width - leftmostViewRightFrame.origin.x;
+	CGFloat widthLeft = 0;
+	CGFloat widthRight = 0;
+	
+	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		widthLeft = rightmostViewLeftFrame.origin.x + rightmostViewLeftFrame.size.width;
+		widthRight = self.bounds.size.width - leftmostViewRightFrame.origin.x;
+	}
+	else
+	{
+		widthRight = leftmostViewRightFrame.origin.x + leftmostViewRightFrame.size.width;
+		widthLeft = self.bounds.size.width - rightmostViewLeftFrame.origin.x;
+	}
 	
 	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
 	{
@@ -674,14 +696,23 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 
 - (void)_updateTitleInsetsForProminentBar:(UIEdgeInsets*)titleInsets
 {
+	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
+	
 	UIView* leftmostView;
 	UIView* rightmostView;
 	
 	NSMutableArray* allItems = [NSMutableArray new];
 	[allItems addObjectsFromArray:self.leftBarButtonItems];
 	[allItems addObjectsFromArray:self.rightBarButtonItems];
-	
-	[self _getLeftmostView:&leftmostView rightmostView:&rightmostView fromBarButtonItems:allItems];
+
+	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		[self _getLeftmostView:&leftmostView rightmostView:&rightmostView fromBarButtonItems:allItems];
+	}
+	else
+	{
+		[self _getLeftmostView:&rightmostView rightmostView:&leftmostView fromBarButtonItems:allItems];
+	}
 	
 	if(@available(iOS 11, *))
 	{
@@ -693,15 +724,17 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 	if(leftmostView != nil)
 	{
 		leftmostViewFrame = [self convertRect:leftmostView.bounds fromView:leftmostView];
-		
-		//Account for an additional size iOS 11 adds to bar button items.
-		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 11 && [leftmostView isKindOfClass:NSClassFromString(_LNPopupDecodeBase64String(@"X1VJQnV0dG9uQmFyQnV0dG9u"))])
-		{
-			leftmostViewFrame.origin.x += (self.layoutMargins.left / 2);
-		}
 	}
 	
-	CGFloat width = self.bounds.size.width - leftmostViewFrame.origin.x;
+	CGFloat width;
+	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		width = self.bounds.size.width - leftmostViewFrame.origin.x;
+	}
+	else
+	{
+		width = leftmostViewFrame.origin.x + leftmostViewFrame.size.width;
+	}
 	
 	width = MAX(width, self.layoutMargins.right);
 	

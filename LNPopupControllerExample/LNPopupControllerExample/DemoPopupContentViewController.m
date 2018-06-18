@@ -32,6 +32,12 @@
 	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
 	play.accessibilityIdentifier = @"PlayButton";
 	play.accessibilityTraits = UIAccessibilityTraitButton;
+	
+	UIBarButtonItem* stop = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"stop"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+	stop.accessibilityLabel = NSLocalizedString(@"Stop", @"");
+	stop.accessibilityIdentifier = @"StopButton";
+	stop.accessibilityTraits = UIAccessibilityTraitButton;
+	
 	UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nextFwd"] style:UIBarButtonItemStylePlain target:nil action:NULL];
 	next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
 	next.accessibilityIdentifier = @"NextButton";
@@ -41,7 +47,7 @@
 	   || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10)
 	{
 		self.popupItem.leftBarButtonItems = @[ play ];
-		self.popupItem.rightBarButtonItems = @[ next ];
+		self.popupItem.rightBarButtonItems = @[ next, stop ];
 	}
 	else
 	{
