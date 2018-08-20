@@ -996,13 +996,15 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		_popupCloseButtonTopConstraint.constant += (_containerController.popupContentViewController.prefersStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
 	}
 	
-    if (_popupContentView.popupCloseButtonMoveForNavigationBars){
-        id hitTest = [[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
-        UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
-        if(possibleBar)
-        {
+    
+    id hitTest = [[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
+    UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
+    if(possibleBar)
+    {
+        if (_popupContentView.popupCloseButtonMoveForNavigationBars)
             _popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
-        }
+        else
+            _popupCloseButtonTopConstraint.constant += 6;
     }
 	
 	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
