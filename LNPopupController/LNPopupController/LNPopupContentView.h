@@ -34,6 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, strong, readonly) LNPopupCloseButton* popupCloseButton;
 
+/**
+ * Move close button under navigation bars
+ */
+@property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars;
+
 @end
 
 NS_ASSUME_NONNULL_END

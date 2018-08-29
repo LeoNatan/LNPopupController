@@ -162,6 +162,8 @@ static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
 		_effectView.frame = self.bounds;
 		_effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[self addSubview:_effectView];
+        
+        _popupCloseButtonAutomaticallyUnobstructsTopBars = YES;
 	}
 	
 	return self;
@@ -994,12 +996,16 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		_popupCloseButtonTopConstraint.constant += (_containerController.popupContentViewController.prefersStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
 	}
 	
-	id hitTest = [[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
-	UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
-	if(possibleBar)
-	{
-		_popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
-	}
+    
+    id hitTest = [[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
+    UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
+    if(possibleBar)
+    {
+        if (_popupContentView.popupCloseButtonAutomaticallyUnobstructsTopBars)
+            _popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
+        else
+            _popupCloseButtonTopConstraint.constant += 6;
+    }
 	
 	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
 	{
