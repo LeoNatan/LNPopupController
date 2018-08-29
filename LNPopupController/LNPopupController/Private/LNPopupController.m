@@ -163,7 +163,7 @@ static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
 		_effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[self addSubview:_effectView];
         
-        _popupCloseButtonMoveForNavigationBars = YES;
+        _popupCloseButtonAutomaticallyUnobstructsTopBars = YES;
 	}
 	
 	return self;
@@ -1001,7 +1001,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
     UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
     if(possibleBar)
     {
-        if (_popupContentView.popupCloseButtonMoveForNavigationBars)
+        if (_popupContentView.popupCloseButtonAutomaticallyUnobstructsTopBars)
             _popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
         else
             _popupCloseButtonTopConstraint.constant += 6;

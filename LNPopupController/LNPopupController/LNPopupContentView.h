@@ -37,7 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Move close button under navigation bars
  */
-@property (nonatomic) BOOL popupCloseButtonMoveForNavigationBars;
+@property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars;
 
 @end
 
