@@ -25,7 +25,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		popupContentView.popupCloseButtonStyle = .none
 		popupInteractionStyle = .snap
 		
-		popupContentVC = storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController
+		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)
 		popupContentVC.tableView.backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
 		
 		DispatchQueue.main.async {
