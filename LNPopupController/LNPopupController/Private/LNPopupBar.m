@@ -262,8 +262,8 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		[_toolbar addSubview:_imageView];
 		
 		_shadowView = [UIView new];
-		_shadowView.backgroundColor = [UIColor colorWithWhite:169.0 / 255.0 alpha:1.0];
-		[self addSubview:_shadowView];
+		_shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+		[_backgroundView.contentView addSubview:_shadowView];
 		
 		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -320,7 +320,7 @@ static UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBa
 		//	[_toolbar bringSubviewToFront:_titlesView];
 		[self bringSubviewToFront:_shadowView];
 		
-		_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.nativeScale);
+		_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
 		
 		[self _layoutTitles];
 	}];
