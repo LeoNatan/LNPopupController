@@ -545,7 +545,46 @@ static void __accessibilityBundleLoadHandler()
 
 @end
 
-void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOOL layout, CGFloat additionalSafeAreaInsetsBottom)
+static inline void _LNPopupSupportFixInsetsForViewController_modern(UIViewController* controller, BOOL layout, CGFloat additionalSafeAreaInsetsBottom) API_AVAILABLE(ios(12.0))
+{
+#ifndef LNPopupControllerEnforceStrictClean
+	static NSString* selName;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		//_updateContentOverlayInsetsForSelfAndChildren
+		selName = _LNPopupDecodeBase64String(upCoOvBase64);
+	});
+
+	void (*dispatchMethod)(id, SEL) = (void(*)(id, SEL))objc_msgSend;
+	dispatchMethod(controller, NSSelectorFromString(selName));
+	
+	if([controller isKindOfClass:UITabBarController.class] || [controller isKindOfClass:UINavigationController.class])
+	{
+		[controller.childViewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
+			_LNPopupSupportFixInsetsForViewController(obj, NO, 0);
+			
+			UIEdgeInsets insets = obj.additionalSafeAreaInsets;
+			insets.bottom += additionalSafeAreaInsetsBottom;
+			obj.additionalSafeAreaInsets = insets;
+		}];
+	}
+	else
+	{
+		UIEdgeInsets insets = controller.additionalSafeAreaInsets;
+		insets.bottom += additionalSafeAreaInsetsBottom;
+		controller.additionalSafeAreaInsets = insets;
+	}
+	
+	if(layout)
+	{
+		[controller.view setNeedsUpdateConstraints];
+		[controller.view setNeedsLayout];
+		[controller.view layoutIfNeeded];
+	}
+#endif
+}
+
+static inline void _LNPopupSupportFixInsetsForViewController_legacy(UIViewController* controller, BOOL layout, CGFloat additionalSafeAreaInsetsBottom)
 {
 #ifndef LNPopupControllerEnforceStrictClean
 	static NSString* selName;
@@ -578,6 +617,18 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		[controller.view layoutIfNeeded];
 	}
 #endif
+}
+
+void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOOL layout, CGFloat additionalSafeAreaInsetsBottom)
+{
+	if (@available(iOS 12.0, *))
+	{
+		_LNPopupSupportFixInsetsForViewController_modern(controller, layout, additionalSafeAreaInsetsBottom);
+	}
+	else
+	{
+		_LNPopupSupportFixInsetsForViewController_legacy(controller, layout, additionalSafeAreaInsetsBottom);
+	}
 }
 
 @interface UITabBarController (LNPopupSupportPrivate) @end
