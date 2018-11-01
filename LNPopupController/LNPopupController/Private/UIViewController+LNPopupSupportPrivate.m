@@ -363,6 +363,8 @@ static void __accessibilityBundleLoadHandler()
 //_updateContentOverlayInsetsFromParentIfNecessary
 - (void)_uCOIFPIN
 {
+	_LNPopupSupportFixInsetsForViewController(self, NO, 0);
+	
 	[self _uCOIFPIN];
 }
 
@@ -548,31 +550,39 @@ static void __accessibilityBundleLoadHandler()
 static inline void _LNPopupSupportFixInsetsForViewController_modern(UIViewController* controller, BOOL layout, CGFloat additionalSafeAreaInsetsBottom) API_AVAILABLE(ios(12.0))
 {
 #ifndef LNPopupControllerEnforceStrictClean
-	static NSString* selName;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		//_updateContentOverlayInsetsForSelfAndChildren
-		selName = _LNPopupDecodeBase64String(upCoOvBase64);
-	});
-
-	void (*dispatchMethod)(id, SEL) = (void(*)(id, SEL))objc_msgSend;
-	dispatchMethod(controller, NSSelectorFromString(selName));
+//	static NSString* selName;
+//	static dispatch_once_t onceToken;
+//	dispatch_once(&onceToken, ^{
+//		//_updateContentOverlayInsetsForSelfAndChildren
+//		selName = _LNPopupDecodeBase64String(upCoOvBase64);
+//	});
+//
+//	void (*dispatchMethod)(id, SEL) = (void(*)(id, SEL))objc_msgSend;
+//	dispatchMethod(controller, NSSelectorFromString(selName));
 	
 	if([controller isKindOfClass:UITabBarController.class] || [controller isKindOfClass:UINavigationController.class])
 	{
 		[controller.childViewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
-			_LNPopupSupportFixInsetsForViewController(obj, NO, 0);
+			_LNPopupSupportFixInsetsForViewController_modern(obj, NO, 0);
 			
-			UIEdgeInsets insets = obj.additionalSafeAreaInsets;
+			UIEdgeInsets oldInsets = obj.additionalSafeAreaInsets;
+			UIEdgeInsets insets = oldInsets;
 			insets.bottom += additionalSafeAreaInsetsBottom;
-			obj.additionalSafeAreaInsets = insets;
+			if(UIEdgeInsetsEqualToEdgeInsets(oldInsets, insets) == NO)
+			{
+				obj.additionalSafeAreaInsets = insets;
+			}
 		}];
 	}
 	else
 	{
-		UIEdgeInsets insets = controller.additionalSafeAreaInsets;
+		UIEdgeInsets oldInsets = controller.additionalSafeAreaInsets;
+		UIEdgeInsets insets = oldInsets;
 		insets.bottom += additionalSafeAreaInsetsBottom;
-		controller.additionalSafeAreaInsets = insets;
+		if(UIEdgeInsetsEqualToEdgeInsets(oldInsets, insets) == NO)
+		{
+			controller.additionalSafeAreaInsets = insets;
+		}
 	}
 	
 	if(layout)
@@ -598,7 +608,7 @@ static inline void _LNPopupSupportFixInsetsForViewController_legacy(UIViewContro
 	dispatchMethod(controller, NSSelectorFromString(selName));
 	
 	[controller.childViewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
-		_LNPopupSupportFixInsetsForViewController(obj, NO, 0);
+		_LNPopupSupportFixInsetsForViewController_legacy(obj, NO, 0);
 	}];
 	
 	if (@available(iOS 11.0, *)) {
@@ -685,6 +695,10 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		
 		m1 = class_getInstanceMethod([self class], @selector(childViewControllerForStatusBarHidden));
 		m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarHidden));
+		method_exchangeImplementations(m1, m2);
+		
+		m1 = class_getInstanceMethod([self class], @selector(setViewControllers:animated:));
+		m2 = class_getInstanceMethod([self class], @selector(_ln_setViewControllers:animated:));
 		method_exchangeImplementations(m1, m2);
 		
 #ifndef LNPopupControllerEnforceStrictClean
@@ -813,6 +827,17 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	return [self _ln_common_childViewControllerForStatusBarStyle];
 }
 
+- (void)_ln_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated
+{
+	if (@available(iOS 12.0, *)) {
+		[viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+			_LNPopupSupportFixInsetsForViewController(obj, NO, self.viewControllers.firstObject.additionalSafeAreaInsets.bottom);
+		}];
+	}
+	
+	[self _ln_setViewControllers:viewControllers animated:animated];
+}
+
 @end
 
 @interface UINavigationController (LNPopupSupportPrivate) @end
@@ -851,6 +876,14 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 		
 		m1 = class_getInstanceMethod([self class], @selector(setNavigationBarHidden:animated:));
 		m2 = class_getInstanceMethod([self class], @selector(_ln_setNavigationBarHidden:animated:));
+		method_exchangeImplementations(m1, m2);
+		
+		m1 = class_getInstanceMethod([self class], @selector(pushViewController:animated:));
+		m2 = class_getInstanceMethod([self class], @selector(_ln_pushViewController:animated:));
+		method_exchangeImplementations(m1, m2);
+		
+		m1 = class_getInstanceMethod([self class], @selector(setViewControllers:animated:));
+		m2 = class_getInstanceMethod([self class], @selector(_ln_setViewControllers:animated:));
 		method_exchangeImplementations(m1, m2);
 		
 #ifndef LNPopupControllerEnforceStrictClean
@@ -977,6 +1010,26 @@ void _LNPopupSupportFixInsetsForViewController(UIViewController* controller, BOO
 	[self _ln_setNavigationBarHidden:hidden animated:animated];
 	
 	[self _layoutPopupBarOrderForUse];
+}
+
+- (void)_ln_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+	if (@available(iOS 12.0, *)) {
+		_LNPopupSupportFixInsetsForViewController(viewController, NO, self.topViewController.additionalSafeAreaInsets.bottom);
+	}
+	
+	[self _ln_pushViewController:viewController animated:animated];
+}
+
+- (void)_ln_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated
+{
+	if (@available(iOS 12.0, *)) {
+		[viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+			_LNPopupSupportFixInsetsForViewController(obj, NO, self.topViewController.additionalSafeAreaInsets.bottom);
+		}];
+	}
+	
+	[self _ln_setViewControllers:viewControllers animated:animated];
 }
 
 @end
