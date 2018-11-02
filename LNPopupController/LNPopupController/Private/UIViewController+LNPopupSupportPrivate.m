@@ -363,8 +363,6 @@ static void __accessibilityBundleLoadHandler()
 //_updateContentOverlayInsetsFromParentIfNecessary
 - (void)_uCOIFPIN
 {
-	_LNPopupSupportFixInsetsForViewController(self, NO, 0);
-	
 	[self _uCOIFPIN];
 }
 
