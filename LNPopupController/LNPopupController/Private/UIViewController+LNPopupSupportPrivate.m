@@ -36,6 +36,8 @@ static NSString* const sTHedBase64 = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvb
 static NSString* const vCUSBBase64 = @"X3ZpZXdDb250cm9sbGVyVW5kZXJsYXBzU3RhdHVzQmFy";
 //_hideShowNavigationBarDidStop:finished:context:
 static NSString* const hSNBDSfcBase64 = @"X2hpZGVTaG93TmF2aWdhdGlvbkJhckRpZFN0b3A6ZmluaXNoZWQ6Y29udGV4dDo=";
+//_viewSafeAreaInsetsFromScene
+static NSString* const vSAIFSBase64 = @"X3ZpZXdTYWZlQXJlYUluc2V0c0Zyb21TY2VuZQ==";
 //_updateLayoutForStatusBarAndInterfaceOrientation
 static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVyZmFjZU9yaWVudGF0aW9u";
 //_accessibilitySpeakThisViewController
@@ -159,11 +161,11 @@ static void __accessibilityBundleLoadHandler()
 		m2 = class_getInstanceMethod([self class], @selector(_vCUSB));
 		method_exchangeImplementations(m1, m2);
 		
-//		//_updateLayoutForStatusBarAndInterfaceOrientation
-//		selName = _LNPopupDecodeBase64String(uLFSBAIO);
-//		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-//		m2 = class_getInstanceMethod([self class], @selector(_uLFSBAIO));
-//		method_exchangeImplementations(m1, m2);
+		//_updateLayoutForStatusBarAndInterfaceOrientation
+		selName = _LNPopupDecodeBase64String(uLFSBAIO);
+		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
+		m2 = class_getInstanceMethod([self class], @selector(_uLFSBAIO));
+		method_exchangeImplementations(m1, m2);
 		
 		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
 		{
@@ -172,6 +174,17 @@ static void __accessibilityBundleLoadHandler()
 			m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
 			m2 = class_getInstanceMethod([self class], @selector(_sCoOvIns:));
 			method_exchangeImplementations(m1, m2);
+		}
+		else
+		{
+			//_viewSafeAreaInsetsFromScene
+			selName = _LNPopupDecodeBase64String(vSAIFSBase64);
+			m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
+			if(m1 != nil)
+			{
+				m2 = class_getInstanceMethod([self class], @selector(_vSAIFS));
+				method_exchangeImplementations(m1, m2);
+			}
 		}
 #endif
 	});
@@ -402,6 +415,21 @@ static UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets 
 	}
 	
 	[self _sCoOvIns:insets];
+}
+
+//_viewSafeAreaInsetsFromScene
+- (UIEdgeInsets)_vSAIFS
+{
+	if([self _isContainedInPopupController])
+	{
+		if (@available(iOS 11.0, *)) {
+			return self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
+		}
+	}
+	
+	UIEdgeInsets insets = [self _vSAIFS];
+	
+	return insets;
 }
 
 //_edgeInsetsForChildViewController:insetsAreAbsolute:
