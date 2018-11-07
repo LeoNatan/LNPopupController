@@ -61,6 +61,26 @@
 	return self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact;
 }
 
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	
+	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
+	[customCloseButton setTitle:@"Custom Close Button" forState:UIControlStateNormal];
+	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
+	[customCloseButton addTarget:self action:@selector(_closePopup) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:customCloseButton];
+	[NSLayoutConstraint activateConstraints:@[
+											  [self.view.centerXAnchor constraintEqualToAnchor:customCloseButton.centerXAnchor],
+											  [self.view.centerYAnchor constraintEqualToAnchor:customCloseButton.centerYAnchor],
+											  ]];
+}
+
+- (void)_closePopup
+{
+	[self.popupPresentationContainerViewController closePopupAnimated:YES completion:nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
