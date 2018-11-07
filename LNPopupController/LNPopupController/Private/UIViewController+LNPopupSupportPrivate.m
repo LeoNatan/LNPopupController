@@ -69,6 +69,8 @@ static NSString* const vSAIFSBase64 = @"X3ZpZXdTYWZlQXJlYUluc2V0c0Zyb21TY2VuZQ==
 static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVyZmFjZU9yaWVudGF0aW9u";
 //_accessibilitySpeakThisViewController
 static NSString* const aSTVC = @"X2FjY2Vzc2liaWxpdHlTcGVha1RoaXNWaWV3Q29udHJvbGxlcg==";
+//setParentViewController:
+static NSString* const sPVC = @"c2V0UGFyZW50Vmlld0NvbnRyb2xsZXI6";
 //UIViewControllerAccessibility
 static NSString* const uiVCA = @"VUlWaWV3Q29udHJvbGxlckFjY2Vzc2liaWxpdHk=";
 //UINavigationControllerAccessibility
@@ -194,6 +196,12 @@ static void __accessibilityBundleLoadHandler()
 								NSSelectorFromString(selName),
 								@selector(_uLFSBAIO));
 		
+		//setParentViewController:
+		selName = _LNPopupDecodeBase64String(sPVC);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(_ln_sPVC:));
+		
 		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
 		{
 			//_setContentOverlayInsets:
@@ -225,42 +233,67 @@ static UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets 
 	return final;
 }
 
-- (void)_ln_updateUserSafeAreaInsets:(UIEdgeInsets)userEdgeInsets popupSafeAreaInsets:(UIEdgeInsets)popupUserEdgeInsets
+static inline __attribute__((always_inline)) void _LNUpdateUserSafeAreaInsets(id self, UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
 {
 	UIEdgeInsets final = __LNEdgeInsetsSum(userEdgeInsets, popupUserEdgeInsets);
 	
 	[self _ln_setAdditionalSafeAreaInsets:final];
 }
 
-- (void)_ln_setPopupSafeAreaInsets:(UIEdgeInsets)additionalSafeAreaInsets
+static inline __attribute__((always_inline)) void _LNSetPopupSafeAreaInsets(id self, UIEdgeInsets additionalSafeAreaInsets)
 {
 	objc_setAssociatedObject(self, LNPopupAdditionalSafeAreaInsets, [NSValue valueWithUIEdgeInsets:additionalSafeAreaInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
-	UIEdgeInsets user = [objc_getAssociatedObject(self, LNUserAdditionalSafeAreaInsets) UIEdgeInsetsValue];
+	UIEdgeInsets user = _LNUserSafeAreas(self);
 	
-	[self _ln_updateUserSafeAreaInsets:user popupSafeAreaInsets:additionalSafeAreaInsets];
+	_LNUpdateUserSafeAreaInsets(self, user, additionalSafeAreaInsets);
 }
 
 - (void)_ln_setAdditionalSafeAreaInsets:(UIEdgeInsets)additionalSafeAreaInsets
 {
 	objc_setAssociatedObject(self, LNUserAdditionalSafeAreaInsets, [NSValue valueWithUIEdgeInsets:additionalSafeAreaInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
-	UIEdgeInsets popup = [objc_getAssociatedObject(self, LNPopupAdditionalSafeAreaInsets) UIEdgeInsetsValue];
+	UIEdgeInsets popup = _LNPopupSafeAreas(self);
 	
-	[self _ln_updateUserSafeAreaInsets:additionalSafeAreaInsets popupSafeAreaInsets:popup];
+	_LNUpdateUserSafeAreaInsets(self, additionalSafeAreaInsets, popup);
 }
 
-- (UIEdgeInsets)_ln_popupSafeAreaInsets
+static inline __attribute__((always_inline)) UIEdgeInsets _LNPopupSafeAreas(id self)
 {
 	return [objc_getAssociatedObject(self, LNPopupAdditionalSafeAreaInsets) UIEdgeInsetsValue];
 }
 
+static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id self)
+{
+	return [objc_getAssociatedObject(self, LNUserAdditionalSafeAreaInsets) UIEdgeInsetsValue];
+}
+
 - (UIEdgeInsets)_ln_additionalSafeAreaInsets
 {
-	UIEdgeInsets user = [objc_getAssociatedObject(self, LNUserAdditionalSafeAreaInsets) UIEdgeInsetsValue];
-	UIEdgeInsets popup = [objc_getAssociatedObject(self, LNPopupAdditionalSafeAreaInsets) UIEdgeInsetsValue];
+	UIEdgeInsets user = _LNPopupSafeAreas(self);
+	UIEdgeInsets popup = _LNUserSafeAreas(self);
 	
 	return __LNEdgeInsetsSum(user, popup);
+}
+
+- (UIEdgeInsets)_ln_popupSafeAreaInsetsForChildController
+{
+	UIViewController* vc = self;
+	while(vc != nil && vc._ln_popupController_nocreate == nil)
+	{
+		vc = vc.parentViewController;
+	}
+	
+	CGRect barFrame = vc._ln_popupController_nocreate.popupBar.frame;
+	return UIEdgeInsetsMake(0, 0, barFrame.size.height, 0);
+}
+
+- (void)_ln_sPVC:(UIViewController*)parentViewController
+{
+	[self _ln_sPVC:parentViewController];
+	
+	_LNSetPopupSafeAreaInsets(self, parentViewController._ln_popupSafeAreaInsetsForChildController);
+
 }
 
 - (void)_ln_presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
@@ -559,7 +592,7 @@ static inline __attribute__((always_inline)) void _LNPopupSupportSetPopupInsetsF
 	}
 	else
 	{
-		[controller _ln_setPopupSafeAreaInsets:popupEdgeInsets];
+		_LNSetPopupSafeAreaInsets(controller, popupEdgeInsets);
 	}
 	
 	if(layout)
@@ -652,11 +685,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return bottomBarFrame;
 }
 
-- (UIEdgeInsets)_ln_popupSafeAreaInsets
-{
-	return self.viewControllers.firstObject._ln_popupSafeAreaInsets;
-}
-
 + (void)load
 {
 	static dispatch_once_t onceToken;
@@ -668,10 +696,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		__swizzleInstanceMethod(self,
 								@selector(childViewControllerForStatusBarHidden),
 								@selector(_ln_childViewControllerForStatusBarHidden));
-		
-		__swizzleInstanceMethod(self,
-								@selector(setViewControllers:animated:),
-								@selector(_ln_setViewControllers:animated:));
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
@@ -694,11 +718,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 								NSSelectorFromString(selName),
 								@selector(sBWT:iE:));
 		
-//		//_updateLayoutForStatusBarAndInterfaceOrientation
-//		selName = _LNPopupDecodeBase64String(uLFSBAIO);
-//		__swizzleInstanceMethod(self,
-//								NSSelectorFromString(selName),
-//								@selector(_uLFSBAIO));
+		//_updateLayoutForStatusBarAndInterfaceOrientation
+		selName = _LNPopupDecodeBase64String(uLFSBAIO);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(_uLFSBAIO));
 #endif
 	});
 }
@@ -799,15 +823,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return [self _ln_common_childViewControllerForStatusBarStyle];
 }
 
-- (void)_ln_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated
-{
-	[viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		_LNPopupSupportSetPopupInsetsForViewController(obj, NO, self.viewControllers.firstObject._ln_popupSafeAreaInsets);
-	}];
-	
-	[self _ln_setViewControllers:viewControllers animated:animated];
-}
-
 @end
 
 @interface UINavigationController (LNPopupSupportPrivate) @end
@@ -832,11 +847,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return toolbarBarFrame;
 }
 
-- (UIEdgeInsets)_ln_popupSafeAreaInsets
-{
-	return self.viewControllers.firstObject._ln_popupSafeAreaInsets;
-}
-
 + (void)load
 {
 	static dispatch_once_t onceToken;
@@ -852,22 +862,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		__swizzleInstanceMethod(self,
 								@selector(setNavigationBarHidden:animated:),
 								@selector(_ln_setNavigationBarHidden:animated:));
-		
-		__swizzleInstanceMethod(self,
-								@selector(pushViewController:animated:),
-								@selector(_ln_pushViewController:animated:));
-		
-		__swizzleInstanceMethod(self,
-								@selector(popViewControllerAnimated:),
-								@selector(_ln_popViewControllerAnimated:));
-		
-		__swizzleInstanceMethod(self,
-								@selector(popToRootViewControllerAnimated:),
-								@selector(_ln_popToRootViewControllerAnimated:));
-		
-		__swizzleInstanceMethod(self,
-								@selector(setViewControllers:animated:),
-								@selector(_ln_setViewControllers:animated:));
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
@@ -889,11 +883,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 								NSSelectorFromString(selName),
 								@selector(hSNBDS:f:c:));
 		
-//		//_updateLayoutForStatusBarAndInterfaceOrientation
-//		selName = _LNPopupDecodeBase64String(uLFSBAIO);
-//		__swizzleInstanceMethod(self,
-//								NSSelectorFromString(selName),
-//								@selector(_uLFSBAIO));
+		//_updateLayoutForStatusBarAndInterfaceOrientation
+		selName = _LNPopupDecodeBase64String(uLFSBAIO);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(_uLFSBAIO));
 #endif
 	});
 }
@@ -992,83 +986,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	[self _layoutPopupBarOrderForUse];
 }
 
-- (void)_ln_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-	_LNPopupSupportSetPopupInsetsForViewController(viewController, NO, self.topViewController._ln_popupSafeAreaInsets);
-	
-	[self _ln_pushViewController:viewController animated:animated];
-}
-
-- (NSArray<__kindof UIViewController*>*)_ln_popToRootViewControllerAnimated:(BOOL)animated
-{
-	NSArray<__kindof UIViewController*>* rv = [self _ln_popToRootViewControllerAnimated:animated];
-	
-	void (^block)(void) = ^ {
-		[rv enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-			_LNPopupSupportSetPopupInsetsForViewController(obj, NO, UIEdgeInsetsZero);
-		}];
-	};
-	
-	if(self.transitionCoordinator == nil)
-	{
-		block();
-	}
-	else
-	{
-		[self.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-			if(context.isCancelled == NO)
-			{
-				block();
-			}
-		}];
-	}
-	
-	return rv;
-}
-
-- (UIViewController*)_ln_popViewControllerAnimated:(BOOL)animated
-{
-	UIViewController* vc = [self _ln_popViewControllerAnimated:animated];
-	
-	void (^block)(void) = ^ {
-		_LNPopupSupportSetPopupInsetsForViewController(vc, NO, UIEdgeInsetsZero);
-	};
-	
-	if(self.transitionCoordinator == nil)
-	{
-		block();
-	}
-	else
-	{
-		[self.transitionCoordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-			if(context.isCancelled == NO)
-			{
-				block();
-			}
-		}];
-	}
-	
-	return vc;
-}
-
-- (void)_ln_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated
-{
-	[viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		_LNPopupSupportSetPopupInsetsForViewController(obj, NO, self.topViewController._ln_popupSafeAreaInsets);
-	}];
-	
-	[self _ln_setViewControllers:viewControllers animated:animated];
-}
-
 @end
 
 @interface UISplitViewController (LNPopupSupportPrivate) @end
 @implementation UISplitViewController (LNPopupSupportPrivate)
-
-- (UIEdgeInsets)_ln_popupSafeAreaInsets
-{
-	return self.viewControllers.firstObject._ln_popupSafeAreaInsets;
-}
 
 + (void)load
 {
@@ -1079,14 +1000,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			__swizzleInstanceMethod(self,
 									@selector(viewDidLayoutSubviews),
 									@selector(_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple));
-			
-			__swizzleInstanceMethod(self,
-									@selector(setViewControllers:),
-									@selector(_ln_setViewControllers:));
-			
-			__swizzleInstanceMethod(self,
-									@selector(addChildViewController:),
-									@selector(_ln_addChildViewController:));
 		}
 	});
 }
@@ -1105,23 +1018,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		void (*super_call)(struct objc_super*, SEL) = (void (*)(struct objc_super*, SEL))objc_msgSendSuper;
 		super_call(&superInfo, @selector(viewDidLayoutSubviews));
 	}
-}
-
-- (void)_ln_addChildViewController:(UIViewController *)childController
-{
-	_LNPopupSupportSetPopupInsetsForViewController(childController, NO, self.viewControllers.firstObject._ln_popupSafeAreaInsets);
-	
-	[self _ln_addChildViewController:childController];
-	
-}
-
-- (void)_ln_setViewControllers:(NSArray<UIViewController *> *)viewControllers
-{
-//	[viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//		_LNPopupSupportSetPopupInsetsForViewController(obj, NO, self.viewControllers.firstObject._ln_popupSafeAreaInsets);
-//	}];
-	
-	[self _ln_setViewControllers:viewControllers];
 }
 
 @end
