@@ -27,6 +27,13 @@
 	return [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 }
 
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	
+	self.view.preservesSuperviewLayoutMargins = YES;
+}
+
 - (BOOL)wantsDefaultTapGestureRecognizer
 {
 	return YES;
