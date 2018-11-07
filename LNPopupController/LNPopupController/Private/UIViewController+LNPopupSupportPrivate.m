@@ -13,6 +13,33 @@
 @import ObjectiveC;
 @import Darwin;
 
+static void __swizzleInstanceMethod(Class cls, SEL originalSelector, SEL swizzledSelector)
+{
+	Method originalMethod = class_getInstanceMethod(cls, originalSelector);
+	Method swizzledMethod = class_getInstanceMethod(cls, swizzledSelector);
+	
+	if(originalMethod == NULL)
+	{
+		return;
+	}
+	
+	if(swizzledMethod == NULL)
+	{
+		[NSException raise:NSInvalidArgumentException format:@"Swizzled method cannot be found."];
+	}
+	
+	BOOL didAdd = class_addMethod(cls, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
+	
+	if(didAdd)
+	{
+		class_replaceMethod(cls, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
+	}
+	else
+	{
+		method_exchangeImplementations(originalMethod, swizzledMethod);
+	}
+}
+
 static const void* LNToolbarHiddenBeforeTransition = &LNToolbarHiddenBeforeTransition;
 static const void* LNToolbarBuggy = &LNToolbarBuggy;
 static const void* LNPopupAdjustingInsets = &LNPopupAdjustingInsets;
@@ -118,73 +145,70 @@ static void __accessibilityBundleLoadHandler()
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		Method m1 = class_getInstanceMethod([self class], @selector(viewDidLayoutSubviews));
-		Method m2 = class_getInstanceMethod([self class], @selector(_ln_popup_viewDidLayoutSubviews));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(viewDidLayoutSubviews),
+								@selector(_ln_popup_viewDidLayoutSubviews));
 		
-		m1 = class_getInstanceMethod([self class], @selector(additionalSafeAreaInsets));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_additionalSafeAreaInsets));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(additionalSafeAreaInsets),
+								@selector(_ln_additionalSafeAreaInsets));
 		
-		m1 = class_getInstanceMethod([self class], @selector(setAdditionalSafeAreaInsets:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_setAdditionalSafeAreaInsets:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(setAdditionalSafeAreaInsets:),
+								@selector(_ln_setAdditionalSafeAreaInsets:));
 		
-		m1 = class_getInstanceMethod([self class], @selector(setNeedsStatusBarAppearanceUpdate));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_setNeedsStatusBarAppearanceUpdate));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(setNeedsStatusBarAppearanceUpdate),
+								@selector(_ln_setNeedsStatusBarAppearanceUpdate));
 		
-		m1 = class_getInstanceMethod([self class], @selector(childViewControllerForStatusBarStyle));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarStyle));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(childViewControllerForStatusBarStyle),
+								@selector(_ln_childViewControllerForStatusBarStyle));
 		
-		m1 = class_getInstanceMethod([self class], @selector(childViewControllerForStatusBarHidden));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarHidden));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(childViewControllerForStatusBarHidden),
+								@selector(_ln_childViewControllerForStatusBarHidden));
 		
-		m1 = class_getInstanceMethod([self class], @selector(viewWillTransitionToSize:withTransitionCoordinator:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_viewWillTransitionToSize:withTransitionCoordinator:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(viewWillTransitionToSize:withTransitionCoordinator:),
+								@selector(_ln_viewWillTransitionToSize:withTransitionCoordinator:));
 		
-		m1 = class_getInstanceMethod([self class], @selector(willTransitionToTraitCollection:withTransitionCoordinator:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_willTransitionToTraitCollection:withTransitionCoordinator:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(willTransitionToTraitCollection:withTransitionCoordinator:),
+								@selector(_ln_willTransitionToTraitCollection:withTransitionCoordinator:));
 		
-		m1 = class_getInstanceMethod([self class], @selector(presentViewController:animated:completion:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_presentViewController:animated:completion:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(presentViewController:animated:completion:),
+								@selector(_ln_presentViewController:animated:completion:));
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		//_viewControllerUnderlapsStatusBar
 		NSString* selName = _LNPopupDecodeBase64String(vCUSBBase64);
-		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(_vCUSB));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(_vCUSB));
 		
 		//_updateLayoutForStatusBarAndInterfaceOrientation
 		selName = _LNPopupDecodeBase64String(uLFSBAIO);
-		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(_uLFSBAIO));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(_uLFSBAIO));
 		
 		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
 		{
 			//_setContentOverlayInsets:
 			selName = _LNPopupDecodeBase64String(sCoOvBase64);
-			m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-			m2 = class_getInstanceMethod([self class], @selector(_sCoOvIns:));
-			method_exchangeImplementations(m1, m2);
+			__swizzleInstanceMethod(self,
+									NSSelectorFromString(selName),
+									@selector(_sCoOvIns:));
 		}
 		else
 		{
 			//_viewSafeAreaInsetsFromScene
 			selName = _LNPopupDecodeBase64String(vSAIFSBase64);
-			m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-			if(m1 != nil)
-			{
-				m2 = class_getInstanceMethod([self class], @selector(_vSAIFS));
-				method_exchangeImplementations(m1, m2);
-			}
+			__swizzleInstanceMethod(self,
+									NSSelectorFromString(selName),
+									@selector(_vSAIFS));
 		}
 #endif
 	});
@@ -573,8 +597,7 @@ static inline __attribute__((always_inline)) void _LNPopupSupportFixInsetsForVie
 }
 
 void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL layout, UIEdgeInsets popupEdgeInsets)
-{
-	
+{	
 	if (@available(iOS 11.0, *))
 	{
 		_LNPopupSupportSetPopupInsetsForViewController_modern(controller, layout, popupEdgeInsets);
@@ -629,48 +652,53 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return bottomBarFrame;
 }
 
+- (UIEdgeInsets)_ln_popupSafeAreaInsets
+{
+	return self.viewControllers.firstObject._ln_popupSafeAreaInsets;
+}
+
 + (void)load
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		Method m1 = class_getInstanceMethod([self class], @selector(childViewControllerForStatusBarStyle));
-		Method m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarStyle));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(childViewControllerForStatusBarStyle),
+								@selector(_ln_childViewControllerForStatusBarStyle));
 		
-		m1 = class_getInstanceMethod([self class], @selector(childViewControllerForStatusBarHidden));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarHidden));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(childViewControllerForStatusBarHidden),
+								@selector(_ln_childViewControllerForStatusBarHidden));
 		
-		m1 = class_getInstanceMethod([self class], @selector(setViewControllers:animated:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_setViewControllers:animated:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(setViewControllers:animated:),
+								@selector(_ln_setViewControllers:animated:));
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
 		
 		//_edgeInsetsForChildViewController:insetsAreAbsolute:
 		selName = _LNPopupDecodeBase64String(edInsBase64);
-		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(eIFCVC:iAA:));
 		
 		//_hideBarWithTransition:isExplicit:
 		selName = _LNPopupDecodeBase64String(hBWTiEBase64);
-		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(hBWT:iE:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(hBWT:iE:));
 		
 		//_showBarWithTransition:isExplicit:
 		selName = _LNPopupDecodeBase64String(sBWTiEBase64);
-		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(sBWT:iE:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(sBWT:iE:));
 		
 //		//_updateLayoutForStatusBarAndInterfaceOrientation
 //		selName = _LNPopupDecodeBase64String(uLFSBAIO);
-//		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-//		m2 = class_getInstanceMethod([self class], @selector(_uLFSBAIO));
-//		method_exchangeImplementations(m1, m2);
+//		__swizzleInstanceMethod(self,
+//								NSSelectorFromString(selName),
+//								@selector(_uLFSBAIO));
 #endif
 	});
 }
@@ -804,66 +832,68 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return toolbarBarFrame;
 }
 
+- (UIEdgeInsets)_ln_popupSafeAreaInsets
+{
+	return self.viewControllers.firstObject._ln_popupSafeAreaInsets;
+}
+
 + (void)load
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		Method m1 = class_getInstanceMethod([self class], @selector(childViewControllerForStatusBarStyle));
-		Method m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarStyle));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(childViewControllerForStatusBarStyle),
+								@selector(_ln_childViewControllerForStatusBarStyle));
 		
-		m1 = class_getInstanceMethod([self class], @selector(childViewControllerForStatusBarHidden));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_childViewControllerForStatusBarHidden));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(childViewControllerForStatusBarHidden),
+								@selector(_ln_childViewControllerForStatusBarHidden));
 		
-		m1 = class_getInstanceMethod([self class], @selector(setNavigationBarHidden:animated:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_setNavigationBarHidden:animated:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(setNavigationBarHidden:animated:),
+								@selector(_ln_setNavigationBarHidden:animated:));
 		
-		m1 = class_getInstanceMethod([self class], @selector(pushViewController:animated:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_pushViewController:animated:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(pushViewController:animated:),
+								@selector(_ln_pushViewController:animated:));
 		
-		m1 = class_getInstanceMethod([self class], @selector(popViewControllerAnimated:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_popViewControllerAnimated:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(popViewControllerAnimated:),
+								@selector(_ln_popViewControllerAnimated:));
 		
-		m1 = class_getInstanceMethod([self class], @selector(popToRootViewControllerAnimated:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_popToRootViewControllerAnimated:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(popToRootViewControllerAnimated:),
+								@selector(_ln_popToRootViewControllerAnimated:));
 		
-		m1 = class_getInstanceMethod([self class], @selector(setViewControllers:animated:));
-		m2 = class_getInstanceMethod([self class], @selector(_ln_setViewControllers:animated:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								@selector(setViewControllers:animated:),
+								@selector(_ln_setViewControllers:animated:));
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
 		//_edgeInsetsForChildViewController:insetsAreAbsolute:
 		selName = _LNPopupDecodeBase64String(edInsBase64);
-		
-		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(eIFCVC:iAA:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(eIFCVC:iAA:));
 		
 		//_setToolbarHidden:edge:duration:
 		selName = _LNPopupDecodeBase64String(sTHedBase64);
-		
-		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(_sTH:e:d:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(_sTH:e:d:));
 		
 		//_hideShowNavigationBarDidStop:finished:context:
 		selName = _LNPopupDecodeBase64String(hSNBDSfcBase64);
-		
-		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-		m2 = class_getInstanceMethod([self class], @selector(hSNBDS:f:c:));
-		method_exchangeImplementations(m1, m2);
+		__swizzleInstanceMethod(self,
+								NSSelectorFromString(selName),
+								@selector(hSNBDS:f:c:));
 		
 //		//_updateLayoutForStatusBarAndInterfaceOrientation
 //		selName = _LNPopupDecodeBase64String(uLFSBAIO);
-//		m1 = class_getInstanceMethod([self class], NSSelectorFromString(selName));
-//		m2 = class_getInstanceMethod([self class], @selector(_uLFSBAIO));
-//		method_exchangeImplementations(m1, m2);
+//		__swizzleInstanceMethod(self,
+//								NSSelectorFromString(selName),
+//								@selector(_uLFSBAIO));
 #endif
 	});
 }
@@ -1035,23 +1065,28 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 @interface UISplitViewController (LNPopupSupportPrivate) @end
 @implementation UISplitViewController (LNPopupSupportPrivate)
 
+- (UIEdgeInsets)_ln_popupSafeAreaInsets
+{
+	return self.viewControllers.firstObject._ln_popupSafeAreaInsets;
+}
+
 + (void)load
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)
 		{
-			Method m1 = class_getInstanceMethod([self class], @selector(viewDidLayoutSubviews));
-			Method m2 = class_getInstanceMethod([self class], @selector(_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple));
-			method_exchangeImplementations(m1, m2);
+			__swizzleInstanceMethod(self,
+									@selector(viewDidLayoutSubviews),
+									@selector(_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple));
 			
-			m1 = class_getInstanceMethod([self class], @selector(setViewControllers:animated:));
-			m2 = class_getInstanceMethod([self class], @selector(_ln_setViewControllers:animated:));
-			method_exchangeImplementations(m1, m2);
+			__swizzleInstanceMethod(self,
+									@selector(setViewControllers:),
+									@selector(_ln_setViewControllers:));
 			
-			m1 = class_getInstanceMethod([self class], @selector(addChildViewController:));
-			m2 = class_getInstanceMethod([self class], @selector(_ln_addChildViewController:));
-			method_exchangeImplementations(m1, m2);
+			__swizzleInstanceMethod(self,
+									@selector(addChildViewController:),
+									@selector(_ln_addChildViewController:));
 		}
 	});
 }
@@ -1080,13 +1115,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 }
 
-- (void)_ln_setViewControllers:(NSArray<UIViewController *> *)viewControllers animated:(BOOL)animated
+- (void)_ln_setViewControllers:(NSArray<UIViewController *> *)viewControllers
 {
-	[viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		_LNPopupSupportSetPopupInsetsForViewController(obj, NO, self.viewControllers.firstObject._ln_popupSafeAreaInsets);
-	}];
+//	[viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//		_LNPopupSupportSetPopupInsetsForViewController(obj, NO, self.viewControllers.firstObject._ln_popupSafeAreaInsets);
+//	}];
 	
-	[self _ln_setViewControllers:viewControllers animated:animated];
+	[self _ln_setViewControllers:viewControllers];
 }
 
 @end
