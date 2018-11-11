@@ -292,8 +292,10 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 {
 	[self _ln_sPVC:parentViewController];
 	
-	_LNSetPopupSafeAreaInsets(self, parentViewController._ln_popupSafeAreaInsetsForChildController);
-
+	
+	if (@available(iOS 11.0, *)) {
+		_LNSetPopupSafeAreaInsets(self, parentViewController._ln_popupSafeAreaInsetsForChildController);
+	}
 }
 
 - (void)_ln_presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
