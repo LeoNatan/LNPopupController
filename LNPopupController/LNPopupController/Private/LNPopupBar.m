@@ -568,6 +568,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	{
 		__FakeMarqueeLabel* rv = [[__FakeMarqueeLabel alloc] initWithFrame:_titlesView.bounds];
 		rv.minimumScaleFactor = 1.0;
+		rv.lineBreakMode = NSLineBreakByTruncatingTail;
 		return rv;
 	}
 	
@@ -772,47 +773,28 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		if(_titleLabel == nil)
 		{
 			_titleLabel = [self _newMarqueeLabel];
+			_titleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12];
 			[_titlesView addSubview:_titleLabel];
 		}
-		
-		NSMutableParagraphStyle* paragraph = [NSMutableParagraphStyle new];
-		if(_resolvedStyle == LNPopupBarStyleCompact)
-		{
-			paragraph.alignment = NSTextAlignmentCenter;
-		}
-		else
-		{
-			paragraph.alignment = NSTextAlignmentNatural;
-		}
-		
-		if(_marqueeScrollEnabled == NO)
-		{
-			paragraph.lineBreakMode = NSLineBreakByTruncatingTail;
-		}
-		
-		NSMutableDictionary* defaultTitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12]} mutableCopy];
-		[defaultTitleAttribures addEntriesFromDictionary:_titleTextAttributes];
-		
-		NSMutableDictionary* defaultSubtitleAttribures = [@{NSParagraphStyleAttributeName: paragraph, NSFontAttributeName: _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:14 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12]} mutableCopy];
-		[defaultSubtitleAttribures addEntriesFromDictionary:_subtitleTextAttributes];
 		
 		BOOL reset = NO;
 		
 		if([_titleLabel.text isEqualToString:_title] == NO && _title != nil)
 		{
-			_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:defaultTitleAttribures];
+			_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:_titleTextAttributes];
 			reset = YES;
 		}
 		
 		if(_subtitleLabel == nil)
 		{
 			_subtitleLabel = [self _newMarqueeLabel];
+			_subtitleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:14 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12];
 			[_titlesView addSubview:_subtitleLabel];
 		}
 		
 		if([_subtitleLabel.text isEqualToString:_subtitle] == NO && _subtitle != nil)
 		{
-			_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:defaultSubtitleAttribures];
+			_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:_subtitleTextAttributes];
 			reset = YES;
 		}
 		
