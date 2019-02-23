@@ -96,6 +96,7 @@
 
 const CGFloat LNPopupBarHeightCompact = 40.0;
 const CGFloat LNPopupBarHeightProminent = 64.0;
+const CGFloat LNPopupBarHeightTabBarInline = 50.0;
 const CGFloat LNPopupBarProminentImageWidth = 48.0;
 
 const NSInteger LNBackgroundStyleInherit = -1;
@@ -118,6 +119,7 @@ const NSInteger LNBackgroundStyleInherit = -1;
 	UIBlurEffect* _customBlurEffect;
 	
 	UIView* _shadowView;
+	UIView* _separatorView;
     
     NSArray<__kindof NSLayoutConstraint *> * _progressViewVerticalConstraints;
 }
@@ -246,8 +248,12 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		_shadowView = [UIView new];
 		_shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
-		[_backgroundView.contentView addSubview:_shadowView];
+		[self addSubview:_shadowView];
 		
+		_separatorView = [UIView new];
+		_separatorView.backgroundColor = [UIColor colorWithWhite:169.0 / 255.0 alpha:1.0];
+		[self addSubview:_separatorView];
+        
 		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_highlightView.userInteractionEnabled = NO;
@@ -294,7 +300,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[self _layoutImageView];
 	
 	[UIView performWithoutAnimation:^{
-		_toolbar.frame = CGRectMake(0, 0, self.bounds.size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController));
+		_toolbar.frame = CGRectMake(0, 0, self.bounds.size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, self.isInlineWithTabBar, _customBarViewController));
 		[_toolbar layoutIfNeeded];
 		
 		[self bringSubviewToFront:_highlightView];
@@ -302,8 +308,14 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		//	[_toolbar bringSubviewToFront:_imageView];
 		//	[_toolbar bringSubviewToFront:_titlesView];
 		[self bringSubviewToFront:_shadowView];
+		[self bringSubviewToFront:_separatorView];
 		
-		_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
+		_shadowView.frame = CGRectMake(0, self.isInlineWithTabBar ? 0.5 : 0, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
+		if (self.isInlineWithTabBar){
+			_separatorView.frame = CGRectMake(0.5, 0, 1 / self.window.screen.nativeScale, self.toolbar.bounds.size.height);
+		} else {
+			_separatorView.frame = CGRectZero;
+		}
 		
 		[self _layoutTitles];
 	}];
@@ -455,6 +467,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_systemShadowColor = systemShadowColor;
 	
 	_shadowView.backgroundColor = systemShadowColor;
+	_separatorView.backgroundColor = systemShadowColor;
 }
 
 - (void)setTranslucent:(BOOL)translucent
@@ -809,7 +822,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	CGRect titleLabelFrame = _titlesView.bounds;
 	
-	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
+	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, self.isInlineWithTabBar, _customBarViewController);
 	titleLabelFrame.size.height = barHeight;
 	if(_subtitle.length > 0)
 	{

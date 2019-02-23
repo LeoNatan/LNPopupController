@@ -269,6 +269,10 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 - (CGRect)_frameForOpenPopupBar
 {
 //	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
+	if (self.popupBar.isInlineWithTabBar){
+		UIEdgeInsets insets = [_containerController insetsForBottomDockingView];
+		return CGRectMake(insets.left, - self.popupBar.frame.size.height, _containerController.view.bounds.size.width - (insets.left + insets.right), self.popupBar.frame.size.height);
+	}
 	return CGRectMake(0, - self.popupBar.frame.size.height, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
 }
 
@@ -276,7 +280,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 {
 	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 	UIEdgeInsets insets = [_containerController insetsForBottomDockingView];
-	return CGRectMake(0, defaultFrame.origin.y - self.popupBar.frame.size.height - insets.bottom, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
+	return CGRectMake(insets.left, defaultFrame.origin.y - self.popupBar.frame.size.height - insets.bottom + insets.top, _containerController.view.bounds.size.width - (insets.left + insets.right), self.popupBar.frame.size.height);
 }
 
 - (void)_repositionPopupContentMovingBottomBar:(BOOL)bottomBar
@@ -289,8 +293,10 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	if(bottomBar)
 	{
 		CGRect bottomBarFrame = _cachedDefaultFrame;
-		bottomBarFrame.origin.y -= _cachedInsets.bottom;
-		bottomBarFrame.origin.y += (percent * (bottomBarFrame.size.height + _cachedInsets.bottom));
+		if (!self.popupBar.isInlineWithTabBar){
+			bottomBarFrame.origin.y -= _cachedInsets.bottom;
+			bottomBarFrame.origin.y += (percent * (bottomBarFrame.size.height + _cachedInsets.bottom));
+		}
 		_bottomBar.frame = bottomBarFrame;
 	}
 	
@@ -300,12 +306,13 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	CGRect contentFrame = _containerController.view.bounds;
 	contentFrame.origin.x = self.popupBar.frame.origin.x;
 	contentFrame.origin.y = self.popupBar.frame.origin.y + self.popupBar.frame.size.height;
+	contentFrame.size.width = self.popupBar.frame.size.width;
 	
 	CGFloat fractionalHeight = MAX(heightForContent - (self.popupBar.frame.origin.y + self.popupBar.frame.size.height), 0);
 	contentFrame.size.height = ceil(fractionalHeight);
 	
 	self.popupContentView.frame = contentFrame;
-	_containerController.popupContentViewController.view.frame = _containerController.view.bounds;
+	_containerController.popupContentViewController.view.frame = self.popupContentView.bounds;
 	
 	[self _repositionPopupCloseButton];
 }
@@ -420,7 +427,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		if(allowBarAlpha && resolvedStyle == LNPopupInteractionStyleSnap)
 		{
 			CGRect frame = self.popupBar.frame;
-			frame.size.height = state < LNPopupPresentationStateTransitioning ? _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.customBarViewController) : 0.0;
+			frame.size.height = state < LNPopupPresentationStateTransitioning ? _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.isInlineWithTabBar, self.popupBar.customBarViewController) : 0.0;
 			self.popupBar.frame = frame;
 			self.popupBar.alpha = state < LNPopupPresentationStateTransitioning;
 		}
@@ -921,7 +928,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 10)
 		{
-			self.popupBar.systemShadowColor = [_bottomBar valueForKeyPath:str2];
+			UIColor *color = [_bottomBar valueForKeyPath:str2];
+			if (!color)
+				color = [UIColor colorWithWhite:0 alpha:0.29];
+			self.popupBar.systemShadowColor = color;
 		}
 		else
 		{
@@ -1203,7 +1213,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		[_containerController.view layoutIfNeeded];
 		
 		CGRect barFrame = self.popupBar.frame;
-		barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.customBarViewController);
+		barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.isInlineWithTabBar, self.popupBar.customBarViewController);
 		self.popupBar.frame = barFrame;
 		
 		[self.popupBar setNeedsLayout];
@@ -1373,7 +1383,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 {
 	CGRect barFrame = self.popupBar.frame;
 	CGFloat currentHeight = barFrame.size.height;
-	barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.customBarViewController);
+	barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.isInlineWithTabBar, self.popupBar.customBarViewController);
 	barFrame.origin.y -= (barFrame.size.height - currentHeight);
 	self.popupBar.frame = barFrame;
 }

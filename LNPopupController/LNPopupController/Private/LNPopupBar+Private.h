@@ -10,10 +10,14 @@
 
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
+extern const CGFloat LNPopupBarHeightTabBarInline;
 
-inline __attribute__((always_inline)) CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC)
+inline __attribute__((always_inline)) CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, BOOL inlineWithTabBar, LNPopupCustomBarViewController* customBarVC)
 {
 	if(customBarVC) { return customBarVC.preferredContentSize.height; }
+    
+	if (inlineWithTabBar)
+		return LNPopupBarHeightTabBarInline;
 	
 	return style == LNPopupBarStyleCompact ? LNPopupBarHeightCompact : LNPopupBarHeightProminent;
 }

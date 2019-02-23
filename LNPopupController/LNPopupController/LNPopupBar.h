@@ -119,6 +119,11 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @property (nonatomic, assign) LNPopupBarStyle barStyle UI_APPEARANCE_SELECTOR;
 
 /**
+ * Popup Bar is inline in tab bar
+ */
+@property (nonatomic, assign) BOOL isInlineWithTabBar;
+
+/**
  * The popup bar's progress style.
  */
 @property (nonatomic, assign) LNPopupBarProgressViewStyle progressViewStyle;
