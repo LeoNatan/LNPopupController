@@ -311,9 +311,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[self bringSubviewToFront:_separatorView];
 		
 		_shadowView.frame = CGRectMake(0, self.isInlineWithTabBar ? 0.5 : 0, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
-		if (self.isInlineWithTabBar){
+		if (self.isInlineWithTabBar)
+		{
 			_separatorView.frame = CGRectMake(0.5, 0, 1 / self.window.screen.nativeScale, self.toolbar.bounds.size.height);
-		} else {
+		} else
+		{
 			_separatorView.frame = CGRectZero;
 		}
 		

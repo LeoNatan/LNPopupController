@@ -17,7 +17,9 @@ inline __attribute__((always_inline)) CGFloat _LNPopupBarHeightForBarStyle(LNPop
 	if(customBarVC) { return customBarVC.preferredContentSize.height; }
     
 	if (inlineWithTabBar)
+	{
 		return LNPopupBarHeightTabBarInline;
+	}
 	
 	return style == LNPopupBarStyleCompact ? LNPopupBarHeightCompact : LNPopupBarHeightProminent;
 }

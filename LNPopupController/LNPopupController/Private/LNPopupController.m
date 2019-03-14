@@ -269,10 +269,12 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 - (CGRect)_frameForOpenPopupBar
 {
 //	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
-	if (self.popupBar.isInlineWithTabBar){
+	if (self.popupBar.isInlineWithTabBar)
+	{
 		UIEdgeInsets insets = [_containerController insetsForBottomDockingView];
 		return CGRectMake(insets.left, - self.popupBar.frame.size.height, _containerController.view.bounds.size.width - (insets.left + insets.right), self.popupBar.frame.size.height);
 	}
+	
 	return CGRectMake(0, - self.popupBar.frame.size.height, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
 }
 
@@ -293,7 +295,8 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	if(bottomBar)
 	{
 		CGRect bottomBarFrame = _cachedDefaultFrame;
-		if (!self.popupBar.isInlineWithTabBar){
+		if (!self.popupBar.isInlineWithTabBar)
+		{
 			bottomBarFrame.origin.y -= _cachedInsets.bottom;
 			bottomBarFrame.origin.y += (percent * (bottomBarFrame.size.height + _cachedInsets.bottom));
 		}
@@ -932,8 +935,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 10)
 		{
 			UIColor *color = [_bottomBar valueForKeyPath:str2];
-			if (!color)
+			if (color == nil)
+			{
 				color = [UIColor colorWithWhite:0 alpha:0.29];
+			}
+			
 			self.popupBar.systemShadowColor = color;
 		}
 		else
