@@ -1115,6 +1115,17 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	 }];
 }
 
+- (void)_transitionCustomBarViewControllerWithPopupContainerSize:(CGSize)size withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	CGSize nextSize = CGSizeMake(size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController));
+	[self.customBarViewController viewWillTransitionToSize:nextSize withTransitionCoordinator:coordinator];
+}
+
+- (void)_transitionCustomBarViewControllerWithPopupContainerTraitCollection:(UITraitCollection *)newCollection withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[_customBarViewController willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+}
+
 - (void)dealloc
 {
 	[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];

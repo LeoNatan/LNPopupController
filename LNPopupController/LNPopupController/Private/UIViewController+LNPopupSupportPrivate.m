@@ -329,6 +329,11 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		[self.popupContentViewController viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 	}
 	
+	if(self._ln_popupController_nocreate.popupBar.customBarViewController != nil)
+	{
+		[self._ln_popupController_nocreate.popupBar _transitionCustomBarViewControllerWithPopupContainerSize:size withCoordinator:coordinator];
+	}
+	
 	[self _ln_viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
@@ -337,6 +342,11 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 	if(self._ln_popupController_nocreate)
 	{
 		[self.popupContentViewController willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+	}
+	
+	if(self._ln_popupController_nocreate.popupBar.customBarViewController != nil)
+	{
+		[self._ln_popupController_nocreate.popupBar _transitionCustomBarViewControllerWithPopupContainerTraitCollection:newCollection withCoordinator:coordinator];
 	}
 	
 	[self _ln_willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
