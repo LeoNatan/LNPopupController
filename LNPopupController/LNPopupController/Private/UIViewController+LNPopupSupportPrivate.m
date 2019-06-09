@@ -147,6 +147,15 @@ static void __accessibilityBundleLoadHandler()
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+		if (@available(iOS 13.0, *))
+		{
+			__swizzleInstanceMethod(self,
+									@selector(isModalInPresentation),
+									@selector(_ln_isModalInPresentation));
+		}
+#endif
+		
 		__swizzleInstanceMethod(self,
 								@selector(viewDidLayoutSubviews),
 								@selector(_ln_popup_viewDidLayoutSubviews));
@@ -220,6 +229,16 @@ static void __accessibilityBundleLoadHandler()
 		}
 #endif
 	});
+}
+
+- (BOOL)_ln_isModalInPresentation
+{
+	if(self._ln_popupController_nocreate.popupControllerState >= LNPopupPresentationStateTransitioning)
+	{
+		return YES;
+	}
+	
+	return [self _ln_isModalInPresentation];
 }
 
 static UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)

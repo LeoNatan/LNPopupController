@@ -13,6 +13,7 @@
 #import "LNPopupLongPressGesutreRecognizer.h"
 #import "LNPopupInteractionPanGestureRecognizer.h"
 #import "_LNPopupBase64Utils.h"
+#import "NSObject+AltKVC.h"
 @import ObjectiveC;
 
 void __LNPopupControllerOutOfWindowHierarchy()
@@ -910,18 +911,29 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 #ifndef LNPopupControllerEnforceStrictClean
 	//backgroundView
 	static NSString* const bV = @"X2JhY2tncm91bmRWaWV3";
-	//backgroundView.shadowView.backgroundColor
-	static NSString* const bVsVbC = @"YmFja2dyb3VuZFZpZXcuc2hhZG93Vmlldy5iYWNrZ3JvdW5kQ29sb3I=";
 	
 	NSString* str1 = _LNPopupDecodeBase64String(bV);
 	
 	if([_bottomBar respondsToSelector:NSSelectorFromString(str1)])
 	{
-		NSString* str2 = _LNPopupDecodeBase64String(bVsVbC);
-		
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 10)
 		{
-			self.popupBar.systemShadowColor = [_bottomBar valueForKeyPath:str2];
+			id something = [_bottomBar valueForKey:str1];
+			
+			static NSString* sV;
+			static dispatch_once_t onceToken;
+			dispatch_once(&onceToken, ^{
+				if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 13)
+				{
+					sV = @"X3NoYWRvd1ZpZXcx";
+				}
+				else
+				{
+					sV = @"X3NoYWRvd1ZpZXc=";
+				}
+			});
+			UIView* somethingElse = [something __ln_valueForKey:_LNPopupDecodeBase64String(sV)];
+			self.popupBar.systemShadowColor = somethingElse.backgroundColor;
 		}
 		else
 		{
@@ -986,16 +998,27 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	CGFloat windowTopSafeAreaInset = 0;
 	
-	if (@available(iOS 11.0, *)) {
+	if (@available(iOS 13.0, *))
+	{
+		if([NSStringFromClass(self.containerController.presentationController.class) containsString:@"Fullscreen"])
+		{
+			windowTopSafeAreaInset += _popupContentView.window.safeAreaInsets.top;
+		}
+		else
+		{
+			windowTopSafeAreaInset += _popupContentView.safeAreaInsets.top + 5;
+		}
+	}
+	else if (@available(iOS 11.0, *))
+	{
 		windowTopSafeAreaInset += _popupContentView.window.safeAreaInsets.top;
 	}
 	
 	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
-	if(windowTopSafeAreaInset == 0)
+	if(windowTopSafeAreaInset == 0 && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 11)
 	{
 		_popupCloseButtonTopConstraint.constant += (_containerController.popupContentViewController.prefersStatusBarHidden ? 0 : [UIApplication sharedApplication].statusBarFrame.size.height);
 	}
-	
     
     id hitTest = [[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
     UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
@@ -1368,6 +1391,16 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 }
 
 #pragma mark _LNPopupBarDelegate
+
+- (void)_traitCollectionForPopupBarDidChange:(LNPopupBar*)bar
+{
+	[self _configurePopupBarFromBottomBar];
+}
+
+- (UITraitCollection*)_traitCollectionForPopupBar:(LNPopupBar*)bar
+{
+	return _bottomBar.traitCollection;
+}
 
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar
 {

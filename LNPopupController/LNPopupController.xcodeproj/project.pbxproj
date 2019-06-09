@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		390B30491B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */; };
 		390DD0111BB2EAC30064DB4A /* LNPopupContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		390F246122AC310A007E0CAE /* NSObject+AltKVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 390F245F22AC310A007E0CAE /* NSObject+AltKVC.h */; };
+		390F246222AC310A007E0CAE /* NSObject+AltKVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 390F246022AC310A007E0CAE /* NSObject+AltKVC.m */; };
 		391481BA1DCFA514002416D1 /* LNChevronView.m in Sources */ = {isa = PBXBuildFile; fileRef = 391481B81DCFA514002416D1 /* LNChevronView.m */; };
 		391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */ = {isa = PBXBuildFile; fileRef = 391481B91DCFA514002416D1 /* LNChevronView.h */; };
 		39222ADB1F1A1C5800388E06 /* LNPopupOpenTapGesutreRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 39222AD91F1A1C5800388E06 /* LNPopupOpenTapGesutreRecognizer.h */; };
@@ -48,6 +50,8 @@
 /* Begin PBXFileReference section */
 		390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LNPopupControllerAssets.xcassets; sourceTree = SOURCE_ROOT; };
 		390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupContentView.h; sourceTree = "<group>"; };
+		390F245F22AC310A007E0CAE /* NSObject+AltKVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+AltKVC.h"; sourceTree = "<group>"; };
+		390F246022AC310A007E0CAE /* NSObject+AltKVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AltKVC.m"; sourceTree = "<group>"; };
 		39109DA11DD8A305004B5FAB /* LNPopupCloseButton+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupCloseButton+Private.h"; sourceTree = "<group>"; };
 		391481B81DCFA514002416D1 /* LNChevronView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNChevronView.m; sourceTree = "<group>"; };
 		391481B91DCFA514002416D1 /* LNChevronView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNChevronView.h; sourceTree = "<group>"; };
@@ -102,6 +106,8 @@
 		3947E1AB1B61CDD70001178B /* Implementation */ = {
 			isa = PBXGroup;
 			children = (
+				390F245F22AC310A007E0CAE /* NSObject+AltKVC.h */,
+				390F246022AC310A007E0CAE /* NSObject+AltKVC.m */,
 				397AFBFE1F1A216400E7D95C /* GestureRecognizers */,
 				3934A9F41DD4C935004B073A /* LNPopupController.pch */,
 				39E7A602200B5157007AF3AD /* _LNPopupBase64Utils.h */,
@@ -200,6 +206,7 @@
 				391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */,
 				39599BAD1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h in Headers */,
 				3934A9F51DD4C935004B073A /* LNPopupController.pch in Headers */,
+				390F246122AC310A007E0CAE /* NSObject+AltKVC.h in Headers */,
 				397AFBFB1F1A1ED200E7D95C /* LNForwardingDelegate.h in Headers */,
 				39222ADB1F1A1C5800388E06 /* LNPopupOpenTapGesutreRecognizer.h in Headers */,
 				397AFC011F1A21DD00E7D95C /* LNPopupLongPressGesutreRecognizer.h in Headers */,
@@ -235,7 +242,7 @@
 		39DB52DC1B5823330061C589 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Leo Natan";
 				TargetAttributes = {
 					39DB52E41B5823330061C589 = {
@@ -246,10 +253,11 @@
 			};
 			buildConfigurationList = 39DB52DF1B5823330061C589 /* Build configuration list for PBXProject "LNPopupController" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 39DB52DB1B5823330061C589;
 			productRefGroup = 39DB52E61B5823330061C589 /* Products */;
@@ -281,6 +289,7 @@
 				397AFC021F1A21DD00E7D95C /* LNPopupLongPressGesutreRecognizer.m in Sources */,
 				39222ADC1F1A1C5800388E06 /* LNPopupOpenTapGesutreRecognizer.m in Sources */,
 				3947E1AA1B61CDA40001178B /* LNPopupCloseButton.m in Sources */,
+				390F246222AC310A007E0CAE /* NSObject+AltKVC.m in Sources */,
 				394A85C21B630992004FFC61 /* _LNWeakRef.m in Sources */,
 				394A85BA1B6304F5004FFC61 /* LNPopupItem.m in Sources */,
 				3947E1B31B61CE4A0001178B /* LNPopupController.m in Sources */,
@@ -302,6 +311,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -361,6 +371,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;

@@ -132,7 +132,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	return rv;
 }
 
-static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
+static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle, UITraitCollection* barTraitCollection)
 {
 	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
 }
@@ -268,6 +268,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	return self;
 }
 
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+	[self._barDelegate _traitCollectionForPopupBarDidChange:self];
+}
+
 - (void)_updateProgressViewWithStyle:(LNPopupBarProgressViewStyle)style
 {
 	style = _LNPopupResolveProgressViewStyleFromProgressViewStyle(style);
@@ -318,7 +323,9 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	_userBackgroundStyle = backgroundStyle;
 	
-	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle) : _userBackgroundStyle;
+	UITraitCollection* collection = [self._barDelegate _traitCollectionForPopupBar:self];
+	
+	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle, collection) : _userBackgroundStyle;
 
 	_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
 	

@@ -48,7 +48,13 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
+{	
+	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"DropShadow"])
+	{
+		otherGestureRecognizer.state = UIGestureRecognizerStateFailed;
+		return YES;
+	}
+	
 	if([NSStringFromClass(otherGestureRecognizer.class) containsString:@"Reveal"])
 	{
 		return NO;
