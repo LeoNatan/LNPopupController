@@ -506,6 +506,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_image = image;
 	
 	[self _layoutImageView];
+	[self _layoutBarButtonItems];
+	[self _setNeedsTitleLayout];
 }
 
 - (void)setAccessibilityCenterHint:(NSString *)accessibilityCenterHint
@@ -603,73 +605,59 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)_getLeftmostView:(UIView* __strong *)leftmostView rightmostView:(UIView* __strong *)rightmostView fromBarButtonItems:(NSArray<UIBarButtonItem*>*)barButtonItems
 {
-	[barButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
-		UIView* itemView = [self _viewForBarButtonItem:barButtonItem];
+	NSArray<UIBarButtonItem*>* sorted = [barButtonItems sortedArrayWithOptions:0 usingComparator:^NSComparisonResult(UIBarButtonItem*  _Nonnull obj1, UIBarButtonItem*  _Nonnull obj2) {
 		
-		if(itemView == nil)
-		{
-			return;
-		}
+		UIView* v1 = [self _viewForBarButtonItem:obj1];
+		UIView* v2 = [self _viewForBarButtonItem:obj2];
 		
-		*leftmostView = *leftmostView == nil ? itemView : itemView.frame.origin.x < (*leftmostView).frame.origin.x ? itemView : *leftmostView;
-		*rightmostView = *rightmostView == nil ? itemView : itemView.frame.origin.x > (*rightmostView).frame.origin.x ? itemView : *rightmostView;
+		return [@(v1.frame.origin.x) compare:@(v2.frame.origin.x)];
 	}];
+	
+	if(leftmostView != NULL) { *leftmostView = [self _viewForBarButtonItem:sorted.firstObject]; }
+	if(rightmostView != NULL) { *rightmostView = [self _viewForBarButtonItem:sorted.lastObject]; }
 }
 
 - (void)_updateTitleInsetsForCompactBar:(UIEdgeInsets*)titleInsets
 {
 	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
 	
-	UIView* leftmostViewLeft;
-	UIView* rightmostViewLeft;
-	
-	UIView* leftmostViewRight;
-	UIView* rightmostViewRight;
+	UIView* leftViewLast;
+	UIView* rightViewFirst;
 	
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
-		[self _getLeftmostView:&leftmostViewLeft rightmostView:&rightmostViewLeft fromBarButtonItems:self.leftBarButtonItems];
-		[self _getLeftmostView:&leftmostViewRight rightmostView:&rightmostViewRight fromBarButtonItems:self.rightBarButtonItems];
+		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.leftBarButtonItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.rightBarButtonItems];
 	}
 	else
 	{
-		[self _getLeftmostView:&rightmostViewLeft rightmostView:&leftmostViewLeft fromBarButtonItems:self.leftBarButtonItems];
-		[self _getLeftmostView:&rightmostViewRight rightmostView:&leftmostViewRight fromBarButtonItems:self.rightBarButtonItems];
+		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.rightBarButtonItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.leftBarButtonItems];
 	}
 	
 	if(@available(iOS 11, *))
 	{
-		[leftmostViewLeft.superview layoutIfNeeded];
-		[rightmostViewLeft.superview layoutIfNeeded];
-		[leftmostViewRight.superview layoutIfNeeded];
-		[rightmostViewRight.superview layoutIfNeeded];
+		[leftViewLast.superview layoutIfNeeded];
+		[rightViewFirst.superview layoutIfNeeded];
 	}
 	
-	CGRect rightmostViewLeftFrame = CGRectZero;
-	if(rightmostViewLeft != nil)
+	CGRect leftViewLastFrame = CGRectZero;
+	if(leftViewLast != nil)
 	{
-		rightmostViewLeftFrame = [self convertRect:rightmostViewLeft.bounds fromView:rightmostViewLeft];
+		leftViewLastFrame = [self convertRect:leftViewLast.bounds fromView:leftViewLast];
 	}
 	
-	CGRect leftmostViewRightFrame = CGRectMake(self.bounds.size.width, 0, 0, 0);
-	if(leftmostViewRight != nil)
+	CGRect rightViewFirstFrame = CGRectMake(self.bounds.size.width, 0, 0, 0);
+	if(rightViewFirst != nil)
 	{
-		leftmostViewRightFrame = [self convertRect:leftmostViewRight.bounds fromView:leftmostViewRight];
+		rightViewFirstFrame = [self convertRect:rightViewFirst.bounds fromView:rightViewFirst];
 	}
 	
 	CGFloat widthLeft = 0;
 	CGFloat widthRight = 0;
 	
-	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
-	{
-		widthLeft = rightmostViewLeftFrame.origin.x + rightmostViewLeftFrame.size.width;
-		widthRight = self.bounds.size.width - leftmostViewRightFrame.origin.x;
-	}
-	else
-	{
-		widthRight = leftmostViewRightFrame.origin.x + leftmostViewRightFrame.size.width;
-		widthLeft = self.bounds.size.width - rightmostViewLeftFrame.origin.x;
-	}
+	widthLeft = leftViewLastFrame.origin.x + leftViewLastFrame.size.width;
+	widthRight = self.bounds.size.width - rightViewFirstFrame.origin.x;
 	
 	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
 	{
@@ -689,8 +677,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
 	
-	UIView* leftmostView;
-	UIView* rightmostView;
+	UIView* leftViewLast;
+	UIView* rightViewFirst;
 	
 	NSMutableArray* allItems = [NSMutableArray new];
 	[allItems addObjectsFromArray:self.leftBarButtonItems];
@@ -698,66 +686,63 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
-		[self _getLeftmostView:&leftmostView rightmostView:&rightmostView fromBarButtonItems:allItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:allItems];
+		leftViewLast = _imageView.hidden ? nil : _imageView;
 	}
 	else
 	{
-		[self _getLeftmostView:&rightmostView rightmostView:&leftmostView fromBarButtonItems:allItems];
+		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:allItems];
+		rightViewFirst = _imageView.hidden ? nil : _imageView;
 	}
 	
 	if(@available(iOS 11, *))
 	{
-		[leftmostView.superview layoutIfNeeded];
-		[rightmostView.superview layoutIfNeeded];
+		[leftViewLast.superview layoutIfNeeded];
+		[rightViewFirst.superview layoutIfNeeded];
 	}
 	
-	CGRect leftmostViewFrame = CGRectMake(self.bounds.size.width, 0, 0, 0);
-	if(leftmostView != nil)
+	CGRect leftViewLastFrame = CGRectZero;
+	if(leftViewLast != nil)
 	{
-		leftmostViewFrame = [self convertRect:leftmostView.bounds fromView:leftmostView];
+		leftViewLastFrame = [self convertRect:leftViewLast.bounds fromView:leftViewLast];
+		
+		if(leftViewLast == _imageView)
+		{
+			leftViewLastFrame.size.width += MIN(self.layoutMargins.left, 20);
+		}
 	}
 	
-	CGFloat width;
-	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	CGRect rightViewFirstFrame = CGRectMake(self.bounds.size.width, 0, 0, 0);
+	if(rightViewFirst != nil)
 	{
-		width = self.bounds.size.width - leftmostViewFrame.origin.x;
-	}
-	else
-	{
-		width = leftmostViewFrame.origin.x + leftmostViewFrame.size.width;
+		rightViewFirstFrame = [self convertRect:rightViewFirst.bounds fromView:rightViewFirst];
+		
+		if(rightViewFirst == _imageView)
+		{
+			leftViewLastFrame.origin.x -= MIN(self.layoutMargins.left, 20);
+		}
 	}
 	
-	width = MAX(width, self.layoutMargins.right);
+	CGFloat widthLeft = 0;
+	CGFloat widthRight = 0;
 	
-	titleInsets->right += width;
+	widthLeft = leftViewLastFrame.origin.x + leftViewLastFrame.size.width;
+	widthRight = self.bounds.size.width - rightViewFirstFrame.origin.x;
+	
+	widthLeft = MAX(widthLeft, self.layoutMargins.left);
+	widthRight = MAX(widthRight, self.layoutMargins.right);
+	
+	//The added padding is for iOS 10 and below, or for certain conditions where iOS 11 won't put its own padding
+	titleInsets->left = widthLeft;
+	titleInsets->right = widthRight;
 }
 
 - (void)_layoutTitles
 {
-	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
 	UIEdgeInsets titleInsets = UIEdgeInsetsZero;
-	
-	CGFloat imageLeading;
-	
-	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
-	{
-		imageLeading = self.layoutMargins.left;
-		if (@available(iOS 11.0, *)) {
-			imageLeading = MAX(self.window.safeAreaInsets.left, imageLeading);
-		}
-	}
-	else
-	{
-		imageLeading = self.layoutMargins.right;
-		if (@available(iOS 11.0, *)) {
-			imageLeading = MAX(self.window.safeAreaInsets.right, imageLeading);
-		}
-	}
 	
 	if(_resolvedStyle == LNPopupBarStyleProminent)
 	{
-		titleInsets.left = _imageView.hidden ? 0 : imageLeading + _imageView.frame.size.width + 17.5;
-		
 		[self _updateTitleInsetsForProminentBar:&titleInsets];
 	}
 	else
@@ -771,7 +756,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	CGRect frame = _titlesView.frame;
 	frame.size.width = self.bounds.size.width - titleInsets.left - titleInsets.right;
 	frame.size.height = self.bounds.size.height;
-	frame.origin.x = layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight ? titleInsets.left : titleInsets.right;
+	frame.origin.x = titleInsets.left;
 	
 	_titlesView.frame = frame;
 	
