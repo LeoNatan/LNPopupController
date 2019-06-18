@@ -34,7 +34,11 @@
 {
 	[super viewDidLoad];
 	
-	self.view.backgroundColor = LNRandomLightColor();
+	if (@available(iOS 13.0, *)) {
+		self.view.backgroundColor = LNRandomAdaptiveColor();
+	} else {
+		self.view.backgroundColor = LNRandomLightColor();
+	}
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -60,7 +64,15 @@
 - (IBAction)_changeBarStyle:(id)sender
 {
 	self.navigationController.toolbar.barStyle = 1 - self.navigationController.toolbar.barStyle;
-	self.navigationController.toolbar.tintColor = self.navigationController.toolbar.barStyle ? LNRandomLightColor() : self.view.tintColor;
+	
+	UIColor* adaptiveColor;
+	if (@available(iOS 13.0, *)) {
+		adaptiveColor = LNRandomAdaptiveInvertedColor();
+	} else {
+		adaptiveColor = LNRandomDarkColor();
+	}
+	
+	self.navigationController.toolbar.tintColor = self.navigationController.toolbar.barStyle ? LNRandomLightColor() : adaptiveColor;
 	[self.navigationController.toolbar.items enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		obj.tintColor = self.navigationController.toolbar.tintColor;
 	}];
@@ -110,15 +122,33 @@
 	
 //	UIViewController* demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
 	UIViewController* demoVC = [DemoPopupContentViewController new];
-	demoVC.view.backgroundColor = LNRandomDarkColor();
-	demoVC.popupItem.title = [LoremIpsum sentence];
-	demoVC.popupItem.subtitle = [LoremIpsum sentence];
+	
+	if (@available(iOS 13.0, *)) {
+		demoVC.view.backgroundColor = LNRandomAdaptiveInvertedColor();
+	} else {
+		demoVC.view.backgroundColor = LNRandomDarkColor();
+	}
+	
+	if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
+	{
+		demoVC.popupItem.title = @"עברית";//[LoremIpsum sentence];
+		demoVC.popupItem.subtitle = @"עברית";//[LoremIpsum sentence];
+	}
+	else
+	{
+		demoVC.popupItem.title = [LoremIpsum sentence];
+		demoVC.popupItem.subtitle = [LoremIpsum sentence];
+	}
 	demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
 	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
 	
 	UILabel* topLabel = [UILabel new];
 	topLabel.text = NSLocalizedString(@"Top", @"");
-	topLabel.textColor = [UIColor whiteColor];
+	if (@available(iOS 13.0, *)) {
+		topLabel.textColor = [UIColor systemBackgroundColor];
+	} else {
+		topLabel.textColor = [UIColor whiteColor];
+	}
 	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:topLabel];
@@ -127,7 +157,11 @@
 	
 	UILabel* bottomLabel = [UILabel new];
 	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
-	bottomLabel.textColor = [UIColor whiteColor];
+	if (@available(iOS 13.0, *)) {
+		bottomLabel.textColor = [UIColor systemBackgroundColor];
+	} else {
+		bottomLabel.textColor = [UIColor whiteColor];
+	}
 	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:bottomLabel];

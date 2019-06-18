@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.12" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina5_5" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.13"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.15"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -219,32 +219,28 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="always" id="JYD-6c-4Kf">
-                        <barButtonItem key="rightBarButtonItem" title="Item" style="done" id="PjS-ok-m0Q">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" id="OEn-BJ-Dk2">
-                                <rect key="frame" x="0.0" y="0.0" width="24.666666666666686" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <segue destination="Xmg-Iw-fcI" kind="presentation" id="5yL-aD-c8O"/>
-                                </connections>
-                            </button>
+                        <barButtonItem key="rightBarButtonItem" image="gear" catalog="system" style="done" id="PjS-ok-m0Q">
+                            <connections>
+                                <segue destination="Xmg-Iw-fcI" kind="presentation" id="uvn-C9-GfA"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="257-FE-s5s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-683" y="-1628"/>
+            <point key="canvasLocation" x="-777" y="-1587"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Wh6-v8-fQK">
             <objects>
-                <navigationController toolbarHidden="NO" id="GHH-ob-Ng8" sceneMemberID="viewController">
+                <navigationController modalPresentationStyle="fullScreen" toolbarHidden="NO" id="GHH-ob-Ng8" sceneMemberID="viewController">
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="2ug-wj-yax">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="eEz-t1-9Ax">
-                        <rect key="frame" x="0.0" y="574" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="594" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
@@ -331,6 +327,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="N4q-gh-14d" secondAttribute="centerX" id="0fv-yD-Bxc"/>
                             <constraint firstItem="nEq-zO-EP8" firstAttribute="top" secondItem="N4q-gh-14d" secondAttribute="bottom" constant="8" id="7gK-sx-KzT"/>
@@ -410,8 +407,8 @@
         <scene sceneID="qqf-ac-jlJ">
             <objects>
                 <navigationController id="Xmg-Iw-fcI" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="AQz-db-v4r">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="AQz-db-v4r">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="I01-gw-9xH">
@@ -424,7 +421,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="peO-3C-gmF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1023" y="-2352"/>
+            <point key="canvasLocation" x="6" y="-2439"/>
         </scene>
         <!--Settings-->
         <scene sceneID="VnF-0o-TTi">
@@ -804,7 +801,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6QU-R6-p5P" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="wfg-ir-axY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-209" y="-2411"/>
+            <point key="canvasLocation" x="855" y="-2439"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="08l-cu-6cc">
@@ -826,7 +823,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RRw-0R-8hQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="538" y="-1705"/>
+            <point key="canvasLocation" x="854" y="-1765"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ouL-tO-EtQ">
@@ -849,7 +846,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="kbq-hr-FKV">
             <objects>
-                <tabBarController id="FNS-iY-Dsd" sceneMemberID="viewController">
+                <tabBarController modalPresentationStyle="fullScreen" id="FNS-iY-Dsd" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Ttb-b6-jET">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -869,16 +866,19 @@
             <point key="canvasLocation" x="587" y="-629"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="gear" catalog="system" width="64" height="60"/>
+    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="QzR-Fj-x6F"/>
         <segue reference="Skw-Eu-N7K"/>
         <segue reference="08s-5F-WiR"/>
         <segue reference="SIC-fE-4sh"/>
-        <segue reference="7qJ-pK-ibQ"/>
+        <segue reference="sDT-1s-aAn"/>
         <segue reference="1U6-NV-9t4"/>
         <segue reference="iD8-2E-cMh"/>
         <segue reference="19O-Tx-Ntx"/>
-        <segue reference="vd8-Hz-cBU"/>
+        <segue reference="IDA-Po-Fia"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" cocoaTouchSystemColor="systemPinkColor"/>
 </document>

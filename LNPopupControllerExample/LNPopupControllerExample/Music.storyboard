@@ -11,7 +11,7 @@
         <!--Portrait Tab Bar Controller-->
         <scene sceneID="iLV-JU-tm0">
             <objects>
-                <tabBarController id="sTg-sL-qRq" customClass="PortraitTabBarController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController modalPresentationStyle="fullScreen" id="sTg-sL-qRq" customClass="PortraitTabBarController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="7rm-Dn-iNB">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>

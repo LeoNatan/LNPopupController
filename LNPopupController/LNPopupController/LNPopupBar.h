@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern const NSInteger LNBackgroundStyleInherit;
+extern const UIBlurEffectStyle LNBackgroundStyleInherit;
 
 /**
  * Available styles for the popup bar 

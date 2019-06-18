@@ -98,7 +98,7 @@ const CGFloat LNPopupBarHeightCompact = 40.0;
 const CGFloat LNPopupBarHeightProminent = 64.0;
 const CGFloat LNPopupBarProminentImageWidth = 48.0;
 
-const NSInteger LNBackgroundStyleInherit = -1;
+const UIBlurEffectStyle LNBackgroundStyleInherit = -9876;
 
 @implementation LNPopupBar
 {
@@ -132,8 +132,20 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	return rv;
 }
 
-static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle, UITraitCollection* barTraitCollection)
+static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
 {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+	if (@available(iOS 13.0, *))
+	{
+		if(systemBarStyle == UIBarStyleBlack)
+		{
+			return barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleSystemChromeMaterialDark : UIBlurEffectStyleSystemUltraThinMaterialDark;
+		}
+		
+		return barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleSystemChromeMaterial : UIBlurEffectStyleSystemUltraThinMaterial;
+	}
+#endif
+	
 	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
 }
 
@@ -323,9 +335,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	_userBackgroundStyle = backgroundStyle;
 	
-	UITraitCollection* collection = [self._barDelegate _traitCollectionForPopupBar:self];
-	
-	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle, collection) : _userBackgroundStyle;
+	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle) : _userBackgroundStyle;
 
 	_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
 	
@@ -333,7 +343,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	if(_userBackgroundStyle == LNBackgroundStyleInherit)
 	{
-		if(_actualBackgroundStyle == UIBlurEffectStyleDark)
+		if (@available(iOS 13.0, *))
+		{
+			_backgroundView.backgroundColor = nil;
+		}
+		else if(_actualBackgroundStyle == UIBlurEffectStyleDark)
 		{
 			_backgroundView.backgroundColor = [UIColor clearColor];
 		}
@@ -376,13 +390,22 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	_userBarTintColor = barTintColor;
 	
-	UIColor* colorToUse = [_userBarTintColor ?: _systemBarTintColor colorWithAlphaComponent:0.67];
+	UIColor* colorToUse = _userBarTintColor ?: _systemBarTintColor;
 	
 	if(_translucent == NO)
 	{
-		colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : (_actualBackgroundStyle == UIBlurEffectStyleLight || _actualBackgroundStyle == UIBlurEffectStyleExtraLight) ? [UIColor whiteColor] : [UIColor blackColor];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+		if (@available(iOS 13.0, *)) {
+			colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : UIColor.systemBackgroundColor;
+		} else {
+#endif
+			colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : (_actualBackgroundStyle == UIBlurEffectStyleLight || _actualBackgroundStyle == UIBlurEffectStyleExtraLight) ? [UIColor whiteColor] : [UIColor blackColor];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+		}
+#endif
 	}
 	
+	_backgroundView.alpha = colorToUse != nil ? 0.0 : 1.0;
 	self.backgroundColor = colorToUse;
 }
 
@@ -598,8 +621,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		itemView = itemView.superview;
 	}
 	
-//	itemView.backgroundColor = UIColor.greenColor;
-	
 	return itemView;
 }
 
@@ -719,7 +740,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		if(rightViewFirst == _imageView)
 		{
-			leftViewLastFrame.origin.x -= MIN(self.layoutMargins.left, 20);
+			rightViewFirstFrame.origin.x -= MIN(self.layoutMargins.left, 20);
 		}
 	}
 	
@@ -939,10 +960,20 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)_setTitleLableFontsAccordingToBarStyleAndTint
 {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+	if (@available(iOS 13.0, *))
+	{
+		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor labelColor];
+		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor secondaryLabelColor];
+		
+		return;
+	}
+#endif
+	
 	if(_actualBackgroundStyle != UIBlurEffectStyleDark)
 	{
 		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: _resolvedStyle == LNPopupBarStyleProminent ? [UIColor colorWithWhite:(38.0 / 255.0) alpha:1.0] : [UIColor blackColor];
-		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: _resolvedStyle == LNPopupBarStyleProminent ? [UIColor colorWithWhite:(38.0 / 255.0) alpha:1.0] : [UIColor darkGrayColor];
+		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: _resolvedStyle == LNPopupBarStyleProminent ? [UIColor colorWithWhite:(38.0 / 255.0) alpha:1.0] : [UIColor blackColor];
 	}
 	else
 	{

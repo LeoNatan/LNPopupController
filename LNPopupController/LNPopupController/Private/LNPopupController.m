@@ -385,7 +385,22 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			_currentContentController.view.clipsToBounds = NO;
 			_currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 			
-			if(CGColorGetAlpha(_currentContentController.view.backgroundColor.CGColor) < 1.0)
+			__block BOOL alphaLessThanZero;
+			void (^block)(void) = ^ {
+				alphaLessThanZero = CGColorGetAlpha(_currentContentController.view.backgroundColor.CGColor) < 1.0;
+			};
+			
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+			if (@available(iOS 13.0, *)) {
+				[_currentContentController.traitCollection performAsCurrentTraitCollection:block];
+			} else {
+#endif
+				block();
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+			}
+#endif
+			
+			if(alphaLessThanZero)
 			{
 				//Support for iOS8, where this property was exposed as readonly.
 				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:self.popupBar.backgroundStyle] forKey:@"effect"];
@@ -1395,11 +1410,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 - (void)_traitCollectionForPopupBarDidChange:(LNPopupBar*)bar
 {
 	[self _configurePopupBarFromBottomBar];
-}
-
-- (UITraitCollection*)_traitCollectionForPopupBar:(LNPopupBar*)bar
-{
-	return _bottomBar.traitCollection;
 }
 
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar

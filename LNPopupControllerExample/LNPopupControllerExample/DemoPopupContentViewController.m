@@ -8,6 +8,7 @@
 
 #import "DemoPopupContentViewController.h"
 #import "SettingsTableViewController.h"
+#import "RandomColors.h"
 
 @import LNPopupController;
 
@@ -68,6 +69,11 @@
 	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[customCloseButton setTitle:@"Custom Close Button" forState:UIControlStateNormal];
 	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
+	if (@available(iOS 13.0, *)) {
+		[customCloseButton setTitleColor:UIColor.systemBackgroundColor forState:UIControlStateNormal];
+	} else {
+		[customCloseButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+	}
 	[customCloseButton addTarget:self action:@selector(_closePopup) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:customCloseButton];
 	[NSLayoutConstraint activateConstraints:@[

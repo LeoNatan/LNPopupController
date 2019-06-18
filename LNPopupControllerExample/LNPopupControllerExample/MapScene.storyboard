@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ZEq-0J-wEi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.12" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ZEq-0J-wEi">
     <device id="retina6_5" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.13"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.15"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="iOS 13.0 system colors" minToolsVersion="11.0"/>
@@ -12,7 +12,7 @@
         <!--Map View Controller-->
         <scene sceneID="3w6-78-LuP">
             <objects>
-                <viewController id="ZEq-0J-wEi" customClass="MapViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="ZEq-0J-wEi" customClass="MapViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Mjn-jY-G6a">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -65,6 +65,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="34" id="chp-bk-fGg"/>
+                                </constraints>
                                 <blurEffect style="regular"/>
                             </visualEffectView>
                         </subviews>
@@ -76,7 +79,7 @@
                             <constraint firstItem="fTi-HK-yCs" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="9KY-CO-k2N"/>
                             <constraint firstAttribute="bottom" secondItem="0EZ-UY-PPz" secondAttribute="bottom" id="N7c-ke-EAK"/>
                             <constraint firstItem="z3u-Zt-das" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="OyN-F7-yvr"/>
-                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="bottom" secondItem="fTi-HK-yCs" secondAttribute="top" id="SqU-Rg-Diz"/>
+                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="bottom" secondItem="fTi-HK-yCs" secondAttribute="top" priority="999" id="SqU-Rg-Diz"/>
                             <constraint firstItem="0EZ-UY-PPz" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="Wu3-sg-B75"/>
                             <constraint firstItem="0EZ-UY-PPz" firstAttribute="top" secondItem="Mjn-jY-G6a" secondAttribute="top" id="X5B-e0-JAK"/>
                             <constraint firstItem="5u8-d1-mBI" firstAttribute="leading" secondItem="ttR-e1-b3Y" secondAttribute="leading" constant="20" id="bmi-kg-d43"/>
@@ -89,7 +92,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="FqG-7m-AwO"/>
                     <connections>
+                        <outlet property="bottomVisualEffectView" destination="fTi-HK-yCs" id="FpD-Ap-F4I"/>
                         <outlet property="mapView" destination="0EZ-UY-PPz" id="GuK-zJ-CCA"/>
+                        <outlet property="topVisualEffectView" destination="z3u-Zt-das" id="v79-xZ-0M1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZdB-FL-LqA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -104,7 +109,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="90" sectionHeaderHeight="28" sectionFooterHeight="28" id="aJL-nE-WRG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="scrollIndicatorInsets" minX="0.0" minY="50" maxX="0.0" maxY="0.0"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="pNG-dh-qzg">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="65"/>
@@ -150,6 +155,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="YFg-LF-k2d" detailTextLabel="aaO-Yd-xQO" style="IBUITableViewCellStyleSubtitle" id="CMG-iF-if1">
                                         <rect key="frame" x="0.0" y="183" width="414" height="90"/>
@@ -174,6 +180,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="OJa-Gr-emV" detailTextLabel="cOx-0L-Baz" style="IBUITableViewCellStyleSubtitle" id="wGX-td-kdB">
                                         <rect key="frame" x="0.0" y="273" width="414" height="90"/>
@@ -198,6 +205,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="BzK-EW-JJD" detailTextLabel="1Im-KD-s0N" style="IBUITableViewCellStyleSubtitle" id="R0F-Vi-FQs">
                                         <rect key="frame" x="0.0" y="363" width="414" height="90"/>
@@ -222,6 +230,7 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
