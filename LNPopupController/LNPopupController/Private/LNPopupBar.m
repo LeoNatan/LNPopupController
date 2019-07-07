@@ -247,7 +247,13 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
 		_imageView.isAccessibilityElement = YES;
-		_imageView.layer.cornerRadius = 3;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+		if (@available(iOS 13.0, *)) {
+			_imageView.layer.cornerCurve = kCACornerCurveCircular;
+		}
+#endif
+		_imageView.layer.cornerRadius = 6;
+		
 		_imageView.layer.masksToBounds = YES;
         if (@available(iOS 11, *)) {
             // support smart invert and therefore do not invert image view colors

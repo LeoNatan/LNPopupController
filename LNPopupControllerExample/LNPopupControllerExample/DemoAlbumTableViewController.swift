@@ -11,6 +11,8 @@ import LNPopupController
 
 class DemoAlbumTableViewController: UITableViewController {
 
+	@IBOutlet var demoAlbumImageView: UIImageView!
+	
 	var images: [UIImage]
 	var titles: [String]
 	var subtitles: [String]
@@ -27,6 +29,12 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.view.tintColor = view.tintColor
 		
         super.viewDidLoad()
+		
+		if #available(iOS 13.0, *) {
+			demoAlbumImageView.layer.cornerCurve = .continuous
+		}
+		demoAlbumImageView.layer.cornerRadius = 8
+		demoAlbumImageView.layer.masksToBounds = true
 		
 		for idx in 1...self.tableView(tableView, numberOfRowsInSection: 0) {
 			images += [UIImage(named: "genre\(idx)")!]
@@ -100,8 +108,12 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
-		tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
-		tabBarController?.popupBar.imageView.layer.cornerRadius = 5
+		
+		if #available(iOS 13.0, *) {
+			tabBarController?.popupBar.tintColor = UIColor.label
+		} else {
+			tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
+		}
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}

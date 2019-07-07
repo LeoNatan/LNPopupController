@@ -106,6 +106,14 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
 	}
 	
+	if (@available(iOS 13.0, *))
+	{
+		if([otherGestureRecognizer.name hasPrefix:@"undointeraction"])
+		{
+			return NO;
+		}
+	}
+	
 	return YES;
 }
 

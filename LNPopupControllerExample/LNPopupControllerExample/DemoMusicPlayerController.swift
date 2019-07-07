@@ -76,6 +76,11 @@ class DemoMusicPlayerController: UIViewController {
 		albumNameLabel.text = albumTitle
 		albumArtImageView.image = albumArt
 		
+		if #available(iOS 13.0, *) {
+			albumArtImageView.layer.cornerCurve = .continuous
+		}
+		albumArtImageView.layer.cornerRadius = 16
+		
 		timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 	}
 	
