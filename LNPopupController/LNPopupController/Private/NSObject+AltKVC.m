@@ -20,9 +20,7 @@
 	NSString* uKey = [NSString stringWithFormat:@"_%@", key];
 	
 	for(NSUInteger idx = 0; idx < count; idx++)
-	{
-//		NSLog(@"%s", ivar_getName(ivarList[idx]));
-		
+	{		
 		NSString* name = [NSString stringWithUTF8String:ivar_getName(ivarList[idx])];
 		
 		if([name isEqualToString:key] || [name isEqualToString:uKey])

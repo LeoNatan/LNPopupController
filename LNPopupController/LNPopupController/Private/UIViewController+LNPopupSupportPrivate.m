@@ -45,6 +45,7 @@ static const void* LNToolbarBuggy = &LNToolbarBuggy;
 static const void* LNPopupAdjustingInsets = &LNPopupAdjustingInsets;
 static const void* LNPopupAdditionalSafeAreaInsets = &LNPopupAdditionalSafeAreaInsets;
 static const void* LNUserAdditionalSafeAreaInsets = &LNUserAdditionalSafeAreaInsets;
+static const void* LNPopupIgnorePrepareTabBar = &LNPopupIgnorePrepareTabBar;
 
 #ifndef LNPopupControllerEnforceStrictClean
 //_setContentOverlayInsets:
@@ -77,6 +78,8 @@ static NSString* const uiVCA = @"VUlWaWV3Q29udHJvbGxlckFjY2Vzc2liaWxpdHk=";
 static NSString* const uiNVCA = @"VUlOYXZpZ2F0aW9uQ29udHJvbGxlckFjY2Vzc2liaWxpdHk=";
 //UITabBarControllerAccessibility
 static NSString* const uiTBCA = @"VUlUYWJCYXJDb250cm9sbGVyQWNjZXNzaWJpbGl0eQ==";
+//_prepareTabBar
+static NSString* const pTBBase64 = @"X3ByZXBhcmVUYWJCYXI=";
 
 static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
@@ -135,6 +138,8 @@ static void __accessibilityBundleLoadHandler()
 	}];
 }
 #endif
+
+#pragma mark - UIViewController
 
 @interface UIViewController ()
 //_edgeInsetsForChildViewController:insetsAreAbsolute:
@@ -672,6 +677,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 }
 
+#pragma mark - UITabBarController
+
 @interface UITabBarController (LNPopupSupportPrivate) @end
 @implementation UITabBarController (LNPopupSupportPrivate)
 
@@ -684,6 +691,17 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)_setTabBarHiddenDuringTransition:(BOOL)toolbarHidden
 {
 	objc_setAssociatedObject(self, LNToolbarHiddenBeforeTransition, @(toolbarHidden), OBJC_ASSOCIATION_RETAIN);
+}
+
+- (BOOL)_isPrepareTabBarIgnored
+{
+	NSNumber* isHidden = objc_getAssociatedObject(self, LNPopupIgnorePrepareTabBar);
+	return isHidden.boolValue;
+}
+
+- (void)_setPrepareTabBarIgnored:(BOOL)isPrepareTabBarIgnored
+{
+	objc_setAssociatedObject(self, LNPopupIgnorePrepareTabBar, @(isPrepareTabBarIgnored), OBJC_ASSOCIATION_RETAIN);
 }
 
 - (nullable UIView *)bottomDockingViewForPopup_nocreate
@@ -708,8 +726,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (CGRect)defaultFrameForBottomDockingView
 {
 	CGRect bottomBarFrame = self.tabBar.frame;
-	CGSize bottomBarSizeThatFits = [self.tabBar sizeThatFits:CGSizeZero];
-	bottomBarFrame.size.height = MAX(bottomBarFrame.size.height, bottomBarSizeThatFits.height);
+	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 13)
+	{
+		CGSize bottomBarSizeThatFits = [self.tabBar sizeThatFits:CGSizeZero];
+		bottomBarFrame.size.height = MAX(bottomBarFrame.size.height, bottomBarSizeThatFits.height);
+	}
 	
 	bottomBarFrame.origin = CGPointMake(0, self.view.bounds.size.height - (self._isTabBarHiddenDuringTransition ? 0.0 : bottomBarFrame.size.height));
 	
@@ -754,6 +775,14 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		__swizzleInstanceMethod(self,
 								NSSelectorFromString(selName),
 								@selector(_uLFSBAIO));
+		
+		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion == 12)
+		{
+			selName = _LNPopupDecodeBase64String(pTBBase64);
+			__swizzleInstanceMethod(self,
+									NSSelectorFromString(selName),
+									@selector(_ln_pTB));
+		}
 #endif
 	});
 }
@@ -819,6 +848,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_showBarWithTransition:isExplicit:
 - (void)sBWT:(NSInteger)t iE:(BOOL)e
 {
+	if(self._ln_popupController_nocreate == nil || self._ln_popupController_nocreate.popupControllerState == LNPopupPresentationStateHidden)
+	{
+		[self _setPrepareTabBarIgnored:YES];
+	}
+	
 	[self _setTabBarHiddenDuringTransition:NO];
 	
 	[self sBWT:t iE:e];
@@ -830,6 +864,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		} completion:nil];
 		
 		[self.selectedViewController.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+			[self _setPrepareTabBarIgnored:NO];
 			if(context.isCancelled)
 			{
 				[self _setTabBarHiddenDuringTransition:YES];
@@ -841,6 +876,23 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			}];
 		}];
 	}
+}
+
+//_prepareTabBar
+- (void)_ln_pTB
+{
+	CGRect oldBarFrame = self.tabBar.frame;
+	
+	[self _ln_pTB];
+	
+	if(self._isPrepareTabBarIgnored == YES)
+	{
+		self.tabBar.frame = oldBarFrame;
+	}
+	
+	//	self.tabBar.frame = (CGRect){{0, 813}, {414, 83}};
+	
+	//	NSLog(@"🤦‍♂️ %@", [self valueForKey:@"_contentOverlayInsets"]);
 }
 #endif
 
@@ -855,6 +907,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 }
 
 @end
+
+#pragma mark - UINavigationController
 
 @interface UINavigationController (LNPopupSupportPrivate) @end
 @implementation UINavigationController (LNPopupSupportPrivate)
@@ -1018,6 +1072,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 }
 
 @end
+
+#pragma mark - UISplitViewController
 
 @interface UISplitViewController (LNPopupSupportPrivate) @end
 @implementation UISplitViewController (LNPopupSupportPrivate)

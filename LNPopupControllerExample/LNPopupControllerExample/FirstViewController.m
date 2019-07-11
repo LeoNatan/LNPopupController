@@ -13,6 +13,18 @@
 #import "RandomColors.h"
 #import "SettingsTableViewController.h"
 
+@interface TabBar : UITabBar @end
+@implementation TabBar
+
+- (void)setFrame:(CGRect)frame
+{
+//	NSLog(@"frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
+
+	[super setFrame:frame];
+}
+
+@end
+
 @interface DemoGalleryController : UITableViewController @end
 @implementation DemoGalleryController
 
