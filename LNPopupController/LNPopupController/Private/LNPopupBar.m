@@ -137,12 +137,14 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 	if (@available(iOS 13.0, *))
 	{
+		//On iOS 13 and above, return .chromeMaterial regardless of bar style (this is how Music.app appears)
+		
 		if(systemBarStyle == UIBarStyleBlack)
 		{
-			return barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleSystemChromeMaterialDark : UIBlurEffectStyleSystemUltraThinMaterialDark;
+			return UIBlurEffectStyleSystemChromeMaterialDark;
 		}
 		
-		return barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleSystemChromeMaterial : UIBlurEffectStyleSystemUltraThinMaterial;
+		return UIBlurEffectStyleSystemChromeMaterial;
 	}
 #endif
 	
@@ -215,7 +217,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[self _innerSetBackgroundStyle:LNBackgroundStyleInherit];
 		
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:self.bounds];
-		[_toolbar setBackgroundImage:[UIImage alloc] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+		[_toolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
 		_toolbar.layer.masksToBounds = YES;
 
@@ -234,7 +236,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
 		_progressView.translatesAutoresizingMaskIntoConstraints = NO;
-		_progressView.trackImage = [UIImage alloc];
+		_progressView.trackImage = [UIImage new];
 		[_toolbar addSubview:_progressView];
 		[self _updateProgressViewWithStyle:self.progressViewStyle];
         

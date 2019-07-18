@@ -776,7 +776,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 								NSSelectorFromString(selName),
 								@selector(_uLFSBAIO));
 		
-		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion == 12)
+		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 12)
 		{
 			selName = _LNPopupDecodeBase64String(pTBBase64);
 			__swizzleInstanceMethod(self,
@@ -848,10 +848,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_showBarWithTransition:isExplicit:
 - (void)sBWT:(NSInteger)t iE:(BOOL)e
 {
-	if(self._ln_popupController_nocreate == nil || self._ln_popupController_nocreate.popupControllerState == LNPopupPresentationStateHidden)
-	{
-		[self _setPrepareTabBarIgnored:YES];
-	}
+	[self _setPrepareTabBarIgnored:YES];
 	
 	[self _setTabBarHiddenDuringTransition:NO];
 	
