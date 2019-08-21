@@ -33,14 +33,16 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		
 		popupBar.customBarViewController = customMapBar
 		popupContentView.popupCloseButtonStyle = .none
+		if #available(iOS 13.0, *) {
+			popupContentView.backgroundStyle = .systemUltraThinMaterial
+		} else {
+			popupContentView.backgroundStyle = .extraLight
+		}
+//		popupContentView.isTranslucent = false
 		popupInteractionStyle = .snap
 		
 		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)
-		if #available(iOS 13.0, *) {
-			popupContentVC.tableView.backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
-		} else {
-			popupContentVC.tableView.backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
-		}
+		popupContentVC.tableView.backgroundColor = .clear
 		
 		DispatchQueue.main.async {
 			self.presentPopupBar(withContentViewController: self.popupContentVC, animated: false, completion: nil)

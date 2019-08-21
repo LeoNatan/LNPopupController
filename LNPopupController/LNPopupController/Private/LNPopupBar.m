@@ -103,8 +103,7 @@ const UIBlurEffectStyle LNBackgroundStyleInherit = -9876;
 @implementation LNPopupBar
 {
 	LNPopupBarStyle _resolvedStyle;
-	
-	UIVisualEffectView* _backgroundView;
+
 	BOOL _delaysBarButtonItemLayout;
 	UIView* _titlesView;
 	UILabel<__MarqueeLabelType>* _titleLabel;
@@ -347,7 +346,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 	_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
 	
-	[_backgroundView setValue:_customBlurEffect forKey:@"effect"];
+	_backgroundView.effect = _customBlurEffect;
 	
 	if(_userBackgroundStyle == LNBackgroundStyleInherit)
 	{

@@ -165,6 +165,9 @@ static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
 		[self addSubview:_effectView];
         
         _popupCloseButtonAutomaticallyUnobstructsTopBars = YES;
+		
+		_translucent = YES;
+		_backgroundStyle = LNBackgroundStyleInherit;
 	}
 	
 	return self;
@@ -182,16 +185,58 @@ static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
 	return _effectView.contentView;
 }
 
-- (void)setEffect:(UIVisualEffect*)effect
-{
-	[_effectView setEffect:effect];
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
 	if(scrollView.contentOffset.y > 0)
 	{
 		scrollView.contentOffset = CGPointZero;
+	}
+}
+
+- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect
+{
+	__block BOOL alphaLessThanZero;
+	void (^block)(void) = ^ {
+		alphaLessThanZero = CGColorGetAlpha(vc.view.backgroundColor.CGColor) < 1.0;
+	};
+	
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+	if (@available(iOS 13.0, *)) {
+		[vc.traitCollection performAsCurrentTraitCollection:block];
+	} else {
+#endif
+		block();
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+	}
+#endif
+	
+	if(alphaLessThanZero)
+	{
+		if(self.translucent == NO)
+		{
+			_effectView.effect = nil;
+		}
+		else if(self.backgroundStyle == LNBackgroundStyleInherit)
+		{
+			_effectView.effect = barEffect;
+		}
+		else
+		{
+			_effectView.effect = [UIBlurEffect effectWithStyle:self.backgroundStyle];
+		}
+		
+		if(self.popupCloseButton.style == LNPopupCloseButtonStyleRound)
+		{
+			self.popupCloseButton.layer.shadowOpacity = 0.2;
+		}
+	}
+	else
+	{
+		_effectView.effect = nil;
+		if(self.popupCloseButton.style == LNPopupCloseButtonStyleRound)
+		{
+			self.popupCloseButton.layer.shadowOpacity = 0.1;
+		}
 	}
 }
 
@@ -385,38 +430,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			_currentContentController.view.clipsToBounds = NO;
 			_currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 			
-			__block BOOL alphaLessThanZero;
-			void (^block)(void) = ^ {
-				alphaLessThanZero = CGColorGetAlpha(_currentContentController.view.backgroundColor.CGColor) < 1.0;
-			};
-			
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-			if (@available(iOS 13.0, *)) {
-				[_currentContentController.traitCollection performAsCurrentTraitCollection:block];
-			} else {
-#endif
-				block();
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-			}
-#endif
-			
-			if(alphaLessThanZero)
-			{
-				//Support for iOS8, where this property was exposed as readonly.
-				[self.popupContentView setValue:[UIBlurEffect effectWithStyle:self.popupBar.backgroundStyle] forKey:@"effect"];
-				if(self.popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound)
-				{
-					self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.2;
-				}
-			}
-			else
-			{
-				[self.popupContentView setValue:nil forKey:@"effect"];
-				if(self.popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound)
-				{
-					self.popupContentView.popupCloseButton.layer.shadowOpacity = 0.1;
-				}
-			}
+			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController barEffect:(id)self.popupBar.backgroundView.effect];
 			
 			[self.popupContentView.contentView addSubview:_currentContentController.view];
 			[self.popupContentView.contentView sendSubviewToBack:_currentContentController.view];

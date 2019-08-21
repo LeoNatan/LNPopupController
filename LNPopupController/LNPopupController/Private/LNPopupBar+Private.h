@@ -67,6 +67,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, strong) UIProgressView* progressView;
 
+@property (nonatomic, strong) UIVisualEffectView* backgroundView;
+
 @property (nonatomic, copy) NSString* accessibilityCenterLabel;
 @property (nonatomic, copy) NSString* accessibilityCenterHint;
 @property (nonatomic, copy) NSString* accessibilityImageLabel;

@@ -11,6 +11,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern const UIBlurEffectStyle LNBackgroundStyleInherit;
+
 /**
  * Holds the popup content container view, as well as the popup close button and the popup interaction gesture recognizer.
  */
@@ -38,6 +40,20 @@ NS_ASSUME_NONNULL_BEGIN
  * Move close button under navigation bars
  */
 @property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars;
+
+/**
+ * The popup content view background style, used when the popup content controller's view has transparency.
+ *
+ * Use @c LNBackgroundStyleInherit value to inherit the popup bar's background style if possible.
+ *
+ * Defaults to @c LNBackgroundStyleInherit
+ */
+@property (nonatomic, assign) UIBlurEffectStyle backgroundStyle UI_APPEARANCE_SELECTOR;
+
+/**
+ * A Boolean value that indicates whether the popup conetnt view is translucent (@c YES) or not (@c NO).
+ */
+@property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
 
 @end
 
