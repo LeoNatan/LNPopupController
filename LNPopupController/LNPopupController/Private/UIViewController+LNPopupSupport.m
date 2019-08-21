@@ -164,6 +164,7 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return self.view;
 }
 
+#if ! TARGET_OS_MACCATALYST
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (id<LNPopupBarPreviewingDelegate>)popupBarPreviewingDelegate
@@ -179,6 +180,7 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	[self didChangeValueForKey:@"popupBarPreviewingDelegate"];
 }
 #pragma clang diagnostic pop
+#endif
 
 @end
 

@@ -22,3 +22,28 @@
 }
 
 @end
+
+@interface SceneSplitViewController : UISplitViewController <UISplitViewControllerDelegate> @end
+@implementation SceneSplitViewController
+
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+	{
+		self.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
+	}
+}
+
+- (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController
+{
+	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+	{
+		return YES;
+	}
+	
+	return splitViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
+}
+
+@end

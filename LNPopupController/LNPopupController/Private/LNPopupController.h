@@ -48,4 +48,6 @@
 
 - (void)_configurePopupBarFromBottomBar;
 
++ (CGFloat)_statusBarHeightForView:(UIView*)view;
+
 @end

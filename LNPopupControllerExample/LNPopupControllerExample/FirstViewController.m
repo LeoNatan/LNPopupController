@@ -38,6 +38,16 @@
 
 @end
 
+@interface DemoGalleryControllerTableView : UITableView @end
+@implementation DemoGalleryControllerTableView
+
+- (BOOL)canBecomeFocused
+{
+	return NO;
+}
+
+@end
+
 @interface DemoGalleryController : UITableViewController @end
 @implementation DemoGalleryController
 
@@ -59,6 +69,14 @@
 	[animator addCompletion:^{
 		[self presentViewController:vc animated:YES completion:nil];
 	}];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+	if(segue.destinationViewController.modalPresentationStyle != UIModalPresentationFullScreen)
+	{
+		[self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+	}
 }
 
 @end
@@ -125,19 +143,9 @@
 	[self.navigationController updatePopupBarAppearance];
 }
 
-- (IBAction)_presentBar:(id)sender
+- (UIViewController*)_targetVCForPopup
 {
-	//All this logic is just so I can use the same controllers over and over in all examples. :-)
-	
-	if(sender == nil &&
-	   self.navigationController == nil &&
-	   self.splitViewController != nil &&
-	   self != self.splitViewController.viewControllers.firstObject)
-	{
-		return;
-	}
-	
-	UIViewController* targetVC = self.navigationController == nil ? self.splitViewController : nil;
+	UIViewController* targetVC = self.navigationController == nil ? self.splitViewController != self.view.window.rootViewController ? self.splitViewController : nil : nil;
 	
 	if(targetVC == nil)
 	{
@@ -152,6 +160,24 @@
 			}
 		}
 	}
+	
+	return targetVC;
+}
+
+- (IBAction)_presentBar:(id)sender
+{
+	//All this logic is just so I can use the same controllers over and over in all examples. :-)
+	
+	if(sender == nil &&
+	   self.navigationController == nil &&
+	   self.splitViewController != nil &&
+	   self.splitViewController != self.view.window.rootViewController &&
+	   self != self.splitViewController.viewControllers.firstObject)
+	{
+		return;
+	}
+	
+	UIViewController* targetVC = [self _targetVCForPopup];
 	
 	if(targetVC.popupContentViewController != nil)
 	{
@@ -195,8 +221,9 @@
 	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:topLabel];
-	[NSLayoutConstraint activateConstraints:@[[topLabel.topAnchor constraintEqualToAnchor:demoVC.topLayoutGuide.bottomAnchor],
-											  [topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]]];
+	[NSLayoutConstraint activateConstraints:@[
+		[topLabel.topAnchor constraintEqualToAnchor:demoVC.topLayoutGuide.bottomAnchor],
+		[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]]];
 	
 	UILabel* bottomLabel = [UILabel new];
 	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
@@ -208,8 +235,9 @@
 	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:bottomLabel];
-	[NSLayoutConstraint activateConstraints:@[[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.bottomLayoutGuide.topAnchor],
-											  [bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]]];
+	[NSLayoutConstraint activateConstraints:@[
+		[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.bottomLayoutGuide.topAnchor],
+		[bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]]];
 	
 	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
 	demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");
@@ -283,6 +311,7 @@
 	[animator addCompletion:^{
 		UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]] applicationActivities:nil];
 		avc.modalPresentationStyle = UIModalPresentationFormSheet;
+		avc.popoverPresentationController.sourceView = [self _targetVCForPopup].popupBar;
 		[self presentViewController:avc animated:YES completion:nil];
 	}];
 }

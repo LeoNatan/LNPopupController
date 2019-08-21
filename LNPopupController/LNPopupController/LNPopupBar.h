@@ -171,6 +171,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 
 #pragma mark Deprecatations
 
+#if ! TARGET_OS_MACCATALYST
 LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG)
 @protocol LNPopupBarPreviewingDelegate <NSObject>
 
@@ -204,5 +205,6 @@ LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG)
 @property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> previewingDelegate LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG);
 
 @end
+#endif
 
 NS_ASSUME_NONNULL_END

@@ -419,22 +419,10 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		vcToCheckForPopupPresentation = [self _findChildInPopupPresentation];
 	}
 	
-	CGFloat statusBarHeightThreshold;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-	if (@available(iOS 13.0, *))
-	{
-		statusBarHeightThreshold = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height / 2;
-	}
-	else
-	{
-#endif
-		statusBarHeightThreshold = UIApplication.sharedApplication.statusBarFrame.size.height / 2;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-	}
-#endif
+	CGFloat statusBarHeight = [LNPopupController _statusBarHeightForView:self.view];
 	
 	if((vcToCheckForPopupPresentation._ln_popupController_nocreate.popupControllerTargetState == LNPopupPresentationStateOpen) ||
-	   (vcToCheckForPopupPresentation._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateClosed && vcToCheckForPopupPresentation._ln_popupController_nocreate.popupContentView.frame.origin.y <= statusBarHeightThreshold))
+	   (vcToCheckForPopupPresentation._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateClosed && vcToCheckForPopupPresentation._ln_popupController_nocreate.popupContentView.frame.origin.y <= (statusBarHeight / 2)))
 	{
 		return vcToCheckForPopupPresentation.popupContentViewController;
 	}
@@ -480,6 +468,8 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 	return __orig_uiVCA_aSTVC(self, _cmd);
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 //_updateLayoutForStatusBarAndInterfaceOrientation
 - (void)_common_uLFSBAIO
 {
@@ -493,6 +483,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		});
 	}
 }
+#pragma clang diagnostic pop
 
 //_updateLayoutForStatusBarAndInterfaceOrientation
 - (void)_uLFSBAIO
@@ -514,20 +505,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		
 		if([self _isContainedInPopupController])
 		{
-			CGFloat statusBarHeight;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-			if (@available(iOS 13.0, *))
-			{
-				statusBarHeight = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height;
-			}
-			else
-			{
-#endif
-				statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-			}
-#endif
-			
+			CGFloat statusBarHeight = [LNPopupController _statusBarHeightForView:self.view];
 			insets.top = self.prefersStatusBarHidden == NO ? statusBarHeight : 0;
 			insets.bottom = 0;
 		}
@@ -560,19 +538,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 	{
 		if([controller _isContainedInPopupController])
 		{
-			CGFloat statusBarHeight;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-			if (@available(iOS 13.0, *))
-			{
-				statusBarHeight = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height;
-			}
-			else
-			{
-#endif
-				statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-			}
-#endif
+			CGFloat statusBarHeight = [LNPopupController _statusBarHeightForView:self.view];
 			
 			insets.top += controller.prefersStatusBarHidden == NO ? statusBarHeight : 0;
 			insets.bottom = 0;
@@ -865,6 +831,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_edgeInsetsForChildViewController:insetsAreAbsolute:
 - (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
 {
+	if(@available(iOS 13.0, *))
+	{
+		return [self eIFCVC:controller iAA:absolute];
+	}
+	
 	return [self _ln_common_eIFCVC:controller iAA:absolute];
 }
 
@@ -1104,6 +1075,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_edgeInsetsForChildViewController:insetsAreAbsolute:
 - (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
 {
+	if(@available(iOS 13.0, *))
+	{
+		return [self eIFCVC:controller iAA:absolute];
+	}
+	
 	return [self _ln_common_eIFCVC:controller iAA:absolute];
 }
 

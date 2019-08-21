@@ -264,7 +264,11 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 #pragma mark Popup Controller
 
-@interface LNPopupController () <_LNPopupItemDelegate, UIViewControllerPreviewingDelegate, _LNPopupBarDelegate> @end
+@interface LNPopupController () <_LNPopupItemDelegate,
+#if ! TARGET_OS_MACCATALYST
+UIViewControllerPreviewingDelegate,
+#endif
+_LNPopupBarDelegate> @end
 
 @implementation LNPopupController
 {
@@ -291,7 +295,9 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	NSLayoutConstraint* _popupCloseButtonTopConstraint;
 	NSLayoutConstraint* _popupCloseButtonHorizontalConstraint;
 	
+#if ! TARGET_OS_MACCATALYST
 	id<UIViewControllerPreviewing> _previewingContext;
+#endif
 }
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
@@ -689,20 +695,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			} transitionOriginatedByUser:NO];
 		}
 		
-		CGFloat statusBarHeightThreshold;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-		if (@available(iOS 13.0, *))
-		{
-			statusBarHeightThreshold = _containerController.view.window.windowScene.statusBarManager.statusBarFrame.size.height / 2;
-		}
-		else
-		{
-#endif
-			statusBarHeightThreshold = UIApplication.sharedApplication.statusBarFrame.size.height / 2;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-		}
-#endif
-		
+		CGFloat statusBarHeightThreshold = [LNPopupController _statusBarHeightForView:_containerController.view] / 2.0;
 		
 		if((_statusBarThresholdDir == 1 && currentCenterY < targetCenterY && _popupContentView.frame.origin.y >= statusBarHeightThreshold)
 		   || (_statusBarThresholdDir == -1 && currentCenterY > targetCenterY && _popupContentView.frame.origin.y < statusBarHeightThreshold))
@@ -1059,19 +1052,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
 	if(windowTopSafeAreaInset == 0 && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 11)
 	{
-		CGFloat statusBarHeight;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-		if (@available(iOS 13.0, *))
-		{
-			statusBarHeight = _containerController.view.window.windowScene.statusBarManager.statusBarFrame.size.height;
-		}
-		else
-		{
-#endif
-			statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-		}
-#endif
+		CGFloat statusBarHeight = [LNPopupController _statusBarHeightForView:_containerController.view];
 		
 		_popupCloseButtonTopConstraint.constant += (_containerController.popupContentViewController.prefersStatusBarHidden ? 0 : statusBarHeight);
 	}
@@ -1089,7 +1070,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
 	{
 		[_popupContentView setNeedsUpdateConstraints];
-		[UIView animateWithDuration:UIApplication.sharedApplication.statusBarOrientationAnimationDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
+		[UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
 			[_popupContentView layoutIfNeeded];
 		} completion:nil];
 	}
@@ -1185,10 +1166,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	//Cannot use self.popupBar in this method because it returns nil when the popup state is LNPopupPresentationStateHidden.
 	
+#if ! TARGET_OS_MACCATALYST
 	if(_previewingContext)
 	{
 		[_containerController unregisterForPreviewingWithContext:_previewingContext];
 	}
+#endif
 	
 	if(_popupBar)
 	{
@@ -1267,10 +1250,12 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		self.popupBarStorage.hidden = NO;
 		
+#if ! TARGET_OS_MACCATALYST
 		if([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 9)
 		{
 			_previewingContext = [_containerController registerForPreviewingWithDelegate:self sourceView:self.popupBarStorage];
 		}
+#endif
 		
 		[self _movePopupBarAndContentToBottomBarSuperview];
 		[self _configurePopupBarFromBottomBar];
@@ -1413,6 +1398,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	[self.popupBar _setTitleViewMarqueesPaused:_popupControllerState != LNPopupPresentationStateClosed];
 }
 
+#if ! TARGET_OS_MACCATALYST
 #pragma mark UIViewControllerPreviewingDelegate
 
 #pragma clang diagnostic push
@@ -1448,6 +1434,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	}
 }
 #pragma clang diagnostic pop
+#endif
 
 #pragma mark _LNPopupBarDelegate
 
@@ -1465,6 +1452,33 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	self.popupBar.frame = barFrame;
 	
 	_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height, 0));
+}
+
+#pragma mark Utils
+
++ (CGFloat)_statusBarHeightForView:(UIView*)view
+{
+	CGFloat statusBarHeight;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000 && ! TARGET_OS_MACCATALYST
+	if (@available(iOS 13.0, *))
+	{
+#endif
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+		statusBarHeight = view.window.windowScene.statusBarManager.statusBarFrame.size.height;
+#endif
+#if ! TARGET_OS_MACCATALYST
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+	}
+	else
+	{
+#endif
+		statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000 && ! TARGET_OS_MACCATALYST
+	}
+#endif
+#endif
+	
+	return statusBarHeight;
 }
 
 @end

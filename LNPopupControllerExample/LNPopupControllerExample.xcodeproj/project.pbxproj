@@ -19,6 +19,7 @@
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
 		393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
+		39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39631FAC230DA03E0059D119 /* SceneDelegate.m */; };
 		397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
 		397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56291B753A45007A67F0 /* MusicCell.swift */; };
 		39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 39837A1F1B756F1A004D2DA9 /* RandomColors.m */; };
@@ -91,6 +92,8 @@
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
 		393F232A1E16D1E4000E969D /* HigherSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HigherSearchBar.swift; sourceTree = "<group>"; };
+		39631FAB230DA03D0059D119 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		39631FAC230DA03E0059D119 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		397C560D1B74DA66007A67F0 /* Music.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Music.storyboard; sourceTree = "<group>"; };
 		397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoAlbumTableViewController.swift; sourceTree = "<group>"; };
 		397C56291B753A45007A67F0 /* MusicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicCell.swift; sourceTree = "<group>"; };
@@ -188,6 +191,8 @@
 				39277A1B1B58228000293F95 /* Info.plist */,
 				39277A0A1B58228000293F95 /* AppDelegate.h */,
 				39277A0B1B58228000293F95 /* AppDelegate.m */,
+				39631FAB230DA03D0059D119 /* SceneDelegate.h */,
+				39631FAC230DA03E0059D119 /* SceneDelegate.m */,
 				39277A081B58228000293F95 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -434,6 +439,7 @@
 				399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */,
 				3988E3581B59C3000039C09B /* FirstViewController.m in Sources */,
 				39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */,
+				39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */,
 				397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -588,6 +594,7 @@
 				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -595,7 +602,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -613,6 +620,7 @@
 				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -620,7 +628,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;

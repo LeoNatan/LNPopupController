@@ -8,20 +8,30 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+@import ObjectiveC;
 
-void HandleExceptions(NSException *exception)
+#if TARGET_OS_MACCATALYST
+@interface NSObject (ZZZ) @end
+@implementation NSObject (ZZZ)
+
++ (void)load
 {
-	UIAlertController* alert = [UIAlertController alertControllerWithTitle:exception.name message:exception.reason preferredStyle:UIAlertControllerStyleAlert];
-	
-	[UIApplication.sharedApplication.keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
-	
-	[[NSRunLoop currentRunLoop] runUntilDate:NSDate.distantFuture];
+	Class cls = NSClassFromString(@"UIFocusRingManager");
+	Method m1 = class_getClassMethod(cls, NSSelectorFromString(@"moveRingToFocusItem:"));
+	Method m2 = class_getClassMethod(NSObject.class, @selector(__ln_moveRingToFocusItem:));
+	method_exchangeImplementations(m1, m2);
 }
+
++ (void)__ln_moveRingToFocusItem:(id)arg1
+{
+	
+}
+
+@end
+#endif
 
 int main(int argc, char * argv[]) {
 	@autoreleasepool {
-		NSSetUncaughtExceptionHandler(&HandleExceptions);
-		
 	    return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
 	}
 }
