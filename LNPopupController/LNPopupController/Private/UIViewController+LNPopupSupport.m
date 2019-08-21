@@ -233,10 +233,17 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
 - (UIEdgeInsets)insetsForBottomDockingView
 {
+	if([NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
+	{
+		return UIEdgeInsetsZero;
+	}
+	
 	if (@available(iOS 11.0, *))
 	{
 		return UIEdgeInsetsMake(0, 0, self.view.superview.safeAreaInsets.bottom, 0);
-	} else {
+	}
+	else
+	{
 		return UIEdgeInsetsZero;
 	}
 }
