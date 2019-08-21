@@ -63,7 +63,7 @@
 
 @end
 
-@interface FirstViewController () <LNPopupBarPreviewingDelegate>
+@interface FirstViewController () <UIContextMenuInteractionDelegate>
 
 @end
 
@@ -240,6 +240,12 @@
 		[targetVC.popupBar setBackgroundStyle:UIBlurEffectStyleDark];
 		[targetVC.popupBar setTintColor:[UIColor yellowColor]];
 	}
+	
+	if (@available(iOS 13.0, *))
+	{
+		UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+		[targetVC.popupBar addInteraction:i];
+	}
 
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
 }
@@ -265,32 +271,20 @@
 	[segue.destinationViewController setHidesBottomBarWhenPushed:YES];
 }
 
-#pragma mark LNPopupBarPreviewingDelegate
+#pragma mark UIContextMenuInteractionDelegate
 
-- (UIViewController *)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar
+- (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location API_AVAILABLE(ios(13.0))
 {
-	UIBlurEffect* blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-	
-	UIViewController* vc = [UIViewController new];
-	vc.view = [[UIVisualEffectView alloc] initWithEffect:blur];
-	vc.view.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.0];
-	vc.preferredContentSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height / 2);
-	
-	UILabel* label = [UILabel new];
-	label.text = @"Hello from\n3D Touch!";
-	label.numberOfLines = 0;
-	label.textColor = [UIColor blackColor];
-	label.font = [UIFont systemFontOfSize:50 weight:UIFontWeightBlack];
-	[label sizeToFit];
-	label.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin;
-	
-	UIVisualEffectView* vib = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect effectForBlurEffect:blur]];
-	vib.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-	[vib.contentView addSubview:label];
-	
-	[[(UIVisualEffectView*)vc.view contentView] addSubview:vib];
-	
-	return vc;
+	return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:nil];
+}
+
+- (void)contextMenuInteraction:(UIContextMenuInteraction *)interaction willEndForConfiguration:(UIContextMenuConfiguration *)configuration animator:(nullable id<UIContextMenuInteractionAnimating>)animator API_AVAILABLE(ios(13.0))
+{
+	[animator addCompletion:^{
+		UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]] applicationActivities:nil];
+		avc.modalPresentationStyle = UIModalPresentationFormSheet;
+		[self presentViewController:avc animated:YES completion:nil];
+	}];
 }
 
 @end

@@ -419,7 +419,19 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		vcToCheckForPopupPresentation = [self _findChildInPopupPresentation];
 	}
 	
-	CGFloat statusBarHeightThreshold = UIApplication.sharedApplication.statusBarFrame.size.height / 2;
+	CGFloat statusBarHeightThreshold;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+	if (@available(iOS 13.0, *))
+	{
+		statusBarHeightThreshold = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height / 2;
+	}
+	else
+	{
+#endif
+		statusBarHeightThreshold = UIApplication.sharedApplication.statusBarFrame.size.height / 2;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+	}
+#endif
 	
 	if((vcToCheckForPopupPresentation._ln_popupController_nocreate.popupControllerTargetState == LNPopupPresentationStateOpen) ||
 	   (vcToCheckForPopupPresentation._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateClosed && vcToCheckForPopupPresentation._ln_popupController_nocreate.popupContentView.frame.origin.y <= statusBarHeightThreshold))
@@ -502,7 +514,21 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		
 		if([self _isContainedInPopupController])
 		{
-			insets.top = self.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
+			CGFloat statusBarHeight;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+			if (@available(iOS 13.0, *))
+			{
+				statusBarHeight = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height;
+			}
+			else
+			{
+#endif
+				statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+			}
+#endif
+			
+			insets.top = self.prefersStatusBarHidden == NO ? statusBarHeight : 0;
 			insets.bottom = 0;
 		}
 	}
@@ -534,7 +560,21 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 	{
 		if([controller _isContainedInPopupController])
 		{
-			insets.top += controller.prefersStatusBarHidden == NO ? [[UIApplication sharedApplication] statusBarFrame].size.height : 0;
+			CGFloat statusBarHeight;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+			if (@available(iOS 13.0, *))
+			{
+				statusBarHeight = self.view.window.windowScene.statusBarManager.statusBarFrame.size.height;
+			}
+			else
+			{
+#endif
+				statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+			}
+#endif
+			
+			insets.top += controller.prefersStatusBarHidden == NO ? statusBarHeight : 0;
 			insets.bottom = 0;
 			*absolute = YES;
 			
@@ -566,16 +606,30 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 
 - (void)_layoutPopupBarOrderForTransition
 {
-	[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
-	[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
-	[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
+	if(@available(ios 13.0, *))
+	{
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	}
+	else {
+		[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
+		[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
+		[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
+	}
 }
 
 - (void)_layoutPopupBarOrderForUse
 {
-	[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
-	[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
-	[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
+	if(@available(ios 13.0, *))
+	{
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	}
+	else {
+		[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
+		[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
+		[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
+	}
 }
 
 - (void)_ln_popup_viewDidLayoutSubviews
@@ -825,6 +879,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_hideBarWithTransition:isExplicit:
 - (void)hBWT:(NSInteger)t iE:(BOOL)e
 {
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	
 	[self _setTabBarHiddenDuringTransition:YES];
 	[self _setIgnoringLayoutDuringTransition:YES];
 	
@@ -841,6 +897,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[self.selectedViewController.transitionCoordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 			[self _setIgnoringLayoutDuringTransition:NO];
 			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
+			
+			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 		}];
 	}
 }
@@ -848,6 +906,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_showBarWithTransition:isExplicit:
 - (void)sBWT:(NSInteger)t iE:(BOOL)e
 {
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	
 	[self _setPrepareTabBarIgnored:YES];
 	
 	[self _setTabBarHiddenDuringTransition:NO];
@@ -870,6 +930,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				[self __repositionPopupBarToClosed_hack];
 			} completion:^(BOOL finished) {
 				[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
+				
+				self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 			}];
 		}];
 	}
@@ -999,6 +1061,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_setToolbarHidden:edge:duration:
 - (void)_sTH:(BOOL)arg1 e:(unsigned int)arg2 d:(CGFloat)arg3;
 {
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	
 	//Move popup bar and content according to current state of the toolbar.
 	[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
 	
@@ -1015,6 +1079,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		//Position the popup bar and content to the superview of the toolbar for the transition.
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
 		[self _layoutPopupBarOrderForUse];
+		
+		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 	};
 	
 	if(self.transitionCoordinator)
@@ -1045,6 +1111,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)hSNBDS:(id)arg1 f:(id)arg2 c:(id)arg3;
 {
 	[self hSNBDS:arg1 f:arg2 c:arg3];
+	
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 	
 	[self _layoutPopupBarOrderForUse];
 }

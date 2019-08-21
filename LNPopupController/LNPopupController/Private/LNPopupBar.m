@@ -267,6 +267,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
 		[_backgroundView.contentView addSubview:_shadowView];
 		
+		_bottomShadowView = [UIView new];
+		_bottomShadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+		[_backgroundView.contentView addSubview:_bottomShadowView];
+		
 		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_highlightView.userInteractionEnabled = NO;
@@ -326,8 +330,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		//	[_toolbar bringSubviewToFront:_imageView];
 		//	[_toolbar bringSubviewToFront:_titlesView];
 		[self bringSubviewToFront:_shadowView];
+		[self bringSubviewToFront:_bottomShadowView];
 		
 		_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
+		_bottomShadowView.frame = CGRectMake(0, self.toolbar.bounds.size.height - 1 / self.window.screen.scale, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
 		
 		[self _layoutTitles];
 	}];
@@ -492,6 +498,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_systemShadowColor = systemShadowColor;
 	
 	_shadowView.backgroundColor = systemShadowColor;
+	_bottomShadowView.backgroundColor = systemShadowColor;
 }
 
 - (void)setTranslucent:(BOOL)translucent

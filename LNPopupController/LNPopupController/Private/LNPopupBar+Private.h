@@ -51,6 +51,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
 @property (nonatomic, strong) UIColor* systemShadowColor;
 
+@property (nonatomic, strong) UIView* bottomShadowView;
+
 @property (nonatomic, weak, readwrite) LNPopupItem* popupItem;
 
 @property (nonatomic, weak) id<_LNPopupBarDelegate> _barDelegate;
