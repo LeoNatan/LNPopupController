@@ -112,8 +112,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupBar.inheritsVisualStyleFromDockingView = true
 		#endif
 		
-		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true)
-		}
+		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
 		
 		if #available(iOS 13.0, *) {
 			tabBarController?.popupBar.tintColor = UIColor.label
