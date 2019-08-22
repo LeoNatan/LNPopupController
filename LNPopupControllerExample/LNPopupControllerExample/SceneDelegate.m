@@ -13,6 +13,8 @@
 	// This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
 #if TARGET_OS_MACCATALYST
+	scene.sizeRestrictions.maximumSize = CGSizeMake(DBL_MAX, DBL_MAX);
+	
 	NSToolbar* toolbar = [NSToolbar new];
 	toolbar.displayMode = NSToolbarDisplayModeIconOnly;
 	

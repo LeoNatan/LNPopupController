@@ -8,34 +8,11 @@
 
 #import "AppDelegate.h"
 
-@interface AppDelegate () <COSTouchVisualizerWindowDelegate>
+@interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
-
-- (BOOL)touchVisualizerWindowShouldShowFingertip:(COSTouchVisualizerWindow *)window
-{
-//	return YES;
-	return NO;
-}
-
-- (BOOL)touchVisualizerWindowShouldAlwaysShowFingertip:(COSTouchVisualizerWindow *)window
-{
-//	return YES;
-	return NO;
-}
-
-- (UIWindow *)window
-{
-	if(!_window)
-	{
-		_window = [[COSTouchVisualizerWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-		_window.touchVisualizerWindowDelegate = self;
-	}
-
-	return _window;
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 //	self.window.layer.speed = 0.2;

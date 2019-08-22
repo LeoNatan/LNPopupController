@@ -116,9 +116,8 @@ const UIBlurEffectStyle LNBackgroundStyleInherit = -9876;
 	UIBlurEffectStyle _actualBackgroundStyle;
 	UIBlurEffect* _customBlurEffect;
 	
+	UIToolbar* _toolbar;
 	UIView* _shadowView;
-    
-    NSArray<__kindof NSLayoutConstraint *> * _progressViewVerticalConstraints;
 }
 
 static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyle(LNPopupBarProgressViewStyle style)
@@ -133,6 +132,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
 {
+#if TARGET_OS_MACCATALYST
+	if(systemBarStyle == UIBarStyleBlack)
+	{
+		return UIBlurEffectStyleSystemThickMaterialDark;
+	}
+
+	return UIBlurEffectStyleSystemThickMaterial;
+#else
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 	if (@available(iOS 13.0, *))
 	{
@@ -148,6 +155,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 #endif
 	
 	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
+#endif
 }
 
 @synthesize backgroundStyle = _userBackgroundStyle, barTintColor = _userBarTintColor;
@@ -211,6 +219,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
 		
+		_contentView = [UIView new];
+		_contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		[self addSubview:_contentView];
+		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
 		
 		[self _innerSetBackgroundStyle:LNBackgroundStyleInherit];
@@ -219,8 +231,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[_toolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
 		_toolbar.layer.masksToBounds = YES;
-
-		[self addSubview:_toolbar];
+		[_contentView addSubview:_toolbar];
 		
 		_titlesView = [[UIView alloc] initWithFrame:self.bounds];
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
@@ -231,15 +242,12 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
 		
 		[self _setNeedsTitleLayout];
-		[_toolbar addSubview:_titlesView];
+		[_contentView addSubview:_titlesView];
 		
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-		_progressView.translatesAutoresizingMaskIntoConstraints = NO;
 		_progressView.trackImage = [UIImage new];
-		[_toolbar addSubview:_progressView];
+		[_contentView addSubview:_progressView];
 		[self _updateProgressViewWithStyle:self.progressViewStyle];
-        
-		[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_progressView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)]];
 		
 		_needsLabelsLayout = YES;
 		
@@ -261,7 +269,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
             _imageView.accessibilityIgnoresInvertColors = YES;
         }
 		
-		[_toolbar addSubview:_imageView];
+		[_contentView addSubview:_imageView];
 		
 		_shadowView = [UIView new];
 		_shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
@@ -276,9 +284,13 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_highlightView.userInteractionEnabled = NO;
 		[_highlightView setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.1]];
 		_highlightView.alpha = 0.0;
-		[self addSubview:_highlightView];
+		[_contentView addSubview:_highlightView];
 		
+#if ! TARGET_OS_MACCATALYST
 		_marqueeScrollEnabled = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion < 10;
+#else
+		_marqueeScrollEnabled = NO;
+#endif
 		_coordinateMarqueeScroll = YES;
 		
 		self.semanticContentAttribute = UISemanticContentAttributeUnspecified;
@@ -302,15 +314,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	[_progressView setHidden:style == LNPopupBarProgressViewStyleNone];
 	
-    if(style == LNPopupBarProgressViewStyleTop)
-    {
-        _progressViewVerticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_progressView(1.5)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)];
-    }
-    else
-	{
-        _progressViewVerticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[_progressView(1.5)]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_progressView)];
-    }
-    [self addConstraints:_progressViewVerticalConstraints];
+	[self setNeedsLayout];
 }
 
 - (void)layoutSubviews
@@ -318,6 +322,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[super layoutSubviews];
 	
 	[_backgroundView setFrame:self.bounds];
+	[_contentView setFrame:self.bounds];
 	
 	[self _layoutImageView];
 	
@@ -332,8 +337,17 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[self bringSubviewToFront:_shadowView];
 		[self bringSubviewToFront:_bottomShadowView];
 		
-		_shadowView.frame = CGRectMake(0, 0, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
-		_bottomShadowView.frame = CGRectMake(0, self.toolbar.bounds.size.height - 1 / self.window.screen.scale, self.toolbar.bounds.size.width, 1 / self.window.screen.scale);
+		_shadowView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, 1 / self.window.screen.scale);
+		_bottomShadowView.frame = CGRectMake(0, _contentView.bounds.size.height - 1 / self.window.screen.scale, _contentView.bounds.size.width, 1 / self.window.screen.scale);
+		
+		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+		{
+			_progressView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, 1.5);
+		}
+		else
+		{
+			_progressView.frame = CGRectMake(0, _contentView.bounds.size.height - 1.5, _contentView.bounds.size.width, 1.5);
+		}
 		
 		[self _layoutTitles];
 	}];
@@ -472,7 +486,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	if(_progressViewStyle != progressViewStyle)
 	{
-		[self removeConstraints:_progressViewVerticalConstraints];
 		[self _updateProgressViewWithStyle:progressViewStyle];
 	}
 	
@@ -589,7 +602,9 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	[self setNeedsLayout];
 	
-	//On iOS 10 and below, there is a bug when setting a UIToolbar's semanticContentAttribute which may cause incorrect layout. So lets trigger 
+	//On iOS 10 and below, there is a bug when setting a UIToolbar's semanticContentAttribute which may cause incorrect layout. So lets trigger
+	
+#if ! TARGET_OS_MACCATALYST
 	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 10)
 	{
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -597,6 +612,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 			[_toolbar layoutIfNeeded];
 		});
 	}
+#endif
 }
 
 - (void)setBarItemsSemanticContentAttribute:(UISemanticContentAttribute)barItemsSemanticContentAttribute
@@ -694,11 +710,13 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	widthLeft = leftViewLastFrame.origin.x + leftViewLastFrame.size.width;
 	widthRight = self.bounds.size.width - rightViewFirstFrame.origin.x;
 	
+#if ! TARGET_OS_MACCATALYST
 	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
 	{
 		widthLeft += 8;
 		widthRight += 8;
 	}
+#endif
 	
 	widthLeft = MAX(widthLeft, self.layoutMargins.left);
 	widthRight = MAX(widthRight, self.layoutMargins.right);

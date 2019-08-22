@@ -141,16 +141,6 @@ static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
 
 #pragma mark Popup Content View
 
-@interface LNPopupContentView ()
-
-- (instancetype)initWithFrame:(CGRect)frame;
-
-@property (nonatomic, strong, readwrite) UIPanGestureRecognizer* popupInteractionGestureRecognizer;
-@property (nonatomic, strong, readwrite) LNPopupCloseButton* popupCloseButton;
-@property (nonatomic, strong) UIVisualEffectView* effectView;
-
-@end
-
 @implementation LNPopupContentView
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
@@ -346,8 +336,7 @@ _LNPopupBarDelegate> @end
 		_bottomBar.frame = bottomBarFrame;
 	}
 	
-	[self.popupBar.toolbar setAlpha:1.0 - percent];
-	[self.popupBar.progressView setAlpha:1.0 - percent];
+	[self.popupBar.contentView setAlpha:1.0 - percent];
 	
 	CGRect contentFrame = _containerController.view.bounds;
 	contentFrame.origin.x = self.popupBar.frame.origin.x;
@@ -439,6 +428,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController barEffect:(id)self.popupBar.backgroundView.effect];
 			
 			[self.popupContentView.contentView addSubview:_currentContentController.view];
+			self.popupContentView.currentPopupContentViewController = _currentContentController;
 			[self.popupContentView.contentView sendSubviewToBack:_currentContentController.view];
 			
 			[self.popupContentView.contentView setNeedsLayout];
@@ -888,6 +878,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		else
 		{
 			[self.popupContentView.contentView addSubview:newContentController.view];
+			self.popupContentView.currentPopupContentViewController = newContentController;
 			[self.popupContentView.contentView sendSubviewToBack:newContentController.view];
 		}
 		
@@ -1050,12 +1041,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
+#if ! TARGET_OS_MACCATALYST
 	if(windowTopSafeAreaInset == 0 && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 11)
 	{
 		CGFloat statusBarHeight = [LNPopupController _statusBarHeightForView:_containerController.view];
 		
 		_popupCloseButtonTopConstraint.constant += (_containerController.popupContentViewController.prefersStatusBarHidden ? 0 : statusBarHeight);
 	}
+#endif
     
     id hitTest = [[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
     UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];

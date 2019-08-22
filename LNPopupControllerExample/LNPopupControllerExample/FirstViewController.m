@@ -89,6 +89,8 @@
 {
 	__weak IBOutlet UIButton *_galleryButton;
 	__weak IBOutlet UIButton *_nextButton;
+	
+	__weak IBOutlet UIBarButtonItem *_barStyleButton;
 }
 
 - (void)viewDidLoad
@@ -97,6 +99,8 @@
 	
 	if (@available(iOS 13.0, *)) {
 		self.view.backgroundColor = LNRandomAdaptiveColor();
+		
+		_barStyleButton.title = NSLocalizedString(@"Style", @"");
 	} else {
 		self.view.backgroundColor = LNRandomLightColor();
 	}
@@ -124,16 +128,25 @@
 
 - (IBAction)_changeBarStyle:(id)sender
 {
-	self.navigationController.toolbar.barStyle = 1 - self.navigationController.toolbar.barStyle;
-	
-	UIColor* adaptiveColor;
-	if (@available(iOS 13.0, *)) {
-		adaptiveColor = LNRandomAdaptiveInvertedColor();
-	} else {
-		adaptiveColor = LNRandomDarkColor();
+	if (@available(iOS 13.0, *))
+	{
+		UIUserInterfaceStyle currentStyle = self.navigationController.traitCollection.userInterfaceStyle;
+		
+		self.navigationController.overrideUserInterfaceStyle = currentStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+	}
+	else
+	{
+		self.navigationController.toolbar.barStyle = 1 - self.navigationController.toolbar.barStyle;
 	}
 	
-	self.navigationController.toolbar.tintColor = self.navigationController.toolbar.barStyle ? LNRandomLightColor() : adaptiveColor;
+	if (@available(iOS 13.0, *))
+	{
+		self.navigationController.toolbar.tintColor = LNRandomAdaptiveInvertedColor();
+	}
+	else
+	{
+		self.navigationController.toolbar.tintColor = self.navigationController.toolbar.barStyle ? LNRandomLightColor() : LNRandomDarkColor();
+	}
 	[self.navigationController.toolbar.items enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		obj.tintColor = self.navigationController.toolbar.tintColor;
 	}];
@@ -193,7 +206,7 @@
 	UIViewController* demoVC = [DemoPopupContentViewController new];
 	
 	if (@available(iOS 13.0, *)) {
-		demoVC.view.backgroundColor = LNRandomAdaptiveInvertedColor();
+		demoVC.view.backgroundColor = LNRandomDarkColor();
 	} else {
 		demoVC.view.backgroundColor = LNRandomDarkColor();
 	}
@@ -213,31 +226,49 @@
 	
 	UILabel* topLabel = [UILabel new];
 	topLabel.text = NSLocalizedString(@"Top", @"");
-	if (@available(iOS 13.0, *)) {
-		topLabel.textColor = [UIColor systemBackgroundColor];
-	} else {
-		topLabel.textColor = [UIColor whiteColor];
-	}
+	topLabel.textColor = [UIColor whiteColor];
 	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:topLabel];
-	[NSLayoutConstraint activateConstraints:@[
-		[topLabel.topAnchor constraintEqualToAnchor:demoVC.topLayoutGuide.bottomAnchor],
-		[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]]];
+	if(@available(iOS 11.0, *))
+	{
+		[NSLayoutConstraint activateConstraints:@[
+			[topLabel.topAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.topAnchor],
+			[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]
+		]];
+	}
+#if ! TARGET_OS_MACCATALYST
+	else
+	{
+		[NSLayoutConstraint activateConstraints:@[
+			[topLabel.topAnchor constraintEqualToAnchor:demoVC.topLayoutGuide.bottomAnchor],
+			[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]
+		]];
+	}
+#endif
 	
 	UILabel* bottomLabel = [UILabel new];
 	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
-	if (@available(iOS 13.0, *)) {
-		bottomLabel.textColor = [UIColor systemBackgroundColor];
-	} else {
-		bottomLabel.textColor = [UIColor whiteColor];
-	}
+	bottomLabel.textColor = [UIColor whiteColor];
 	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:bottomLabel];
-	[NSLayoutConstraint activateConstraints:@[
-		[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.bottomLayoutGuide.topAnchor],
-		[bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]]];
+	if(@available(iOS 11.0, *))
+	{
+		[NSLayoutConstraint activateConstraints:@[
+			[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.bottomAnchor],
+			[bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]
+		]];
+	}
+#if ! TARGET_OS_MACCATALYST
+	else
+	{
+		[NSLayoutConstraint activateConstraints:@[
+			[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.bottomLayoutGuide.topAnchor],
+			[bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]
+		]];
+	}
+#endif
 	
 	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
 	demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");

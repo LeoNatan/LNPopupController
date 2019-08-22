@@ -29,7 +29,14 @@ class DemoMusicPlayerController: UIViewController {
 		let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
-		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact || ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10 {
+		let oldOS : Bool
+		#if !targetEnvironment(macCatalyst)
+		oldOS = ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10
+		#else
+		oldOS = false
+		#endif
+		
+		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact || oldOS {
 			popupItem.leftBarButtonItems = [ pause ]
 			popupItem.rightBarButtonItems = [ next ]
 		}
@@ -54,9 +61,11 @@ class DemoMusicPlayerController: UIViewController {
 			if isViewLoaded {
 				albumNameLabel.text = albumTitle
 			}
+			#if !targetEnvironment(macCatalyst)
 			if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 9 {
 				popupItem.subtitle = albumTitle
 			}
+			#endif
 		}
 	}
 	var albumArt: UIImage = UIImage() {

@@ -12,11 +12,16 @@
 
 @import LNPopupController;
 
-@interface DemoPopupContentViewController ()
+@interface DemoPopupContentView : UIView @end
+@implementation DemoPopupContentView @end
 
-@end
-
+@interface DemoPopupContentViewController () @end
 @implementation DemoPopupContentViewController
+
+- (void)loadView
+{
+	self.view = [DemoPopupContentView new];
+}
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
@@ -45,7 +50,10 @@
 	next.accessibilityTraits = UIAccessibilityTraitButton;
 	
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact
-	   || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10)
+#if ! TARGET_OS_MACCATALYST
+	   || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10
+#endif
+	   )
 	{
 		self.popupItem.leftBarButtonItems = @[ play ];
 		self.popupItem.rightBarButtonItems = @[ next, stop ];
@@ -67,13 +75,9 @@
 	[super viewDidLoad];
 	
 	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
-	[customCloseButton setTitle:@"Custom Close Button" forState:UIControlStateNormal];
+	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];
 	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
-	if (@available(iOS 13.0, *)) {
-		[customCloseButton setTitleColor:UIColor.systemBackgroundColor forState:UIControlStateNormal];
-	} else {
-		[customCloseButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
-	}
+	[customCloseButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
 	[customCloseButton addTarget:self action:@selector(_closePopup) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:customCloseButton];
 	[NSLayoutConstraint activateConstraints:@[
