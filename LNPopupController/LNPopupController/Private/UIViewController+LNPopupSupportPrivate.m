@@ -670,12 +670,12 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 	{
 		if(self.bottomDockingViewForPopup_nocreateOrDeveloper == self._ln_bottomBarSupport_nocreate)
 		{
-			self._ln_bottomBarSupport.frame = self.defaultFrameForBottomDockingView_internalOrDeveloper;
-			[self.view bringSubviewToFront:self._ln_bottomBarSupport];
+			self._ln_bottomBarSupport_nocreate.frame = self.defaultFrameForBottomDockingView_internalOrDeveloper;
+			[self.view bringSubviewToFront:self._ln_bottomBarSupport_nocreate];
 		}
 		else
 		{
-			self._ln_bottomBarSupport.hidden = YES;
+			self._ln_bottomBarSupport_nocreate.hidden = YES;
 		}
 		
 		if(self._ignoringLayoutDuringTransition == NO && self._ln_popupController_nocreate.popupControllerState != LNPopupPresentationStateHidden)
