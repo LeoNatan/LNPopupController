@@ -19,7 +19,7 @@ set -e
 # fi
 
 CURRENT_VERSION=$(/usr/libexec/PlistBuddy LNPopupController/Info.plist -c "Print CFBundleShortVersionString")
-NEXT_VERSION=$(echo "$CURRENT_VERSION" | perl -pe 's/^((\d+\.)*)(\d+)(.*)$/$1.($3+1).$4/e')
+NEXT_VERSION=$(echo "$CURRENT_VERSION" | perl -pe 's/^((\d+\.)*)(-?\d+)(.*)$/$1.($3+1).$4/e')
 
 echo -e "\033[1;34mUsing $NEXT_VERSION as release version\033[0m"
 
