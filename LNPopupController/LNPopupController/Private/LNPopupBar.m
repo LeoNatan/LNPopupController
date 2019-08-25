@@ -219,9 +219,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
 		
-		_contentView = [UIView new];
-		_contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		[self addSubview:_contentView];
+		_contentView = _backgroundView.contentView;
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
 		
@@ -231,6 +229,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[_toolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
 		_toolbar.layer.masksToBounds = YES;
+		
 		[_contentView addSubview:_toolbar];
 		
 		_titlesView = [[UIView alloc] initWithFrame:self.bounds];
@@ -322,7 +321,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[super layoutSubviews];
 	
 	[_backgroundView setFrame:self.bounds];
-	[_contentView setFrame:self.bounds];
 	
 	[self _layoutImageView];
 	
@@ -330,12 +328,12 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_toolbar.frame = CGRectMake(0, 0, self.bounds.size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController));
 		[_toolbar layoutIfNeeded];
 		
-		[self bringSubviewToFront:_highlightView];
-		[self bringSubviewToFront:_toolbar];
-		//	[_toolbar bringSubviewToFront:_imageView];
-		//	[_toolbar bringSubviewToFront:_titlesView];
-		[self bringSubviewToFront:_shadowView];
-		[self bringSubviewToFront:_bottomShadowView];
+		[_contentView bringSubviewToFront:_highlightView];
+		[_contentView bringSubviewToFront:_toolbar];
+		[_contentView bringSubviewToFront:_imageView];
+		[_contentView bringSubviewToFront:_titlesView];
+		[_contentView bringSubviewToFront:_shadowView];
+		[_contentView bringSubviewToFront:_bottomShadowView];
 		
 		_shadowView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, 1 / self.window.screen.scale);
 		_bottomShadowView.frame = CGRectMake(0, _contentView.bounds.size.height - 1 / self.window.screen.scale, _contentView.bounds.size.width, 1 / self.window.screen.scale);

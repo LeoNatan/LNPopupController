@@ -336,6 +336,7 @@ _LNPopupBarDelegate> @end
 		_bottomBar.frame = bottomBarFrame;
 	}
 	
+	[self.popupBar layoutIfNeeded];
 	[self.popupBar.contentView setAlpha:1.0 - percent];
 	
 	CGRect contentFrame = _containerController.view.bounds;
