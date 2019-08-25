@@ -100,7 +100,12 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 /**
  * The popup bar's progress style.
  */
-@property (nonatomic, assign) LNPopupBarProgressViewStyle progressViewStyle;
+@property (nonatomic, assign) LNPopupBarProgressViewStyle progressViewStyle UI_APPEARANCE_SELECTOR;
+
+/**
+* The progress view displayed on the popup bar.
+*/
+@property (nonatomic, strong, readonly) UIProgressView* progressView;
 
 /**
  * The popup bar background style that specifies its appearance.
