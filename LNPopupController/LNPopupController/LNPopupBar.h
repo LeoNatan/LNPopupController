@@ -197,7 +197,7 @@ LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG)
 
 @end
 
-@interface LNPopupBar (Deprecated)
+@interface LNPopupBar ()
 
 /**
  * The previewing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the @c LNPopupBarPreviewingDelegate protocol.
