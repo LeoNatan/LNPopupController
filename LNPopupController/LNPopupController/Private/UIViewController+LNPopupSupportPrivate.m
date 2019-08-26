@@ -918,7 +918,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 }
 
 //_hideBarWithTransition:isExplicit:
-- (void)hBWT:(NSInteger)t iE:(BOOL)e
+- (void)_legacy_hBWT:(NSInteger)t iE:(BOOL)e
 {
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
 	
@@ -945,7 +945,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 }
 
 //_showBarWithTransition:isExplicit:
-- (void)sBWT:(NSInteger)t iE:(BOOL)e
+- (void)_legacy_sBWT:(NSInteger)t iE:(BOOL)e
 {
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
 	
@@ -974,6 +974,73 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				
 				self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 			}];
+		}];
+	}
+}
+
+//_hideBarWithTransition:isExplicit:
+- (void)hBWT:(NSInteger)t iE:(BOOL)e
+{
+	if(notavailable(iOS 13.0, *))
+	{
+		[self _legacy_hBWT:t iE:e];
+		return;
+	}
+	
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	
+	[self _setTabBarHiddenDuringTransition:YES];
+	
+	[self hBWT:t iE:e];
+	
+	if(t > 0)
+	{
+		[self _setIgnoringLayoutDuringTransition:YES];
+		
+		[self.selectedViewController.transitionCoordinator animateAlongsideTransition: ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+			[self __repositionPopupBarToClosed_hack];
+		} completion: ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+			[self _setIgnoringLayoutDuringTransition:NO];
+			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
+			
+			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
+		}];
+	}
+}
+
+//_showBarWithTransition:isExplicit:
+- (void)sBWT:(NSInteger)t iE:(BOOL)e
+{
+	if(notavailable(iOS 13.0, *))
+	{
+		[self _legacy_sBWT:t iE:e];
+		return;
+	}
+	
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	
+	[self _setPrepareTabBarIgnored:YES];
+	
+	[self sBWT:t iE:e];
+	
+	if(t > 0)
+	{
+		[self.selectedViewController.transitionCoordinator animateAlongsideTransition:^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+			[self _layoutPopupBarOrderForTransition];
+			[self _setTabBarHiddenDuringTransition:NO];
+			[self __repositionPopupBarToClosed_hack];
+		} completion: ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+			[self _setPrepareTabBarIgnored:NO];
+			
+			if(context.isCancelled)
+			{
+				[self _setTabBarHiddenDuringTransition:YES];
+			}
+			
+			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
+			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerState];
+			
+			[self _layoutPopupBarOrderForUse];
 		}];
 	}
 }

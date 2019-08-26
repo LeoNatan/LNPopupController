@@ -27,5 +27,6 @@
 #define LNChevronViewStateFlat __LNChevronViewStateFlat
 #define LNChevronViewStateDown __LNChevronViewStateDown
 
+#define notavailable(...) @available(__VA_ARGS__)) { } else if(YES
 
 #endif /* LNPopupController_pch */
