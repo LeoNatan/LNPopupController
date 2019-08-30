@@ -219,7 +219,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
 		
-		_contentView = _backgroundView.contentView;
+		_contentView = [UIView new];
+		[self addSubview:_contentView];
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
 		
@@ -321,6 +322,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[super layoutSubviews];
 	
 	[_backgroundView setFrame:self.bounds];
+	[_contentView setFrame:self.bounds];
 	
 	[self _layoutImageView];
 	

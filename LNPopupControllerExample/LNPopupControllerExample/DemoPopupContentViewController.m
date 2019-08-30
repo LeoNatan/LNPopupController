@@ -32,19 +32,24 @@
 	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 }
 
+- (void)button:(UIBarButtonItem*)button
+{
+	NSLog(@"✓");
+}
+
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection
 {
-	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"play"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"play"] style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
 	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
 	play.accessibilityIdentifier = @"PlayButton";
 	play.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* stop = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"stop"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+	UIBarButtonItem* stop = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"stop"] style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
 	stop.accessibilityLabel = NSLocalizedString(@"Stop", @"");
 	stop.accessibilityIdentifier = @"StopButton";
 	stop.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nextFwd"] style:UIBarButtonItemStylePlain target:nil action:NULL];
+	UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nextFwd"] style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
 	next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
 	next.accessibilityIdentifier = @"NextButton";
 	next.accessibilityTraits = UIAccessibilityTraitButton;
