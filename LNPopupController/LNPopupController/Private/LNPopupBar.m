@@ -337,8 +337,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[_contentView bringSubviewToFront:_shadowView];
 		[_contentView bringSubviewToFront:_bottomShadowView];
 		
-		_shadowView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, 1 / self.window.screen.scale);
-		_bottomShadowView.frame = CGRectMake(0, _contentView.bounds.size.height - 1 / self.window.screen.scale, _contentView.bounds.size.width, 1 / self.window.screen.scale);
+		UIWindow *window = self.window ? self.window : [[[UIApplication sharedApplication] delegate] window];
+		CGFloat h = 1 / window.screen.scale;
+		_shadowView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, h);
+		_bottomShadowView.frame = CGRectMake(0, _contentView.bounds.size.height - h, _contentView.bounds.size.width, h);
 		
 		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
 		{
