@@ -1,3 +1,5 @@
+// swift-tools-version:5.1
+
 import PackageDescription
 
 let package = Package(
@@ -9,7 +11,7 @@ let package = Package(
         .library(name: "LNPopupController", targets: ["LNPopupController"]),
     ],
     targets: [
-        .target(name: "LNPopupController", path: "Source")
+        .target(name: "LNPopupController", path: "LNPopupController")
     ],
     swiftLanguageVersions: [
         .v5
