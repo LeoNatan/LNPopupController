@@ -1452,27 +1452,21 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 + (CGFloat)_statusBarHeightForView:(UIView*)view
 {
-	CGFloat statusBarHeight;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000 && ! TARGET_OS_MACCATALYST
+#if TARGET_OS_MACCATALYST
+	return 0;
+#else
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 	if (@available(iOS 13.0, *))
 	{
-#endif
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
-		statusBarHeight = view.window.windowScene.statusBarManager.statusBarFrame.size.height;
-#endif
-#if ! TARGET_OS_MACCATALYST
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+		if(view != nil)
+		{
+			return view.window.windowScene.statusBarManager.statusBarFrame.size.height;
+		}
 	}
-	else
-	{
-#endif
-		statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000 && ! TARGET_OS_MACCATALYST
-	}
-#endif
 #endif
 	
-	return statusBarHeight;
+	return UIApplication.sharedApplication.statusBarFrame.size.height;
+#endif
 }
 
 @end
