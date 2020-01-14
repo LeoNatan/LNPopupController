@@ -12,6 +12,18 @@
 #import "LNPopupCloseButton.h"
 #import "LNPopupContentView.h"
 
+@interface LNPopupContentView ()
+
+- (instancetype)initWithFrame:(CGRect)frame;
+
+@property (nonatomic, strong, readwrite) UIPanGestureRecognizer* popupInteractionGestureRecognizer;
+@property (nonatomic, strong, readwrite) LNPopupCloseButton* popupCloseButton;
+@property (nonatomic, strong) UIVisualEffectView* effectView;
+
+@property (nonatomic, weak) UIViewController* currentPopupContentViewController;
+
+@end
+
 @interface LNPopupController : NSObject
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController;
@@ -47,5 +59,7 @@
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 
 - (void)_configurePopupBarFromBottomBar;
+
++ (CGFloat)_statusBarHeightForView:(UIView*)view;
 
 @end

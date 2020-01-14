@@ -48,7 +48,13 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
+{	
+	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"DropShadow"])
+	{
+		otherGestureRecognizer.state = UIGestureRecognizerStateFailed;
+		return YES;
+	}
+	
 	if([NSStringFromClass(otherGestureRecognizer.class) containsString:@"Reveal"])
 	{
 		return NO;
@@ -98,6 +104,14 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	if([self.forwardedDelegate respondsToSelector:_cmd])
 	{
 		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
+	}
+	
+	if (@available(iOS 13.0, *))
+	{
+		if([otherGestureRecognizer.name hasPrefix:@"undointeraction"])
+		{
+			return NO;
+		}
 	}
 	
 	return YES;

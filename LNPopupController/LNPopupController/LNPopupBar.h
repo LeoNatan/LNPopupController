@@ -10,9 +10,12 @@
 #import <LNPopupController/LNPopupItem.h>
 #import <LNPopupController/LNPopupCustomBarViewController.h>
 
+#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
+#define LN_DEPRECATED_PREVIEWING_MSG "Add context menu interaction or register for previewing directly on the popup bar view. This API will be removed soon."
+
 NS_ASSUME_NONNULL_BEGIN
 
-extern const NSInteger LNBackgroundStyleInherit;
+extern const UIBlurEffectStyle LNBackgroundStyleInherit;
 
 /**
  * Available styles for the popup bar 
@@ -59,30 +62,6 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 	LNPopupBarProgressViewStyleNone
 };
 
-@protocol LNPopupBarPreviewingDelegate <NSObject>
-
-@required
-
-/**
- * Called when the user performs a peek action on the popup bar.
- *
- * The default implementation returns @c nil and no preview is displayed.
- *
- * @return The view controller whose view you want to provide as the preview (peek), or @c nil to disable preview.
- */
-- (nullable UIViewController*)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar;
-
-@optional
-
-/**
- * Called when the user performs a pop action on the popup bar.
- *
- * The default implementation does not commit the view controller.
- */
-- (void)popupBar:(LNPopupBar*)popupBar commitPreviewingViewController:(UIViewController*)viewController;
-
-@end
-
 /**
  * A popup bar is a control that displays popup information. Content is popuplated from @c LNPopupItem items.
  */
@@ -121,7 +100,12 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 /**
  * The popup bar's progress style.
  */
-@property (nonatomic, assign) LNPopupBarProgressViewStyle progressViewStyle;
+@property (nonatomic, assign) LNPopupBarProgressViewStyle progressViewStyle UI_APPEARANCE_SELECTOR;
+
+/**
+* The progress view displayed on the popup bar.
+*/
+@property (nonatomic, strong, readonly) UIProgressView* progressView;
 
 /**
  * The popup bar background style that specifies its appearance.
@@ -184,15 +168,48 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @property (nonatomic, strong, readonly) UILongPressGestureRecognizer* barHighlightGestureRecognizer;
 
 /**
- * The previewing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the @c LNPopupBarPreviewingDelegate protocol.
- */
-@property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> previewingDelegate;
-
-/**
  * Set this property with an @c LNPopupCustomBarViewController subclass object to provide a popup bar with custom content.
  */
 @property (nullable, nonatomic, strong) LNPopupCustomBarViewController* customBarViewController;
 
 @end
+
+#pragma mark Deprecatations
+
+#if ! TARGET_OS_MACCATALYST
+LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG)
+@protocol LNPopupBarPreviewingDelegate <NSObject>
+
+@required
+
+/**
+ * Called when the user performs a peek action on the popup bar.
+ *
+ * The default implementation returns @c nil and no preview is displayed.
+ *
+ * @return The view controller whose view you want to provide as the preview (peek), or @c nil to disable preview.
+ */
+- (nullable UIViewController*)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG);
+
+@optional
+
+/**
+ * Called when the user performs a pop action on the popup bar.
+ *
+ * The default implementation does not commit the view controller.
+ */
+- (void)popupBar:(LNPopupBar*)popupBar commitPreviewingViewController:(UIViewController*)viewController LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG);
+
+@end
+
+@interface LNPopupBar ()
+
+/**
+ * The previewing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the @c LNPopupBarPreviewingDelegate protocol.
+ */
+@property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> previewingDelegate LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG);
+
+@end
+#endif
 
 NS_ASSUME_NONNULL_END

@@ -23,7 +23,19 @@ static NSArray* __keys;
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		__keys = @[NSStringFromSelector(@selector(title)), NSStringFromSelector(@selector(subtitle)), NSStringFromSelector(@selector(image)), NSStringFromSelector(@selector(progress)), NSStringFromSelector(@selector(leftBarButtonItems)), NSStringFromSelector(@selector(rightBarButtonItems)), NSStringFromSelector(@selector(accessibilityLabel)), NSStringFromSelector(@selector(accessibilityHint)), NSStringFromSelector(@selector(accessibilityImageLabel)), NSStringFromSelector(@selector(accessibilityProgressLabel)), NSStringFromSelector(@selector(accessibilityProgressValue))];
+		__keys = @[
+			NSStringFromSelector(@selector(title)),
+			NSStringFromSelector(@selector(subtitle)),
+			NSStringFromSelector(@selector(image)),
+			NSStringFromSelector(@selector(progress)),
+			NSStringFromSelector(@selector(leftBarButtonItems)),
+			NSStringFromSelector(@selector(rightBarButtonItems)),
+			NSStringFromSelector(@selector(accessibilityLabel)),
+			NSStringFromSelector(@selector(accessibilityHint)),
+			NSStringFromSelector(@selector(accessibilityImageLabel)),
+			NSStringFromSelector(@selector(accessibilityProgressLabel)),
+			NSStringFromSelector(@selector(accessibilityProgressValue))
+		];
 	});
 }
 
