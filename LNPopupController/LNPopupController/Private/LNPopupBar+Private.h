@@ -11,11 +11,26 @@
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
 
-extern CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC);
-extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style);
+inline __attribute__((always_inline)) CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC)
+{
+	if(customBarVC) { return customBarVC.preferredContentSize.height; }
+	
+	return style == LNPopupBarStyleCompact ? LNPopupBarHeightCompact : LNPopupBarHeightProminent;
+}
+
+inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
+{
+	LNPopupBarStyle rv = style;
+	if(rv == LNPopupBarStyleDefault)
+	{
+		rv = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion > 9 ? LNPopupBarStyleProminent : LNPopupBarStyleCompact;
+	}
+	return rv;
+}
 
 @protocol _LNPopupBarDelegate <NSObject>
 
+- (void)_traitCollectionForPopupBarDidChange:(LNPopupBar*)bar;
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar;
 
 @end
@@ -36,6 +51,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
 @property (nonatomic, strong) UIColor* systemShadowColor;
 
+@property (nonatomic, strong) UIView* bottomShadowView;
+
 @property (nonatomic, weak, readwrite) LNPopupItem* popupItem;
 
 @property (nonatomic, weak) id<_LNPopupBarDelegate> _barDelegate;
@@ -45,12 +62,14 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @property (nonatomic, strong) UIImage* image;
 
-@property (nonatomic, strong) UIToolbar* toolbar;
-
 @property (nonatomic, strong) UIView* highlightView;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 
-@property (nonatomic, strong) UIProgressView* progressView;
+@property (nonatomic, strong, readwrite) UIProgressView* progressView;
+
+@property (nonatomic, strong) UIView* contentView;
+//@property (nonatomic, strong) UIToolbar* toolbar;
+@property (nonatomic, strong) UIVisualEffectView* backgroundView;
 
 @property (nonatomic, copy) NSString* accessibilityCenterLabel;
 @property (nonatomic, copy) NSString* accessibilityCenterHint;
@@ -71,5 +90,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 - (void)_setTitleViewMarqueesPaused:(BOOL)paused;
 
 - (void)_removeAnimationFromBarItems;
+
+- (void)_transitionCustomBarViewControllerWithPopupContainerSize:(CGSize)size withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
+- (void)_transitionCustomBarViewControllerWithPopupContainerTraitCollection:(UITraitCollection *)newCollection withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
 
 @end

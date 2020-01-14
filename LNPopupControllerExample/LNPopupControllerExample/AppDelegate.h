@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "COSTouchVisualizerWindow.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) COSTouchVisualizerWindow *window;
-
+@property (strong, nonatomic) UIWindow *window;
 
 @end
 

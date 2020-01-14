@@ -11,6 +11,8 @@ import LNPopupController
 
 class DemoAlbumTableViewController: UITableViewController {
 
+	@IBOutlet var demoAlbumImageView: UIImageView!
+	
 	var images: [UIImage]
 	var titles: [String]
 	var subtitles: [String]
@@ -28,6 +30,12 @@ class DemoAlbumTableViewController: UITableViewController {
 		
         super.viewDidLoad()
 		
+		if #available(iOS 13.0, *) {
+			demoAlbumImageView.layer.cornerCurve = .continuous
+		}
+		demoAlbumImageView.layer.cornerRadius = 8
+		demoAlbumImageView.layer.masksToBounds = true
+		
 		for idx in 1...self.tableView(tableView, numberOfRowsInSection: 0) {
 			images += [UIImage(named: "genre\(idx)")!]
 			titles += [LoremIpsum.title()]
@@ -39,14 +47,15 @@ class DemoAlbumTableViewController: UITableViewController {
 	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
-		
+		#if !targetEnvironment(macCatalyst)
 		if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 10 {
 			let insets = UIEdgeInsets.init(top: topLayoutGuide.length, left: 0, bottom: bottomLayoutGuide.length, right: 0)
 			tableView.contentInset = insets
 			tableView.scrollIndicatorInsets = insets
 		}
+		#endif
 	}
-
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
@@ -99,14 +108,22 @@ class DemoAlbumTableViewController: UITableViewController {
 		popupContentController.popupItem.accessibilityHint = NSLocalizedString("Double Tap to Expand the Mini Player", comment: "")
 		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
+		#if targetEnvironment(macCatalyst)
+		tabBarController?.popupBar.inheritsVisualStyleFromDockingView = true
+		#endif
+		
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
-		tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
-		tabBarController?.popupBar.imageView.layer.cornerRadius = 5
+		
+		if #available(iOS 13.0, *) {
+			tabBarController?.popupBar.tintColor = UIColor.label
+		} else {
+			tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
+		}
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
 	
-	override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-		cell.backgroundColor = UIColor.clear
-	}
+//	override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//		cell.backgroundColor = UIColor.clear
+//	}
 }

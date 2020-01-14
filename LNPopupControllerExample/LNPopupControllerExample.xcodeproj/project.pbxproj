@@ -19,6 +19,7 @@
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
 		393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
+		39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39631FAC230DA03E0059D119 /* SceneDelegate.m */; };
 		397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
 		397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56291B753A45007A67F0 /* MusicCell.swift */; };
 		39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 39837A1F1B756F1A004D2DA9 /* RandomColors.m */; };
@@ -26,9 +27,11 @@
 		39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A251B759721004D2DA9 /* PortraitTabBarController.swift */; };
 		3988E3581B59C3000039C09B /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3988E3571B59C3000039C09B /* FirstViewController.m */; };
 		399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399748711D5652250079492B /* DemoPopupContentViewController.m */; };
+		39A3B58B230D400B00E10425 /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* SplitViewController.m */; };
+		39DA0E8322D7B9C6001E63A0 /* NSObject+XcodeBugs.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */; };
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		39F513F61B88F9E800F7C717 /* COSTouchVisualizerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F513F51B88F9E800F7C717 /* COSTouchVisualizerWindow.m */; };
+		39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
 		39F611CB1E9AD9E6002859BA /* LNPopupControllerExampleUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 39F611CA1E9AD9E6002859BA /* LNPopupControllerExampleUITests.m */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +91,8 @@
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
 		393F232A1E16D1E4000E969D /* HigherSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HigherSearchBar.swift; sourceTree = "<group>"; };
+		39631FAB230DA03D0059D119 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
+		39631FAC230DA03E0059D119 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		397C560D1B74DA66007A67F0 /* Music.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Music.storyboard; sourceTree = "<group>"; };
 		397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoAlbumTableViewController.swift; sourceTree = "<group>"; };
 		397C56291B753A45007A67F0 /* MusicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicCell.swift; sourceTree = "<group>"; };
@@ -99,9 +104,13 @@
 		399748701D5652250079492B /* DemoPopupContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoPopupContentViewController.h; sourceTree = "<group>"; };
 		399748711D5652250079492B /* DemoPopupContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoPopupContentViewController.m; sourceTree = "<group>"; };
 		39A134DA1B73FFC0003AB4C5 /* LNPopupControllerExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupControllerExample-Bridging-Header.h"; sourceTree = "<group>"; };
+		39A3B589230D400B00E10425 /* SplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitViewController.h; sourceTree = "<group>"; };
+		39A3B58A230D400B00E10425 /* SplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
+		39A3B58C230D433100E10425 /* LNPopupControllerExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupControllerExample.entitlements; sourceTree = "<group>"; };
+		39DA0E8122D7B9C6001E63A0 /* NSObject+XcodeBugs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+XcodeBugs.h"; sourceTree = "<group>"; };
+		39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+XcodeBugs.m"; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
-		39F513F41B88F9E800F7C717 /* COSTouchVisualizerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = COSTouchVisualizerWindow.h; sourceTree = "<group>"; };
-		39F513F51B88F9E800F7C717 /* COSTouchVisualizerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = COSTouchVisualizerWindow.m; sourceTree = "<group>"; };
+		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39F611C81E9AD9E5002859BA /* LNPopupControllerExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LNPopupControllerExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		39F611CA1E9AD9E6002859BA /* LNPopupControllerExampleUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupControllerExampleUITests.m; sourceTree = "<group>"; };
 		39F611CC1E9AD9E6002859BA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -112,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */,
 				39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,6 +152,7 @@
 				39277A061B58228000293F95 /* LNPopupControllerExample */,
 				39F611C91E9AD9E6002859BA /* LNPopupControllerExampleUITests */,
 				39277A051B58228000293F95 /* Products */,
+				39DDA0AC230D5F63007DCCD8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -157,6 +168,7 @@
 		39277A061B58228000293F95 /* LNPopupControllerExample */ = {
 			isa = PBXGroup;
 			children = (
+				39A3B58C230D433100E10425 /* LNPopupControllerExample.entitlements */,
 				39277A131B58228000293F95 /* Main.storyboard */,
 				397C560B1B74D47D007A67F0 /* Demo - Testing Scene (Objective-C) */,
 				397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */,
@@ -176,6 +188,8 @@
 				39277A1B1B58228000293F95 /* Info.plist */,
 				39277A0A1B58228000293F95 /* AppDelegate.h */,
 				39277A0B1B58228000293F95 /* AppDelegate.m */,
+				39631FAB230DA03D0059D119 /* SceneDelegate.h */,
+				39631FAC230DA03E0059D119 /* SceneDelegate.m */,
 				39277A081B58228000293F95 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -217,6 +231,8 @@
 				3988E3571B59C3000039C09B /* FirstViewController.m */,
 				399748701D5652250079492B /* DemoPopupContentViewController.h */,
 				399748711D5652250079492B /* DemoPopupContentViewController.m */,
+				39A3B589230D400B00E10425 /* SplitViewController.h */,
+				39A3B58A230D400B00E10425 /* SplitViewController.m */,
 			);
 			name = "Demo - Testing Scene (Objective-C)";
 			sourceTree = "<group>";
@@ -236,10 +252,11 @@
 		39837A221B756F9B004D2DA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				7B09DF521B899C24006E6088 /* COSTouchVisualizerWindow */,
 				397C56091B74D450007A67F0 /* LoremIpsum */,
 				39837A211B756F4C004D2DA9 /* RandomColors.h */,
 				39837A1F1B756F1A004D2DA9 /* RandomColors.m */,
+				39DA0E8122D7B9C6001E63A0 /* NSObject+XcodeBugs.h */,
+				39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -252,6 +269,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		39DDA0AC230D5F63007DCCD8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				39DDA0AD230D5F63007DCCD8 /* MapKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		39F611C91E9AD9E6002859BA /* LNPopupControllerExampleUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -259,15 +284,6 @@
 				39F611CC1E9AD9E6002859BA /* Info.plist */,
 			);
 			path = LNPopupControllerExampleUITests;
-			sourceTree = "<group>";
-		};
-		7B09DF521B899C24006E6088 /* COSTouchVisualizerWindow */ = {
-			isa = PBXGroup;
-			children = (
-				39F513F41B88F9E800F7C717 /* COSTouchVisualizerWindow.h */,
-				39F513F51B88F9E800F7C717 /* COSTouchVisualizerWindow.m */,
-			);
-			name = COSTouchVisualizerWindow;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -317,13 +333,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Leo Natan";
 				TargetAttributes = {
 					39277A031B58228000293F95 = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = S9QFG2VH2E;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1100;
 					};
 					39F611C71E9AD9E5002859BA = {
 						CreatedOnToolsVersion = 8.3;
@@ -334,7 +350,7 @@
 			};
 			buildConfigurationList = 392779FF1B58228000293F95 /* Build configuration list for PBXProject "LNPopupControllerExample" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -398,9 +414,10 @@
 				397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */,
 				39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
-				39F513F61B88F9E800F7C717 /* COSTouchVisualizerWindow.m in Sources */,
 				393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */,
+				39A3B58B230D400B00E10425 /* SplitViewController.m in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
+				39DA0E8322D7B9C6001E63A0 /* NSObject+XcodeBugs.m in Sources */,
 				39277A091B58228000293F95 /* main.m in Sources */,
 				39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */,
 				393F23291E16CF90000E969D /* LocationsController.swift in Sources */,
@@ -408,6 +425,7 @@
 				399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */,
 				3988E3581B59C3000039C09B /* FirstViewController.m in Sources */,
 				39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */,
+				39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */,
 				397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -451,6 +469,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -505,6 +524,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -557,18 +577,21 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -580,18 +603,21 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
