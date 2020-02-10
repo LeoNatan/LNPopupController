@@ -1,6 +1,6 @@
 
 //
-//  MarqueeLabel.h
+//  LNMarqueeLabel.h
 //  
 //  Created by Charles Powell on 1/31/11.
 //  Copyright (c) 2011-2015 Charles Powell. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-/** An enum that defines the types of `MarqueeLabel` scrolling */
+/** An enum that defines the types of `LNMarqueeLabel` scrolling */
 typedef NS_ENUM(NSUInteger, MarqueeType) {
     /** Scrolls left first, then back right to the original position. */
     MLLeftRight = 0,
@@ -30,51 +30,51 @@ typedef NS_ENUM(NSUInteger, MarqueeType) {
 #endif
 
 /**
- MarqueeLabel is a UILabel subclass adds a scrolling marquee effect when the text of a label instance outgrows the available width. Instances of `MarqueeLabel` can be configured
+ LNMarqueeLabel is a UILabel subclass adds a scrolling marquee effect when the text of a label instance outgrows the available width. Instances of `LNMarqueeLabel` can be configured
  for label scrolling direction/looping, speed/rate, and other options.
  */
 
 IB_DESIGNABLE
-@interface MarqueeLabel : UILabel <CAAnimationDelegate>
+@interface LNMarqueeLabel : UILabel <CAAnimationDelegate>
 
 ////////////////////////////////////////////////////////////////////////////////
-/// @name Creating MarqueeLabels
+/// @name Creating LNMarqueeLabels
 ////////////////////////////////////////////////////////////////////////////////
 
-/** Returns a newly initialized `MarqueeLabel` instance.
+/** Returns a newly initialized `LNMarqueeLabel` instance.
 
  The default scroll duration of 7.0 seconds and fade length of 0.0 are used.
  
  @param frame A rectangle specifying the initial location and size of the view in its superview's coordinates. Text (for the given font, font size, etc.) that does not fit in this frame will automatically scroll.
- @return An initialized `MarqueeLabel` object or nil if the object couldn't be created.
+ @return An initialized `LNMarqueeLabel` object or nil if the object couldn't be created.
 */
 
 - (instancetype)initWithFrame:(CGRect)frame;
 
 
-/** Returns a newly initialized `MarqueeLabel` instance with the specified scroll rate and edge transparency fade length.
+/** Returns a newly initialized `LNMarqueeLabel` instance with the specified scroll rate and edge transparency fade length.
  
  You must specify a non-zero rate, and you cannot thereafter modify the rate.
  
  @param frame A rectangle specifying the initial location and size of the view in its superview's coordinates. Text (for the given font, font size, etc.) that does not fit in this frame will automatically scroll.
  @param pixelsPerSec A rate of scroll for the label scroll animation. Must be non-zero. Note that this will be the maximum rate for ease-type animation.
- @param fadeLength A length of transparency fade at the left and right edges of the `MarqueeLabel` instance's frame.
+ @param fadeLength A length of transparency fade at the left and right edges of the `LNMarqueeLabel` instance's frame.
  @see fadeLength
- @return An initialized `MarqueeLabel` object or nil if the object couldn't be created.
+ @return An initialized `LNMarqueeLabel` object or nil if the object couldn't be created.
  */
 
 - (instancetype)initWithFrame:(CGRect)frame rate:(CGFloat)pixelsPerSec andFadeLength:(CGFloat)fadeLength;
 
 
-/** Returns a newly initialized `MarqueeLabel` instance with the specified scroll duration and edge transparency fade length.
+/** Returns a newly initialized `LNMarqueeLabel` instance with the specified scroll duration and edge transparency fade length.
  
  You must specify a non-zero duration, and you cannot thereafter modify the duration.
  
  @param frame A rectangle specifying the initial location and size of the view in its superview's coordinates. Text (for the given font, font size, etc.) that does not fit in this frame will automatically scroll.
  @param scrollDuration A scroll duration the label scroll animation. Must be non-zero. This will be the duration that the animation takes for one-half of the scroll cycle in the case of left-right and right-left marquee types, and for one loop of a continuous marquee type.
- @param fadeLength A length of transparency fade at the left and right edges of the `MarqueeLabel` instance's frame.
+ @param fadeLength A length of transparency fade at the left and right edges of the `LNMarqueeLabel` instance's frame.
  @see fadeLength
- @return An initialized `MarqueeLabel` object or nil if the object couldn't be created.
+ @return An initialized `LNMarqueeLabel` object or nil if the object couldn't be created.
  */
 
 - (instancetype)initWithFrame:(CGRect)frame duration:(NSTimeInterval)scrollDuration andFadeLength:(CGFloat)fadeLength;
@@ -109,11 +109,11 @@ IB_DESIGNABLE
 @property (nonatomic, assign) UIViewAnimationOptions animationCurve;
 
 
-/** A boolean property that sets whether the `MarqueeLabel` should behave like a normal UILabel.
+/** A boolean property that sets whether the `LNMarqueeLabel` should behave like a normal UILabel.
  
- When set to `YES` the `MarqueeLabel` will behave like a normal UILabel, and  will not begin scrolling when the text is
+ When set to `YES` the `LNMarqueeLabel` will behave like a normal UILabel, and  will not begin scrolling when the text is
  larger than the specified frame. The change takes effect immediately, removing any in-flight animation as well as any
- current edge fade. Note that the `MarqueeLabel` will respect the current values of the `lineBreakMode` and `textAlignment` 
+ current edge fade. Note that the `LNMarqueeLabel` will respect the current values of the `lineBreakMode` and `textAlignment`
  properties while labelized.
  
  To simply prevent automatic scrolling, use the `holdScrolling` property.
@@ -131,12 +131,12 @@ IB_DESIGNABLE
 @property (nonatomic, assign) IBInspectable BOOL labelize;
 
 
-/** A boolean property that sets whether the `MarqueeLabel` should hold (prevent) label scrolling.
+/** A boolean property that sets whether the `LNMarqueeLabel` should hold (prevent) label scrolling.
  
- When set to `YES`, the `MarqueeLabel` will not automatically scroll even its text is larger than the specified frame, 
+ When set to `YES`, the `LNMarqueeLabel` will not automatically scroll even its text is larger than the specified frame,
  although the specified edge fades will remain.
  
- To set the `MarqueeLabel` to act like a normal UILabel, use the `labelize` property.
+ To set the `LNMarqueeLabel` to act like a normal UILabel, use the `labelize` property.
  
  Defaults to `NO`.
  
@@ -147,9 +147,9 @@ IB_DESIGNABLE
 @property (nonatomic, assign) IBInspectable BOOL holdScrolling;
 
 
-/** A boolean property that sets whether the `MarqueeLabel` should only begin a scroll when tapped.
+/** A boolean property that sets whether the `LNMarqueeLabel` should only begin a scroll when tapped.
  
- If this property is set to `YES`, the `MarqueeLabel` will begin a scroll animation cycle only when tapped. The label will
+ If this property is set to `YES`, the `LNMarqueeLabel` will begin a scroll animation cycle only when tapped. The label will
  not automatically being a scroll. This setting overrides the setting of the `holdScrolling` property.
  
  Defaults to `NO` .
@@ -161,9 +161,9 @@ IB_DESIGNABLE
 @property (nonatomic, assign) IBInspectable BOOL tapToScroll;
 
 
-/** Defines the direction and method in which the `MarqueeLabel` instance scrolls.
+/** Defines the direction and method in which the `LNMarqueeLabel` instance scrolls.
  
- `MarqueeLabel` supports four types of scrolling: `MLLeftRight`, `MLRightLeft`, `MLContinuous`, and `MLContinuousReverse`.
+ `LNMarqueeLabel` supports four types of scrolling: `MLLeftRight`, `MLRightLeft`, `MLContinuous`, and `MLContinuousReverse`.
  
  Given the nature of how text direction works, the options for the `marqueeType` property require specific text alignments
  and will set the textAlignment property accordingly.
@@ -260,9 +260,9 @@ IB_DESIGNABLE
 @property (nonatomic, assign) CGFloat continuousMarqueeExtraBuffer DEPRECATED_ATTRIBUTE;
 
 
-/** The length of transparency fade at the left and right edges of the `MarqueeLabel` instance's frame.
+/** The length of transparency fade at the left and right edges of the `LNMarqueeLabel` instance's frame.
  
- This propery sets the size (in points) of the view edge transparency fades on the left and right edges of a `MarqueeLabel`. The
+ This propery sets the size (in points) of the view edge transparency fades on the left and right edges of a `LNMarqueeLabel`. The
  transparency fades from an alpha of 1.0 (fully visible) to 0.0 (fully transparent) over this distance. Values set to this property
  will be sanitized to prevent a fade length greater than 1/2 of the frame width.
  
@@ -419,16 +419,16 @@ IB_DESIGNABLE
 /// @name Bulk-manipulation Methods
 ////////////////////////////////////////////////////////////////////////////////
 
-/** Convenience method to restart all `MarqueeLabel` instances that have the specified view controller in their next responder chain.
+/** Convenience method to restart all `LNMarqueeLabel` instances that have the specified view controller in their next responder chain.
  
- This method sends a `NSNotification` to all `MarqueeLabel` instances with the specified view controller in their next responder chain.
+ This method sends a `NSNotification` to all `LNMarqueeLabel` instances with the specified view controller in their next responder chain.
  The scrolling animation of these instances will be automatically restarted. This is equivalent to calling `restartLabel` on all affected
  instances.
  
  There is currently no functional difference between this method and `controllerViewDidAppear:` or `controllerViewWillAppear:`. The methods may 
  be used interchangeably.
  
- @warning View controllers that appear with animation (such as from underneath a modal-style controller) can cause some `MarqueeLabel` text
+ @warning View controllers that appear with animation (such as from underneath a modal-style controller) can cause some `LNMarqueeLabel` text
  position "jumping" when this method is used in `viewDidAppear` if scroll animations are already underway. Use this method inside `viewWillAppear:`
  instead to avoid this problem.
  
@@ -444,7 +444,7 @@ IB_DESIGNABLE
 + (void)restartLabelsOfController:(UIViewController *)controller;
 
 
-/** Convenience method to restart all `MarqueeLabel` instances that have the specified view controller in their next responder chain.
+/** Convenience method to restart all `LNMarqueeLabel` instances that have the specified view controller in their next responder chain.
  
  Alternative to `restartLabelsOfController:`. This method is retained for backwards compatibility and future enhancements.
  
@@ -457,7 +457,7 @@ IB_DESIGNABLE
 + (void)controllerViewDidAppear:(UIViewController *)controller;
 
 
-/** Convenience method to restart all `MarqueeLabel` instances that have the specified view controller in their next responder chain.
+/** Convenience method to restart all `LNMarqueeLabel` instances that have the specified view controller in their next responder chain.
  
  Alternative to `restartLabelsOfController:`. This method is retained for backwards compatibility and future enhancements.
  
@@ -477,24 +477,24 @@ IB_DESIGNABLE
 + (void)controllerViewAppearing:(UIViewController *)controller DEPRECATED_ATTRIBUTE;
 
 
-/** Labelizes all `MarqueeLabel` instances that have the specified view controller in their next responder chain.
+/** Labelizes all `LNMarqueeLabel` instances that have the specified view controller in their next responder chain.
  
- This method sends an `NSNotification` to all `MarqueeLabel` instances with the specified view controller in their next
- responder chain. The `labelize` property of these `MarqueeLabel` instances will be set to `YES`.
+ This method sends an `NSNotification` to all `LNMarqueeLabel` instances with the specified view controller in their next
+ responder chain. The `labelize` property of these `LNMarqueeLabel` instances will be set to `YES`.
  
- @param controller The view controller for which all `MarqueeLabel` instances should be labelized.
+ @param controller The view controller for which all `LNMarqueeLabel` instances should be labelized.
  @see labelize
  */
 
 + (void)controllerLabelsShouldLabelize:(UIViewController *)controller;
 
 
-/** De-Labelizes all `MarqueeLabel` instances that have the specified view controller in their next responder chain.
+/** De-Labelizes all `LNMarqueeLabel` instances that have the specified view controller in their next responder chain.
  
- This method sends an `NSNotification` to all `MarqueeLabel` instances with the specified view controller in their next
- responder chain. The `labelize` property of these `MarqueeLabel` instances will be set to `NO` .
+ This method sends an `NSNotification` to all `LNMarqueeLabel` instances with the specified view controller in their next
+ responder chain. The `labelize` property of these `LNMarqueeLabel` instances will be set to `NO` .
  
- @param controller The view controller for which all `MarqueeLabel` instances should be de-labelized.
+ @param controller The view controller for which all `LNMarqueeLabel` instances should be de-labelized.
  @see labelize
  */
 

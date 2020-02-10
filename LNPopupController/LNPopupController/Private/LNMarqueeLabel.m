@@ -1,19 +1,19 @@
 
 //
-//  MarqueeLabel.m
+//  LNMarqueeLabel.m
 //
 //  Created by Charles Powell on 1/31/11.
 //  Copyright (c) 2011-2015 Charles Powell. All rights reserved.
 //
 
-#import "MarqueeLabel.h"
+#import "LNMarqueeLabel.h"
 #import <QuartzCore/QuartzCore.h>
 
 // Notification strings
-NSString *const kMarqueeLabelControllerRestartNotification = @"MarqueeLabelViewControllerRestart";
-NSString *const kMarqueeLabelShouldLabelizeNotification = @"MarqueeLabelShouldLabelizeNotification";
-NSString *const kMarqueeLabelShouldAnimateNotification = @"MarqueeLabelShouldAnimateNotification";
-NSString *const kMarqueeLabelAnimationCompletionBlock = @"MarqueeLabelAnimationCompletionBlock";
+NSString *const kLNMarqueeLabelControllerRestartNotification = @"LNMarqueeLabelViewControllerRestart";
+NSString *const kLNMarqueeLabelShouldLabelizeNotification = @"LNMarqueeLabelShouldLabelizeNotification";
+NSString *const kLNMarqueeLabelShouldAnimateNotification = @"LNMarqueeLabelShouldAnimateNotification";
+NSString *const kLNMarqueeLabelAnimationCompletionBlock = @"LNMarqueeLabelAnimationCompletionBlock";
 
 // Animation completion block
 typedef void(^MLAnimationCompletionBlock)(BOOL finished);
@@ -28,17 +28,17 @@ typedef void(^MLAnimationCompletionBlock)(BOOL finished);
 @interface GradientSetupAnimation : CABasicAnimation
 @end
 
-@interface UIView (MarqueeLabelHelpers)
+@interface UIView (LNMarqueeLabelHelpers)
 - (UIViewController *)firstAvailableViewController;
 - (id)traverseResponderChainForFirstViewController;
 @end
 
-@interface CAMediaTimingFunction (MarqueeLabelHelpers)
+@interface CAMediaTimingFunction (LNMarqueeLabelHelpers)
 - (NSArray *)controlPoints;
 - (CGFloat)durationPercentageForPositionPercentage:(CGFloat)positionPercentage withDuration:(NSTimeInterval)duration;
 @end
 
-@interface MarqueeLabel()
+@interface LNMarqueeLabel()
 
 @property (nonatomic, strong) UILabel *subLabel;
 
@@ -57,35 +57,35 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 @end
 
 
-@implementation MarqueeLabel
+@implementation LNMarqueeLabel
 
 #pragma mark - Class Methods and handlers
 
 + (void)restartLabelsOfController:(UIViewController *)controller {
-    [MarqueeLabel notifyController:controller
-                       withMessage:kMarqueeLabelControllerRestartNotification];
+    [LNMarqueeLabel notifyController:controller
+                       withMessage:kLNMarqueeLabelControllerRestartNotification];
 }
 
 + (void)controllerViewWillAppear:(UIViewController *)controller {
-    [MarqueeLabel restartLabelsOfController:controller];
+    [LNMarqueeLabel restartLabelsOfController:controller];
 }
 
 + (void)controllerViewDidAppear:(UIViewController *)controller {
-    [MarqueeLabel restartLabelsOfController:controller];
+    [LNMarqueeLabel restartLabelsOfController:controller];
 }
 
 + (void)controllerViewAppearing:(UIViewController *)controller {
-    [MarqueeLabel restartLabelsOfController:controller];
+    [LNMarqueeLabel restartLabelsOfController:controller];
 }
 
 + (void)controllerLabelsShouldLabelize:(UIViewController *)controller {
-    [MarqueeLabel notifyController:controller
-                       withMessage:kMarqueeLabelShouldLabelizeNotification];
+    [LNMarqueeLabel notifyController:controller
+                       withMessage:kLNMarqueeLabelShouldLabelizeNotification];
 }
 
 + (void)controllerLabelsShouldAnimate:(UIViewController *)controller {
-    [MarqueeLabel notifyController:controller
-                       withMessage:kMarqueeLabelShouldAnimateNotification];
+    [LNMarqueeLabel notifyController:controller
+                       withMessage:kLNMarqueeLabelShouldAnimateNotification];
 }
 
 + (void)notifyController:(UIViewController *)controller withMessage:(NSString *)message
@@ -246,9 +246,9 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     // Add notification observers
     // Custom class notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewControllerShouldRestart:) name:kMarqueeLabelControllerRestartNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldLabelize:) name:kMarqueeLabelShouldLabelizeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldAnimate:) name:kMarqueeLabelShouldAnimateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewControllerShouldRestart:) name:kLNMarqueeLabelControllerRestartNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldLabelize:) name:kLNMarqueeLabelShouldLabelizeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldAnimate:) name:kLNMarqueeLabelShouldAnimateNotification object:nil];
     
     // UIApplication state notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartLabel) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -278,7 +278,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     [self updateSublabel];
 }
 
-#pragma mark - MarqueeLabel Heavy Lifting
+#pragma mark - LNMarqueeLabel Heavy Lifting
 
 - (void)layoutSubviews
 {
@@ -624,7 +624,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
                                                               interval:interval
                                                                  delay:delayAmount];
     // Add completion block
-    [awayAnim setValue:@(YES) forKey:kMarqueeLabelAnimationCompletionBlock];
+    [awayAnim setValue:@(YES) forKey:kLNMarqueeLabelAnimationCompletionBlock];
     
     // Add animation
     [self.subLabel.layer addAnimation:awayAnim forKey:@"position"];
@@ -707,7 +707,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     
     
     // Attach completion block
-    [labelAnimation setValue:@(YES) forKey:kMarqueeLabelAnimationCompletionBlock];
+    [labelAnimation setValue:@(YES) forKey:kLNMarqueeLabelAnimationCompletionBlock];
     
     // Add animation
     [self.subLabel.layer addAnimation:labelAnimation forKey:@"position"];
@@ -1299,12 +1299,12 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 }
 
 - (void)setNumberOfLines:(NSInteger)numberOfLines {
-    // By the nature of MarqueeLabel, this is 1
+    // By the nature of LNMarqueeLabel, this is 1
     [super setNumberOfLines:1];
 }
 
 - (void)setAdjustsFontSizeToFitWidth:(BOOL)adjustsFontSizeToFitWidth {
-    // By the nature of MarqueeLabel, this is NO
+    // By the nature of LNMarqueeLabel, this is NO
     [super setAdjustsFontSizeToFitWidth:NO];
 }
 
@@ -1342,7 +1342,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 }
 
 - (void)setAdjustsLetterSpacingToFitWidth:(BOOL)adjustsLetterSpacingToFitWidth {
-    // By the nature of MarqueeLabel, this is NO
+    // By the nature of LNMarqueeLabel, this is NO
     [super setAdjustsLetterSpacingToFitWidth:NO];
 }
 
@@ -1525,7 +1525,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
 
 @end
 
-@implementation UIView (MarqueeLabelHelpers)
+@implementation UIView (LNMarqueeLabelHelpers)
 // Thanks to Phil M
 // http://stackoverflow.com/questions/1340434/get-to-uiviewcontroller-from-uiview-on-iphone
 
@@ -1549,7 +1549,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
 
 @end
 
-@implementation CAMediaTimingFunction (MarqueeLabelHelpers)
+@implementation CAMediaTimingFunction (LNMarqueeLabelHelpers)
 
 - (CGFloat)durationPercentageForPositionPercentage:(CGFloat)positionPercentage withDuration:(NSTimeInterval)duration
 {
@@ -1592,14 +1592,14 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
         df0 = [self derivativeYValueForCurveAt:t0 withControlPoints:controlPoints];
         // Check if derivative is small or zero ( http://en.wikipedia.org/wiki/Newton's_method#Failure_analysis )
         if (fabs(df0) < 1e-6) {
-            NSLog(@"MarqueeLabel: Newton's Method failure, small/zero derivative!");
+            NSLog(@"LNMarqueeLabel: Newton's Method failure, small/zero derivative!");
             break;
         }
         // Else recalculate t1
         t1 = t0 - f0/df0;
     }
     
-    NSLog(@"MarqueeLabel: Failed to find t for Y input!");
+    NSLog(@"LNMarqueeLabel: Failed to find t for Y input!");
     return t0;
 }
 

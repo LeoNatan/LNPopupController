@@ -8,7 +8,7 @@
 
 #import "LNPopupBar+Private.h"
 #import "LNPopupCustomBarViewController+Private.h"
-#import "MarqueeLabel.h"
+#import "LNMarqueeLabel.h"
 #import "_LNPopupBase64Utils.h"
 
 @interface _LNPopupToolbar : UIToolbar @end
@@ -92,7 +92,7 @@
 
 @end
 
-@interface MarqueeLabel () <__MarqueeLabelType> @end
+@interface LNMarqueeLabel () <__MarqueeLabelType> @end
 
 const CGFloat LNPopupBarHeightCompact = 40.0;
 const CGFloat LNPopupBarHeightProminent = 64.0;
@@ -636,7 +636,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		return rv;
 	}
 	
-	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
+	LNMarqueeLabel* rv = [[LNMarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
 	rv.leadingBuffer = 0.0;
 	rv.trailingBuffer = 20.0;
 	rv.animationDelay = 2.0;
