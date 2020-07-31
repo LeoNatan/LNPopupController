@@ -927,10 +927,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	{
 		self.tabBar.frame = oldBarFrame;
 	}
-	
-	//	self.tabBar.frame = (CGRect){{0, 813}, {414, 83}};
-	
-	//	NSLog(@"🤦‍♂️ %@", [self valueForKey:@"_contentOverlayInsets"]);
 }
 #endif
 

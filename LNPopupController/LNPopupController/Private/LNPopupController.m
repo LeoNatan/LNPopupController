@@ -143,13 +143,6 @@ static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
 
 @implementation LNPopupContentView
 
-- (void)safeAreaInsetsDidChange
-{
-	[super safeAreaInsetsDidChange];
-	
-	NSLog(@"🤦‍♂️ %@", @(self.safeAreaInsets));
-}
-
 - (nonnull instancetype)initWithFrame:(CGRect)frame
 {
 	self = [super initWithFrame:frame];
@@ -350,9 +343,12 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	contentFrame = _containerController.view.bounds;
 	if(@available(iOS 14.0, *))
 	{
-		if(_containerController.view.safeAreaInsets.left == 100)
+		if(_containerController.splitViewController != nil && (_containerController.view.safeAreaInsets.left == 100 || _containerController.view.safeAreaInsets.right == 100))
 		{
-			contentFrame.origin.x += 100;
+			//Take into account RTL
+			CGFloat dx = _containerController.view.safeAreaInsets.left == 100 ? 100 : 0;
+			
+			contentFrame.origin.x += dx;
 			contentFrame.size.width -= 100;
 		}
 	}
