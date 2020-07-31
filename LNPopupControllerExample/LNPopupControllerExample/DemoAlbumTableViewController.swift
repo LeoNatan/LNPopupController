@@ -45,17 +45,6 @@ class DemoAlbumTableViewController: UITableViewController {
 		tableView.backgroundColor = LNRandomDarkColor()
     }
 	
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		#if !targetEnvironment(macCatalyst)
-		if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 10 {
-			let insets = UIEdgeInsets.init(top: topLayoutGuide.length, left: 0, bottom: bottomLayoutGuide.length, right: 0)
-			tableView.contentInset = insets
-			tableView.scrollIndicatorInsets = insets
-		}
-		#endif
-	}
-	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		

@@ -9,7 +9,7 @@
 #import "LNPopupBar+Private.h"
 #import "LNPopupCustomBarViewController+Private.h"
 #import "MarqueeLabel.h"
-#import "_LNPopupBase64Utils.h"
+#import "_LNPopupSwizzlingUtils.h"
 
 @interface _LNPopupToolbar : UIToolbar @end
 @implementation _LNPopupToolbar
@@ -33,11 +33,8 @@
 {
 	[super layoutSubviews];
 	
-	//On iOS 11 reset the semantic content attribute to make sure it propagades to all subviews.
-	if(@available(iOS 11, *))
-	{
-		[self setSemanticContentAttribute:self.semanticContentAttribute];
-	}
+	//On iOS 11 and above reset the semantic content attribute to make sure it propagades to all subviews.
+	[self setSemanticContentAttribute:self.semanticContentAttribute];
 }
 
 - (void)_deepSetSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute toView:(UIView*)view startingFromView:(UIView*)staringView;
@@ -58,15 +55,8 @@
 
 - (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute
 {
-	if(@available(iOS 11, *))
-	{
-		//On iOS 11, due to a bug in UIKit, the semantic content attribute must be propagaded recursively to all subviews, so that the system behaves correctly.
-		[self _deepSetSemanticContentAttribute:semanticContentAttribute toView:self startingFromView:self];
-	}
-	else
-	{
-		[super setSemanticContentAttribute:semanticContentAttribute];
-	}
+	//On iOS 11, due to a bug in UIKit, the semantic content attribute must be propagaded recursively to all subviews, so that the system behaves correctly.
+	[self _deepSetSemanticContentAttribute:semanticContentAttribute toView:self startingFromView:self];
 }
 
 @end
@@ -125,7 +115,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	LNPopupBarProgressViewStyle rv = style;
 	if(rv == LNPopupBarProgressViewStyleDefault)
 	{
-		rv = [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion > 9 ? LNPopupBarProgressViewStyleNone : LNPopupBarProgressViewStyleBottom;
+		rv = LNPopupBarProgressViewStyleNone;
 	}
 	return rv;
 }
@@ -262,12 +252,9 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		}
 #endif
 		_imageView.layer.cornerRadius = 6;
-		
 		_imageView.layer.masksToBounds = YES;
-        if (@available(iOS 11, *)) {
-            // support smart invert and therefore do not invert image view colors
-            _imageView.accessibilityIgnoresInvertColors = YES;
-        }
+		// support smart invert and therefore do not invert image view colors
+		_imageView.accessibilityIgnoresInvertColors = YES;
 		
 		[_contentView addSubview:_imageView];
 		
@@ -286,11 +273,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_highlightView.alpha = 0.0;
 		[_contentView addSubview:_highlightView];
 		
-#if ! TARGET_OS_MACCATALYST
-		_marqueeScrollEnabled = [NSProcessInfo processInfo].operatingSystemVersion.majorVersion < 10;
-#else
 		_marqueeScrollEnabled = NO;
-#endif
 		_coordinateMarqueeScroll = YES;
 		
 		self.semanticContentAttribute = UISemanticContentAttributeUnspecified;
@@ -603,18 +586,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_toolbar.semanticContentAttribute = semanticContentAttribute;
 	
 	[self setNeedsLayout];
-	
-	//On iOS 10 and below, there is a bug when setting a UIToolbar's semanticContentAttribute which may cause incorrect layout. So lets trigger
-	
-#if ! TARGET_OS_MACCATALYST
-	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 10)
-	{
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[_toolbar setNeedsLayout];
-			[_toolbar layoutIfNeeded];
-		});
-	}
-#endif
 }
 
 - (void)setBarItemsSemanticContentAttribute:(UISemanticContentAttribute)barItemsSemanticContentAttribute
@@ -688,11 +659,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.leftBarButtonItems];
 	}
 	
-	if(@available(iOS 11, *))
-	{
-		[leftViewLast.superview layoutIfNeeded];
-		[rightViewFirst.superview layoutIfNeeded];
-	}
+	[leftViewLast.superview layoutIfNeeded];
+	[rightViewFirst.superview layoutIfNeeded];
 	
 	CGRect leftViewLastFrame = CGRectZero;
 	if(leftViewLast != nil)
@@ -711,14 +679,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	widthLeft = leftViewLastFrame.origin.x + leftViewLastFrame.size.width;
 	widthRight = self.bounds.size.width - rightViewFirstFrame.origin.x;
-	
-#if ! TARGET_OS_MACCATALYST
-	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 11)
-	{
-		widthLeft += 8;
-		widthRight += 8;
-	}
-#endif
 	
 	widthLeft = MAX(widthLeft, self.layoutMargins.left);
 	widthRight = MAX(widthRight, self.layoutMargins.right);
@@ -750,11 +710,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		rightViewFirst = _imageView.hidden ? nil : _imageView;
 	}
 	
-	if(@available(iOS 11, *))
-	{
-		[leftViewLast.superview layoutIfNeeded];
-		[rightViewFirst.superview layoutIfNeeded];
-	}
+	[leftViewLast.superview layoutIfNeeded];
+	[rightViewFirst.superview layoutIfNeeded];
 	
 	CGRect leftViewLastFrame = CGRectZero;
 	if(leftViewLast != nil)
@@ -967,20 +924,12 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
-		CGFloat safeLeading = self.layoutMargins.left;
-		if (@available(iOS 11.0, *)) {
-			safeLeading = MAX(self.window.safeAreaInsets.left, safeLeading);
-		}
-		
+		CGFloat safeLeading = MAX(self.window.safeAreaInsets.left, self.layoutMargins.left);
 		_imageView.center = CGPointMake(safeLeading + LNPopupBarProminentImageWidth / 2, LNPopupBarHeightProminent / 2);
 	}
 	else
 	{
-		CGFloat safeLeading = self.layoutMargins.right;
-		if (@available(iOS 11.0, *)) {
-			safeLeading = MAX(self.window.safeAreaInsets.right, safeLeading);
-		}
-		
+		CGFloat safeLeading = MAX(self.window.safeAreaInsets.right, self.layoutMargins.right);
 		_imageView.center = CGPointMake(self.bounds.size.width - safeLeading - LNPopupBarProminentImageWidth / 2, LNPopupBarHeightProminent / 2);
 	}
 	

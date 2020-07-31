@@ -31,7 +31,7 @@ Check the demo project for many common use cases of the framework in various sce
 
 ### Features
 
-* Available for iOS 9 and above, as an Xcode dynamic framework
+* Available for iOS 12 and above, as an Xcode framework
 * Good citizen in modern UIKit world
 * Modern Objective C syntax for best Swift interoperability
 
@@ -132,25 +132,19 @@ Any `UIViewController` subclasses can be popup container view controllers. The p
 	
 	return bottomViewFrame;
 }
-``` 
+```
 
 ### Appearance and Behavior
 
 #### Modern Look and Feel
 
-`LNPopupController` provides two distinct style of popup look and feel, one based on modern Music app look and feel, and one based on iOS 9 look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9 style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9 style close buttons. For each, there is a "default" style for choosing the most suitable one for the current operating system version.
+`LNPopupController` provides two distinct style of popup look and feel, one based on modern Music app look and feel, and one based on the previous, iOS 9-style look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9-style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current operating system version.
 
-The defaults for iOS 10 and later are:
+The defaults are:
 * Prominent bar style
 * Snap interaction style
 * Chevron close button style
 * No progress view style
-
-The defaults for iOS 9 are:
-* Compact bar style
-* Drag interaction style
-* Round close button style
-* Bottom progress view style
 
 ##### Bar Style
 
@@ -302,7 +296,7 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 ## Acknowledgements
 
 The framework uses:
-* [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel) Copyright (c) 2011-2018 Charles Powell
+* [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel) Copyright (c) 2011-2020 Charles Powell
 
 Additionally, the demo project uses:
 

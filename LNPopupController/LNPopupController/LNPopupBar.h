@@ -10,7 +10,7 @@
 #import <LNPopupController/LNPopupItem.h>
 #import <LNPopupController/LNPopupCustomBarViewController.h>
 
-#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
+#define LN_UNAVAILABLE_API(x) __attribute__((unavailable(x)))
 #define LN_DEPRECATED_PREVIEWING_MSG "Add context menu interaction or register for previewing directly on the popup bar view. This API will be removed soon."
 
 NS_ASSUME_NONNULL_BEGIN
@@ -177,7 +177,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 #pragma mark Deprecatations
 
 #if ! TARGET_OS_MACCATALYST
-LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG)
+LN_UNAVAILABLE_API(LN_DEPRECATED_PREVIEWING_MSG)
 @protocol LNPopupBarPreviewingDelegate <NSObject>
 
 @required
@@ -189,7 +189,7 @@ LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG)
  *
  * @return The view controller whose view you want to provide as the preview (peek), or @c nil to disable preview.
  */
-- (nullable UIViewController*)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG);
+- (nullable UIViewController*)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar LN_UNAVAILABLE_API(LN_DEPRECATED_PREVIEWING_MSG);
 
 @optional
 
@@ -198,7 +198,7 @@ LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG)
  *
  * The default implementation does not commit the view controller.
  */
-- (void)popupBar:(LNPopupBar*)popupBar commitPreviewingViewController:(UIViewController*)viewController LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG);
+- (void)popupBar:(LNPopupBar*)popupBar commitPreviewingViewController:(UIViewController*)viewController LN_UNAVAILABLE_API(LN_DEPRECATED_PREVIEWING_MSG);
 
 @end
 
@@ -207,7 +207,7 @@ LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG)
 /**
  * The previewing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the @c LNPopupBarPreviewingDelegate protocol.
  */
-@property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> previewingDelegate LN_DEPRECATED_API(LN_DEPRECATED_PREVIEWING_MSG);
+@property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> previewingDelegate LN_UNAVAILABLE_API(LN_DEPRECATED_PREVIEWING_MSG);
 
 @end
 #endif

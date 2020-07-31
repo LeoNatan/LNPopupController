@@ -230,22 +230,10 @@
 	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:topLabel];
-	if(@available(iOS 11.0, *))
-	{
-		[NSLayoutConstraint activateConstraints:@[
-			[topLabel.topAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.topAnchor],
-			[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]
-		]];
-	}
-#if ! TARGET_OS_MACCATALYST
-	else
-	{
-		[NSLayoutConstraint activateConstraints:@[
-			[topLabel.topAnchor constraintEqualToAnchor:demoVC.topLayoutGuide.bottomAnchor],
-			[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor constant:40]
-		]];
-	}
-#endif
+	[NSLayoutConstraint activateConstraints:@[
+		[topLabel.topAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.topAnchor],
+		[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.centerXAnchor constant:40]
+	]];
 	
 	UILabel* bottomLabel = [UILabel new];
 	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
@@ -253,22 +241,10 @@
 	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:bottomLabel];
-	if(@available(iOS 11.0, *))
-	{
-		[NSLayoutConstraint activateConstraints:@[
-			[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.bottomAnchor],
-			[bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]
-		]];
-	}
-#if ! TARGET_OS_MACCATALYST
-	else
-	{
-		[NSLayoutConstraint activateConstraints:@[
-			[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.bottomLayoutGuide.topAnchor],
-			[bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.centerXAnchor]
-		]];
-	}
-#endif
+	[NSLayoutConstraint activateConstraints:@[
+		[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.bottomAnchor],
+		[bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.centerXAnchor]
+	]];
 	
 	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
 	demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");

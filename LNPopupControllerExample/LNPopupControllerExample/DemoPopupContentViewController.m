@@ -54,11 +54,7 @@
 	next.accessibilityIdentifier = @"NextButton";
 	next.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact
-#if ! TARGET_OS_MACCATALYST
-	   || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 10
-#endif
-	   )
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
 	{
 		self.popupItem.leftBarButtonItems = @[ play ];
 		self.popupItem.rightBarButtonItems = @[ next, stop ];
@@ -86,8 +82,8 @@
 	[customCloseButton addTarget:self action:@selector(_closePopup) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:customCloseButton];
 	[NSLayoutConstraint activateConstraints:@[
-											  [self.view.centerXAnchor constraintEqualToAnchor:customCloseButton.centerXAnchor],
-											  [self.view.centerYAnchor constraintEqualToAnchor:customCloseButton.centerYAnchor],
+											  [self.view.safeAreaLayoutGuide.centerXAnchor constraintEqualToAnchor:customCloseButton.centerXAnchor],
+											  [self.view.safeAreaLayoutGuide.centerYAnchor constraintEqualToAnchor:customCloseButton.centerYAnchor],
 											  ]];
 }
 
