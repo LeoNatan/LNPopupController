@@ -237,10 +237,12 @@
             <objects>
                 <navigationController modalPresentationStyle="fullScreen" toolbarHidden="NO" id="GHH-ob-Ng8" sceneMemberID="viewController">
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="2ug-wj-yax">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2ug-wj-yax">
+                        <rect key="frame" x="0.0" y="44" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="eEz-t1-9Ax">
+                        <rect key="frame" x="0.0" y="680" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
@@ -295,7 +297,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Correct bottom safe area" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N4q-gh-14d">
-                                <rect key="frame" x="73" y="701" width="229" height="20"/>
+                                <rect key="frame" x="88.000000000000014" y="701" width="199.33333333333337" height="20"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -357,7 +359,7 @@
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="always" id="ZqR-0M-W4y">
+                    <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="never" id="ZqR-0M-W4y">
                         <barButtonItem key="rightBarButtonItem" title="Gallery" style="done" id="J60-GM-dOF">
                             <connections>
                                 <segue destination="Kpt-cx-19r" kind="unwind" unwindAction="unwindToGallery:" id="dI4-2y-ODx"/>
@@ -381,8 +383,8 @@
         <scene sceneID="fHL-ZM-8LF">
             <objects>
                 <navigationController id="cyK-Q5-zYP" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="EXq-2t-lC5">
-                        <rect key="frame" x="0.0" y="44" width="375" height="96"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="EXq-2t-lC5">
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -885,7 +887,7 @@
         <segue reference="iD8-2E-cMh"/>
         <segue reference="19O-Tx-Ntx"/>
         <segue reference="IDA-Po-Fia"/>
-        <segue reference="b6h-Yb-Vtz"/>
+        <segue reference="osK-Oa-kX7"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>

@@ -440,6 +440,11 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		vcToCheckForPopupPresentation = [self _findChildInPopupPresentation];
 	}
 	
+	if(vcToCheckForPopupPresentation._ln_popupController_nocreate == nil)
+	{
+		return nil;
+	}
+	
 	CGFloat statusBarHeight = [LNPopupController _statusBarHeightForView:self.isViewLoaded ? self.view : nil];
 	
 	if((vcToCheckForPopupPresentation._ln_popupController_nocreate.popupControllerTargetState == LNPopupPresentationStateOpen) ||

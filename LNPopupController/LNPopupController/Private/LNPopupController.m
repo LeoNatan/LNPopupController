@@ -1392,13 +1392,21 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 #if TARGET_OS_MACCATALYST
 	return 0;
 #else
+	if(view == nil)
+	{
+		return 0;
+	}
+	
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 	if (@available(iOS 13.0, *))
 	{
-		if(view != nil)
+		if(view.window.safeAreaInsets.top == 0)
 		{
-			return view.window.windowScene.statusBarManager.statusBarFrame.size.height;
+			//Probably 🤷‍♂️ an old iPhone
+			return 20;
 		}
+		
+		return view.window.safeAreaInsets.top;
 	}
 #endif
 	
