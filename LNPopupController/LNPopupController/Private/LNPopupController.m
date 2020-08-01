@@ -1392,7 +1392,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 #if TARGET_OS_MACCATALYST
 	return 0;
 #else
-	if(view == nil)
+	if(view == nil || view.window == nil)
 	{
 		return 0;
 	}

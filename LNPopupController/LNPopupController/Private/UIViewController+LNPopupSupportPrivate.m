@@ -899,11 +899,18 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	[self sBWT:t iE:e];
 	
+	CGRect frame = self.tabBar.frame;
+	
 	if(t > 0)
 	{
 		[self.selectedViewController.transitionCoordinator animateAlongsideTransition:^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-			[self _layoutPopupBarOrderForTransition];
+			
+			[UIView performWithoutAnimation:^{
+				self.tabBar.frame = frame;
+			}];
+			
 			[self _setTabBarHiddenDuringTransition:NO];
+			[self _layoutPopupBarOrderForTransition];
 			[self __repositionPopupBarToClosed_hack];
 		} completion: ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 			[self _setPrepareTabBarIgnored:NO];

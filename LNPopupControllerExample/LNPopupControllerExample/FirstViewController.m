@@ -79,6 +79,69 @@
 	}
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if(indexPath.section != 0 || indexPath.row != [tableView numberOfRowsInSection:0] - 1)
+	{
+		return;
+	}
+	
+	UITabBarController* tvc = [UITabBarController new];
+	tvc.modalPresentationStyle = UIModalPresentationFullScreen;
+	
+	UIViewController* vc1 = [UIViewController new];
+	vc1.view.backgroundColor = UIColor.redColor;
+	
+	if(@available(iOS 14.0, *))
+	{
+		UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithPrimaryAction:[UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
+			[self dismissViewControllerAnimated:YES completion:nil];
+		}]];
+		item.title = @"Gallery";
+		item.style = UIBarButtonItemStyleDone;
+		
+		vc1.navigationItem.rightBarButtonItem = item;
+	}
+	
+	UIViewController* vc2 = [UIViewController new];
+	vc2.view.backgroundColor = UIColor.greenColor;
+	vc2.hidesBottomBarWhenPushed = YES;
+	
+	UINavigationController* nvc = [UINavigationController new];
+	nvc.viewControllers = @[vc1];
+	nvc.tabBarItem.title = @"Navigation Bar";
+	nvc.tabBarItem.image = [UIImage systemImageNamed:@"star"];
+	
+	tvc.viewControllers = @[nvc];
+	
+	[self presentViewController:tvc animated:YES completion:^{
+		UIViewController* demoVC = [DemoPopupContentViewController new];
+		
+		if (@available(iOS 13.0, *)) {
+			demoVC.view.backgroundColor = LNRandomDarkColor();
+		} else {
+			demoVC.view.backgroundColor = LNRandomDarkColor();
+		}
+		
+		if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
+		{
+			demoVC.popupItem.title = @"עברית";//[LoremIpsum sentence];
+			demoVC.popupItem.subtitle = @"עברית";//[LoremIpsum sentence];
+		}
+		else
+		{
+			demoVC.popupItem.title = [LoremIpsum sentence];
+			demoVC.popupItem.subtitle = [LoremIpsum sentence];
+		}
+		demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
+		demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
+		
+		[tvc presentPopupBarWithContentViewController:demoVC animated:YES completion:^{
+			[nvc pushViewController:vc2 animated:YES];
+		}];
+	}];
+}
+
 @end
 
 @interface FirstView : UIView @end
@@ -140,7 +203,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
-	
 }
 
 - (IBAction)_changeBarStyle:(id)sender
