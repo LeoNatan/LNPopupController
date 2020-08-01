@@ -320,8 +320,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[_contentView bringSubviewToFront:_shadowView];
 		[_contentView bringSubviewToFront:_bottomShadowView];
 		
-		UIWindow *window = self.window ? self.window : [[[UIApplication sharedApplication] delegate] window];
-		CGFloat h = 1 / window.screen.scale;
+		UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
+		CGFloat h = 1 / screen.scale;
 		_shadowView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, h);
 		_bottomShadowView.frame = CGRectMake(0, _contentView.bounds.size.height - h, _contentView.bounds.size.width, h);
 		
