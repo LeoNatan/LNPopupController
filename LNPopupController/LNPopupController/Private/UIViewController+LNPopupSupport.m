@@ -34,9 +34,11 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 {
 	if(self.view.window == nil)
 	{
-		[self.view _ln_forgetAboutIt];
-		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^{
-			[self presentPopupBarWithContentViewController:controller openPopup:openPopup animated:animated completion:completionBlock];
+		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
+			[self presentPopupBarWithContentViewController:controller openPopup:openPopup animated:NO completion:^{
+				if(completionBlock) { completionBlock(); }
+				completionBlockInWindow();
+			}];
 		}];
 		
 		return;
@@ -60,16 +62,52 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	if(self.view.window == nil)
+	{
+		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
+			[self openPopupAnimated:NO completion:^{
+				if(completionBlock) { completionBlock(); }
+				completionBlockInWindow();
+			}];
+		}];
+		
+		return;
+	}
+	
 	[self._ln_popupController_nocreate openPopupAnimated:animated completion:completionBlock];
 }
 
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	if(self.view.window == nil)
+	{
+		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
+			[self closePopupAnimated:NO completion:^{
+				if(completionBlock) { completionBlock(); }
+				completionBlockInWindow();
+			}];
+		}];
+		
+		return;
+	}
+	
 	[self._ln_popupController_nocreate closePopupAnimated:animated completion:completionBlock];
 }
 
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	if(self.view.window == nil)
+	{
+		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
+			[self dismissPopupBarAnimated:NO completion:^{
+				if(completionBlock) { completionBlock(); }
+				completionBlockInWindow();
+			}];
+		}];
+		
+		return;
+	}
+	
 	[self._ln_popupController_nocreate dismissPopupBarAnimated:animated completion:^{
 		//Cleanup
 		self.popupContentViewController.popupPresentationContainerViewController = nil;

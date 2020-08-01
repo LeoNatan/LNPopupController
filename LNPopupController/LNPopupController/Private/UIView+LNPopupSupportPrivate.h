@@ -10,9 +10,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^LNInWindowBlock)(dispatch_block_t);
+
 @interface UIView (LNPopupSupportPrivate)
 
-- (void)_ln_letMeKnowWhenViewInWindowHierarchy:(dispatch_block_t)block;
+- (void)_ln_letMeKnowWhenViewInWindowHierarchy:(LNInWindowBlock)block;
 - (void)_ln_forgetAboutIt;
 
 @end

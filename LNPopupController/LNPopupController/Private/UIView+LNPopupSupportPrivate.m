@@ -53,20 +53,35 @@ static NSString* dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
 }
 #endif
 
-- (void)_ln_notify
+LNAlwaysInline
+static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting, NSUInteger idx)
 {
-	NSMutableArray<dispatch_block_t>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
+	if(waiting.count == idx)
+	{
+		if(waiting.count > 0)
+		{
+			[self _ln_forgetAboutIt];
+		}
+		
+		return;
+	}
 	
-	[waiting enumerateObjectsUsingBlock:^(dispatch_block_t  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		obj();
-	}];
-	
-	[self _ln_forgetAboutIt];
+	LNInWindowBlock block = waiting[idx];
+	block(^ {
+		_LNNotify(self, waiting, idx + 1);
+	});
 }
 
-- (void)_ln_letMeKnowWhenViewInWindowHierarchy:(dispatch_block_t)block
+- (void)_ln_notify
 {
-	NSMutableArray<dispatch_block_t>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
+	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
+	
+	_LNNotify(self, waiting, 0);
+}
+
+- (void)_ln_letMeKnowWhenViewInWindowHierarchy:(LNInWindowBlock)block
+{
+	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
 	if(waiting == nil)
 	{
 		waiting = [NSMutableArray new];
@@ -78,7 +93,7 @@ static NSString* dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
 
 - (void)_ln_forgetAboutIt
 {
-	NSMutableArray<dispatch_block_t>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
+	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
 	[waiting removeAllObjects];
 }
 
