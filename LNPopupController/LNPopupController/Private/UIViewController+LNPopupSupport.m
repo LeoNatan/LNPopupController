@@ -9,6 +9,7 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupItem+Private.h"
 #import "_LNWeakRef.h"
+#import "UIView+LNPopupSupportPrivate.h"
 @import ObjectiveC;
 
 static const void* _LNPopupItemKey = &_LNPopupItemKey;
@@ -31,6 +32,16 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completionBlock;
 {
+	if(self.view.window == nil)
+	{
+		[self.view _ln_forgetAboutIt];
+		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^{
+			[self presentPopupBarWithContentViewController:controller openPopup:openPopup animated:animated completion:completionBlock];
+		}];
+		
+		return;
+	}
+	
 	if(controller == nil)
 	{
 		[NSException raise:NSInternalInconsistencyException format:@"Content view controller cannot be nil."];

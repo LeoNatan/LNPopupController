@@ -1,0 +1,20 @@
+//
+//  UIView+LNPopupSupportPrivate.h
+//  LNPopupController
+//
+//  Created by Leo Natan (Wix) on 8/1/20.
+//  Copyright © 2020 Leo Natan. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface UIView (LNPopupSupportPrivate)
+
+- (void)_ln_letMeKnowWhenViewInWindowHierarchy:(dispatch_block_t)block;
+- (void)_ln_forgetAboutIt;
+
+@end
+
+NS_ASSUME_NONNULL_END

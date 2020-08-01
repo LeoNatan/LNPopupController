@@ -81,6 +81,22 @@
 
 @end
 
+@interface FirstView : UIView @end
+
+@implementation FirstView
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+	[super willMoveToWindow:newWindow];
+}
+
+- (void)didMoveToWindow
+{
+	[super didMoveToWindow];
+}
+
+@end
+
 @interface FirstViewController () <UIContextMenuInteractionDelegate>
 
 @end
@@ -117,13 +133,14 @@
 	
 	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
 	_nextButton.hidden = self.splitViewController != nil;
+	
+	[self _presentBar:nil animated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
 	
-	[self _presentBar:nil];
 }
 
 - (IBAction)_changeBarStyle:(id)sender
@@ -178,6 +195,11 @@
 }
 
 - (IBAction)_presentBar:(id)sender
+{
+	[self _presentBar:sender animated:YES];
+}
+
+- (void)_presentBar:(id)sender animated:(BOOL)animated;
 {
 	//All this logic is just so I can use the same controllers over and over in all examples. :-)
 	
@@ -282,7 +304,7 @@
 		[targetVC.popupBar addInteraction:i];
 	}
 
-	[targetVC presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
+	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
 }
 
 - (IBAction)_dismissBar:(id)sender

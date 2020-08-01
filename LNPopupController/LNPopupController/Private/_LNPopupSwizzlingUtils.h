@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 @import ObjectiveC;
 
-#ifdef DEBUG
+#if LNPOPUP_DEBUG_SWIZZLES
 #define SWIZ_TRAP() raise(SIGTRAP);
 #else
 #define SWIZ_TRAP()
 #endif
 
+#if LNPOPUP_DEBUG_SWIZZLES
 #define SetNSErrorFor(FUNC, ERROR_VAR, FORMAT,...)	\
 NSString *errStr = [NSString stringWithFormat:@"%s: " FORMAT,FUNC,##__VA_ARGS__]; \
 NSLog(@"%@", errStr); \
@@ -25,6 +26,9 @@ code:-1	\
 userInfo:@{NSLocalizedDescriptionKey:errStr}]; \
 }
 #define SetNSError(ERROR_VAR, FORMAT,...) SetNSErrorFor(__func__, ERROR_VAR, FORMAT, ##__VA_ARGS__)
+#else
+#define SetNSError(ERROR_VAR, FORMAT,...)
+#endif
 
 #define GetClass(obj)	object_getClass(obj)
 
@@ -36,6 +40,9 @@ LNAlwaysInline
 static BOOL LNSwizzleMethod(Class cls, SEL orig, SEL alt)
 {
 	Method origMethod = class_getInstanceMethod(cls, orig);
+#if ! LNPOPUP_DEBUG_SWIZZLES
+	__unused
+#endif
 	NSError* error;
 	if (!origMethod) {
 		SetNSError(&error, @"original method %@ not found for class %@", NSStringFromSelector(orig), cls);
