@@ -21,19 +21,29 @@ class DemoMusicPlayerController: UIViewController {
 	
 	var timer : Timer?
 	
+	fileprivate func LNSystemImage(named: String) -> UIImage {
+		let config : UIImage.SymbolConfiguration
+		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
+			config = UIImage.SymbolConfiguration(scale: .unspecified)
+		} else {
+			config = UIImage.SymbolConfiguration(scale: .medium)
+		}
+		
+		return UIImage(systemName: named, withConfiguration: config)!
+	}
+	
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder)
 		
-		let pause = UIBarButtonItem(image: UIImage(named: "pause"), style: .plain, target: nil, action: nil)
+		let pause = UIBarButtonItem(image: LNSystemImage(named: "pause.fill"), style: .plain, target: nil, action: nil)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-		let next = UIBarButtonItem(image: UIImage(named: "nextFwd"), style: .plain, target: nil, action: nil)
+		let next = UIBarButtonItem(image: LNSystemImage(named: "forward.fill"), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
 		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
 			popupItem.leftBarButtonItems = [ pause ]
 			popupItem.rightBarButtonItems = [ next ]
-		}
-		else {
+		} else {
 			popupItem.rightBarButtonItems = [ pause, next ]
 		}
 		

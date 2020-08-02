@@ -110,7 +110,10 @@
 	UINavigationController* nvc = [UINavigationController new];
 	nvc.viewControllers = @[vc1];
 	nvc.tabBarItem.title = @"Navigation Bar";
-	nvc.tabBarItem.image = [UIImage systemImageNamed:@"star"];
+	if(@available(iOS 13.0, *))
+	{
+		nvc.tabBarItem.image = [UIImage systemImageNamed:@"star"];
+	}
 	
 	tvc.viewControllers = @[nvc];
 	
