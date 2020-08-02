@@ -9,28 +9,12 @@
 #import <Foundation/Foundation.h>
 @import ObjectiveC;
 
-#if LNPOPUP_DEBUG_SWIZZLES
-#define SWIZ_TRAP() raise(SIGTRAP);
-#else
-#define SWIZ_TRAP()
-#endif
-
-#if LNPOPUP_DEBUG_SWIZZLES
-#define SetNSErrorFor(FUNC, ERROR_VAR, FORMAT,...)	\
-NSString *errStr = [NSString stringWithFormat:@"%s: " FORMAT,FUNC,##__VA_ARGS__]; \
+#define LNSwizzleComplain(FORMAT, ...) \
+if(shouldTrapAndPrint) { \
+NSString *errStr = [NSString stringWithFormat:@"%s: " FORMAT,__func__,##__VA_ARGS__]; \
 NSLog(@"%@", errStr); \
-SWIZ_TRAP() \
-if (ERROR_VAR) {	\
-*ERROR_VAR = [NSError errorWithDomain:@"NSCocoaErrorDomain" \
-code:-1	\
-userInfo:@{NSLocalizedDescriptionKey:errStr}]; \
+raise(SIGTRAP); \
 }
-#define SetNSError(ERROR_VAR, FORMAT,...) SetNSErrorFor(__func__, ERROR_VAR, FORMAT, ##__VA_ARGS__)
-#else
-#define SetNSError(ERROR_VAR, FORMAT,...)
-#endif
-
-#define GetClass(obj)	object_getClass(obj)
 
 #ifndef LNAlwaysInline
 #define LNAlwaysInline inline __attribute__((__always_inline__))
@@ -39,19 +23,21 @@ userInfo:@{NSLocalizedDescriptionKey:errStr}]; \
 LNAlwaysInline
 static BOOL LNSwizzleMethod(Class cls, SEL orig, SEL alt)
 {
+	static BOOL shouldTrapAndPrint = NO;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		shouldTrapAndPrint = [NSProcessInfo.processInfo.environment[@"LNPOPUP_DEBUG_SWIZZLES"] boolValue] == YES;
+	});
+	
 	Method origMethod = class_getInstanceMethod(cls, orig);
-#if ! LNPOPUP_DEBUG_SWIZZLES
-	__unused
-#endif
-	NSError* error;
 	if (!origMethod) {
-		SetNSError(&error, @"original method %@ not found for class %@", NSStringFromSelector(orig), cls);
+		LNSwizzleComplain(@"original method %@ not found for class %@", NSStringFromSelector(orig), cls);
 		return NO;
 	}
 	
 	Method altMethod = class_getInstanceMethod(cls, alt);
 	if (!altMethod) {
-		SetNSError(&error, @"alternate method %@ not found for class %@", NSStringFromSelector(alt), cls);
+		LNSwizzleComplain(@"alternate method %@ not found for class %@", NSStringFromSelector(alt), cls);
 		return NO;
 	}
 	
@@ -65,7 +51,7 @@ static BOOL LNSwizzleMethod(Class cls, SEL orig, SEL alt)
 LNAlwaysInline
 static BOOL LNSwizzleClassMethod(Class cls, SEL orig, SEL alt)
 {
-	return LNSwizzleMethod(GetClass((id)cls), orig, alt);
+	return LNSwizzleMethod(object_getClass((id)cls), orig, alt);
 }
 
 LNAlwaysInline

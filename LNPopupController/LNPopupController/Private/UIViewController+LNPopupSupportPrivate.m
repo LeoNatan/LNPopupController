@@ -32,12 +32,6 @@ static const void* LNUserAdditionalSafeAreaInsets = &LNUserAdditionalSafeAreaIns
 static const void* LNPopupIgnorePrepareTabBar = &LNPopupIgnorePrepareTabBar;
 
 #ifndef LNPopupControllerEnforceStrictClean
-//_setContentOverlayInsets:
-static NSString* const sCoOvBase64 = @"X3NldENvbnRlbnRPdmVybGF5SW5zZXRzOg==";
-//_updateContentOverlayInsetsForSelfAndChildren
-static NSString* const upCoOvBase64 = @"X3VwZGF0ZUNvbnRlbnRPdmVybGF5SW5zZXRzRm9yU2VsZkFuZENoaWxkcmVu";
-//_edgeInsetsForChildViewController:insetsAreAbsolute:
-static NSString* const edInsBase64 = @"X2VkZ2VJbnNldHNGb3JDaGlsZFZpZXdDb250cm9sbGVyOmluc2V0c0FyZUFic29sdXRlOg==";
 //_hideBarWithTransition:isExplicit:
 static NSString* const hBWTiEBase64 = @"X2hpZGVCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0Og==";
 //_showBarWithTransition:isExplicit:
@@ -73,6 +67,7 @@ static NSString* const uCOIFPIN = @"X3VwZGF0ZUNvbnRlbnRPdmVybGF5SW5zZXRzRnJvbVBh
 static NSString* const vD = @"X3ZpZXdEZWxlZ2F0ZQ==";
 #endif
 
+//_accessibilitySpeakThisViewController
 static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
@@ -107,6 +102,8 @@ static void __accessibilityBundleLoadHandler()
 		
 		NSString* selName = _LNPopupDecodeBase64String(aSTVC);
 		
+		//UIViewControllerAccessibility
+		//_accessibilitySpeakThisViewController
 		NSString* clsName = _LNPopupDecodeBase64String(uiVCA);
 		Method m1 = class_getInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
 		__orig_uiVCA_aSTVC = (void*)method_getImplementation(m1);
@@ -185,10 +182,6 @@ static void __accessibilityBundleLoadHandler()
 
 #pragma mark - UIViewController
 
-@interface UIViewController ()
-//_edgeInsetsForChildViewController:insetsAreAbsolute:
-- (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute;
-@end
 @interface UIViewController (LNPopupLayout) @end
 @implementation UIViewController (LNPopupLayout)
 
@@ -336,6 +329,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 	return UIEdgeInsetsMake(0, 0, barFrame.size.height, 0);
 }
 
+//setParentViewController:
 - (void)_ln_sPVC:(UIViewController*)parentViewController
 {
 	[self _ln_sPVC:parentViewController];
@@ -491,6 +485,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		return self.popupContentViewController;
 	}
 	
+	//_accessibilitySpeakThisViewController
 	return __orig_uiVCA_aSTVC(self, _cmd);
 }
 
@@ -518,29 +513,27 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 	[self _common_uLFSBAIO];
 }
 
-//_setContentOverlayInsets:
-- (void)_sCoOvIns:(UIEdgeInsets)insets
-{
-	[self _sCoOvIns:insets];
-}
-
 //_viewSafeAreaInsetsFromScene
 - (UIEdgeInsets)_vSAIFS
 {
 	if([self _isContainedInPopupController])
 	{
-		return self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
+		if(@available(iOS 14.0, *))
+		{
+			if(self.popupPresentationContainerViewController.splitViewController != nil && [self.popupPresentationContainerViewController.splitViewController.viewControllers indexOfObject:self.popupPresentationContainerViewController] == 0)
+			{
+				return self.popupPresentationContainerViewController.view.safeAreaInsets;
+			}
+			
+			return self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
+		}
+		else
+		{
+			return self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
+		}
 	}
 	
 	UIEdgeInsets insets = [self _vSAIFS];
-	
-	return insets;
-}
-
-//_edgeInsetsForChildViewController:insetsAreAbsolute:
-- (UIEdgeInsets)_ln_common_eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
-{
-	UIEdgeInsets insets = [self eIFCVC:controller iAA:absolute];
 	
 	return insets;
 }
@@ -721,12 +714,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
 		
-		//_edgeInsetsForChildViewController:insetsAreAbsolute:
-		selName = _LNPopupDecodeBase64String(edInsBase64);
-		LNSwizzleMethod(self,
-						NSSelectorFromString(selName),
-						@selector(eIFCVC:iAA:));
-		
 		//_hideBarWithTransition:isExplicit:
 		selName = _LNPopupDecodeBase64String(hBWTiEBase64);
 		LNSwizzleMethod(self,
@@ -763,6 +750,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return self.popupContentViewController;
 	}
 	
+	//_accessibilitySpeakThisViewController
 	return __orig_uiTBCA_aSTVC(self, _cmd);
 }
 
@@ -772,17 +760,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	[self _uLFSBAIO];
 	
 	[self _common_uLFSBAIO];
-}
-
-//_edgeInsetsForChildViewController:insetsAreAbsolute:
-- (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
-{
-	if(@available(iOS 13.0, *))
-	{
-		return [self eIFCVC:controller iAA:absolute];
-	}
-	
-	return [self _ln_common_eIFCVC:controller iAA:absolute];
 }
 
 - (void)__repositionPopupBarToClosed_hack
@@ -996,11 +973,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
-		//_edgeInsetsForChildViewController:insetsAreAbsolute:
-		selName = _LNPopupDecodeBase64String(edInsBase64);
-		LNSwizzleMethod(self,
-						NSSelectorFromString(selName),
-						@selector(eIFCVC:iAA:));
 		
 		//_setToolbarHidden:edge:duration:
 		selName = _LNPopupDecodeBase64String(sTHedBase64);
@@ -1033,6 +1005,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return self.popupContentViewController;
 	}
 	
+	//_accessibilitySpeakThisViewController
 	return __orig_uiNVCA_aSTVC(self, _cmd);
 }
 
@@ -1086,17 +1059,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	{
 		[UIView animateWithDuration:arg3 animations:animations completion:completion];
 	}
-}
-
-//_edgeInsetsForChildViewController:insetsAreAbsolute:
-- (UIEdgeInsets)eIFCVC:(UIViewController*)controller iAA:(BOOL*)absolute
-{
-	if(@available(iOS 13.0, *))
-	{
-		return [self eIFCVC:controller iAA:absolute];
-	}
-	
-	return [self _ln_common_eIFCVC:controller iAA:absolute];
 }
 
 //_hideShowNavigationBarDidStop:finished:context:

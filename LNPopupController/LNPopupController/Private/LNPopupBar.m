@@ -310,7 +310,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[self _layoutImageView];
 	
 	[UIView performWithoutAnimation:^{
-		_toolbar.frame = CGRectMake(0, 0, self.bounds.size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController));
+		[_toolbar sizeToFit];
+		_toolbar.frame = CGRectMake(0, CGRectGetMidY(self.bounds) - _toolbar.bounds.size.height / 2 - 1, self.bounds.size.width, _toolbar.bounds.size.height);
 		[_toolbar layoutIfNeeded];
 		
 		[_contentView bringSubviewToFront:_highlightView];
@@ -1011,7 +1012,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	NSMutableArray* items = [NSMutableArray new];
 	
 	UIBarButtonItem* flexibleSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
-	flexibleSpacer.tag = 666;
 	if(resolvedStyle == LNPopupBarStyleProminent || resolvedStyle == LNPopupBarStyleCustom)
 	{
 		[items addObject:flexibleSpacer];

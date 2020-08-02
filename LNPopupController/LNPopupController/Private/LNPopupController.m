@@ -183,6 +183,11 @@ static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
 	}
 }
 
+- (void)safeAreaInsetsDidChange
+{
+	[super safeAreaInsetsDidChange];
+}
+
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect
 {
 	__block BOOL alphaLessThanZero;
@@ -341,17 +346,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	self.popupContentView.frame = contentFrame;
 	
 	contentFrame = _containerController.view.bounds;
-	if(@available(iOS 14.0, *))
-	{
-		if(_containerController.splitViewController != nil && (_containerController.view.safeAreaInsets.left == 100 || _containerController.view.safeAreaInsets.right == 100))
-		{
-			//Take into account RTL
-			CGFloat dx = _containerController.view.safeAreaInsets.left == 100 ? 100 : 0;
-			
-			contentFrame.origin.x += dx;
-			contentFrame.size.width -= 100;
-		}
-	}
 	_containerController.popupContentViewController.view.frame = contentFrame;
 	
 	[self _repositionPopupCloseButton];
@@ -877,15 +871,20 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[newContentController viewWillTransitionToSize:_containerController.view.bounds.size withTransitionCoordinator:coordinator];
 		newContentController.view.frame = oldContentViewFrame;
 		newContentController.view.clipsToBounds = NO;
-		if(oldContentController != nil)
+		
+		self.popupContentView.currentPopupContentViewController = newContentController;
+		
+		if(_popupControllerState > LNPopupPresentationStateClosed)
 		{
-			[self.popupContentView.contentView insertSubview:newContentController.view belowSubview:oldContentController.view];
-		}
-		else
-		{
-			[self.popupContentView.contentView addSubview:newContentController.view];
-			self.popupContentView.currentPopupContentViewController = newContentController;
-			[self.popupContentView.contentView sendSubviewToBack:newContentController.view];
+			if(oldContentController != nil)
+			{
+				[self.popupContentView.contentView insertSubview:newContentController.view belowSubview:oldContentController.view];
+			}
+			else
+			{
+				[self.popupContentView.contentView addSubview:newContentController.view];
+				[self.popupContentView.contentView sendSubviewToBack:newContentController.view];
+			}
 		}
 		
 		[oldContentController.view removeFromSuperview];
