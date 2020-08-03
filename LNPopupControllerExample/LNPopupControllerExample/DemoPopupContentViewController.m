@@ -81,13 +81,13 @@ static UIImage* LNSystemImage(NSString* named)
 	
 	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
 	{
-		self.popupItem.leftBarButtonItems = @[ play ];
-		self.popupItem.rightBarButtonItems = @[ next, stop ];
+		self.popupItem.leadingBarButtonItems = @[ play ];
+		self.popupItem.trailingBarButtonItems = @[ next, stop ];
 	}
 	else
 	{
-		self.popupItem.rightBarButtonItems = @[ play, next ];
-		self.popupItem.leftBarButtonItems = nil;
+		self.popupItem.barButtonItems = @[ play, next ];
+		self.popupItem.leadingBarButtonItems = nil;
 	}
 }
 

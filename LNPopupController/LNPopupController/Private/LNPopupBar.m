@@ -653,13 +653,13 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
-		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.leftBarButtonItems];
-		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.rightBarButtonItems];
+		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.leadingBarButtonItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.trailingBarButtonItems];
 	}
 	else
 	{
-		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.rightBarButtonItems];
-		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.leftBarButtonItems];
+		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.trailingBarButtonItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.leadingBarButtonItems];
 	}
 	
 	[leftViewLast.superview layoutIfNeeded];
@@ -699,8 +699,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	UIView* rightViewFirst;
 	
 	NSMutableArray* allItems = [NSMutableArray new];
-	[allItems addObjectsFromArray:self.leftBarButtonItems];
-	[allItems addObjectsFromArray:self.rightBarButtonItems];
+	[allItems addObjectsFromArray:self.leadingBarButtonItems];
+	[allItems addObjectsFromArray:self.trailingBarButtonItems];
 
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
@@ -995,7 +995,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)_layoutBarButtonItems
 {
-	if(self.leftBarButtonItems.count + self.rightBarButtonItems.count == 0)
+	if(self.leadingBarButtonItems.count + self.trailingBarButtonItems.count == 0)
 	{
 		return;
 	}
@@ -1017,7 +1017,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[items addObject:flexibleSpacer];
 	}
 	
-	[self.leftBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
+	[self.leadingBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
 		[items addObject:barButtonItem];
 	}];
 	
@@ -1026,7 +1026,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[items addObject:flexibleSpacer];
 	}
 
-	[self.rightBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
+	[self.trailingBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
 		[items addObject:barButtonItem];
 	}];
 	
@@ -1087,9 +1087,9 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 }
 
-- (void)setLeftBarButtonItems:(NSArray *)leftBarButtonItems
+- (void)setLeadingBarButtonItems:(NSArray *)leadingBarButtonItems
 {
-	_leftBarButtonItems = [leftBarButtonItems copy];
+	_leadingBarButtonItems = [leadingBarButtonItems copy];
 	
 	if(_delaysBarButtonItemLayout == NO)
 	{
@@ -1097,9 +1097,9 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 }
 
-- (void)setRightBarButtonItems:(NSArray *)rightBarButtonItems
+- (void)setTrailingBarButtonItems:(NSArray *)trailingBarButtonItems
 {
-	_rightBarButtonItems = [rightBarButtonItems copy];
+	_trailingBarButtonItems = [trailingBarButtonItems copy];
 	
 	if(_delaysBarButtonItemLayout == NO)
 	{
@@ -1137,6 +1137,25 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 - (void)dealloc
 {
 	[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];
+}
+
+- (NSArray<UIBarButtonItem *> *)barButtonItems
+{
+	return self.trailingBarButtonItems;
+}
+
+@end
+
+@implementation LNPopupBar (Deprecated)
+
+- (NSArray<UIBarButtonItem *> *)leftBarButtonItems
+{
+	return self.leadingBarButtonItems;
+}
+
+- (NSArray<UIBarButtonItem *> *)rightBarButtonItems
+{
+	return self.trailingBarButtonItems;
 }
 
 @end

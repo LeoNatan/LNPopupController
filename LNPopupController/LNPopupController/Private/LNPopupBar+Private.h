@@ -77,8 +77,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, copy) NSString* accessibilityProgressLabel;
 @property (nonatomic, copy) NSString* accessibilityProgressValue;
 
-@property (nonatomic, copy, readwrite) NSArray<UIBarButtonItem*>* leftBarButtonItems;
-@property (nonatomic, copy, readwrite) NSArray<UIBarButtonItem*>* rightBarButtonItems;
+@property (nonatomic, copy, readwrite) NSArray<UIBarButtonItem*>* leadingBarButtonItems;
+@property (nonatomic, copy, readwrite) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
 
 @property (nonatomic, strong, readwrite) UITapGestureRecognizer* popupOpenGestureRecognizer;
 @property (nonatomic, strong, readwrite) UILongPressGestureRecognizer* barHighlightGestureRecognizer;

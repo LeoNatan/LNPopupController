@@ -41,10 +41,10 @@ class DemoMusicPlayerController: UIViewController {
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
 		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
-			popupItem.leftBarButtonItems = [ pause ]
-			popupItem.rightBarButtonItems = [ next ]
+			popupItem.leadingBarButtonItems = [ pause ]
+			popupItem.trailingBarButtonItems = [ next ]
 		} else {
-			popupItem.rightBarButtonItems = [ pause, next ]
+			popupItem.barButtonItems = [ pause, next ]
 		}
 		
 		accessibilityDateComponentsFormatter.unitsStyle = .spellOut

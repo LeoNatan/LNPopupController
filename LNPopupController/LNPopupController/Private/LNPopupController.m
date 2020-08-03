@@ -818,17 +818,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 - (void)_reconfigureBarItems
 {
 	[self.popupBarStorage _delayBarButtonLayout];
-	[self.popupBarStorage setLeftBarButtonItems:_currentPopupItem.leftBarButtonItems];
-	[self.popupBarStorage setRightBarButtonItems:_currentPopupItem.rightBarButtonItems];
+	[self.popupBarStorage setLeadingBarButtonItems:_currentPopupItem.leadingBarButtonItems];
+	[self.popupBarStorage setTrailingBarButtonItems:_currentPopupItem.trailingBarButtonItems];
 	[self.popupBarStorage _layoutBarButtonItems];
 }
 
-- (void)_reconfigure_leftBarButtonItems
+- (void)_reconfigure_leadingBarButtonItems
 {
 	[self _reconfigureBarItems];
 }
 
-- (void)_reconfigure_rightBarButtonItems
+- (void)_reconfigure_trailingBarButtonItems
 {
 	[self _reconfigureBarItems];
 }
@@ -909,7 +909,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	else
 	{
-		NSArray<NSString*>* keys = @[@"title", @"subtitle", @"image", @"progress", @"leftBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityImageLabel", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
+		NSArray<NSString*>* keys = @[@"title", @"subtitle", @"image", @"progress", @"leadingBarButtonItems", @"trailingBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityImageLabel", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
 		[keys enumerateObjectsUsingBlock:^(NSString * __nonnull key, NSUInteger idx, BOOL * __nonnull stop) {
 			[self _popupItem:_currentPopupItem didChangeValueForKey:key];
 		}];

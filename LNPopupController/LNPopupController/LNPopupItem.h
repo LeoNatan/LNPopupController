@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
+
 /**
  * An @c LNPopupItem object manages the buttons and text to be displayed in a popup bar. Each view controller in popup presentation must have an @c LNPopupItem object that contains the buttons and text it wants displayed in the popup bar.
  */
@@ -42,16 +44,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) float progress;
 
 /**
- * An array of custom bar button items to display on the left side of the popup bar.
+ * An array of custom bar button items to display on the popup bar.
  *
- * @note For prominent popup bars, these buttons are positioned on the right side, before items in @c rightBarButtonItems.
+ * @note For compact popup bars, this property is equivalent to @c trailingBarButtonItems.
  */
-@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems;
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* barButtonItems;
 
 /**
- * An array of custom bar button items to display on the right side of the popup bar.
+ * An array of custom bar button items to display on the leading side of the popup bar.
+ *
+ * @note For prominent popup bars, these buttons are positioned on the trailing side, before items in @c trailingBarButtonItems.
  */
-@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems;
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leadingBarButtonItems;
+
+/**
+ * An array of custom bar button items to display on the trailing side of the popup bar.
+ *
+ * @note For prominent popup bars, this property is synonymous with @c barButtonItems.
+ */
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
 
 @end
 
@@ -71,6 +82,14 @@ NS_ASSUME_NONNULL_BEGIN
  * The accessibility value of the progress, in a localized string.
  */
 @property (nonatomic, copy, nullable) NSString* accessibilityProgressValue;
+
+@end
+
+@interface LNPopupItem (Deprecated)
+
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems LN_DEPRECATED_API("Use leadingBarButtonItems instead.");
+
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems LN_DEPRECATED_API("Use barButtonItems or trailingBarButtonItems instead.");
 
 @end
 

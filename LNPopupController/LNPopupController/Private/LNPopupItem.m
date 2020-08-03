@@ -28,8 +28,8 @@ static NSArray* __keys;
 			NSStringFromSelector(@selector(subtitle)),
 			NSStringFromSelector(@selector(image)),
 			NSStringFromSelector(@selector(progress)),
-			NSStringFromSelector(@selector(leftBarButtonItems)),
-			NSStringFromSelector(@selector(rightBarButtonItems)),
+			NSStringFromSelector(@selector(leadingBarButtonItems)),
+			NSStringFromSelector(@selector(trailingBarButtonItems)),
 			NSStringFromSelector(@selector(accessibilityLabel)),
 			NSStringFromSelector(@selector(accessibilityHint)),
 			NSStringFromSelector(@selector(accessibilityImageLabel)),
@@ -84,6 +84,40 @@ static NSArray* __keys;
 	if(progress > 1.0) { progress = 1.0; }
 	_progress = progress;
 	[self didChangeValueForKey:NSStringFromSelector(_cmd)];
+}
+
+- (NSArray<UIBarButtonItem *> *)barButtonItems
+{
+	return self.trailingBarButtonItems;
+}
+
+- (void)setBarButtonItems:(NSArray<UIBarButtonItem *> *)barButtonItems
+{
+	self.trailingBarButtonItems = barButtonItems;
+}
+
+@end
+
+@implementation LNPopupItem (Deprecated)
+
+- (NSArray<UIBarButtonItem *> *)leftBarButtonItems
+{
+	return self.leadingBarButtonItems;
+}
+
+- (void)setLeftBarButtonItems:(NSArray<UIBarButtonItem *> *)leftBarButtonItems
+{
+	self.leadingBarButtonItems = leftBarButtonItems;
+}
+
+- (NSArray<UIBarButtonItem *> *)rightBarButtonItems
+{
+	return self.trailingBarButtonItems;
+}
+
+- (void)setRightBarButtonItems:(NSArray<UIBarButtonItem *> *)rightBarButtonItems
+{
+	self.trailingBarButtonItems = rightBarButtonItems;
 }
 
 @end
