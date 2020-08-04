@@ -130,7 +130,17 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
 - (LNPopupPresentationState)popupPresentationState
 {
-	return self._ln_popupController_nocreate.popupControllerState;
+	return self._ln_popupController_nocreate.popupControllerPublicState;
+}
+
+- (id<LNPopupPresentationDelegate>)popupPresentationDelegate
+{
+	return self._ln_popupController.userPopupPresentationDelegate;
+}
+
+- (void)setPopupPresentationDelegate:(id<LNPopupPresentationDelegate>)popupPresentationDelegate
+{
+	self._ln_popupController.userPopupPresentationDelegate = popupPresentationDelegate;
 }
 
 - (BOOL)_isContainedInPopupController

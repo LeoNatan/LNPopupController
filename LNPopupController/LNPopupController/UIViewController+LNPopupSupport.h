@@ -11,6 +11,9 @@
 #import <LNPopupController/LNPopupBar.h>
 #import <LNPopupController/LNPopupItem.h>
 
+#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
+#define LN_UNAVAILABLE_API(x) __attribute__((unavailable(x)))
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -43,19 +46,19 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 	/**
 	 * The popup bar is hidden and no presentation is taking place.
 	 */
-	LNPopupPresentationStateHidden,
+	LNPopupPresentationStateBarHidden = 0,
 	/**
 	 * The popup bar is presented and is closed and no presentation is taking place.
 	 */
-	LNPopupPresentationStateClosed,
-	/**
-	 * The popup is in the middle of transitioning between states.
-	 */
-	LNPopupPresentationStateTransitioning,
+	LNPopupPresentationStateBarPresented = 1,
 	/**
 	 * The popup is open and the content controller's view is displayed.
 	 */
-	LNPopupPresentationStateOpen,
+	LNPopupPresentationStateOpen = 3,
+	
+	LNPopupPresentationStateHidden LN_DEPRECATED_API("Use LNPopupPresentationStateBarHidden instead.") = LNPopupPresentationStateBarHidden,
+	LNPopupPresentationStateClosed LN_DEPRECATED_API("Use LNPopupPresentationStateBarPresented instead.") = LNPopupPresentationStateBarPresented,
+	LNPopupPresentationStateTransitioning LN_DEPRECATED_API("Should no longer be used.") = 2,
 };
 
 /**
@@ -80,6 +83,47 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  * @return The view to which the popup interaction gesture recognizer should be added to.
  */
 @property (nonatomic, strong, readonly) __kindof UIView* viewForPopupInteractionGestureRecognizer;
+
+@end
+
+@protocol LNPopupPresentationDelegate <NSObject>
+
+@optional
+
+/**
+ * Notifies the delegate that the popup bar is about to be presented.
+ */
+- (void)popupPresentationControllerWillPresentPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup bar has been presented.
+ */
+- (void)popupPresentationControllerDidPresentPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup bar is about to be dismissed.
+ */
+- (void)popupPresentationControllerWillDismissPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup bar has been dismissed.
+ */
+- (void)popupPresentationControllerDidDismissPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+
+/**
+ * Notifies the delegate that the popup is about to be opened.
+ */
+- (void)popupPresentationControllerWillOpenPopup:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup has been opened.
+ */
+- (void)popupPresentationControllerDidOpenPopup:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup is about to be closed.
+ */
+- (void)popupPresentationControllerWillClosePopup:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup has been closed.
+ */
+- (void)popupPresentationControllerDidClosePopup:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+
 
 @end
 
@@ -159,8 +203,15 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 
 /**
  * The state of the popup presentation. (read-only)
+ *
+ * This property is KVO-compliant.
  */
 @property (nonatomic, readonly) LNPopupPresentationState popupPresentationState;
+
+/**
+ * The delegate that handles popup presentation-related messages.
+ */
+@property (nonatomic, weak) id<LNPopupPresentationDelegate> popupPresentationDelegate;
 
 /**
  * The content view controller of the receiver. If there is no popover presentation, the property will be @c nil. (read-only)
@@ -210,7 +261,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 /**
  * @warning This API is deprecated. Use @c bottomDockingViewForPopupBar instead.
  */
-@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopup NS_UNAVAILABLE;
+@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopup LN_UNAVAILABLE_API("Use @c bottomDockingViewForPopupBar instead.");
 
 @end
 

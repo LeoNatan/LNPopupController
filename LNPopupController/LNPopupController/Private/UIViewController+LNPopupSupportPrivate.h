@@ -18,6 +18,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 @interface UIViewController (LNPopupSupportPrivate)
 
+- (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
+
 - (nullable UIViewController*)_ln_common_childViewControllerForStatusBarStyle;
 
 @property (nonatomic, strong, readonly, getter=_ln_popupController) LNPopupController* ln_popupController;

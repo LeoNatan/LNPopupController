@@ -163,7 +163,7 @@
 
 @end
 
-@interface FirstViewController () <UIContextMenuInteractionDelegate>
+@interface FirstViewController () <UIContextMenuInteractionDelegate, LNPopupPresentationDelegate>
 
 @end
 
@@ -369,6 +369,7 @@
 		[targetVC.popupBar addInteraction:i];
 	}
 
+	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
 }
 
@@ -408,6 +409,48 @@
 		avc.popoverPresentationController.sourceView = [self _targetVCForPopup].popupBar;
 		[self presentViewController:avc animated:YES completion:nil];
 	}];
+}
+
+#pragma mark LNPopupPresentationDelegate
+
+- (void)popupPresentationControllerWillPresentPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated
+{
+	
+}
+
+- (void)popupPresentationControllerDidPresentPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated
+{
+
+}
+
+- (void)popupPresentationControllerWillDismissPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated
+{
+
+}
+
+- (void)popupPresentationControllerDidDismissPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated
+{
+	
+}
+
+- (void)popupPresentationControllerWillOpenPopup:(UIViewController*)popupPresentationController animated:(BOOL)animated
+{
+	
+}
+
+- (void)popupPresentationControllerDidOpenPopup:(UIViewController*)popupPresentationController animated:(BOOL)animated
+{
+	
+}
+
+- (void)popupPresentationControllerWillClosePopup:(UIViewController*)popupPresentationController animated:(BOOL)animated
+{
+
+}
+
+- (void)popupPresentationControllerDidClosePopup:(UIViewController*)popupPresentationController animated:(BOOL)animated
+{
+	
 }
 
 @end

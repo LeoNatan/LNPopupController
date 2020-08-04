@@ -60,7 +60,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return NO;
 	}
 	
-	if(_popupController.popupControllerState != LNPopupPresentationStateOpen)
+	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)
 	{
 		if([self.forwardedDelegate respondsToSelector:_cmd])
 		{
@@ -96,7 +96,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-	if(_popupController.popupControllerState != LNPopupPresentationStateOpen)
+	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)
 	{
 		return NO;
 	}

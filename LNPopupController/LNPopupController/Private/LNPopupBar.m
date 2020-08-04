@@ -11,6 +11,9 @@
 #import "MarqueeLabel.h"
 #import "_LNPopupSwizzlingUtils.h"
 
+@interface _LNPopupContentView : UIView @end
+@implementation _LNPopupContentView @end
+
 @interface _LNPopupToolbar : UIToolbar @end
 @implementation _LNPopupToolbar
 
@@ -209,7 +212,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
 		
-		_contentView = [UIView new];
+		_contentView = [_LNPopupContentView new];
 		[self addSubview:_contentView];
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
@@ -220,7 +223,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[_toolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
 		_toolbar.layer.masksToBounds = YES;
-		
 		[_contentView addSubview:_toolbar];
 		
 		_titlesView = [[UIView alloc] initWithFrame:self.bounds];
@@ -304,14 +306,19 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	[super layoutSubviews];
 	
-	[_backgroundView setFrame:self.bounds];
-	[_contentView setFrame:self.bounds];
-	
-	[self _layoutImageView];
-	
 	[UIView performWithoutAnimation:^{
-		[_toolbar sizeToFit];
-		_toolbar.frame = CGRectMake(0, CGRectGetMidY(self.bounds) - _toolbar.bounds.size.height / 2 - 1, self.bounds.size.width, _toolbar.bounds.size.height);
+		CGRect frame = self.bounds;
+		[_backgroundView setFrame:frame];
+		
+		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
+		frame.size.height = barHeight;
+		[_contentView setFrame:frame];
+		
+		[self _layoutImageView];
+		
+		CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)];
+		_toolbar.bounds = CGRectMake(0, 0, self.bounds.size.width, toolbarSize.height);
+		_toolbar.center = CGPointMake(_contentView.center.x, _contentView.center.y - 1);
 		[_toolbar layoutIfNeeded];
 		
 		[_contentView bringSubviewToFront:_highlightView];
@@ -780,7 +787,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		if(_titleLabel == nil)
 		{
 			_titleLabel = [self _newMarqueeLabel];
-			_titleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12];
+			_titleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:14];
 			[_titlesView addSubview:_titleLabel];
 		}
 		
@@ -795,7 +802,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		if(_subtitleLabel == nil)
 		{
 			_subtitleLabel = [self _newMarqueeLabel];
-			_subtitleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:14 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:12];
+			_subtitleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:14 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:11];
 			[_titlesView addSubview:_subtitleLabel];
 		}
 		
@@ -818,6 +825,17 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
 	titleLabelFrame.size.height = barHeight;
+	
+	//Add some padding for compact bar
+	if(@available(iOS 13.0, *))
+	{
+		if(_resolvedStyle == LNPopupBarStyleCompact)
+		{
+			titleLabelFrame.origin.x += 8;
+			titleLabelFrame.size.width -= 16;
+		}
+	}
+	
 	if(_subtitle.length > 0)
 	{
 		CGRect subtitleLabelFrame = _titlesView.bounds;
@@ -830,6 +848,13 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		}
 		else
 		{
+			//Add some padding for compact bar
+			if(@available(iOS 13.0, *))
+			{
+				subtitleLabelFrame.origin.x += 8;
+				subtitleLabelFrame.size.width -= 16;
+			}
+			
 			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
 			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
 		}
