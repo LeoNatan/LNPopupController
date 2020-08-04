@@ -221,12 +221,12 @@ LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG)
 /**
  * An array of custom bar button items to display on the left side. (read-only)
  */
-@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* leftBarButtonItems LN_DEPRECATED_API("Use leadingBarButtonItems");
+@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* leftBarButtonItems LN_DEPRECATED_API("Use leadingBarButtonItems instead.");
 
 /**
  * An array of custom bar button items to display on the right side. (read-only)
  */
-@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* rightBarButtonItems LN_DEPRECATED_API("Use trailingBarButtonItems");
+@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* rightBarButtonItems LN_DEPRECATED_API("Use barButtonItems or trailingBarButtonItems instead.");
 
 @end
 #endif

@@ -22,14 +22,18 @@ class DemoMusicPlayerController: UIViewController {
 	var timer : Timer?
 	
 	fileprivate func LNSystemImage(named: String) -> UIImage {
-		let config : UIImage.SymbolConfiguration
-		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
-			config = UIImage.SymbolConfiguration(scale: .unspecified)
+		if #available(iOS 13.0, *) {
+			let config : UIImage.SymbolConfiguration
+			if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
+				config = UIImage.SymbolConfiguration(scale: .unspecified)
+			} else {
+				config = UIImage.SymbolConfiguration(scale: .medium)
+			}
+			
+			return UIImage(systemName: named, withConfiguration: config)!
 		} else {
-			config = UIImage.SymbolConfiguration(scale: .medium)
+			return UIImage(named: "gears")!
 		}
-		
-		return UIImage(systemName: named, withConfiguration: config)!
 	}
 	
 	required init?(coder aDecoder: NSCoder) {

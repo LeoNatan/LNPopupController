@@ -39,25 +39,32 @@
 
 static UIImage* LNSystemImage(NSString* named)
 {
-	static UIImageSymbolConfiguration* largeConfig = nil;
-	static UIImageSymbolConfiguration* compactConfig = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		largeConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleUnspecified];
-		compactConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium];
-	});
-	
-	UIImageSymbolConfiguration* config;
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
+	if (@available(iOS 13.0, *))
 	{
-		config = compactConfig;
+		static UIImageSymbolConfiguration* largeConfig = nil;
+		static UIImageSymbolConfiguration* compactConfig = nil;
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			largeConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleUnspecified];
+			compactConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium];
+		});
+		
+		UIImageSymbolConfiguration* config;
+		if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
+		{
+			config = compactConfig;
+		}
+		else
+		{
+			config = largeConfig;
+		}
+		
+		return [UIImage systemImageNamed:named withConfiguration:config];
 	}
 	else
 	{
-		config = largeConfig;
+		return [UIImage imageNamed:@"gears"];
 	}
-	
-	return [UIImage systemImageNamed:named withConfiguration:config];
 }
 
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection
@@ -98,7 +105,9 @@ static UIImage* LNSystemImage(NSString* named)
 {
 	[super viewDidLoad];
 	
-	self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+	if (@available(iOS 13.0, *)) {
+		self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+	}
 	
 	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];

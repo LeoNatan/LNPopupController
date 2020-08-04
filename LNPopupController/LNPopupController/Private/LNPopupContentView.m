@@ -10,8 +10,8 @@
 
 @implementation LNPopupContentView
 {
-	UIUserInterfaceStyle _userOverrideUserInterfaceStyle;
-	UIUserInterfaceStyle _controllerOverrideUserInterfaceStyle;
+	NSInteger _userOverrideUserInterfaceStyle;
+	NSInteger _controllerOverrideUserInterfaceStyle;
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame

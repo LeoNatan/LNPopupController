@@ -48,7 +48,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 	 */
 	LNPopupPresentationStateBarHidden = 0,
 	/**
-	 * The popup bar is presented and is closed and no presentation is taking place.
+	 * The popup bar is presented and is closed.
 	 */
 	LNPopupPresentationStateBarPresented = 1,
 	/**
