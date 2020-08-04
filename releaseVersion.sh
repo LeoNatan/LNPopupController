@@ -57,4 +57,4 @@ git push --tags
 echo -e "\033[1;34mCreating a GitHub release\033[0m"
 
 API_JSON=$(printf '{"tag_name": "%s","target_commitish": "master", "name": "v%s", "body": %s, "draft": false, "prerelease": false}' "$NEXT_VERSION" "$NEXT_VERSION" "$RELEASENOTESCONTENTS")
-curl -s --data "$API_JSON" https://api.github.com/repos/LeoNatan/LNPopupController/releases?access_token=${GITHUB_RELEASES_TOKEN}
+curl -H 'Authorization: token ${GITHUB_RELEASES_TOKEN}' -s --data "$API_JSON" https://api.github.com/repos/LeoNatan/LNPopupController/releases
