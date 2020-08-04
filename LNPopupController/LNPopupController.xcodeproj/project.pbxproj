@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3907CDB824D9BD6E007C9300 /* LNPopupContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */; };
-		390B30491B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */; };
 		390DD0111BB2EAC30064DB4A /* LNPopupContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		390F246122AC310A007E0CAE /* NSObject+AltKVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 390F245F22AC310A007E0CAE /* NSObject+AltKVC.h */; };
 		390F246222AC310A007E0CAE /* NSObject+AltKVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 390F246022AC310A007E0CAE /* NSObject+AltKVC.m */; };
@@ -52,7 +51,6 @@
 /* Begin PBXFileReference section */
 		3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupContentView.m; sourceTree = "<group>"; };
 		3907CDB924D9BD8A007C9300 /* LNPopupContentView+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupContentView+Private.h"; sourceTree = "<group>"; };
-		390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LNPopupControllerAssets.xcassets; sourceTree = SOURCE_ROOT; };
 		390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupContentView.h; sourceTree = "<group>"; };
 		390F245F22AC310A007E0CAE /* NSObject+AltKVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+AltKVC.h"; sourceTree = "<group>"; };
 		390F246022AC310A007E0CAE /* NSObject+AltKVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AltKVC.m"; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 				39599BA81E02CD65008EE386 /* LNPopupCustomBarViewController.h */,
 				394A85B71B6304F5004FFC61 /* LNPopupItem.h */,
 				3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */,
-				390B30481B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets */,
 				46ECC2AE1BF31025005CE96C /* Info.plist */,
 			);
 			path = LNPopupController;
@@ -282,7 +279,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				390B30491B6AC0D4009ACD03 /* LNPopupControllerAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

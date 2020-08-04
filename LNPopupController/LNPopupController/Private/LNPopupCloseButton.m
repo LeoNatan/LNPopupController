@@ -65,7 +65,17 @@
 
 - (void)_setupForCircularButton
 {
-	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+	UIBlurEffectStyle blurStyle;
+	if(@available(iOS 13.0, *))
+	{
+		blurStyle = UIBlurEffectStyleSystemChromeMaterial;
+	}
+	else
+	{
+		blurStyle = UIBlurEffectStyleExtraLight;
+	}
+	
+	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
 	_effectView.userInteractionEnabled = NO;
 	[self addSubview:_effectView];
 	
@@ -92,9 +102,34 @@
 	self.layer.shadowOffset = CGSizeMake(0, 0);
 	self.layer.masksToBounds = NO;
 	
-	[self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	UIColor* color;
+	if(@available(iOS 13.0, *))
+	{
+		color = UIColor.labelColor;
+	}
+	else
+	{
+		color = UIColor.blackColor;
+	}
 	
-	[self setImage:[UIImage imageNamed:@"DismissChevron" inBundle:[NSBundle bundleForClass:self.class] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+	[self setTitleColor:color forState:UIControlStateNormal];
+	[self setTintColor:color];
+	
+
+	if(@available(iOS 13.0, *))
+	{
+		UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
+		UIImage* image = [UIImage systemImageNamed:@"chevron.down" withConfiguration:config];
+		[self setImage:image forState:UIControlStateNormal];
+	}
+	else
+	{
+		_chevronView = [[LNChevronView alloc] initWithFrame:CGRectMake(4, 4.5, 16, 16)];
+		_chevronView.width = 3.0;
+		_chevronView.color = color;
+		[_chevronView setState:LNChevronViewStateUp animated:NO];
+		[self addSubview:_chevronView];
+	}
 }
 
 - (void)_didTouchDown
