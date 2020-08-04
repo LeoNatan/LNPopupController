@@ -9,6 +9,10 @@
 #import "LNPopupContentView+Private.h"
 
 @implementation LNPopupContentView
+{
+	UIUserInterfaceStyle _userOverrideUserInterfaceStyle;
+	UIUserInterfaceStyle _controllerOverrideUserInterfaceStyle;
+}
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
 {
@@ -53,6 +57,25 @@
 - (void)safeAreaInsetsDidChange
 {
 	[super safeAreaInsetsDidChange];
+}
+
+- (UIUserInterfaceStyle)overrideUserInterfaceStyle
+{
+	return _userOverrideUserInterfaceStyle != UIUserInterfaceStyleUnspecified ? _userOverrideUserInterfaceStyle : _controllerOverrideUserInterfaceStyle;
+}
+
+- (void)setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
+{
+	_userOverrideUserInterfaceStyle = overrideUserInterfaceStyle;
+	
+	[super setOverrideUserInterfaceStyle:self.overrideUserInterfaceStyle];
+}
+
+- (void)setControllerOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
+{
+	_controllerOverrideUserInterfaceStyle = overrideUserInterfaceStyle;
+	
+	[super setOverrideUserInterfaceStyle:self.overrideUserInterfaceStyle];
 }
 
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 @import ObjectiveC;
 
-#define notavailable(...) @available(__VA_ARGS__)) { } else if(YES
+#define unavailable(...) @available(__VA_ARGS__)) { } else if(YES
 
 #define LNSwizzleComplain(FORMAT, ...) \
 if(shouldTrapAndPrint) { \

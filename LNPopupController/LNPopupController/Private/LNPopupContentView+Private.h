@@ -19,6 +19,8 @@
 
 @property (nonatomic, weak) UIViewController* currentPopupContentViewController;
 
+- (void)setControllerOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle API_AVAILABLE(ios(13.0));
+
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect;
 
 @end

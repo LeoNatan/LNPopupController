@@ -62,8 +62,6 @@ static UIImage* LNSystemImage(NSString* named)
 
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection
 {
-	
-	
 	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"play.fill") style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
 	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
 	play.accessibilityIdentifier = @"PlayButton";
@@ -99,6 +97,8 @@ static UIImage* LNSystemImage(NSString* named)
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	
+	self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
 	
 	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];

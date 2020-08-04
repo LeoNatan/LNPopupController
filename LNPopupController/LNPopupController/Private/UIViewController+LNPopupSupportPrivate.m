@@ -137,7 +137,8 @@ static void __accessibilityBundleLoadHandler()
 
 + (void)load
 {
-	if(@available(iOS 14.0, *)) {} else {
+	if(unavailable(iOS 14.0, *))
+	{
 		//_setSafeAreaInsets:updateSubviewsDuringNextLayoutPass:
 		NSString* selName = _LNPopupDecodeBase64String(sSAIuSDNLP);
 		LNSwizzleMethod(self,
@@ -195,6 +196,10 @@ static void __accessibilityBundleLoadHandler()
 			LNSwizzleMethod(self,
 							@selector(isModalInPresentation),
 							@selector(_ln_isModalInPresentation));
+			
+			LNSwizzleMethod(self,
+							@selector(setOverrideUserInterfaceStyle:),
+							@selector(_ln_popup_setOverrideUserInterfaceStyle:));
 		}
 #endif
 		
@@ -272,6 +277,16 @@ static void __accessibilityBundleLoadHandler()
 	}
 	
 	return [self _ln_isModalInPresentation];
+}
+
+- (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle API_AVAILABLE(ios(13.0))
+{
+	[self _ln_popup_setOverrideUserInterfaceStyle:overrideUserInterfaceStyle];
+	
+	if(self._isContainedInPopupController)
+	{
+		[self.popupPresentationContainerViewController.popupContentView setControllerOverrideUserInterfaceStyle:overrideUserInterfaceStyle];
+	}
 }
 
 static inline __attribute__((always_inline)) void _LNUpdateUserSafeAreaInsets(id self, UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
@@ -841,7 +856,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_hideBarWithTransition:isExplicit:
 - (void)hBWT:(NSInteger)t iE:(BOOL)e
 {
-	if(notavailable(iOS 13.0, *))
+	if(unavailable(iOS 13.0, *))
 	{
 		[self _legacy_hBWT:t iE:e];
 		return;
@@ -871,7 +886,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_showBarWithTransition:isExplicit:
 - (void)sBWT:(NSInteger)t iE:(BOOL)e
 {
-	if(notavailable(iOS 13.0, *))
+	if(unavailable(iOS 13.0, *))
 	{
 		[self _legacy_sBWT:t iE:e];
 		return;

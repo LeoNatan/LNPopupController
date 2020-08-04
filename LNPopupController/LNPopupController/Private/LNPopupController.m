@@ -196,6 +196,15 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[self _repositionPopupContentMovingBottomBar:YES];
 }
 
+- (void)_addContentControllerSubview:(UIViewController*)currentContentController
+{
+	if (@available(iOS 13.0, *))
+	{
+		[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
+	}
+	[self.popupContentView.contentView addSubview:currentContentController.view];
+}
+
 - (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
 {
 	if(_forceTouchOverride)
@@ -224,7 +233,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController barEffect:(id)self.popupBar.backgroundView.effect];
 			
-			[self.popupContentView.contentView addSubview:_currentContentController.view];
+			[self _addContentControllerSubview:_currentContentController];
 			self.popupContentView.currentPopupContentViewController = _currentContentController;
 			[self.popupContentView.contentView sendSubviewToBack:_currentContentController.view];
 			
@@ -706,7 +715,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 		else
 		{
-			[self.popupContentView.contentView addSubview:newContentController.view];
+			[self _addContentControllerSubview:newContentController];
 			[self.popupContentView.contentView sendSubviewToBack:newContentController.view];
 		}
 	}
