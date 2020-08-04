@@ -49,6 +49,11 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 		[NSException raise:NSInternalInconsistencyException format:@"Content view controller cannot be nil."];
 	}
 	
+	if(controller == self)
+	{
+		[NSException raise:NSInternalInconsistencyException format:@"Content view controller cannot be the same as the presenting controller."];
+	}
+	
 	self.popupContentViewController = controller;
 	controller.popupPresentationContainerViewController = self;
 	
