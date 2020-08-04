@@ -1072,6 +1072,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			if(open)
 			{
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillOpenPopup:animated:), animated);
 				[self openPopupAnimated:animated completion:completionBlock];
 			}
 		} completion:^(BOOL finished) {
@@ -1082,6 +1083,11 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			}
 			
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidPresentPopupBar:animated:), animated);
+			
+			if(open)
+			{
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
+			}
 			
 			if(completionBlock != nil && !open)
 			{
@@ -1127,6 +1133,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			_popupControllerInternalState = _LNPopupPresentationStateTransitioning;
 			_popupControllerTargetState = LNPopupPresentationStateBarHidden;
 			
+			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillDismissPopupBar:animated:), animated);
+			
 			[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^
 			 {
 				 CGRect barFrame = self.popupBar.frame;
@@ -1155,6 +1163,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				 _currentContentController = nil;
 				 
 				 _effectiveStatusBarUpdateController = nil;
+				 
+				 _LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidDismissPopupBar:animated:), animated);
 				 
 				 [_containerController _ln_setPopupPresentationState:LNPopupPresentationStateBarHidden];
 				 
