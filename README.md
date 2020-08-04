@@ -31,7 +31,7 @@ Check the demo project for many common use cases of the framework in various sce
 
 ### Features
 
-* Available for iOS 12 and above, as an Xcode framework
+* Available for iOS 11 and above, as an Xcode framework
 * Good citizen in modern UIKit world
 * Modern Objective C syntax for best Swift interoperability
 
