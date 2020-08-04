@@ -6,7 +6,7 @@
 //  Copyright © 2015 Leo Natan. All rights reserved.
 //
 
-#import "LNPopupBar.h"
+#import <LNPopupController/LNPopupBar.h>
 
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;

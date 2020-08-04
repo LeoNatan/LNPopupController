@@ -6,7 +6,7 @@
 //  Copyright © 2015 Leo Natan. All rights reserved.
 //
 
-#import "LNPopupCloseButton.h"
+#import <LNPopupController/LNPopupCloseButton.h>
 @import ObjectiveC;
 #import "LNChevronView.h"
 

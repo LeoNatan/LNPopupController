@@ -5,6 +5,12 @@
 //  Copyright © 2016 Leo Natan. All rights reserved.
 //
 
+#define LNChevronView __LNChevronView
+#define LNChevronViewState __LNChevronViewState
+#define LNChevronViewStateUp __LNChevronViewStateUp
+#define LNChevronViewStateFlat __LNChevronViewStateFlat
+#define LNChevronViewStateDown __LNChevronViewStateDown
+
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN

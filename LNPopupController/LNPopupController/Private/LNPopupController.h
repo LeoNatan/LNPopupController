@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LNPopupBar+Private.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
-#import "LNPopupCloseButton.h"
+#import <LNPopupController/LNPopupCloseButton.h>
 #import "LNPopupContentView+Private.h"
 
 extern const NSUInteger _LNPopupPresentationStateTransitioning;

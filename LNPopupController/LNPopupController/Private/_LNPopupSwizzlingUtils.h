@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 @import ObjectiveC;
 
+#define notavailable(...) @available(__VA_ARGS__)) { } else if(YES
+
 #define LNSwizzleComplain(FORMAT, ...) \
 if(shouldTrapAndPrint) { \
 NSString *errStr = [NSString stringWithFormat:@"%s: " FORMAT,__func__,##__VA_ARGS__]; \
