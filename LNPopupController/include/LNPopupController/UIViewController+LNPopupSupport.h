@@ -1,1 +1,1 @@
-/Users/lnatan/Desktop/GitHub (Private)/LNPopupController/LNPopupController/LNPopupController/UIViewController+LNPopupSupport.h
+../../LNPopupController/UIViewController+LNPopupSupport.h
