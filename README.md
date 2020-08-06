@@ -44,7 +44,7 @@ LNPopupController supports SPM versions 5.1.0 and above. To use SPM, you should 
 You can also manually add the package to your Package.swift file:
 
 ```swift
-.package(url: "https://github.com/LeoNatan/LNPopupController.git", from: "2.9.0")
+.package(url: "https://github.com/LeoNatan/LNPopupController.git", from: "2.9.2")
 ```
 
 And the dependency in your target:

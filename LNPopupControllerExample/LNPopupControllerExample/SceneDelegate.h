@@ -2,7 +2,7 @@
 //  SceneDelegate.h
 //  ZZZ
 //
-//  Created by Leo Natan (Wix) on 8/21/19.
+//  Created by Leo Natan on 8/21/19.
 //  Copyright © 2019 wix. All rights reserved.
 //
 

@@ -62,3 +62,4 @@ fastlane/test_output
 
 iOSInjectionProject/
 .swiftpm
+swiftpm

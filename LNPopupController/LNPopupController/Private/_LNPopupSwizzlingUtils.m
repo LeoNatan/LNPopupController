@@ -2,8 +2,8 @@
 //  _LNPopupSwizzlingUtils.m
 //  LNPopupController
 //
-//  Created by Leo Natan (Wix) on 1/14/18.
-//  Copyright © 2018 Leo Natan. All rights reserved.
+//  Created by Leo Natan on 1/14/18.
+//  Copyright © 2015-2020 Leo Natan. All rights reserved.
 //
 
 #import "_LNPopupSwizzlingUtils.h"

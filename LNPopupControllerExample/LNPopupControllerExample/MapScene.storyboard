@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.12" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ZEq-0J-wEi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17147" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ZEq-0J-wEi">
     <device id="retina6_5" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.15"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17120"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
-        <capability name="iOS 13.0 system colors" minToolsVersion="11.0"/>
     </dependencies>
     <scenes>
         <!--Map View Controller-->
@@ -29,7 +30,10 @@
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dOj-8I-c7R">
                                             <rect key="frame" x="0.0" y="0.0" width="33" height="33"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                            <state key="normal" image="back"/>
+                                            <state key="normal">
+                                                <imageReference key="image" image="chevron.left" catalog="system" symbolScale="large"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="bold"/>
+                                            </state>
                                             <connections>
                                                 <action selector="backButtonTapped:" destination="ZEq-0J-wEi" eventType="touchUpInside" id="ewO-gG-Sjy"/>
                                                 <segue destination="RgK-1F-W7f" kind="unwind" unwindAction="unwindToGallery:" id="ttM-k1-hYQ"/>
@@ -71,7 +75,8 @@
                                 <blurEffect style="regular"/>
                             </visualEffectView>
                         </subviews>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="ttR-e1-b3Y"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="fTi-HK-yCs" secondAttribute="bottom" id="53b-6h-61m"/>
                             <constraint firstAttribute="trailing" secondItem="z3u-Zt-das" secondAttribute="trailing" id="5g0-iP-rZr"/>
@@ -88,7 +93,6 @@
                             <constraint firstAttribute="trailing" secondItem="0EZ-UY-PPz" secondAttribute="trailing" id="gmU-UH-plU"/>
                             <constraint firstItem="ttR-e1-b3Y" firstAttribute="top" secondItem="z3u-Zt-das" secondAttribute="bottom" id="xiS-Dz-Wxg"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="ttR-e1-b3Y"/>
                     </view>
                     <navigationItem key="navigationItem" id="FqG-7m-AwO"/>
                     <connections>
@@ -140,17 +144,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="7 min to work" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="erT-G3-HBb">
-                                                    <rect key="frame" x="20" y="20.333333333333329" width="116" height="24"/>
+                                                    <rect key="frame" x="20" y="19" width="127" height="26.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Take Market St." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="CnG-y0-rK9">
-                                                    <rect key="frame" x="20" y="48" width="106" height="18"/>
+                                                    <rect key="frame" x="20" y="49.333333333333329" width="106" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="secondaryLabelColor"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -165,17 +169,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Home" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YFg-LF-k2d">
-                                                    <rect key="frame" x="19.999999999999996" y="20.333333333333329" width="52.666666666666657" height="24"/>
+                                                    <rect key="frame" x="19.999999999999996" y="19" width="57.666666666666664" height="26.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Directions from my location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aaO-Yd-xQO">
-                                                    <rect key="frame" x="20" y="48" width="188" height="18"/>
+                                                    <rect key="frame" x="20" y="49.333333333333329" width="188.33333333333334" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="secondaryLabelColor"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -190,17 +194,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Restaurant" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OJa-Gr-emV">
-                                                    <rect key="frame" x="19.999999999999993" y="20.333333333333329" width="94.333333333333314" height="24"/>
+                                                    <rect key="frame" x="20" y="19" width="103" height="26.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Cheapest prices" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cOx-0L-Baz">
-                                                    <rect key="frame" x="20.000000000000007" y="48" width="111.66666666666669" height="18"/>
+                                                    <rect key="frame" x="20.000000000000007" y="49.333333333333329" width="111.66666666666667" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="secondaryLabelColor"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -215,17 +219,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Favorites" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BzK-EW-JJD">
-                                                    <rect key="frame" x="20" y="20.333333333333329" width="79" height="24"/>
+                                                    <rect key="frame" x="20" y="19" width="86" height="26.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="10 Places" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1Im-KD-s0N">
-                                                    <rect key="frame" x="20" y="48" width="65" height="18"/>
+                                                    <rect key="frame" x="20" y="49.333333333333329" width="65" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="secondaryLabelColor"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -266,13 +270,13 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </searchBar>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="ldy-mW-kXZ"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="zJz-wK-6yg" secondAttribute="trailing" constant="-10" id="EvB-p6-GVc"/>
                             <constraint firstAttribute="top" secondItem="zJz-wK-6yg" secondAttribute="top" id="V8B-bo-le0"/>
                             <constraint firstItem="zJz-wK-6yg" firstAttribute="leading" secondItem="MVX-6E-FSc" secondAttribute="leadingMargin" constant="-10" id="WBI-yr-XwK"/>
                             <constraint firstAttribute="bottom" secondItem="zJz-wK-6yg" secondAttribute="bottom" id="j8J-rw-bjh"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="ldy-mW-kXZ"/>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -286,8 +290,22 @@
             <point key="canvasLocation" x="1157.5999999999999" y="-9.4452773613193415"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="back" width="128" height="128"/>
-    </resources>
+    <designables>
+        <designable name="l4J-iT-MKq">
+            <size key="intrinsicContentSize" width="-1" height="56"/>
+        </designable>
+        <designable name="zJz-wK-6yg">
+            <size key="intrinsicContentSize" width="-1" height="56"/>
+        </designable>
+    </designables>
     <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <resources>
+        <image name="chevron.left" catalog="system" width="96" height="128"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

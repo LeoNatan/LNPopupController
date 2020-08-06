@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17140" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17147" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
     <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment version="4864" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17115"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17120"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -35,7 +35,7 @@
         <scene sceneID="38q-Kc-L0T">
             <objects>
                 <navigationController modalPresentationStyle="fullScreen" id="yVZ-Nv-QXJ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Music" image="musicTab" id="vBw-QA-u4Y"/>
+                    <tabBarItem key="tabBarItem" title="Music" image="play.circle.fill" catalog="system" id="vBw-QA-u4Y"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Gmu-0O-wzk">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -322,7 +322,7 @@
         <scene sceneID="2du-v5-87H">
             <objects>
                 <navigationController id="fst-JL-nMD" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Artists" image="artists" id="wmG-jF-o9a"/>
+                    <tabBarItem key="tabBarItem" title="Artists" image="music.mic" catalog="system" id="wmG-jF-o9a"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DVk-h5-a3S">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -339,7 +339,7 @@
         <scene sceneID="C6e-rq-0IG">
             <objects>
                 <navigationController id="AxQ-vF-9zl" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Composers" image="composers" id="2hs-ep-FyF"/>
+                    <tabBarItem key="tabBarItem" title="Composers" image="music.quarternote.3" catalog="system" id="2hs-ep-FyF"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uG5-sG-lf4">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -356,7 +356,7 @@
         <scene sceneID="Scr-u1-MCI">
             <objects>
                 <navigationController id="FDh-R3-2kK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Recents" image="recents" id="c4d-XQ-fP0"/>
+                    <tabBarItem key="tabBarItem" title="Recents" image="clock.fill" catalog="system" id="c4d-XQ-fP0"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="pUY-Qq-0Gw">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -380,24 +380,24 @@
         </designable>
     </designables>
     <inferredMetricsTieBreakers>
-        <segue reference="IKD-oX-Nxq"/>
+        <segue reference="ABc-SJ-NGd"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
         <image name="action" width="19" height="5"/>
         <image name="airplayaudio" catalog="system" width="128" height="121"/>
-        <image name="artists" width="32" height="32"/>
         <image name="backward.fill" catalog="system" width="128" height="77"/>
-        <image name="composers" width="32" height="32"/>
+        <image name="clock.fill" catalog="system" width="128" height="121"/>
         <image name="demoAlbum" width="2048" height="2048"/>
         <image name="ellipsis.circle.fill" catalog="system" width="128" height="121"/>
         <image name="forward.fill" catalog="system" width="128" height="79"/>
         <image name="genre1" width="88" height="88"/>
         <image name="list.bullet" catalog="system" width="128" height="88"/>
-        <image name="musicTab" width="32" height="32"/>
+        <image name="music.mic" catalog="system" width="128" height="121"/>
+        <image name="music.quarternote.3" catalog="system" width="128" height="103"/>
         <image name="pause.fill" catalog="system" width="116" height="128"/>
+        <image name="play.circle.fill" catalog="system" width="128" height="121"/>
         <image name="quote.bubble" catalog="system" width="128" height="110"/>
-        <image name="recents" width="25" height="25"/>
         <image name="speaker.fill" catalog="system" width="128" height="128"/>
         <image name="speaker.wave.3.fill" catalog="system" width="128" height="86"/>
         <systemColor name="labelColor">

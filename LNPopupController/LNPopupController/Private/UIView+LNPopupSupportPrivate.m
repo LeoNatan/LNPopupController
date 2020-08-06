@@ -2,15 +2,16 @@
 //  UIView+LNPopupSupportPrivate.m
 //  LNPopupController
 //
-//  Created by Leo Natan (Wix) on 8/1/20.
-//  Copyright © 2020 Leo Natan. All rights reserved.
+//  Created by Leo Natan on 8/1/20.
+//  Copyright © 2015-2020 Leo Natan. All rights reserved.
 //
 
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupSwizzlingUtils.h"
 @import ObjectiveC;
 
-static const void* LNPopupAwaitingViewInWindowHierarchy = &LNPopupAwaitingViewInWindowHierarchy;
+static const void* LNPopupAwaitingViewInWindowHierarchyKey = &LNPopupAwaitingViewInWindowHierarchyKey;
+static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
 
 #if ! LNPopupControllerEnforceStrictClean
 //_didMoveFromWindow:toWindow:
@@ -54,46 +55,65 @@ static NSString* dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
 #endif
 
 LNAlwaysInline
-static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting, NSUInteger idx)
+static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 {
-	if(waiting.count == idx)
+	if(waiting.count == 0)
 	{
-		if(waiting.count > 0)
-		{
-			[self _ln_forgetAboutIt];
-		}
-		
+		[self _ln_setNotifying:NO];
 		return;
 	}
 	
-	LNInWindowBlock block = waiting[idx];
+	LNInWindowBlock block = waiting.firstObject;
+	[waiting removeObjectAtIndex:0];
 	block(^ {
-		_LNNotify(self, waiting, idx + 1);
+		_LNNotify(self, waiting);
 	});
+}
+
+- (void)_ln_setNotifying:(BOOL)notifying
+{
+	objc_setAssociatedObject(self, LNPopupNotifyingKey, @(notifying), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (BOOL)_ln_isNotifying
+{
+	return [objc_getAssociatedObject(self, LNPopupNotifyingKey) boolValue];
 }
 
 - (void)_ln_notify
 {
-	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
+	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchyKey);
 	
-	_LNNotify(self, waiting, 0);
+	if(waiting.count == 0)
+	{
+		return;
+	}
+	
+	[self _ln_setNotifying:YES];
+	
+	_LNNotify(self, waiting);
 }
 
 - (void)_ln_letMeKnowWhenViewInWindowHierarchy:(LNInWindowBlock)block
 {
-	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
+	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchyKey);
 	if(waiting == nil)
 	{
 		waiting = [NSMutableArray new];
-		objc_setAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy, waiting, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		objc_setAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchyKey, waiting, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	}
 	
 	[waiting addObject:block];
+	
+	if(self.window != nil && self._ln_isNotifying == NO)
+	{
+		[self _ln_notify];
+	}
 }
 
 - (void)_ln_forgetAboutIt
 {
-	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchy);
+	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchyKey);
 	[waiting removeAllObjects];
 }
 

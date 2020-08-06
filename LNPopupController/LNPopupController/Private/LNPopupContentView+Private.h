@@ -2,8 +2,8 @@
 //  LNPopupContentView+Private.h
 //  LNPopupController
 //
-//  Created by Leo Natan (Wix) on 8/4/20.
-//  Copyright © 2020 Leo Natan. All rights reserved.
+//  Created by Leo Natan on 8/4/20.
+//  Copyright © 2015-2020 Leo Natan. All rights reserved.
 //
 
 #import <LNPopupController/LNPopupContentView.h>

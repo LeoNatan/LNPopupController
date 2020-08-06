@@ -2,7 +2,7 @@
 //  SplitViewController.h
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan (Wix) on 8/21/19.
+//  Created by Leo Natan on 8/21/19.
 //  Copyright © 2019 Leo Natan. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  NSObject+XcodeBugs.h
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan (Wix) on 7/11/19.
+//  Created by Leo Natan on 7/11/19.
 //  Copyright © 2019 Leo Natan. All rights reserved.
 //
 
