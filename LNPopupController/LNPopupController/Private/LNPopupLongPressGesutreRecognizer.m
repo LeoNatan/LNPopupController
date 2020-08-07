@@ -29,6 +29,21 @@
 	return YES;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+	if([NSStringFromClass(otherGestureRecognizer.class) containsString:@"SwiftUI"])
+	{
+		return YES;
+	}
+	
+	if([self.forwardedDelegate respondsToSelector:_cmd])
+	{
+		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:otherGestureRecognizer];
+	}
+	
+	return NO;
+}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
 	if([self.forwardedDelegate respondsToSelector:_cmd])

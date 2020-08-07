@@ -48,7 +48,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{	
+{
 	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"DropShadow"])
 	{
 		otherGestureRecognizer.state = UIGestureRecognizerStateFailed;
@@ -96,6 +96,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
+	if([NSStringFromClass(otherGestureRecognizer.class) containsString:@"SwiftUI"])
+	{
+		return YES;
+	}
+	
 	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)
 	{
 		return NO;
