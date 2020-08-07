@@ -1060,6 +1060,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[items addObject:fixedSpacer];
 	
 	[_toolbar setItems:items animated:YES];
+	[_toolbar layoutIfNeeded];
 	
 	[self _setNeedsTitleLayout];
 	
