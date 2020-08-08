@@ -83,6 +83,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong, readwrite) UITapGestureRecognizer* popupOpenGestureRecognizer;
 @property (nonatomic, strong, readwrite) UILongPressGestureRecognizer* barHighlightGestureRecognizer;
 
+@property (nonatomic) BOOL _applySwiftUILayoutFixes;
 
 - (void)_delayBarButtonLayout;
 - (void)_layoutBarButtonItems;

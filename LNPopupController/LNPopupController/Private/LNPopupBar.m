@@ -316,9 +316,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		[self _layoutImageView];
 		
+		CGFloat swiftuiOffset = __applySwiftUILayoutFixes ? 20 : 0;
+		
 		CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)];
-		_toolbar.bounds = CGRectMake(0, 0, self.bounds.size.width, toolbarSize.height);
-		_toolbar.center = CGPointMake(_contentView.center.x, _contentView.center.y - 1);
+		_toolbar.bounds = CGRectMake(0, 0, self.bounds.size.width - swiftuiOffset, toolbarSize.height);
+		_toolbar.center = CGPointMake(_contentView.center.x - swiftuiOffset / 2, _contentView.center.y - 1);
 		[_toolbar layoutIfNeeded];
 		
 		[_contentView bringSubviewToFront:_highlightView];
@@ -705,9 +707,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	UIView* leftViewLast;
 	UIView* rightViewFirst;
 	
-	NSMutableArray* allItems = [NSMutableArray new];
-	[allItems addObjectsFromArray:self.leadingBarButtonItems];
-	[allItems addObjectsFromArray:self.trailingBarButtonItems];
+	NSArray* allItems = _toolbar.items;
 
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
@@ -1042,6 +1042,17 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[items addObject:flexibleSpacer];
 	}
 	
+	if(resolvedStyle == LNPopupBarStyleProminent && __applySwiftUILayoutFixes)
+	{
+		UIView* spacing = [UIView new];
+		spacing.translatesAutoresizingMaskIntoConstraints = NO;
+		[spacing.widthAnchor constraintEqualToConstant:20].active = YES;
+//		[spacing.heightAnchor constraintEqualToConstant:20].active = YES;
+//		spacing.backgroundColor = UIColor.greenColor;
+		
+		[items addObject:[[UIBarButtonItem alloc] initWithCustomView:spacing]];
+	}
+	
 	[self.leadingBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
 		[items addObject:barButtonItem];
 	}];
@@ -1049,6 +1060,15 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	if(resolvedStyle == LNPopupBarStyleCompact)
 	{
 		[items addObject:flexibleSpacer];
+	}
+	else if(__applySwiftUILayoutFixes)
+	{
+		UIView* spacing = [UIView new];
+		spacing.translatesAutoresizingMaskIntoConstraints = NO;
+		[spacing.widthAnchor constraintEqualToConstant:20].active = YES;
+//		[spacing.heightAnchor constraintEqualToConstant:20].active = YES;
+//		spacing.backgroundColor = UIColor.greenColor;
+		[items addObject:[[UIBarButtonItem alloc] initWithCustomView:spacing]];
 	}
 
 	[self.trailingBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -1168,6 +1188,13 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 - (NSArray<UIBarButtonItem *> *)barButtonItems
 {
 	return self.trailingBarButtonItems;
+}
+
+- (void)set_applySwiftUILayoutFixes:(BOOL)_applySwiftUILayoutFixes
+{
+	__applySwiftUILayoutFixes = _applySwiftUILayoutFixes;
+	
+	[self _layoutBarButtonItems];
 }
 
 @end
