@@ -551,7 +551,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_image = image;
 	
 	[self _layoutImageView];
-	[self _layoutBarButtonItems];
 	[self _setNeedsTitleLayout];
 }
 
@@ -1080,7 +1079,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[items addObject:fixedSpacer];
 	
 	[_toolbar setItems:items animated:YES];
-	[_toolbar layoutIfNeeded];
 	
 	[self _setNeedsTitleLayout];
 	
@@ -1192,9 +1190,12 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)set_applySwiftUILayoutFixes:(BOOL)_applySwiftUILayoutFixes
 {
-	__applySwiftUILayoutFixes = _applySwiftUILayoutFixes;
-	
-	[self _layoutBarButtonItems];
+	if(__applySwiftUILayoutFixes != _applySwiftUILayoutFixes)
+	{
+		__applySwiftUILayoutFixes = _applySwiftUILayoutFixes;
+		
+		[self _layoutBarButtonItems];
+	}
 }
 
 @end

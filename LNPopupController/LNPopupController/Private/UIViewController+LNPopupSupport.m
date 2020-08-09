@@ -10,6 +10,7 @@
 #import "LNPopupItem+Private.h"
 #import "_LNWeakRef.h"
 #import "UIView+LNPopupSupportPrivate.h"
+#import "_LNPopupSwizzlingUtils.h"
 @import ObjectiveC;
 
 static const void* _LNPopupItemKey = &_LNPopupItemKey;
@@ -18,6 +19,7 @@ const void* _LNPopupPresentationContainerViewControllerKey = &_LNPopupPresentati
 const void* _LNPopupContentViewControllerKey = &_LNPopupContentViewControllerKey;
 static const void* _LNPopupInteractionStyleKey = &_LNPopupInteractionStyleKey;
 static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
+static const void* _LNPopupIsInPopupAppearanceTransitionKey = &_LNPopupIsInPopupAppearanceTransitionKey;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
@@ -32,6 +34,8 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completionBlock;
 {
+	LNDynamicallySubclass(controller, _LN_UIViewController_AppearanceControl.class);
+	
 	if(self.view.window == nil)
 	{
 		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
@@ -158,6 +162,16 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 	return [self.parentViewController _isContainedInPopupController];
 }
 
+- (BOOL)_isContainedInPopupControllerOrDeallocated
+{
+	if(objc_getAssociatedObject(self, _LNPopupPresentationContainerViewControllerKey) != nil)
+	{
+		return YES;
+	}
+	
+	return [self.parentViewController _isContainedInPopupControllerOrDeallocated];
+}
+
 - (UIViewController *)popupPresentationContainerViewController
 {
 	return [(_LNWeakRef*)objc_getAssociatedObject(self, _LNPopupPresentationContainerViewControllerKey) object];
@@ -225,6 +239,25 @@ static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 - (__kindof UIView *)viewForPopupInteractionGestureRecognizer
 {
 	return self.view;
+}
+
+- (BOOL)_ln_isInPopupAppearanceTransition
+{
+	return [objc_getAssociatedObject(self, _LNPopupIsInPopupAppearanceTransitionKey) boolValue];
+}
+
+- (void)_ln_beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
+{
+	objc_setAssociatedObject(self, _LNPopupIsInPopupAppearanceTransitionKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	
+	[self beginAppearanceTransition:isAppearing animated:animated];
+}
+
+- (void)_ln_endAppearanceTransition
+{
+	[self endAppearanceTransition];
+	
+	objc_setAssociatedObject(self, _LNPopupIsInPopupAppearanceTransitionKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

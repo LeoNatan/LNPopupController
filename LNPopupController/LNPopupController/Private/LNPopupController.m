@@ -198,11 +198,26 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_addContentControllerSubview:(UIViewController*)currentContentController
 {
+	if(currentContentController == nil)
+	{
+		return;
+	}
+	
 	if (@available(iOS 13.0, *))
 	{
 		[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
 	}
 	[self.popupContentView.contentView addSubview:currentContentController.view];
+}
+
+- (void)_removeContentControllerFromContentView:(UIViewController*)currentContentController
+{
+	if(currentContentController == nil)
+	{
+		return;
+	}
+	
+	[_currentContentController.view removeFromSuperview];
 }
 
 - (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
@@ -225,7 +240,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_popupControllerInternalState == LNPopupPresentationStateBarPresented)
 	{
-		[_currentContentController beginAppearanceTransition:YES animated:NO];
+		[_currentContentController _ln_beginAppearanceTransition:YES animated:NO];
 		[UIView performWithoutAnimation:^{
 			_currentContentController.view.frame = _containerController.view.bounds;
 			_currentContentController.view.clipsToBounds = NO;
@@ -233,14 +248,13 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController barEffect:(id)self.popupBar.backgroundView.effect];
 			
-			[self _addContentControllerSubview:_currentContentController];
 			self.popupContentView.currentPopupContentViewController = _currentContentController;
 			[self.popupContentView.contentView sendSubviewToBack:_currentContentController.view];
 			
 			[self.popupContentView.contentView setNeedsLayout];
 			[self.popupContentView.contentView layoutIfNeeded];
 		}];
-		[_currentContentController endAppearanceTransition];
+		[_currentContentController _ln_endAppearanceTransition];
 	};
 	
 	if(notifyDelegate && _popupControllerPublicState == LNPopupPresentationStateOpen && state == LNPopupPresentationStateBarPresented)
@@ -281,7 +295,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		 
 		 if(state == LNPopupPresentationStateBarPresented)
 		 {
-			 [_currentContentController beginAppearanceTransition:NO animated:YES];
+			 [_currentContentController _ln_beginAppearanceTransition:NO animated:YES];
 		 }
 		 
 		 [self _setContentToState:state];
@@ -295,8 +309,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		 
 		 if(state == LNPopupPresentationStateBarPresented)
 		 {
-			 [_currentContentController.view removeFromSuperview];
-			 [_currentContentController endAppearanceTransition];
+			 [_currentContentController _ln_endAppearanceTransition];
 			 
 			 [self _cleanupGestureRecognizersForController:_currentContentController];
 			 
@@ -695,8 +708,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
 	{
-		[oldContentController beginAppearanceTransition:NO animated:NO];
-		[newContentController beginAppearanceTransition:YES animated:NO];
+		[oldContentController _ln_beginAppearanceTransition:NO animated:NO];
+		[newContentController _ln_beginAppearanceTransition:YES animated:NO];
 	}
 	
 	_LNPopupTransitionCoordinator* coordinator = [_LNPopupTransitionCoordinator new];
@@ -707,8 +720,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	self.popupContentView.currentPopupContentViewController = newContentController;
 	
-	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
-	{
+//	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
+//	{
 		if(oldContentController != nil)
 		{
 			[self.popupContentView.contentView insertSubview:newContentController.view belowSubview:oldContentController.view];
@@ -718,14 +731,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self _addContentControllerSubview:newContentController];
 			[self.popupContentView.contentView sendSubviewToBack:newContentController.view];
 		}
-	}
+//	}
 	
-	[oldContentController.view removeFromSuperview];
+	[self _removeContentControllerFromContentView:oldContentController];
 	
 	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
 	{
-		[oldContentController endAppearanceTransition];
-		[newContentController endAppearanceTransition];
+		[oldContentController _ln_endAppearanceTransition];
+		[newContentController _ln_endAppearanceTransition];
 		
 		UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
 		
@@ -1153,6 +1166,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				 _LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
 			 } completion:^(BOOL finished) {
 				 _popupControllerInternalState = LNPopupPresentationStateBarHidden;
+				 
+				 [self _removeContentControllerFromContentView:_currentContentController];
 				 
 				 CGRect bottomBarFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 				 bottomBarFrame.origin.y -= _cachedInsets.bottom;

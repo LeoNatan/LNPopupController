@@ -15,6 +15,7 @@ let package = Package(
 			targets: ["LNPopupController"]),
 		.library(
 			name: "LNPopupController-Static",
+			type: .static,
 			targets: ["LNPopupController"]),
 	],
 	dependencies: [],

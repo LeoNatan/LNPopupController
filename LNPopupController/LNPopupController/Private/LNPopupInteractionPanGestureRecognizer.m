@@ -83,7 +83,14 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	
 	if([otherGestureRecognizer.view isKindOfClass:[UIScrollView class]])
 	{
-		return YES;
+		if(otherGestureRecognizer.view == gestureRecognizer.view)
+		{
+			return NO;
+		}
+		else
+		{
+			return YES;
+		}
 	}
 	
 	if([self.forwardedDelegate respondsToSelector:_cmd])
@@ -98,7 +105,14 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 {
 	if([NSStringFromClass(otherGestureRecognizer.class) containsString:@"SwiftUI"])
 	{
-		return YES;
+		if([gestureRecognizer.view isKindOfClass:LNPopupBar.class] == YES)
+		{
+			return YES;
+		}
+		else
+		{
+			return NO;
+		}
 	}
 	
 	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)

@@ -93,7 +93,7 @@ LNAlwaysInline
 static BOOL LNDynamicallySubclass(id obj, Class target)
 {
 	SEL canarySEL = NSSelectorFromString([NSString stringWithFormat:@"__LN_canaryInTheCoalMine_%@", NSStringFromClass(target)]);
-	if([obj respondsToSelector:canarySEL])
+	if([object_getClass(obj) instancesRespondToSelector:canarySEL])
 	{
 		//Already there.
 		return YES;

@@ -31,6 +31,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (nullable _LNPopupBottomBarSupport *)_ln_bottomBarSupport_nocreate;
 
 - (BOOL)_isContainedInPopupController;
+- (BOOL)_isContainedInPopupControllerOrDeallocated;
+- (BOOL)_ln_isInPopupAppearanceTransition;
+- (void)_ln_beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated;
+- (void)_ln_endAppearanceTransition;
 
 - (nullable UIView *)bottomDockingViewForPopup_nocreateOrDeveloper;
 - (nonnull UIView *)bottomDockingViewForPopup_internalOrDeveloper;
@@ -39,5 +43,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (CGRect)defaultFrameForBottomDockingView_internalOrDeveloper;
 
 @end
+
+@interface _LN_UIViewController_AppearanceControl : UIViewController @end
 
 NS_ASSUME_NONNULL_END
