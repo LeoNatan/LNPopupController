@@ -4,6 +4,8 @@
 
 `LNPopupController` is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.
 
+For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
+
 [![GitHub release](https://img.shields.io/github/release/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/releases) [![GitHub stars](https://img.shields.io/github/stars/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/stargazers) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/LeoNatan/LNPopupController/master/LICENSE) <span class="badge-paypal"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BR68NJEJXGWL6" title="Donate to this project using PayPal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg?style=flat" alt="PayPal Donation Button" /></a></span>
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/graphs/contributors) [![Carthage compatible](https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
@@ -21,11 +23,11 @@ For `UITabBarController` subclasses, the default dock view is the tab bar.
 For `UINavigationController` subclasses, the default dock view is the toolbar.
 For other classes, the popup bar is presented at the bottom of the screen. View controller subclasses can provide their own docking views.
 
-The framework attempts to correct the top and bottom layout guides of the container controller and its child controllers as the popup bar is presented and dismissed.
+The framework correctly maintains the safe area insets and guide of the container controller’s view and its child controllers, as the popup bar is presented and dismissed.
 
 The contents of the popup bar is built dynamically using the popup item objects (instances of the `LNPopupItem` class) associated with the popup content view controllers. To change the contents of the popup bar, you must therefore configure the popup items of your view controllers.
 
-Generally, it is recommended to present the popup bar on the outermost container controller. So if you have a view controller container in a navigation controller, which is in turn contained in a tab bar controller, it is recommended to present the popup bar on the tab bar controller.
+Generally, it is recommended to present the popup bar on the outermost container controller. So if you have a view controller contained in a navigation controller, which is in turn contained in a tab bar controller, it is recommended to present the popup bar on the tab bar controller.
 
 Check the demo project for many common use cases of the framework in various scenarios. It contains examples in Swift and Objective C.
 
@@ -34,6 +36,7 @@ Check the demo project for many common use cases of the framework in various sce
 * Available for iOS 11 and above, as an Xcode framework or an SPM package
 * Good citizen in modern UIKit world
 * Modern Objective C syntax and great Swift interoperability
+* For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
 
 ## Adding to Your Project
 
