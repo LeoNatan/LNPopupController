@@ -69,7 +69,6 @@ static void _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 	LNPopupPresentationState _stateBeforeDismissStarted;
 	
 	BOOL _dismissalOverride;
-	BOOL _forceTouchOverride;
 	
 	//Cached for performance during panning the popup content
 	CGRect _cachedDefaultFrame;
@@ -222,11 +221,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
 {
-	if(_forceTouchOverride)
-	{
-		return;
-	}
-	
 	if(transitionOriginatedByUser == YES && _popupControllerInternalState == _LNPopupPresentationStateTransitioning)
 	{
 		NSLog(@"LNPopupController: The popup controller is already in transition. Will ignore this transition request.");
@@ -579,7 +573,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarPresentationByUserPanGestureHandler:(UIPanGestureRecognizer*)pgr
 {
-	if(_dismissalOverride || _forceTouchOverride)
+	if(_dismissalOverride)
 	{
 		return;
 	}
@@ -1148,6 +1142,12 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	if(_dismissalOverride == YES)
+	{
+		if(completionBlock != nil) { completionBlock(); }
+		return;
+	}
+	
 	if(_popupControllerInternalState != LNPopupPresentationStateBarHidden)
 	{
 		void (^dismissalAnimationCompletionBlock)(void) = ^
@@ -1192,17 +1192,15 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				 
 				 [_containerController _ln_setPopupPresentationState:LNPopupPresentationStateBarHidden];
 				 
-				 if(completionBlock != nil)
-				 {
-					 completionBlock();
-				 }
+				 if(completionBlock != nil) { completionBlock(); }
 			 }];
 		};
+		
+		_dismissalOverride = YES;
 		
 		if(_popupControllerTargetState != LNPopupPresentationStateBarPresented)
 		{
 //			self.popupBarStorage.hidden = YES;
-			_dismissalOverride = YES;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			

@@ -67,7 +67,7 @@
 		3947E1A71B61CDA40001178B /* LNPopupCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupCloseButton.h; sourceTree = "<group>"; };
 		3947E1A81B61CDA40001178B /* LNPopupCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNPopupCloseButton.m; sourceTree = "<group>"; };
 		3947E1B01B61CE4A0001178B /* LNPopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupController.h; sourceTree = "<group>"; };
-		3947E1B11B61CE4A0001178B /* LNPopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LNPopupController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		3947E1B11B61CE4A0001178B /* LNPopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LNPopupController.m; sourceTree = "<group>"; };
 		3947E1B81B6300370001178B /* LNPopupBar+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LNPopupBar+Private.h"; sourceTree = "<group>"; };
 		394A85B51B630409004FFC61 /* LNPopupBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupBar.h; sourceTree = "<group>"; };
 		394A85B71B6304F5004FFC61 /* LNPopupItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupItem.h; sourceTree = "<group>"; };
