@@ -26,18 +26,6 @@
 
 @end
 
-@interface UIViewController ()
-
-- (id)_segueTemplateWithIdentifier:(id)arg1;
-
-@end
-
-@interface NSObject ()
-
-- (id)instantiateOrFindDestinationViewControllerWithSender:(id)arg1;
-
-@end
-
 @interface DemoGalleryControllerTableView : UITableView @end
 @implementation DemoGalleryControllerTableView
 
@@ -52,24 +40,6 @@
 @implementation DemoGalleryController
 
 - (IBAction)unwindToGallery:(UIStoryboardSegue *)unwindSegue { }
-
-- (nullable UIContextMenuConfiguration *)tableView:(UITableView *)tableView contextMenuConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath point:(CGPoint)point API_AVAILABLE(ios(13.0))
-{
-	return [UIContextMenuConfiguration configurationWithIdentifier:@"Preview" previewProvider:^ UIViewController* {
-		NSString* cellIdentifier = [tableView cellForRowAtIndexPath:indexPath].reuseIdentifier;
-		id segueTemplate = [self _segueTemplateWithIdentifier:cellIdentifier];
-		return [segueTemplate instantiateOrFindDestinationViewControllerWithSender:self];;
-	} actionProvider:nil];
-}
-
-- (void)tableView:(UITableView *)tableView willPerformPreviewActionForMenuWithConfiguration:(UIContextMenuConfiguration *)configuration animator:(id<UIContextMenuInteractionCommitAnimating>)animator API_AVAILABLE(ios(13.0))
-{
-	UIViewController* vc = animator.previewViewController;
-	
-	[animator addCompletion:^{
-		[self presentViewController:vc animated:YES completion:nil];
-	}];
-}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3908159224E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */; };
+		3908159324E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3908C34C1E7C9EA200451B5D /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3908C34B1E7C9EA200451B5D /* SettingsTableViewController.m */; };
 		39140B901DBD69540036A6C5 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 397C560D1B74DA66007A67F0 /* Music.storyboard */; };
 		39277A091B58228000293F95 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A081B58228000293F95 /* main.m */; };
@@ -35,6 +37,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3908158E24E1A8C8007AADDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39C7BBB623342F5700052DF0;
+			remoteInfo = LNPreviewToContextMenu;
+		};
+		3908159024E1A8D0007AADDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39C7BBB523342F5700052DF0;
+			remoteInfo = LNPreviewToContextMenu;
+		};
 		39DB52F41B5823490061C589 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */;
@@ -58,6 +74,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3908159324E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Embed Frameworks */,
 				39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -66,6 +83,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPreviewToContextMenu.xcodeproj; path = LNPreviewToContextMenu/LNPreviewToContextMenu/LNPreviewToContextMenu.xcodeproj; sourceTree = "<group>"; };
 		3908C34A1E7C9EA200451B5D /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		3908C34B1E7C9EA200451B5D /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		39277A041B58228000293F95 /* LNPopupControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,6 +128,7 @@
 			files = (
 				39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */,
 				39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */,
+				3908159224E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Frameworks */,
 				39F8A07424DB3B1F0008B209 /* LoremIpsum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,6 +136,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3908158B24E1A8C8007AADDE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3908C3491E7C9E8A00451B5D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +156,7 @@
 		392779FB1B58228000293F95 = {
 			isa = PBXGroup;
 			children = (
+				3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */,
 				39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */,
 				39277A061B58228000293F95 /* LNPopupControllerExample */,
 				39277A051B58228000293F95 /* Products */,
@@ -261,6 +289,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3908159124E1A8D0007AADDE /* PBXTargetDependency */,
 				39DB61831B8891EE001BFF8F /* PBXTargetDependency */,
 			);
 			name = LNPopupControllerExample;
@@ -307,6 +336,10 @@
 					ProductGroup = 39DB52F11B5823480061C589 /* Products */;
 					ProjectRef = 39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */;
 				},
+				{
+					ProductGroup = 3908158B24E1A8C8007AADDE /* Products */;
+					ProjectRef = 3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -316,6 +349,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = LNPreviewToContextMenu.framework;
+			remoteRef = 3908158E24E1A8C8007AADDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		39DB52F51B5823490061C589 /* LNPopupController.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -367,6 +407,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3908159124E1A8D0007AADDE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LNPreviewToContextMenu;
+			targetProxy = 3908159024E1A8D0007AADDE /* PBXContainerItemProxy */;
+		};
 		39DB61831B8891EE001BFF8F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = LNPopupController;

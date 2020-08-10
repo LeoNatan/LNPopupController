@@ -1,0 +1,3 @@
+[submodule "LNPopupControllerExample/LNPreviewToContextMenu"]
+	path = LNPopupControllerExample/LNPreviewToContextMenu
+	url = https://github.com/LeoNatan/LNPreviewToContextMenu.git

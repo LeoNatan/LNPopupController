@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17140" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17147" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17115"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17120"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -38,8 +38,8 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <segue destination="bBi-xD-gOl" kind="showDetail" identifier="tabnav" id="08s-5F-WiR">
-                                                <segue key="commit" inheritsFrom="parent" id="OfT-wM-nCe"/>
-                                                <segue key="preview" inheritsFrom="commit" id="5if-2T-Xuw"/>
+                                                <segue key="commit" inheritsFrom="parent" id="aYs-cU-bh7"/>
+                                                <segue key="preview" inheritsFrom="commit" id="F7j-zw-OfV"/>
                                             </segue>
                                         </connections>
                                     </tableViewCell>
@@ -325,10 +325,7 @@
                                     <color key="titleColor" systemColor="labelColor"/>
                                 </state>
                                 <connections>
-                                    <segue destination="l54-z5-xcG" kind="show" id="48J-eM-45Z">
-                                        <segue key="commit" inheritsFrom="parent" id="JCQ-AO-4Kc"/>
-                                        <segue key="preview" inheritsFrom="commit" id="Eyx-VG-aO3"/>
-                                    </segue>
+                                    <segue destination="l54-z5-xcG" kind="show" id="48J-eM-45Z"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PfZ-Ec-LGF">
@@ -394,7 +391,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q0v-GP-COM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Kpt-cx-19r" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-778" y="535"/>
+            <point key="canvasLocation" x="-730" y="454"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="fHL-ZM-8LF">
