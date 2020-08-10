@@ -335,13 +335,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 
 - (UIEdgeInsets)_ln_popupSafeAreaInsetsForChildController
 {
-	UIViewController* vc = self;
-	while(vc != nil && vc._ln_popupController_nocreate == nil)
-	{
-		vc = vc.parentViewController;
-	}
-	
-	CGRect barFrame = vc._ln_popupController_nocreate.popupBar.frame;
+	CGRect barFrame = self._ln_popupController_nocreate.popupBar.frame;
 	return UIEdgeInsetsMake(0, 0, barFrame.size.height, 0);
 }
 
