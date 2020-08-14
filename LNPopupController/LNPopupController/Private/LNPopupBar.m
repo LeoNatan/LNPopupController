@@ -307,46 +307,44 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	[super layoutSubviews];
 	
-	[UIView performWithoutAnimation:^{
-		CGRect frame = self.bounds;
-		[_backgroundView setFrame:frame];
-		
-		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
-		frame.size.height = barHeight;
-		[_contentView setFrame:frame];
-		
-		[self _layoutImageView];
-		
-		CGFloat swiftuiOffset = __applySwiftUILayoutFixes ? 20 : 0;
-		
-		CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)];
-		_toolbar.bounds = CGRectMake(0, 0, self.bounds.size.width - swiftuiOffset, toolbarSize.height);
-		_toolbar.center = CGPointMake(_contentView.center.x - swiftuiOffset / 2, _contentView.center.y - 1);
-		[_toolbar layoutIfNeeded];
-		
-		[_contentView bringSubviewToFront:_highlightView];
-		[_contentView bringSubviewToFront:_toolbar];
-		[_contentView bringSubviewToFront:_imageView];
-		[_contentView bringSubviewToFront:_titlesView];
-		[_contentView bringSubviewToFront:_shadowView];
-		[_contentView bringSubviewToFront:_bottomShadowView];
-		
-		UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
-		CGFloat h = 1 / screen.scale;
-		_shadowView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, h);
-		_bottomShadowView.frame = CGRectMake(0, _contentView.bounds.size.height - h, _contentView.bounds.size.width, h);
-		
-		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
-		{
-			_progressView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, 1.5);
-		}
-		else
-		{
-			_progressView.frame = CGRectMake(0, _contentView.bounds.size.height - 1.5, _contentView.bounds.size.width, 1.5);
-		}
-		
-		[self _layoutTitles];
-	}];
+	CGRect frame = self.bounds;
+	[_backgroundView setFrame:frame];
+	
+	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
+	frame.size.height = barHeight;
+	[_contentView setFrame:frame];
+	
+	[self _layoutImageView];
+	
+	CGFloat swiftuiOffset = __applySwiftUILayoutFixes ? 20 : 0;
+	
+	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)];
+	_toolbar.bounds = CGRectMake(0, 0, self.bounds.size.width - swiftuiOffset, toolbarSize.height);
+	_toolbar.center = CGPointMake(_contentView.center.x - swiftuiOffset / 2, _contentView.center.y - 1);
+	[_toolbar layoutIfNeeded];
+	
+	[_contentView bringSubviewToFront:_highlightView];
+	[_contentView bringSubviewToFront:_toolbar];
+	[_contentView bringSubviewToFront:_imageView];
+	[_contentView bringSubviewToFront:_titlesView];
+	[_contentView bringSubviewToFront:_shadowView];
+	[_contentView bringSubviewToFront:_bottomShadowView];
+	
+	UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
+	CGFloat h = 1 / screen.scale;
+	_shadowView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, h);
+	_bottomShadowView.frame = CGRectMake(0, _contentView.bounds.size.height - h, _contentView.bounds.size.width, h);
+	
+	if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+	{
+		_progressView.frame = CGRectMake(0, 0, _contentView.bounds.size.width, 1.5);
+	}
+	else
+	{
+		_progressView.frame = CGRectMake(0, _contentView.bounds.size.height - 1.5, _contentView.bounds.size.width, 1.5);
+	}
+	
+	[self _layoutTitles];
 }
 
 - (UIBlurEffectStyle)backgroundStyle

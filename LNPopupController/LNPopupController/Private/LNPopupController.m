@@ -181,6 +181,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		targetFrame = [self _frameForClosedPopupBar];
 	}
+	else
+	{
+		CGRect closedFrame = [self _frameForClosedPopupBar];
+		targetFrame.size = closedFrame.size;
+	}
 	
 	_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 	_cachedInsets = [_containerController insetsForBottomDockingView];
