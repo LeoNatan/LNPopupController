@@ -6,6 +6,7 @@
 //  Copyright © 2016 Leo Natan. All rights reserved.
 //
 
+#if LNPOPUP
 import UIKit
 
 class CustomMapBarViewController: LNPopupCustomBarViewController {
@@ -35,3 +36,4 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 		}, completion: nil)
 	}
 }
+#endif

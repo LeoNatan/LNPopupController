@@ -6,6 +6,7 @@
 //  Copyright © 2016 Leo Natan. All rights reserved.
 //
 
+#if LNPOPUP
 #import "DemoPopupContentViewController.h"
 #import "SettingsTableViewController.h"
 #import "RandomColors.h"
@@ -162,3 +163,5 @@ static UIImage* LNSystemImage(NSString* named)
 }
 
 @end
+
+#endif

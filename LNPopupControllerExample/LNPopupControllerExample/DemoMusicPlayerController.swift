@@ -6,6 +6,7 @@
 //  Copyright © 2015 Leo Natan. All rights reserved.
 //
 
+#if LNPOPUP
 import UIKit
 import LNPopupController
 
@@ -115,3 +116,5 @@ class DemoMusicPlayerController: UIViewController {
 		}
 	}
 }
+
+#endif

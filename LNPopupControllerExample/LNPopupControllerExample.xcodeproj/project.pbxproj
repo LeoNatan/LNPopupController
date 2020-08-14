@@ -34,6 +34,31 @@
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
 		39F8A07424DB3B1F0008B209 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 39F8A07324DB3B1F0008B209 /* LoremIpsum */; };
+		39FAFC3624E71A6C008BBC2D /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3908C34B1E7C9EA200451B5D /* SettingsTableViewController.m */; };
+		39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
+		39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
+		39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
+		39FAFC3A24E71A6C008BBC2D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
+		39FAFC3B24E71A6C008BBC2D /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* SplitViewController.m */; };
+		39FAFC3C24E71A6C008BBC2D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
+		39FAFC3D24E71A6C008BBC2D /* NSObject+XcodeBugs.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */; };
+		39FAFC3E24E71A6C008BBC2D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A081B58228000293F95 /* main.m */; };
+		39FAFC3F24E71A6C008BBC2D /* RandomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 39837A1F1B756F1A004D2DA9 /* RandomColors.m */; };
+		39FAFC4024E71A6C008BBC2D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
+		39FAFC4124E71A6C008BBC2D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23241E16C04A000E969D /* MapViewController.swift */; };
+		39FAFC4224E71A6C008BBC2D /* DemoPopupContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399748711D5652250079492B /* DemoPopupContentViewController.m */; };
+		39FAFC4324E71A6C008BBC2D /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3988E3571B59C3000039C09B /* FirstViewController.m */; };
+		39FAFC4424E71A6C008BBC2D /* PortraitTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A251B759721004D2DA9 /* PortraitTabBarController.swift */; };
+		39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39631FAC230DA03E0059D119 /* SceneDelegate.m */; };
+		39FAFC4624E71A6C008BBC2D /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56291B753A45007A67F0 /* MusicCell.swift */; };
+		39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
+		39FAFC4A24E71A6C008BBC2D /* LNPreviewToContextMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */; };
+		39FAFC4B24E71A6C008BBC2D /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 39FAFC3324E71A6C008BBC2D /* LoremIpsum */; };
+		39FAFC4D24E71A6C008BBC2D /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 397C560D1B74DA66007A67F0 /* Music.storyboard */; };
+		39FAFC4E24E71A6C008BBC2D /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 393F23221E16BF1D000E969D /* MapScene.storyboard */; };
+		39FAFC4F24E71A6C008BBC2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39277A161B58228000293F95 /* Assets.xcassets */; };
+		39FAFC5024E71A6C008BBC2D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
+		39FAFC5224E71A6C008BBC2D /* LNPreviewToContextMenu.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +90,13 @@
 			remoteGlobalIDString = 39DB52E41B5823330061C589;
 			remoteInfo = LNPopupController;
 		};
+		39FAFC3024E71A6C008BBC2D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 39C7BBB523342F5700052DF0;
+			remoteInfo = LNPreviewToContextMenu;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -76,6 +108,17 @@
 			files = (
 				3908159324E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Embed Frameworks */,
 				39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39FAFC5124E71A6C008BBC2D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				39FAFC5224E71A6C008BBC2D /* LNPreviewToContextMenu.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,6 +162,8 @@
 		39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+XcodeBugs.m"; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
 		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExampleNoPopup.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LNPopupControllerExampleNoPopup-Info.plist"; path = "/Users/lnatan/Desktop/GitHub (Private)/LNPopupController/LNPopupControllerExample/LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +175,16 @@
 				39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */,
 				3908159224E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Frameworks */,
 				39F8A07424DB3B1F0008B209 /* LoremIpsum in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		39FAFC4724E71A6C008BBC2D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */,
+				39FAFC4A24E71A6C008BBC2D /* LNPreviewToContextMenu.framework in Frameworks */,
+				39FAFC4B24E71A6C008BBC2D /* LoremIpsum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				39277A041B58228000293F95 /* LNPopupControllerExample.app */,
+				39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -193,6 +249,7 @@
 				397C560A1B74D45F007A67F0 /* Swift Bridging Header */,
 				39277A161B58228000293F95 /* Assets.xcassets */,
 				39277A1B1B58228000293F95 /* Info.plist */,
+				39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */,
 				39277A0A1B58228000293F95 /* AppDelegate.h */,
 				39277A0B1B58228000293F95 /* AppDelegate.m */,
 				39631FAB230DA03D0059D119 /* SceneDelegate.h */,
@@ -300,6 +357,28 @@
 			productReference = 39277A041B58228000293F95 /* LNPopupControllerExample.app */;
 			productType = "com.apple.product-type.application";
 		};
+		39FAFC2E24E71A6C008BBC2D /* LNPopupControllerExampleNoPopup */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39FAFC5424E71A6C008BBC2D /* Build configuration list for PBXNativeTarget "LNPopupControllerExampleNoPopup" */;
+			buildPhases = (
+				39FAFC3524E71A6C008BBC2D /* Sources */,
+				39FAFC4724E71A6C008BBC2D /* Frameworks */,
+				39FAFC4C24E71A6C008BBC2D /* Resources */,
+				39FAFC5124E71A6C008BBC2D /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				39FAFC2F24E71A6C008BBC2D /* PBXTargetDependency */,
+			);
+			name = LNPopupControllerExampleNoPopup;
+			packageProductDependencies = (
+				39FAFC3324E71A6C008BBC2D /* LoremIpsum */,
+			);
+			productName = LNPopupControllerExample;
+			productReference = 39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -344,6 +423,7 @@
 			projectRoot = "";
 			targets = (
 				39277A031B58228000293F95 /* LNPopupControllerExample */,
+				39FAFC2E24E71A6C008BBC2D /* LNPopupControllerExampleNoPopup */,
 			);
 		};
 /* End PBXProject section */
@@ -377,6 +457,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		39FAFC4C24E71A6C008BBC2D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39FAFC4D24E71A6C008BBC2D /* Music.storyboard in Resources */,
+				39FAFC4E24E71A6C008BBC2D /* MapScene.storyboard in Resources */,
+				39FAFC4F24E71A6C008BBC2D /* Assets.xcassets in Resources */,
+				39FAFC5024E71A6C008BBC2D /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -404,6 +495,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		39FAFC3524E71A6C008BBC2D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39FAFC3624E71A6C008BBC2D /* SettingsTableViewController.m in Sources */,
+				39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */,
+				39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */,
+				39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */,
+				39FAFC3A24E71A6C008BBC2D /* HigherSearchBar.swift in Sources */,
+				39FAFC3B24E71A6C008BBC2D /* SplitViewController.m in Sources */,
+				39FAFC3C24E71A6C008BBC2D /* AppDelegate.m in Sources */,
+				39FAFC3D24E71A6C008BBC2D /* NSObject+XcodeBugs.m in Sources */,
+				39FAFC3E24E71A6C008BBC2D /* main.m in Sources */,
+				39FAFC3F24E71A6C008BBC2D /* RandomColors.m in Sources */,
+				39FAFC4024E71A6C008BBC2D /* LocationsController.swift in Sources */,
+				39FAFC4124E71A6C008BBC2D /* MapViewController.swift in Sources */,
+				39FAFC4224E71A6C008BBC2D /* DemoPopupContentViewController.m in Sources */,
+				39FAFC4324E71A6C008BBC2D /* FirstViewController.m in Sources */,
+				39FAFC4424E71A6C008BBC2D /* PortraitTabBarController.swift in Sources */,
+				39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */,
+				39FAFC4624E71A6C008BBC2D /* MusicCell.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -416,6 +531,11 @@
 			isa = PBXTargetDependency;
 			name = LNPopupController;
 			targetProxy = 39DB61821B8891EE001BFF8F /* PBXContainerItemProxy */;
+		};
+		39FAFC2F24E71A6C008BBC2D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LNPreviewToContextMenu;
+			targetProxy = 39FAFC3024E71A6C008BBC2D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -551,12 +671,18 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"LNPOPUP=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_SWIFT_FLAGS = "-DLNPOPUP";
 				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -580,7 +706,68 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
+				GCC_PREPROCESSOR_DEFINITIONS = "LNPOPUP=1";
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_SWIFT_FLAGS = "-DLNPOPUP";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		39FAFC5524E71A6C008BBC2D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = S9QFG2VH2E;
+				INFOPLIST_FILE = "LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		39FAFC5624E71A6C008BBC2D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = S9QFG2VH2E;
+				INFOPLIST_FILE = "LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -619,10 +806,27 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		39FAFC5424E71A6C008BBC2D /* Build configuration list for PBXNativeTarget "LNPopupControllerExampleNoPopup" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39FAFC5524E71A6C008BBC2D /* Debug */,
+				39FAFC5624E71A6C008BBC2D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		39F8A07224DB3B1F0008B209 /* XCRemoteSwiftPackageReference "LoremIpsum" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lukaskubanek/LoremIpsum";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		39FAFC3424E71A6C008BBC2D /* XCRemoteSwiftPackageReference "LoremIpsum" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukaskubanek/LoremIpsum";
 			requirement = {
@@ -636,6 +840,11 @@
 		39F8A07324DB3B1F0008B209 /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 39F8A07224DB3B1F0008B209 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
+			productName = LoremIpsum;
+		};
+		39FAFC3324E71A6C008BBC2D /* LoremIpsum */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39FAFC3424E71A6C008BBC2D /* XCRemoteSwiftPackageReference "LoremIpsum" */;
 			productName = LoremIpsum;
 		};
 /* End XCSwiftPackageProductDependency section */

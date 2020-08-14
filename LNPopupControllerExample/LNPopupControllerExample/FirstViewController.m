@@ -6,7 +6,9 @@
 //  Copyright © 2015 Leo Natan. All rights reserved.
 //
 
+#if LNPOPUP
 @import LNPopupController;
+#endif
 #import "FirstViewController.h"
 #import "DemoPopupContentViewController.h"
 #import "LoremIpsum.h"
@@ -68,7 +70,10 @@
 
 @end
 
-@interface FirstViewController () <UIContextMenuInteractionDelegate, LNPopupPresentationDelegate>
+@interface FirstViewController ()
+#if LNPOPUP
+<UIContextMenuInteractionDelegate, LNPopupPresentationDelegate>
+#endif
 
 @end
 
@@ -140,7 +145,9 @@
 	self.navigationController.navigationBar.barStyle = self.navigationController.toolbar.barStyle;
 	self.navigationController.navigationBar.tintColor = self.navigationController.toolbar.tintColor;
 	
+#if LNPOPUP
 	[self.navigationController updatePopupBarAppearance];
+#endif
 }
 
 - (UIViewController*)_targetVCForPopup
@@ -192,6 +199,7 @@
 
 - (void)_presentBar:(id)sender animated:(BOOL)animated;
 {
+#if LNPOPUP
 	UIViewController* targetVC = [self _targetVCForPopup];
 	
 	if(targetVC == nil)
@@ -291,22 +299,15 @@
 
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
+#endif
 }
 
 - (IBAction)_dismissBar:(id)sender
 {
-	__kindof UIViewController* targetVC = self.tabBarController;
-	if(targetVC == nil)
-	{
-		targetVC = self.navigationController;
-		
-		if(targetVC == nil)
-		{
-			targetVC = self;
-		}
-	}
-	
+#if LNPOPUP
+	__kindof UIViewController* targetVC = [self _targetVCForPopup];
 	[targetVC dismissPopupBarAnimated:YES completion:nil];
+#endif
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -316,6 +317,7 @@
 
 #pragma mark UIContextMenuInteractionDelegate
 
+#if LNPOPUP
 - (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location API_AVAILABLE(ios(13.0))
 {
 	return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:nil];
@@ -330,6 +332,7 @@
 		[self presentViewController:avc animated:YES completion:nil];
 	}];
 }
+#endif
 
 #pragma mark LNPopupPresentationDelegate
 

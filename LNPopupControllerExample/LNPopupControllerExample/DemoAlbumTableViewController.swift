@@ -7,7 +7,9 @@
 //
 
 import UIKit
+#if LNPOPUP
 import LNPopupController
+#endif
 import LoremIpsum
 
 class DemoAlbumTableViewController: UITableViewController {
@@ -90,6 +92,7 @@ class DemoAlbumTableViewController: UITableViewController {
     }
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		#if LNPOPUP
 		let popupContentController = storyboard?.instantiateViewController(withIdentifier: "DemoMusicPlayerController") as! DemoMusicPlayerController
 		popupContentController.songTitle = titles[(indexPath as NSIndexPath).row]
 		popupContentController.albumTitle = subtitles[(indexPath as NSIndexPath).row]
@@ -109,6 +112,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		} else {
 			tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
 		}
+		#endif
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}

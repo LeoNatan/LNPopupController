@@ -6,7 +6,9 @@
 //  Copyright © 2016 Leo Natan. All rights reserved.
 //
 
+#if LNPOPUP
 import LNPopupController
+#endif
 import UIKit
 import MapKit
 
@@ -27,6 +29,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
+		#if LNPOPUP
 		let customMapBar = storyboard!.instantiateViewController(withIdentifier: "CustomMapBarViewController") as! CustomMapBarViewController
 		customMapBar.view.backgroundColor = .clear
 		customMapBar.searchBar.delegate = self
@@ -44,17 +47,18 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)
 		popupContentVC.tableView.backgroundColor = .clear
 		
-		DispatchQueue.main.async {
-			self.presentPopupBar(withContentViewController: self.popupContentVC, animated: false, completion: nil)
-		}
+		self.presentPopupBar(withContentViewController: self.popupContentVC, animated: false, completion: nil)
+		#endif
 	}
 	
 	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+		#if LNPOPUP
 		openPopup(animated: true, completion: nil)
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { 
 			self.popupContentVC.searchBar.becomeFirstResponder()
 		}
+		#endif
 		
 		return false;
 	}
