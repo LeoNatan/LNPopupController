@@ -12,6 +12,7 @@
 #import "LoremIpsum.h"
 #import "RandomColors.h"
 #import "SettingsTableViewController.h"
+#import "SplitViewController.h"
 @import UIKit;
 
 @interface TabBar : UITabBar @end
@@ -47,72 +48,6 @@
 	{
 		[self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 	}
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if(indexPath.section != 0 || indexPath.row != [tableView numberOfRowsInSection:0] - 1)
-	{
-		return;
-	}
-	
-	UITabBarController* tvc = [UITabBarController new];
-	tvc.modalPresentationStyle = UIModalPresentationFullScreen;
-	
-	UIViewController* vc1 = [UIViewController new];
-	vc1.view.backgroundColor = UIColor.redColor;
-	
-	if(@available(iOS 14.0, *))
-	{
-		UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithPrimaryAction:[UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
-			[self dismissViewControllerAnimated:YES completion:nil];
-		}]];
-		item.title = @"Gallery";
-		item.style = UIBarButtonItemStyleDone;
-		
-		vc1.navigationItem.rightBarButtonItem = item;
-	}
-	
-	UIViewController* vc2 = [UIViewController new];
-	vc2.view.backgroundColor = UIColor.greenColor;
-	vc2.hidesBottomBarWhenPushed = YES;
-	
-	UINavigationController* nvc = [UINavigationController new];
-	nvc.viewControllers = @[vc1];
-	nvc.tabBarItem.title = @"Navigation Bar";
-	if(@available(iOS 13.0, *))
-	{
-		nvc.tabBarItem.image = [UIImage systemImageNamed:@"star"];
-	}
-	
-	tvc.viewControllers = @[nvc];
-	
-	[self presentViewController:tvc animated:YES completion:^{
-		UIViewController* demoVC = [DemoPopupContentViewController new];
-		
-		if (@available(iOS 13.0, *)) {
-			demoVC.view.backgroundColor = LNRandomDarkColor();
-		} else {
-			demoVC.view.backgroundColor = LNRandomDarkColor();
-		}
-		
-		if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
-		{
-			demoVC.popupItem.title = @"עברית";//[LoremIpsum sentence];
-			demoVC.popupItem.subtitle = @"עברית";//[LoremIpsum sentence];
-		}
-		else
-		{
-			demoVC.popupItem.title = [LoremIpsum sentence];
-			demoVC.popupItem.subtitle = [LoremIpsum sentence];
-		}
-		demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
-		demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
-		
-		[tvc presentPopupBarWithContentViewController:demoVC animated:YES completion:^{
-			[nvc pushViewController:vc2 animated:YES];
-		}];
-	}];
 }
 
 @end
@@ -210,19 +145,40 @@
 
 - (UIViewController*)_targetVCForPopup
 {
-	UIViewController* targetVC = self.navigationController == nil ? self.splitViewController != self.view.window.rootViewController ? self.splitViewController : nil : nil;
+	if([self.splitViewController isKindOfClass:SplitViewControllerPrimaryPopup.class] && self.navigationController != [self.ln_splitViewController viewControllerForColumn:LNSplitViewControllerColumnPrimary])
+	{
+		return nil;
+	}
+	
+	NSMutableArray* vcs = @[self].mutableCopy;
+	if(self.navigationController)
+	{
+		[vcs addObject:self.navigationController];
+	}
+	if([self.splitViewController isKindOfClass:SplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.ln_splitViewController viewControllerForColumn:LNSplitViewControllerColumnPrimary]])
+	{
+		return nil;
+	}
+	
+	if([self.splitViewController isKindOfClass:SplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.ln_splitViewController viewControllerForColumn:LNSplitViewControllerColumnSupplementary]])
+	{
+		return nil;
+	}
+	
+	if([self.splitViewController isKindOfClass:SplitViewControllerGlobalPopup.class])
+	{
+		return self.splitViewController;
+	}
+	
+	UIViewController* targetVC = self.tabBarController;
 	
 	if(targetVC == nil)
 	{
-		targetVC = self.tabBarController;
+		targetVC = self.navigationController;
+		
 		if(targetVC == nil)
 		{
-			targetVC = self.navigationController;
-			
-			if(targetVC == nil)
-			{
-				targetVC = self;
-			}
+			targetVC = self;
 		}
 	}
 	
@@ -236,18 +192,12 @@
 
 - (void)_presentBar:(id)sender animated:(BOOL)animated;
 {
-	//All this logic is just so I can use the same controllers over and over in all examples. :-)
+	UIViewController* targetVC = [self _targetVCForPopup];
 	
-	if(sender == nil &&
-	   self.navigationController == nil &&
-	   self.splitViewController != nil &&
-	   self.splitViewController != self.view.window.rootViewController &&
-	   self != self.splitViewController.viewControllers.firstObject)
+	if(targetVC == nil)
 	{
 		return;
 	}
-	
-	UIViewController* targetVC = [self _targetVCForPopup];
 	
 	if(targetVC.popupContentViewController != nil)
 	{
@@ -333,11 +283,11 @@
 		[targetVC.popupBar setTintColor:[UIColor yellowColor]];
 	}
 	
-	if (@available(iOS 13.0, *))
-	{
-		UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-		[targetVC.popupBar addInteraction:i];
-	}
+//	if (@available(iOS 13.0, *))
+//	{
+//		UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+//		[targetVC.popupBar addInteraction:i];
+//	}
 
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
