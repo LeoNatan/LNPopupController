@@ -13,7 +13,7 @@
 @import ObjectiveC;
 @import Darwin;
 
-static UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
+static inline __attribute__((always_inline)) UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
 {
 	UIEdgeInsets final = userEdgeInsets;
 	final.bottom += popupUserEdgeInsets.bottom;
@@ -335,8 +335,8 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 
 - (UIEdgeInsets)_ln_popupSafeAreaInsetsForChildController
 {
-	CGRect barFrame = self._ln_popupController_nocreate.popupBar.frame;
-	return UIEdgeInsetsMake(0, 0, barFrame.size.height, 0);
+	CGFloat barHeight = self._ln_popupController_nocreate.popupBar.frame.size.height;
+	return UIEdgeInsetsMake(0, 0, barHeight, 0);
 }
 
 //setParentViewController:
@@ -344,7 +344,14 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 {
 	[self _ln_sPVC:parentViewController];
 	
-	_LNSetPopupSafeAreaInsets(self, parentViewController._ln_popupSafeAreaInsetsForChildController);
+	if([parentViewController isKindOfClass:UITabBarController.class])
+	{
+		_LNSetPopupSafeAreaInsets(self, parentViewController._ln_popupSafeAreaInsetsForChildController);
+	}
+	else
+	{
+		_LNSetPopupSafeAreaInsets(self, self._ln_popupSafeAreaInsetsForChildController);
+	}
 }
 
 - (void)_ln_presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
@@ -639,9 +646,10 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 
 void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL layout, UIEdgeInsets popupEdgeInsets)
 {
-	if([controller isKindOfClass:UITabBarController.class] || [controller isKindOfClass:UINavigationController.class] || [controller isKindOfClass:UISplitViewController.class])
+	//Tab bars behave strangly when additionalSafeAreaInsets are set.
+	if([controller isKindOfClass:UITabBarController.class])
 	{
-		[((UINavigationController*)controller).viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
+		[((UITabBarController*)controller).viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
 			_LNPopupSupportSetPopupInsetsForViewController(obj, NO, popupEdgeInsets);
 		}];
 	}

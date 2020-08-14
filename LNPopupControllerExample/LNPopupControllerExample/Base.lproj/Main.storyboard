@@ -278,11 +278,9 @@
                 <navigationController modalPresentationStyle="fullScreen" toolbarHidden="NO" id="GHH-ob-Ng8" sceneMemberID="viewController">
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="2ug-wj-yax">
-                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="eEz-t1-9Ax">
-                        <rect key="frame" x="0.0" y="680" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
@@ -393,19 +391,19 @@
                     </view>
                     <tabBarItem key="tabBarItem" systemItem="featured" id="CHZ-OA-bCn"/>
                     <toolbarItems>
-                        <barButtonItem title="Present Popup" id="L0d-F2-GTi">
+                        <barButtonItem title="Present Bar" image="dock.arrow.up.rectangle" catalog="system" id="L0d-F2-GTi">
                             <connections>
                                 <action selector="_presentBar:" destination="l54-z5-xcG" id="xd5-fh-z8p"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="wfv-5d-KZ8"/>
-                        <barButtonItem title="Bar Style" id="Mqv-hY-tWM">
+                        <barButtonItem title="Bar Style" image="rays" catalog="system" id="Mqv-hY-tWM">
                             <connections>
                                 <action selector="_changeBarStyle:" destination="l54-z5-xcG" id="Rf3-YV-ndy"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Hqh-tz-zeD"/>
-                        <barButtonItem title="Dismiss Popup" id="via-gg-BV5">
+                        <barButtonItem title="Dismiss Bar" image="dock.arrow.down.rectangle" catalog="system" id="via-gg-BV5">
                             <connections>
                                 <action selector="_dismissBar:" destination="l54-z5-xcG" id="Aq6-af-BTv"/>
                             </connections>
@@ -944,7 +942,10 @@
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
+        <image name="dock.arrow.down.rectangle" catalog="system" width="128" height="93"/>
+        <image name="dock.arrow.up.rectangle" catalog="system" width="128" height="93"/>
         <image name="gears" width="25" height="25"/>
+        <image name="rays" catalog="system" width="128" height="122"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
