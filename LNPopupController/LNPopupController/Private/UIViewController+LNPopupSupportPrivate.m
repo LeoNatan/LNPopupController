@@ -79,12 +79,39 @@ static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
  A helper view for view controllers without real bottom bars.
  */
 @implementation _LNPopupBottomBarSupport
+{
+	UIVisualEffectView* _bottomBackground;
+}
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
 {
 	self = [super initWithFrame:frame];
-	if(self) { self.userInteractionEnabled = NO; self.hidden = YES; }
+	if(self)
+	{
+		self.userInteractionEnabled = NO;
+		UIBlurEffectStyle blurStyle;
+		if (@available(iOS 13.0, *))
+		{
+			blurStyle = UIBlurEffectStyleSystemChromeMaterial;
+		}
+		else
+		{
+			blurStyle = UIBlurEffectStyleLight;
+		}
+		_bottomBackground = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
+		
+		[self addSubview:_bottomBackground];
+	}
 	return self;
+}
+
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	
+	CGRect frame = self.bounds;
+	frame.size.height = self.superview.bounds.size.height - self.frame.origin.y;
+	_bottomBackground.frame = frame;
 }
 
 @end
@@ -191,7 +218,6 @@ static void __accessibilityBundleLoadHandler()
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 		if (@available(iOS 13.0, *))
 		{
 			LNSwizzleMethod(self,
@@ -202,7 +228,6 @@ static void __accessibilityBundleLoadHandler()
 							@selector(setOverrideUserInterfaceStyle:),
 							@selector(_ln_popup_setOverrideUserInterfaceStyle:));
 		}
-#endif
 		
 		LNSwizzleMethod(self,
 						@selector(viewDidLayoutSubviews),

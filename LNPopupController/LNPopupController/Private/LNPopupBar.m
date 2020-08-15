@@ -133,11 +133,9 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 	return UIBlurEffectStyleSystemThickMaterial;
 #else
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 	if (@available(iOS 13.0, *))
 	{
 		//On iOS 13 and above, return .chromeMaterial regardless of bar style (this is how Music.app appears)
-		
 		if(systemBarStyle == UIBarStyleBlack)
 		{
 			return UIBlurEffectStyleSystemChromeMaterialDark;
@@ -145,7 +143,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		return UIBlurEffectStyleSystemChromeMaterial;
 	}
-#endif
 	
 	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
 #endif
@@ -249,11 +246,9 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
 		_imageView.isAccessibilityElement = YES;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 		if (@available(iOS 13.0, *)) {
 			_imageView.layer.cornerCurve = kCACornerCurveCircular;
 		}
-#endif
 		_imageView.layer.cornerRadius = 6;
 		_imageView.layer.masksToBounds = YES;
 		// support smart invert and therefore do not invert image view colors
@@ -267,6 +262,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		_bottomShadowView = [UIView new];
 		_bottomShadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
+		_bottomShadowView.hidden = YES;
 		[_contentView addSubview:_bottomShadowView];
 		
 		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
@@ -300,6 +296,20 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[_progressView setHidden:style == LNPopupBarProgressViewStyleNone];
 	
 	[self setNeedsLayout];
+}
+
+- (void)updateConstraints
+{
+	if(_customBarViewController)
+	{
+		CGRect frame = self.bounds;
+
+		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
+		frame.size.height = barHeight;
+		[_contentView setFrame:frame];
+	}
+
+	[super updateConstraints];
 }
 
 - (void)layoutSubviews
@@ -414,15 +424,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	if(_translucent == NO)
 	{
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 		if (@available(iOS 13.0, *)) {
 			colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : UIColor.systemBackgroundColor;
 		} else {
-#endif
 			colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : (_actualBackgroundStyle == UIBlurEffectStyleLight || _actualBackgroundStyle == UIBlurEffectStyleExtraLight) ? [UIColor whiteColor] : [UIColor blackColor];
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 		}
-#endif
 	}
 	
 	_backgroundView.alpha = colorToUse != nil ? 0.0 : 1.0;
@@ -968,7 +974,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)_setTitleLableFontsAccordingToBarStyleAndTint
 {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 	if (@available(iOS 13.0, *))
 	{
 		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor labelColor];
@@ -976,7 +981,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		return;
 	}
-#endif
 	
 	if(_actualBackgroundStyle != UIBlurEffectStyleDark)
 	{
@@ -1100,33 +1104,36 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)setCustomBarViewController:(LNPopupCustomBarViewController*)customBarViewController
 {
-	if(_customBarViewController != customBarViewController)
+	if(_customBarViewController == customBarViewController)
 	{
-		if (customBarViewController.containingPopupBar)
-		{
-			//Cleanly move the custom bar view controller from the previos popup bar.
-			customBarViewController.containingPopupBar.customBarViewController = nil;
-		}
-		
-		_customBarViewController.containingPopupBar = nil;
-		[_customBarViewController.view removeFromSuperview];
-		[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];
-		
-		_customBarViewController = customBarViewController;
-		_customBarViewController.containingPopupBar = self;
-		[_customBarViewController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
-		
-		_customBarViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
-		[self addSubview:_customBarViewController.view];
-		[NSLayoutConstraint activateConstraints:@[[self.topAnchor constraintEqualToAnchor:_customBarViewController.view.topAnchor],
-												  [self.leftAnchor constraintEqualToAnchor:_customBarViewController.view.leftAnchor],
-												  [self.rightAnchor constraintEqualToAnchor:_customBarViewController.view.rightAnchor],
-												  [self.bottomAnchor constraintEqualToAnchor:_customBarViewController.view.bottomAnchor]]];
-		
-		[self _updateViewsAfterCustomBarViewControllerUpdate];
-		
-		[self setBarStyle:LNPopupBarStyleCustom];
+		return;
 	}
+	
+	if (customBarViewController.containingPopupBar)
+	{
+		//Cleanly move the custom bar view controller from the previos popup bar.
+		customBarViewController.containingPopupBar.customBarViewController = nil;
+	}
+	
+	_customBarViewController.containingPopupBar = nil;
+	[_customBarViewController.view removeFromSuperview];
+	[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];
+	
+	_customBarViewController = customBarViewController;
+	_customBarViewController.containingPopupBar = self;
+	[_customBarViewController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
+	
+	_customBarViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
+	[self.contentView addSubview:_customBarViewController.view];
+	[NSLayoutConstraint activateConstraints:@[
+		[self.contentView.leadingAnchor constraintEqualToAnchor:_customBarViewController.view.leadingAnchor],
+		[self.contentView.trailingAnchor constraintEqualToAnchor:_customBarViewController.view.trailingAnchor],
+		[self.contentView.centerXAnchor constraintEqualToAnchor:_customBarViewController.view.centerXAnchor],
+	]];
+	
+	[self _updateViewsAfterCustomBarViewControllerUpdate];
+	
+	[self setBarStyle:LNPopupBarStyleCustom];
 }
 
 - (void)setLeadingBarButtonItems:(NSArray *)leadingBarButtonItems

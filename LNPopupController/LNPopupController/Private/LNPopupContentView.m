@@ -85,15 +85,11 @@
 		alphaLessThanZero = CGColorGetAlpha(vc.view.backgroundColor.CGColor) < 1.0;
 	};
 	
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 	if (@available(iOS 13.0, *)) {
 		[vc.traitCollection performAsCurrentTraitCollection:block];
 	} else {
-#endif
 		block();
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
 	}
-#endif
 	
 	if(alphaLessThanZero)
 	{
