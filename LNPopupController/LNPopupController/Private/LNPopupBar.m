@@ -11,8 +11,8 @@
 #import "MarqueeLabel.h"
 #import "_LNPopupSwizzlingUtils.h"
 
-@interface _LNPopupContentView : UIView @end
-@implementation _LNPopupContentView @end
+@interface _LNPopupBarContentView : UIView @end
+@implementation _LNPopupBarContentView @end
 
 @interface _LNPopupToolbar : UIToolbar @end
 @implementation _LNPopupToolbar
@@ -212,7 +212,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
 		
-		_contentView = [_LNPopupContentView new];
+		_contentView = [_LNPopupBarContentView new];
 		[self addSubview:_contentView];
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
@@ -267,7 +267,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		_bottomShadowView = [UIView new];
 		_bottomShadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
-		[_backgroundView.contentView addSubview:_bottomShadowView];
+		[_contentView addSubview:_bottomShadowView];
 		
 		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

@@ -783,32 +783,26 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		self.popupBar.translucent = [(id<_LNPopupBarSupport>)_bottomBar isTranslucent];
 	}
 	
+	static UIColor* systemShadowColor;
+	static NSString* sV;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		if(@available(iOS 13.0, *))
+		{
 #ifndef LNPopupControllerEnforceStrictClean
-	//backgroundView
-	static NSString* const bV = @"X2JhY2tncm91bmRWaWV3";
-	
-	NSString* str1 = _LNPopupDecodeBase64String(bV);
-	
-	if([_bottomBar respondsToSelector:NSSelectorFromString(str1)])
-	{
-		id something = [_bottomBar valueForKey:str1];
-		
-		static NSString* sV;
-		static dispatch_once_t onceToken;
-		dispatch_once(&onceToken, ^{
-			if(@available(iOS 13.0, *))
-			{
-				sV = @"X3NoYWRvd1ZpZXcx";
-			}
-			else
-			{
-				sV = @"X3NoYWRvd1ZpZXc=";
-			}
-		});
-		UIView* somethingElse = [something __ln_valueForKey:_LNPopupDecodeBase64String(sV)];
-		self.popupBar.systemShadowColor = somethingElse.backgroundColor;
-	}
+			//_systemChromeShadowColor
+			sV = @"X3N5c3RlbUNocm9tZVNoYWRvd0NvbG9y";
+			systemShadowColor = [UIColor valueForKey:_LNPopupDecodeBase64String(sV)];
+#else
+			systemShadowColor = [UIColor systemGray2Color];
 #endif
+		}
+		else
+		{
+			systemShadowColor = [UIColor lightGrayColor];
+		}
+	});
+	self.popupBar.systemShadowColor = systemShadowColor;
 }
 
 - (void)_movePopupBarAndContentToBottomBarSuperview
