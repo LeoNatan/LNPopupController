@@ -335,8 +335,14 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 
 - (UIEdgeInsets)_ln_popupSafeAreaInsetsForChildController
 {
-	CGFloat barHeight = self._ln_popupController_nocreate.popupBar.frame.size.height;
-	return UIEdgeInsetsMake(0, 0, barHeight, 0);
+	UIViewController* vc = self;
+	while(vc != nil && vc._ln_popupController_nocreate == nil)
+	{
+		vc = vc.parentViewController;
+	}
+	
+	CGRect barFrame = vc._ln_popupController_nocreate.popupBar.frame;
+	return UIEdgeInsetsMake(0, 0, barFrame.size.height, 0);
 }
 
 //setParentViewController:
@@ -344,13 +350,13 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 {
 	[self _ln_sPVC:parentViewController];
 	
-	if([parentViewController isKindOfClass:UITabBarController.class])
+	if([parentViewController isKindOfClass:UITabBarController.class] || [parentViewController isKindOfClass:UINavigationController.class] || [parentViewController isKindOfClass:UISplitViewController.class])
 	{
 		_LNSetPopupSafeAreaInsets(self, parentViewController._ln_popupSafeAreaInsetsForChildController);
 	}
 	else
 	{
-		_LNSetPopupSafeAreaInsets(self, self._ln_popupSafeAreaInsetsForChildController);
+		_LNSetPopupSafeAreaInsets(self, UIEdgeInsetsMake(0, 0, self._ln_popupController_nocreate.popupBar.frame.size.height, 0));
 	}
 }
 
@@ -646,8 +652,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 
 void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL layout, UIEdgeInsets popupEdgeInsets)
 {
-	//Tab bars behave strangly when additionalSafeAreaInsets are set.
-	if([controller isKindOfClass:UITabBarController.class])
+	if([controller isKindOfClass:UITabBarController.class] || [controller isKindOfClass:UINavigationController.class] || [controller isKindOfClass:UISplitViewController.class])
 	{
 		[((UITabBarController*)controller).viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * __nonnull obj, NSUInteger idx, BOOL * __nonnull stop) {
 			_LNPopupSupportSetPopupInsetsForViewController(obj, NO, popupEdgeInsets);

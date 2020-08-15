@@ -177,7 +177,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		targetFrame = [self _frameForOpenPopupBar];
 	}
-	else if(state == LNPopupPresentationStateBarPresented || (state == _LNPopupPresentationStateTransitioning && _popupControllerTargetState == LNPopupPresentationStateBarPresented))
+	else if(state == LNPopupPresentationStateBarPresented || (state == _LNPopupPresentationStateTransitioning && (_popupControllerTargetState == LNPopupPresentationStateBarHidden || _popupControllerTargetState == LNPopupPresentationStateBarPresented)))
 	{
 		targetFrame = [self _frameForClosedPopupBar];
 	}

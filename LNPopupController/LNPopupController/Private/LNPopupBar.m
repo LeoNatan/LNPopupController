@@ -283,7 +283,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		self.barItemsSemanticContentAttribute = UISemanticContentAttributePlayback;
 		
 		self.isAccessibilityElement = NO;
-		self.clipsToBounds = YES;
 	}
 	
 	return self;
@@ -308,11 +307,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[super layoutSubviews];
 	
 	CGRect frame = self.bounds;
-	[_backgroundView setFrame:frame];
 	
 	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
 	frame.size.height = barHeight;
 	[_contentView setFrame:frame];
+	[_backgroundView setFrame:frame];
 	
 	[self _layoutImageView];
 	
