@@ -63,40 +63,24 @@
                                 </view>
                                 <blurEffect style="regular"/>
                             </visualEffectView>
-                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTi-HK-yCs" userLabel="Bottom Safe Area Mask">
-                                <rect key="frame" x="0.0" y="862" width="414" height="34"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="ffk-ch-Xax">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="34"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                </view>
-                                <constraints>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="34" id="chp-bk-fGg"/>
-                                </constraints>
-                                <blurEffect style="regular"/>
-                            </visualEffectView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ttR-e1-b3Y"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="fTi-HK-yCs" secondAttribute="bottom" id="53b-6h-61m"/>
                             <constraint firstAttribute="trailing" secondItem="z3u-Zt-das" secondAttribute="trailing" id="5g0-iP-rZr"/>
                             <constraint firstItem="5u8-d1-mBI" firstAttribute="top" secondItem="ttR-e1-b3Y" secondAttribute="top" constant="20" id="8AO-7m-vxX"/>
-                            <constraint firstItem="fTi-HK-yCs" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="9KY-CO-k2N"/>
                             <constraint firstAttribute="bottom" secondItem="0EZ-UY-PPz" secondAttribute="bottom" id="N7c-ke-EAK"/>
                             <constraint firstItem="z3u-Zt-das" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="OyN-F7-yvr"/>
-                            <constraint firstItem="ttR-e1-b3Y" firstAttribute="bottom" secondItem="fTi-HK-yCs" secondAttribute="top" priority="999" id="SqU-Rg-Diz"/>
                             <constraint firstItem="0EZ-UY-PPz" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="Wu3-sg-B75"/>
                             <constraint firstItem="0EZ-UY-PPz" firstAttribute="top" secondItem="Mjn-jY-G6a" secondAttribute="top" id="X5B-e0-JAK"/>
                             <constraint firstItem="5u8-d1-mBI" firstAttribute="leading" secondItem="ttR-e1-b3Y" secondAttribute="leading" constant="20" id="bmi-kg-d43"/>
                             <constraint firstItem="z3u-Zt-das" firstAttribute="top" secondItem="Mjn-jY-G6a" secondAttribute="top" id="dfX-n3-ch3"/>
-                            <constraint firstAttribute="trailing" secondItem="fTi-HK-yCs" secondAttribute="trailing" id="ei5-QK-t3A"/>
                             <constraint firstAttribute="trailing" secondItem="0EZ-UY-PPz" secondAttribute="trailing" id="gmU-UH-plU"/>
                             <constraint firstItem="ttR-e1-b3Y" firstAttribute="top" secondItem="z3u-Zt-das" secondAttribute="bottom" id="xiS-Dz-Wxg"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="FqG-7m-AwO"/>
                     <connections>
-                        <outlet property="bottomVisualEffectView" destination="fTi-HK-yCs" id="FpD-Ap-F4I"/>
                         <outlet property="mapView" destination="0EZ-UY-PPz" id="GuK-zJ-CCA"/>
                         <outlet property="topVisualEffectView" destination="z3u-Zt-das" id="v79-xZ-0M1"/>
                     </connections>
