@@ -191,6 +191,15 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 @property (nonatomic, strong, readonly) LNPopupBar* popupBar;
 
 /**
+ * Controls whether the popup bar should extend under the safe area, to the bottom of the screen.
+ *
+ * When a popup bar is presented on a view controller with the system bottom docking view, or a navigation controller with hidden toolbar, the popup bar's background view will extend under the safe area.
+ *
+ * The default value of this property is @c YES.
+ */
+@property (nonatomic, assign) BOOL shouldExtendPopupBarUnderSafeArea;
+
+/**
  * Call this method to update the popup bar appearance (style, tint color, etc.) according to its docking view. You should call this after updating the docking view.
  * If the popup bar's @c inheritsVisualStyleFromDockingView property is set to @c NO, this method has no effect. @see @c LNPopupBar.inheritsVisualStyleFromDockingView
  */
@@ -231,7 +240,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 @interface UIViewController (LNPopupCustomContainer)
 
 /**
- * Return a view to dock the popup bar to, or @c nil to use the system-provided view.
+ * Return a view to dock the popup bar to, or @c nil to use an appropriate system-provided view.
  *
  * A default implementation is provided for @c UIViewController, @c UINavigationController and @c UITabBarController.
  * The default implmentation for @c UIViewController returns an invisible @c UIView instance, docked to the bottom. For @c UINavigationController, the toolbar is returned. For @c UITabBarController, the tab bar is returned.
@@ -246,9 +255,9 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 @property (nonatomic, readonly) CGRect defaultFrameForBottomDockingView;
 
 /**
- * The insets for the bottom docking view from bottom of the container controller's view. By default, this is set to the container controller view's safe area insets in iOS 11 or @c UIEdgeInsetsZero otherwise. Currently, only the bottom inset is respected.
+ * The insets for the bottom docking view from bottom of the container controller's view. By default, this returns @c UIEdgeInsetsZero. Currently, only the bottom inset is respected.
  *
- * The system calculates the position of the popup bar by summing the bottom bar height and the bottom of the insets.
+ * The system calculates the position of the popup bar and the bottom docking view by summing the bottom docking view's height and the bottom of the insets.
  *
  * @warning This API is experimental and will probably change in the future. Use with care.
  */
@@ -261,7 +270,7 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
 /**
  * @warning This API is deprecated. Use @c bottomDockingViewForPopupBar instead.
  */
-@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopup LN_UNAVAILABLE_API("Use @c bottomDockingViewForPopupBar instead.");
+@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopup LN_UNAVAILABLE_API("Use bottomDockingViewForPopupBar instead.");
 
 @end
 

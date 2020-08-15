@@ -20,6 +20,7 @@ const void* _LNPopupContentViewControllerKey = &_LNPopupContentViewControllerKey
 static const void* _LNPopupInteractionStyleKey = &_LNPopupInteractionStyleKey;
 static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 static const void* _LNPopupIsInPopupAppearanceTransitionKey = &_LNPopupIsInPopupAppearanceTransitionKey;
+static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendUnderSafeAreaKey;
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
@@ -316,12 +317,7 @@ static const void* _LNPopupIsInPopupAppearanceTransitionKey = &_LNPopupIsInPopup
 
 - (UIEdgeInsets)insetsForBottomDockingView
 {
-	if(self.presentingViewController != nil && [NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
-	{
-		return UIEdgeInsetsZero;
-	}
-	
-	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom), 0);
+	return UIEdgeInsetsZero;
 }
 
 - (CGRect)defaultFrameForBottomDockingView
@@ -331,12 +327,29 @@ static const void* _LNPopupIsInPopupAppearanceTransitionKey = &_LNPopupIsInPopup
 
 - (CGRect)defaultFrameForBottomDockingView_internal
 {
-	return CGRectMake(0, self.view.bounds.size.height, self.view.bounds.size.width, 0);
+	CGFloat safeAreaAddition = self.view.superview.safeAreaInsets.bottom;
+	
+	if(self.presentingViewController != nil && [NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
+	{
+		safeAreaAddition = 0;
+	}
+	
+	return CGRectMake(0, self.view.bounds.size.height - safeAreaAddition, self.view.bounds.size.width, safeAreaAddition);
 }
 
 - (CGRect)defaultFrameForBottomDockingView_internalOrDeveloper
 {
 	return [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
+}
+
+- (BOOL)shouldExtendPopupBarUnderSafeArea
+{
+	return [(objc_getAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey) ?: @1) boolValue];
+}
+
+- (void)setShouldExtendPopupBarUnderSafeArea:(BOOL)shouldExtendPopupBarUnderSafeArea
+{
+	objc_setAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey, @(shouldExtendPopupBarUnderSafeArea), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

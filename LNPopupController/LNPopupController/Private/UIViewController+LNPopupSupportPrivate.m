@@ -25,11 +25,11 @@ static inline __attribute__((always_inline)) UIEdgeInsets __LNEdgeInsetsSum(UIEd
 }
 
 static const void* LNToolbarHiddenBeforeTransition = &LNToolbarHiddenBeforeTransition;
-static const void* LNToolbarBuggy = &LNToolbarBuggy;
 static const void* LNPopupAdjustingInsets = &LNPopupAdjustingInsets;
 static const void* LNPopupAdditionalSafeAreaInsets = &LNPopupAdditionalSafeAreaInsets;
 static const void* LNUserAdditionalSafeAreaInsets = &LNUserAdditionalSafeAreaInsets;
 static const void* LNPopupIgnorePrepareTabBar = &LNPopupIgnorePrepareTabBar;
+static const void* LNPopupBarExtensionView = &LNPopupBarExtensionView;
 
 #ifndef LNPopupControllerEnforceStrictClean
 //_hideBarWithTransition:isExplicit:
@@ -80,7 +80,6 @@ static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
  */
 @implementation _LNPopupBottomBarSupport
 {
-	UIVisualEffectView* _bottomBackground;
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
@@ -89,32 +88,15 @@ static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
 	if(self)
 	{
 		self.userInteractionEnabled = NO;
-		UIBlurEffectStyle blurStyle;
-		if (@available(iOS 13.0, *))
-		{
-			blurStyle = UIBlurEffectStyleSystemChromeMaterial;
-		}
-		else
-		{
-			blurStyle = UIBlurEffectStyleLight;
-		}
-		_bottomBackground = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
-		
-		[self addSubview:_bottomBackground];
+//		self.hidden = YES;
 	}
 	return self;
 }
 
-- (void)layoutSubviews
-{
-	[super layoutSubviews];
-	
-	CGRect frame = self.bounds;
-	frame.size.height = self.superview.bounds.size.height - self.frame.origin.y;
-	_bottomBackground.frame = frame;
-}
-
 @end
+
+@interface _LNPopupBarExtensionView : UIVisualEffectView @end
+@implementation _LNPopupBarExtensionView @end
 
 #ifndef LNPopupControllerEnforceStrictClean
 static id __accessibilityBundleLoadObserver;
@@ -635,6 +617,45 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 	}
 }
 
+- (_LNPopupBarExtensionView*)_ln_bottomBarExtension_nocreate
+{
+	return objc_getAssociatedObject(self, LNPopupBarExtensionView);
+}
+
+- (_LNPopupBarExtensionView*)_ln_bottomBarExtension
+{
+	if(self.shouldExtendPopupBarUnderSafeArea == NO)
+	{
+		[self._ln_bottomBarExtension_nocreate removeFromSuperview];
+		
+		return nil;
+	}
+	
+	_LNPopupBarExtensionView* rv = objc_getAssociatedObject(self, LNPopupBarExtensionView);
+	if(rv == nil)
+	{
+		UIBlurEffectStyle blurStyle;
+		if (@available(iOS 13.0, *))
+		{
+			blurStyle = UIBlurEffectStyleSystemChromeMaterial;
+		}
+		else
+		{
+			blurStyle = UIBlurEffectStyleLight;
+		}
+		rv = [[_LNPopupBarExtensionView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
+		
+		objc_setAssociatedObject(self, LNPopupBarExtensionView, rv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	}
+	
+	if(rv.superview != self.view)
+	{
+		[self.view addSubview:rv];
+	}
+	
+	return rv;
+}
+
 - (void)_ln_popup_viewDidLayoutSubviews
 {
 	[self _ln_popup_viewDidLayoutSubviews];
@@ -645,6 +666,8 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		{
 			self._ln_bottomBarSupport_nocreate.frame = self.defaultFrameForBottomDockingView_internalOrDeveloper;
 			[self.view bringSubviewToFront:self._ln_bottomBarSupport_nocreate];
+			
+			self._ln_bottomBarExtension.frame = self._ln_bottomBarSupport_nocreate.frame;
 		}
 		else
 		{
@@ -1010,6 +1033,16 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return toolbarBarFrame;
 }
 
+- (UIEdgeInsets)insetsForBottomDockingView
+{
+	if(self.presentingViewController != nil && [NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
+	{
+		return UIEdgeInsetsZero;
+	}
+	
+	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom), 0);
+}
+
 + (void)load
 {
 	static dispatch_once_t onceToken;
@@ -1025,6 +1058,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		LNSwizzleMethod(self,
 						@selector(setNavigationBarHidden:animated:),
 						@selector(_ln_setNavigationBarHidden:animated:));
+		
+		LNSwizzleMethod(self,
+						@selector(viewDidLayoutSubviews),
+						@selector(_ln_popup_viewDidLayoutSubviews_nvc));
 		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
@@ -1048,6 +1085,35 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 						@selector(_uLFSBAIO));
 #endif
 	});
+}
+
+- (void)_ln_popup_viewDidLayoutSubviews_nvc
+{
+	if(self._ln_popupController_nocreate.popupControllerInternalState != LNPopupPresentationStateBarHidden)
+	{
+		if(self.isToolbarHidden == NO && self._ignoringLayoutDuringTransition == NO)
+		{
+			self._ln_bottomBarExtension_nocreate.hidden = YES;
+			[self._ln_bottomBarExtension_nocreate removeFromSuperview];
+		}
+		else
+		{
+			self._ln_bottomBarExtension.hidden = NO;
+		}
+	}
+	
+	struct objc_super superInfo = {
+		self,
+		[UIViewController class]
+	};
+	void (*super_call)(struct objc_super*, SEL) = (void (*)(struct objc_super*, SEL))objc_msgSendSuper;
+	super_call(&superInfo, @selector(viewDidLayoutSubviews));
+	
+	if(self._ignoringLayoutDuringTransition == NO)
+	{
+		CGFloat bottomSafeArea = self.view.superview.safeAreaInsets.bottom;
+		self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, bottomSafeArea);
+	}
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
@@ -1074,20 +1140,41 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 //Support for `hidesBottomBarWhenPushed`.
 //_setToolbarHidden:edge:duration:
-- (void)_sTH:(BOOL)arg1 e:(unsigned int)arg2 d:(CGFloat)arg3;
+- (void)_sTH:(BOOL)hidden e:(unsigned int)edge d:(CGFloat)duration;
 {
-	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = hidden;
 	
 	//Move popup bar and content according to current state of the toolbar.
 	[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 	
+	__block CGRect frame = self.toolbar.frame;
+	frame.size.height += self.view.superview.safeAreaInsets.bottom;
+	
 	//Trigger the toolbar hide or show transition.
-	[self _sTH:arg1 e:arg2 d:arg3];
+	[self _sTH:hidden e:edge d:duration];
+	
+	if(hidden == YES)
+	{
+		self._ln_bottomBarExtension.frame = frame;
+	}
 	
 	void (^animations)(void) = ^ {
 		//During the transition, animate the popup bar and content together with the toolbar transition.
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 		[self _layoutPopupBarOrderForTransition];
+		
+		CGRect frame;
+		if(hidden)
+		{
+			CGFloat safeArea = self.view.superview.safeAreaInsets.bottom;
+			self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - safeArea, self.view.bounds.size.width, safeArea);
+		}
+		else
+		{
+			frame = self.toolbar.frame;
+			frame.size.height += self.view.superview.safeAreaInsets.bottom;
+			self._ln_bottomBarExtension_nocreate.frame = frame;
+		}
 	};
 	
 	void (^completion)(BOOL finished) = ^ (BOOL finished) {
@@ -1112,7 +1199,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	else
 	{
-		[UIView animateWithDuration:arg3 animations:animations completion:completion];
+		[UIView animateWithDuration:duration animations:animations completion:completion];
 	}
 }
 
