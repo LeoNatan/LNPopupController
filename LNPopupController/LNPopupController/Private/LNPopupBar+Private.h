@@ -31,6 +31,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @protocol _LNPopupBarDelegate <NSObject>
 
 - (void)_traitCollectionForPopupBarDidChange:(LNPopupBar*)bar;
+- (void)_popupBarMetricsDidChange:(LNPopupBar*)bar;
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar;
 
 @end

@@ -177,9 +177,9 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @property (nonatomic, strong, readonly) UILongPressGestureRecognizer* barHighlightGestureRecognizer;
 
 /**
- * Set this property with an @c LNPopupCustomBarViewController subclass object to provide a popup bar with custom content.
+ * Set this property to an @c LNPopupCustomBarViewController subclass object to provide a popup bar with custom content controller.
  */
-@property (nullable, nonatomic, strong) LNPopupCustomBarViewController* customBarViewController;
+@property (nullable, nonatomic, strong) __kindof LNPopupCustomBarViewController* customBarViewController;
 
 @end
 

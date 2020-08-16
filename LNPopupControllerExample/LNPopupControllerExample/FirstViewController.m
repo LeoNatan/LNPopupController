@@ -111,6 +111,8 @@
 	_nextButton.hidden = self.splitViewController != nil;
 	
 	[self _presentBar:nil animated:NO];
+	
+	self.tabBarController.view.backgroundColor = self.view.backgroundColor;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -290,6 +292,8 @@
 		[targetVC.popupBar setBackgroundStyle:UIBlurEffectStyleDark];
 		[targetVC.popupBar setTintColor:[UIColor yellowColor]];
 	}
+	
+	targetVC.shouldExtendPopupBarUnderSafeArea = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
 	
 //	if (@available(iOS 13.0, *))
 //	{

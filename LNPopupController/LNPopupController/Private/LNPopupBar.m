@@ -172,7 +172,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_needsLabelsLayout = YES;
 		[self setNeedsLayout];
 		
-		[self._barDelegate _popupBarStyleDidChange:self];
+		[self._barDelegate _popupBarMetricsDidChange:self];
 	}
 }
 
@@ -392,6 +392,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	//Recalculate labels
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+	
+	[self._barDelegate _popupBarStyleDidChange:self];
 }
 
 - (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
@@ -433,6 +435,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	_backgroundView.alpha = colorToUse != nil ? 0.0 : 1.0;
 	self.backgroundColor = colorToUse;
+	
+	[self._barDelegate _popupBarStyleDidChange:self];
 }
 
 - (void)setBarTintColor:(UIColor *)barTintColor
@@ -450,6 +454,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_userBackgroundColor = backgroundColor;
 	
 	[super setBackgroundColor:_userBackgroundColor ?: _systemBackgroundColor];
+	
+	[self._barDelegate _popupBarStyleDidChange:self];
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
@@ -1098,7 +1104,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	if([keyPath isEqualToString:@"preferredContentSize"] == YES && object == _customBarViewController)
 	{
-		[self._barDelegate _popupBarStyleDidChange:self];
+		[self._barDelegate _popupBarMetricsDidChange:self];
 	}
 }
 

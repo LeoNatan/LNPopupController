@@ -14,5 +14,6 @@ extern NSString* const PopupSettingsProgressViewStyle;
 extern NSString* const PopupSettingsCloseButtonStyle;
 extern NSString* const PopupSettingsMarqueeStyle;
 extern NSString* const PopupSettingsEnableCustomizations;
+extern NSString* const PopupSettingsExtendBar;
 
 @interface SettingsTableViewController : UITableViewController @end

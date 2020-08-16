@@ -52,6 +52,7 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 
 - (void)_configurePopupBarFromBottomBar;
+- (void)_updateBarExtensionStyleFromPopupBar;
 
 + (CGFloat)_statusBarHeightForView:(UIView*)view;
 

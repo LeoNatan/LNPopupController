@@ -14,20 +14,32 @@ NSString* const PopupSettingsProgressViewStyle = @"PopupSettingsProgressViewStyl
 NSString* const PopupSettingsCloseButtonStyle = @"PopupSettingsCloseButtonStyle";
 NSString* const PopupSettingsMarqueeStyle = @"PopupSettingsMarqueeStyle";
 NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomizations";
+NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 
 @interface SettingsTableViewController ()
 {
 	NSDictionary<NSNumber*, NSString*>* _sectionToKeyMapping;
+	
+	IBOutlet UISwitch* _customizations;
+	IBOutlet UISwitch* _extendBars;
 }
 
 @end
 
 @implementation SettingsTableViewController
 
++ (void)load
+{
+	[NSUserDefaults.standardUserDefaults registerDefaults:@{PopupSettingsExtendBar: @YES}];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
 	_sectionToKeyMapping = @{@0: PopupSettingsBarStyle, @1: PopupSettingsInteractionStyle, @2: PopupSettingsProgressViewStyle, @3: PopupSettingsCloseButtonStyle, @4: PopupSettingsMarqueeStyle};
+	
+	_customizations.on = [[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsEnableCustomizations];
+	_extendBars.on = [[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsExtendBar];
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,21 +52,13 @@ NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomi
 {
 	UITableViewCell* cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
 	
-	cell.accessoryType = UITableViewCellAccessoryNone;
-	cell.accessoryView = nil;
-	cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-	
 	NSString* key = _sectionToKeyMapping[@(indexPath.section)];
-	if(key == nil)
+	if(key != nil)
 	{
-		UISwitch* customizations = [UISwitch new];
-		customizations.on = [[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsEnableCustomizations];
-		[customizations addTarget:self action:@selector(_demoSwitchValueDidChange:) forControlEvents:UIControlEventValueChanged];
-		cell.accessoryView = customizations;
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	}
-	else
-	{
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.accessoryView = nil;
+		cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+		
 		NSUInteger value = [[[NSUserDefaults standardUserDefaults] objectForKey:key] unsignedIntegerValue];
 		if(value == 0xFFFF)
 		{
@@ -79,9 +83,14 @@ NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomi
 	[self.tableView reloadData];
 }
 
-- (void)_demoSwitchValueDidChange:(UISwitch*)sender
+- (IBAction)_demoSwitchValueDidChange:(UISwitch*)sender
 {
 	[[NSUserDefaults standardUserDefaults] setBool:sender.isOn forKey:PopupSettingsEnableCustomizations];
+}
+
+- (IBAction)_extendBarsSwitchValueDidChange:(UISwitch*)sender
+{
+	[[NSUserDefaults standardUserDefaults] setBool:sender.isOn forKey:PopupSettingsExtendBar];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

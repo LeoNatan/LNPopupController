@@ -805,6 +805,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	self.popupBar.systemShadowColor = systemShadowColor;
 }
 
+- (void)_updateBarExtensionStyleFromPopupBar
+{
+	_containerController._ln_bottomBarExtension_nocreate.backgroundColor = _containerController.popupBar.backgroundColor;
+	_containerController._ln_bottomBarExtension_nocreate.effectView.backgroundColor = _containerController.popupBar.backgroundView.backgroundColor;
+	_containerController._ln_bottomBarExtension_nocreate.effectView.alpha = _containerController.popupBar.backgroundView.alpha;
+	_containerController._ln_bottomBarExtension_nocreate.effectView.effect = _containerController.popupBar.backgroundView.effect;
+}
+
 - (void)_movePopupBarAndContentToBottomBarSuperview
 {
 	[self.popupBar removeFromSuperview];
@@ -1233,7 +1241,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	[self _configurePopupBarFromBottomBar];
 }
 
-- (void)_popupBarStyleDidChange:(LNPopupBar*)bar
+- (void)_popupBarMetricsDidChange:(LNPopupBar*)bar
 {
 	CGRect barFrame = self.popupBar.frame;
 	CGFloat currentHeight = barFrame.size.height;
@@ -1242,6 +1250,11 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	self.popupBar.frame = barFrame;
 	
 	_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height, 0));
+}
+
+- (void)_popupBarStyleDidChange:(LNPopupBar*)bar
+{
+	[self _updateBarExtensionStyleFromPopupBar];
 }
 
 #pragma mark Utils
