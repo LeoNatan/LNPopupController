@@ -8,37 +8,152 @@
 
 #if LNPOPUP
 import UIKit
+import SwiftUI
 import LNPopupController
 
-class DemoMusicPlayerController: UIViewController {
+@available(iOS 13.0, *)
+fileprivate struct BlurView: UIViewRepresentable {
+	var style: UIBlurEffect.Style = .systemMaterial
+	func makeUIView(context: Context) -> UIVisualEffectView {
+		return UIVisualEffectView(effect: UIBlurEffect(style: style))
+	}
+	func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+		uiView.effect = UIBlurEffect(style: style)
+	}
+}
 
-	@IBOutlet weak var songNameLabel: UILabel!
-	@IBOutlet weak var albumNameLabel: UILabel!
-	@IBOutlet weak var progressView: UIProgressView!
+@available(iOS 13.0, *)
+class PlaybackSettings: ObservableObject {
+	@Published var songTitle: String = ""
+	@Published var albumTitle: String = ""
+	@Published var albumArt: UIImage = UIImage()
 	
-	@IBOutlet weak var albumArtImageView: UIImageView!
+	@Published var playbackProgress: Float = 0.0
+	@Published var volume: Float = 0.5
+	@Published var isPlaying: Bool = true
+}
+
+@available(iOS 13.0, *)
+struct PlayerView: View {
+	@ObservedObject var playbackSettings = PlaybackSettings()
 	
-	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
-	
-	var timer : Timer?
-	
-	fileprivate func LNSystemImage(named: String) -> UIImage {
-		if #available(iOS 13.0, *) {
-			let config : UIImage.SymbolConfiguration
-			if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
-				config = UIImage.SymbolConfiguration(scale: .unspecified)
-			} else {
-				config = UIImage.SymbolConfiguration(scale: .medium)
-			}
-			
-			return UIImage(systemName: named, withConfiguration: config)!
-		} else {
-			return UIImage(named: "gears")!
-		}
+	init() {
 	}
 	
-	required init?(coder aDecoder: NSCoder) {
-		super.init(coder: aDecoder)
+	var body: some View {
+		VStack {
+			Image(uiImage: playbackSettings.albumArt)
+				.resizable()
+				.clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+				.aspectRatio(contentMode: .fit)
+				.padding([.leading, .trailing], 20)
+				.padding([.top], 40)
+				.shadow(radius: 5)
+			VStack(spacing: 40) {
+				HStack {
+					VStack(alignment: .leading) {
+						Text(playbackSettings.songTitle)
+							.font(.system(size: 20, weight: .bold))
+						Text(playbackSettings.albumTitle)
+							.font(.system(size: 20, weight: .regular))
+					}
+					.lineLimit(1)
+					.frame(minWidth: 0,
+						   maxWidth: .infinity,
+						   alignment: .topLeading)
+					Button(action: {}, label: {
+						Image(systemName: "ellipsis.circle")
+							.font(.title)
+					})
+				}
+				if #available(iOS 14.0, *) {
+					ProgressView(value: playbackSettings.playbackProgress)
+				} else {
+					Slider(value: $playbackSettings.playbackProgress)
+				}
+				HStack {
+					Button(action: {}, label: {
+						Image(systemName: "backward.fill")
+					})
+					.frame(minWidth: 0, maxWidth: .infinity)
+					Button(action: {
+						playbackSettings.isPlaying.toggle()
+					}, label: {
+						Image(systemName: playbackSettings.isPlaying ? "pause.fill" : "play.fill")
+					})
+					.frame(minWidth: 0, maxWidth: .infinity)
+					Button(action: {}, label: {
+						Image(systemName: "forward.fill")
+					})
+					.frame(minWidth: 0, maxWidth: .infinity)
+				}
+				.frame(height: 40)
+				.font(.largeTitle)
+				HStack {
+					Image(systemName: "speaker.fill")
+					Slider(value: $playbackSettings.volume)
+					Image(systemName: "speaker.wave.2.fill")
+				}
+				.font(.footnote)
+				.foregroundColor(.gray)
+				HStack {
+					Button(action: {}, label: {
+						Image(systemName: "shuffle")
+					})
+					.frame(minWidth: 0, maxWidth: .infinity)
+					Button(action: {}, label: {
+						Image(systemName: "airplayaudio")
+					})
+					.frame(minWidth: 0, maxWidth: .infinity)
+					Button(action: {}, label: {
+						Image(systemName: "repeat")
+					})
+					.frame(minWidth: 0, maxWidth: .infinity)
+				}
+				.font(.body)
+			}
+			.padding(30)
+		}
+		.frame(minWidth: 0,
+			   maxWidth: .infinity,
+			   minHeight: 0,
+			   maxHeight: .infinity,
+			   alignment: .top)
+		.background({
+			ZStack {
+				Image(uiImage: playbackSettings.albumArt)
+					.resizable()
+					.aspectRatio(contentMode: .fill)
+				BlurView()
+			}
+			.edgesIgnoringSafeArea(.all)
+		}())
+		.animation(.spring())
+	}
+}
+
+@available(iOS 13.0, *)
+class DemoMusicPlayerController: UIHostingController<PlayerView> {
+	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
+	var timer : Timer?
+	
+	let playerView = PlayerView()
+	
+	fileprivate func LNSystemImage(named: String) -> UIImage {
+		let config : UIImage.SymbolConfiguration
+		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
+			config = UIImage.SymbolConfiguration(scale: .unspecified)
+		} else {
+			config = UIImage.SymbolConfiguration(scale: .medium)
+		}
+		
+		return UIImage(systemName: named, withConfiguration: config)!
+	}
+	
+	required init() {
+		super.init(rootView: playerView)
+		
+		timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 		
 		let pause = UIBarButtonItem(image: LNSystemImage(named: "pause.fill"), style: .plain, target: nil, action: nil)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
@@ -57,48 +172,27 @@ class DemoMusicPlayerController: UIViewController {
 	
 	var songTitle: String = "" {
 		didSet {
-			if isViewLoaded {
-				songNameLabel.text = songTitle
-			}
-			
 			popupItem.title = songTitle
+			playerView.playbackSettings.songTitle = songTitle
 		}
 	}
+	
 	var albumTitle: String = "" {
 		didSet {
-			if isViewLoaded {
-				albumNameLabel.text = albumTitle
-			}
-			#if !targetEnvironment(macCatalyst)
-			if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 9 {
-				popupItem.subtitle = albumTitle
-			}
-			#endif
+			playerView.playbackSettings.albumTitle = albumTitle
 		}
 	}
+
 	var albumArt: UIImage = UIImage() {
 		didSet {
-			if isViewLoaded {
-				albumArtImageView.image = albumArt
-			}
+			playerView.playbackSettings.albumArt = albumArt
 			popupItem.image = albumArt
 			popupItem.accessibilityImageLabel = NSLocalizedString("Album Art", comment: "")
 		}
 	}
 	
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-		songNameLabel.text = songTitle
-		albumNameLabel.text = albumTitle
-		albumArtImageView.image = albumArt
-		
-		if #available(iOS 13.0, *) {
-			albumArtImageView.layer.cornerCurve = .continuous
-		}
-		albumArtImageView.layer.cornerRadius = 16
-		
-		timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
+	@objc required dynamic init?(coder aDecoder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
 	}
 	
 	@objc func _timerTicked(_ timer: Timer) {
@@ -108,7 +202,7 @@ class DemoMusicPlayerController: UIViewController {
 		let totalTime = TimeInterval(250)
 		popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: TimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: totalTime)!)"
 		
-		progressView.progress = popupItem.progress
+		playerView.playbackSettings.playbackProgress = popupItem.progress
 		
 		if popupItem.progress >= 1.0 {
 			timer.invalidate()

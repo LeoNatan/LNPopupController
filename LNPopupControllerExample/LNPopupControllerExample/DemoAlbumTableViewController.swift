@@ -12,6 +12,7 @@ import LNPopupController
 #endif
 import LoremIpsum
 
+@available(iOS 13.0, *)
 class DemoAlbumTableViewController: UITableViewController {
 
 	@IBOutlet var demoAlbumImageView: UIImageView!
@@ -33,9 +34,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		
         super.viewDidLoad()
 		
-		if #available(iOS 13.0, *) {
-			demoAlbumImageView.layer.cornerCurve = .continuous
-		}
+		demoAlbumImageView.layer.cornerCurve = .continuous
 		demoAlbumImageView.layer.cornerRadius = 8
 		demoAlbumImageView.layer.masksToBounds = true
 		
@@ -93,7 +92,7 @@ class DemoAlbumTableViewController: UITableViewController {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		#if LNPOPUP
-		let popupContentController = storyboard?.instantiateViewController(withIdentifier: "DemoMusicPlayerController") as! DemoMusicPlayerController
+		let popupContentController = DemoMusicPlayerController()
 		popupContentController.songTitle = titles[(indexPath as NSIndexPath).row]
 		popupContentController.albumTitle = subtitles[(indexPath as NSIndexPath).row]
 		popupContentController.albumArt = images[(indexPath as NSIndexPath).row]
@@ -106,12 +105,8 @@ class DemoAlbumTableViewController: UITableViewController {
 		#endif
 		
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
+		tabBarController?.popupBar.tintColor = UIColor.label
 		
-		if #available(iOS 13.0, *) {
-			tabBarController?.popupBar.tintColor = UIColor.label
-		} else {
-			tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
-		}
 		#endif
 		
 		tableView.deselectRow(at: indexPath, animated: true)

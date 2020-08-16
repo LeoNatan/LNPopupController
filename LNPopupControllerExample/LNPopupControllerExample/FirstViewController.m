@@ -52,6 +52,23 @@
 	}
 }
 
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if(((indexPath.section == 0 && indexPath.row > 3) || indexPath.section > 0) && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 13)
+	{
+		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+		
+		UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"The “%@” scene requires iOS 13 and above.", cell.textLabel.text] preferredStyle:UIAlertControllerStyleAlert];
+		[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+		
+		[self presentViewController:alert animated:YES completion:nil];
+		
+		return NO;
+	}
+	
+	return YES;
+}
+
 @end
 
 @interface FirstView : UIView @end

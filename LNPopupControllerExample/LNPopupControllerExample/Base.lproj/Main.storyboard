@@ -741,7 +741,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="None" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="jB9-gB-SHh">
-                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
+                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -762,7 +762,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Default" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Mph-ZL-PYQ">
-                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
+                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -779,7 +779,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Disabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="D3Z-UZ-Qj5">
-                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
+                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -796,7 +796,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="eB1-oU-dLQ">
-                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
+                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -807,7 +807,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Customizations" id="0W7-xT-AZi">
+                            <tableViewSection headerTitle="Extend Bars Under Safe Area" id="0W7-xT-AZi">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="sIK-iP-AtO" style="IBUITableViewCellStyleDefault" id="7bH-7q-HqN">
                                         <rect key="frame" x="16" y="1127.3333320617676" width="343" height="44"/>
@@ -817,7 +817,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="sIK-iP-AtO">
-                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
+                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -825,6 +825,33 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="accessoryView" destination="qYf-hD-ORu" id="RHV-dM-d1H"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Customizations" id="0NB-NV-YLQ">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="9Me-vs-LNp" style="IBUITableViewCellStyleDefault" id="mlW-fM-oUd">
+                                        <rect key="frame" x="16" y="1227.3333320617676" width="343" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mlW-fM-oUd" id="q0T-kQ-4Np">
+                                            <rect key="frame" x="0.0" y="0.0" width="343" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="9Me-vs-LNp">
+                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="accessoryView" destination="PSz-B4-yB8" id="XW9-6q-5zC"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -846,8 +873,26 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="_customizations" destination="PSz-B4-yB8" id="82n-TW-N32"/>
+                        <outlet property="_extendBars" destination="qYf-hD-ORu" id="2XW-FV-Nb2"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6QU-R6-p5P" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="PSz-B4-yB8">
+                    <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <connections>
+                        <action selector="_demoSwitchValueDidChange:" destination="JHl-xj-fvV" eventType="primaryActionTriggered" id="iod-oB-YqM"/>
+                    </connections>
+                </switch>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="qYf-hD-ORu">
+                    <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <connections>
+                        <action selector="_extendBarsSwitchValueDidChange:" destination="JHl-xj-fvV" eventType="primaryActionTriggered" id="28Y-s2-WMP"/>
+                    </connections>
+                </switch>
                 <exit id="wfg-ir-axY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="855" y="-2439"/>
