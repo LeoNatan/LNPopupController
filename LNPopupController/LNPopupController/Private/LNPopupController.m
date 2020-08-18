@@ -211,6 +211,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
 	}
+	currentContentController.view.translatesAutoresizingMaskIntoConstraints = YES;
+	_currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
+	currentContentController.view.frame = self.popupContentView.contentView.bounds;
 	[self.popupContentView.contentView addSubview:currentContentController.view];
 }
 
@@ -241,9 +244,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		[_currentContentController _ln_beginAppearanceTransition:YES animated:NO];
 		[UIView performWithoutAnimation:^{
-			_currentContentController.view.frame = _containerController.view.bounds;
-			_currentContentController.view.clipsToBounds = NO;
-			_currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
+//			_currentContentController.view.frame = _containerController.view.bounds;
 			
 			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController barEffect:(id)self.popupBar.backgroundView.effect];
 			
