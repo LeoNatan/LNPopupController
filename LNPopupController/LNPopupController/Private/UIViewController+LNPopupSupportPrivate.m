@@ -1151,7 +1151,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_setToolbarHidden:edge:duration:
 - (void)_sTH:(BOOL)hidden e:(UIRectEdge)edge d:(CGFloat)duration;
 {
-	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = hidden || self.shouldExtendPopupBarUnderSafeArea == NO;
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
 	
 	//Move popup bar and content according to current state of the toolbar.
 	[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
@@ -1175,7 +1175,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		self._ln_bottomBarExtension.frame = frame;
 	}
 	
-	NSLog(@"Before: %@", @(self._ln_bottomBarExtension.frame));
+	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = hidden == NO ? 0.0 : 1.0;
 	
 	void (^animations)(void) = ^ {
 		//During the transition, animate the popup bar and content together with the toolbar transition.
@@ -1187,7 +1187,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		{
 			CGFloat safeArea = self.view.superview.safeAreaInsets.bottom;
 			self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - safeArea, self.view.bounds.size.width, safeArea);
-			NSLog(@"Animation: %@", @(self._ln_bottomBarExtension_nocreate.frame));
+			
+			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 		}
 		else
 		{
@@ -1199,7 +1200,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			}
 			self._ln_bottomBarExtension_nocreate.frame = frame;
 			
-			NSLog(@"Animation: %@", @(frame));
+			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
 		}
 	};
 	
@@ -1207,8 +1208,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		//Position the popup bar and content to the superview of the toolbar for the transition.
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 		[self _layoutPopupBarOrderForUse];
-		
+	
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
+		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
 		
 		[self _setIgnoringLayoutDuringTransition:NO];
 	};
