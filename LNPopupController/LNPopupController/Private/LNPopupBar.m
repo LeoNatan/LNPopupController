@@ -14,6 +14,12 @@
 @interface _LNPopupBarContentView : UIView @end
 @implementation _LNPopupBarContentView @end
 
+@interface _LNPopupBarTitlesView : UIView @end
+@implementation _LNPopupBarTitlesView @end
+
+@interface _LNPopupBarShadowView : UIView @end
+@implementation _LNPopupBarShadowView @end
+
 @interface _LNPopupToolbar : UIToolbar @end
 @implementation _LNPopupToolbar
 
@@ -222,7 +228,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_toolbar.layer.masksToBounds = YES;
 		[_contentView addSubview:_toolbar];
 		
-		_titlesView = [[UIView alloc] initWithFrame:self.bounds];
+		_titlesView = [[_LNPopupBarTitlesView alloc] initWithFrame:self.bounds];
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
 		_titlesView.accessibilityTraits = UIAccessibilityTraitButton;
 		_titlesView.isAccessibilityElement = YES;
@@ -256,16 +262,16 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		[_contentView addSubview:_imageView];
 		
-		_shadowView = [UIView new];
+		_shadowView = [_LNPopupBarShadowView new];
 		_shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
 		[_backgroundView.contentView addSubview:_shadowView];
 		
-		_bottomShadowView = [UIView new];
+		_bottomShadowView = [_LNPopupBarShadowView new];
 		_bottomShadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
 		_bottomShadowView.hidden = YES;
 		[_contentView addSubview:_bottomShadowView];
 		
-		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
+		_highlightView = [[_LNPopupBarShadowView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_highlightView.userInteractionEnabled = NO;
 		[_highlightView setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.1]];
