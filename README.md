@@ -82,46 +82,46 @@ While the framework is written in Objective C, it uses modern Objective C syntax
 
 Import the module in your project:
 
-```objective-c
-@import LNPopupController;
+```swift
+import LNPopupController
 ```
 
 ### Popup Items
 
-A popup item always reflects information about the view controller with which it is associated. The popup item should provide a title and subtitles to display when the view controller is the content controller of a popup bar. In addition, the item may contain additional buttons to display on the left and right side of the popup bar using `leftBarButtonItems` and `rightBarButtonItems`.
+A popup item should always reflect the popup information about the view controller with which it is associated. The popup item should provide a title and subtitles to display in the popup bar, when the view controller is presented as a popup content controller. In addition, the item may contain additional buttons to display on the leading and/or trailing edges of the popup bar using `leadingBarButtonItems` and `trailingBarButtonItems`.
 
 ### Managing the Popup Bar
 
 To present the popup bar, create a content controller, update its popup item and present the popup bar.
 
-```objective-c
-DemoPopupContentViewController* demoVC = [DemoPopupContentViewController new];
-demoVC.view.backgroundColor = [UIColor redColor];
-demoVC.popupItem.title = @"Hello World";
-demoVC.popupItem.subtitle = @"And a subtitle!";
-demoVC.popupItem.progress = 0.34;
+```swift
+let demoVC = DemoPopupContentViewController()
+demoVC.view.backgroundColor = .red
+demoVC.popupItem.title = "Hello World"
+demoVC.popupItem.subtitle = "And a subtitle!"
+demoVC.popupItem.progress = 0.34
 	
-[self.tabBarController presentPopupBarWithContentViewController:demoVC animated:YES completion:nil];
+tabBarController?.presentPopupBar(withContentViewController: demoVC, animated: true, completion: nil)
 ```
 
 You can present a new content controller while the popup bar is presented and when the popup itself is open.
 
-To open and close the popup programatically, use `openPopupAnimated:completion:` and `closePopupAnimated:completion:` respectively.
+To open and close the popup programatically, use `openPopup(animated:completion:)` and `closePopup(animated:completion:)` respectively.
 
-```objective-c
-[self.tabBarController openPopupAnimated:YES completion:nil];
+```swift
+tabBarController?.openPopup(animated: true, completion: nil)
 ```
 
-Alternatively, you can present the popup bar and open the popup in one animation, using `presentPopupBarWithContentViewController:openPopup:animated:completion:`.
+Alternatively, you can present the popup bar and open the popup in one animation, using `presentPopupBar(withContentViewController:openPopup:animated:completion:)`.
 
-```objective-c
-[self.tabBarController presentPopupBarWithContentViewController:demoVC openPopup:YES animated:YES completion:nil];
+```swift
+tabBarController?.presentPopupBar(withContentViewController: demoVC, openPopup:true, animated: true, completion: nil)
 ```
 
 To dismiss the popup bar, use `dismissPopupBarAnimated:completion:`.
 
-```objective-c
-[self.tabBarController dismissPopupBarAnimated:YES completion:nil];
+```swift
+tabBarController?.dismissPopupBar(animated: true, completion: nil)
 ```
 
 If the popup is open when dismissing the popup bar, the popup content will also be dismissed.
@@ -130,26 +130,21 @@ If the popup is open when dismissing the popup bar, the popup content will also 
 
 Any `UIViewController` subclasses can be popup container view controllers. The popup bar is attached to a bottom docking view. By default, `UITabBarController` and `UINavigationController` subclasses return their bottom bars as docking view, while other controllers return a hidden 0pt height view on the bottom of the view. In your subclass, override `bottomDockingViewForPopupBar` and `defaultFrameForBottomDockingView` and return your view and frame accordingly. **The returned view must be attached to the bottom of the view controller's view, or results are undefined.**
 
-```objective-c
-- (nonnull UIView *)bottomDockingViewForPopupBar
-{
-	return self.myCoolBottomView;
+```swift
+override var bottomDockingViewForPopupBar: UIView? {
+	return myCoolBottomView
 }
 
-- (CGRect)defaultFrameForBottomDockingView
-{
-	CGRect bottomViewFrame = self.myCoolBottomView.frame;
-	
-	if(self.isMyCoolBottomViewHidden)
-	{
-		bottomViewFrame.origin = CGPointMake(bottomViewFrame.origin.x, self.view.bounds.size.height);
-	}
-	else
-	{
-		bottomViewFrame.origin = CGPointMake(bottomViewFrame.origin.x, self.view.bounds.size.height - bottomViewFrame.size.height);
-	}
-	
-	return bottomViewFrame;
+override var defaultFrameForBottomDockingView: CGRect {
+	var bottomViewFrame = myCoolBottomView.frame
+  
+  if isMyCoolBottomViewHidden {
+    bottomViewFrame.origin = CGPoint(x: bottomViewFrame.x, y: view.bounds.height)
+  } else {
+    bottomViewFrame.origin = CGPoint(x: bottomViewFrame.x, y: view.bounds.height - bottomViewFrame.height)
+  }
+  
+  return bottomViewFrame
 }
 ```
 
@@ -170,7 +165,7 @@ The defaults are:
 Customizing the popup bar style is achieved by setting the popup bar's `barStyle` property.
 
 ```swift
-navigationController.popupBar.barStyle = .compact
+navigationController?.popupBar.barStyle = .compact
 ```
 
 ##### Interaction Style
@@ -178,7 +173,7 @@ navigationController.popupBar.barStyle = .compact
 Customizing the popup interaction style is achieved by setting the popup presentation containing controller's `popupInteractionStyle` property.
 
 ```swift
-navigationController.popupInteractionStyle = .drag
+navigationController?.popupInteractionStyle = .drag
 ```
 
 ##### Progress View Style
@@ -186,10 +181,10 @@ navigationController.popupInteractionStyle = .drag
 Customizing the popup bar progress view style is achieved by setting the popup bar's `progressViewStyle` property.
 
 ```swift
-navigationController.popupBar.progressViewStyle = .top
+navigationController?.popupBar.progressViewStyle = .top
 ```
 
-To hide the progress view, set the `progressViewStyle` to `LNPopupBarProgressViewStyleNone` / `.none`.
+To hide the progress view, set the `progressViewStyle` property to `LNPopupBarProgressViewStyle.none`.
 
 ##### Close Button Style
 
@@ -199,13 +194,13 @@ Customizing the popup close button style is achieved by setting the popup conten
 navigationController.popupContentView.popupCloseButtonStyle = .round
 ```
 
-To hide the popup close button, set the `popupCloseButtonStyle` to `LNPopupCloseButtonStyleNone` / `.none`.
+To hide the popup close button, set the `popupCloseButtonStyle` property to `LNPopupCloseButtonStyle.none`.
 
 #### Popup Bar Appearance
 
 For navigation and tab bar controller popup containers, the style of the popup bar is determined according to the bottom bar's appearance. For other container controllers, the style is the default style. For each style, title and button colors will be adjusted accordingly.
 
-To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, use the `updatePopupBarAppearance` method.
+To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, call the `updatePopupBarAppearance()` method.
 
 <img src="./Supplements/modern_bar_style.gif" width="360"/> <img src="./Supplements/bar_style.gif" width="360"/>
 
@@ -213,7 +208,7 @@ Supplying long text for the title and/or subtitle will result in a scrolling tex
 
 <img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scoll.gif" width="360"/>
 
-The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition to the bottom of the container controller view. Using `setToolbarHidden:` and `setToolbarHidden:animated:` is also supported.
+The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition to the bottom of the container controller view. Setting  `isToolbarHidden = true` and calling `setToolbarHidden(_:animated:)` are also supported.
 
 <img src="./Supplements/hidesBottomBar_TabBar.gif" width="360"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="360"/>
 
@@ -229,7 +224,7 @@ When opening the popup, the system queries the `viewForPopupInteractionGestureRe
 
 You can implement the delegate of the interaction gesture recognizer in order to influence its behavior, such as preventing popup interaction when the user is interacting with other controls or views inside the popup content.
 
-**Note:** If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code. Instead, consider implementing the gesture recognizer's delegate instead and provide custom logic to disable the interaction.
+**Note:** If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code. Instead, consider implementing the gesture recognizer's delegate and providing custom logic to disable the interaction.
 
 #### Full Right-to-Left Support
 
@@ -248,11 +243,12 @@ Customization can be achieved through the ```LNPopupBar```, ```LNPopupContentVie
 
 ```LNPopupBar``` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on popup bar objects.
 
-```objective-c
-[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
-[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setSubtitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]}];
-[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setBarStyle:UIBarStyleBlack];
-[[LNPopupBar appearanceWhenContainedInInstancesOfClasses:@[[UINavigationController class]]] setTintColor:[UIColor yellowColor]];
+```swift
+let appearanceProxy = LNPopupBar.appearance(whenContainedInInstancesOf: [UINavigationController.self])
+appearanceProxy.titleTextAttributes = [.font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow]
+appearanceProxy.subtitleTextAttributes = [.font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green]
+appearanceProxy.backgroundStyle = .systemChromeMaterialDark
+appearanceProxy.tintColor = .yellow
 ```
 
 <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/>
@@ -265,11 +261,13 @@ The framework supports implementing custom popup bars.
 
 To implement a custom popup bar, subclass ```LNPopupCustomBarViewController```.
 
-In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's ```preferredContentSize``` property with the preferred popup bar height. Override `wantsDefaultTapGestureRecognizer` and/or `wantsDefaultPanGestureRecognizer` to disable adding the default gesture recognizers.
+In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's ```preferredContentSize``` property with the preferred popup bar height. Override the `wantsDefaultTapGestureRecognizer` and/or `wantsDefaultPanGestureRecognizer` properties to disable adding the default gesture recognizers.
 
-In your subclass implement the `popupItemDidUpdate` method to be notified on updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
+In your subclass, implement the `popupItemDidUpdate` method to be notified of updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
 
-Finally, set the `customBarViewController` property of the popup bar object to an instance of your ```LNPopupCustomBarViewController``` subclass. This will change the bar style to ```LNPopupBarStyleCustom```/```custom```.
+Finally, set the `customBarViewController` property of the popup bar object to an instance of your ```LNPopupCustomBarViewController``` subclass. This will change the bar style to `LNPopupBarStyle.custom`.
+
+The included demo projects includes an example custom popup bar scene.
 
 ### Accessibility
 
@@ -279,23 +277,23 @@ The framework supports accessibility and will honor accessibility labels, hints 
 
 To modify the accessibility label and hint of the popup bar, set the `accessibilityLabel` and `accessibilityHint` properties of the `LNPopupItem` object of the popup content view controller.
 
-```objc
-demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
-demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");
+```swift
+demoVC.popupItem.accessibilityLabel = NSLocalizedString("Custom popup bar accessibility label", comment: "")
+demoVC.popupItem.accessibilityHint = NSLocalizedString("Custom popup bar accessibility hint", comment: "")
 ```
 
 To add accessibility labels and hints to buttons, set the `accessibilityLabel` and `accessibilityHint` properties of the `UIBarButtonItem` objects.
 
-```objc
-UIBarButtonItem* upNext = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"next"] style:UIBarButtonItemStylePlain target:nil action:NULL];
-upNext.accessibilityLabel = NSLocalizedString(@"Up Next", @"");
-upNext.accessibilityHint = NSLocalizedString(@"Double Tap to Show Up Next List", @"");
+```swift
+let upNext = UIBarButtonItem(image: UIImage(named: "next"), style: .plain, target: self, action: #selector(nextItem))
+upNext.accessibilityLabel = NSLocalizedString("Up Next", comment: "")
+upNext.accessibilityHint = NSLocalizedString("Double tap to show up next list", comment: "")
 ```
 To modify the accessibility label and hint of the popup close button, set the `accessibilityLabel` and `accessibilityHint` properties of the `LNPopupCloseButton` object of the popup container view controller.
 
-```objc
-targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
-targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
+```swift
+tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Custom popup close button accessibility label", comment: "")
+tabBarController?.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString("Custom popup close button accessibility hint", comment: "")
 ```
 
 To modify the accessibility label and value of the popup bar progress view, set the `accessibilityProgressLabel` and `accessibilityProgressValue` properties of the `LNPopupItem` object of the popup content view controller.
