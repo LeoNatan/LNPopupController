@@ -14,7 +14,15 @@
 @import LNPopupController;
 
 @interface DemoPopupContentView : UIView @end
-@implementation DemoPopupContentView @end
+@implementation DemoPopupContentView
+
+- (void)setFrame:(CGRect)frame
+{
+//	NSLog(@"Frame: %@", @(frame));
+	[super setFrame:frame];
+}
+
+@end
 
 @interface DemoPopupContentViewController () @end
 @implementation DemoPopupContentViewController
@@ -28,9 +36,26 @@
 {
 	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self _setPopupItemButtonsWithTraitCollection:newCollection];
+		[self _updateBackgroundColor];
 	} completion:nil];
 	
 	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
+- (void)_updateBackgroundColor
+{
+	if (@available(iOS 13.0, *)) {
+		self.view.backgroundColor = LNRandomAdaptiveInvertedColor();
+	} else {
+		self.view.backgroundColor = LNRandomDarkColor();
+	}
+	
+	[self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)button:(UIBarButtonItem*)button
@@ -106,14 +131,14 @@ static UIImage* LNSystemImage(NSString* named)
 {
 	[super viewDidLoad];
 	
-	if (@available(iOS 13.0, *)) {
-		self.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-	}
-	
 	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];
 	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
-	[customCloseButton setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
+	if (@available(iOS 13.0, *)) {
+		[customCloseButton setTitleColor:UIColor.systemBackgroundColor forState:UIControlStateNormal];
+	} else {
+		[customCloseButton setTitleColor:UIColor.lightTextColor forState:UIControlStateNormal];
+	}
 	[customCloseButton addTarget:self action:@selector(_closePopup) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:customCloseButton];
 	[NSLayoutConstraint activateConstraints:@[
@@ -154,7 +179,11 @@ static UIImage* LNSystemImage(NSString* named)
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-	return UIStatusBarStyleLightContent;
+	if (@available(iOS 13.0, *)) {
+		return self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
+	} else {
+		return UIStatusBarStyleLightContent;
+	}
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation

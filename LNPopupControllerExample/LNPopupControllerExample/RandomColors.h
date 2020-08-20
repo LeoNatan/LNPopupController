@@ -11,7 +11,8 @@
 API_AVAILABLE(ios(13.0))
 extern UIColor* LNRandomAdaptiveColor(void);
 API_AVAILABLE(ios(13.0))
-UIColor* LNRandomAdaptiveInvertedColor(void);
+extern UIColor* LNRandomAdaptiveInvertedColor(void);
+extern UIColor* LNRandomSystemColor(void);
 
 extern UIColor* LNRandomDarkColor(void);
 extern UIColor* LNRandomLightColor(void);

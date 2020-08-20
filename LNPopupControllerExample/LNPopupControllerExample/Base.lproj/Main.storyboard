@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17147" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17120"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17124"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -278,9 +278,11 @@
                 <navigationController modalPresentationStyle="fullScreen" toolbarHidden="NO" id="GHH-ob-Ng8" sceneMemberID="viewController">
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="2ug-wj-yax">
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="eEz-t1-9Ax">
+                        <rect key="frame" x="0.0" y="680" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
@@ -323,7 +325,7 @@
         <!--Split View Controller Primary Popup-->
         <scene sceneID="0aA-gd-S0Z">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" preferredDisplayMode="beside" id="NWj-M1-Csm" customClass="SplitViewControllerPrimaryPopup" sceneMemberID="viewController">
+                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="beside" id="NWj-M1-Csm" customClass="SplitViewControllerPrimaryPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="GHH-ob-Ng8" kind="relationship" relationship="masterViewController" id="IDA-Po-Fia"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="04d-1K-Lzo"/>
@@ -391,19 +393,19 @@
                     </view>
                     <tabBarItem key="tabBarItem" systemItem="featured" id="CHZ-OA-bCn"/>
                     <toolbarItems>
-                        <barButtonItem title="Present Bar" image="dock.arrow.up.rectangle" catalog="system" id="L0d-F2-GTi">
+                        <barButtonItem title="Present Bar" id="L0d-F2-GTi">
                             <connections>
                                 <action selector="_presentBar:" destination="l54-z5-xcG" id="xd5-fh-z8p"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="wfv-5d-KZ8"/>
-                        <barButtonItem title="Bar Style" image="rays" catalog="system" id="Mqv-hY-tWM">
+                        <barButtonItem title="Appearance" id="Mqv-hY-tWM">
                             <connections>
                                 <action selector="_changeBarStyle:" destination="l54-z5-xcG" id="Rf3-YV-ndy"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Hqh-tz-zeD"/>
-                        <barButtonItem title="Dismiss Bar" image="dock.arrow.down.rectangle" catalog="system" id="via-gg-BV5">
+                        <barButtonItem title="Dismiss Bar" id="via-gg-BV5">
                             <connections>
                                 <action selector="_dismissBar:" destination="l54-z5-xcG" id="Aq6-af-BTv"/>
                             </connections>
@@ -741,7 +743,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="None" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="jB9-gB-SHh">
-                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -762,7 +764,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Default" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Mph-ZL-PYQ">
-                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -779,7 +781,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Disabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="D3Z-UZ-Qj5">
-                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -796,7 +798,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="eB1-oU-dLQ">
-                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -817,7 +819,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="sIK-iP-AtO">
-                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -841,7 +843,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="9Me-vs-LNp">
-                                                    <rect key="frame" x="16" y="0.0" width="311" height="44"/>
+                                                    <rect key="frame" x="15" y="0.0" width="320" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -987,10 +989,7 @@
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
-        <image name="dock.arrow.down.rectangle" catalog="system" width="128" height="93"/>
-        <image name="dock.arrow.up.rectangle" catalog="system" width="128" height="93"/>
         <image name="gears" width="25" height="25"/>
-        <image name="rays" catalog="system" width="128" height="122"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

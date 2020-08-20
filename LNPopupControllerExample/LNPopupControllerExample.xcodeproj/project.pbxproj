@@ -307,10 +307,10 @@
 		39837A221B756F9B004D2DA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				39837A211B756F4C004D2DA9 /* RandomColors.h */,
-				39837A1F1B756F1A004D2DA9 /* RandomColors.m */,
 				39DA0E8122D7B9C6001E63A0 /* NSObject+XcodeBugs.h */,
 				39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */,
+				39837A211B756F4C004D2DA9 /* RandomColors.h */,
+				39837A1F1B756F1A004D2DA9 /* RandomColors.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";

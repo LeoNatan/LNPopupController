@@ -54,6 +54,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
+#if !TARGET_OS_MACCATALYST
 	if(((indexPath.section == 0 && indexPath.row > 3) || indexPath.section > 0) && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 13)
 	{
 		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -65,6 +66,7 @@
 		
 		return NO;
 	}
+#endif
 	
 	return YES;
 }
@@ -106,10 +108,9 @@
 {
 	[super viewDidLoad];
 	
-	if (@available(iOS 13.0, *)) {
+	if (@available(iOS 13.0, *))
+	{
 		self.view.backgroundColor = LNRandomAdaptiveColor();
-		
-		_barStyleButton.title = NSLocalizedString(@"Style", @"");
 	} else {
 		self.view.backgroundColor = LNRandomLightColor();
 	}
@@ -152,7 +153,7 @@
 	
 	if (@available(iOS 13.0, *))
 	{
-		self.navigationController.toolbar.tintColor = LNRandomAdaptiveInvertedColor();
+		self.navigationController.toolbar.tintColor = LNRandomSystemColor();
 	}
 	else
 	{
@@ -239,12 +240,6 @@
 //	UIViewController* demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
 	UIViewController* demoVC = [DemoPopupContentViewController new];
 	
-	if (@available(iOS 13.0, *)) {
-		demoVC.view.backgroundColor = LNRandomDarkColor();
-	} else {
-		demoVC.view.backgroundColor = LNRandomDarkColor();
-	}
-	
 	if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
 	{
 		demoVC.popupItem.title = @"עברית";//[LoremIpsum sentence];
@@ -260,7 +255,11 @@
 	
 	UILabel* topLabel = [UILabel new];
 	topLabel.text = NSLocalizedString(@"Top", @"");
-	topLabel.textColor = [UIColor whiteColor];
+	if (@available(iOS 13.0, *)) {
+		topLabel.textColor = [UIColor systemBackgroundColor];
+	} else {
+		topLabel.textColor = [UIColor lightTextColor];
+	}
 	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:topLabel];
@@ -271,7 +270,11 @@
 	
 	UILabel* bottomLabel = [UILabel new];
 	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
-	bottomLabel.textColor = [UIColor whiteColor];
+	if (@available(iOS 13.0, *)) {
+		bottomLabel.textColor = [UIColor systemBackgroundColor];
+	} else {
+		bottomLabel.textColor = [UIColor lightTextColor];
+	}
 	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:bottomLabel];
@@ -317,7 +320,7 @@
 //		UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
 //		[targetVC.popupBar addInteraction:i];
 //	}
-
+	
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
 #endif
