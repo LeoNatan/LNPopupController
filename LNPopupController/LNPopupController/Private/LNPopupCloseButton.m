@@ -102,31 +102,18 @@
 	self.layer.shadowOffset = CGSizeMake(0, 0);
 	self.layer.masksToBounds = NO;
 	
-	UIColor* color;
-	if(@available(iOS 13.0, *))
-	{
-		color = UIColor.labelColor;
-	}
-	else
-	{
-		color = UIColor.blackColor;
-	}
+	[self setTitleColor:self.tintColor forState:UIControlStateNormal];
 	
-	[self setTitleColor:color forState:UIControlStateNormal];
-	[self setTintColor:color];
-	
-
 	if(@available(iOS 13.0, *))
 	{
 		UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
-		UIImage* image = [UIImage systemImageNamed:@"chevron.down" withConfiguration:config];
+		UIImage* image = [[UIImage systemImageNamed:@"chevron.down" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 		[self setImage:image forState:UIControlStateNormal];
 	}
 	else
 	{
 		_chevronView = [[LNChevronView alloc] initWithFrame:CGRectMake(4, 4.5, 16, 16)];
 		_chevronView.width = 3.0;
-		_chevronView.color = color;
 		[_chevronView setState:LNChevronViewStateUp animated:NO];
 		[self addSubview:_chevronView];
 	}
@@ -232,6 +219,11 @@
 	}
 	
 	[_chevronView setState:LNChevronViewStateFlat animated:YES];
+}
+
+- (void)tintColorDidChange
+{
+	[self setTitleColor:self.tintColor forState:UIControlStateNormal];
 }
 
 @end

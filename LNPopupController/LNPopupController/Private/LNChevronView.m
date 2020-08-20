@@ -44,7 +44,7 @@ IB_DESIGNABLE
 
 - (void)_commonInit
 {
-	self.color = [UIColor lightGrayColor];
+	[self setTintColor:nil];
 	self.width = _LNChevronDefaultWidth;
 	self.animationDuration = _LNChevronDefaultAnimationDuration;
 	
@@ -58,9 +58,9 @@ IB_DESIGNABLE
 	if(_leftView == nil)
 	{
 		_leftView = [[UIView alloc] initWithFrame:CGRectZero];
-		_leftView.backgroundColor = self.color;
+		_leftView.backgroundColor = self.tintColor;
 		_rightView = [[UIView alloc] initWithFrame:CGRectZero];
-		_rightView.backgroundColor = self.color;
+		_rightView.backgroundColor = self.tintColor;
 		
 		[self addSubview:_leftView];
 		[self addSubview:_rightView];
@@ -141,17 +141,10 @@ IB_DESIGNABLE
 	}
 }
 
-- (void)setColor:(UIColor *)color
+- (void)tintColorDidChange
 {
-	if(color == nil)
-	{
-		color = [UIColor lightGrayColor];
-	}
-	
-	_color = color;
-	
-	_leftView.backgroundColor = color;
-	_rightView.backgroundColor = color;
+	_leftView.backgroundColor = self.tintColor;
+	_rightView.backgroundColor = self.tintColor;
 }
 
 - (void)setWidth:(CGFloat)width

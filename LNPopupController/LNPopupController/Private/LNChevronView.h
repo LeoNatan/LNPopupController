@@ -24,7 +24,6 @@ typedef NS_ENUM(NSInteger, LNChevronViewState) {
 @interface LNChevronView : UIView
 
 @property (nonatomic, assign) LNChevronViewState state;
-@property (nonatomic, strong, null_resettable) UIColor* color;
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) NSTimeInterval animationDuration;
 

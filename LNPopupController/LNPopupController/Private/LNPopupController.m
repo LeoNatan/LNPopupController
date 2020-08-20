@@ -926,10 +926,22 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(buttonStyle == LNPopupCloseButtonStyleRound)
 		{
+			if (@available(iOS 13.0, *)) {
+				_popupContentView.popupCloseButton.tintColor = [UIColor labelColor];
+			} else {
+				_popupContentView.popupCloseButton.tintColor = [UIColor lightGrayColor];
+			}
+			
 			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.leadingAnchor constraintEqualToAnchor:_popupContentView.contentView.leadingAnchor constant:12];
 		}
 		else
 		{
+			if (@available(iOS 13.0, *)) {
+				_popupContentView.popupCloseButton.tintColor = [UIColor systemGray2Color];
+			} else {
+				_popupContentView.popupCloseButton.tintColor = [UIColor lightGrayColor];
+			}
+			
 			_popupCloseButtonHorizontalConstraint = [_popupContentView.popupCloseButton.centerXAnchor constraintEqualToAnchor:_popupContentView.contentView.safeAreaLayoutGuide.centerXAnchor];
 		}
 		
