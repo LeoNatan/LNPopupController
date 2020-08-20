@@ -141,8 +141,7 @@ static void _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 	
 	self.popupContentView.frame = contentFrame;
 	
-	contentFrame = _containerController.view.bounds;
-	_containerController.popupContentViewController.view.frame = contentFrame;
+	_containerController.popupContentViewController.view.frame = _containerController.view.bounds;
 	
 	[self _repositionPopupCloseButton];
 }
@@ -704,8 +703,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	self.popupBarStorage.popupItem = _currentPopupItem;
 	
-	CGRect oldContentViewFrame = oldContentController.view.frame;
-	
 	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
 	{
 		[oldContentController _ln_beginAppearanceTransition:NO animated:NO];
@@ -715,7 +712,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_LNPopupTransitionCoordinator* coordinator = [_LNPopupTransitionCoordinator new];
 	[newContentController willTransitionToTraitCollection:_containerController.traitCollection withTransitionCoordinator:coordinator];
 	[newContentController viewWillTransitionToSize:_containerController.view.bounds.size withTransitionCoordinator:coordinator];
-	newContentController.view.frame = oldContentViewFrame;
+	newContentController.view.frame = _containerController.view.bounds;
 	newContentController.view.clipsToBounds = NO;
 	
 	self.popupContentView.currentPopupContentViewController = newContentController;
@@ -981,7 +978,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	self.popupContentView = [[LNPopupContentView alloc] initWithFrame:_containerController.view.bounds];
-	_popupContentView.layer.masksToBounds = YES;
+	_popupContentView.clipsToBounds = YES;
 	[_popupContentView addObserver:self forKeyPath:@"popupCloseButtonStyle" options:NSKeyValueObservingOptionInitial context:NULL];
 	
 	_popupContentView.preservesSuperviewLayoutMargins = YES;
@@ -1046,10 +1043,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock
 {
-	_LNPopupTransitionCoordinator* coordinator = [_LNPopupTransitionCoordinator new];
-	[_containerController.popupContentViewController willTransitionToTraitCollection:_containerController.traitCollection withTransitionCoordinator:coordinator];
-	[_containerController.popupContentViewController viewWillTransitionToSize:_containerController.view.bounds.size withTransitionCoordinator:coordinator];
-	
 	UIViewController* old = _currentContentController;
 	[self _reconfigureContentWithOldContentController:old newContentController:_containerController.popupContentViewController];
 	
