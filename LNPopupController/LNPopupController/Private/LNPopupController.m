@@ -61,7 +61,6 @@ static void _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 @implementation LNPopupController
 {
 	__weak LNPopupItem* _currentPopupItem;
-	__kindof UIViewController* _currentContentController;
 	
 	BOOL _dismissGestureStarted;
 	CGFloat _dismissStartingOffset;

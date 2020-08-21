@@ -31,6 +31,7 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
 @property (nonatomic, weak) id<LNPopupPresentationDelegate> userPopupPresentationDelegate;
 
+@property (nonatomic, strong) __kindof UIViewController* currentContentController;
 @property (nonatomic, weak) __kindof UIViewController* containerController;
 
 @property (nonatomic) CGPoint lastPopupBarLocation;

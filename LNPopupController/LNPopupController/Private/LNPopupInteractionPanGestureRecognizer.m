@@ -103,20 +103,18 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-	if([NSStringFromClass(otherGestureRecognizer.class) containsString:@"SwiftUI"])
+	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)
 	{
-		if([gestureRecognizer.view isKindOfClass:LNPopupBar.class] == YES)
+		return NO;
+	}
+	
+	if(_popupController.popupBar._applySwiftUILayoutFixes)
+	{
+		if([otherGestureRecognizer isKindOfClass:UIPanGestureRecognizer.class])
 		{
 			return YES;
 		}
-		else
-		{
-			return NO;
-		}
-	}
-	
-	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)
-	{
+		
 		return NO;
 	}
 	

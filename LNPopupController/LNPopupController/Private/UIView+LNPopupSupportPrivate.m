@@ -18,6 +18,12 @@ static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
 static NSString* dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
 #endif
 
+@interface UIViewController ()
+
+- (void)_ln_popup_viewDidMoveToWindow;
+
+@end
+
 @implementation UIView (LNPopupSupportPrivate)
 
 + (void)load
@@ -42,6 +48,11 @@ static NSString* dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
 - (void)_ln__dMFW:(UIWindow*)fromWindow tW:(UIWindow*)toWindow
 {
 	[self _ln__dMFW:fromWindow tW:toWindow];
+	
+	if([self.nextResponder isKindOfClass:UIViewController.class] && [self.nextResponder respondsToSelector:@selector(_ln_popup_viewDidMoveToWindow)])
+	{
+		[(id)self.nextResponder _ln_popup_viewDidMoveToWindow];
+	}
 	
 	[self _ln_notify];
 }
