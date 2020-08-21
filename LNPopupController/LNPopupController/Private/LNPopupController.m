@@ -712,6 +712,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_LNPopupTransitionCoordinator* coordinator = [_LNPopupTransitionCoordinator new];
 	[newContentController willTransitionToTraitCollection:_containerController.traitCollection withTransitionCoordinator:coordinator];
 	[newContentController viewWillTransitionToSize:_containerController.view.bounds.size withTransitionCoordinator:coordinator];
+	newContentController.view.translatesAutoresizingMaskIntoConstraints = YES;
+	newContentController.view.autoresizingMask = UIViewAutoresizingNone;
 	newContentController.view.frame = _containerController.view.bounds;
 	newContentController.view.clipsToBounds = NO;
 	
