@@ -792,7 +792,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	CGRect frame = _titlesView.frame;
 	frame.size.width = self.bounds.size.width - titleInsets.left - titleInsets.right;
-	frame.size.height = self.bounds.size.height;
+	frame.size.height = _contentView.bounds.size.height;
 	frame.origin.x = titleInsets.left;
 	
 	_titlesView.frame = frame;
