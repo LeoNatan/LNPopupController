@@ -267,7 +267,7 @@ In your subclass, implement the `popupItemDidUpdate` method to be notified of up
 
 Finally, set the `customBarViewController` property of the popup bar object to an instance of your `LNPopupCustomBarViewController` subclass. This will change the bar style to `LNPopupBarStyle.custom`.
 
-The included demo projects includes an example custom popup bar scene.
+The included demo project includes an example custom popup bar scene.
 
 ### Accessibility
 
