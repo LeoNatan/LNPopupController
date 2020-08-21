@@ -132,11 +132,11 @@ Any `UIViewController` subclasses can be popup container view controllers. The p
 
 ```swift
 override var bottomDockingViewForPopupBar: UIView? {
-	return myCoolBottomView
+  return myCoolBottomView
 }
 
 override var defaultFrameForBottomDockingView: CGRect {
-	var bottomViewFrame = myCoolBottomView.frame
+  var bottomViewFrame = myCoolBottomView.frame
   
   if isMyCoolBottomViewHidden {
     bottomViewFrame.origin = CGPoint(x: bottomViewFrame.x, y: view.bounds.height)
@@ -259,13 +259,13 @@ The framework supports implementing custom popup bars.
 
 <img src="./Supplements/custom_bar.png" width="360"/>
 
-To implement a custom popup bar, subclass ```LNPopupCustomBarViewController```.
+To implement a custom popup bar, subclass `LNPopupCustomBarViewController`.
 
-In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's ```preferredContentSize``` property with the preferred popup bar height. Override the `wantsDefaultTapGestureRecognizer` and/or `wantsDefaultPanGestureRecognizer` properties to disable adding the default gesture recognizers.
+In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's `preferredContentSize` property with the preferred popup bar height. Override the `wantsDefaultTapGestureRecognizer` and/or `wantsDefaultPanGestureRecognizer` properties to disable adding the default gesture recognizers.
 
 In your subclass, implement the `popupItemDidUpdate` method to be notified of updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
 
-Finally, set the `customBarViewController` property of the popup bar object to an instance of your ```LNPopupCustomBarViewController``` subclass. This will change the bar style to `LNPopupBarStyle.custom`.
+Finally, set the `customBarViewController` property of the popup bar object to an instance of your `LNPopupCustomBarViewController` subclass. This will change the bar style to `LNPopupBarStyle.custom`.
 
 The included demo projects includes an example custom popup bar scene.
 
