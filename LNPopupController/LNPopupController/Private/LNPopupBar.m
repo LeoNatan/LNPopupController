@@ -203,6 +203,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	if(self)
 	{
 		self.preservesSuperviewLayoutMargins = YES;
+		self.clipsToBounds = YES;
 		
 		_inheritsVisualStyleFromDockingView = YES;
 		
