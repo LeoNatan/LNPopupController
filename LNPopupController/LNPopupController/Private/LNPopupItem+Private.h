@@ -19,6 +19,8 @@
 
 @interface LNPopupItem ()
 
+@property (nonatomic, strong) UIViewController* swiftuiImageController;
+
 /**
  * The accessibility label of the image, in a localized string.
  */

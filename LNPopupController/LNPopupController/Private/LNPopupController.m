@@ -622,6 +622,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 - (void)_reconfigure_image
 {
 	self.popupBarStorage.image = _currentPopupItem.image;
+	
+	if(_currentPopupItem.image != nil && _currentPopupItem.swiftuiImageController != nil)
+	{
+		_currentPopupItem.swiftuiImageController = nil;
+	}
 }
 
 - (void)_reconfigure_progress
@@ -672,6 +677,19 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 - (void)_reconfigure_trailingBarButtonItems
 {
 	[self _reconfigureBarItems];
+}
+
+- (void)_reconfigure_swiftuiImageController
+{
+	if(_currentPopupItem.swiftuiImageController != nil)
+	{
+		self.popupBarStorage.swiftuiImageController = _currentPopupItem.swiftuiImageController;
+	}
+	
+	if(_currentPopupItem.swiftuiImageController != nil && _currentPopupItem.image != nil)
+	{
+		_currentPopupItem.image = nil;
+	}
 }
 
 - (void)_popupItem:(LNPopupItem*)popupItem didChangeValueForKey:(NSString*)key

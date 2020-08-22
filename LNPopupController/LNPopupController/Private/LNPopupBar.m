@@ -570,6 +570,28 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[self _setNeedsTitleLayout];
 }
 
+- (void)setSwiftuiImageController:(UIViewController *)swiftuiImageController
+{
+	if(_swiftuiImageController != nil)
+	{
+		[_swiftuiImageController.view removeFromSuperview];
+	}
+	
+	_swiftuiImageController = swiftuiImageController;
+	
+	_swiftuiImageController.view.translatesAutoresizingMaskIntoConstraints = NO;
+	[_imageView addSubview:_swiftuiImageController.view];
+	[NSLayoutConstraint activateConstraints:@[
+		[_imageView.topAnchor constraintEqualToAnchor:_swiftuiImageController.view.topAnchor],
+		[_imageView.bottomAnchor constraintEqualToAnchor:_swiftuiImageController.view.bottomAnchor],
+		[_imageView.leadingAnchor constraintEqualToAnchor:_swiftuiImageController.view.leadingAnchor],
+		[_imageView.trailingAnchor constraintEqualToAnchor:_swiftuiImageController.view.trailingAnchor],
+	]];
+	
+	[self _layoutImageView];
+	[self _setNeedsTitleLayout];
+}
+
 - (void)setAccessibilityCenterHint:(NSString *)accessibilityCenterHint
 {
 	_accessibilityCenterHint = accessibilityCenterHint;
@@ -961,7 +983,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 	
 	_imageView.image = _image;
-	_imageView.hidden = _image == nil;
+	_imageView.hidden = _image == nil && _swiftuiImageController == nil;
 	
 	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
 	

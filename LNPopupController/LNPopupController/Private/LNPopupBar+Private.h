@@ -62,6 +62,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, copy) NSString* subtitle;
 
 @property (nonatomic, strong) UIImage* image;
+@property (nonatomic, strong) UIViewController* swiftuiImageController;
 
 @property (nonatomic, strong) UIView* highlightView;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
