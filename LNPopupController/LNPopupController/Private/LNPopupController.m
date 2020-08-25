@@ -807,11 +807,18 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		if(@available(iOS 13.0, *))
 		{
 #ifndef LNPopupControllerEnforceStrictClean
-			//_systemChromeShadowColor
-			sV = @"X3N5c3RlbUNocm9tZVNoYWRvd0NvbG9y";
-			systemShadowColor = [UIColor valueForKey:_LNPopupDecodeBase64String(sV)];
-#else
-			systemShadowColor = [UIColor systemGray2Color];
+			if(@available(iOS 13.5, *))
+			{
+				//_systemChromeShadowColor
+				sV = @"X3N5c3RlbUNocm9tZVNoYWRvd0NvbG9y";
+				systemShadowColor = [UIColor valueForKey:_LNPopupDecodeBase64String(sV)];
+			}
+			else
+			{
+#endif
+				systemShadowColor = [UIColor systemGray2Color];
+#ifndef LNPopupControllerEnforceStrictClean
+			}
 #endif
 		}
 		else
