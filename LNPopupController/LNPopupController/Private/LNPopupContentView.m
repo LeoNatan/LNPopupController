@@ -7,6 +7,7 @@
 //
 
 #import "LNPopupContentView+Private.h"
+#import "LNPopupController.h"
 
 @implementation LNPopupContentView
 {
@@ -44,6 +45,37 @@
 - (UIView *)contentView
 {
 	return _effectView.contentView;
+}
+
+- (void)setUserContentEffectView:(UIVisualEffectView *)userContentEffectView
+{
+    if(self.popupCloseButton.style == LNPopupCloseButtonStyleChevron)
+    {
+        _userContentEffectView = userContentEffectView;
+        LNPopupController *popupController = self.currentPopupContentViewController.popupPresentationContainerViewController._ln_popupController;
+        if (userContentEffectView != nil) {
+            [popupController _setUpUserEffectViewForPopupContentView];
+            [popupController _repositionPopupCloseButton];
+        }
+        else
+        {
+            [popupController _setUpCloseButtonForPopupContentView];
+            [popupController _repositionPopupCloseButton];
+        }
+    }
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView* view = [super hitTest:point withEvent:event];
+    if (_vibrancyEffectView != nil)
+    {
+        if (CGRectContainsPoint(CGRectInset(_vibrancyEffectView.frame, -20, -20), point))
+        {
+            return _popupCloseButton;
+        }
+    }
+    return view;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView

@@ -80,6 +80,9 @@ static void _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 	
 	NSLayoutConstraint* _popupCloseButtonTopConstraint;
 	NSLayoutConstraint* _popupCloseButtonHorizontalConstraint;
+
+    NSLayoutConstraint* _vibrancyEffectViewTopConstraint;
+    NSLayoutConstraint* _vibrancyEffectViewHorizontalConstraint;
 }
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
@@ -886,9 +889,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_repositionPopupCloseButton
 {
-	CGFloat startingTopConstant = _popupCloseButtonTopConstraint.constant;
+    CGFloat startingTopConstant = _popupContentView.userContentEffectView != nil ? _vibrancyEffectViewTopConstraint.constant : _popupCloseButtonTopConstraint.constant;
 	
-	_popupCloseButtonTopConstraint.constant = _popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 8;
+    if (_popupContentView.userContentEffectView != nil) {
+        _vibrancyEffectViewTopConstraint.constant = 8;
+    }
+    else {
+        _popupCloseButtonTopConstraint.constant = _popupContentView.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 8;
+    }
 	
 	CGFloat windowTopSafeAreaInset = 0;
 	
@@ -908,23 +916,47 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		windowTopSafeAreaInset += _popupContentView.window.safeAreaInsets.top;
 	}
 	
-	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
+    if (_popupContentView.userContentEffectView != nil) {
+        _vibrancyEffectViewTopConstraint.constant += windowTopSafeAreaInset;
+    }
+    else {
+        _popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
+    }
     
     id hitTest = [[_currentContentController view] hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
     UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
     if(possibleBar)
     {
         if (_popupContentView.popupCloseButtonAutomaticallyUnobstructsTopBars)
-            _popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
+        {
+            if (_popupContentView.userContentEffectView != nil)
+            {
+                _vibrancyEffectViewTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
+            }
+            else {
+                _popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
+            }
+        }
         else
-            _popupCloseButtonTopConstraint.constant += 6;
+        {
+            if (_popupContentView.userContentEffectView != nil)
+            {
+                _vibrancyEffectViewTopConstraint.constant += 6;
+            }
+            else
+            {
+                _popupCloseButtonTopConstraint.constant += 6;
+            }
+        }
     }
 	
-	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
+	if(startingTopConstant != _popupCloseButtonTopConstraint.constant || startingTopConstant != _vibrancyEffectViewTopConstraint.constant)
 	{
 		[_popupContentView setNeedsUpdateConstraints];
+        [_popupContentView.userContentEffectView setNeedsUpdateConstraints];
 		[UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
 			[_popupContentView layoutIfNeeded];
+            [_popupContentView.userContentEffectView layoutIfNeeded];
 		} completion:nil];
 	}
 }
@@ -973,6 +1005,30 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		[NSLayoutConstraint activateConstraints:@[_popupCloseButtonTopConstraint, _popupCloseButtonHorizontalConstraint]];
 	}
+}
+
+- (void)_setUpUserEffectViewForPopupContentView
+{
+    LNPopupCloseButtonStyle buttonStyle = _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(_popupContentView.popupCloseButtonStyle);
+    
+    if(buttonStyle != LNPopupCloseButtonStyleNone)
+    {
+        UIVibrancyEffect* effect = [UIVibrancyEffect effectForBlurEffect: (UIBlurEffect*)(_popupContentView.userContentEffectView.effect)];
+        _popupContentView.vibrancyEffectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+        [_popupContentView.vibrancyEffectView.contentView addSubview:_popupContentView.popupCloseButton];
+        [_popupContentView.userContentEffectView.contentView addSubview:_popupContentView.vibrancyEffectView];
+        CGSize size = [_popupContentView.popupCloseButton sizeThatFits:CGSizeZero];
+        _popupContentView.popupCloseButton.translatesAutoresizingMaskIntoConstraints = YES;
+        _popupContentView.popupCloseButton.frame = CGRectMake(0, 0, size.width, size.height);
+        _popupContentView.vibrancyEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+        _vibrancyEffectViewTopConstraint = [_popupContentView.vibrancyEffectView.topAnchor constraintEqualToAnchor:_popupContentView.userContentEffectView.topAnchor constant: 8];
+        [[_popupContentView.vibrancyEffectView.widthAnchor constraintEqualToConstant:size.width] setActive:YES];
+        [[_popupContentView.vibrancyEffectView.heightAnchor constraintEqualToConstant:size.height] setActive:YES];
+
+        _vibrancyEffectViewHorizontalConstraint = [_popupContentView.vibrancyEffectView.centerXAnchor constraintEqualToAnchor:_popupContentView.userContentEffectView.safeAreaLayoutGuide.centerXAnchor];
+        
+        [NSLayoutConstraint activateConstraints:@[_vibrancyEffectViewTopConstraint, _vibrancyEffectViewHorizontalConstraint]];
+    }
 }
 
 - (LNPopupBar *)popupBarStorage

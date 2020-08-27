@@ -55,6 +55,13 @@ extern const UIBlurEffectStyle LNBackgroundStyleInherit;
  */
 @property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
 
+/**
+ * The content view visual effect view provided by the user for adding a vibrancy effect to the button.
+ *
+ * The value of this property will be ignored if @c style is set to @c LNPopupCloseButtonStyleRound.
+ */
+@property (nonatomic, strong) UIVisualEffectView* userContentEffectView;
+
 @end
 
 NS_ASSUME_NONNULL_END

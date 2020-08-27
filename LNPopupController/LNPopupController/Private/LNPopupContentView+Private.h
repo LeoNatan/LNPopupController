@@ -16,6 +16,7 @@
 @property (nonatomic, strong, readwrite) LNPopupCloseButton* popupCloseButton;
 @property (nonatomic, strong) UIVisualEffectView* effectView;
 @property (nonatomic, strong, readonly) UIView* contentView;
+@property (nonatomic, strong) UIVisualEffectView* vibrancyEffectView;
 
 @property (nonatomic, weak) UIViewController* currentPopupContentViewController;
 

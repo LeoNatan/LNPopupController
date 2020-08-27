@@ -25,7 +25,9 @@
 @end
 
 @interface DemoPopupContentViewController () @end
-@implementation DemoPopupContentViewController
+@implementation DemoPopupContentViewController {
+    UIImageView* _imageView;
+}
 
 - (void)loadView
 {
@@ -129,9 +131,9 @@ static UIImage* LNSystemImage(NSString* named)
 
 - (void)viewDidLoad
 {
-	[super viewDidLoad];
-	
-	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [super viewDidLoad];
+    
+    UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];
 	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
 	if (@available(iOS 13.0, *)) {
@@ -154,7 +156,27 @@ static UIImage* LNSystemImage(NSString* named)
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
+    [super viewWillAppear:animated];
+    
+    if (@available(iOS 13.0, *)) {
+        [_imageView removeFromSuperview];
+        int r = arc4random_uniform(30)+1;
+        UIImage* image = [UIImage imageNamed:[NSString stringWithFormat:@"genre%d",r]];
+        _imageView = [[UIImageView alloc] initWithImage:image];
+        _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _imageView.frame = self.view.bounds;
+        [self.view insertSubview:_imageView atIndex:0];
+        
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            UIBlurEffect* effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialDark];
+            UIVisualEffectView* effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+            effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            effectView.frame = self.view.bounds;
+            [self.view insertSubview:effectView atIndex:1];
+            self.popupPresentationContainerViewController.popupContentView.userContentEffectView = effectView;
+        });
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated

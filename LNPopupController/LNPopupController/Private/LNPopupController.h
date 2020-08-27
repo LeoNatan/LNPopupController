@@ -46,6 +46,8 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 - (void)_movePopupBarAndContentToBottomBarSuperview;
 
 - (void)_repositionPopupCloseButton;
+- (void)_setUpCloseButtonForPopupContentView;
+- (void)_setUpUserEffectViewForPopupContentView;
 
 - (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock;
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
