@@ -27,6 +27,7 @@
 @interface DemoPopupContentViewController () @end
 @implementation DemoPopupContentViewController {
     UIImageView* _imageView;
+    UIVisualEffectView* _effectView;
 }
 
 - (void)loadView
@@ -167,15 +168,14 @@ static UIImage* LNSystemImage(NSString* named)
         _imageView.frame = self.view.bounds;
         [self.view insertSubview:_imageView atIndex:0];
         
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            UIBlurEffect* effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialDark];
-            UIVisualEffectView* effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-            effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            effectView.frame = self.view.bounds;
-            [self.view insertSubview:effectView atIndex:1];
-            self.popupPresentationContainerViewController.popupContentView.userContentEffectView = effectView;
-        });
+        if (_effectView == nil) {
+            UIBlurEffect* effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
+            _effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+            _effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            _effectView.frame = self.view.bounds;
+            [self.view insertSubview:_effectView atIndex:1];
+            self.popupPresentationContainerViewController.popupContentView.userContentEffectView = _effectView;
+        }
     }
 }
 
