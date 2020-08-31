@@ -1163,7 +1163,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[NSLayoutConstraint activateConstraints:@[
 		[self.contentView.leadingAnchor constraintEqualToAnchor:_customBarViewController.view.leadingAnchor],
 		[self.contentView.trailingAnchor constraintEqualToAnchor:_customBarViewController.view.trailingAnchor],
-		[self.contentView.centerXAnchor constraintEqualToAnchor:_customBarViewController.view.centerXAnchor],
+        [self.contentView.topAnchor constraintEqualToAnchor:_customBarViewController.view.topAnchor],
+        [self.contentView.bottomAnchor constraintEqualToAnchor:_customBarViewController.view.bottomAnchor]
 	]];
 	
 	[self _updateViewsAfterCustomBarViewControllerUpdate];
