@@ -44,6 +44,11 @@
 	return YES;
 }
 
+- (BOOL)wantsDefaultHighlightGestureRecognizer
+{
+	return YES;
+}
+
 - (void)setPreferredContentSize:(CGSize)preferredContentSize
 {
 	[super setPreferredContentSize:preferredContentSize];

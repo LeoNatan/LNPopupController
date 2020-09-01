@@ -236,7 +236,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Maps" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="rWD-1P-SlK">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Maps (Auto Layout)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="rWD-1P-SlK">
                                                     <rect key="frame" x="16" y="0.0" width="343" height="44"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -249,6 +249,29 @@
                                             <segue destination="LhN-D5-lOz" kind="showDetail" identifier="maps" id="SIC-fE-4sh">
                                                 <segue key="commit" inheritsFrom="parent" id="7vY-Se-WS9"/>
                                                 <segue key="preview" inheritsFrom="commit" id="KBw-AZ-EfH"/>
+                                            </segue>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="maps" textLabel="xr3-Im-WEg" style="IBUITableViewCellStyleDefault" id="07I-Fx-JaB">
+                                        <rect key="frame" x="0.0" y="607.33333206176758" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="07I-Fx-JaB" id="jXc-oJ-q5J">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Maps (Manual Layout)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="xr3-Im-WEg">
+                                                    <rect key="frame" x="16" y="0.0" width="343" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="bVY-yO-vvJ" kind="showDetail" id="FoD-Oj-irL">
+                                                <segue key="commit" inheritsFrom="parent" id="qiQ-gN-Lcx"/>
+                                                <segue key="preview" inheritsFrom="commit" id="dYv-ii-ymw"/>
                                             </segue>
                                         </connections>
                                     </tableViewCell>
@@ -367,7 +390,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PfZ-Ec-LGF">
-                                <rect key="frame" x="302" y="132" width="57" height="33"/>
+                                <rect key="frame" x="302" y="88" width="57" height="33"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <state key="normal" title="Gallery">
                                     <color key="titleColor" systemColor="labelColor"/>
@@ -454,6 +477,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RNZ-LC-ONs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-392" y="-918"/>
+        </scene>
+        <!--ManualLayoutScene-->
+        <scene sceneID="pVW-EQ-2Mr">
+            <objects>
+                <viewControllerPlaceholder storyboardName="ManualLayoutScene" id="bVY-yO-vvJ" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zda-7E-BRL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-151" y="-920"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="qqf-ac-jlJ">
@@ -977,15 +1008,16 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="gRd-L2-CDS"/>
+        <segue reference="Te4-2y-lMK"/>
         <segue reference="Skw-Eu-N7K"/>
         <segue reference="08s-5F-WiR"/>
+        <segue reference="FoD-Oj-irL"/>
         <segue reference="SIC-fE-4sh"/>
-        <segue reference="3Gb-iz-WgK"/>
+        <segue reference="7qJ-pK-ibQ"/>
         <segue reference="1U6-NV-9t4"/>
         <segue reference="iD8-2E-cMh"/>
         <segue reference="19O-Tx-Ntx"/>
-        <segue reference="Yls-eT-pdu"/>
+        <segue reference="UEc-Fk-ILA"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>

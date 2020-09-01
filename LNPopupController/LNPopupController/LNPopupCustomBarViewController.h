@@ -31,10 +31,19 @@
  */
 @property (nonatomic, assign, readonly) BOOL wantsDefaultPanGestureRecognizer;
 
+/**
+ * Indicates whether the default highlight gesture recognizer should be added to the popup bar.
+ *
+ * Defaults to @c YES.
+ */
+@property (nonatomic, assign, readonly) BOOL wantsDefaultHighlightGestureRecognizer;
+
 /*
  * The @c preferredContentSize is used for height calculation of the popup bar. Update this property if you need to resize the popup bar.
  */
 @property (nonatomic, assign) CGSize preferredContentSize;
+
+- (void)viewDidLoad NS_REQUIRES_SUPER; // Called after the view has been loaded. For view controllers created in code, this is after -loadView. For view controllers unarchived from a nib, this is after the view is set.
 
 /**
  * Called by the framework to notify the popup bar content view controller that one or more keys of the the popup item have been updated, or the entire popup item has changed.

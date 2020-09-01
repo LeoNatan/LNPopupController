@@ -356,6 +356,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarLongPressGestureRecognized:(UILongPressGestureRecognizer*)lpgr
 {
+	if(self.popupBar.customBarViewController != nil && self.popupBar.customBarViewController.wantsDefaultHighlightGestureRecognizer == NO)
+	{
+		return;
+	}
+	
 	switch (lpgr.state) {
 		case UIGestureRecognizerStateBegan:
 			[self.popupBar setHighlighted:YES animated:YES];

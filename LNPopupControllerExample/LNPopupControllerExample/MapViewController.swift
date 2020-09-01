@@ -21,11 +21,16 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		super.viewWillAppear(animated)
 		
 		#if LNPOPUP
-		let customMapBar = storyboard!.instantiateViewController(withIdentifier: "CustomMapBarViewController") as! CustomMapBarViewController
-		customMapBar.view.backgroundColor = .clear
-		customMapBar.searchBar.delegate = self
+		if let customMapBar = storyboard!.instantiateViewController(withIdentifier: "CustomMapBarViewController") as? CustomMapBarViewController {
+			customMapBar.view.backgroundColor = .clear
+			customMapBar.searchBar.delegate = self
+			
+			popupBar.customBarViewController = customMapBar
+		} else {
+			//Manual layout bar scene
+			popupBar.customBarViewController = ManualLayoutCustomBarViewController()
+		}
 		
-		popupBar.customBarViewController = customMapBar
 		popupContentView.popupCloseButtonStyle = .none
 		if #available(iOS 13.0, *) {
 			popupContentView.backgroundStyle = .systemChromeMaterial

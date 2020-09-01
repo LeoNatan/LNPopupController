@@ -29,6 +29,10 @@
 		3988E3581B59C3000039C09B /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3988E3571B59C3000039C09B /* FirstViewController.m */; };
 		399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399748711D5652250079492B /* DemoPopupContentViewController.m */; };
 		39A3B58B230D400B00E10425 /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* SplitViewController.m */; };
+		39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
+		39BBA86A24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */; };
+		39BBA86B24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */; };
+		39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
 		39DA0E8322D7B9C6001E63A0 /* NSObject+XcodeBugs.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */; };
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -158,6 +162,8 @@
 		39A3B589230D400B00E10425 /* SplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitViewController.h; sourceTree = "<group>"; };
 		39A3B58A230D400B00E10425 /* SplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
 		39A3B58C230D433100E10425 /* LNPopupControllerExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupControllerExample.entitlements; sourceTree = "<group>"; };
+		39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ManualLayoutScene.storyboard; sourceTree = "<group>"; };
+		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
 		39DA0E8122D7B9C6001E63A0 /* NSObject+XcodeBugs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+XcodeBugs.h"; sourceTree = "<group>"; };
 		39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+XcodeBugs.m"; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
@@ -236,6 +242,7 @@
 				397C560B1B74D47D007A67F0 /* Demo - Testing Scene (Objective-C) */,
 				397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */,
 				393F23211E16BEF5000E969D /* Demo - Custom Pupup Bar Scene (Swift) */,
+				39BBA86324FEC16600D9712A /* Demo - Custom Pupup Bar Scene - Manual Layout (Swift) */,
 				3908C3491E7C9E8A00451B5D /* Settings */,
 				39837A221B756F9B004D2DA9 /* Utils */,
 				39277A071B58228000293F95 /* Supporting Files */,
@@ -313,6 +320,15 @@
 				39837A1F1B756F1A004D2DA9 /* RandomColors.m */,
 			);
 			name = Utils;
+			sourceTree = "<group>";
+		};
+		39BBA86324FEC16600D9712A /* Demo - Custom Pupup Bar Scene - Manual Layout (Swift) */ = {
+			isa = PBXGroup;
+			children = (
+				39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */,
+				39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */,
+			);
+			name = "Demo - Custom Pupup Bar Scene - Manual Layout (Swift)";
 			sourceTree = "<group>";
 		};
 		39DB52F11B5823480061C589 /* Products */ = {
@@ -451,6 +467,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39140B901DBD69540036A6C5 /* Music.storyboard in Resources */,
+				39BBA86A24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */,
 				393F23231E16BF1D000E969D /* MapScene.storyboard in Resources */,
 				39277A171B58228000293F95 /* Assets.xcassets in Resources */,
 				39277A151B58228000293F95 /* Main.storyboard in Resources */,
@@ -462,6 +479,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39FAFC4D24E71A6C008BBC2D /* Music.storyboard in Resources */,
+				39BBA86B24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */,
 				39FAFC4E24E71A6C008BBC2D /* MapScene.storyboard in Resources */,
 				39FAFC4F24E71A6C008BBC2D /* Assets.xcassets in Resources */,
 				39FAFC5024E71A6C008BBC2D /* Main.storyboard in Resources */,
@@ -476,6 +494,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3908C34C1E7C9EA200451B5D /* SettingsTableViewController.m in Sources */,
+				39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */,
 				397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */,
 				39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
@@ -500,6 +519,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39FAFC3624E71A6C008BBC2D /* SettingsTableViewController.m in Sources */,
+				39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */,
 				39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */,
 				39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */,
 				39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */,

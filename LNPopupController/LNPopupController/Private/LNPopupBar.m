@@ -319,6 +319,18 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[super updateConstraints];
 }
 
+- (void)_layoutCustomBarController
+{
+	if(_customBarViewController == nil || _customBarViewController.view.translatesAutoresizingMaskIntoConstraints == NO)
+	{
+		return;
+	}
+	
+	CGRect frame = _contentView.bounds;
+	frame.size.height = _customBarViewController.preferredContentSize.height;
+	_customBarViewController.view.frame = frame;
+}
+
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
@@ -329,6 +341,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	frame.size.height = barHeight;
 	[_contentView setFrame:frame];
 	[_backgroundView setFrame:frame];
+	
+	[self _layoutCustomBarController];
 	
 	[self _layoutImageView];
 	
@@ -1144,6 +1158,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		return;
 	}
 	
+	[self layoutIfNeeded];
+	
 	if (customBarViewController.containingPopupBar)
 	{
 		//Cleanly move the custom bar view controller from the previos popup bar.
@@ -1155,20 +1171,26 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];
 	
 	_customBarViewController = customBarViewController;
-	_customBarViewController.containingPopupBar = self;
-	[_customBarViewController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
 	
-	_customBarViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
-	[self.contentView addSubview:_customBarViewController.view];
-	[NSLayoutConstraint activateConstraints:@[
-		[self.contentView.leadingAnchor constraintEqualToAnchor:_customBarViewController.view.leadingAnchor],
-		[self.contentView.trailingAnchor constraintEqualToAnchor:_customBarViewController.view.trailingAnchor],
-		[self.contentView.centerXAnchor constraintEqualToAnchor:_customBarViewController.view.centerXAnchor],
-	]];
+	if(_customBarViewController != nil)
+	{
+		_customBarViewController.containingPopupBar = self;
+		[_customBarViewController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
+		
+		[self.contentView addSubview:_customBarViewController.view];
+		
+		if(_customBarViewController.view.translatesAutoresizingMaskIntoConstraints == NO)
+		{
+			[NSLayoutConstraint activateConstraints:@[
+				[self.contentView.leadingAnchor constraintEqualToAnchor:_customBarViewController.view.leadingAnchor],
+				[self.contentView.trailingAnchor constraintEqualToAnchor:_customBarViewController.view.trailingAnchor],
+				[self.contentView.centerXAnchor constraintEqualToAnchor:_customBarViewController.view.centerXAnchor],
+			]];
+		}
+	}
 	
 	[self _updateViewsAfterCustomBarViewControllerUpdate];
-	
-	[self setBarStyle:LNPopupBarStyleCustom];
+	[self setBarStyle:_customBarViewController != nil ? LNPopupBarStyleCustom : LNPopupBarStyleDefault];
 }
 
 - (void)setLeadingBarButtonItems:(NSArray *)leadingBarButtonItems
