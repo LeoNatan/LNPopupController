@@ -754,6 +754,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[self _fixupGestureRecognizersForController:newContentController];
 	}
 	
+	if(_popupControllerPublicState == LNPopupPresentationStateOpen)
+	{
+		[newContentController.viewForPopupInteractionGestureRecognizer addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+	}
+	
 	_currentContentController = newContentController;
 	
 	if(self.popupBar.customBarViewController != nil)
