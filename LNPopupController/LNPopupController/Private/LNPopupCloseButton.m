@@ -6,7 +6,7 @@
 //  Copyright © 2015-2020 Leo Natan. All rights reserved.
 //
 
-#import <LNPopupController/LNPopupCloseButton.h>
+#import "LNPopupCloseButton+Private.h"
 @import ObjectiveC;
 #import "LNChevronView.h"
 
@@ -14,28 +14,16 @@
 {
 	UIVisualEffectView* _effectView;
 	UIView* _highlightView;
-	LNPopupCloseButtonStyle _style;
 	
 	LNChevronView* _chevronView;
 }
 
-- (instancetype)initWithStyle:(LNPopupCloseButtonStyle)style
+- (instancetype)init
 {
-	self = [self init];
+	self = [super init];
 	
 	if(self)
 	{
-		_style = style;
-		
-		if(_style == LNPopupCloseButtonStyleRound)
-		{
-			[self _setupForCircularButton];
-		}
-		else
-		{
-			[self _setupForChevronButton];
-		}
-		
 		self.accessibilityLabel = NSLocalizedString(@"Close", @"");
 		
 		[self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -44,15 +32,57 @@
 		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		
-		return self;
+		_style = LNPopupCloseButtonStyleChevron;
+		[self _setupForChevronButton];
 	}
 	
 	return self;
 }
 
+- (void)setStyle:(LNPopupCloseButtonStyle)style
+{
+	//This will take care of cases where the user sets LNPopupCloseButtonStyleDefault as well as close button repositioning.
+	[self.popupContentView setPopupCloseButtonStyle:style];
+}
+
+- (void)_setStyle:(LNPopupCloseButtonStyle)style
+{
+	if(_style == style)
+	{
+		return;
+	}
+	
+	_style = style;
+	
+	[self _cleanup];
+	
+	if(_style == LNPopupCloseButtonStyleRound)
+	{
+		[self _setupForCircularButton];
+	}
+	else if(_style == LNPopupCloseButtonStyleChevron)
+	{
+		[self _setupForChevronButton];
+	}
+}
+
 - (UIVisualEffectView*)backgroundView
 {
 	return _effectView;
+}
+
+- (void)_cleanup
+{
+	[_chevronView removeFromSuperview];
+	_chevronView = nil;
+	
+	[_effectView removeFromSuperview];
+	_effectView = nil;
+	
+	[_highlightView removeFromSuperview];
+	_highlightView = nil;
+	
+	[self setImage:nil forState:UIControlStateNormal];
 }
 
 - (void)_setupForChevronButton

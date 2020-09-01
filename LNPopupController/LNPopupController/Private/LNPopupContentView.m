@@ -7,11 +7,28 @@
 //
 
 #import "LNPopupContentView+Private.h"
+#import "LNPopupCloseButton+Private.h"
+#import <LNPopupController/UIViewController+LNPopupSupport.h>
+
+LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPopupCloseButtonStyle style)
+{
+	LNPopupCloseButtonStyle rv = style;
+	if(rv == LNPopupCloseButtonStyleDefault)
+	{
+		rv = LNPopupCloseButtonStyleChevron;
+	}
+	return rv;
+}
 
 @implementation LNPopupContentView
 {
 	NSInteger _userOverrideUserInterfaceStyle;
 	NSInteger _controllerOverrideUserInterfaceStyle;
+	
+	NSLayoutConstraint* _popupCloseButtonTopConstraint;
+
+	NSLayoutConstraint* _popupCloseButtonCenterConstraint;
+	NSLayoutConstraint* _popupCloseButtonLeadingConstraint;
 }
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
@@ -29,6 +46,9 @@
 		
 		_translucent = YES;
 		_backgroundStyle = LNBackgroundStyleInherit;
+		
+		_popupCloseButton = [LNPopupCloseButton new];
+		_popupCloseButton.popupContentView = self;
 	}
 	
 	return self;
@@ -44,6 +64,138 @@
 - (UIView *)contentView
 {
 	return _effectView.contentView;
+}
+
+- (void)setPopupCloseButtonStyle:(LNPopupCloseButtonStyle)popupCloseButtonStyle
+{
+	_popupCloseButtonStyle = popupCloseButtonStyle;
+	
+	LNPopupCloseButtonStyle buttonStyle = _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(self.popupCloseButtonStyle);
+	
+	[UIView performWithoutAnimation:^{
+		[self.popupCloseButton _setStyle:buttonStyle];
+		
+		if(buttonStyle != LNPopupCloseButtonStyleNone)
+		{
+			self.popupCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
+			[self.contentView addSubview:self.popupCloseButton];
+			
+			[self.popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+			[self.popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+			[self.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+			[self.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+			
+			if(_popupCloseButtonTopConstraint == nil)
+			{
+				_popupCloseButtonTopConstraint = [self.popupCloseButton.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant:buttonStyle == LNPopupCloseButtonStyleRound ? 12 : 8];
+				
+				[NSLayoutConstraint activateConstraints:@[_popupCloseButtonTopConstraint]];
+			}
+			
+			if(_popupCloseButtonLeadingConstraint == nil)
+			{
+				_popupCloseButtonLeadingConstraint = [self.popupCloseButton.leadingAnchor constraintEqualToAnchor:self.contentView.leadingAnchor constant:12];
+			}
+			
+			if(_popupCloseButtonCenterConstraint == nil)
+			{
+				_popupCloseButtonCenterConstraint = [self.popupCloseButton.centerXAnchor constraintEqualToAnchor:self.contentView.safeAreaLayoutGuide.centerXAnchor];
+			}
+			
+			if(buttonStyle == LNPopupCloseButtonStyleRound)
+			{
+				if (@available(iOS 13.0, *)) {
+					self.popupCloseButton.tintColor = [UIColor labelColor];
+				} else {
+					self.popupCloseButton.tintColor = [UIColor lightGrayColor];
+				}
+				
+				_popupCloseButtonLeadingConstraint.active = YES;
+				_popupCloseButtonCenterConstraint.active = NO;
+			}
+			else
+			{
+				if (@available(iOS 13.0, *)) {
+					self.popupCloseButton.tintColor = [UIColor systemGray2Color];
+				} else {
+					self.popupCloseButton.tintColor = [UIColor lightGrayColor];
+				}
+				
+				_popupCloseButtonLeadingConstraint.active = NO;
+				_popupCloseButtonCenterConstraint.active = YES;
+			}
+			
+			[self _repositionPopupCloseButton];
+		}
+	}];
+}
+
+- (UIView*)_view:(UIView*)view selfOrSuperviewKindOfClass:(Class)aClass
+{
+	if([view isKindOfClass:aClass])
+	{
+		return view;
+	}
+	
+	UIView* superview = view.superview;
+	
+	while(superview != nil)
+	{
+		if([superview isKindOfClass:aClass])
+		{
+			return superview;
+		}
+		
+		superview = superview.superview;
+	}
+	
+	return nil;
+}
+
+
+- (void)_repositionPopupCloseButton
+{
+	CGFloat startingTopConstant = _popupCloseButtonTopConstraint.constant;
+
+	_popupCloseButtonTopConstraint.constant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 4;
+
+	CGFloat windowTopSafeAreaInset = 0;
+
+	if (@available(iOS 13.0, *))
+	{
+		if([NSStringFromClass(_currentPopupContentViewController.popupPresentationContainerViewController.presentationController.class) containsString:@"Fullscreen"])
+		{
+			windowTopSafeAreaInset += self.window.safeAreaInsets.top;
+		}
+		else
+		{
+			windowTopSafeAreaInset += self.safeAreaInsets.top + 5;
+		}
+	}
+	else
+	{
+		windowTopSafeAreaInset += self.window.safeAreaInsets.top;
+	}
+
+	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
+
+	id hitTest = [_currentPopupContentViewController.view hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
+	UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
+	if(possibleBar)
+	{
+		if (self.popupCloseButtonAutomaticallyUnobstructsTopBars)
+			_popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
+		else
+			_popupCloseButtonTopConstraint.constant += 6;
+	}
+
+	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
+	{
+		[self setNeedsUpdateConstraints];
+		[UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
+			[self layoutIfNeeded];
+		} completion:nil];
+	}
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView

@@ -563,7 +563,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		dispatch_async(dispatch_get_main_queue(), ^{
 			[UIView animateWithDuration:UIApplication.sharedApplication.statusBarOrientationAnimationDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options: UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
 				[self.popupContentViewController _uLFSBAIO];
-				[self._ln_popupController_nocreate _repositionPopupCloseButton];
+				[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];
 			} completion:nil];
 		});
 	}

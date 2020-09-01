@@ -36,11 +36,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LNPopupCloseButton : UIButton
 
 /**
- * The current style of the popup close button. (read-only)
- *
- * @note In order to change the button's style, set the @c popupCloseButtonStyle property of the content view.
+ * Gets or sets the style of the popup close button. Has the same effect as setting the @c popupCloseButtonStyle property of the content view.
  */
-@property (nonatomic, readonly) LNPopupCloseButtonStyle style;
+@property (nonatomic) LNPopupCloseButtonStyle style UI_APPEARANCE_SELECTOR;
 
 /**
  * The button’s background view. (read-only)

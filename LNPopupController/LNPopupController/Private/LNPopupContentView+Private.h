@@ -23,6 +23,8 @@
 
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect;
 
+- (void)_repositionPopupCloseButton;
+
 @end
 
 @interface _LNPopupTransitionCoordinator : NSObject <UIViewControllerTransitionCoordinator> @end

@@ -29,7 +29,7 @@ extern const UIBlurEffectStyle LNBackgroundStyleInherit;
 /**
  * The popup close button style.
  */
-@property (nonatomic) LNPopupCloseButtonStyle popupCloseButtonStyle;
+@property (nonatomic) LNPopupCloseButtonStyle popupCloseButtonStyle UI_APPEARANCE_SELECTOR;
 
 /**
  * The popup close button. (read-only)
