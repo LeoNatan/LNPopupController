@@ -323,14 +323,6 @@
 	
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
-	
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-		targetVC.popupContentView.popupCloseButton.style = LNPopupCloseButtonStyleRound;
-		
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-			targetVC.popupContentView.popupCloseButton.style = LNPopupCloseButtonStyleDefault;
-		});
-	});
 #endif
 }
 
