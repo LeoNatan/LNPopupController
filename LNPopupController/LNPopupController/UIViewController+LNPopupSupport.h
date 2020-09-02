@@ -84,6 +84,15 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  */
 @property (nonatomic, strong, readonly) __kindof UIView* viewForPopupInteractionGestureRecognizer;
 
+/**
+ * Gives the popup content controller the opportunity to place the popup close button within its own view hierarchy, instead of the system-defined placement.
+ *
+ * The default implementation of this method does nothing and returns @c NO.
+ *
+ * @return Return @c YES if the popup close button has been positioned in the controller's view hierarchy, or @c NO to allow the system to handle positioning of the button.
+ */
+- (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton;
+
 @end
 
 @protocol LNPopupPresentationDelegate <NSObject>

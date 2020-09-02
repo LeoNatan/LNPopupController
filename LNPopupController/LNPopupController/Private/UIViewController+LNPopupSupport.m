@@ -212,6 +212,11 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 	return rv;
 }
 
+- (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton
+{
+	return NO;
+}
+
 - (LNPopupBar *)popupBar
 {
 	return self._ln_popupController.popupBarStorage;

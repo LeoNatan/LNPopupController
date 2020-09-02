@@ -49,6 +49,11 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		
 		_popupCloseButton = [LNPopupCloseButton new];
 		_popupCloseButton.popupContentView = self;
+		
+		[_popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+		[_popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		[_popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+		[_popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 	}
 	
 	return self;
@@ -66,6 +71,18 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	return _effectView.contentView;
 }
 
+- (void)setCurrentPopupContentViewController:(UIViewController *)currentPopupContentViewController
+{
+	if(_currentPopupContentViewController == currentPopupContentViewController)
+	{
+		return;
+	}
+	
+	_currentPopupContentViewController = currentPopupContentViewController;
+	
+	self.popupCloseButtonStyle = self.popupCloseButtonStyle;
+}
+
 - (void)setPopupCloseButtonStyle:(LNPopupCloseButtonStyle)popupCloseButtonStyle
 {
 	_popupCloseButtonStyle = popupCloseButtonStyle;
@@ -75,15 +92,38 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	[UIView performWithoutAnimation:^{
 		[self.popupCloseButton _setStyle:buttonStyle];
 		
+		if(buttonStyle == LNPopupCloseButtonStyleRound)
+		{
+			if (@available(iOS 13.0, *)) {
+				self.popupCloseButton.tintColor = [UIColor labelColor];
+			} else {
+				self.popupCloseButton.tintColor = [UIColor lightGrayColor];
+			}
+		}
+		else
+		{
+			if (@available(iOS 13.0, *)) {
+				self.popupCloseButton.tintColor = [UIColor systemGray2Color];
+			} else {
+				self.popupCloseButton.tintColor = [UIColor lightGrayColor];
+			}
+		}
+		
+		if([_currentPopupContentViewController positionPopupCloseButton:self.popupCloseButton] == YES)
+		{
+			return;
+		}
+		else
+		{
+			if(self.popupCloseButton.superview != self.contentView)
+			{
+				[self.contentView addSubview:self.popupCloseButton];
+			}
+		}
+		
 		if(buttonStyle != LNPopupCloseButtonStyleNone)
 		{
 			self.popupCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
-			[self.contentView addSubview:self.popupCloseButton];
-			
-			[self.popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-			[self.popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-			[self.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-			[self.popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 			
 			if(_popupCloseButtonTopConstraint == nil)
 			{
@@ -104,28 +144,20 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 			
 			if(buttonStyle == LNPopupCloseButtonStyleRound)
 			{
-				if (@available(iOS 13.0, *)) {
-					self.popupCloseButton.tintColor = [UIColor labelColor];
-				} else {
-					self.popupCloseButton.tintColor = [UIColor lightGrayColor];
-				}
-				
 				_popupCloseButtonLeadingConstraint.active = YES;
 				_popupCloseButtonCenterConstraint.active = NO;
 			}
 			else
 			{
-				if (@available(iOS 13.0, *)) {
-					self.popupCloseButton.tintColor = [UIColor systemGray2Color];
-				} else {
-					self.popupCloseButton.tintColor = [UIColor lightGrayColor];
-				}
-				
 				_popupCloseButtonLeadingConstraint.active = NO;
 				_popupCloseButtonCenterConstraint.active = YES;
 			}
 			
 			[self _repositionPopupCloseButton];
+		}
+		else
+		{
+			self.popupCloseButton.hidden = YES;
 		}
 	}];
 }
@@ -155,6 +187,11 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 - (void)_repositionPopupCloseButton
 {
+	if(self.popupCloseButton.superview != self.contentView)
+	{
+		return;
+	}
+	
 	CGFloat startingTopConstant = _popupCloseButtonTopConstraint.constant;
 
 	_popupCloseButtonTopConstraint.constant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 4;

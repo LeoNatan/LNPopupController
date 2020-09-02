@@ -15,7 +15,9 @@ import LNPopupController
 fileprivate struct BlurView: UIViewRepresentable {
 	var style: UIBlurEffect.Style = .systemMaterial
 	func makeUIView(context: Context) -> UIVisualEffectView {
-		return UIVisualEffectView(effect: UIBlurEffect(style: style))
+		let rv = UIVisualEffectView(effect: UIBlurEffect(style: style))
+		rv.tag = 666
+		return rv
 	}
 	func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
 		uiView.effect = UIBlurEffect(style: style)
@@ -136,6 +138,22 @@ struct PlayerView: View {
 class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 	var timer : Timer?
+	var popupCloseButton: LNPopupCloseButton?
+	
+	lazy var vibrancyView : UIVisualEffectView = {
+		let blur = self.view.viewWithTag(666) as! UIVisualEffectView
+		let rv = UIVisualEffectView(effect: UIVibrancyEffect(blurEffect: blur.effect as! UIBlurEffect, style: .separator))
+		rv.translatesAutoresizingMaskIntoConstraints = false
+		blur.contentView.addSubview(rv)
+		NSLayoutConstraint.activate([
+			rv.leadingAnchor.constraint(equalTo: blur.safeAreaLayoutGuide.leadingAnchor),
+			rv.trailingAnchor.constraint(equalTo: blur.safeAreaLayoutGuide.trailingAnchor),
+			rv.topAnchor.constraint(equalTo: blur.safeAreaLayoutGuide.topAnchor),
+			rv.bottomAnchor.constraint(equalTo: blur.safeAreaLayoutGuide.bottomAnchor)
+		])
+		
+		return rv
+	}()
 	
 	let playerView = PlayerView()
 	
@@ -168,6 +186,26 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		}
 		
 		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
+	}
+	
+	override func positionPopupCloseButton(_ popupCloseButton: LNPopupCloseButton) -> Bool {
+		self.popupCloseButton = popupCloseButton
+		self.view.setNeedsLayout()
+		return true
+	}
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		if let popupCloseButton = popupCloseButton, popupCloseButton.superview != vibrancyView.contentView {
+			vibrancyView.contentView.addSubview(popupCloseButton)
+			
+			popupCloseButton.translatesAutoresizingMaskIntoConstraints = false
+			
+			NSLayoutConstraint.activate([
+				popupCloseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+				popupCloseButton.topAnchor.constraint(equalTo: vibrancyView.contentView.topAnchor, constant: 4),
+			])
+		}
 	}
 	
 	var songTitle: String = "" {
