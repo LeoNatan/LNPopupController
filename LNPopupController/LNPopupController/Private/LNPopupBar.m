@@ -1191,6 +1191,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	[self _updateViewsAfterCustomBarViewControllerUpdate];
 	[self setBarStyle:_customBarViewController != nil ? LNPopupBarStyleCustom : LNPopupBarStyleDefault];
+	
+	[self setNeedsLayout];
 }
 
 - (void)setLeadingBarButtonItems:(NSArray *)leadingBarButtonItems
