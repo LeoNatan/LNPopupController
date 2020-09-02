@@ -125,7 +125,6 @@ struct PlayerView: View {
 			ZStack {
 				Image(uiImage: playbackSettings.albumArt)
 					.resizable()
-					.aspectRatio(contentMode: .fill)
 				BlurView()
 			}
 			.edgesIgnoringSafeArea(.all)

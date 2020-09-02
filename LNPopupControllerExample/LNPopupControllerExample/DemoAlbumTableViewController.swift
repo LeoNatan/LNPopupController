@@ -104,6 +104,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupBar.inheritsVisualStyleFromDockingView = true
 		#endif
 		
+//		tabBarController?.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
 		tabBarController?.popupBar.tintColor = UIColor.label
 		
