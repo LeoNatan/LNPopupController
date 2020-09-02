@@ -652,7 +652,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 
 - (_LNPopupBarExtensionView*)_ln_bottomBarExtension
 {
-	if(self.shouldExtendPopupBarUnderSafeArea == NO)
+	if(self.shouldExtendPopupBarUnderSafeArea == NO || self._ln_popupController_nocreate.popupControllerTargetState == LNPopupPresentationStateBarHidden)
 	{
 		[self._ln_bottomBarExtension_nocreate removeFromSuperview];
 		

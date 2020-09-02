@@ -13,10 +13,10 @@
         <scene sceneID="HV6-VP-YN3">
             <objects>
                 <tableViewController id="Aqm-1n-Gaw" customClass="DemoGalleryController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="SEF-81-WTq" customClass="DemoGalleryControllerTableView">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="SEF-81-WTq" customClass="DemoGalleryControllerTableView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <sections>
                             <tableViewSection headerTitle="Standard Scenes" id="u0a-MD-vX0">
                                 <cells>
@@ -203,7 +203,7 @@
                             <tableViewSection headerTitle="Demo App" id="Gta-F3-Ame">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="music" textLabel="KHO-fT-c7X" style="IBUITableViewCellStyleDefault" id="Eee-L9-s2S">
-                                        <rect key="frame" x="0.0" y="463.33333206176758" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="462.66666603088379" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Eee-L9-s2S" id="oWC-62-YfI">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -230,7 +230,7 @@
                             <tableViewSection headerTitle="Custom Popup Bar" id="r2v-LF-kGk" userLabel="Custom Popup Bar">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="maps" textLabel="rWD-1P-SlK" style="IBUITableViewCellStyleDefault" id="7ir-HW-rvz">
-                                        <rect key="frame" x="0.0" y="563.33333206176758" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="562" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7ir-HW-rvz" id="wcj-rE-thV">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -253,7 +253,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="maps" textLabel="xr3-Im-WEg" style="IBUITableViewCellStyleDefault" id="07I-Fx-JaB">
-                                        <rect key="frame" x="0.0" y="607.33333206176758" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="606" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="07I-Fx-JaB" id="jXc-oJ-q5J">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -1022,9 +1022,6 @@
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
         <image name="gears" width="25" height="25"/>
-        <systemColor name="groupTableViewBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
