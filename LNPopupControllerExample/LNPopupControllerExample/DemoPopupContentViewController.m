@@ -25,7 +25,10 @@
 @end
 
 @interface DemoPopupContentViewController () @end
-@implementation DemoPopupContentViewController
+@implementation DemoPopupContentViewController {
+    UIImageView* _imageView;
+    UIVisualEffectView* _effectView;
+}
 
 - (void)loadView
 {
@@ -152,9 +155,47 @@ static UIImage* LNSystemImage(NSString* named)
 	[self.popupPresentationContainerViewController closePopupAnimated:YES completion:nil];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    if (@available(iOS 13.0, *)) {
+        if (_effectView == nil) {
+            UIBlurEffect* blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
+            _effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+            _effectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            _effectView.frame = self.view.bounds;
+            [self.view insertSubview:_effectView atIndex:0];
+            
+            UIVibrancyEffect* vibEffect = [UIVibrancyEffect effectForBlurEffect: (UIBlurEffect*)(_effectView.effect)];
+            UIVisualEffectView* vibrancyEffectView = [[UIVisualEffectView alloc] initWithEffect:vibEffect];
+            LNPopupCloseButton* popupCloseButton = self.popupPresentationContainerViewController.popupContentView.popupCloseButton;
+            [vibrancyEffectView.contentView addSubview:popupCloseButton];
+            [_effectView.contentView addSubview:vibrancyEffectView];
+            CGSize size = [popupCloseButton sizeThatFits:CGSizeZero];
+            popupCloseButton.translatesAutoresizingMaskIntoConstraints = YES;
+            popupCloseButton.frame = CGRectMake(0, 0, size.width, size.height);
+            vibrancyEffectView.translatesAutoresizingMaskIntoConstraints = NO;
+            [[vibrancyEffectView.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant: 4] setActive:YES];
+            [[vibrancyEffectView.widthAnchor constraintEqualToConstant:size.width] setActive:YES];
+            [[vibrancyEffectView.heightAnchor constraintEqualToConstant:size.height] setActive:YES];
+            [[vibrancyEffectView.centerXAnchor constraintEqualToAnchor:_effectView.centerXAnchor constant: 0] setActive:YES];
+        }
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
+
+    if (@available(iOS 13.0, *)) {
+        [_imageView removeFromSuperview];
+        int r = arc4random_uniform(30)+1;
+        UIImage* image = [UIImage imageNamed:[NSString stringWithFormat:@"genre%d",r]];
+        _imageView = [[UIImageView alloc] initWithImage:image];
+        _imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _imageView.frame = self.view.bounds;
+        [self.view insertSubview:_imageView atIndex:0];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
