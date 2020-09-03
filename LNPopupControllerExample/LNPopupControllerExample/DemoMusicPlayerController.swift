@@ -43,93 +43,97 @@ struct PlayerView: View {
 	}
 	
 	var body: some View {
-		VStack {
-			Image(uiImage: playbackSettings.albumArt)
-				.resizable()
-				.clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-				.aspectRatio(contentMode: .fit)
-				.padding([.leading, .trailing], 20)
-				.padding([.top], 40)
-				.shadow(radius: 5)
-			VStack(spacing: 40) {
-				HStack {
-					VStack(alignment: .leading) {
-						Text(playbackSettings.songTitle)
-							.font(.system(size: 20, weight: .bold))
-						Text(playbackSettings.albumTitle)
-							.font(.system(size: 20, weight: .regular))
-					}
-					.lineLimit(1)
-					.frame(minWidth: 0,
-						   maxWidth: .infinity,
-						   alignment: .topLeading)
-					Button(action: {}, label: {
-						Image(systemName: "ellipsis.circle")
-							.font(.title)
-					})
-				}
-				if #available(iOS 14.0, *) {
-					ProgressView(value: playbackSettings.playbackProgress)
-				} else {
-					Slider(value: $playbackSettings.playbackProgress)
-				}
-				HStack {
-					Button(action: {}, label: {
-						Image(systemName: "backward.fill")
-					})
-					.frame(minWidth: 0, maxWidth: .infinity)
-					Button(action: {
-						playbackSettings.isPlaying.toggle()
-					}, label: {
-						Image(systemName: playbackSettings.isPlaying ? "pause.fill" : "play.fill")
-					})
-					.frame(minWidth: 0, maxWidth: .infinity)
-					Button(action: {}, label: {
-						Image(systemName: "forward.fill")
-					})
-					.frame(minWidth: 0, maxWidth: .infinity)
-				}
-				.frame(height: 40)
-				.font(.largeTitle)
-				HStack {
-					Image(systemName: "speaker.fill")
-					Slider(value: $playbackSettings.volume)
-					Image(systemName: "speaker.wave.2.fill")
-				}
-				.font(.footnote)
-				.foregroundColor(.gray)
-				HStack {
-					Button(action: {}, label: {
-						Image(systemName: "shuffle")
-					})
-					.frame(minWidth: 0, maxWidth: .infinity)
-					Button(action: {}, label: {
-						Image(systemName: "airplayaudio")
-					})
-					.frame(minWidth: 0, maxWidth: .infinity)
-					Button(action: {}, label: {
-						Image(systemName: "repeat")
-					})
-					.frame(minWidth: 0, maxWidth: .infinity)
-				}
-				.font(.body)
-			}
-			.padding(30)
-		}
-		.frame(minWidth: 0,
-			   maxWidth: .infinity,
-			   minHeight: 0,
-			   maxHeight: .infinity,
-			   alignment: .top)
-		.background({
-			ZStack {
+		GeometryReader { geometry in
+			return VStack {
 				Image(uiImage: playbackSettings.albumArt)
 					.resizable()
-				BlurView()
+					.clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+					.aspectRatio(contentMode: .fit)
+					.padding([.leading, .trailing], 10)
+					.padding([.top], geometry.size.height * 60 / 896.0)
+					.shadow(radius: 5)
+				VStack(spacing: geometry.size.height * 30.0 / 896.0) {
+					HStack {
+						VStack(alignment: .leading) {
+							Text(playbackSettings.songTitle)
+								.font(.system(size: 20, weight: .bold))
+							Text(playbackSettings.albumTitle)
+								.font(.system(size: 20, weight: .regular))
+						}
+						.lineLimit(1)
+						.frame(minWidth: 0,
+							   maxWidth: .infinity,
+							   alignment: .topLeading)
+						Button(action: {}, label: {
+							Image(systemName: "ellipsis.circle")
+								.font(.title)
+						})
+					}
+					if #available(iOS 14.0, *) {
+						ProgressView(value: playbackSettings.playbackProgress)
+							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
+					} else {
+						Slider(value: $playbackSettings.playbackProgress)
+							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
+					}
+					HStack {
+						Button(action: {}, label: {
+							Image(systemName: "backward.fill")
+						})
+						.frame(minWidth: 0, maxWidth: .infinity)
+						Button(action: {
+							playbackSettings.isPlaying.toggle()
+						}, label: {
+							Image(systemName: playbackSettings.isPlaying ? "pause.fill" : "play.fill")
+						})
+						.font(.system(size: 50, weight: .bold))
+						.frame(minWidth: 0, maxWidth: .infinity, minHeight: 50, maxHeight: 50)
+						Button(action: {}, label: {
+							Image(systemName: "forward.fill")
+						})
+						.frame(minWidth: 0, maxWidth: .infinity)
+					}
+					.font(.system(size: 30, weight: .regular))
+					.padding([.bottom], geometry.size.height * 20.0 / 896.0)
+					HStack {
+						Image(systemName: "speaker.fill")
+						Slider(value: $playbackSettings.volume)
+						Image(systemName: "speaker.wave.2.fill")
+					}
+					.font(.footnote)
+					.foregroundColor(.gray)
+					HStack {
+						Button(action: {}, label: {
+							Image(systemName: "shuffle")
+						})
+						.frame(minWidth: 0, maxWidth: .infinity)
+						Button(action: {}, label: {
+							Image(systemName: "airplayaudio")
+						})
+						.frame(minWidth: 0, maxWidth: .infinity)
+						Button(action: {}, label: {
+							Image(systemName: "repeat")
+						})
+						.frame(minWidth: 0, maxWidth: .infinity)
+					}
+					.font(.body)
+				}
+				.padding(geometry.size.height * 40.0 / 896.0)
 			}
-			.edgesIgnoringSafeArea(.all)
-		}())
-		.animation(.spring())
+			.frame(minWidth: 0,
+				   maxWidth: .infinity,
+				   minHeight: 0,
+				   maxHeight: .infinity,
+				   alignment: .top)
+			.background({
+				ZStack {
+					Image(uiImage: playbackSettings.albumArt)
+						.resizable()
+					BlurView()
+				}
+				.edgesIgnoringSafeArea(.all)
+			}())
+		}
 	}
 }
 
@@ -158,10 +162,10 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	
 	fileprivate func LNSystemImage(named: String) -> UIImage {
 		let config : UIImage.SymbolConfiguration
-		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
+		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? UInt ?? 0)! == LNPopupBarStyle.compact {
 			config = UIImage.SymbolConfiguration(scale: .unspecified)
 		} else {
-			config = UIImage.SymbolConfiguration(scale: .medium)
+			config = UIImage.SymbolConfiguration(weight: .bold)
 		}
 		
 		return UIImage(systemName: named, withConfiguration: config)!
@@ -177,10 +181,12 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		let next = UIBarButtonItem(image: LNSystemImage(named: "forward.fill"), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
-		if UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? LNPopupBarStyle == LNPopupBarStyle.compact {
+		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? UInt ?? 0)! == LNPopupBarStyle.compact {
 			popupItem.leadingBarButtonItems = [ pause ]
 			popupItem.trailingBarButtonItems = [ next ]
 		} else {
+			pause.width = 60
+			next.width = 60
 			popupItem.barButtonItems = [ pause, next ]
 		}
 		
@@ -216,6 +222,9 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	
 	var albumTitle: String = "" {
 		didSet {
+			if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? UInt ?? 0)! == .compact {
+				popupItem.subtitle = albumTitle
+			}
 			playerView.playbackSettings.albumTitle = albumTitle
 		}
 	}

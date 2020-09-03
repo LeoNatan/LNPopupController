@@ -34,6 +34,8 @@ class DemoAlbumTableViewController: UITableViewController {
 		
         super.viewDidLoad()
 		
+		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? UInt ?? 0)!
+		
 		demoAlbumImageView.layer.cornerCurve = .continuous
 		demoAlbumImageView.layer.cornerRadius = 8
 		demoAlbumImageView.layer.masksToBounds = true
@@ -43,15 +45,7 @@ class DemoAlbumTableViewController: UITableViewController {
 			titles += [LoremIpsum.title]
 			subtitles += [LoremIpsum.sentence]
 		}
-		
-		tableView.backgroundColor = LNRandomDarkColor()
     }
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-		tableView.setContentOffset(CGPoint(x: 0, y: -tableView.contentInset.top), animated: false)
-	}
 	
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -66,8 +60,8 @@ class DemoAlbumTableViewController: UITableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		let separator = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 1 / UIScreen.main.scale))
-		separator.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+		let separator = UIView(frame: CGRect(x: view.layoutMargins.left, y: 0, width: tableView.bounds.size.width - view.layoutMargins.left, height: 1 / UIScreen.main.scale))
+		separator.backgroundColor = .separator
 		separator.autoresizingMask = .flexibleWidth
 		let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 2))
 		view.addSubview(separator)
@@ -79,13 +73,7 @@ class DemoAlbumTableViewController: UITableViewController {
 
 		cell.imageView?.image = images[(indexPath as NSIndexPath).row]
 		cell.textLabel?.text = titles[(indexPath as NSIndexPath).row]
-		cell.textLabel?.textColor = UIColor.white
 		cell.detailTextLabel?.text = subtitles[(indexPath as NSIndexPath).row]
-		cell.detailTextLabel?.textColor = UIColor.white
-		
-		let selectionView = UIView()
-		selectionView.backgroundColor = UIColor.white.withAlphaComponent(0.45)
-		cell.selectedBackgroundView = selectionView
 		
         return cell
     }
@@ -106,14 +94,11 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 //		tabBarController?.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
+		tabBarController?.popupBar.imageView.layer.cornerRadius = 3
 		tabBarController?.popupBar.tintColor = UIColor.label
 		
 		#endif
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
-	
-//	override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//		cell.backgroundColor = UIColor.clear
-//	}
 }

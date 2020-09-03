@@ -117,6 +117,8 @@ static UIImage* LNSystemImage(NSString* named)
 	}
 	else
 	{
+		play.width = 50;
+		next.width = 50;
 		self.popupItem.barButtonItems = @[ play, next ];
 		self.popupItem.leadingBarButtonItems = nil;
 	}

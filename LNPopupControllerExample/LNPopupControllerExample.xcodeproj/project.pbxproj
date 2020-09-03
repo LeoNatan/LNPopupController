@@ -37,6 +37,8 @@
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
+		39E9746E250193B8009F24DF /* ColorfulButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E9746D250193B8009F24DF /* ColorfulButton.swift */; };
+		39E9746F250193B8009F24DF /* ColorfulButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E9746D250193B8009F24DF /* ColorfulButton.swift */; };
 		39F8A07424DB3B1F0008B209 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 39F8A07324DB3B1F0008B209 /* LoremIpsum */; };
 		39FAFC3624E71A6C008BBC2D /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3908C34B1E7C9EA200451B5D /* SettingsTableViewController.m */; };
 		39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
@@ -168,6 +170,7 @@
 		39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+XcodeBugs.m"; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
 		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		39E9746D250193B8009F24DF /* ColorfulButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorfulButton.swift; sourceTree = "<group>"; };
 		39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExampleNoPopup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LNPopupControllerExampleNoPopup-Info.plist"; path = "/Users/lnatan/Desktop/GitHub (Private)/LNPopupController/LNPopupControllerExample/LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
@@ -307,6 +310,7 @@
 				39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */,
 				397C56291B753A45007A67F0 /* MusicCell.swift */,
 				39837A251B759721004D2DA9 /* PortraitTabBarController.swift */,
+				39E9746D250193B8009F24DF /* ColorfulButton.swift */,
 			);
 			name = "Demo - Music Scene (Swift)";
 			sourceTree = "<group>";
@@ -509,6 +513,7 @@
 				399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */,
 				3988E3581B59C3000039C09B /* FirstViewController.m in Sources */,
 				39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */,
+				39E9746E250193B8009F24DF /* ColorfulButton.swift in Sources */,
 				39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */,
 				397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */,
 			);
@@ -534,6 +539,7 @@
 				39FAFC4224E71A6C008BBC2D /* DemoPopupContentViewController.m in Sources */,
 				39FAFC4324E71A6C008BBC2D /* FirstViewController.m in Sources */,
 				39FAFC4424E71A6C008BBC2D /* PortraitTabBarController.swift in Sources */,
+				39E9746F250193B8009F24DF /* ColorfulButton.swift in Sources */,
 				39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */,
 				39FAFC4624E71A6C008BBC2D /* MusicCell.swift in Sources */,
 			);
