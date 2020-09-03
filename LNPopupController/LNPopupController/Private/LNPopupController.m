@@ -1090,7 +1090,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				 
 				 [self.popupContentView removeFromSuperview];
 				 self.popupContentView.popupInteractionGestureRecognizer = nil;
-				 [self.popupContentView removeObserver:self forKeyPath:@"popupCloseButtonStyle"];
 				 self.popupContentView = nil;
 				 
 				 _LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
