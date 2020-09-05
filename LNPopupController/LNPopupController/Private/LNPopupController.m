@@ -16,10 +16,7 @@
 #import "NSObject+AltKVC.h"
 @import ObjectiveC;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-const NSUInteger _LNPopupPresentationStateTransitioning = LNPopupPresentationStateTransitioning;
-#pragma clang diagnostic pop
+const NSUInteger _LNPopupPresentationStateTransitioning = 2;
 
 static const CGFloat LNPopupBarGestureHeightPercentThreshold = 0.2;
 static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
@@ -271,74 +268,85 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	};
 	
-	[UIView animateWithDuration:animated ? (resolvedStyle == LNPopupInteractionStyleSnap ? 0.65 : 0.5) : 0.0 delay:0.0 usingSpringWithDamping:spring ? 0.8 : 1.0 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^
-	 {
-		 if(state != _LNPopupPresentationStateTransitioning)
-		 {
-			 updatePopupBarAlpha();
-		 }
-		 
-		 if(state == LNPopupPresentationStateBarPresented)
-		 {
-			 [_currentContentController _ln_beginAppearanceTransition:NO animated:YES];
-		 }
-		 
-		 [self _setContentToState:state];
-		 [_containerController.view layoutIfNeeded];
-	 } completion:^(BOOL finished)
-	 {
-		 if(state != _LNPopupPresentationStateTransitioning)
-		 {
-			 updatePopupBarAlpha();
-		 }
-		 
-		 if(state == LNPopupPresentationStateBarPresented)
-		 {
-			 [_currentContentController _ln_endAppearanceTransition];
-			 
-			 [self _cleanupGestureRecognizersForController:_currentContentController];
-			 
-			 [_currentContentController.viewForPopupInteractionGestureRecognizer removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-			 [self.popupBar addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-			 
-			 [self.popupBar _setTitleViewMarqueesPaused:NO];
-			 
-			 _popupContentView.accessibilityViewIsModal = NO;
-			 UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
-			 
-			 if(_popupControllerPublicState == LNPopupPresentationStateOpen)
-			 {
-				 _LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidClosePopup:animated:), animated);
-			 }
-		 }
-		 else if(state == LNPopupPresentationStateOpen)
-		 {
-			 [self.popupBar _setTitleViewMarqueesPaused:YES];
-			 
-			 [self.popupBar removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-			 [_currentContentController.viewForPopupInteractionGestureRecognizer addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-			 [self _fixupGestureRecognizersForController:_currentContentController];
-			 
-			 _popupContentView.accessibilityViewIsModal = YES;
-			 UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _popupContentView.popupCloseButton);
-			 
-			 if(_popupControllerPublicState == LNPopupPresentationStateBarPresented)
-			 {
-				 _LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
-			 }
-		 }
-		 
-		 _popupControllerInternalState = state;
+	void (^animationBlock)(void) = ^
+	{
+		if(state != _LNPopupPresentationStateTransitioning)
+		{
+			updatePopupBarAlpha();
+		}
+		
+		if(state == LNPopupPresentationStateBarPresented)
+		{
+			[_currentContentController _ln_beginAppearanceTransition:NO animated:YES];
+		}
+		
+		[self _setContentToState:state];
+		[_containerController.view layoutIfNeeded];
+	};
+	
+	void (^completionBlock)(BOOL) = ^(BOOL finished)
+	{
+		if(state != _LNPopupPresentationStateTransitioning)
+		{
+			updatePopupBarAlpha();
+		}
+		
+		if(state == LNPopupPresentationStateBarPresented)
+		{
+			[_currentContentController _ln_endAppearanceTransition];
+			
+			[self _cleanupGestureRecognizersForController:_currentContentController];
+			
+			[_currentContentController.viewForPopupInteractionGestureRecognizer removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+			[self.popupBar addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+			
+			[self.popupBar _setTitleViewMarqueesPaused:NO];
+			
+			_popupContentView.accessibilityViewIsModal = NO;
+			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
+			
+			if(_popupControllerPublicState == LNPopupPresentationStateOpen)
+			{
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidClosePopup:animated:), animated);
+			}
+		}
+		else if(state == LNPopupPresentationStateOpen)
+		{
+			[self.popupBar _setTitleViewMarqueesPaused:YES];
+			
+			[self.popupBar removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+			[_currentContentController.viewForPopupInteractionGestureRecognizer addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+			[self _fixupGestureRecognizersForController:_currentContentController];
+			
+			_popupContentView.accessibilityViewIsModal = YES;
+			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _popupContentView.popupCloseButton);
+			
+			if(_popupControllerPublicState == LNPopupPresentationStateBarPresented)
+			{
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
+			}
+		}
+		
+		_popupControllerInternalState = state;
 		if(state != _LNPopupPresentationStateTransitioning)
 		{
 			[_containerController _ln_setPopupPresentationState:state];
 		}
-
-		 if(completion)
-		 {
-			 completion();
-		 }
-	 }];
+		
+		if(completion)
+		{
+			completion();
+		}
+	};
+	
+	if(animated == NO)
+	{
+		animationBlock();
+		completionBlock(YES);
+		return;
+	}
+	
+	[UIView animateWithDuration:resolvedStyle == LNPopupInteractionStyleSnap ? 0.65 : 0.5 delay:0.0 usingSpringWithDamping:spring ? 0.8 : 1.0 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:animationBlock completion:completionBlock];
 }
 
 - (void)_popupBarLongPressGestureRecognized:(UILongPressGestureRecognizer*)lpgr
