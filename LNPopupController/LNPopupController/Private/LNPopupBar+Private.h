@@ -39,8 +39,9 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @protocol _LNPopupBarSupport <NSObject>
 
 @property (nonatomic, assign) UIBarStyle barStyle;
-@property (nonatomic, retain) UIColor* barTintColor;
-@property(nonatomic, assign, getter=isTranslucent) BOOL translucent;
+@property (nonatomic, strong) UIColor* barTintColor;
+@property (nonatomic, assign, getter=isTranslucent) BOOL translucent;
+@property (nonatomic, strong) UIBarAppearance* standardAppearance API_AVAILABLE(ios(13.0));
 
 @end
 

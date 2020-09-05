@@ -798,32 +798,35 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	static UIColor* systemShadowColor;
-	static NSString* sV;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		if(@available(iOS 13.0, *))
 		{
-#ifndef LNPopupControllerEnforceStrictClean
-			if(@available(iOS 13.5, *))
-			{
-				//_systemChromeShadowColor
-				sV = @"X3N5c3RlbUNocm9tZVNoYWRvd0NvbG9y";
-				systemShadowColor = [UIColor valueForKey:_LNPopupDecodeBase64String(sV)];
-			}
-			else
-			{
-#endif
-				systemShadowColor = [UIColor systemGray2Color];
-#ifndef LNPopupControllerEnforceStrictClean
-			}
-#endif
+			UIToolbarAppearance* appearance = [UIToolbarAppearance new];
+			[appearance configureWithDefaultBackground];
+			systemShadowColor = appearance.shadowColor;
 		}
 		else
 		{
 			systemShadowColor = [UIColor lightGrayColor];
 		}
 	});
-	self.popupBar.systemShadowColor = systemShadowColor;
+	
+	UIColor* shadowColorToUse = systemShadowColor;
+	if(@available(iOS 13.0, *))
+	{
+		UIBarAppearance* appearanceToUse = nil;
+		if([_bottomBar respondsToSelector:@selector(standardAppearance)])
+		{
+			appearanceToUse = [(id<_LNPopupBarSupport>)_bottomBar standardAppearance];
+		}
+		
+		if(appearanceToUse != nil)
+		{
+			shadowColorToUse = appearanceToUse.shadowColor;
+		}
+	}
+	self.popupBar.systemShadowColor = shadowColorToUse;
 }
 
 - (void)_updateBarExtensionStyleFromPopupBar
