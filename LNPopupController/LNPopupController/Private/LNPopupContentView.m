@@ -206,7 +206,12 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		}
 		else
 		{
-			windowTopSafeAreaInset += self.safeAreaInsets.top + 5;
+			UIView* viewToUse = _currentPopupContentViewController.popupPresentationContainerViewController.presentingViewController.presentedViewController.view;
+			if(viewToUse == nil)
+			{
+				viewToUse = self;
+			}
+			windowTopSafeAreaInset += viewToUse.safeAreaInsets.top + 5;
 		}
 	}
 	else
@@ -228,7 +233,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
 	{
-		[self setNeedsUpdateConstraints];
 		[UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
 			[self layoutIfNeeded];
 		} completion:nil];
