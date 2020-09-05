@@ -34,8 +34,13 @@ class DemoAlbumTableViewController: UITableViewController {
 		
         super.viewDidLoad()
 		
+#if LNPOPUP
 		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? UInt ?? 0)!
-		
+#endif
+		let appearance = UINavigationBarAppearance()
+		appearance.configureWithTransparentBackground()
+		navigationItem.standardAppearance = appearance
+
 		demoAlbumImageView.layer.cornerCurve = .continuous
 		demoAlbumImageView.layer.cornerRadius = 8
 		demoAlbumImageView.layer.masksToBounds = true
@@ -46,6 +51,17 @@ class DemoAlbumTableViewController: UITableViewController {
 			subtitles += [LoremIpsum.sentence]
 		}
     }
+	
+	override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		let appearance = UINavigationBarAppearance()
+		
+		if scrollView.contentOffset.y > -scrollView.adjustedContentInset.top {
+			appearance.configureWithDefaultBackground()
+		} else {
+			appearance.configureWithTransparentBackground()
+		}
+		navigationItem.standardAppearance = appearance
+	}
 	
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
