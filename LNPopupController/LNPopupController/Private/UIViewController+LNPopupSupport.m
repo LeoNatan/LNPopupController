@@ -9,6 +9,7 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupItem+Private.h"
 #import "_LNWeakRef.h"
+#import "UIViewController+LNPopupSupportPrivate.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupSwizzlingUtils.h"
 @import ObjectiveC;
@@ -332,7 +333,7 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 
 - (CGRect)defaultFrameForBottomDockingView_internal
 {
-	CGFloat safeAreaAddition = self.view.superview.safeAreaInsets.bottom;
+	CGFloat safeAreaAddition = self.view.safeAreaInsets.bottom - _LNPopupSafeAreas(self).bottom;
 	
 	if(self.presentingViewController != nil && [NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
 	{

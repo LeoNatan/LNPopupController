@@ -13,17 +13,6 @@
 @import ObjectiveC;
 @import Darwin;
 
-static inline __attribute__((always_inline)) UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
-{
-	UIEdgeInsets final = userEdgeInsets;
-	final.bottom += popupUserEdgeInsets.bottom;
-	final.top += popupUserEdgeInsets.top;
-	final.left += popupUserEdgeInsets.left;
-	final.right += popupUserEdgeInsets.right;
-	
-	return final;
-}
-
 static const void* LNToolbarHiddenBeforeTransition = &LNToolbarHiddenBeforeTransition;
 static const void* LNPopupAdjustingInsets = &LNPopupAdjustingInsets;
 static const void* LNPopupAdditionalSafeAreaInsets = &LNPopupAdditionalSafeAreaInsets;
@@ -350,7 +339,7 @@ static inline __attribute__((always_inline)) void _LNSetPopupSafeAreaInsets(id s
 	_LNUpdateUserSafeAreaInsets(self, additionalSafeAreaInsets, popup);
 }
 
-static inline __attribute__((always_inline)) UIEdgeInsets _LNPopupSafeAreas(id self)
+UIEdgeInsets _LNPopupSafeAreas(id self)
 {
 	return [objc_getAssociatedObject(self, LNPopupAdditionalSafeAreaInsets) UIEdgeInsetsValue];
 }
@@ -583,19 +572,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 {
 	if([self _isContainedInPopupController])
 	{
-		if(@available(iOS 14.0, *))
-		{
-			if(self.popupPresentationContainerViewController.splitViewController != nil && [self.popupPresentationContainerViewController.splitViewController.viewControllers indexOfObject:self.popupPresentationContainerViewController] == 0)
-			{
-				return self.popupPresentationContainerViewController.view.safeAreaInsets;
-			}
-			
-			return self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
-		}
-		else
-		{
-			return self.popupPresentationContainerViewController.view.safeAreaInsets;
-		}
+		return __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.popupPresentationContainerViewController).bottom, 0));		
 	}
 	
 	UIEdgeInsets insets = [self _vSAIFS];
@@ -1042,7 +1019,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	CGRect toolbarBarFrame = self.toolbar.frame;
 	
-	toolbarBarFrame.origin = CGPointMake(toolbarBarFrame.origin.x, self.view.bounds.size.height - (self.isToolbarHidden ? 0.0 : toolbarBarFrame.size.height));
+	toolbarBarFrame.origin = CGPointMake(toolbarBarFrame.origin.x, self.view.bounds.size.height - (self.isToolbarHidden ? 0.0 : toolbarBarFrame.size.height) - (self.view.safeAreaInsets.bottom - self.view.window.safeAreaInsets.bottom));
 	
 	return toolbarBarFrame;
 }

@@ -1188,7 +1188,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		if(view.window.safeAreaInsets.top == 0)
 		{
 			//Probably 🤷‍♂️ an old iPhone
-			return 20;
+			return view.window.windowScene.statusBarManager.statusBarHidden ? 0 : 20;
 		}
 		
 		return view.window.safeAreaInsets.top;

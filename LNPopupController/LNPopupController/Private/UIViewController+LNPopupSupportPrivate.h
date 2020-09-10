@@ -12,6 +12,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static inline __attribute__((always_inline)) UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
+{
+	UIEdgeInsets final = userEdgeInsets;
+	final.bottom += popupUserEdgeInsets.bottom;
+	final.top += popupUserEdgeInsets.top;
+	final.left += popupUserEdgeInsets.left;
+	final.right += popupUserEdgeInsets.right;
+	
+	return final;
+}
+
+UIEdgeInsets _LNPopupSafeAreas(id self);
 void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL layout, UIEdgeInsets popupEdgeInsets);
 
 @interface _LNPopupBottomBarSupport : UIView @end
