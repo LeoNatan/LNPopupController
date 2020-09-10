@@ -6,6 +6,7 @@
 //  Copyright © 2015-2020 Leo Natan. All rights reserved.
 //
 
+#import "LNPopupController.h"
 #import "LNPopupContentView+Private.h"
 #import "LNPopupCloseButton+Private.h"
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
@@ -217,6 +218,10 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	else
 	{
 		windowTopSafeAreaInset += self.window.safeAreaInsets.top;
+        if (windowTopSafeAreaInset == 0)
+        {
+            windowTopSafeAreaInset = [LNPopupController _statusBarHeightForView:self];
+        }
 	}
 
 	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
