@@ -594,7 +594,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		}
 		else
 		{
-			return self.popupPresentationContainerViewController.view.superview.safeAreaInsets;
+			return self.popupPresentationContainerViewController.view.safeAreaInsets;
 		}
 	}
 	
