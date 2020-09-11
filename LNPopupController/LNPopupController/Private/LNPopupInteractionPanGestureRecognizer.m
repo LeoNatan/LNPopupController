@@ -130,6 +130,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 			return NO;
 		}
 	}
+
+	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"SwiftUI"])
+	{
+		return NO;
+	}
 	
 	return YES;
 }
