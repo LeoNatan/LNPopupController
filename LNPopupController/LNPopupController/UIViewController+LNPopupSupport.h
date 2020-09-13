@@ -16,6 +16,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, LNPopupPresentationStyle) {
+	LNPopupPresentationStyleDefault,
+//	LNPopupPresentationStyleFullScreen,
+//	LNPopupPresentationStyleFullHeight,
+//	LNPopupPresentationStyleOverCurrentContext,
+	LNPopupPresentationStyleSheet API_AVAILABLE(ios(13.0)),
+};
+
 /**
  * Available interaction styles with the popup bar and popup content view.
  */
@@ -188,6 +196,11 @@ typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
  * @param completion      The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify @c nil for this parameter.
  */
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)(void))completion;
+
+/**
+ * The popup presentation style.
+ */
+@property (nonatomic) LNPopupPresentationStyle popupPresentationStyle;
 
 /**
  * The popup bar interaction style.

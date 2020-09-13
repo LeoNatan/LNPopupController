@@ -331,6 +331,15 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_customBarViewController.view.frame = frame;
 }
 
+- (void)setExtendedBackgroundViewHeight:(CGFloat)extendedBackgroundViewHeight
+{
+	_extendedBackgroundViewHeight = extendedBackgroundViewHeight;
+	
+	CGFloat height = _LNPopupBarHeightForBarStyle(self.barStyle, self.customBarViewController);
+	CGRect contentFrame = CGRectMake(0, 0, self.bounds.size.width, height);
+	[_backgroundView setFrame:CGRectMake(contentFrame.origin.x, contentFrame.origin.y, contentFrame.size.width, contentFrame.size.height + self.extendedBackgroundViewHeight)];
+}
+
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
@@ -340,6 +349,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
 	frame.size.height = barHeight;
 	[_contentView setFrame:frame];
+	frame.size.height += self.extendedBackgroundViewHeight;
 	[_backgroundView setFrame:frame];
 	
 	[self _layoutCustomBarController];

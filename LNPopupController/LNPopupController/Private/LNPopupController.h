@@ -11,6 +11,7 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import <LNPopupController/LNPopupCloseButton.h>
 #import "LNPopupContentView+Private.h"
+#import "LNPopupContentViewController.h"
 
 extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
@@ -23,6 +24,7 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 @property (nonatomic, strong) LNPopupBar* popupBar;
 @property (nonatomic, strong, readonly) LNPopupBar* popupBarStorage;
 @property (nonatomic, strong) LNPopupContentView* popupContentView;
+@property (nonatomic, strong) LNPopupContentViewController* popupContentViewController;
 @property (nonatomic, strong) UIScrollView* popupContentContainerView;
 
 @property (nonatomic) LNPopupPresentationState popupControllerPublicState;

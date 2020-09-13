@@ -321,6 +321,7 @@
 //		[targetVC.popupBar addInteraction:i];
 //	}
 	
+	targetVC.popupPresentationStyle = LNPopupPresentationStyleSheet;
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
 #endif

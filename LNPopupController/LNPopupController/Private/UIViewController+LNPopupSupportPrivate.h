@@ -36,6 +36,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 @interface UIViewController (LNPopupSupportPrivate)
 
+- (nullable UIPresentationController*)_ln_nonMemoryLeakingPresentationController;
+
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
 
 - (nullable UIViewController*)_ln_common_childViewControllerForStatusBarStyle;

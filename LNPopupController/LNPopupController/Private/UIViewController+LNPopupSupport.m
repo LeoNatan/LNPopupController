@@ -18,6 +18,7 @@ static const void* _LNPopupItemKey = &_LNPopupItemKey;
 static const void* _LNPopupControllerKey = &_LNPopupControllerKey;
 const void* _LNPopupPresentationContainerViewControllerKey = &_LNPopupPresentationContainerViewControllerKey;
 const void* _LNPopupContentViewControllerKey = &_LNPopupContentViewControllerKey;
+static const void* _LNPopupPresentationStyleKey = &_LNPopupPresentationStyleKey;
 static const void* _LNPopupInteractionStyleKey = &_LNPopupInteractionStyleKey;
 static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
 static const void* _LNPopupIsInPopupAppearanceTransitionKey = &_LNPopupIsInPopupAppearanceTransitionKey;
@@ -32,7 +33,31 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 @end
 #pragma clang diagnostic pop
 
+@interface UIViewController ()
+
+#if ! LNPopupControllerEnforceStrictClean
+//TODO: Hide
+- (id)_existingPresentationControllerImmediate:(_Bool)arg1 effective:(_Bool)arg2;
+#endif
+
+@end
+
 @implementation UIViewController (LNPopupSupport)
+
+- (UIPresentationController*)_ln_nonMemoryLeakingPresentationController
+{
+#if ! LNPopupControllerEnforceStrictClean
+	//TODO: Hide
+	return [self _existingPresentationControllerImmediate:NO effective:NO];
+#else
+	NSString* selector = [NSString stringWithFormat:@"_%@", NSStringFromSelector(@selector(presentationController))];
+	
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+	return [self performSelector:NSSelectorFromString(selector)];
+#pragma clang diagnostic pop
+#endif
+}
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completionBlock;
 {
@@ -226,6 +251,16 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 - (LNPopupContentView *)popupContentView
 {
 	return self._ln_popupController.popupContentView;
+}
+
+- (LNPopupPresentationStyle)popupPresentationStyle
+{
+	return [objc_getAssociatedObject(self, _LNPopupPresentationStyleKey) unsignedIntegerValue];
+}
+
+- (void)setPopupPresentationStyle:(LNPopupPresentationStyle)popupPresentationStyle
+{
+	objc_setAssociatedObject(self, _LNPopupPresentationStyleKey, @(popupPresentationStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (LNPopupInteractionStyle)popupInteractionStyle

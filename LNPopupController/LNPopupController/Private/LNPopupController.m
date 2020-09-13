@@ -14,6 +14,7 @@
 #import "LNPopupInteractionPanGestureRecognizer.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSObject+AltKVC.h"
+#import "LNPopupContentViewController.h"
 @import ObjectiveC;
 
 const NSUInteger _LNPopupPresentationStateTransitioning = 2;
@@ -219,6 +220,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(state == _popupControllerInternalState)
 	{
+		if(completion)
+		{
+			completion();
+		}
+		
 		return;
 	}
 	
@@ -379,11 +385,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	switch (tgr.state) {
 		case UIGestureRecognizerStateEnded:
 		{
-			[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:NO completion:^{
-				[_containerController.view setNeedsLayout];
-				[_containerController.view layoutIfNeeded];
-				[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
-			} transitionOriginatedByUser:NO];
+			[self openPopupAnimated:YES completion:nil allowPopupBarAlphaModification:NO byUser:NO];
+//			[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:NO completion:^{
+//				[_containerController.view setNeedsLayout];
+//				[_containerController.view layoutIfNeeded];
+//				[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+//			} transitionOriginatedByUser:NO];
 		}	break;
 		default:
 			break;
@@ -903,6 +910,20 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return self.popupBarStorage;
 }
 
+- (LNPopupContentViewController *)popupContentViewController
+{
+	if(_popupContentViewController)
+	{
+		return _popupContentViewController;
+	}
+	
+	self.popupContentViewController = [[LNPopupContentViewController alloc] initWithPopupController:self];
+	
+	self.popupContentViewController.popupContentView.popupInteractionGestureRecognizer = [[LNPopupInteractionPanGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:) popupController:self];
+	
+	return _popupContentViewController;
+}
+
 - (LNPopupContentView *)popupContentView
 {
 	if(_popupContentView)
@@ -1046,13 +1067,38 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	}
 }
 
+- (void)_prepareContentViewControllerWithPopupBarAttributes
+{
+	self.popupContentViewController.bottomBar = _bottomBar;
+	self.popupContentViewController.popupBar = self.popupBarStorage;
+	
+	self.popupContentViewController.popupPresentationStyle = _containerController.popupPresentationStyle;
+//	self.popupContentViewController.dimsBackgroundInPresentation = self.popupContentViewController.popupContentView.dimsBackground;
+//	self.popupContentViewController.dismissOnDimTap = self.popupContentViewController.popupContentView.closesPopupOnBackgroundTap;
+}
+
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:^{
+	[self openPopupAnimated:animated completion:completionBlock allowPopupBarAlphaModification:YES byUser:YES];
+}
+
+- (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock allowPopupBarAlphaModification:(BOOL)allowPopupBarAlphaModification byUser:(BOOL)byUser
+{
+	[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:allowPopupBarAlphaModification completion:^{
 		[_containerController.view setNeedsLayout];
 		[_containerController.view layoutIfNeeded];
-		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:NO];
-	} transitionOriginatedByUser:YES];
+		
+		[self _prepareContentViewControllerWithPopupBarAttributes];
+
+		[_containerController presentViewController:self.popupContentViewController animated:animated completion:^ {
+			if(completionBlock)
+			{
+				completionBlock();
+			}
+		}];
+		
+//		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:NO];
+	} transitionOriginatedByUser:byUser];
 }
 
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
