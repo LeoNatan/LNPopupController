@@ -929,7 +929,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
 	
-	[self _setPrepareTabBarIgnored:YES];
+	[self _setPrepareTabBarIgnored:t > 0];
 	
 	[self sBWT:t iE:e];
 	
