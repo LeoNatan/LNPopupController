@@ -39,10 +39,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
 
 - (nullable UIViewController*)_ln_common_childViewControllerForStatusBarStyle;
+- (nullable UIPresentationController*)nonMemoryLeakingPresentationController;
 
 @property (nonatomic, strong, readonly, getter=_ln_popupController) LNPopupController* ln_popupController;
 - (LNPopupController*)_ln_popupController_nocreate;
-@property (nullable, nonatomic, assign, readwrite) UIViewController* popupPresentationContainerViewController;
+@property (nullable, nonatomic, weak, readwrite) UIViewController* popupPresentationContainerViewController;
 @property (nullable, nonatomic, strong, readonly) UIViewController* popupContentViewController;
 
 @property (nonnull, nonatomic, strong, readonly, getter=_ln_bottomBarSupport) _LNPopupBottomBarSupport* bottomBarSupport;

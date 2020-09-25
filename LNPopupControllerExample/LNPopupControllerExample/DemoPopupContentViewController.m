@@ -179,6 +179,11 @@ static UIImage* LNSystemImage(NSString* named)
 	[super viewSafeAreaInsetsDidChange];
 }
 
+- (void)dealloc
+{
+	
+}
+
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
 	if (@available(iOS 13.0, *)) {

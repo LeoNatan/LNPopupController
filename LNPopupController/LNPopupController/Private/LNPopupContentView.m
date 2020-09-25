@@ -201,7 +201,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 	if (@available(iOS 13.0, *))
 	{
-		if([NSStringFromClass(_currentPopupContentViewController.popupPresentationContainerViewController.presentationController.class) containsString:@"Fullscreen"])
+		if([NSStringFromClass(_currentPopupContentViewController.popupPresentationContainerViewController.nonMemoryLeakingPresentationController.class) containsString:@"Fullscreen"])
 		{
 			windowTopSafeAreaInset += self.window.safeAreaInsets.top;
 		}

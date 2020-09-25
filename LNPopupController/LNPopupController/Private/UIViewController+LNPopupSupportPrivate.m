@@ -1026,7 +1026,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (UIEdgeInsets)insetsForBottomDockingView
 {
-	if(self.presentingViewController != nil && [NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
+	if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
 	{
 		return UIEdgeInsetsZero;
 	}

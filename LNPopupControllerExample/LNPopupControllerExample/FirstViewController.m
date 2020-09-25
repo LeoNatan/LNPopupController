@@ -138,6 +138,11 @@
 	[super viewDidAppear:animated];
 }
 
+- (void)dealloc
+{
+	
+}
+
 - (IBAction)_changeBarStyle:(id)sender
 {
 	if (@available(iOS 13.0, *))

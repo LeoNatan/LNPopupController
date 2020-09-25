@@ -32,7 +32,35 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 @end
 #pragma clang diagnostic pop
 
+#if ! LNPopupControllerEnforceStrictClean
+//_existingPresentationControllerImmediate:effective:
+static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlckltbWVkaWF0ZTplZmZlY3RpdmU6";
+#endif
+
 @implementation UIViewController (LNPopupSupport)
+
+- (UIPresentationController*)nonMemoryLeakingPresentationController
+{
+#if ! LNPopupControllerEnforceStrictClean
+	//TODO: Hide
+
+	static NSString* sel = nil;
+	static id (*nonLeakingPresentationController)(id, SEL, BOOL, BOOL) = (void*)objc_msgSend;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sel = _LNPopupDecodeBase64String(ePCIEBase64);
+	});
+
+	return nonLeakingPresentationController(self, NSSelectorFromString(sel), NO, NO);
+#else
+	NSString* selector = [NSString stringWithFormat:@"_%@", NSStringFromSelector(@selector(presentationController))];
+	
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+	return [self performSelector:NSSelectorFromString(selector)];
+#pragma clang diagnostic pop
+#endif
+}
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completionBlock;
 {
@@ -335,7 +363,7 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 {
 	CGFloat safeAreaAddition = self.view.safeAreaInsets.bottom - _LNPopupSafeAreas(self).bottom;
 	
-	if(self.presentingViewController != nil && [NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
+	if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
 	{
 		safeAreaAddition = 0;
 	}
