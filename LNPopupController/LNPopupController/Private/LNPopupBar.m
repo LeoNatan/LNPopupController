@@ -131,14 +131,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
 {
-#if TARGET_OS_MACCATALYST
-	if(systemBarStyle == UIBarStyleBlack)
-	{
-		return UIBlurEffectStyleSystemThickMaterialDark;
-	}
-
-	return UIBlurEffectStyleSystemThickMaterial;
-#else
 	if (@available(iOS 13.0, *))
 	{
 		//On iOS 13 and above, return .chromeMaterial regardless of bar style (this is how Music.app appears)
@@ -151,7 +143,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 	
 	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
-#endif
 }
 
 @synthesize backgroundStyle = _userBackgroundStyle, barTintColor = _userBarTintColor;
