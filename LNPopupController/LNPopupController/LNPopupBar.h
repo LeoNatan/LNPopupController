@@ -187,26 +187,15 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 
 #if ! TARGET_OS_MACCATALYST
 LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG)
+/// This no longer has any effect. Add context menu interaction or register for previewing directly on the popup bar view.
 @protocol LNPopupBarPreviewingDelegate <NSObject>
 
 @required
 
-/**
- * Called when the user performs a peek action on the popup bar.
- *
- * The default implementation returns @c nil and no preview is displayed.
- *
- * @return The view controller whose view you want to provide as the preview (peek), or @c nil to disable preview.
- */
 - (nullable UIViewController*)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG);
 
 @optional
 
-/**
- * Called when the user performs a pop action on the popup bar.
- *
- * The default implementation does not commit the view controller.
- */
 - (void)popupBar:(LNPopupBar*)popupBar commitPreviewingViewController:(UIViewController*)viewController LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG);
 
 @end
@@ -214,7 +203,7 @@ LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG)
 @interface LNPopupBar (Deprecated)
 
 /**
- * The previewing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the @c LNPopupBarPreviewingDelegate protocol.
+ * This no longer has any effect. Add context menu interaction or register for previewing directly on the popup bar view.
  */
 @property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> previewingDelegate LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG);
 
