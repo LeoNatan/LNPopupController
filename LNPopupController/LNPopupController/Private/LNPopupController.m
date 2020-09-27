@@ -14,6 +14,7 @@
 #import "LNPopupInteractionPanGestureRecognizer.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSObject+AltKVC.h"
+#import "UIView+LNPopupSupportPrivate.h"
 @import ObjectiveC;
 
 const NSUInteger _LNPopupPresentationStateTransitioning = 2;
@@ -789,6 +790,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
+	self.popupBar.effectGroupingIdentifier = _bottomBar._groupingIdentifierIfAvailable;
+	
 	if([_bottomBar respondsToSelector:@selector(barStyle)])
 	{
 		[self.popupBar setSystemBarStyle:[(id<_LNPopupBarSupport>)_bottomBar barStyle]];
@@ -843,6 +846,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_containerController._ln_bottomBarExtension_nocreate.effectView.backgroundColor = _containerController.popupBar.backgroundView.backgroundColor;
 	_containerController._ln_bottomBarExtension_nocreate.effectView.alpha = _containerController.popupBar.backgroundView.alpha;
 	_containerController._ln_bottomBarExtension_nocreate.effectView.effect = _containerController.popupBar.backgroundView.effect;
+	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:_containerController._ln_bottomBarExtension_nocreate.effectView];
+	_popupContentView.clipsToBounds = YES;
 }
 
 - (void)_movePopupBarAndContentToBottomBarSuperview
@@ -1169,6 +1174,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar
 {
 	[self _updateBarExtensionStyleFromPopupBar];
+	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:self.popupContentView.effectView];
 }
 
 #pragma mark Utils

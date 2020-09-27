@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1200"
+   LastUpgradeVersion = "1220"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -73,6 +73,11 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "LNPOPUP_DEBUG_SWIZZLES"
+            value = "1"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "CG_CONTEXT_SHOW_BACKTRACE"
             value = "1"
             isEnabled = "YES">
          </EnvironmentVariable>

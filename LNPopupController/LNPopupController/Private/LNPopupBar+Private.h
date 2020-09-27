@@ -73,6 +73,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong) UIView* contentView;
 //@property (nonatomic, strong) UIToolbar* toolbar;
 @property (nonatomic, strong) UIVisualEffectView* backgroundView;
+@property (nonatomic, strong) NSString* effectGroupingIdentifier;
+- (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView;
 
 @property (nonatomic, copy) NSString* accessibilityCenterLabel;
 @property (nonatomic, copy) NSString* accessibilityCenterHint;
