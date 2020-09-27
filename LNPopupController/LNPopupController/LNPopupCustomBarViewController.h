@@ -20,21 +20,21 @@
 /**
  * Indicates whether the default tap gesture recognizer should be added to the popup bar.
  *
- * Defaults to @c YES.
+ * Defaults to @c true.
  */
 @property (nonatomic, assign, readonly) BOOL wantsDefaultTapGestureRecognizer;
 
 /**
  * Indicates whether the default pan gesture recognizer should be added to the popup bar.
  *
- * Defaults to @c YES.
+ * Defaults to @c true.
  */
 @property (nonatomic, assign, readonly) BOOL wantsDefaultPanGestureRecognizer;
 
 /**
  * Indicates whether the default highlight gesture recognizer should be added to the popup bar.
  *
- * Defaults to @c YES.
+ * Defaults to @c true.
  */
 @property (nonatomic, assign, readonly) BOOL wantsDefaultHighlightGestureRecognizer;
 

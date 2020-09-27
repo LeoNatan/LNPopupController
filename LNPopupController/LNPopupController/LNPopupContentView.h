@@ -46,12 +46,12 @@ extern const UIBlurEffectStyle LNBackgroundStyleInherit;
  *
  * Use @c LNBackgroundStyleInherit value to inherit the popup bar's background style if possible.
  *
- * Defaults to @c LNBackgroundStyleInherit
+ * Defaults to @c LNBackgroundStyleInherit.
  */
 @property (nonatomic, assign) UIBlurEffectStyle backgroundStyle UI_APPEARANCE_SELECTOR;
 
 /**
- * A Boolean value that indicates whether the popup conetnt view is translucent (@c YES) or not (@c NO).
+ * A Boolean value that indicates whether the popup conetnt view is translucent (@c true) or not (@c false).
  */
 @property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
 

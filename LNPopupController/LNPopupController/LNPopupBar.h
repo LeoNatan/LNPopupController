@@ -70,7 +70,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @interface LNPopupBar : UIView <UIAppearanceContainer>
 
 /**
- * If @c YES, the popup bar will automatically inherit its style from the bottom docking view.
+ * If @c true, the popup bar will automatically inherit its style from the bottom docking view.
  */
 @property (nonatomic, assign) BOOL inheritsVisualStyleFromDockingView UI_APPEARANCE_SELECTOR;
 
@@ -119,7 +119,9 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 /**
  * The popup bar background style that specifies its appearance.
  *
- * Use @c LNBackgroundStyleInherit value to inherit the docking view's bar style if possible.
+ * Use @c LNBackgroundStyleInherit value to inherit the docking view's bar style if possible, or use a system default.
+ *
+ * Defaults to @c LNBackgroundStyleInherit.
  */
 @property (nonatomic, assign) UIBlurEffectStyle backgroundStyle UI_APPEARANCE_SELECTOR;
 
@@ -129,7 +131,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @property (nullable, nonatomic, strong) UIColor* barTintColor UI_APPEARANCE_SELECTOR;
 
 /**
- * A Boolean value that indicates whether the popup bar is translucent (@c YES) or not (@c NO).
+ * A Boolean value that indicates whether the popup bar is translucent (@c true) or not (@c false).
  */
 @property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
 
@@ -157,7 +159,9 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @property (nonatomic) UISemanticContentAttribute barItemsSemanticContentAttribute;
 
 /**
- * When enabled, titles and subtitles that are longer than the space available will scroll text over time. By default, this is set to @c false for iOS 10 and above, @c true otherwise.
+ * When enabled, titles and subtitles that are longer than the space available will scroll text over time.
+ *
+ * Defaults to @c false.
  */
 @property (nonatomic, assign) BOOL marqueeScrollEnabled;
 
