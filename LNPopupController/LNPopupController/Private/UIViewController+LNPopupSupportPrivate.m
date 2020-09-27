@@ -904,6 +904,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_bottomBarExtension.frame = frame;
 	[self hBWT:t iE:e];
 	
+	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
+	self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+	
 //	if(t > 0)
 //	{
 		[self _setIgnoringLayoutDuringTransition:YES];
@@ -919,6 +922,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
+			
+			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
 		}];
 //	}
 }
@@ -938,6 +943,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	if(t > 0)
 	{
 		[self _setIgnoringLayoutDuringTransition:YES];
+		
+		NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
+		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
 		
 		[self.selectedViewController.transitionCoordinator animateAlongsideTransition:^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 			
@@ -970,6 +978,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			[self _layoutPopupBarOrderForUse];
 			
 			[self _setIgnoringLayoutDuringTransition:NO];
+			
+			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
 		}];
 	}
 }

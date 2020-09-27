@@ -406,6 +406,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 - (void)setEffectGroupingIdentifier:(NSString *)groupingIdentifier
 {
 	[self _applyGroupingIdentifier:groupingIdentifier toVisualEffectView:self.backgroundView];
+	
+	[self._barDelegate _popupBarStyleDidChange:self];
 }
 
 - (UIBlurEffectStyle)backgroundStyle

@@ -350,11 +350,14 @@ UIContextMenuInteractionDelegate, LNPopupPresentationDelegate
 {
 	//Mask Apple's push bug. This uses private API, so don't copy it as is in your app!
 	
-	UIViewController* disappearing = [navigationController valueForKey:@"disappearingViewController"];
-	UIViewController* target = viewController;
-	BOOL isPushing = [[navigationController valueForKey:@"isPushing"] boolValue];
-	
-	self.tabBarController.view.backgroundColor = (isPushing ? target : disappearing).view.backgroundColor;
+	if(@available(iOS 13.0, *))
+	{
+		UIViewController* disappearing = [navigationController valueForKey:@"disappearingViewController"];
+		UIViewController* target = viewController;
+		BOOL isPushing = [[navigationController valueForKey:@"isPushing"] boolValue];
+		
+		self.tabBarController.view.backgroundColor = (isPushing ? target : disappearing).view.backgroundColor;
+	}
 }
 
 #pragma mark UIContextMenuInteractionDelegate
