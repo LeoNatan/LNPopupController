@@ -89,10 +89,11 @@
 
 @end
 
-@interface FirstViewController ()
+@interface FirstViewController () <UINavigationControllerDelegate,
 #if LNPOPUP
-<UIContextMenuInteractionDelegate, LNPopupPresentationDelegate>
+UIContextMenuInteractionDelegate, LNPopupPresentationDelegate
 #endif
+>
 
 @end
 
@@ -114,6 +115,8 @@
 	} else {
 		self.view.backgroundColor = LNRandomLightColor();
 	}
+	
+	self.navigationController.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -129,8 +132,6 @@
 	_nextButton.hidden = self.splitViewController != nil;
 	
 	[self _presentBar:nil animated:NO];
-	
-	self.tabBarController.view.backgroundColor = self.view.backgroundColor;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -294,7 +295,6 @@
 	targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
-//	targetVC.popupBar.previewingDelegate = self;
 	targetVC.popupBar.progressViewStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsProgressViewStyle] unsignedIntegerValue];
 	targetVC.popupBar.barStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
 	targetVC.popupInteractionStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsInteractionStyle] unsignedIntegerValue];
@@ -342,6 +342,19 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	[segue.destinationViewController setHidesBottomBarWhenPushed:YES];
+}
+
+#pragma mark UINavigationControllerDelegate
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+	//Mask Apple's push bug. This uses private API, so don't copy it as is in your app!
+	
+	UIViewController* disappearing = [navigationController valueForKey:@"disappearingViewController"];
+	UIViewController* target = viewController;
+	BOOL isPushing = [[navigationController valueForKey:@"isPushing"] boolValue];
+	
+	self.tabBarController.view.backgroundColor = (isPushing ? target : disappearing).view.backgroundColor;
 }
 
 #pragma mark UIContextMenuInteractionDelegate
