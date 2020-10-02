@@ -48,15 +48,6 @@ static NSString* const uiTBCA = @"VUlUYWJCYXJDb250cm9sbGVyQWNjZXNzaWJpbGl0eQ==";
 //_prepareTabBar
 static NSString* const pTBBase64 = @"X3ByZXBhcmVUYWJCYXI=";
 
-#if TARGET_OS_MACCATALYST
-//_setSafeAreaInsets:updateSubviewsDuringNextLayoutPass:
-static NSString* const sSAIuSDNLP = @"X3NldFNhZmVBcmVhSW5zZXRzOnVwZGF0ZVN1YnZpZXdzRHVyaW5nTmV4dExheW91dFBhc3M6";
-//_updateContentOverlayInsetsFromParentIfNecessary
-static NSString* const uCOIFPIN = @"X3VwZGF0ZUNvbnRlbnRPdmVybGF5SW5zZXRzRnJvbVBhcmVudElmTmVjZXNzYXJ5";
-//_viewDelegate
-static NSString* const vD = @"X3ZpZXdEZWxlZ2F0ZQ==";
-#endif
-
 //_accessibilitySpeakThisViewController
 static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
@@ -155,59 +146,6 @@ static void __accessibilityBundleLoadHandler()
 }
 #endif
 
-#pragma mark - UIView
-
-#if TARGET_OS_MACCATALYST
-#ifndef LNPopupControllerEnforceStrictClean
-@interface UIView (LNPopupLayout) @end
-@implementation UIView (LNPopupLayout)
-
-+ (void)load
-{
-	if(unavailable(iOS 14.0, *))
-	{
-		//_setSafeAreaInsets:updateSubviewsDuringNextLayoutPass:
-		NSString* selName = _LNPopupDecodeBase64String(sSAIuSDNLP);
-		LNSwizzleMethod(self,
-						NSSelectorFromString(selName),
-						@selector(_sSAI:uSDNLP:));
-	}
-}
-
-//_setSafeAreaInsets:updateSubviewsDuringNextLayoutPass:
-- (void)_sSAI:(UIEdgeInsets)arg1 uSDNLP:(BOOL)arg2
-{
-	[self _sSAI:arg1 uSDNLP:arg2];
-	
-	if([self isKindOfClass:LNPopupContentView.class])
-	{
-		LNPopupContentView* contentView = (id)self;
-		
-		static SEL delegateSelector;
-		static SEL updateSelector;
-		static dispatch_once_t onceToken;
-		dispatch_once(&onceToken, ^{
-			//_viewDelegate
-			delegateSelector = NSSelectorFromString(_LNPopupDecodeBase64String(vD));
-			//_updateContentOverlayInsetsFromParentIfNecessary
-			updateSelector = NSSelectorFromString(_LNPopupDecodeBase64String(uCOIFPIN));
-		});
-		
-		[contentView.effectView.contentView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-			[[obj performSelector:delegateSelector] performSelector:updateSelector];
-			[obj _sSAI:__LNEdgeInsetsSum(self.superview.safeAreaInsets, contentView.currentPopupContentViewController.additionalSafeAreaInsets) uSDNLP:arg2];
-			//			[obj performSelector:NSSelectorFromString(@"_recursiveEagerlyUpdateSafeAreaInsetsUntilViewController")];
-#pragma clang diagnostic pop
-		}];
-	}
-}
-
-@end
-#endif
-#endif
-
 #pragma mark - UIViewController
 
 @interface UIViewController (LNPopupLayout) @end
@@ -283,13 +221,11 @@ static void __accessibilityBundleLoadHandler()
 						NSSelectorFromString(selName),
 						@selector(_ln_sPVC:));
 		
-#if ! TARGET_OS_MACCATALYST
 		//_viewSafeAreaInsetsFromScene
 		selName = _LNPopupDecodeBase64String(vSAIFSBase64);
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_vSAIFS));
-#endif
 #endif
 	});
 }

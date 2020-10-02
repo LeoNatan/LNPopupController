@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17124"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17502"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -286,7 +286,9 @@
                     <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="always" id="JYD-6c-4Kf">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="gears" style="done" id="PjS-ok-m0Q">
                             <connections>
-                                <segue destination="Xmg-Iw-fcI" kind="presentation" id="uvn-C9-GfA"/>
+                                <segue destination="Xmg-Iw-fcI" kind="popoverPresentation" popoverAnchorBarButtonItem="PjS-ok-m0Q" id="uvn-C9-GfA">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
+                                </segue>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

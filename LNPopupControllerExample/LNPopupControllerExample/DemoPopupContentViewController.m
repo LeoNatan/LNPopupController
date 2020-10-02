@@ -26,6 +26,9 @@
 
 @interface DemoPopupContentViewController () @end
 @implementation DemoPopupContentViewController
+{
+	NSInteger _lastStyle;
+}
 
 - (void)loadView
 {
@@ -49,10 +52,20 @@
 
 - (void)_updateBackgroundColor
 {
-	if (@available(iOS 13.0, *)) {
-		self.view.backgroundColor = LNRandomAdaptiveInvertedColor();
-	} else {
-		self.view.backgroundColor = LNRandomDarkColor();
+	if(@available(iOS 13.0, *)) {
+		if(self.view.traitCollection.userInterfaceStyle != _lastStyle)
+		{
+			_lastStyle = self.view.traitCollection.userInterfaceStyle;
+			self.view.backgroundColor = LNRandomAdaptiveInvertedColor();
+		}
+	}
+	else
+	{
+		if(_lastStyle == 0)
+		{
+			_lastStyle++;
+			self.view.backgroundColor = LNRandomDarkColor();
+		}
 	}
 	
 	[self setNeedsStatusBarAppearanceUpdate];
