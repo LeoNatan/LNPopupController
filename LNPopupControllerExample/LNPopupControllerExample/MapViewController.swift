@@ -15,8 +15,29 @@ import MapKit
 class MapViewController: UIViewController, UISearchBarDelegate {
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet weak var topVisualEffectView: UIVisualEffectView!
+	@IBOutlet weak var backButtonBackground: UIVisualEffectView!
 	private var popupContentVC: LocationsController!
 
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		backButtonBackground.layer.cornerRadius = 10.0
+		backButtonBackground.layer.borderWidth = 1.0
+		backButtonBackground.layer.borderColor = self.view.tintColor.cgColor
+		
+		if #available(iOS 13.0, *) {
+			topVisualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
+			backButtonBackground.effect = UIBlurEffect(style: .systemChromeMaterial)
+			backButtonBackground.layer.cornerCurve = .continuous
+		}
+	}
+	
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		
+		backButtonBackground.layer.borderColor = self.view.tintColor.cgColor
+	}
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		

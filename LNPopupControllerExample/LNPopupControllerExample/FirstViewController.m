@@ -44,6 +44,17 @@
 
 - (IBAction)unwindToGallery:(UIStoryboardSegue *)unwindSegue { }
 
+- (void)viewDidLoad
+{
+	UIViewController* demoVC = [DemoPopupContentViewController new];
+	
+	demoVC.popupItem.title = @"Welcome to LNPopupController!";
+	demoVC.popupItem.image = [UIImage imageNamed:@"genre10"];
+	
+	self.navigationController.popupBar.marqueeScrollEnabled = YES;
+	[self.navigationController presentPopupBarWithContentViewController:demoVC animated:NO completion:nil];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	if(segue.destinationViewController.modalPresentationStyle != UIModalPresentationFullScreen)

@@ -210,7 +210,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 			UIView* viewToUse = _currentPopupContentViewController.popupPresentationContainerViewController.presentingViewController.presentedViewController.view;
 			if(viewToUse == nil)
 			{
-				viewToUse = self;
+				viewToUse = self.superview;
 			}
 			windowTopSafeAreaInset += viewToUse.safeAreaInsets.top + 5;
 		}
