@@ -77,7 +77,7 @@
 #if ! LNPopupControllerEnforceStrictClean
 			if(@available(iOS 13.0, *))
 			{
-				UIPresentationController* pc = [presenting ?: source _ln_nonMemoryLeakingPresentationController];
+				UIPresentationController* pc = [presenting ?: source nonMemoryLeakingPresentationController];
 				if([NSStringFromClass(pc.class) containsString:@"Form"])
 				{
 					targetClass = _LNPopupFormSheetPresentationController;

@@ -131,14 +131,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
 {
-#if TARGET_OS_MACCATALYST
-	if(systemBarStyle == UIBarStyleBlack)
-	{
-		return UIBlurEffectStyleSystemThickMaterialDark;
-	}
-
-	return UIBlurEffectStyleSystemThickMaterial;
-#else
 	if (@available(iOS 13.0, *))
 	{
 		//On iOS 13 and above, return .chromeMaterial regardless of bar style (this is how Music.app appears)
@@ -151,7 +143,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 	
 	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
-#endif
 }
 
 @synthesize backgroundStyle = _userBackgroundStyle, barTintColor = _userBarTintColor;
@@ -212,6 +203,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_translucent = YES;
 		
 		_backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
+		self.effectGroupingIdentifier = nil;
 		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
@@ -385,6 +377,47 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 	
 	[self _layoutTitles];
+}
+
+- (NSString*)_effectGroupingIdentifierKey
+{
+	static NSString* gN = @"Z3JvdXBOYW1l";
+	static NSString* rv = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		rv = _LNPopupDecodeBase64String(gN);
+	});
+	return rv;
+}
+
+- (void)_applyGroupingIdentifier:(NSString*)groupingIdentifier toVisualEffectView:(UIVisualEffectView*)visualEffectView
+{
+	if(@available(iOS 13.0, *))
+	{
+		[visualEffectView setValue:groupingIdentifier ?: [NSString stringWithFormat:@"<%@:%p> Backdrop Group", self.class, self] forKey:self._effectGroupingIdentifierKey];
+	}
+}
+
+- (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView
+{
+	[self _applyGroupingIdentifier:self.effectGroupingIdentifier toVisualEffectView:visualEffectView];
+}
+
+- (NSString *)effectGroupingIdentifier
+{
+	if(@available(iOS 13.0, *))
+	{
+		return [self.backgroundView valueForKey:self._effectGroupingIdentifierKey];
+	}
+	
+	return nil;
+}
+
+- (void)setEffectGroupingIdentifier:(NSString *)groupingIdentifier
+{
+	[self _applyGroupingIdentifier:groupingIdentifier toVisualEffectView:self.backgroundView];
+	
+	[self._barDelegate _popupBarStyleDidChange:self];
 }
 
 - (UIBlurEffectStyle)backgroundStyle

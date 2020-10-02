@@ -74,7 +74,7 @@
 		39444985250D6E570099B121 /* _LNPopupSheetPresentationController_.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupSheetPresentationController_.m; sourceTree = "<group>"; };
 		39444988250D71470099B121 /* _LNPopupPresentationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupPresentationController.m; sourceTree = "<group>"; };
 		3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIViewController+LNPopupSupport.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+LNPopupSupport.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+LNPopupSupport.m"; sourceTree = "<group>"; };
 		3947E1A41B61CD650001178B /* LNPopupBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNPopupBar.m; sourceTree = "<group>"; };
 		3947E1A71B61CDA40001178B /* LNPopupCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupCloseButton.h; sourceTree = "<group>"; };
 		3947E1A81B61CDA40001178B /* LNPopupCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNPopupCloseButton.m; sourceTree = "<group>"; };
@@ -276,7 +276,7 @@
 		39DB52DC1B5823330061C589 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = "Leo Natan";
 				TargetAttributes = {
 					39DB52E41B5823330061C589 = {
@@ -395,7 +395,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACH_O_TYPE = mh_dylib;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -450,7 +450,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MACH_O_TYPE = mh_dylib;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;

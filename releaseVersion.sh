@@ -25,21 +25,16 @@ echo -e "\033[1;34mUsing $NEXT_VERSION as release version\033[0m"
 
 echo -e "\033[1;34mCreating release notes\033[0m"
 
-# RELEASE_NOTES_FILE=_tmp_release_notes.md
-#
-# touch "${RELEASE_NOTES_FILE}"
-# open -Wn "${RELEASE_NOTES_FILE}"
-#
-# if ! [ -s "${RELEASE_NOTES_FILE}" ]; then
-#   echo >&2 "\033[1;31mNo release notes provided, aborting.\033[0m"
-#   rm -f "${RELEASE_NOTES_FILE}"
-#   exit -1
-# fi
-#
-# #Escape user input in markdown to valid JSON string using PHP 🤦‍♂️ (https://stackoverflow.com/a/13466143/983912)
-# RELEASENOTESCONTENTS=$(printf '%s' "$(<"${RELEASE_NOTES_FILE}")" | php -r 'echo json_encode(file_get_contents("php://stdin"));')
-#
-# rm -f "${RELEASE_NOTES_FILE}"
+RELEASE_NOTES_FILE=_tmp_release_notes.md
+
+touch "${RELEASE_NOTES_FILE}"
+open -Wn "${RELEASE_NOTES_FILE}"
+
+if ! [ -s "${RELEASE_NOTES_FILE}" ]; then
+  echo >&2 "\033[1;31mNo release notes provided, aborting.\033[0m"
+  rm -f "${RELEASE_NOTES_FILE}"
+  exit -1
+fi
 
 echo -e "\033[1;34mUpdating framework version\033[0m"
 
@@ -54,7 +49,8 @@ git tag "$NEXT_VERSION"
 git push
 git push --tags
 
-# echo -e "\033[1;34mCreating a GitHub release\033[0m"
-#
-# API_JSON=$(printf '{"tag_name": "%s","target_commitish": "master", "name": "v%s", "body": %s, "draft": false, "prerelease": false}' "$NEXT_VERSION" "$NEXT_VERSION" "$RELEASENOTESCONTENTS")
-# curl -H 'Authorization: token ${GITHUB_RELEASES_TOKEN}' -s --data "$API_JSON" https://api.github.com/repos/LeoNatan/LNPopupController/releases
+echo -e "\033[1;34mCreating a GitHub release\033[0m"
+
+gh release create --repo LeoNatan/LNPopupController "$NEXT_VERSION" --title "v$NEXT_VERSION" --notes-file "${RELEASE_NOTES_FILE}"
+
+rm -f "${RELEASE_NOTES_FILE}"

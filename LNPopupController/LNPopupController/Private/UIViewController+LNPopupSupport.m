@@ -33,22 +33,26 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 @end
 #pragma clang diagnostic pop
 
-@interface UIViewController ()
-
 #if ! LNPopupControllerEnforceStrictClean
-//TODO: Hide
-- (id)_existingPresentationControllerImmediate:(_Bool)arg1 effective:(_Bool)arg2;
+//_existingPresentationControllerImmediate:effective:
+static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlckltbWVkaWF0ZTplZmZlY3RpdmU6";
 #endif
-
-@end
 
 @implementation UIViewController (LNPopupSupport)
 
-- (UIPresentationController*)_ln_nonMemoryLeakingPresentationController
+- (UIPresentationController*)nonMemoryLeakingPresentationController
 {
 #if ! LNPopupControllerEnforceStrictClean
 	//TODO: Hide
-	return [self _existingPresentationControllerImmediate:NO effective:NO];
+
+	static NSString* sel = nil;
+	static id (*nonLeakingPresentationController)(id, SEL, BOOL, BOOL) = (void*)objc_msgSend;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sel = _LNPopupDecodeBase64String(ePCIEBase64);
+	});
+
+	return nonLeakingPresentationController(self, NSSelectorFromString(sel), NO, NO);
 #else
 	NSString* selector = [NSString stringWithFormat:@"_%@", NSStringFromSelector(@selector(presentationController))];
 	
@@ -370,7 +374,7 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 {
 	CGFloat safeAreaAddition = self.view.safeAreaInsets.bottom - _LNPopupSafeAreas(self).bottom;
 	
-	if(self.presentingViewController != nil && [NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
+	if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
 	{
 		safeAreaAddition = 0;
 	}

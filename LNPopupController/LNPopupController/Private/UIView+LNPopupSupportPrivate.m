@@ -16,6 +16,8 @@ static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
 #if ! LNPopupControllerEnforceStrictClean
 //_didMoveFromWindow:toWindow:
 static NSString* dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
+//_backdropViewLayerGroupName
+static NSString* _bVLGN = @"X2JhY2tkcm9wVmlld0xheWVyR3JvdXBOYW1l";
 #endif
 
 @interface UIViewController ()
@@ -126,6 +128,28 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 {
 	NSMutableArray<LNInWindowBlock>* waiting = objc_getAssociatedObject(self, LNPopupAwaitingViewInWindowHierarchyKey);
 	[waiting removeAllObjects];
+}
+
+- (NSString*)_groupingIdentifierIfAvailable
+{
+#if ! LNPopupControllerEnforceStrictClean
+	static NSString* key = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		key = _LNPopupDecodeBase64String(_bVLGN);
+	});
+	
+	if([self respondsToSelector:NSSelectorFromString(key)])
+	{
+		return [self valueForKey:key];
+	}
+	else
+	{
+#endif
+		return nil;
+#if ! LNPopupControllerEnforceStrictClean
+	}
+#endif
 }
 
 @end

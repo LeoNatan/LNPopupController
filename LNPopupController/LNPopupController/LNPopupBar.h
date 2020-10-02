@@ -70,7 +70,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @interface LNPopupBar : UIView <UIAppearanceContainer>
 
 /**
- * If @c YES, the popup bar will automatically inherit its style from the bottom docking view.
+ * If @c true, the popup bar will automatically inherit its style from the bottom docking view.
  */
 @property (nonatomic, assign) BOOL inheritsVisualStyleFromDockingView UI_APPEARANCE_SELECTOR;
 
@@ -119,7 +119,9 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 /**
  * The popup bar background style that specifies its appearance.
  *
- * Use @c LNBackgroundStyleInherit value to inherit the docking view's bar style if possible.
+ * Use @c LNBackgroundStyleInherit value to inherit the docking view's bar style if possible, or use a system default.
+ *
+ * Defaults to @c LNBackgroundStyleInherit.
  */
 @property (nonatomic, assign) UIBlurEffectStyle backgroundStyle UI_APPEARANCE_SELECTOR;
 
@@ -129,7 +131,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @property (nullable, nonatomic, strong) UIColor* barTintColor UI_APPEARANCE_SELECTOR;
 
 /**
- * A Boolean value that indicates whether the popup bar is translucent (@c YES) or not (@c NO).
+ * A Boolean value that indicates whether the popup bar is translucent (@c true) or not (@c false).
  */
 @property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
 
@@ -157,7 +159,9 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 @property (nonatomic) UISemanticContentAttribute barItemsSemanticContentAttribute;
 
 /**
- * When enabled, titles and subtitles that are longer than the space available will scroll text over time. By default, this is set to @c false for iOS 10 and above, @c true otherwise.
+ * When enabled, titles and subtitles that are longer than the space available will scroll text over time.
+ *
+ * Defaults to @c false.
  */
 @property (nonatomic, assign) BOOL marqueeScrollEnabled;
 
@@ -187,26 +191,15 @@ typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
 
 #if ! TARGET_OS_MACCATALYST
 LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG)
+/// This no longer has any effect. Add context menu interaction or register for previewing directly on the popup bar view.
 @protocol LNPopupBarPreviewingDelegate <NSObject>
 
 @required
 
-/**
- * Called when the user performs a peek action on the popup bar.
- *
- * The default implementation returns @c nil and no preview is displayed.
- *
- * @return The view controller whose view you want to provide as the preview (peek), or @c nil to disable preview.
- */
 - (nullable UIViewController*)previewingViewControllerForPopupBar:(LNPopupBar*)popupBar LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG);
 
 @optional
 
-/**
- * Called when the user performs a pop action on the popup bar.
- *
- * The default implementation does not commit the view controller.
- */
 - (void)popupBar:(LNPopupBar*)popupBar commitPreviewingViewController:(UIViewController*)viewController LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG);
 
 @end
@@ -214,7 +207,7 @@ LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG)
 @interface LNPopupBar (Deprecated)
 
 /**
- * The previewing delegate object mediates the presentation of views from the preview (peek) view controller and the commit (pop) view controller. In practice, these two are typically the same view controller. The delegate performs this mediation through your implementation of the methods of the @c LNPopupBarPreviewingDelegate protocol.
+ * This no longer has any effect. Add context menu interaction or register for previewing directly on the popup bar view.
  */
 @property (nullable, nonatomic, weak) id<LNPopupBarPreviewingDelegate> previewingDelegate LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG);
 

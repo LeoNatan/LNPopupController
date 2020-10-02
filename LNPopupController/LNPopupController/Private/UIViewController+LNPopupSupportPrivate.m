@@ -48,15 +48,6 @@ static NSString* const uiTBCA = @"VUlUYWJCYXJDb250cm9sbGVyQWNjZXNzaWJpbGl0eQ==";
 //_prepareTabBar
 static NSString* const pTBBase64 = @"X3ByZXBhcmVUYWJCYXI=";
 
-#if TARGET_OS_MACCATALYST
-//_setSafeAreaInsets:updateSubviewsDuringNextLayoutPass:
-static NSString* const sSAIuSDNLP = @"X3NldFNhZmVBcmVhSW5zZXRzOnVwZGF0ZVN1YnZpZXdzRHVyaW5nTmV4dExheW91dFBhc3M6";
-//_updateContentOverlayInsetsFromParentIfNecessary
-static NSString* const uCOIFPIN = @"X3VwZGF0ZUNvbnRlbnRPdmVybGF5SW5zZXRzRnJvbVBhcmVudElmTmVjZXNzYXJ5";
-//_viewDelegate
-static NSString* const vD = @"X3ZpZXdEZWxlZ2F0ZQ==";
-#endif
-
 //_accessibilitySpeakThisViewController
 static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
@@ -155,59 +146,6 @@ static void __accessibilityBundleLoadHandler()
 }
 #endif
 
-#pragma mark - UIView
-
-#if TARGET_OS_MACCATALYST
-#ifndef LNPopupControllerEnforceStrictClean
-@interface UIView (LNPopupLayout) @end
-@implementation UIView (LNPopupLayout)
-
-+ (void)load
-{
-	if(unavailable(iOS 14.0, *))
-	{
-		//_setSafeAreaInsets:updateSubviewsDuringNextLayoutPass:
-		NSString* selName = _LNPopupDecodeBase64String(sSAIuSDNLP);
-		LNSwizzleMethod(self,
-						NSSelectorFromString(selName),
-						@selector(_sSAI:uSDNLP:));
-	}
-}
-
-//_setSafeAreaInsets:updateSubviewsDuringNextLayoutPass:
-- (void)_sSAI:(UIEdgeInsets)arg1 uSDNLP:(BOOL)arg2
-{
-	[self _sSAI:arg1 uSDNLP:arg2];
-	
-	if([self isKindOfClass:LNPopupContentView.class])
-	{
-		LNPopupContentView* contentView = (id)self;
-		
-		static SEL delegateSelector;
-		static SEL updateSelector;
-		static dispatch_once_t onceToken;
-		dispatch_once(&onceToken, ^{
-			//_viewDelegate
-			delegateSelector = NSSelectorFromString(_LNPopupDecodeBase64String(vD));
-			//_updateContentOverlayInsetsFromParentIfNecessary
-			updateSelector = NSSelectorFromString(_LNPopupDecodeBase64String(uCOIFPIN));
-		});
-		
-		[contentView.effectView.contentView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-			[[obj performSelector:delegateSelector] performSelector:updateSelector];
-			[obj _sSAI:__LNEdgeInsetsSum(self.superview.safeAreaInsets, contentView.currentPopupContentViewController.additionalSafeAreaInsets) uSDNLP:arg2];
-			//			[obj performSelector:NSSelectorFromString(@"_recursiveEagerlyUpdateSafeAreaInsetsUntilViewController")];
-#pragma clang diagnostic pop
-		}];
-	}
-}
-
-@end
-#endif
-#endif
-
 #pragma mark - UIViewController
 
 @interface UIViewController (LNPopupLayout) @end
@@ -283,13 +221,11 @@ static void __accessibilityBundleLoadHandler()
 						NSSelectorFromString(selName),
 						@selector(_ln_sPVC:));
 		
-#if ! TARGET_OS_MACCATALYST
 		//_viewSafeAreaInsetsFromScene
 		selName = _LNPopupDecodeBase64String(vSAIFSBase64);
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_vSAIFS));
-#endif
 #endif
 	});
 }
@@ -601,7 +537,8 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
 		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
 	}
-	else {
+	else
+	{
 		[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
 		[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
 		[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
@@ -612,10 +549,12 @@ static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id se
 {
 	if(@available(ios 13.0, *))
 	{
+		[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
 		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
 		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
 	}
-	else {
+	else
+	{
 		[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
 		[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
 		[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
@@ -904,6 +843,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_bottomBarExtension.frame = frame;
 	[self hBWT:t iE:e];
 	
+	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
+	self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+	
 //	if(t > 0)
 //	{
 		[self _setIgnoringLayoutDuringTransition:YES];
@@ -919,6 +861,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
+			
+			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
 		}];
 //	}
 }
@@ -929,7 +873,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
 	
-	[self _setPrepareTabBarIgnored:YES];
+	[self _setPrepareTabBarIgnored:t > 0];
 	
 	[self sBWT:t iE:e];
 	
@@ -938,6 +882,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	if(t > 0)
 	{
 		[self _setIgnoringLayoutDuringTransition:YES];
+		
+		NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
+		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
 		
 		[self.selectedViewController.transitionCoordinator animateAlongsideTransition:^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 			
@@ -970,6 +917,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			[self _layoutPopupBarOrderForUse];
 			
 			[self _setIgnoringLayoutDuringTransition:NO];
+			
+			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
 		}];
 	}
 }
@@ -1026,7 +975,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (UIEdgeInsets)insetsForBottomDockingView
 {
-	if(self.presentingViewController != nil && [NSStringFromClass(self.presentationController.class) containsString:@"Preview"])
+	if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
 	{
 		return UIEdgeInsetsZero;
 	}
