@@ -63,7 +63,8 @@
 	
 	Class targetClass;
 	
-	switch (self.popupPresentationStyle) {
+	switch (self.popupPresentationStyle)
+	{
 //		case LNPopupPresentationStyleFullScreen:
 //			targetClass = _LNFullScreenPopupPresentationController.class;
 //			break;
@@ -90,7 +91,7 @@
 			else
 			{
 #endif
-				[NSException raise:NSInternalInconsistencyException format:@"Sheet presentation style is not supported on iOS versions below 13."];
+				[NSException raise:NSInternalInconsistencyException format:@"Specified presentation style is not supported"];
 //				targetClass = _LNLegacyOSSheetPopupPresentationController.class;
 #if ! LNPopupControllerEnforceStrictClean
 			}

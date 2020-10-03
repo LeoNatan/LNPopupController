@@ -20,8 +20,6 @@ Class _LNPopupFormSheetPresentationController;
 @implementation _LNPopupSheetPresentationController_
 typedef void(^classBlock)(Class cls);
 
-@synthesize popupContentController=_popupContentController;
-
 + (void)load
 {
 	@autoreleasepool
@@ -90,7 +88,9 @@ typedef void(^classBlock)(Class cls);
 	
 	if(self)
 	{
-//		[self setValue:@YES forKey:@"wantsBottomAttached"];
+		[self setValue:@YES forKey:@"wantsFullScreen"];
+		[self setValue:@YES forKey:@"wantsBottomAttached"];
+		[self setValue:@YES forKey:@"allowsInteractiveDismissWhenFullScreen"];
 	}
 	
 	return self;
@@ -304,6 +304,11 @@ typedef void(^classBlock)(Class cls);
 		weakRef = [_LNWeakRef refWithObject:popupPresentationControllerDelegate];
 	}
 	objc_setAssociatedObject(self, @selector(popupPresentationControllerDelegate), weakRef, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (LNPopupContentViewController *)popupContentController
+{
+	return nil;
 }
 
 @end
