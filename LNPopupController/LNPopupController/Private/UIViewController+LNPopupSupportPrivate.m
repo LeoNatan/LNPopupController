@@ -887,7 +887,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	CGRect frame = self.tabBar.frame;
 	frame.origin.x = self.view.bounds.size.width;
-	self._ln_bottomBarExtension_nocreate.frame = frame;
+	self._ln_bottomBarExtension.frame = frame;
 	[self hBWT:t iE:e];
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
@@ -1168,7 +1168,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		CGRect frame;
 		if(hidden)
 		{
-			self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - safeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
+			self._ln_bottomBarExtension.frame = CGRectMake(0, self.view.bounds.size.height - safeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
 			
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 		}
@@ -1180,7 +1180,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			{
 				frame.origin.x = self.view.bounds.size.width;
 			}
-			self._ln_bottomBarExtension_nocreate.frame = frame;
+			self._ln_bottomBarExtension.frame = frame;
 			
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
 		}
