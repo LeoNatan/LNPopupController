@@ -29,6 +29,19 @@
 
 @end
 
+@interface Toolbar : UIToolbar @end
+@implementation Toolbar
+
+- (void)setFrame:(CGRect)frame
+{
+//	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
+	
+	[super setFrame:frame];
+}
+
+@end
+
+
 @interface DemoGalleryControllerTableView : UITableView @end
 @implementation DemoGalleryControllerTableView
 
@@ -46,6 +59,9 @@
 
 - (void)viewDidLoad
 {
+	[super viewDidLoad];
+	
+#if LNPOPUP
 	UIViewController* demoVC = [DemoPopupContentViewController new];
 	
 	demoVC.popupItem.title = @"Welcome to LNPopupController!";
@@ -53,6 +69,7 @@
 	
 	self.navigationController.popupBar.marqueeScrollEnabled = YES;
 	[self.navigationController presentPopupBarWithContentViewController:demoVC animated:NO completion:nil];
+#endif
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -100,9 +117,9 @@
 
 @end
 
-@interface FirstViewController () <UINavigationControllerDelegate,
+@interface FirstViewController () <UINavigationControllerDelegate
 #if LNPOPUP
-UIContextMenuInteractionDelegate, LNPopupPresentationDelegate
+, UIContextMenuInteractionDelegate, LNPopupPresentationDelegate
 #endif
 >
 

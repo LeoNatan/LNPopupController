@@ -130,7 +130,7 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	[waiting removeAllObjects];
 }
 
-- (NSString*)_groupingIdentifierIfAvailable
+- (NSString*)_effectGroupingIdentifierIfAvailable
 {
 #if ! LNPopupControllerEnforceStrictClean
 	static NSString* key = nil;

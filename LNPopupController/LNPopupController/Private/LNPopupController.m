@@ -180,7 +180,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_containerController setNeedsStatusBarAppearanceUpdate];
 	}
 	
-	[self _repositionPopupContentMovingBottomBar:YES];
+	[self _repositionPopupContentMovingBottomBar:_containerController._ignoringLayoutDuringTransition == NO];
 }
 
 - (void)_addContentControllerSubview:(UIViewController*)currentContentController
@@ -790,7 +790,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	self.popupBar.effectGroupingIdentifier = _bottomBar._groupingIdentifierIfAvailable;
+	self.popupBar.effectGroupingIdentifier = _bottomBar._effectGroupingIdentifierIfAvailable;
 	
 	if([_bottomBar respondsToSelector:@selector(barStyle)])
 	{

@@ -55,6 +55,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)_ln_beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated;
 - (void)_ln_endAppearanceTransition;
 
+- (BOOL)_ignoringLayoutDuringTransition;
+
 - (nullable UIView *)bottomDockingViewForPopup_nocreateOrDeveloper;
 - (nonnull UIView *)bottomDockingViewForPopup_internalOrDeveloper;
 
