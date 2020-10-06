@@ -127,8 +127,8 @@
 	[self addTarget:self action:@selector(_didTouchCancel) forControlEvents:UIControlEventTouchCancel];
 	
 	self.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.layer.shadowOpacity = 0.1;
-	self.layer.shadowRadius = 3.0;
+	self.layer.shadowOpacity = 0.15;
+	self.layer.shadowRadius = 4.0;
 	self.layer.shadowOffset = CGSizeMake(0, 0);
 	self.layer.masksToBounds = NO;
 	

@@ -8,6 +8,7 @@
 
 #if LNPOPUP
 @import LNPopupController;
+@import WebKit;
 #endif
 #import "FirstViewController.h"
 #import "DemoPopupContentViewController.h"
@@ -54,6 +55,9 @@
 
 @interface DemoGalleryController : UITableViewController @end
 @implementation DemoGalleryController
+{
+	WKWebView* _webView;
+}
 
 - (IBAction)unwindToGallery:(UIStoryboardSegue *)unwindSegue { }
 
@@ -61,13 +65,48 @@
 {
 	[super viewDidLoad];
 	
+	_webView = [WKWebView new];
+	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]]];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	
 #if LNPOPUP
-	UIViewController* demoVC = [DemoPopupContentViewController new];
+//	UIViewController* demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
+	UIViewController* demoVC = [UIViewController new];
+	_webView.translatesAutoresizingMaskIntoConstraints = NO;
+	[demoVC.view addSubview:_webView];
+
+	UIBlurEffectStyle style;
+	if (@available(iOS 13.0, *)) {
+		style = UIBlurEffectStyleSystemChromeMaterial;
+	} else {
+		style = UIBlurEffectStyleProminent;
+	}
+	UIVisualEffectView* effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
+	effectView.translatesAutoresizingMaskIntoConstraints = NO;
+	[demoVC.view addSubview:effectView];
+
+	[NSLayoutConstraint activateConstraints:@[
+		[demoVC.view.topAnchor constraintEqualToAnchor:_webView.topAnchor],
+		[demoVC.view.bottomAnchor constraintEqualToAnchor:_webView.bottomAnchor],
+		[demoVC.view.leadingAnchor constraintEqualToAnchor:_webView.leadingAnchor],
+		[demoVC.view.trailingAnchor constraintEqualToAnchor:_webView.trailingAnchor],
+
+		[demoVC.view.topAnchor constraintEqualToAnchor:effectView.topAnchor],
+		[demoVC.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:effectView.bottomAnchor],
+		[demoVC.view.leadingAnchor constraintEqualToAnchor:effectView.leadingAnchor],
+		[demoVC.view.trailingAnchor constraintEqualToAnchor:effectView.trailingAnchor],
+	]];
 	
 	demoVC.popupItem.title = @"Welcome to LNPopupController!";
 	demoVC.popupItem.image = [UIImage imageNamed:@"genre10"];
 	
 	self.navigationController.popupBar.marqueeScrollEnabled = YES;
+	self.navigationController.popupContentView.popupCloseButtonStyle = LNPopupCloseButtonStyleRound;
+	self.navigationController.popupContentView.popupCloseButton.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
 	[self.navigationController presentPopupBarWithContentViewController:demoVC animated:NO completion:nil];
 #endif
 }
