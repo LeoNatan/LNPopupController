@@ -785,12 +785,16 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_configurePopupBarFromBottomBar
 {
+	self.popupBar.effectGroupingIdentifier = _bottomBar._effectGroupingIdentifierIfAvailable;
+	//Schedule one more effect identifier refresh, in case it's not yet ready at this point.
+	dispatch_async(dispatch_get_main_queue(), ^{
+		self.popupBar.effectGroupingIdentifier = _bottomBar._effectGroupingIdentifierIfAvailable;
+	});
+	
 	if(self.popupBar.inheritsVisualStyleFromDockingView == NO)
 	{
 		return;
 	}
-	
-	self.popupBar.effectGroupingIdentifier = _bottomBar._effectGroupingIdentifierIfAvailable;
 	
 	if([_bottomBar respondsToSelector:@selector(barStyle)])
 	{

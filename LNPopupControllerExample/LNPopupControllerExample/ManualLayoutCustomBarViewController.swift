@@ -14,17 +14,15 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		view.backgroundColor = .systemRed
-		
 		centeredButton.setTitle("Centered", for: .normal)
 		centeredButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-		centeredButton.tintColor = .white
+//		centeredButton.tintColor = .white
 		centeredButton.sizeToFit()
 		view.addSubview(centeredButton)
 		
 		leftButton.setTitle("<- Left", for: .normal)
 		leftButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-		leftButton.tintColor = .white
+//		leftButton.tintColor = .white
 		leftButton.sizeToFit()
 		view.addSubview(leftButton)
 		
