@@ -76,7 +76,7 @@
 	NSLog(@"✓");
 }
 
-static UIImage* LNSystemImage(NSString* named)
+UIImage* LNSystemImage(NSString* named)
 {
 	if (@available(iOS 13.0, *))
 	{

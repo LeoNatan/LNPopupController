@@ -18,6 +18,8 @@
 #import "SplitViewController.h"
 @import UIKit;
 
+extern UIImage* LNSystemImage(NSString* named);
+
 @interface TabBar : UITabBar @end
 @implementation TabBar
 
@@ -57,6 +59,7 @@
 @implementation DemoGalleryController
 {
 	WKWebView* _webView;
+	UIViewController* _demoVC;
 }
 
 - (IBAction)unwindToGallery:(UIStoryboardSegue *)unwindSegue { }
@@ -67,18 +70,12 @@
 	
 	_webView = [WKWebView new];
 	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]]];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
 	
 #if LNPOPUP
-//	UIViewController* demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
-	UIViewController* demoVC = [UIViewController new];
+	_demoVC = [UIViewController new];
 	_webView.translatesAutoresizingMaskIntoConstraints = NO;
-	[demoVC.view addSubview:_webView];
-
+	[_demoVC.view addSubview:_webView];
+	
 	UIBlurEffectStyle style;
 	if (@available(iOS 13.0, *)) {
 		style = UIBlurEffectStyleSystemChromeMaterial;
@@ -87,27 +84,41 @@
 	}
 	UIVisualEffectView* effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
 	effectView.translatesAutoresizingMaskIntoConstraints = NO;
-	[demoVC.view addSubview:effectView];
-
+	[_demoVC.view addSubview:effectView];
+	
 	[NSLayoutConstraint activateConstraints:@[
-		[demoVC.view.topAnchor constraintEqualToAnchor:_webView.topAnchor],
-		[demoVC.view.bottomAnchor constraintEqualToAnchor:_webView.bottomAnchor],
-		[demoVC.view.leadingAnchor constraintEqualToAnchor:_webView.leadingAnchor],
-		[demoVC.view.trailingAnchor constraintEqualToAnchor:_webView.trailingAnchor],
-
-		[demoVC.view.topAnchor constraintEqualToAnchor:effectView.topAnchor],
-		[demoVC.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:effectView.bottomAnchor],
-		[demoVC.view.leadingAnchor constraintEqualToAnchor:effectView.leadingAnchor],
-		[demoVC.view.trailingAnchor constraintEqualToAnchor:effectView.trailingAnchor],
+		[_demoVC.view.topAnchor constraintEqualToAnchor:_webView.topAnchor],
+		[_demoVC.view.bottomAnchor constraintEqualToAnchor:_webView.bottomAnchor],
+		[_demoVC.view.leadingAnchor constraintEqualToAnchor:_webView.leadingAnchor],
+		[_demoVC.view.trailingAnchor constraintEqualToAnchor:_webView.trailingAnchor],
+		
+		[_demoVC.view.topAnchor constraintEqualToAnchor:effectView.topAnchor],
+		[_demoVC.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:effectView.bottomAnchor],
+		[_demoVC.view.leadingAnchor constraintEqualToAnchor:effectView.leadingAnchor],
+		[_demoVC.view.trailingAnchor constraintEqualToAnchor:effectView.trailingAnchor],
 	]];
 	
-	demoVC.popupItem.title = @"Welcome to LNPopupController!";
-	demoVC.popupItem.image = [UIImage imageNamed:@"genre10"];
+	_demoVC.popupItem.title = @"Welcome to LNPopupController!";
+	_demoVC.popupItem.image = [UIImage imageNamed:@"genre10"];
+	_demoVC.popupItem.barButtonItems = @[
+		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill") style:UIBarButtonItemStylePlain target:nil action:nil],
+	];
 	
 	self.navigationController.popupBar.marqueeScrollEnabled = YES;
-	self.navigationController.popupContentView.popupCloseButtonStyle = LNPopupCloseButtonStyleRound;
-	self.navigationController.popupContentView.popupCloseButton.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-	[self.navigationController presentPopupBarWithContentViewController:demoVC animated:NO completion:nil];
+	self.navigationController.popupContentView.popupCloseButtonStyle = LNPopupCloseButtonStyleNone;
+	if (@available(iOS 13.0, *))
+	{
+		self.navigationController.popupContentView.popupCloseButton.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+	}
+#endif
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	[super viewDidAppear:animated];
+	
+#if LNPOPUP
+	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:YES completion:nil];
 #endif
 }
 
