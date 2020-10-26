@@ -1162,10 +1162,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	CGFloat safeArea = self.view.superview.safeAreaInsets.bottom;
 	
+	[self _layoutPopupBarOrderForTransition];
+	
 	void (^animations)(void) = ^ {
 		//During the transition, animate the popup bar and content together with the toolbar transition.
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
-		[self _layoutPopupBarOrderForTransition];
 		
 		CGRect frame;
 		if(hidden)
@@ -1205,6 +1206,15 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	};
 	
 	[self _setIgnoringLayoutDuringTransition:YES];
+	
+	if(duration == 0)
+	{
+		animations();
+		completion(YES);
+		
+		return;
+	}
+	
 	if(self.transitionCoordinator)
 	{
 		[self.transitionCoordinator animateAlongsideTransitionInView:self._ln_popupController_nocreate.popupBar.superview animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
@@ -1246,7 +1256,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	[self _ln_setNavigationBarHidden:hidden animated:animated];
 	
-	[self _layoutPopupBarOrderForUse];
+	if([self _ignoringLayoutDuringTransition] == NO)
+	{
+		[self _layoutPopupBarOrderForUse];
+	}
 }
 
 @end
