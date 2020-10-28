@@ -194,9 +194,13 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	}
 	
 	override func positionPopupCloseButton(_ popupCloseButton: LNPopupCloseButton) -> Bool {
+		#if targetEnvironment(macCatalyst)
+		return false
+		#else
 		self.popupCloseButton = popupCloseButton
 		self.view.setNeedsLayout()
 		return true
+		#endif
 	}
 	
 	override func viewDidLayoutSubviews() {
