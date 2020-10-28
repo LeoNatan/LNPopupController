@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM(NSUInteger, LNPopupInteractionStyle) {
 	/**
-	 * Use the most appropriate interaction style for the current operating system version—uses snap style for iOS 10 and above, otherwise drag.
+	 * The default interaction style for the current environment
 	 */
 	LNPopupInteractionStyleDefault,
 	
@@ -29,10 +29,17 @@ typedef NS_ENUM(NSUInteger, LNPopupInteractionStyle) {
 	 * Drag interaction style
 	 */
 	LNPopupInteractionStyleDrag,
+	
 	/**
 	 * Snap interaction style
 	 */
 	LNPopupInteractionStyleSnap,
+	
+	/**
+	 * Scroll interaction style
+	 */
+	LNPopupInteractionStyleScroll,
+	
 	/**
 	 * No interaction
 	 */

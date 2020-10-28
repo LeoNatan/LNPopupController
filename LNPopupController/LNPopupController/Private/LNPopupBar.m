@@ -136,10 +136,18 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		//On iOS 13 and above, return .chromeMaterial regardless of bar style (this is how Music.app appears)
 		if(systemBarStyle == UIBarStyleBlack)
 		{
+#if TARGET_OS_MACCATALYST
+			return UIBlurEffectStyleSystemThickMaterialDark;
+#else
 			return UIBlurEffectStyleSystemChromeMaterialDark;
+#endif
 		}
 		
+#if TARGET_OS_MACCATALYST
+		return UIBlurEffectStyleSystemThickMaterial;
+#else
 		return UIBlurEffectStyleSystemChromeMaterial;
+#endif
 	}
 	
 	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;

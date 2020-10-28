@@ -17,6 +17,10 @@
 #import "UIView+LNPopupSupportPrivate.h"
 @import ObjectiveC;
 
+#if TARGET_OS_MACCATALYST
+@import AppKit;
+#endif
+
 const NSUInteger _LNPopupPresentationStateTransitioning = 2;
 
 static const CGFloat LNPopupBarGestureHeightPercentThreshold = 0.2;
@@ -27,7 +31,11 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	LNPopupInteractionStyle rv = style;
 	if(rv == LNPopupInteractionStyleDefault)
 	{
+#if TARGET_OS_MACCATALYST
+		rv = LNPopupInteractionStyleScroll;
+#else
 		rv = LNPopupInteractionStyleSnap;
+#endif
 	}
 	return rv;
 }
@@ -393,12 +401,34 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarPresentationByUserPanGestureHandler_began:(UIPanGestureRecognizer*)pgr
 {
+#if TARGET_OS_MACCATALYST
+	id hostingWindow = [self.popupBar.window valueForKey:@"hostWindow"];
+	id event = [hostingWindow valueForKey:@"currentEvent"];
+	
+	if(event != nil && [[event valueForKey:@"type"] isEqualToNumber:@22 /* NSEventTypeScrollWheel */])
+	{
+		return;
+	}
+#endif
+	
 	if(self.popupBar.customBarViewController != nil && self.popupBar.customBarViewController.wantsDefaultPanGestureRecognizer == NO)
 	{
 		return;
 	}
 	
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	
+	if(resolvedStyle == LNPopupInteractionStyleNone)
+	{
+		//Ignore all events.
+		return;
+	}
+	
+	if(resolvedStyle == LNPopupInteractionStyleScroll && [pgr.view isKindOfClass:UIScrollView.class] == NO)
+	{
+		//Ignore non-scroll events.
+		return;
+	}
 	
 	if(resolvedStyle == LNPopupInteractionStyleSnap)
 	{
@@ -428,7 +458,29 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarPresentationByUserPanGestureHandler_changed:(UIPanGestureRecognizer*)pgr
 {
+#if TARGET_OS_MACCATALYST
+	id hostingWindow = [self.popupBar.window valueForKey:@"hostWindow"];
+	id event = [hostingWindow valueForKey:@"currentEvent"];
+	
+	if(event != nil && [[event valueForKey:@"type"] isEqualToNumber:@22 /* NSEventTypeScrollWheel */])
+	{
+		return;
+	}
+#endif
+	
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	
+	if(resolvedStyle == LNPopupInteractionStyleNone)
+	{
+		//Ignore all events.
+		return;
+	}
+	
+	if(resolvedStyle == LNPopupInteractionStyleScroll && [pgr.view isKindOfClass:UIScrollView.class] == NO)
+	{
+		//Ignore non-scroll events.
+		return;
+	}
 	
 	if(pgr != _popupContentView.popupInteractionGestureRecognizer)
 	{
@@ -460,7 +512,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	if(_dismissGestureStarted == NO && (resolvedStyle == LNPopupInteractionStyleDrag || _popupControllerInternalState > LNPopupPresentationStateBarPresented))
+	if(_dismissGestureStarted == NO && (resolvedStyle == LNPopupInteractionStyleDrag || resolvedStyle == LNPopupInteractionStyleScroll || _popupControllerInternalState > LNPopupPresentationStateBarPresented))
 	{
 		_lastSeenMovement = CACurrentMediaTime();
 		BOOL prevState = self.popupBar.barHighlightGestureRecognizer.enabled;
@@ -509,7 +561,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		CGFloat currentCenterY = self.popupBar.center.y;
 		
 		self.popupBar.center = CGPointMake(self.popupBar.center.x, targetCenterY);
-		[self _repositionPopupContentMovingBottomBar:resolvedStyle == LNPopupInteractionStyleDrag];
+		[self _repositionPopupContentMovingBottomBar:(resolvedStyle == LNPopupInteractionStyleDrag || resolvedStyle == LNPopupInteractionStyleScroll)];
 		_lastSeenMovement = CACurrentMediaTime();
 		
 		[_popupContentView.popupCloseButton _setButtonContainerTransitioning];
@@ -549,7 +601,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		LNPopupPresentationState targetState = _stateBeforeDismissStarted;
 		
-		if(resolvedStyle == LNPopupInteractionStyleDrag)
+		if(resolvedStyle == LNPopupInteractionStyleDrag || resolvedStyle == LNPopupInteractionStyleScroll)
 		{
 			CGFloat barTransitionPercent = [self _percentFromPopupBar];
 			BOOL hasPassedHeighThreshold = _stateBeforeDismissStarted == LNPopupPresentationStateBarPresented ? barTransitionPercent > LNPopupBarGestureHeightPercentThreshold : barTransitionPercent < (1.0 - LNPopupBarGestureHeightPercentThreshold);

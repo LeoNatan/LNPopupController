@@ -24,7 +24,7 @@ extern const UIBlurEffectStyle LNBackgroundStyleInherit;
  */
 typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 	/**
-	 * Use the most appropriate style for the current operating system version—uses prominent style for iOS 10 and above, otherwise compact.
+	 * The default bar style for the current environment
 	 */
 	LNPopupBarStyleDefault,
 	
@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 	/**
 	 * Custom bar style
 	 *
-	 * @note Do not set this style directly. Instead set @c LNPopupBar.customBarViewController and the framework will use this style.
+	 * @note Do not set this style directly. Instead, set @c LNPopupBar.customBarViewController and the framework will use this style.
 	 */
 	LNPopupBarStyleCustom
 };

@@ -13,7 +13,7 @@
  */
 typedef NS_ENUM(NSUInteger, LNPopupCloseButtonStyle) {
 	/**
-	 * Use the most appropriate close button style for the current operating system version—uses cehvron button style for iOS 10 and above, otherwise round button.
+	 * The default close button style for the current environment
 	 */
 	LNPopupCloseButtonStyleDefault,
 	
