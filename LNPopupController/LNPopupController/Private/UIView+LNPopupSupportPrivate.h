@@ -16,8 +16,18 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 
 - (void)_ln_letMeKnowWhenViewInWindowHierarchy:(LNInWindowBlock)block;
 - (void)_ln_forgetAboutIt;
-- (NSString*)_effectGroupingIdentifierIfAvailable;
+- (nullable NSString*)_effectGroupingIdentifierIfAvailable;
 
 @end
+
+#if TARGET_OS_MACCATALYST
+
+@interface UIWindow (MacCatalystSupport)
+
+- (NSUInteger)_ln_currentEventType;
+
+@end
+
+#endif
 
 NS_ASSUME_NONNULL_END

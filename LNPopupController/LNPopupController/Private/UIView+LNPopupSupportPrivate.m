@@ -9,6 +9,9 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupSwizzlingUtils.h"
 @import ObjectiveC;
+#if TARGET_OS_MACCATALYST
+@import AppKit;
+#endif
 
 static const void* LNPopupAwaitingViewInWindowHierarchyKey = &LNPopupAwaitingViewInWindowHierarchyKey;
 static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
@@ -18,6 +21,12 @@ static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
 static NSString* dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
 //_backdropViewLayerGroupName
 static NSString* _bVLGN = @"X2JhY2tkcm9wVmlld0xheWVyR3JvdXBOYW1l";
+//hostWindow
+static NSString* _hW = @"aG9zdFdpbmRvdw==";
+//attachedWindow
+static NSString* _aW = @"YXR0YWNoZWRXaW5kb3c=";
+//currentEvent
+static NSString* _cE = @"Y3VycmVudEV2ZW50";
 #endif
 
 @interface UIViewController ()
@@ -153,3 +162,45 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 }
 
 @end
+
+#if TARGET_OS_MACCATALYST
+	
+@implementation UIWindow (MacCatalystSupport)
+
+- (NSUInteger)_ln_currentEventType
+{
+#if LNPopupControllerEnforceStrictClean
+	return 0;
+#else
+	//hostWindow
+	static NSString* hW;
+	//attachedWindow
+	static NSString* aW;
+	//currentEvent
+	static NSString* cE;
+	
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		hW = _LNPopupDecodeBase64String(_hW);
+		aW = _LNPopupDecodeBase64String(_aW);
+		cE = _LNPopupDecodeBase64String(_cE);
+	});
+	
+	//Obtain the actual NSWindow object
+	id hostingWindow = [self valueForKey:hW];
+	if([NSStringFromClass([hostingWindow class]) hasSuffix:@"Proxy"])
+	{
+		//On Big Sur, the hosting window is abstracted behind a proxy object, but we need the actual NSWindow
+		hostingWindow = [hostingWindow valueForKey:aW];
+	}
+	//Obtain the current NSEvent
+	id event = [hostingWindow valueForKey:cE];
+	
+	return [[event valueForKey:@"type"] unsignedIntegerValue];
+#endif
+}
+
+@end
+
+
+#endif
