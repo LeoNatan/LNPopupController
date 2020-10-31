@@ -39,7 +39,6 @@
 {
 	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self _setPopupItemButtonsWithTraitCollection:newCollection];
-		[self _updateBackgroundColor];
 	} completion:nil];
 	
 	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
@@ -145,6 +144,8 @@ UIImage* LNSystemImage(NSString* named)
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	
+	[self _updateBackgroundColor];
 	
 	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];

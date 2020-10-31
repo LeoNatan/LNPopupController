@@ -9,17 +9,12 @@
 @import UIKit;
 #import "RandomColors.h"
 
-static UIColor* demoLightColor;
-static UIColor* demoDarkColor;
 static NSMutableArray<UIColor*>* namedSystemColors;
 static NSUInteger lastNamedSystemColorIdx = 0;
 
 __attribute__((constructor))
 static void LNInitializeDemoColors(void)
 {
-	demoLightColor = [UIColor colorWithRed:0.631372549 green:0.8666666667 blue:0.4470588235 alpha:1.0];
-	demoDarkColor = [UIColor colorWithRed:0.1215686275 green:0.0862745098 blue:0.168627451 alpha:1.0];
-	
 	namedSystemColors = @[
 		UIColor.systemRedColor,
 		UIColor.systemGreenColor,
@@ -45,11 +40,29 @@ UIColor* LNRandomSystemColor(void)
 	return namedSystemColors[rv];
 }
 
-API_AVAILABLE(ios(13.0))
-UIColor* LNRandomAdaptiveColor(void)
+UIColor* _LNSeedDarkColor(long seed)
 {
-	UIColor* light = LNRandomLightColor();
-	UIColor* dark = LNRandomDarkColor();
+	srand48(seed);
+	CGFloat hue = drand48();
+	CGFloat saturation = 0.5;
+	CGFloat brightness = 0.3 + 0.1 * drand48();
+	return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+}
+
+UIColor* _LNSeedLightColor(long seed)
+{
+	srand48(seed);
+	CGFloat hue = drand48();
+	CGFloat saturation = 0.5;
+	CGFloat brightness = 1.0 - 0.1 * drand48();
+	return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+}
+
+API_AVAILABLE(ios(13.0))
+UIColor* _LNSeedAdaptiveColor(long seed)
+{
+	UIColor* light = _LNSeedLightColor(seed);
+	UIColor* dark = _LNSeedDarkColor(seed);
 	return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull collection) {
 		if(collection.userInterfaceStyle == UIUserInterfaceStyleDark)
 		{
@@ -60,59 +73,66 @@ UIColor* LNRandomAdaptiveColor(void)
 			return light;
 		}
 	}];
+}
+
+API_AVAILABLE(ios(13.0))
+UIColor* _LNSeedAdaptiveInvertedColor(long seed)
+{
+	UIColor* light = _LNSeedLightColor(seed);
+	UIColor* dark = _LNSeedDarkColor(seed);
+	return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull collection) {
+		if(collection.userInterfaceStyle == UIUserInterfaceStyleDark)
+		{
+			return light;
+		}
+		else
+		{
+			return dark;
+		}
+	}];
+}
+
+
+API_AVAILABLE(ios(13.0))
+UIColor* LNRandomAdaptiveColor(void)
+{
+	return _LNSeedAdaptiveColor(arc4random());
 }
 
 API_AVAILABLE(ios(13.0))
 UIColor* LNRandomAdaptiveInvertedColor(void)
 {
-	UIColor* light = LNRandomLightColor();
-	UIColor* dark = LNRandomDarkColor();
-	return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull collection) {
-		if(collection.userInterfaceStyle == UIUserInterfaceStyleDark)
-		{
-			return light;
-		}
-		else
-		{
-			return dark;
-		}
-	}];
+	return _LNSeedAdaptiveInvertedColor(arc4random());
+}
+
+API_AVAILABLE(ios(13.0))
+UIColor* LNSeedAdaptiveColor(NSString* seed)
+{
+	return _LNSeedAdaptiveColor(seed.hash);
+}
+
+API_AVAILABLE(ios(13.0))
+UIColor* LNSeedAdaptiveInvertedColor(NSString* seed)
+{
+	return _LNSeedAdaptiveInvertedColor(seed.hash);
 }
 
 UIColor* LNRandomDarkColor(void)
 {
-	static BOOL shouldProvideDemoColor = NO;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		shouldProvideDemoColor = [NSUserDefaults.standardUserDefaults boolForKey:@"LNUseDemoRandomColors"];
-	});
-	
-	if(shouldProvideDemoColor)
-	{
-		return demoDarkColor;
-	}
-	
-	CGFloat hue = ( arc4random_uniform(256) / 256.0 );
-	CGFloat saturation = 0.5;
-	CGFloat brightness = 0.1 + ( arc4random_uniform(64) / 256.0 );
-	return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+	return _LNSeedDarkColor(arc4random());
 }
 
 UIColor* LNRandomLightColor(void)
 {
-	static BOOL shouldProvideDemoColor = NO;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		shouldProvideDemoColor = [NSUserDefaults.standardUserDefaults boolForKey:@"LNUseDemoRandomColors"];
-	});
-	
-	if(shouldProvideDemoColor)
-	{
-		return demoLightColor;
-	}
-	
-	CGFloat hue = ( arc4random_uniform(256) / 256.0 );
-	CGFloat saturation = 0.5;
-	CGFloat brightness = 1.0 - ( arc4random_uniform(64) / 256.0 );
-	return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+	return _LNSeedLightColor(arc4random());
+}
+
+UIColor* LNSeedDarkColor(NSString* seed)
+{
+	return _LNSeedDarkColor(seed.hash);
+}
+
+UIColor* LNSeedLightColor(NSString* seed)
+{
+	return _LNSeedLightColor(seed.hash);
 }
