@@ -31,6 +31,7 @@ class PlaybackSettings: ObservableObject {
 	@Published var albumArt: UIImage = UIImage()
 	
 	@Published var playbackProgress: Float = 0.0
+	@Published var progressEditedByUser: Bool = false
 	@Published var volume: Float = 0.5
 	@Published var isPlaying: Bool = true
 }
@@ -69,13 +70,15 @@ struct PlayerView: View {
 								.font(.title)
 						})
 					}
-					if #available(iOS 14.0, *) {
-						ProgressView(value: playbackSettings.playbackProgress)
-							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
-					} else {
-						Slider(value: $playbackSettings.playbackProgress)
-							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
-					}
+//					if #available(iOS 14.0, *) {
+//						ProgressView(value: playbackSettings.playbackProgress)
+//							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
+//					} else {
+						Slider(value: $playbackSettings.playbackProgress, onEditingChanged: { editing in
+							playbackSettings.progressEditedByUser = editing
+						})
+						.padding([.bottom], geometry.size.height * 30.0 / 896.0)
+//					}
 					HStack {
 						Button(action: {}, label: {
 							Image(systemName: "backward.fill")
@@ -246,13 +249,15 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	}
 	
 	@objc func _timerTicked(_ timer: Timer) {
-		popupItem.progress += 0.0002;
-		popupItem.accessibilityProgressLabel = NSLocalizedString("Playback Progress", comment: "")
+		if playerView.playbackSettings.progressEditedByUser == false {
+			playerView.playbackSettings.playbackProgress += 0.0002
+		}
 		
+		popupItem.progress = playerView.playbackSettings.playbackProgress
+		
+		popupItem.accessibilityProgressLabel = NSLocalizedString("Playback Progress", comment: "")
 		let totalTime = TimeInterval(250)
 		popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: TimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: totalTime)!)"
-		
-		playerView.playbackSettings.playbackProgress = popupItem.progress
 		
 		if popupItem.progress >= 1.0 {
 			timer.invalidate()

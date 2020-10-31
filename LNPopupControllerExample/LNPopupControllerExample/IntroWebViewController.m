@@ -55,8 +55,13 @@ extern UIImage* LNSystemImage(NSString* named);
 	self.popupItem.title = @"Welcome to LNPopupController!";
 	self.popupItem.image = [UIImage imageNamed:@"genre10"];
 	self.popupItem.barButtonItems = @[
-		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill") style:UIBarButtonItemStylePlain target:nil action:nil],
+		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill") style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
+}
+
+- (IBAction)_navigate:(id)sender
+{
+	[UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"] options:@{} completionHandler:nil];
 }
 
 @end
