@@ -15,5 +15,6 @@ extern NSString* const PopupSettingsCloseButtonStyle;
 extern NSString* const PopupSettingsMarqueeStyle;
 extern NSString* const PopupSettingsEnableCustomizations;
 extern NSString* const PopupSettingsExtendBar;
+extern NSString* const PopupSettingsVisualEffectViewBlurEffect;
 
 @interface SettingsTableViewController : UITableViewController @end

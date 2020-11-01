@@ -15,6 +15,7 @@ NSString* const PopupSettingsCloseButtonStyle = @"PopupSettingsCloseButtonStyle"
 NSString* const PopupSettingsMarqueeStyle = @"PopupSettingsMarqueeStyle";
 NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomizations";
 NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
+NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
 
 @interface SettingsTableViewController ()
 {
@@ -36,10 +37,20 @@ NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	_sectionToKeyMapping = @{@0: PopupSettingsBarStyle, @1: PopupSettingsInteractionStyle, @2: PopupSettingsProgressViewStyle, @3: PopupSettingsCloseButtonStyle, @4: PopupSettingsMarqueeStyle};
+	_sectionToKeyMapping = @{
+		@0: PopupSettingsBarStyle,
+		@1: PopupSettingsInteractionStyle,
+		@2: PopupSettingsProgressViewStyle,
+		@3: PopupSettingsCloseButtonStyle,
+		@4: PopupSettingsMarqueeStyle,
+		@5: PopupSettingsVisualEffectViewBlurEffect,
+		@6: PopupSettingsVisualEffectViewBlurEffect,
+		@7: PopupSettingsVisualEffectViewBlurEffect,
+		@8: PopupSettingsVisualEffectViewBlurEffect,
+	};
 	
-	_customizations.on = [[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsEnableCustomizations];
-	_extendBars.on = [[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsExtendBar];
+	_customizations.on = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsEnableCustomizations];
+	_extendBars.on = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,16 +69,27 @@ NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		cell.accessoryView = nil;
 		cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-		
-		NSUInteger value = [[[NSUserDefaults standardUserDefaults] objectForKey:key] unsignedIntegerValue];
-		if(value == 0xFFFF)
+	
+		if(key == PopupSettingsVisualEffectViewBlurEffect)
 		{
-			value = 3;
+			NSNumber* effectStyle = [NSUserDefaults.standardUserDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
+			if((cell.tag == -1 && effectStyle == nil) || (effectStyle != nil && cell.tag == effectStyle.integerValue + 10))
+			{
+				cell.accessoryType = UITableViewCellAccessoryCheckmark;
+			}
 		}
-		
-		if(indexPath.row == value)
+		else
 		{
-			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+			NSUInteger value = [[NSUserDefaults.standardUserDefaults objectForKey:key] unsignedIntegerValue];
+			if(value == 0xFFFF)
+			{
+				value = 3;
+			}
+			
+			if(indexPath.row == value)
+			{
+				cell.accessoryType = UITableViewCellAccessoryCheckmark;
+			}
 		}
 	}
 	
@@ -75,9 +97,9 @@ NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 }
 
 - (IBAction)_resetButtonTapped:(UIBarButtonItem *)sender {
-	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:PopupSettingsEnableCustomizations];
+	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsEnableCustomizations];
 	[_sectionToKeyMapping enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
-		[[NSUserDefaults standardUserDefaults] setObject:@0 forKey:obj];
+		[NSUserDefaults.standardUserDefaults setObject:@0 forKey:obj];
 	}];
 	
 	[self.tableView reloadData];
@@ -85,32 +107,61 @@ NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 
 - (IBAction)_demoSwitchValueDidChange:(UISwitch*)sender
 {
-	[[NSUserDefaults standardUserDefaults] setBool:sender.isOn forKey:PopupSettingsEnableCustomizations];
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsEnableCustomizations];
 }
 
 - (IBAction)_extendBarsSwitchValueDidChange:(UISwitch*)sender
 {
-	[[NSUserDefaults standardUserDefaults] setBool:sender.isOn forKey:PopupSettingsExtendBar];
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsExtendBar];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSString* key = _sectionToKeyMapping[@(indexPath.section)];
-	NSUInteger prevValue = [[[NSUserDefaults standardUserDefaults] objectForKey:key] unsignedIntegerValue];
-	if(prevValue == 0xFFFF)
-	{
-		prevValue = 3;
-	}
-
-	[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:prevValue inSection:indexPath.section]].accessoryType = UITableViewCellAccessoryNone;
-	[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
 	
-	NSUInteger value = indexPath.row;
-	if(value == 3)
+	if(key == PopupSettingsVisualEffectViewBlurEffect)
 	{
-		value = 0xFFFF;
+		NSNumber* previous = [NSUserDefaults.standardUserDefaults objectForKey:key];
+		UITableViewCell* previousCell = nil;
+		if(previous != nil)
+		{
+			previousCell = [tableView viewWithTag:previous.integerValue + 10];
+		}
+		else
+		{
+			previousCell = [tableView viewWithTag:-1];
+		}
+		previousCell.accessoryType = UITableViewCellAccessoryNone;
+		
+		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		if(cell.tag == -1)
+		{
+			[NSUserDefaults.standardUserDefaults removeObjectForKey:key];
+		}
+		else
+		{
+			[NSUserDefaults.standardUserDefaults setObject:@(cell.tag - 10) forKey:key];
+		}
 	}
-	[[NSUserDefaults standardUserDefaults] setObject:@(value) forKey:key];
+	else
+	{
+		NSUInteger prevValue = [[NSUserDefaults.standardUserDefaults objectForKey:key] unsignedIntegerValue];
+		if(prevValue == 0xFFFF)
+		{
+			prevValue = 3;
+		}
+		
+		[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:prevValue inSection:indexPath.section]].accessoryType = UITableViewCellAccessoryNone;
+		[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+		
+		NSUInteger value = indexPath.row;
+		if(value == 3)
+		{
+			value = 0xFFFF;
+		}
+		[NSUserDefaults.standardUserDefaults setObject:@(value) forKey:key];
+	}
 	
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

@@ -55,7 +55,7 @@
 		if(self.view.traitCollection.userInterfaceStyle != _lastStyle)
 		{
 			_lastStyle = self.view.traitCollection.userInterfaceStyle;
-			self.view.backgroundColor = LNRandomAdaptiveInvertedColor();
+			self.view.backgroundColor = LNSeedAdaptiveInvertedColor(@"Popup");
 		}
 	}
 	else
@@ -63,7 +63,7 @@
 		if(_lastStyle == 0)
 		{
 			_lastStyle++;
-			self.view.backgroundColor = LNRandomDarkColor();
+			self.view.backgroundColor = LNSeedDarkColor(@"Popup");
 		}
 	}
 	

@@ -8,7 +8,6 @@
 
 #if LNPOPUP
 @import LNPopupController;
-#import "IntroWebViewController.h"
 #endif
 #import "FirstViewController.h"
 #import "DemoPopupContentViewController.h"
@@ -44,83 +43,6 @@ extern UIImage* LNSystemImage(NSString* named);
 
 @end
 
-
-@interface DemoGalleryControllerTableView : UITableView @end
-@implementation DemoGalleryControllerTableView
-
-- (BOOL)canBecomeFocused
-{
-	return NO;
-}
-
-@end
-
-@interface DemoGalleryController : UITableViewController @end
-@implementation DemoGalleryController
-{
-#if LNPOPUP
-	IntroWebViewController* _demoVC;
-#endif
-}
-
-- (IBAction)unwindToGallery:(UIStoryboardSegue *)unwindSegue { }
-
-- (void)viewDidLoad
-{
-	[super viewDidLoad];
-	
-#if LNPOPUP
-	_demoVC = [IntroWebViewController new];
-	
-	self.navigationController.popupBar.marqueeScrollEnabled = YES;
-#if ! TARGET_OS_MACCATALYST
-	self.navigationController.popupContentView.popupCloseButtonStyle = LNPopupCloseButtonStyleNone;
-#endif
-	if (@available(iOS 13.0, *))
-	{
-		self.navigationController.popupContentView.popupCloseButton.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-	}
-#endif
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	
-#if LNPOPUP
-	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:YES completion:nil];
-#endif
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-	if(segue.destinationViewController.modalPresentationStyle != UIModalPresentationFullScreen)
-	{
-		[self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
-	}
-}
-
-- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
-{
-#if !TARGET_OS_MACCATALYST
-	if(((indexPath.section == 0 && indexPath.row > 3) || indexPath.section > 0) && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 13)
-	{
-		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
-		
-		UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"The “%@” scene requires iOS 13 and above.", cell.textLabel.text] preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-		
-		[self presentViewController:alert animated:YES completion:nil];
-		
-		return NO;
-	}
-#endif
-	
-	return YES;
-}
-
-@end
-
 @interface FirstView : UIView @end
 
 @implementation FirstView
@@ -143,6 +65,9 @@ extern UIImage* LNSystemImage(NSString* named);
 #endif
 >
 
+@property (nonatomic, strong) NSString* colorSeedString;
+@property (nonatomic) NSInteger colorSeedCount;
+
 @end
 
 @implementation FirstViewController
@@ -157,11 +82,20 @@ extern UIImage* LNSystemImage(NSString* named);
 {
 	[super viewDidLoad];
 	
+	if(self.colorSeedString == nil)
+	{
+//		self.colorSeedString = [LoremIpsum sentence];
+//		self.colorSeedString = [NSString stringWithFormat:@"%@", @(arc4random())];
+		self.colorSeedString = @"nil";
+		self.colorSeedCount = 0;
+	}
+	
+	NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
 	if (@available(iOS 13.0, *))
 	{
-		self.view.backgroundColor = LNRandomAdaptiveColor();
+		self.view.backgroundColor = LNSeedAdaptiveColor(seed);
 	} else {
-		self.view.backgroundColor = LNRandomLightColor();
+		self.view.backgroundColor = LNSeedLightColor(seed);
 	}
 	
 	self.navigationController.delegate = self;
@@ -366,6 +300,12 @@ extern UIImage* LNSystemImage(NSString* named);
 		[targetVC.popupBar setTintColor:[UIColor yellowColor]];
 	}
 	
+	NSNumber* effectOverride = [NSUserDefaults.standardUserDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
+	if(effectOverride != nil)
+	{
+		targetVC.popupBar.backgroundStyle = effectOverride.unsignedIntegerValue;
+	}
+	
 	targetVC.shouldExtendPopupBarUnderSafeArea = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
 	
 //	if (@available(iOS 13.0, *))
@@ -390,6 +330,11 @@ extern UIImage* LNSystemImage(NSString* named);
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	[segue.destinationViewController setHidesBottomBarWhenPushed:YES];
+	if([segue.destinationViewController isKindOfClass:FirstViewController.class])
+	{
+		[(FirstViewController*)segue.destinationViewController setColorSeedString:self.colorSeedString];
+		[(FirstViewController*)segue.destinationViewController setColorSeedCount:self.colorSeedCount + 1];
+	}
 }
 
 #pragma mark UINavigationControllerDelegate

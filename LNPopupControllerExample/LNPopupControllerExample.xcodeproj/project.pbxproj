@@ -21,6 +21,7 @@
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
 		393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
 		39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39631FAC230DA03E0059D119 /* SceneDelegate.m */; };
+		39756327254ED9EB0066981E /* DemoGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 39756326254ED9EB0066981E /* DemoGallery.m */; };
 		397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
 		397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56291B753A45007A67F0 /* MusicCell.swift */; };
 		39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 39837A1F1B756F1A004D2DA9 /* RandomColors.m */; };
@@ -151,6 +152,8 @@
 		393F232A1E16D1E4000E969D /* HigherSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HigherSearchBar.swift; sourceTree = "<group>"; };
 		39631FAB230DA03D0059D119 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		39631FAC230DA03E0059D119 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
+		39756325254ED9EB0066981E /* DemoGallery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoGallery.h; sourceTree = "<group>"; };
+		39756326254ED9EB0066981E /* DemoGallery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoGallery.m; sourceTree = "<group>"; };
 		397C560D1B74DA66007A67F0 /* Music.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Music.storyboard; sourceTree = "<group>"; };
 		397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoAlbumTableViewController.swift; sourceTree = "<group>"; };
 		397C56291B753A45007A67F0 /* MusicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicCell.swift; sourceTree = "<group>"; };
@@ -295,6 +298,8 @@
 		397C560B1B74D47D007A67F0 /* Demo - Testing Scene (Objective-C) */ = {
 			isa = PBXGroup;
 			children = (
+				39756325254ED9EB0066981E /* DemoGallery.h */,
+				39756326254ED9EB0066981E /* DemoGallery.m */,
 				39277A0D1B58228000293F95 /* FirstViewController.h */,
 				3988E3571B59C3000039C09B /* FirstViewController.m */,
 				399748701D5652250079492B /* DemoPopupContentViewController.h */,
@@ -504,6 +509,7 @@
 			files = (
 				3908C34C1E7C9EA200451B5D /* SettingsTableViewController.m in Sources */,
 				39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */,
+				39756327254ED9EB0066981E /* DemoGallery.m in Sources */,
 				397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */,
 				39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
