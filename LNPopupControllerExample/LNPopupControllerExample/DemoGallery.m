@@ -56,6 +56,7 @@
 	[super viewDidAppear:animated];
 	
 #if LNPOPUP
+	self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
 	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:YES completion:nil];
 #endif
 }

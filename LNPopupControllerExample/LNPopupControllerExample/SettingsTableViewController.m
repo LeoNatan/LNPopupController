@@ -98,7 +98,15 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 
 - (IBAction)_resetButtonTapped:(UIBarButtonItem *)sender {
 	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsEnableCustomizations];
+	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsExtendBar];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsVisualEffectViewBlurEffect];
+	
 	[_sectionToKeyMapping enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+		if(obj == PopupSettingsVisualEffectViewBlurEffect)
+		{
+			return;
+		}
+		
 		[NSUserDefaults.standardUserDefaults setObject:@0 forKey:obj];
 	}];
 	

@@ -84,9 +84,19 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 	if(self.colorSeedString == nil)
 	{
-//		self.colorSeedString = [LoremIpsum sentence];
-//		self.colorSeedString = [NSString stringWithFormat:@"%@", @(arc4random())];
-		self.colorSeedString = @"nil";
+		if(self.splitViewController != nil)
+		{
+			self.colorSeedString = [NSString stringWithFormat:@"%@", @(arc4random())];
+		}
+		else if(self.tabBarController != nil)
+		{
+			NSUInteger tabIdx = [self.tabBarController.viewControllers indexOfObject:self.navigationController ?: self];
+			self.colorSeedString = [NSString stringWithFormat:@"tab_%@", @(tabIdx)];
+		}
+		else
+		{
+			self.colorSeedString = @"nil";
+		}
 		self.colorSeedCount = 0;
 	}
 	
