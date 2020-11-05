@@ -291,6 +291,21 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	return self;
 }
 
+- (void)addInteraction:(id<UIInteraction>)interaction
+{
+	[_contentView addInteraction:interaction];
+}
+
+- (void)removeInteraction:(id<UIInteraction>)interaction
+{
+	[_contentView removeInteraction:interaction];
+}
+
+- (NSArray<id<UIInteraction>> *)interactions
+{
+	return [_contentView interactions];
+}
+
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
 	[self._barDelegate _traitCollectionForPopupBarDidChange:self];
