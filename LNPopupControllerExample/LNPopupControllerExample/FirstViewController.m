@@ -76,6 +76,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	__weak IBOutlet UIButton *_nextButton;
 	
 	__weak IBOutlet UIBarButtonItem *_barStyleButton;
+	BOOL _forceNoPresentPopupBar;
 }
 
 - (void)viewDidLoad
@@ -212,6 +213,7 @@ extern UIImage* LNSystemImage(NSString* named);
 
 - (IBAction)_presentBar:(id)sender
 {
+	_forceNoPresentPopupBar = NO;
 	[self _presentBar:sender animated:YES];
 }
 
@@ -219,6 +221,11 @@ extern UIImage* LNSystemImage(NSString* named);
 {
 #if LNPOPUP
 	UIViewController* targetVC = [self _targetVCForPopup];
+	
+	if(_forceNoPresentPopupBar == YES)
+	{
+		return;
+	}
 	
 	if(targetVC == nil)
 	{
@@ -332,6 +339,7 @@ extern UIImage* LNSystemImage(NSString* named);
 - (IBAction)_dismissBar:(id)sender
 {
 #if LNPOPUP
+	_forceNoPresentPopupBar = YES;
 	__kindof UIViewController* targetVC = [self _targetVCForPopup];
 	[targetVC dismissPopupBarAnimated:YES completion:nil];
 #endif
