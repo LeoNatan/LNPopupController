@@ -58,4 +58,14 @@
 {
 }
 
+- (UIViewController*)popupContentViewController
+{
+	return self.popupController.currentContentController;
+}
+
+- (UIViewController*)popupPresentationContainerViewController
+{
+	return self.popupController.containerController;
+}
+
 @end

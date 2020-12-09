@@ -1218,6 +1218,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 	
 	_customBarViewController.containingPopupBar = nil;
+	[self._barDelegate _popupBar:self updateCustomBarController:_customBarViewController cleanup:YES];
 	[_customBarViewController.view removeFromSuperview];
 	[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];
 	
@@ -1226,6 +1227,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	if(_customBarViewController != nil)
 	{
 		_customBarViewController.containingPopupBar = self;
+		[self._barDelegate _popupBar:self updateCustomBarController:_customBarViewController cleanup:NO];
 		[_customBarViewController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
 		
 		[self.contentView addSubview:_customBarViewController.view];

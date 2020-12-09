@@ -8,10 +8,11 @@
 
 #import <LNPopupController/LNPopupItem.h>
 #import <LNPopupController/LNPopupCustomBarViewController.h>
-
+#import "LNPopupController.h"
 
 @interface LNPopupCustomBarViewController ()
 
 @property (nonatomic, weak, readwrite) LNPopupBar* containingPopupBar;
+@property (nonatomic, weak) LNPopupController* popupController;
 
 @end

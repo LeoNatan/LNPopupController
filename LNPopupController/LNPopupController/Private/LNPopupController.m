@@ -15,6 +15,7 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSObject+AltKVC.h"
 #import "UIView+LNPopupSupportPrivate.h"
+#import "LNPopupCustomBarViewController+Private.h"
 @import ObjectiveC;
 
 #if TARGET_OS_MACCATALYST
@@ -1246,6 +1247,18 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 {
 	[self _updateBarExtensionStyleFromPopupBar];
 	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:self.popupContentView.effectView];
+}
+
+- (void)_popupBar:(LNPopupBar *)bar updateCustomBarController:(LNPopupCustomBarViewController *)customController cleanup:(BOOL)cleanup
+{
+	if(cleanup)
+	{
+		customController.popupController = nil;
+	}
+	else
+	{
+		customController.popupController = self;
+	}
 }
 
 #pragma mark Utils
