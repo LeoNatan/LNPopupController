@@ -11,6 +11,21 @@
 #import "MarqueeLabel.h"
 #import "_LNPopupSwizzlingUtils.h"
 
+#ifndef LNPopupControllerEnforceStrictClean
+//_effectWithStyle:tintColor:invertAutomaticStyle:
+static NSString* const _eWSti = @"X2VmZmVjdFdpdGhTdHlsZTp0aW50Q29sb3I6aW52ZXJ0QXV0b21hdGljU3R5bGU6";
+static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
+static id(*_effectWithStyle_tintColor_invertAutomaticStyle)(id, SEL, NSUInteger, UIColor*, BOOL);
+
+__attribute__((constructor))
+static void __setupFunction()
+{
+	_effectWithStyle_tintColor_invertAutomaticStyle_SEL = NSSelectorFromString(_LNPopupDecodeBase64String(_eWSti));
+	Method m = class_getClassMethod(UIBlurEffect.class, _effectWithStyle_tintColor_invertAutomaticStyle_SEL);
+	_effectWithStyle_tintColor_invertAutomaticStyle = (void*)method_getImplementation(m);
+}
+#endif
+
 @interface _LNPopupBarContentView : UIView @end
 @implementation _LNPopupBarContentView @end
 
@@ -221,7 +236,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
 		
-		[self _innerSetBackgroundStyle:LNBackgroundStyleInherit];
+		[self _innerSetBackgroundStyle:LNBackgroundStyleInherit tintColor:self._internalBarTintColor];
 		
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:self.bounds];
 		[_toolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
@@ -438,19 +453,42 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	return _userBackgroundStyle;
 }
 
-- (void)_innerSetBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
+- (void)_innerSetBackgroundStyle:(UIBlurEffectStyle)backgroundStyle tintColor:(UIColor*)tintColor
 {
 	_userBackgroundStyle = backgroundStyle;
 	
 	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle) : _userBackgroundStyle;
 
-	_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
+	BOOL hasOS13 = NO;
+#ifndef LNPopupControllerEnforceStrictClean
+	if(@available(iOS 13.0, *))
+	{
+		hasOS13 = YES;
+	}
+	
+	if(tintColor != nil && hasOS13)
+	{
+		_customBlurEffect = _effectWithStyle_tintColor_invertAutomaticStyle(UIBlurEffect.class, _effectWithStyle_tintColor_invertAutomaticStyle_SEL, 100, tintColor, NO);
+	}
+	else
+	{
+#endif
+		_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
+#ifndef LNPopupControllerEnforceStrictClean
+	}
+#endif
+	
+	if(hasOS13 == NO)
+	{
+		_backgroundView.alpha = tintColor != nil ? 0.0 : 1.0;
+		self.backgroundColor = tintColor;
+	}
 	
 	_backgroundView.effect = _customBlurEffect;
 	
 	if(_userBackgroundStyle == LNBackgroundStyleInherit)
 	{
-		if (@available(iOS 13.0, *))
+		if(@available(iOS 13.0, *))
 		{
 			_backgroundView.backgroundColor = nil;
 		}
@@ -464,9 +502,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		}
 	}
 	
-	//Recalculate bar tint color
-	[self _internalSetBarTintColor:_userBarTintColor];
-	
 	//Recalculate labels
 	[self _setTitleLableFontsAccordingToBarStyleAndTint];
 	
@@ -475,7 +510,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
 {
-	[self _innerSetBackgroundStyle:backgroundStyle];
+	[self _innerSetBackgroundStyle:backgroundStyle tintColor:self._internalBarTintColor];
 }
 
 - (UIColor *)tintColor
@@ -495,6 +530,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	return _userBarTintColor;
 }
 
+- (UIColor*)_internalBarTintColor
+{
+	return _userBarTintColor ?: _systemBarTintColor;
+}
+
 - (void)_internalSetBarTintColor:(UIColor*)barTintColor
 {
 	_userBarTintColor = barTintColor;
@@ -510,8 +550,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		}
 	}
 	
-	_backgroundView.alpha = colorToUse != nil ? 0.0 : 1.0;
-	self.backgroundColor = colorToUse;
+	[self _innerSetBackgroundStyle:self.backgroundStyle tintColor:colorToUse];
 	
 	[self._barDelegate _popupBarStyleDidChange:self];
 }
@@ -561,7 +600,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	_systemBarStyle = systemBarStyle;
 	
-	[self _innerSetBackgroundStyle:_userBackgroundStyle];
+	[self _innerSetBackgroundStyle:_userBackgroundStyle tintColor:self._internalBarTintColor];
 }
 
 - (void)setProgressViewStyle:(LNPopupBarProgressViewStyle)progressViewStyle
