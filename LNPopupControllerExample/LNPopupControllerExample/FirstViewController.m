@@ -350,7 +350,7 @@ extern UIImage* LNSystemImage(NSString* named);
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	[segue.destinationViewController setHidesBottomBarWhenPushed:YES];
+	segue.destinationViewController.hidesBottomBarWhenPushed = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed];
 	if([segue.destinationViewController isKindOfClass:FirstViewController.class])
 	{
 		[(FirstViewController*)segue.destinationViewController setColorSeedString:self.colorSeedString];

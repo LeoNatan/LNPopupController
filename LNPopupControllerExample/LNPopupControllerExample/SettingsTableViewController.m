@@ -15,6 +15,7 @@ NSString* const PopupSettingsCloseButtonStyle = @"PopupSettingsCloseButtonStyle"
 NSString* const PopupSettingsMarqueeStyle = @"PopupSettingsMarqueeStyle";
 NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomizations";
 NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
+NSString* const PopupSettingsHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
 NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
 
 @interface SettingsTableViewController ()
@@ -23,6 +24,8 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 	
 	IBOutlet UISwitch* _customizations;
 	IBOutlet UISwitch* _extendBars;
+	IBOutlet UISwitch* _hidesBottomBarWhenPushed;
+;
 }
 
 @end
@@ -31,7 +34,7 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 
 + (void)load
 {
-	[NSUserDefaults.standardUserDefaults registerDefaults:@{PopupSettingsExtendBar: @YES}];
+	[NSUserDefaults.standardUserDefaults registerDefaults:@{PopupSettingsExtendBar: @YES, PopupSettingsHidesBottomBarWhenPushed: @YES}];
 }
 
 - (void)viewDidLoad {
@@ -51,6 +54,7 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 	
 	_customizations.on = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsEnableCustomizations];
 	_extendBars.on = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
+	_hidesBottomBarWhenPushed.on = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed];
 }
 
 - (void)didReceiveMemoryWarning
@@ -121,6 +125,11 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 - (IBAction)_extendBarsSwitchValueDidChange:(UISwitch*)sender
 {
 	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsExtendBar];
+}
+
+- (IBAction)_hidesBottomBarWhenPushedValueDidChange:(UISwitch*)sender
+{
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsHidesBottomBarWhenPushed];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
