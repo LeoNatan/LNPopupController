@@ -124,7 +124,10 @@ extern UIImage* LNSystemImage(NSString* named);
 	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
 	_nextButton.hidden = self.splitViewController != nil;
 	
-	[self _presentBar:nil animated:NO];
+	if(self.tabBarController == nil || self.navigationController.topViewController == self.navigationController.viewControllers.firstObject)
+	{
+		[self _presentBar:nil animated:NO];
+	}
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -220,12 +223,12 @@ extern UIImage* LNSystemImage(NSString* named);
 - (void)_presentBar:(id)sender animated:(BOOL)animated;
 {
 #if LNPOPUP
-	UIViewController* targetVC = [self _targetVCForPopup];
-	
 	if(_forceNoPresentPopupBar == YES)
 	{
 		return;
 	}
+	
+	UIViewController* targetVC = [self _targetVCForPopup];
 	
 	if(targetVC == nil)
 	{
