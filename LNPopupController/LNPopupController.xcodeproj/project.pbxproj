@@ -61,7 +61,7 @@
 		39222ADA1F1A1C5800388E06 /* LNPopupOpenTapGesutreRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupOpenTapGesutreRecognizer.m; sourceTree = "<group>"; };
 		39314A501B6AE7A400574D3C /* MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarqueeLabel.h; sourceTree = "<group>"; };
 		39314A511B6AE7A400574D3C /* MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarqueeLabel.m; sourceTree = "<group>"; };
-		3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIViewController+LNPopupSupport.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIViewController+LNPopupSupport.h"; sourceTree = "<group>"; };
 		3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+LNPopupSupport.m"; sourceTree = "<group>"; };
 		3947E1A41B61CD650001178B /* LNPopupBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNPopupBar.m; sourceTree = "<group>"; };
 		3947E1A71B61CDA40001178B /* LNPopupCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupCloseButton.h; sourceTree = "<group>"; };

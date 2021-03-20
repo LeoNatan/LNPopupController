@@ -22,7 +22,7 @@ extern const UIBlurEffectStyle LNBackgroundStyleInherit;
 /**
  * Available styles for the popup bar 
  */
-typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
+typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	/**
 	 * The default bar style for the current environment
 	 */
@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, LNPopupBarStyle) {
 	LNPopupBarStyleCustom
 };
 
-typedef NS_ENUM(NSUInteger, LNPopupBarProgressViewStyle) {
+typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
 	/**
 	 * Use the most appropriate style for the current operating system version—uses none for iOS 10 and above, otherwise bottom.
 	 */

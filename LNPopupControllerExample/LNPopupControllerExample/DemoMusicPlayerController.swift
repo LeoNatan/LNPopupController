@@ -165,7 +165,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	
 	fileprivate func LNSystemImage(named: String) -> UIImage {
 		let config : UIImage.SymbolConfiguration
-		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? UInt ?? 0)! == LNPopupBarStyle.compact {
+		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == LNPopupBarStyle.compact {
 			config = UIImage.SymbolConfiguration(scale: .unspecified)
 		} else {
 			config = UIImage.SymbolConfiguration(weight: .bold)
@@ -184,7 +184,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		let next = UIBarButtonItem(image: LNSystemImage(named: "forward.fill"), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
-		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? UInt ?? 0)! == LNPopupBarStyle.compact {
+		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == LNPopupBarStyle.compact {
 			popupItem.leadingBarButtonItems = [ pause ]
 			popupItem.trailingBarButtonItems = [ next ]
 		} else {
@@ -229,7 +229,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	
 	var albumTitle: String = "" {
 		didSet {
-			if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? UInt ?? 0)! == .compact {
+			if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == .compact {
 				popupItem.subtitle = albumTitle
 			}
 			playerView.playbackSettings.albumTitle = albumTitle

@@ -35,7 +35,7 @@ class DemoAlbumTableViewController: UITableViewController {
         super.viewDidLoad()
 		
 #if LNPOPUP
-		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? UInt ?? 0)!
+		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
 #endif
 		let appearance = UINavigationBarAppearance()
 		appearance.configureWithTransparentBackground()

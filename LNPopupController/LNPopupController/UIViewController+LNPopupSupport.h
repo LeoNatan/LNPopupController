@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Available interaction styles with the popup bar and popup content view.
  */
-typedef NS_ENUM(NSUInteger, LNPopupInteractionStyle) {
+typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	/**
 	 * The default interaction style for the current environment
 	 */
@@ -49,7 +49,7 @@ typedef NS_ENUM(NSUInteger, LNPopupInteractionStyle) {
 /**
  * The state of the popup presentation.
  */
-typedef NS_ENUM(NSUInteger, LNPopupPresentationState){
+typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 	/**
 	 * The popup bar is hidden and no presentation is taking place.
 	 */

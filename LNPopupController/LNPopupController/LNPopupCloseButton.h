@@ -11,7 +11,7 @@
 /**
  * Available styles for the popup close button
  */
-typedef NS_ENUM(NSUInteger, LNPopupCloseButtonStyle) {
+typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 	/**
 	 * The default close button style for the current environment
 	 */
