@@ -37,7 +37,8 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 	[NSUserDefaults.standardUserDefaults registerDefaults:@{PopupSettingsExtendBar: @YES, PopupSettingsHidesBottomBarWhenPushed: @YES}];
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
 	
 	_sectionToKeyMapping = @{
@@ -52,15 +53,14 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 		@8: PopupSettingsVisualEffectViewBlurEffect,
 	};
 	
-	_customizations.on = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsEnableCustomizations];
-	_extendBars.on = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
-	_hidesBottomBarWhenPushed.on = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed];
+	[self _resetSwitchesAnimated:NO];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)_resetSwitchesAnimated:(BOOL)animated
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+	[_customizations setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsEnableCustomizations] animated:animated];
+	[_extendBars setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar] animated:animated];
+	[_hidesBottomBarWhenPushed setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed] animated:animated];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -100,9 +100,11 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 	return cell;
 }
 
-- (IBAction)_resetButtonTapped:(UIBarButtonItem *)sender {
+- (IBAction)_resetButtonTapped:(UIBarButtonItem *)sender
+{
 	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsEnableCustomizations];
 	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsExtendBar];
+	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsHidesBottomBarWhenPushed];
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsVisualEffectViewBlurEffect];
 	
 	[_sectionToKeyMapping enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
@@ -113,6 +115,8 @@ NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualE
 		
 		[NSUserDefaults.standardUserDefaults setObject:@0 forKey:obj];
 	}];
+	
+	[self _resetSwitchesAnimated:YES];
 	
 	[self.tableView reloadData];
 }
