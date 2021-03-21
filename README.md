@@ -253,7 +253,7 @@ appearanceProxy.tintColor = .yellow
 
 <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/>
 
-#### Custom Popup Bar
+#### Custom Popup Bars
 
 The framework supports implementing custom popup bars.
 
@@ -261,9 +261,9 @@ The framework supports implementing custom popup bars.
 
 To implement a custom popup bar, subclass `LNPopupCustomBarViewController`.
 
-In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's `preferredContentSize` property with the preferred popup bar height. Override the `wantsDefaultTapGestureRecognizer` and/or `wantsDefaultPanGestureRecognizer` properties to disable adding the default gesture recognizers.
+In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's `preferredContentSize` property with the preferred popup bar height. Override any of the `wantsDefaultTapGestureRecognizer`, `wantsDefaultPanGestureRecognizer` and/or `wantsDefaultHighlightGestureRecognizer` properties to disable the default gesture recognizers functionality in your custom popup bar.
 
-In your subclass, implement the `popupItemDidUpdate` method to be notified of updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
+In your subclass, implement the `popupItemDidUpdate()` method to be notified of updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
 
 Finally, set the `customBarViewController` property of the popup bar object to an instance of your `LNPopupCustomBarViewController` subclass. This will change the bar style to `LNPopupBarStyle.custom`.
 
@@ -307,8 +307,8 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 ## Notes
 
 * Non-translucent bars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars themselves, and supporting those is not a priority for LNPopupController.
-  * Instead, either use translucent bars, set a background color to your bar instead of setting it as not translucent or set `extendedLayoutIncludesOpaqueBars` to true for contained controllers
-* Manually hiding tab bars is not supported by the framework or by Apple. **Do not hide the tab bar using `tabBar.hidden = YES`.**
+  * Instead, either use translucent bars, or set a background color to your bar instead of setting it as not translucent or set `extendedLayoutIncludesOpaqueBars` to true for contained controllers
+* Manually hiding tab bars is not supported by the framework or by Apple. **Do not hide the tab bar using `tabBar.hidden = YES`**, this will lead to undefined behavior by the framework. 
 
 ## Acknowledgements
 
