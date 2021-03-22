@@ -41,9 +41,6 @@
 	_demoVC = [IntroWebViewController new];
 	
 	self.navigationController.popupBar.marqueeScrollEnabled = YES;
-#if ! TARGET_OS_MACCATALYST
-	self.navigationController.popupContentView.popupCloseButtonStyle = LNPopupCloseButtonStyleNone;
-#endif
 	if (@available(iOS 13.0, *))
 	{
 		self.navigationController.popupContentView.popupCloseButton.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
