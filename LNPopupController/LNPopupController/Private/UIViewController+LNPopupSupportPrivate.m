@@ -651,7 +651,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 	else if(self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden && extensionView.superview != nil)
 	{
-		[UIView animateWithDuration:0.05 animations:^{
+		[UIView animateWithDuration:0.15 animations:^{
 			extensionView.alpha = 0.0;
 		} completion:^(BOOL finished) {
 			removeFromSuperview();

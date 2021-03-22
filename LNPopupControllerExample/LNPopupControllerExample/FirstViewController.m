@@ -76,7 +76,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	__weak IBOutlet UIButton *_nextButton;
 	
 	__weak IBOutlet UIBarButtonItem *_barStyleButton;
-	BOOL _forceNoPresentPopupBar;
+	BOOL _alreadyPresentedAutomatically;
 }
 
 - (void)viewDidLoad
@@ -216,16 +216,20 @@ extern UIImage* LNSystemImage(NSString* named);
 
 - (IBAction)_presentBar:(id)sender
 {
-	_forceNoPresentPopupBar = NO;
 	[self _presentBar:sender animated:YES];
 }
 
 - (void)_presentBar:(id)sender animated:(BOOL)animated;
 {
 #if LNPOPUP
-	if(_forceNoPresentPopupBar == YES)
+	if(_alreadyPresentedAutomatically == YES && sender == nil)
 	{
 		return;
+	}
+	
+	if(sender == nil)
+	{
+		_alreadyPresentedAutomatically = YES;
 	}
 	
 	UIViewController* targetVC = [self _targetVCForPopup];
@@ -240,7 +244,7 @@ extern UIImage* LNSystemImage(NSString* named);
 		return;
 	}
 	
-	if(targetVC == self.navigationController && self.navigationController.viewControllers.count > 1 && self.splitViewController == nil)
+	if(targetVC == self.navigationController && self.navigationController.viewControllers.count > 1 && self.splitViewController == nil && sender == nil)
 	{
 		return;
 	}
@@ -250,8 +254,8 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 	if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
 	{
-		demoVC.popupItem.title = @"עברית";//[LoremIpsum sentence];
-		demoVC.popupItem.subtitle = @"עברית";//[LoremIpsum sentence];
+		demoVC.popupItem.title = @"עברית";
+		demoVC.popupItem.subtitle = @"עברית";
 	}
 	else
 	{
@@ -342,7 +346,6 @@ extern UIImage* LNSystemImage(NSString* named);
 - (IBAction)_dismissBar:(id)sender
 {
 #if LNPOPUP
-	_forceNoPresentPopupBar = YES;
 	__kindof UIViewController* targetVC = [self _targetVCForPopup];
 	[targetVC dismissPopupBarAnimated:YES completion:nil];
 #endif
