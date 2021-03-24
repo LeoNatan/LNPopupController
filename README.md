@@ -10,22 +10,20 @@ For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopu
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/graphs/contributors) [![Carthage compatible](https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-<img src="./Supplements/open_modern_popup.gif" width="360"/> <img src="./Supplements/close_modern_popup.gif" width="360"/>
-
-<img src="./Supplements/taps.gif" width="360"/> <img src="./Supplements/swipes.gif" width="360"/>
+<img src="./Supplements/open_modern_popup.gif" width="360"/>
 
 See a video of the modern popup look & feel [here](https://vimeo.com/194064291) and a video of the classic popup look & feel [here](https://vimeo.com/137020302).
 
-Once a popup bar is presented with a content view controller, the user can swipe or tap the popup at any point to present the content controller. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
+Once a popup bar is presented with a content view controller, the user can swipe or tap the popup bar at any point to present the popup. After finishing, the user dismisses the popup by either swiping or tapping the close button.
 
 The framework is intended to be very generic and work in most situations, so it is implemented as a category over `UIViewController`. Each view controller can present a popup bar, docked to a bottom view. 
 For `UITabBarController` subclasses, the default dock view is the tab bar. 
 For `UINavigationController` subclasses, the default dock view is the toolbar.
 For other classes, the popup bar is presented at the bottom of the screen. View controller subclasses can provide their own docking views.
 
-The framework correctly maintains the safe area insets and guide of the container controller’s view and its child controllers, as the popup bar is presented and dismissed.
+The framework correctly maintains the safe area insets of the container controller’s view and its child controllers, as the popup bar is presented and dismissed.
 
-The contents of the popup bar is built dynamically using the popup item objects (instances of the `LNPopupItem` class) associated with the popup content view controllers. To change the contents of the popup bar, you must therefore configure the popup items of your view controllers.
+The information displayed on the popup bar is provided dynamically with popup item objects (instances of the `LNPopupItem` class) associated with the popup content view controllers. To change this information, update the popup item of the view controller.
 
 Generally, it is recommended to present the popup bar on the outermost container controller. So if you have a view controller contained in a navigation controller, which is in turn contained in a tab bar controller, it is recommended to present the popup bar on the tab bar controller.
 
@@ -198,17 +196,17 @@ To hide the popup close button, set the `popupCloseButtonStyle` property to `LNP
 
 #### Popup Bar Appearance
 
-For navigation and tab bar controller popup containers, the style of the popup bar is determined according to the bottom bar's appearance. For other container controllers, the style is the default style. For each style, title and button colors will be adjusted accordingly.
+For navigation and tab bar container controllers, the style of the popup bar is determined according to the bottom bar's appearance. For other container controllers, a default style is used, most suitable for the current environment.
 
 To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, call the `updatePopupBarAppearance()` method.
 
-<img src="./Supplements/modern_bar_style.gif" width="360"/> <img src="./Supplements/bar_style.gif" width="360"/>
+<img src="./Supplements/modern_bar_style.gif" width="360"/>
 
-Supplying long text for the title and/or subtitle will result in a scrolling text. Otherwise, the text will be centered.
+Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee is enabled. Otherwise, the text will be truncated.
 
-<img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scoll.gif" width="360"/>
+<img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/>
 
-The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set, the popup bar will transition to the bottom of the container controller view. Setting  `isToolbarHidden = true` and calling `setToolbarHidden(_:animated:)` are also supported.
+The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set to `true`, the popup bar will transition to the bottom of the pushed controller's view. Setting  `isToolbarHidden = true` and calling `setToolbarHidden(_:animated:)` are also supported.
 
 <img src="./Supplements/hidesBottomBar_TabBar.gif" width="360"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="360"/>
 
@@ -241,7 +239,7 @@ Customization can be achieved through the ```LNPopupBar```, ```LNPopupContentVie
 
 #### Popup Bar Customization
 
-```LNPopupBar``` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on popup bar objects.
+```LNPopupBar``` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on specific popup bar objects.
 
 ```swift
 let appearanceProxy = LNPopupBar.appearance(whenContainedInInstancesOf: [UINavigationController.self])
@@ -267,7 +265,7 @@ In your subclass, implement the `popupItemDidUpdate()` method to be notified of 
 
 Finally, set the `customBarViewController` property of the popup bar object to an instance of your `LNPopupCustomBarViewController` subclass. This will change the bar style to `LNPopupBarStyle.custom`.
 
-The included demo project includes an example custom popup bar scene.
+The included demo project includes two example custom popup bar scenes.
 
 ### Accessibility
 
