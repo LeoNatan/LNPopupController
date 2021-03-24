@@ -1,7 +1,5 @@
 # LNPopupController
 
-<img src="./Supplements/Artwork.png" width=256/>
-
 `LNPopupController` is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.
 
 For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
@@ -10,7 +8,7 @@ For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopu
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/graphs/contributors) [![Carthage compatible](https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-<img src="./Supplements/open_modern_popup.gif" width="360"/>
+<p align="center"><img src="./Supplements/open_modern_popup.gif" width="360"/></p>
 
 See a video of the modern popup look & feel [here](https://vimeo.com/194064291) and a video of the classic popup look & feel [here](https://vimeo.com/137020302).
 
@@ -200,19 +198,19 @@ For navigation and tab bar container controllers, the style of the popup bar is 
 
 To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, call the `updatePopupBarAppearance()` method.
 
-<img src="./Supplements/modern_bar_style.gif" width="360"/>
+<p align="center"><img src="./Supplements/modern_bar_style.gif" width="360"/></p>
 
 Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee is enabled. Otherwise, the text will be truncated.
 
-<img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/>
+<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
 
 The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set to `true`, the popup bar will transition to the bottom of the pushed controller's view. Setting  `isToolbarHidden = true` and calling `setToolbarHidden(_:animated:)` are also supported.
 
-<img src="./Supplements/hidesBottomBar_TabBar.gif" width="360"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="360"/>
+<p align="center"><img src="./Supplements/hidesBottomBar_TabBar.gif" width="360"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="360"/></p>
 
 Status bar management of the popup content view controller is respected and applied when appropriate.
 
-<img src="./Supplements/statusbar_style.gif" width="360"/> <img src="./Supplements/statusbar_hidden.gif" width="360"/>
+<p align="center"><img src="./Supplements/statusbar_style.gif" width="360"/> <img src="./Supplements/statusbar_hidden.gif" width="360"/></p>
 
 #### Interaction Gesture Recognizer
 
@@ -228,7 +226,7 @@ You can implement the delegate of the interaction gesture recognizer in order to
 
 The framework has full right-to-left support.
 
-<img src="./Supplements/rtl_english.png" width="360"/> <img src="./Supplements/rtl_hebrew.png" width="360"/>
+<p align="center"><img src="./Supplements/rtl_english.png" width="360"/> <img src="./Supplements/rtl_hebrew.png" width="360"/></p>
 
 By default, the popup bar will follow the system's user interface layout direction, but will preserve the bar button items' order.
 To customize this behavior, modify the popup bar's ```semanticContentAttribute``` and ```barItemsSemanticContentAttribute``` properties.
@@ -249,13 +247,13 @@ appearanceProxy.backgroundStyle = .systemChromeMaterialDark
 appearanceProxy.tintColor = .yellow
 ```
 
-<img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/>
+<p align="center"><img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/></p>
 
 #### Custom Popup Bars
 
 The framework supports implementing custom popup bars.
 
-<img src="./Supplements/custom_bar.png" width="360"/>
+<p align="center"><img src="./Supplements/custom_bar.png" width="360"/></p>
 
 To implement a custom popup bar, subclass `LNPopupCustomBarViewController`.
 
@@ -271,7 +269,7 @@ The included demo project includes two example custom popup bar scenes.
 
 The framework supports accessibility and will honor accessibility labels, hints and values. By default, the accessibility label of the popup bar is the title and subtitle provided by the popup item.
 
-<img src="./Supplements/default_bar_accessibility_label.png"/>
+<p align="center"><img src="./Supplements/default_bar_accessibility_label.png"/></p>
 
 To modify the accessibility label and hint of the popup bar, set the `accessibilityLabel` and `accessibilityHint` properties of the `LNPopupItem` object of the popup content view controller.
 
