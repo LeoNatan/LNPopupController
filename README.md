@@ -318,4 +318,4 @@ The framework uses:
 Additionally, the demo project uses:
 
 * [LoremIpsum](https://github.com/lukaskubanek/LoremIpsum) Copyright (c) 2013 Lukas Kubanek
-* [COSTouchVisualizer](https://github.com/conopsys/COSTouchVisualizer) Copyright (c) 2014 Joe Blau
+
