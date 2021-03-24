@@ -1,4 +1,7 @@
 #import "SceneDelegate.h"
+#import "SettingsTableViewController.h"
+
+@import LNTouchVisualizer;
 
 @interface SceneDelegate ()
 
@@ -21,6 +24,12 @@
 		UISplitViewController* split = (id)self.window.rootViewController;
 		split.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
 	}
+#else
+	scene.touchVisualizerEnabled = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled];
+	
+	LNTouchConfig* rippleConfig = [LNTouchConfig rippleConfig];
+	rippleConfig.fillColor = UIColor.systemPinkColor;
+	scene.touchVisualizerWindow.touchRippleConfig = rippleConfig;
 #endif
 }
 
