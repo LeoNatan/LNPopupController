@@ -503,7 +503,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 	
 	//Recalculate labels
-	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+	[self _setTitleLabelFontsAccordingToBarStyleAndTint];
 	
 	[self._barDelegate _popupBarStyleDidChange:self];
 }
@@ -966,7 +966,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		}
 	}
 	
-	[self _setTitleLableFontsAccordingToBarStyleAndTint];
+	[self _setTitleLabelFontsAccordingToBarStyleAndTint];
 	
 	CGRect titleLabelFrame = _titlesView.bounds;
 	
@@ -1116,7 +1116,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 }
 
-- (void)_setTitleLableFontsAccordingToBarStyleAndTint
+- (void)_setTitleLabelFontsAccordingToBarStyleAndTint
 {
 	if (@available(iOS 13.0, *))
 	{
