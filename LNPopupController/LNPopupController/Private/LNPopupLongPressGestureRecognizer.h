@@ -1,5 +1,5 @@
 //
-//  LNPopupLongPressGesutreRecognizer.h
+//  LNPopupLongPressGestureRecognizer.h
 //  LNPopupController
 //
 //  Created by Leo Natan on 15/07/2017.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LNPopupLongPressGesutreRecognizer : UILongPressGestureRecognizer
+@interface LNPopupLongPressGestureRecognizer : UILongPressGestureRecognizer
 
 @end

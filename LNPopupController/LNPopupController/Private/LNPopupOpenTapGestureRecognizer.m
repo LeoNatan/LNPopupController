@@ -1,19 +1,19 @@
 //
-//  LNPopupOpenTapGesutreRecognizer.m
+//  LNPopupOpenTapGestureRecognizer.m
 //  LNPopupController
 //
 //  Created by Leo Natan on 15/07/2017.
 //  Copyright © 2015-2020 Leo Natan. All rights reserved.
 //
 
-#import "LNPopupOpenTapGesutreRecognizer.h"
+#import "LNPopupOpenTapGestureRecognizer.h"
 #import "LNForwardingDelegate.h"
 
-@interface LNPopupOpenTapGesutreRecognizerForwardingDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate>
+@interface LNPopupOpenTapGestureRecognizerForwardingDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate>
 
 @end
 
-@implementation LNPopupOpenTapGesutreRecognizerForwardingDelegate
+@implementation LNPopupOpenTapGestureRecognizerForwardingDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
@@ -32,9 +32,9 @@
 
 @end
 
-@implementation LNPopupOpenTapGesutreRecognizer
+@implementation LNPopupOpenTapGestureRecognizer
 {
-	LNPopupOpenTapGesutreRecognizerForwardingDelegate* _actualDelegate;
+	LNPopupOpenTapGestureRecognizerForwardingDelegate* _actualDelegate;
 }
 
 - (instancetype)initWithTarget:(id)target action:(SEL)action
@@ -43,7 +43,7 @@
 	
 	if(self)
 	{
-		_actualDelegate = [LNPopupOpenTapGesutreRecognizerForwardingDelegate new];
+		_actualDelegate = [LNPopupOpenTapGestureRecognizerForwardingDelegate new];
 		[super setDelegate:_actualDelegate];
 	}
 	
@@ -57,7 +57,7 @@
 
 - (void)setDelegate:(id<UIGestureRecognizerDelegate>)delegate
 {
-	_actualDelegate = [LNPopupOpenTapGesutreRecognizerForwardingDelegate new];
+	_actualDelegate = [LNPopupOpenTapGestureRecognizerForwardingDelegate new];
 	_actualDelegate.forwardedDelegate = delegate;
 	[super setDelegate:_actualDelegate];
 }

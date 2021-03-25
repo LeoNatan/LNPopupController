@@ -9,8 +9,8 @@
 #import "LNPopupController.h"
 #import "LNPopupCloseButton+Private.h"
 #import "LNPopupItem+Private.h"
-#import "LNPopupOpenTapGesutreRecognizer.h"
-#import "LNPopupLongPressGesutreRecognizer.h"
+#import "LNPopupOpenTapGestureRecognizer.h"
+#import "LNPopupLongPressGestureRecognizer.h"
 #import "LNPopupInteractionPanGestureRecognizer.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSObject+AltKVC.h"
@@ -943,10 +943,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar = [[LNPopupBar alloc] initWithFrame:[self _frameForClosedPopupBar]];
 	_popupBar.hidden = YES;
 	_popupBar._barDelegate = self;
-	_popupBar.popupOpenGestureRecognizer = [[LNPopupOpenTapGesutreRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
+	_popupBar.popupOpenGestureRecognizer = [[LNPopupOpenTapGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
 	[_popupBar addGestureRecognizer:_popupBar.popupOpenGestureRecognizer];
 	
-	_popupBar.barHighlightGestureRecognizer = [[LNPopupLongPressGesutreRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
+	_popupBar.barHighlightGestureRecognizer = [[LNPopupLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
 	_popupBar.barHighlightGestureRecognizer.minimumPressDuration = 0;
 	_popupBar.barHighlightGestureRecognizer.cancelsTouchesInView = NO;
 	_popupBar.barHighlightGestureRecognizer.delaysTouchesBegan = NO;
