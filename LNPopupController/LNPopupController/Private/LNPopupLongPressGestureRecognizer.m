@@ -1,12 +1,12 @@
 //
-//  LNPopupLongPressGesutreRecognizer.m
+//  LNPopupLongPressGestureRecognizer.m
 //  LNPopupController
 //
 //  Created by Leo Natan on 15/07/2017.
 //  Copyright © 2015-2020 Leo Natan. All rights reserved.
 //
 
-#import "LNPopupLongPressGesutreRecognizer.h"
+#import "LNPopupLongPressGestureRecognizer.h"
 #import "LNForwardingDelegate.h"
 
 @interface LNPopupControllerLongPressGestureDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate>
@@ -57,7 +57,7 @@
 @end
 
 
-@implementation LNPopupLongPressGesutreRecognizer
+@implementation LNPopupLongPressGestureRecognizer
 {
 	LNPopupControllerLongPressGestureDelegate* _actualDelegate;
 }
