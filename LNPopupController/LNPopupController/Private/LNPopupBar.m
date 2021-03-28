@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/24/15.
-//  Copyright © 2015-2020 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import "LNPopupBar+Private.h"
@@ -226,13 +226,19 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_translucent = YES;
 		
 		_backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
-		self.effectGroupingIdentifier = nil;
 		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
 		
 		_contentView = [_LNPopupBarContentView new];
 		[self addSubview:_contentView];
+		
+		_interactionBackgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
+		_interactionBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_interactionBackgroundView.userInteractionEnabled = NO;
+		[_contentView addSubview:_interactionBackgroundView];
+		
+		self.effectGroupingIdentifier = nil;
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
 		
@@ -290,7 +296,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_highlightView = [[_LNPopupBarShadowView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_highlightView.userInteractionEnabled = NO;
-		[_highlightView setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.1]];
+		if (@available(iOS 13.0, *)) {
+			_highlightView.backgroundColor = [UIColor.systemGray2Color colorWithAlphaComponent:0.35];
+		} else {
+			_highlightView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.1];
+		}
 		_highlightView.alpha = 0.0;
 		[_contentView addSubview:_highlightView];
 		
@@ -304,21 +314,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 	
 	return self;
-}
-
-- (void)addInteraction:(id<UIInteraction>)interaction
-{
-	[_contentView addInteraction:interaction];
-}
-
-- (void)removeInteraction:(id<UIInteraction>)interaction
-{
-	[_contentView removeInteraction:interaction];
-}
-
-- (NSArray<id<UIInteraction>> *)interactions
-{
-	return [_contentView interactions];
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
@@ -383,6 +378,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_toolbar.center = CGPointMake(_contentView.center.x - swiftuiOffset / 2, _contentView.center.y - 1);
 	[_toolbar layoutIfNeeded];
 	
+	[_contentView bringSubviewToFront:_interactionBackgroundView];
 	[_contentView bringSubviewToFront:_highlightView];
 	[_contentView bringSubviewToFront:_toolbar];
 	[_contentView bringSubviewToFront:_imageView];
@@ -444,6 +440,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 - (void)setEffectGroupingIdentifier:(NSString *)groupingIdentifier
 {
 	[self _applyGroupingIdentifier:groupingIdentifier toVisualEffectView:self.backgroundView];
+	[self _applyGroupingIdentifier:groupingIdentifier toVisualEffectView:self.interactionBackgroundView];
 	
 	[self._barDelegate _popupBarStyleDidChange:self];
 }
@@ -480,25 +477,25 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	
 	if(hasOS13 == NO)
 	{
-		_backgroundView.alpha = tintColor != nil ? 0.0 : 1.0;
+		_interactionBackgroundView.alpha = _backgroundView.alpha = tintColor != nil ? 0.0 : 1.0;
 		self.backgroundColor = tintColor;
 	}
 	
-	_backgroundView.effect = _customBlurEffect;
+	_interactionBackgroundView.effect = _backgroundView.effect = _customBlurEffect;
 	
 	if(_userBackgroundStyle == LNBackgroundStyleInherit)
 	{
 		if(@available(iOS 13.0, *))
 		{
-			_backgroundView.backgroundColor = nil;
+			_interactionBackgroundView.backgroundColor = _backgroundView.backgroundColor = nil;
 		}
 		else if(_actualBackgroundStyle == UIBlurEffectStyleDark)
 		{
-			_backgroundView.backgroundColor = [UIColor clearColor];
+			_interactionBackgroundView.backgroundColor = _backgroundView.backgroundColor = [UIColor clearColor];
 		}
 		else if(_actualBackgroundStyle == UIBlurEffectStyleLight)
 		{
-			_backgroundView.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:_resolvedStyle == LNPopupBarStyleProminent ? 0.5 : 0.0];
+			_interactionBackgroundView.backgroundColor = _backgroundView.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:_resolvedStyle == LNPopupBarStyleProminent ? 0.5 : 0.0];
 		}
 	}
 	
@@ -639,7 +636,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	_translucent = translucent;
 	
-	_backgroundView.hidden = _translucent == NO;
+	_interactionBackgroundView.hidden = _backgroundView.hidden = _translucent == NO;
 	
 	[self _internalSetBarTintColor:_userBarTintColor];
 }
@@ -1342,6 +1339,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 - (NSArray<UIBarButtonItem *> *)barButtonItems
 {
 	return self.trailingBarButtonItems;
+}
+
+- (void)_cancelAnyUserInteraction
+{
+	[self._barDelegate _removeInteractionGestureForPopupBar:self];
 }
 
 - (void)set_applySwiftUILayoutFixes:(BOOL)_applySwiftUILayoutFixes

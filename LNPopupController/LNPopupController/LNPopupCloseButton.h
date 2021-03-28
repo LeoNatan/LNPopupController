@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/24/15.
-//  Copyright © 2015-2020 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LNPopupCloseButton : UIButton
+@interface LNPopupCloseButton : UIButton <UIAppearanceContainer>
 
 /**
  * Gets or sets the style of the popup close button. Has the same effect as setting the @c popupCloseButtonStyle property of the content view.

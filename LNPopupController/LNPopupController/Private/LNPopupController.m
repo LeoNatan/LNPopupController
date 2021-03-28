@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/24/15.
-//  Copyright © 2015-2020 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import "LNPopupController.h"
@@ -1226,6 +1226,13 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 }
 
 #pragma mark _LNPopupBarDelegate
+
+- (void)_removeInteractionGestureForPopupBar:(LNPopupBar*)bar
+{
+	BOOL oldVal = _popupContentView.popupInteractionGestureRecognizer.enabled;
+	_popupContentView.popupInteractionGestureRecognizer.enabled = NO;
+	_popupContentView.popupInteractionGestureRecognizer.enabled = oldVal;
+}
 
 - (void)_traitCollectionForPopupBarDidChange:(LNPopupBar*)bar
 {

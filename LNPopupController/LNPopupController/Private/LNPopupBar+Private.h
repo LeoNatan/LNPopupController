@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2020 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import <LNPopupController/LNPopupBar.h>
@@ -34,6 +34,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 - (void)_popupBarMetricsDidChange:(LNPopupBar*)bar;
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar;
 - (void)_popupBar:(LNPopupBar*)bar updateCustomBarController:(LNPopupCustomBarViewController*)customController cleanup:(BOOL)cleanup;
+- (void)_removeInteractionGestureForPopupBar:(LNPopupBar*)bar;
 
 @end
 
@@ -72,8 +73,9 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong, readwrite) UIProgressView* progressView;
 
 @property (nonatomic, strong) UIView* contentView;
-//@property (nonatomic, strong) UIToolbar* toolbar;
 @property (nonatomic, strong) UIVisualEffectView* backgroundView;
+@property (nonatomic, strong) UIVisualEffectView* interactionBackgroundView;
+
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView;
 
@@ -100,5 +102,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 - (void)_transitionCustomBarViewControllerWithPopupContainerSize:(CGSize)size withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
 - (void)_transitionCustomBarViewControllerWithPopupContainerTraitCollection:(UITraitCollection *)newCollection withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
+
+- (void)_cancelAnyUserInteraction;
 
 @end

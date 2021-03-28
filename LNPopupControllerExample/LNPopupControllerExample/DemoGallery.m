@@ -23,7 +23,13 @@
 
 @end
 
-@interface DemoGalleryController : UITableViewController @end
+@interface DemoGalleryController : UITableViewController <
+#if LNPOPUP
+UIContextMenuInteractionDelegate
+#endif
+>
+@end
+
 @implementation DemoGalleryController
 {
 #if LNPOPUP
@@ -54,7 +60,13 @@
 	
 #if LNPOPUP
 	self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
-	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:YES completion:nil];
+	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:NO completion:nil];
+	
+	if (@available(iOS 13.0, *))
+	{
+		UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+		[self.navigationController.popupBar addInteraction:i];
+	}
 #endif
 }
 
@@ -84,5 +96,24 @@
 	
 	return YES;
 }
+
+#pragma mark UIContextMenuInteractionDelegate
+
+#if LNPOPUP
+- (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location API_AVAILABLE(ios(13.0))
+{
+	return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:nil];
+}
+
+- (void)contextMenuInteraction:(UIContextMenuInteraction *)interaction willEndForConfiguration:(UIContextMenuConfiguration *)configuration animator:(nullable id<UIContextMenuInteractionAnimating>)animator API_AVAILABLE(ios(13.0))
+{	
+	[animator addCompletion:^{
+		UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]] applicationActivities:nil];
+		avc.modalPresentationStyle = UIModalPresentationFormSheet;
+		avc.popoverPresentationController.sourceView = self.navigationController.popupBar;
+		[self presentViewController:avc animated:YES completion:nil];
+	}];
+}
+#endif
 
 @end

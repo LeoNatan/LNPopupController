@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2020 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -16,7 +16,7 @@ extern const UIBlurEffectStyle LNBackgroundStyleInherit;
 /**
  * Holds the popup content container view, as well as the popup close button and the popup interaction gesture recognizer.
  */
-@interface LNPopupContentView : UIView
+@interface LNPopupContentView : UIView <UIAppearanceContainer>
 
 /**
  * The gesture recognizer responsible for interactive opening and closing of the popup. (read-only)
