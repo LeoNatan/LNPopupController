@@ -2,7 +2,7 @@
 //  LNChevronView.h
 //
 //  Created by Leo Natan on 16/9/16.
-//  Copyright © 2015-2020 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #define LNChevronView __LNChevronView
