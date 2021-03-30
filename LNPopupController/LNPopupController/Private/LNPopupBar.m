@@ -378,13 +378,17 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_toolbar.center = CGPointMake(_contentView.center.x - swiftuiOffset / 2, _contentView.center.y - 1);
 	[_toolbar layoutIfNeeded];
 	
-	[_contentView bringSubviewToFront:_interactionBackgroundView];
-	[_contentView bringSubviewToFront:_highlightView];
-	[_contentView bringSubviewToFront:_toolbar];
-	[_contentView bringSubviewToFront:_imageView];
-	[_contentView bringSubviewToFront:_titlesView];
-	[_contentView bringSubviewToFront:_shadowView];
-	[_contentView bringSubviewToFront:_bottomShadowView];
+	[_contentView sendSubviewToBack:_interactionBackgroundView];
+	[_contentView insertSubview:_highlightView aboveSubview:_interactionBackgroundView];
+	[_contentView insertSubview:_toolbar aboveSubview:_highlightView];
+	[_contentView insertSubview:_imageView aboveSubview:_toolbar];
+	[_contentView insertSubview:_titlesView aboveSubview:_imageView];
+	[_contentView insertSubview:_shadowView aboveSubview:_titlesView];
+	[_contentView insertSubview:_bottomShadowView aboveSubview:_shadowView];
+	if(_customBarViewController != nil)
+	{
+		[_contentView insertSubview:_customBarViewController.view aboveSubview:_bottomShadowView];
+	}
 	
 	UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
 	CGFloat h = 1 / screen.scale;

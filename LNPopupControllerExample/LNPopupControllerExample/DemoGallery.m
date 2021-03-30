@@ -60,7 +60,7 @@ UIContextMenuInteractionDelegate
 	
 #if LNPOPUP
 	self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
-	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:NO completion:nil];
+	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:YES completion:nil];
 	
 	if (@available(iOS 13.0, *))
 	{
@@ -106,12 +106,16 @@ UIContextMenuInteractionDelegate
 }
 
 - (void)contextMenuInteraction:(UIContextMenuInteraction *)interaction willEndForConfiguration:(UIContextMenuConfiguration *)configuration animator:(nullable id<UIContextMenuInteractionAnimating>)animator API_AVAILABLE(ios(13.0))
-{	
+{
+	interaction.view.userInteractionEnabled = NO;
+	
 	[animator addCompletion:^{
 		UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]] applicationActivities:nil];
 		avc.modalPresentationStyle = UIModalPresentationFormSheet;
 		avc.popoverPresentationController.sourceView = self.navigationController.popupBar;
 		[self presentViewController:avc animated:YES completion:nil];
+		
+		interaction.view.userInteractionEnabled = YES;
 	}];
 }
 #endif
