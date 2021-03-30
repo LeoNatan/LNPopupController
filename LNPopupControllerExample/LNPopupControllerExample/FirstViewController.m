@@ -367,7 +367,7 @@ extern UIImage* LNSystemImage(NSString* named);
 {
 	//Mask Apple's push bug. This uses private API, so don't copy it as is in your app!
 	
-	if(@available(iOS 13.0, *))
+	if(@available(iOS 14.0, *))
 	{
 		UIViewController* disappearing = [navigationController valueForKey:@"disappearingViewController"];
 		UIViewController* target = viewController;
