@@ -42,8 +42,6 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 - (UIPresentationController*)nonMemoryLeakingPresentationController
 {
 #if ! LNPopupControllerEnforceStrictClean
-	//TODO: Hide
-
 	static NSString* sel = nil;
 	static id (*nonLeakingPresentationController)(id, SEL, BOOL, BOOL) = (void*)objc_msgSend;
 	static dispatch_once_t onceToken;

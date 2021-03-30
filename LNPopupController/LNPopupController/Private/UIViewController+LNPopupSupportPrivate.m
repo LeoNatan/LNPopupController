@@ -1037,7 +1037,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	CGRect toolbarBarFrame = self.toolbar.frame;
 	
-	toolbarBarFrame.origin = CGPointMake(toolbarBarFrame.origin.x, self.view.bounds.size.height - (self.isToolbarHidden ? 0.0 : toolbarBarFrame.size.height) - (self.view.safeAreaInsets.bottom - self.view.window.safeAreaInsets.bottom));
+	CGFloat bottomSafeAreaHeight = self.view.safeAreaInsets.bottom;
+	if([NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"] == NO)
+	{
+		bottomSafeAreaHeight -= self.view.window.safeAreaInsets.bottom;
+	}
+	
+	toolbarBarFrame.origin = CGPointMake(toolbarBarFrame.origin.x, self.view.bounds.size.height - (self.isToolbarHidden ? 0.0 : toolbarBarFrame.size.height) - bottomSafeAreaHeight);
 	
 	return toolbarBarFrame;
 }
