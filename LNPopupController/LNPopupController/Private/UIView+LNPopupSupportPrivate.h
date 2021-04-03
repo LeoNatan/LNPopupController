@@ -24,7 +24,7 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 
 @interface UIWindow (MacCatalystSupport)
 
-- (NSUInteger)_ln_currentEventType;
+@property (nonatomic, strong, readonly) UIEvent* _ln_currentEvent;
 
 @end
 

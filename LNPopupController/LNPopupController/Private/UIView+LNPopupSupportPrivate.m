@@ -167,10 +167,10 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	
 @implementation UIWindow (MacCatalystSupport)
 
-- (NSUInteger)_ln_currentEventType
+- (UIEvent*)_ln_currentEvent
 {
 #if LNPopupControllerEnforceStrictClean
-	return 0;
+	return nil;
 #else
 	//hostWindow
 	static NSString* hW;
@@ -194,9 +194,7 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 		hostingWindow = [hostingWindow valueForKey:aW];
 	}
 	//Obtain the current NSEvent
-	id event = [hostingWindow valueForKey:cE];
-	
-	return [[event valueForKey:@"type"] unsignedIntegerValue];
+	return [hostingWindow valueForKey:cE];
 #endif
 }
 

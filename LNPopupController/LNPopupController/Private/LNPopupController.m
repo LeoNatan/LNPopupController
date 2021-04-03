@@ -403,14 +403,13 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 - (void)_popupBarPresentationByUserPanGestureHandler_began:(UIPanGestureRecognizer*)pgr
 {
 #if TARGET_OS_MACCATALYST
-	id hostingWindow = [self.popupBar.window valueForKey:@"hostWindow"];
-	if(self.popupBar.window._ln_currentEventType == 22 /*NSEventTypeScrollWheel*/)
+	UIEvent* event = self.popupBar.window._ln_currentEvent;
+	if(event.type == 22 /*NSEventTypeScrollWheel*/)
 	{
 		return;
 	}
-	id event = [hostingWindow valueForKey:@"currentEvent"];
 	
-	if(event != nil && [[event valueForKey:@"type"] isEqualToNumber:@22 /* NSEventTypeScrollWheel */])
+	if(event != nil && event.type == 22)
 	{
 		return;
 	}
@@ -464,7 +463,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 - (void)_popupBarPresentationByUserPanGestureHandler_changed:(UIPanGestureRecognizer*)pgr
 {
 #if TARGET_OS_MACCATALYST
-	if(self.popupBar.window._ln_currentEventType == 22 /*NSEventTypeScrollWheel*/)
+	if(self.popupBar.window._ln_currentEvent.type == 22 /*NSEventTypeScrollWheel*/)
 	{
 		return;
 	}
