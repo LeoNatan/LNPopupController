@@ -265,6 +265,8 @@ extern UIImage* LNSystemImage(NSString* named);
 	demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
 	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
 	
+	LNPopupCloseButtonStyle closeButtonStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsCloseButtonStyle] unsignedIntegerValue];
+	
 	UILabel* topLabel = [UILabel new];
 	topLabel.text = NSLocalizedString(@"Top", @"");
 	if (@available(iOS 13.0, *)) {
@@ -277,7 +279,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	[demoVC.view addSubview:topLabel];
 	[NSLayoutConstraint activateConstraints:@[
 		[topLabel.topAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.topAnchor],
-		[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.centerXAnchor constant:40]
+		[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.centerXAnchor constant:closeButtonStyle == LNPopupCloseButtonStyleDefault || closeButtonStyle == LNPopupCloseButtonStyleChevron ? 40 : 0]
 	]];
 	
 	UILabel* bottomLabel = [UILabel new];
@@ -304,7 +306,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	targetVC.popupBar.progressViewStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsProgressViewStyle] unsignedIntegerValue];
 	targetVC.popupBar.barStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
 	targetVC.popupInteractionStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsInteractionStyle] unsignedIntegerValue];
-	targetVC.popupContentView.popupCloseButtonStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsCloseButtonStyle] unsignedIntegerValue];
+	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
 	
 	NSNumber* marqueeEnabledSetting = [[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsMarqueeStyle];
 	if(marqueeEnabledSetting && [marqueeEnabledSetting isEqualToNumber:@0] == NO)
@@ -387,11 +389,15 @@ extern UIImage* LNSystemImage(NSString* named);
 
 - (void)contextMenuInteraction:(UIContextMenuInteraction *)interaction willEndForConfiguration:(UIContextMenuConfiguration *)configuration animator:(nullable id<UIContextMenuInteractionAnimating>)animator API_AVAILABLE(ios(13.0))
 {
-	[animator addCompletion:^{
+	[animator addAnimations:^{
 		UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]] applicationActivities:nil];
 		avc.modalPresentationStyle = UIModalPresentationFormSheet;
 		avc.popoverPresentationController.sourceView = [self _targetVCForPopup].popupBar;
 		[self presentViewController:avc animated:YES completion:nil];
+	}];
+	
+	[animator addCompletion:^{
+		
 	}];
 }
 #endif
