@@ -401,7 +401,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 	else
 	{
-		_progressView.frame = CGRectMake(0, _contentView.bounds.size.height - 1.5, _contentView.bounds.size.width, 1.5);
+		_progressView.frame = CGRectMake(0, _contentView.bounds.size.height - 2.5, _contentView.bounds.size.width, 1.5);
 	}
 	
 	[self _layoutTitles];
