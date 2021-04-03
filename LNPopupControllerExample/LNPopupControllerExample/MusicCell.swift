@@ -8,7 +8,21 @@
 
 import UIKit
 
+@available(iOS 13.0, *)
 class MusicCell: UITableViewCell {
+	let selectionEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
+	
+	required init?(coder: NSCoder) {
+		super.init(coder: coder)
+		
+		selectionEffectView.frame = bounds
+		selectionEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		selectionEffectView.isHidden = true
+		addSubview(selectionEffectView)
+		sendSubviewToBack(selectionEffectView)
+		
+		selectionStyle = .none
+	}
 	
 	override func layoutSubviews() {
 		super.layoutSubviews()
@@ -22,4 +36,19 @@ class MusicCell: UITableViewCell {
 		separatorInset = UIEdgeInsets(top: 0, left: textLabel!.frame.origin.x, bottom: 0, right: 0)
 	}
 	
+	override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+		guard isHighlighted != highlighted else {
+			return
+		}
+
+		super.setHighlighted(highlighted, animated: animated)
+
+		selectionEffectView.alpha = highlighted ? 0.0 : 1.0
+		selectionEffectView.isHidden = false
+		UIView.animate(withDuration: highlighted ? 0.0 : 0.35) {
+			self.selectionEffectView.alpha = highlighted ? 1.0 : 0.0
+		} completion: { _ in
+			self.selectionEffectView.isHidden = highlighted == false
+		}
+	}
 }

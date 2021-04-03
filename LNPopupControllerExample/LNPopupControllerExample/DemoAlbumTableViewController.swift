@@ -34,6 +34,22 @@ class DemoAlbumTableViewController: UITableViewController {
 		
         super.viewDidLoad()
 		
+		let backgroundImageView = UIImageView(image: UIImage(named: "demoAlbum"))
+		backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		backgroundImageView.contentMode = .scaleAspectFill
+		let backgroundEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+		backgroundEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		let container = UIView(frame: tableView.bounds)
+		container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		backgroundImageView.frame = container.bounds
+		backgroundEffectView.frame = container.bounds
+		container.addSubview(backgroundImageView)
+		container.addSubview(backgroundEffectView)
+		
+		tableView.backgroundView = container
+		
+		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
+		
 #if LNPOPUP
 		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
 #endif
