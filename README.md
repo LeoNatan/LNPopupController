@@ -166,6 +166,8 @@ Customizing the popup bar style is achieved by setting the popup bar's `barStyle
 navigationController?.popupBar.barStyle = .compact
 ```
 
+<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+
 ##### Interaction Style
 
 Customizing the popup interaction style is achieved by setting the popup presentation containing controller's `popupInteractionStyle` property.
@@ -173,6 +175,8 @@ Customizing the popup interaction style is achieved by setting the popup present
 ```swift
 navigationController?.popupInteractionStyle = .drag
 ```
+
+<p align="center"><img src="./Supplements/interaction_snap.gif" width="360"/> <img src="./Supplements/interaction_drag.gif" width="360"/></p>
 
 ##### Progress View Style
 
@@ -184,6 +188,8 @@ navigationController?.popupBar.progressViewStyle = .top
 
 To hide the progress view, set the `progressViewStyle` property to `LNPopupBarProgressViewStyle.none`.
 
+<p align="center"><img src="./Supplements/progress_view_none.png" width="360"/><br/><br/><img src="./Supplements/progress_view_top.png" width="360"/><br/><br/><img src="./Supplements/progress_view_bottom.png" width="360"/></p>
+
 ##### Close Button Style
 
 Customizing the popup close button style is achieved by setting the popup content view's `popupCloseButtonStyle` property.
@@ -194,7 +200,9 @@ navigationController.popupContentView.popupCloseButtonStyle = .round
 
 To hide the popup close button, set the `popupCloseButtonStyle` property to `LNPopupCloseButtonStyle.none`.
 
-#### Popup Bar Appearance
+<p align="center"><img src="./Supplements/close_button_none.png" width="360"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="360"/><br/><br/><img src="./Supplements/close_button_round.png" width="360"/></p>
+
+#### Popup Bar Appearance and Behavior
 
 For navigation and tab bar container controllers, the style of the popup bar is determined according to the bottom bar's appearance. For other container controllers, a default style is used, most suitable for the current environment.
 
@@ -213,6 +221,10 @@ The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar 
 Status bar management of the popup content view controller is respected and applied when appropriate.
 
 <p align="center"><img src="./Supplements/statusbar_style.gif" width="360"/> <img src="./Supplements/statusbar_hidden.gif" width="360"/></p>
+
+Context menus are supported. Just add a `UIContextMenuInteraction` interaction object to the popup bar, and it will behave as expected.
+
+<p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="360"/></p>
 
 #### Interaction Gesture Recognizer
 
