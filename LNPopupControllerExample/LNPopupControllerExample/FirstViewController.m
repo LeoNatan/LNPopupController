@@ -277,9 +277,16 @@ extern UIImage* LNSystemImage(NSString* named);
 	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:topLabel];
+	
+	CGFloat offset =
+#if ! TARGET_OS_MACCATALYST
+	closeButtonStyle == LNPopupCloseButtonStyleDefault ||
+#endif
+	closeButtonStyle == LNPopupCloseButtonStyleChevron ? 40 : 0;
+	
 	[NSLayoutConstraint activateConstraints:@[
 		[topLabel.topAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.topAnchor],
-		[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.centerXAnchor constant:closeButtonStyle == LNPopupCloseButtonStyleDefault || closeButtonStyle == LNPopupCloseButtonStyleChevron ? 40 : 0]
+		[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.centerXAnchor constant:offset]
 	]];
 	
 	UILabel* bottomLabel = [UILabel new];
