@@ -150,11 +150,21 @@ UIImage* LNSystemImage(NSString* named)
 	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];
 	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
-	if (@available(iOS 13.0, *)) {
+	
+	if(@available(iOS 13.0, *))
+	{
 		[customCloseButton setTitleColor:UIColor.systemBackgroundColor forState:UIControlStateNormal];
-	} else {
+	}
+	else
+	{
 		[customCloseButton setTitleColor:UIColor.lightTextColor forState:UIControlStateNormal];
 	}
+	
+	if(@available(iOS 13.4, *))
+	{
+		customCloseButton.pointerInteractionEnabled = YES;
+	}
+	
 	[customCloseButton addTarget:self action:@selector(_closePopup) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:customCloseButton];
 	[NSLayoutConstraint activateConstraints:@[
