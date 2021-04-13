@@ -47,7 +47,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @end
 
-@interface LNPopupBar ()
+@interface LNPopupBar () <UIPointerInteractionDelegate>
 
 @property (nonatomic, assign) UIBarStyle systemBarStyle;
 @property (nonatomic, strong) UIColor* systemTintColor;

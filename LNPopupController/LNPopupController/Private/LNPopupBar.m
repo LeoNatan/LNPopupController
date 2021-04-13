@@ -152,14 +152,14 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		if(systemBarStyle == UIBarStyleBlack)
 		{
 #if TARGET_OS_MACCATALYST
-			return UIBlurEffectStyleSystemThickMaterialDark;
+			return UIBlurEffectStyleSystemMaterialDark;
 #else
 			return UIBlurEffectStyleSystemChromeMaterialDark;
 #endif
 		}
 		
 #if TARGET_OS_MACCATALYST
-		return UIBlurEffectStyleSystemThickMaterial;
+		return UIBlurEffectStyleSystemMaterial;
 #else
 		return UIBlurEffectStyleSystemChromeMaterial;
 #endif
@@ -218,6 +218,12 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	{
 		self.preservesSuperviewLayoutMargins = YES;
 		self.clipsToBounds = YES;
+		
+		if (@available(iOS 13.4, *))
+		{
+			UIPointerInteraction* pointerInteraction = [[UIPointerInteraction alloc] initWithDelegate:self];
+			[self addInteraction:pointerInteraction];
+		}
 		
 		_inheritsVisualStyleFromDockingView = YES;
 		
@@ -1288,8 +1294,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[self setNeedsLayout];
 }
 
-- (void)setLeadingBarButtonItems:(NSArray *)leadingBarButtonItems
-{
+- (void)setLeadingBarButtonItems:(NSArray<UIBarButtonItem*> *)leadingBarButtonItems
+{	
 	_leadingBarButtonItems = [leadingBarButtonItems copy];
 	
 	if(_delaysBarButtonItemLayout == NO)
@@ -1298,7 +1304,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 }
 
-- (void)setTrailingBarButtonItems:(NSArray *)trailingBarButtonItems
+- (void)setTrailingBarButtonItems:(NSArray<UIBarButtonItem*> *)trailingBarButtonItems
 {
 	_trailingBarButtonItems = [trailingBarButtonItems copy];
 	
@@ -1358,6 +1364,21 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		[self _layoutBarButtonItems];
 	}
+}
+
+#pragma mark UIPointerInteractionDelegate
+
+- (UIPointerStyle *)pointerInteraction:(UIPointerInteraction *)interaction styleForRegion:(UIPointerRegion *)region API_AVAILABLE(ios(13.4))
+{
+	UIPointerEffect* effect = [UIPointerHighlightEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:interaction.view]];
+	[effect setValue:@10 forKey:@"scaleUpPoints"];
+	UIPointerShape* shape = [UIPointerShape shapeWithRoundedRect:interaction.view.frame];
+	
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		NSLog(@"");
+	});
+	
+	return [UIPointerStyle styleWithEffect:effect shape:shape];
 }
 
 @end

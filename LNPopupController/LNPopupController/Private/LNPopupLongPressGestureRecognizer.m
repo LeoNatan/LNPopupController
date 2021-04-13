@@ -16,6 +16,16 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
+#if ! TARGET_OS_MACCATALYST
+	if (@available(iOS 13.4, *))
+	{
+		if(touch.type == UITouchTypeIndirectPointer)
+		{
+			return NO;
+		}
+	}
+#endif
+	
 	if([touch.view isKindOfClass:[UIControl class]])
 	{
 		return NO;

@@ -21,22 +21,26 @@ NS_ASSUME_NONNULL_BEGIN
  */
 typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	/**
-	 * The default interaction style for the current environment
+	 * The default interaction style for the current environment.
+	 *
+	 * On iOS, the default interaction style is snap.
+	 *
+	 * On macOS, the default interaction style is scroll.
 	 */
 	LNPopupInteractionStyleDefault,
 	
 	/**
-	 * Drag interaction style
+	 * Drag interaction style.
 	 */
 	LNPopupInteractionStyleDrag,
 	
 	/**
-	 * Snap interaction style
+	 * Snap interaction style.
 	 */
 	LNPopupInteractionStyleSnap,
 	
 	/**
-	 * Scroll interaction style
+	 * Scroll interaction style.
 	 */
 	LNPopupInteractionStyleScroll,
 	

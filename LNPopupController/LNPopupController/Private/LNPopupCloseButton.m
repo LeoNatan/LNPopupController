@@ -32,6 +32,22 @@
 		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		
+		if (@available(iOS 13.4, *))
+		{
+			self.pointerInteractionEnabled = YES;
+			self.pointerStyleProvider = ^ UIPointerStyle* (UIButton *button, UIPointerEffect *proposedEffect, UIPointerShape *proposedShape) {
+				NSValue* rectValue = [proposedShape valueForKey:@"rect"];
+				if(rectValue == nil)
+				{
+					return [UIPointerStyle styleWithEffect:proposedEffect shape:proposedShape];
+				}
+				
+				CGRect rect = CGRectInset(rectValue.CGRectValue, -5, -5);
+				
+				return [UIPointerStyle styleWithEffect:proposedEffect shape:[UIPointerShape shapeWithRoundedRect:rect]];
+			};
+		}
+		
 		_style = LNPopupCloseButtonStyleChevron;
 		[self _setupForChevronButton];
 	}
