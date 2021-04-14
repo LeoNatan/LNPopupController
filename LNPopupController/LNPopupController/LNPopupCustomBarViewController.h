@@ -10,7 +10,12 @@
 
 @class LNPopupBar;
 
-@interface LNPopupCustomBarViewController : UIViewController
+/**
+ * An object that manages a custom popup bar view hierarchy.
+ *
+ * Implement the @c UIPointerInteractionDelegate methods to customize pointer interactions.
+ */
+@interface LNPopupCustomBarViewController : UIViewController <UIPointerInteractionDelegate>
 
 /**
  * The containing popup bar. (read-only)

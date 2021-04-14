@@ -196,6 +196,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 }
 
+- (void)_setHighlightAlpha:(CGFloat)alpha animated:(BOOL)animated
+{
+	
+}
+
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
 	id block = ^ { self.highlightView.alpha = highlighted ? 1.0 : 0.0; };
@@ -299,11 +304,20 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_bottomShadowView.hidden = YES;
 		[_contentView addSubview:_bottomShadowView];
 		
-		_highlightView = [[_LNPopupBarShadowView alloc] initWithFrame:self.bounds];
+		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_highlightView.userInteractionEnabled = NO;
 		if (@available(iOS 13.0, *)) {
-			_highlightView.backgroundColor = [UIColor.systemGray2Color colorWithAlphaComponent:0.35];
+			_highlightView.backgroundColor = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+				if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+				{
+					return [UIColor.whiteColor colorWithAlphaComponent:0.15];
+				}
+				else
+				{
+					return [UIColor.systemGray2Color colorWithAlphaComponent:0.35];
+				}
+			}];
 		} else {
 			_highlightView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.1];
 		}
@@ -1368,20 +1382,75 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 #pragma mark UIPointerInteractionDelegate
 
+- (nullable UIPointerRegion *)pointerInteraction:(UIPointerInteraction *)interaction regionForRequest:(UIPointerRegionRequest *)request defaultRegion:(UIPointerRegion *)defaultRegion API_AVAILABLE(ios(13.4))
+{
+	if(_customBarViewController && [_customBarViewController respondsToSelector:@selector(pointerInteraction:regionForRequest:defaultRegion:)])
+	{
+		return [_customBarViewController pointerInteraction:interaction regionForRequest:request defaultRegion:defaultRegion];
+	}
+	
+	return defaultRegion;
+}
+
 - (UIPointerStyle *)pointerInteraction:(UIPointerInteraction *)interaction styleForRegion:(UIPointerRegion *)region API_AVAILABLE(ios(13.4))
 {
-	UIPointerEffect* effect = [UIPointerHighlightEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:interaction.view]];
-	[effect setValue:@10 forKey:@"scaleUpPoints"];
-	UIPointerShape* shape = [UIPointerShape shapeWithRoundedRect:interaction.view.frame];
+	if(_customBarViewController && [_customBarViewController respondsToSelector:@selector(pointerInteraction:styleForRegion:)])
+	{
+		return [_customBarViewController pointerInteraction:interaction styleForRegion:region];
+	}
 	
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-		NSLog(@"");
-	});
+	if(_customBarViewController != nil && _customBarViewController.wantsDefaultHighlightGestureRecognizer == NO)
+	{
+		return nil;
+	}
+	
+	UIPointerHoverEffect* effect = [UIPointerHoverEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:interaction.view]];
+	effect.prefersScaledContent = YES;
+	effect.prefersShadow = NO;
+	effect.preferredTintMode = UIPointerEffectTintModeNone;
+	
+	UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
 	
 	return [UIPointerStyle styleWithEffect:effect shape:shape];
 }
 
+- (void)pointerInteraction:(UIPointerInteraction *)interaction willEnterRegion:(UIPointerRegion *)region animator:(id<UIPointerInteractionAnimating>)animator  API_AVAILABLE(ios(13.4))
+{
+	if(_customBarViewController && [_customBarViewController respondsToSelector:@selector(pointerInteraction:willEnterRegion:animator:)])
+	{
+		[_customBarViewController pointerInteraction:interaction willEnterRegion:region animator:animator];
+		
+		return;
+	}
+	
+	[animator addAnimations:^{
+		if(_customBarViewController == nil || _customBarViewController.wantsDefaultHighlightGestureRecognizer == YES)
+		{
+			[self setHighlighted:YES animated:YES];
+		}
+	}];
+}
+
+- (void)pointerInteraction:(UIPointerInteraction *)interaction willExitRegion:(UIPointerRegion *)region animator:(id<UIPointerInteractionAnimating>)animator  API_AVAILABLE(ios(13.4))
+{
+	if(_customBarViewController && [_customBarViewController respondsToSelector:@selector(pointerInteraction:willExitRegion:animator:)])
+	{
+		[_customBarViewController pointerInteraction:interaction willExitRegion:region animator:animator];
+		
+		return;
+	}
+	
+	[animator addAnimations:^{
+		if(_customBarViewController == nil || _customBarViewController.wantsDefaultHighlightGestureRecognizer == YES)
+		{
+			[self setHighlighted:NO animated:YES];
+		}
+	}];
+}
+
 @end
+
+#pragma mark - Deprecations
 
 @implementation LNPopupBar (Deprecated)
 
