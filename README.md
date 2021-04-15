@@ -226,13 +226,11 @@ Context menus are supported. Just add a `UIContextMenuInteraction` interaction o
 
 <p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="360"/></p>
 
-#### Pointer Interactions
-
-Pointer interactions are supported by the framework. For the system bar styles, a default implementation is provided.
+Pointer interactions are supported, and a default implementation is provided for system bar styles.
 
 <p align="center"><img src="./Supplements/pointer_interaction.gif"/></p>
 
-For custom popup bar controllers, the `LNPopupCustomBarViewController` class implements the `UIPointerInteractionDelegate` protocol. Implement its methods inside your subclass to implement custom pointer interactions.
+For custom popup bar controllers, the `LNPopupCustomBarViewController` class implements the `UIPointerInteractionDelegate` protocol. Implement the protocol's methods inside your subclass to implement custom pointer interactions.
 
 #### Interaction Gesture Recognizer
 
