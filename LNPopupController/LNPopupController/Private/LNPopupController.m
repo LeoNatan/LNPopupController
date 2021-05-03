@@ -493,6 +493,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		UIScrollView* possibleScrollView = (id)pgr.view;
 		if([possibleScrollView isKindOfClass:[UIScrollView class]])
 		{
+			//If the scroll view has horizontal scroll, ignore the scroll view's pan gesture recognizer.
+			if(possibleScrollView.contentSize.width > possibleScrollView.bounds.size.width)
+			{
+				return;
+			}
+			
 			id<UIGestureRecognizerDelegate> delegate = _popupContentView.popupInteractionGestureRecognizer.delegate;
 			
 			if(([delegate respondsToSelector:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:)] && [delegate gestureRecognizer:_popupContentView.popupInteractionGestureRecognizer shouldRequireFailureOfGestureRecognizer:pgr] == YES) ||
