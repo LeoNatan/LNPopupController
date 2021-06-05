@@ -92,6 +92,13 @@ static void __setupFunction()
 - (void)pauseLabel;
 - (void)restartLabel;
 - (BOOL)isPaused;
+- (void)shutdownLabel;
+
+@property (nonatomic, assign) CGFloat rate;
+@property (nonatomic, assign) CGFloat animationDelay;
+@property (nonatomic, weak) MarqueeLabel* synchronizedLabel;
+@property (nonatomic, readonly) NSTimeInterval animationDuration;
+@property (nonatomic, assign) BOOL holdScrolling;
 
 @end
 
@@ -102,7 +109,11 @@ static void __setupFunction()
 - (void)unpauseLabel {}
 - (void)pauseLabel {}
 - (void)restartLabel {}
-- (BOOL)isPaused { return NO; }
+- (void)shutdownLabel {}
+- (BOOL)isPaused { return YES; }
+- (NSTimeInterval)animationDuration { return 0.0; }
+
+@synthesize rate=_rate, animationDelay=_animationDelay, synchronizedLabel=_synchronizedLabel, holdScrolling=_holdScrolling;
 
 @end
 
@@ -123,6 +134,7 @@ const UIBlurEffectStyle LNBackgroundStyleInherit = -9876;
 	UILabel<__MarqueeLabelType>* _titleLabel;
 	UILabel<__MarqueeLabelType>* _subtitleLabel;
 	BOOL _needsLabelsLayout;
+	BOOL _marqueePaused;
 	
 	UIColor* _userTintColor;
 	UIColor* _userBackgroundColor;
@@ -325,6 +337,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[_contentView addSubview:_highlightView];
 		
 		_marqueeScrollEnabled = NO;
+		_marqueeScrollRate = 30;
+		_marqueeScrollDelay = 2.0;
 		_coordinateMarqueeScroll = YES;
 		
 		self.semanticContentAttribute = UISemanticContentAttributeUnspecified;
@@ -669,28 +683,14 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 {
 	_title = [title copy];
 	
-	if(_coordinateMarqueeScroll)
-	{
-		[self _setNeedsTitleLayout];
-	}
-	else
-	{
-		_titleLabel.text = _title;
-	}
+	[self _setNeedsTitleLayout];
 }
 
 - (void)setSubtitle:(NSString *)subtitle
 {
 	_subtitle = [subtitle copy];
 	
-	if(_coordinateMarqueeScroll)
-	{
-		[self _setNeedsTitleLayout];
-	}
-	else
-	{
-		_subtitleLabel.text = _subtitle;
-	}
+	[self _setNeedsTitleLayout];
 }
 
 - (void)setImage:(UIImage *)image
@@ -785,11 +785,12 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		return rv;
 	}
 	
-	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
+	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:_marqueeScrollRate andFadeLength:10];
 	rv.leadingBuffer = 0.0;
 	rv.trailingBuffer = 20.0;
-	rv.animationDelay = 2.0;
+	rv.animationDelay = _marqueeScrollDelay;
 	rv.marqueeType = MLContinuous;
+	rv.holdScrolling = YES;
 	return rv;
 }
 
@@ -961,9 +962,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		BOOL reset = NO;
 		
-		if([_titleLabel.text isEqualToString:_title] == NO && _title != nil)
+		NSAttributedString* attr = _title ? [[NSAttributedString alloc] initWithString:_title attributes:_titleTextAttributes] : nil;
+		if(_title != nil && [_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
 		{
-			_titleLabel.attributedText = [[NSAttributedString alloc] initWithString:_title attributes:_titleTextAttributes];
+			_titleLabel.attributedText = attr;
 			reset = YES;
 		}
 		
@@ -974,9 +976,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 			[_titlesView addSubview:_subtitleLabel];
 		}
 		
-		if([_subtitleLabel.text isEqualToString:_subtitle] == NO && _subtitle != nil)
+		attr = _subtitle ? [[NSAttributedString alloc] initWithString:_subtitle attributes:_subtitleTextAttributes] : nil;
+		if(_subtitle != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
 		{
-			_subtitleLabel.attributedText = [[NSAttributedString alloc] initWithString:_subtitle attributes:_subtitleTextAttributes];
+			_subtitleLabel.attributedText = attr;
 			reset = YES;
 		}
 		
@@ -1051,6 +1054,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[self _updateAccessibility];
 	
 	_titleLabel.frame = titleLabelFrame;
+	
+	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
 	
 	_needsLabelsLayout = NO;
 }
@@ -1161,21 +1166,22 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)_setTitleViewMarqueesPaused:(BOOL)paused
 {
-	if(paused)
+	_marqueePaused = paused;
+	
+	if(_marqueePaused)
 	{
-		[_titleLabel restartLabel];
-		[_titleLabel pauseLabel];
-		[_subtitleLabel restartLabel];
-		[_subtitleLabel pauseLabel];
+		[_titleLabel shutdownLabel];
+		[_subtitleLabel shutdownLabel];
+		
+		_titleLabel.holdScrolling = YES;
+		_subtitleLabel.holdScrolling = YES;
 	}
 	else
 	{
-		[_titleLabel unpauseLabel];
-		if(_subtitle.length > 0)
-		{
-			[_subtitleLabel unpauseLabel];
-			
-		}
+		[_titleLabel restartLabel];
+		[_subtitleLabel restartLabel];
+		
+		[self _recalculateCoordinatedMarqueeScrollIfNeeded];
 	}
 }
 
@@ -1333,6 +1339,77 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_marqueeScrollEnabled = marqueeScrollEnabled;
 	
 	[self _setNeedsTitleLayout];
+}
+
+- (void)setMarqueeScrollRate:(CGFloat)marqueeScrollRate
+{
+	_marqueeScrollRate = marqueeScrollRate;
+	
+	_titleLabel.rate = _marqueeScrollRate;
+	_subtitleLabel.rate = _marqueeScrollRate;
+	
+	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
+}
+
+- (void)setMarqueeScrollDelay:(NSTimeInterval)marqueeScrollDelay
+{
+	_marqueeScrollDelay = marqueeScrollDelay;
+	
+	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
+}
+
+- (void)setCoordinateMarqueeScroll:(BOOL)coordinateMarqueeScroll
+{
+	_coordinateMarqueeScroll = coordinateMarqueeScroll;
+	
+	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
+}
+
+- (void)_recalculateCoordinatedMarqueeScrollIfNeeded
+{
+	if(_marqueeScrollEnabled == NO)
+	{
+		return;
+	}
+	
+	if(_marqueePaused == YES)
+	{
+		return;
+	}
+	
+	MarqueeLabel* titleLabel = (id)_titleLabel;
+	MarqueeLabel* subtitleLabel = (id)_subtitleLabel;
+	
+	titleLabel.animationDelay = _marqueeScrollDelay;
+	subtitleLabel.animationDelay = _marqueeScrollDelay;
+	
+	if(_coordinateMarqueeScroll == YES && _title.length > 0 && _subtitle.length > 0)
+	{
+		titleLabel.holdScrolling = YES;
+		subtitleLabel.holdScrolling = YES;
+		
+		if(titleLabel.animationDuration < _subtitleLabel.animationDuration)
+		{
+			titleLabel.synchronizedLabel = nil;
+			subtitleLabel.synchronizedLabel = (id)_titleLabel;
+			titleLabel.holdScrolling = NO;
+			titleLabel.holdScrolling = YES;
+			subtitleLabel.holdScrolling = NO;
+		}
+		else
+		{
+			titleLabel.synchronizedLabel = (id)_subtitleLabel;
+			subtitleLabel.synchronizedLabel = nil;
+			titleLabel.holdScrolling = NO;
+			subtitleLabel.holdScrolling = NO;
+			subtitleLabel.holdScrolling = YES;
+		}
+	}
+	else
+	{
+		titleLabel.holdScrolling = NO;
+		subtitleLabel.holdScrolling = NO;
+	}
 }
 
 - (void)_removeAnimationFromBarItems

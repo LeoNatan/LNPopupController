@@ -161,12 +161,30 @@ typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
 /**
  * When enabled, titles and subtitles that are longer than the space available will scroll text over time.
  *
- * Defaults to @c false.
+ * Defaults to @c false
  */
 @property (nonatomic, assign) BOOL marqueeScrollEnabled;
 
 /**
- * When enabled, the title and subtitle marquee scroll will be coordinated, and if either the title or subtitle of the current popup item change, the animation will reset so the two can scroll together. Enabled by default.
+ * The scroll rate, in points, of the title and subtitle marquee animation.
+ *
+ * Defaults to @c 30
+ */
+@property (nonatomic, assign) CGFloat marqueeScrollRate;
+
+/**
+ * The delay, in seconds, before starting the title and subtitle marquee animation.
+ *
+ * Defaults to @c 2
+ */
+@property (nonatomic, assign) NSTimeInterval marqueeScrollDelay;
+
+/**
+ * When enabled, the title and subtitle marquee scroll animations will be coordinated.
+ *
+ * If either the title or subtitle of the current popup item change, the animation will reset so the two can scroll together.
+ *
+ * Defaults to @c true
  */
 @property (nonatomic, assign) BOOL coordinateMarqueeScroll;
 

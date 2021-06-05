@@ -249,10 +249,6 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(viewControllerShouldRestart:) name:kMarqueeLabelControllerRestartNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldLabelize:) name:kMarqueeLabelShouldLabelizeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(labelsShouldAnimate:) name:kMarqueeLabelShouldAnimateNotification object:nil];
-    
-    // UIApplication state notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(restartLabel) name:UIApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(shutdownLabel) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)minimizeLabelFrameWithMaximumSize:(CGSize)maxSize adjustHeight:(BOOL)adjustHeight {
@@ -694,15 +690,16 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         // 2) The instance is still attached to a window - this completion block is called for
         //    many reasons, including if the animation is removed due to the view being removed
         //    from the UIWindow (typically when the view controller is no longer the "top" view)
-        if (weakSelf.window && ![weakSelf.subLabel.layer animationForKey:@"position"]) {
-            // Begin again, if conditions met
-            if (weakSelf.labelShouldScroll && !weakSelf.tapToScroll && !weakSelf.holdScrolling) {
-                [weakSelf scrollContinuousWithInterval:interval
-                                             after:delayAmount
-                                    labelAnimation:labelAnimation
-                                 gradientAnimation:gradientAnimation];
-            }
-        }
+		
+		if (weakSelf.window && ![weakSelf.subLabel.layer animationForKey:@"position"]) {
+			// Begin again, if conditions met
+			if (weakSelf.labelShouldScroll && !weakSelf.tapToScroll && !weakSelf.holdScrolling) {
+				[weakSelf scrollContinuousWithInterval:interval
+												 after:delayAmount
+										labelAnimation:labelAnimation
+									 gradientAnimation:gradientAnimation];
+			}
+		}
     };
     
     
@@ -1147,8 +1144,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 }
 
 - (void)labelWillBeginScroll {
-    // Default implementation does nothing
-    return;
+	[self.synchronizedLabel beginScroll];
 }
 
 - (void)labelReturnedToHome:(BOOL)finished {
@@ -1592,14 +1588,12 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset) {
         df0 = [self derivativeYValueForCurveAt:t0 withControlPoints:controlPoints];
         // Check if derivative is small or zero ( http://en.wikipedia.org/wiki/Newton's_method#Failure_analysis )
         if (fabs(df0) < 1e-6) {
-            NSLog(@"MarqueeLabel: Newton's Method failure, small/zero derivative!");
             break;
         }
         // Else recalculate t1
         t1 = t0 - f0/df0;
     }
     
-    NSLog(@"MarqueeLabel: Failed to find t for Y input!");
     return t0;
 }
 
