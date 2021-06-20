@@ -48,7 +48,12 @@
  */
 @property (nonatomic, assign) CGSize preferredContentSize;
 
-- (void)viewDidLoad NS_REQUIRES_SUPER; // Called after the view has been loaded. For view controllers created in code, this is after -loadView. For view controllers unarchived from a nib, this is after the view is set.
+/**
+ * Called after the view has been loaded. For view controllers created in code, this is after @c loadView(). For view controllers unarchived from a nib, this is after the view is set.
+ 
+ * @note You must call the @c super implementation of this method.
+ */
+- (void)viewDidLoad NS_REQUIRES_SUPER;
 
 /**
  * Called by the framework to notify the popup bar content view controller that one or more keys of the the popup item have been updated, or the entire popup item has changed.

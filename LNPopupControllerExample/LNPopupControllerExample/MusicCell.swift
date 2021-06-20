@@ -8,7 +8,6 @@
 
 import UIKit
 
-@available(iOS 13.0, *)
 class MusicCell: UITableViewCell {
 	let selectionEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterial))
 	

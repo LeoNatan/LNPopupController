@@ -7,6 +7,7 @@
 //
 
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
+#import "_LNPopupBarBackgroundView.h"
 
 @class LNPopupController;
 
@@ -27,12 +28,6 @@ UIEdgeInsets _LNPopupSafeAreas(id self);
 void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL layout, UIEdgeInsets popupEdgeInsets);
 
 @interface _LNPopupBottomBarSupport : UIView @end
-
-@interface _LNPopupBarExtensionView : UIView
-
-@property (nonatomic, strong, readonly) UIVisualEffectView *effectView;
-
-@end
 
 @interface UIViewController (LNPopupSupportPrivate)
 
@@ -63,8 +58,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (CGRect)defaultFrameForBottomDockingView_internal;
 - (CGRect)defaultFrameForBottomDockingView_internalOrDeveloper;
 
-- (_LNPopupBarExtensionView*)_ln_bottomBarExtension_nocreate;
-- (_LNPopupBarExtensionView*)_ln_bottomBarExtension;
+- (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate;
+- (_LNPopupBarBackgroundView*)_ln_bottomBarExtension;
 
 @end
 

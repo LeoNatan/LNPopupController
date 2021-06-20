@@ -51,20 +51,10 @@
 
 - (void)_updateBackgroundColor
 {
-	if(@available(iOS 13.0, *)) {
-		if(self.view.traitCollection.userInterfaceStyle != _lastStyle)
-		{
-			_lastStyle = self.view.traitCollection.userInterfaceStyle;
-			self.view.backgroundColor = LNSeedAdaptiveInvertedColor(@"Popup");
-		}
-	}
-	else
+	if(self.view.traitCollection.userInterfaceStyle != _lastStyle)
 	{
-		if(_lastStyle == 0)
-		{
-			_lastStyle++;
-			self.view.backgroundColor = LNSeedDarkColor(@"Popup");
-		}
+		_lastStyle = self.view.traitCollection.userInterfaceStyle;
+		self.view.backgroundColor = LNSeedAdaptiveInvertedColor(@"Popup");
 	}
 	
 	[self setNeedsStatusBarAppearanceUpdate];
@@ -77,32 +67,25 @@
 
 UIImage* LNSystemImage(NSString* named)
 {
-	if (@available(iOS 13.0, *))
+	static UIImageSymbolConfiguration* largeConfig = nil;
+	static UIImageSymbolConfiguration* compactConfig = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		largeConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleUnspecified];
+		compactConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium];
+	});
+	
+	UIImageSymbolConfiguration* config;
+	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
 	{
-		static UIImageSymbolConfiguration* largeConfig = nil;
-		static UIImageSymbolConfiguration* compactConfig = nil;
-		static dispatch_once_t onceToken;
-		dispatch_once(&onceToken, ^{
-			largeConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleUnspecified];
-			compactConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium];
-		});
-		
-		UIImageSymbolConfiguration* config;
-		if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
-		{
-			config = compactConfig;
-		}
-		else
-		{
-			config = largeConfig;
-		}
-		
-		return [UIImage systemImageNamed:named withConfiguration:config];
+		config = compactConfig;
 	}
 	else
 	{
-		return [UIImage imageNamed:@"gears"];
+		config = largeConfig;
 	}
+	
+	return [UIImage systemImageNamed:named withConfiguration:config];
 }
 
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection
@@ -150,15 +133,7 @@ UIImage* LNSystemImage(NSString* named)
 	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];
 	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	if(@available(iOS 13.0, *))
-	{
-		[customCloseButton setTitleColor:UIColor.systemBackgroundColor forState:UIControlStateNormal];
-	}
-	else
-	{
-		[customCloseButton setTitleColor:UIColor.lightTextColor forState:UIControlStateNormal];
-	}
+	[customCloseButton setTitleColor:UIColor.systemBackgroundColor forState:UIControlStateNormal];
 	
 	if(@available(iOS 13.4, *))
 	{
@@ -210,11 +185,7 @@ UIImage* LNSystemImage(NSString* named)
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-	if (@available(iOS 13.0, *)) {
-		return self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
-	} else {
-		return UIStatusBarStyleLightContent;
-	}
+	return self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation

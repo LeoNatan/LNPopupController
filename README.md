@@ -204,9 +204,9 @@ To hide the popup close button, set the `popupCloseButtonStyle` property to `LNP
 
 #### Popup Bar Appearance and Behavior
 
-For navigation and tab bar container controllers, the style of the popup bar is determined according to the bottom bar's appearance. For other container controllers, a default style is used, most suitable for the current environment.
+For navigation and tab bar container controllers, the appearance of the popup bar is determined according to the bottom bar's appearance. For other container controllers, a default appearance is used, most suitable for the current environment.
 
-To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, call the `updatePopupBarAppearance()` method.
+To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, call the `setNeedsPopupBarAppearanceUpdate()` method.
 
 <p align="center"><img src="./Supplements/modern_bar_style.gif" width="360"/></p>
 
@@ -222,7 +222,7 @@ Status bar management of the popup content view controller is respected and appl
 
 <p align="center"><img src="./Supplements/statusbar_style.gif" width="360"/> <img src="./Supplements/statusbar_hidden.gif" width="360"/></p>
 
-Context menus are supported. Just add a `UIContextMenuInteraction` interaction object to the popup bar, and it will behave as expected.
+Context menus are supported. Add a `UIContextMenuInteraction` interaction object to the popup bar, and it will behave as expected.
 
 <p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="360"/></p>
 
@@ -253,21 +253,27 @@ To customize this behavior, modify the popup bar's ```semanticContentAttribute``
 
 ### Customization
 
-Customization can be achieved through the ```LNPopupBar```, ```LNPopupContentView``` and ```LNPopupCustomBarViewController``` classes.
+Customization can be achieved through the `LNPopupBarAppearance`, ```LNPopupBar```, ```LNPopupContentView``` and ```LNPopupCustomBarViewController``` classes.
 
 #### Popup Bar Customization
 
-```LNPopupBar``` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on specific popup bar objects.
+```LNPopupBar``` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on a specific popup bar object. Use `LNPopupBarAppearance` objects to define the standard appearance of the bar.
 
 ```swift
+let appearance = LNPopupBarAppearance()
+appearance.titleTextAttributes = [.font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow]
+appearance.subtitleTextAttributes = [.font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green]
+appearance.backgroundEffect = UIBlurEffect(style: .systemChromeMaterialDark)
+
 let appearanceProxy = LNPopupBar.appearance(whenContainedInInstancesOf: [UINavigationController.self])
-appearanceProxy.titleTextAttributes = [.font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow]
-appearanceProxy.subtitleTextAttributes = [.font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green]
-appearanceProxy.backgroundStyle = .systemChromeMaterialDark
+appearanceProxy.inheritsAppearanceFromDockingView = false
+appearanceProxy.standardAppearance = appearance
 appearanceProxy.tintColor = .yellow
 ```
 
 <p align="center"><img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/></p>
+
+
 
 #### Custom Popup Bars
 

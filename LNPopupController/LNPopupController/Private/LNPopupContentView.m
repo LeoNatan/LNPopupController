@@ -50,7 +50,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		_popupCloseButtonAutomaticallyUnobstructsTopBars = YES;
 		
 		_translucent = YES;
-		_backgroundStyle = LNBackgroundStyleInherit;
+		_backgroundEffect = nil;
 		
 		_popupCloseButton = [LNPopupCloseButton new];
 		_popupCloseButton.popupContentView = self;
@@ -99,19 +99,11 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		
 		if(buttonStyle == LNPopupCloseButtonStyleRound)
 		{
-			if (@available(iOS 13.0, *)) {
-				self.popupCloseButton.tintColor = [UIColor labelColor];
-			} else {
-				self.popupCloseButton.tintColor = [UIColor lightGrayColor];
-			}
+			self.popupCloseButton.tintColor = [UIColor labelColor];
 		}
 		else
 		{
-			if (@available(iOS 13.0, *)) {
 				self.popupCloseButton.tintColor = [UIColor systemGray2Color];
-			} else {
-				self.popupCloseButton.tintColor = [UIColor lightGrayColor];
-			}
 		}
 		
 		if([_currentPopupContentViewController positionPopupCloseButton:self.popupCloseButton] == YES)
@@ -203,29 +195,18 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 	CGFloat windowTopSafeAreaInset = 0;
 
-	if (@available(iOS 13.0, *))
+	if([NSStringFromClass(_currentPopupContentViewController.popupPresentationContainerViewController.nonMemoryLeakingPresentationController.class) containsString:@"Fullscreen"])
 	{
-		if([NSStringFromClass(_currentPopupContentViewController.popupPresentationContainerViewController.nonMemoryLeakingPresentationController.class) containsString:@"Fullscreen"])
-		{
-			windowTopSafeAreaInset += self.window.safeAreaInsets.top;
-		}
-		else
-		{
-			UIView* viewToUse = _currentPopupContentViewController.popupPresentationContainerViewController.presentingViewController.presentedViewController.view;
-			if(viewToUse == nil)
-			{
-				viewToUse = self.superview;
-			}
-			windowTopSafeAreaInset += viewToUse.safeAreaInsets.top + 5;
-		}
+		windowTopSafeAreaInset += self.window.safeAreaInsets.top;
 	}
 	else
 	{
-		windowTopSafeAreaInset += self.window.safeAreaInsets.top;
-        if (windowTopSafeAreaInset == 0)
-        {
-            windowTopSafeAreaInset = [LNPopupController _statusBarHeightForView:self];
-        }
+		UIView* viewToUse = _currentPopupContentViewController.popupPresentationContainerViewController.presentingViewController.presentedViewController.view;
+		if(viewToUse == nil)
+		{
+			viewToUse = self.superview;
+		}
+		windowTopSafeAreaInset += viewToUse.safeAreaInsets.top + 5;
 	}
 
 	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
@@ -287,11 +268,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		alphaLessThanZero = CGColorGetAlpha(vc.view.backgroundColor.CGColor) < 1.0;
 	};
 	
-	if (@available(iOS 13.0, *)) {
-		[vc.traitCollection performAsCurrentTraitCollection:block];
-	} else {
-		block();
-	}
+	[vc.traitCollection performAsCurrentTraitCollection:block];
 	
 	if(alphaLessThanZero)
 	{
@@ -299,13 +276,13 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		{
 			_effectView.effect = nil;
 		}
-		else if(self.backgroundStyle == LNBackgroundStyleInherit)
+		else if(_backgroundEffect == nil)
 		{
 			_effectView.effect = barEffect;
 		}
 		else
 		{
-			_effectView.effect = [UIBlurEffect effectWithStyle:self.backgroundStyle];
+			_effectView.effect = _backgroundEffect;
 		}
 		
 		if(self.popupCloseButton.style == LNPopupCloseButtonStyleRound)
@@ -324,6 +301,27 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 }
 
 @end
+
+#pragma mark Deprecations
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+@implementation LNPopupContentView (Deprecations)
+
+- (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
+{
+	_backgroundEffect = backgroundStyle == LNBackgroundStyleInherit ? nil : [UIBlurEffect effectWithStyle:backgroundStyle];
+}
+
+- (UIBlurEffectStyle)backgroundStyle
+{
+	return _backgroundEffect == nil ? LNBackgroundStyleInherit : [[_backgroundEffect valueForKey:@"style"] unsignedIntegerValue];
+}
+
+@end
+
+#pragma clang diagnostic pop
 
 #pragma mark Popup Transition Coordinator
 

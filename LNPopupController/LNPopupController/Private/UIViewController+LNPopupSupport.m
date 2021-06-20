@@ -162,6 +162,11 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 
 - (void)updatePopupBarAppearance
 {
+	[self setNeedsPopupBarAppearanceUpdate];
+}
+
+- (void)setNeedsPopupBarAppearanceUpdate
+{
 	[self._ln_popupController_nocreate _configurePopupBarFromBottomBar];
 }
 

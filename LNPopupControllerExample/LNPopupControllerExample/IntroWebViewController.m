@@ -29,17 +29,10 @@ extern UIImage* LNSystemImage(NSString* named);
 	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]]];
 	_webView.translatesAutoresizingMaskIntoConstraints = NO;
 //	_webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-	if (@available(iOS 13.0, *)) {
-		_webView.scrollView.automaticallyAdjustsScrollIndicatorInsets = NO;
-	}
+	_webView.scrollView.automaticallyAdjustsScrollIndicatorInsets = NO;
 	[self.view addSubview:_webView];
 	
-	UIBlurEffectStyle style;
-	if (@available(iOS 13.0, *)) {
-		style = UIBlurEffectStyleSystemThinMaterial;
-	} else {
-		style = UIBlurEffectStyleRegular;
-	}
+	UIBlurEffectStyle style = UIBlurEffectStyleSystemThinMaterial;
 	UIVisualEffectView* effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
 	effectView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.view addSubview:effectView];

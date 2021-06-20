@@ -24,10 +24,13 @@ static void LNInitializeDemoColors(void)
 		UIColor.systemPinkColor,
 		UIColor.systemPurpleColor,
 		UIColor.systemTealColor,
+		UIColor.systemIndigoColor,
+		UIColor.systemBrownColor,
 	].mutableCopy;
-	if (@available(iOS 13.0, *))
+	if(@available(iOS 15.0, *))
 	{
-		[namedSystemColors addObject:UIColor.systemIndigoColor];
+		[namedSystemColors addObject:UIColor.systemMintColor];
+		[namedSystemColors addObject:UIColor.systemCyanColor];
 	}
 }
 

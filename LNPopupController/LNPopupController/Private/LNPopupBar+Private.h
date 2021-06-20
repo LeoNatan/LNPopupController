@@ -7,6 +7,8 @@
 //
 
 #import <LNPopupController/LNPopupBar.h>
+#import "LNPopupBarAppearance+Private.h"
+#import "_LNPopupBarBackgroundView.h"
 
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
@@ -40,20 +42,17 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @protocol _LNPopupBarSupport <NSObject>
 
-@property (nonatomic, assign) UIBarStyle barStyle;
-@property (nonatomic, strong) UIColor* barTintColor;
-@property (nonatomic, assign, getter=isTranslucent) BOOL translucent;
+@property (nonatomic, strong) UIColor *barTintColor;
 @property (nonatomic, strong) UIBarAppearance* standardAppearance API_AVAILABLE(ios(13.0));
 
 @end
 
-@interface LNPopupBar () <UIPointerInteractionDelegate>
+@interface LNPopupBar () <UIPointerInteractionDelegate, _LNPopupBarAppearanceDelegate>
 
-@property (nonatomic, assign) UIBarStyle systemBarStyle;
 @property (nonatomic, strong) UIColor* systemTintColor;
-@property (nonatomic, strong) UIColor* systemBarTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
-@property (nonatomic, strong) UIColor* systemShadowColor;
+@property (nonatomic, strong) UIBarAppearance* systemAppearance;
+@property (nonatomic, readonly, strong) _LNPopupBarAppearanceChainProxy* activeAppearanceChain;
 
 @property (nonatomic, strong) UIView* bottomShadowView;
 
@@ -73,7 +72,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong, readwrite) UIProgressView* progressView;
 
 @property (nonatomic, strong) UIView* contentView;
-@property (nonatomic, strong) UIVisualEffectView* backgroundView;
+@property (nonatomic, strong) _LNPopupBarBackgroundView* backgroundView;
 @property (nonatomic, strong) UIVisualEffectView* interactionBackgroundView;
 
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;

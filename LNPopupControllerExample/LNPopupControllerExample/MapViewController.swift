@@ -25,11 +25,9 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		backButtonBackground.layer.borderWidth = 1.0
 		backButtonBackground.layer.borderColor = self.view.tintColor.cgColor
 		
-		if #available(iOS 13.0, *) {
-			topVisualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
-			backButtonBackground.effect = UIBlurEffect(style: .systemChromeMaterial)
-			backButtonBackground.layer.cornerCurve = .continuous
-		}
+		topVisualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
+		backButtonBackground.effect = UIBlurEffect(style: .systemChromeMaterial)
+		backButtonBackground.layer.cornerCurve = .continuous
 	}
 	
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -53,11 +51,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		}
 		
 		popupContentView.popupCloseButtonStyle = .none
-		if #available(iOS 13.0, *) {
-			popupContentView.backgroundStyle = .systemChromeMaterial
-		} else {
-			popupContentView.backgroundStyle = .extraLight
-		}
+		popupContentView.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
 //		popupContentView.isTranslucent = false
 		popupInteractionStyle = .snap
 		

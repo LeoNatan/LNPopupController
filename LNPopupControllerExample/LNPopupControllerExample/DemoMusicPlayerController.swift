@@ -11,7 +11,6 @@ import UIKit
 import SwiftUI
 import LNPopupController
 
-@available(iOS 13.0, *)
 fileprivate struct BlurView: UIViewRepresentable {
 	var style: UIBlurEffect.Style = .systemMaterial
 	func makeUIView(context: Context) -> UIVisualEffectView {
@@ -24,7 +23,6 @@ fileprivate struct BlurView: UIViewRepresentable {
 	}
 }
 
-@available(iOS 13.0, *)
 class PlaybackSettings: ObservableObject {
 	@Published var songTitle: String = ""
 	@Published var albumTitle: String = ""
@@ -36,7 +34,6 @@ class PlaybackSettings: ObservableObject {
 	@Published var isPlaying: Bool = true
 }
 
-@available(iOS 13.0, *)
 struct PlayerView: View {
 	@ObservedObject var playbackSettings = PlaybackSettings()
 	
@@ -140,7 +137,6 @@ struct PlayerView: View {
 	}
 }
 
-@available(iOS 13.0, *)
 class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 	var timer : Timer?

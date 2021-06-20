@@ -45,7 +45,6 @@
 		39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
 		39E9746E250193B8009F24DF /* ColorfulButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E9746D250193B8009F24DF /* ColorfulButton.swift */; };
 		39E9746F250193B8009F24DF /* ColorfulButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E9746D250193B8009F24DF /* ColorfulButton.swift */; };
-		39F8A07424DB3B1F0008B209 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 39F8A07324DB3B1F0008B209 /* LoremIpsum */; };
 		39FAFC3624E71A6C008BBC2D /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3908C34B1E7C9EA200451B5D /* SettingsTableViewController.m */; };
 		39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
 		39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
@@ -218,7 +217,6 @@
 				39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */,
 				39843F23260BA6E6004CCF55 /* LNTouchVisualizer.framework in Frameworks */,
 				3908159224E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Frameworks */,
-				39F8A07424DB3B1F0008B209 /* LoremIpsum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,7 +419,6 @@
 			);
 			name = LNPopupControllerExample;
 			packageProductDependencies = (
-				39F8A07324DB3B1F0008B209 /* LoremIpsum */,
 			);
 			productName = LNPopupControllerExample;
 			productReference = 39277A041B58228000293F95 /* LNPopupControllerExample.app */;
@@ -476,7 +473,6 @@
 			);
 			mainGroup = 392779FB1B58228000293F95;
 			packageReferences = (
-				39F8A07224DB3B1F0008B209 /* XCRemoteSwiftPackageReference "LoremIpsum" */,
 			);
 			productRefGroup = 39277A051B58228000293F95 /* Products */;
 			projectDirPath = "";
@@ -698,7 +694,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -748,7 +744,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -776,7 +772,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -807,7 +803,7 @@
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				GCC_PREPROCESSOR_DEFINITIONS = "LNPOPUP=1";
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -838,7 +834,7 @@
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 6Z9ASVU98Y;
 				INFOPLIST_FILE = "LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -867,7 +863,7 @@
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = 6Z9ASVU98Y;
 				INFOPLIST_FILE = "LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -917,14 +913,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		39F8A07224DB3B1F0008B209 /* XCRemoteSwiftPackageReference "LoremIpsum" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/lukaskubanek/LoremIpsum";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		39FAFC3424E71A6C008BBC2D /* XCRemoteSwiftPackageReference "LoremIpsum" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukaskubanek/LoremIpsum";
@@ -936,11 +924,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		39F8A07324DB3B1F0008B209 /* LoremIpsum */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 39F8A07224DB3B1F0008B209 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
-			productName = LoremIpsum;
-		};
 		39FAFC3324E71A6C008BBC2D /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 39FAFC3424E71A6C008BBC2D /* XCRemoteSwiftPackageReference "LoremIpsum" */;

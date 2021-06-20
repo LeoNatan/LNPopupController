@@ -8,7 +8,6 @@
 
 import UIKit
 
-@available(iOS 13.0, *)
 @IBDesignable
 class ColorfulButton: UIButton {
 	fileprivate func resetBackgroundColor() {

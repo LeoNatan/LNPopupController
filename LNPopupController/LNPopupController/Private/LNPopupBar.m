@@ -139,9 +139,6 @@ const UIBlurEffectStyle LNBackgroundStyleInherit = -9876;
 	UIColor* _userTintColor;
 	UIColor* _userBackgroundColor;
 	
-	UIBlurEffectStyle _actualBackgroundStyle;
-	UIBlurEffect* _customBlurEffect;
-	
 	UIToolbar* _toolbar;
 	UIView* _shadowView;
 }
@@ -155,32 +152,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	return rv;
 }
-
-static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyleForSystemBarStyle(UIBarStyle systemBarStyle, LNPopupBarStyle barStyle)
-{
-	if (@available(iOS 13.0, *))
-	{
-		//On iOS 13 and above, return .chromeMaterial regardless of bar style (this is how Music.app appears)
-		if(systemBarStyle == UIBarStyleBlack)
-		{
-#if TARGET_OS_MACCATALYST
-			return UIBlurEffectStyleSystemMaterialDark;
-#else
-			return UIBlurEffectStyleSystemChromeMaterialDark;
-#endif
-		}
-		
-#if TARGET_OS_MACCATALYST
-		return UIBlurEffectStyleSystemMaterial;
-#else
-		return UIBlurEffectStyleSystemChromeMaterial;
-#endif
-	}
-	
-	return systemBarStyle == UIBarStyleBlack ? UIBlurEffectStyleDark : barStyle == LNPopupBarStyleCompact ? UIBlurEffectStyleExtraLight : UIBlurEffectStyleLight;
-}
-
-@synthesize backgroundStyle = _userBackgroundStyle, barTintColor = _userBarTintColor;
 
 - (void)setHidden:(BOOL)hidden
 {
@@ -242,13 +213,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 			[self addInteraction:pointerInteraction];
 		}
 		
-		_inheritsVisualStyleFromDockingView = YES;
+		_inheritsAppearanceFromDockingView = YES;
+		_standardAppearance = [LNPopupBarAppearance new];
 		
-		_userBackgroundStyle = LNBackgroundStyleInherit;
-		
-		_translucent = YES;
-		
-		_backgroundView = [[UIVisualEffectView alloc] initWithEffect:nil];
+		_backgroundView = [[_LNPopupBarBackgroundView alloc] initWithEffect:nil];
 		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
@@ -265,8 +233,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
 		
-		[self _innerSetBackgroundStyle:LNBackgroundStyleInherit tintColor:self._internalBarTintColor];
-		
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:self.bounds];
 		[_toolbar setBackgroundImage:[UIImage new] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
@@ -281,7 +247,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_backgroundView.accessibilityTraits = UIAccessibilityTraitButton;
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
 		
-		[self _setNeedsTitleLayout];
 		[_contentView addSubview:_titlesView];
 		
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
@@ -297,9 +262,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
 		_imageView.isAccessibilityElement = YES;
-		if (@available(iOS 13.0, *)) {
-			_imageView.layer.cornerCurve = kCACornerCurveCircular;
-		}
+		_imageView.layer.cornerCurve = kCACornerCurveCircular;
 		_imageView.layer.cornerRadius = 6;
 		_imageView.layer.masksToBounds = YES;
 		// support smart invert and therefore do not invert image view colors
@@ -308,7 +271,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		[_contentView addSubview:_imageView];
 		
 		_shadowView = [_LNPopupBarShadowView new];
-		_shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
 		[_backgroundView.contentView addSubview:_shadowView];
 		
 		_bottomShadowView = [_LNPopupBarShadowView new];
@@ -319,32 +281,15 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_highlightView.userInteractionEnabled = NO;
-		if (@available(iOS 13.0, *)) {
-			_highlightView.backgroundColor = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-				if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
-				{
-					return [UIColor.whiteColor colorWithAlphaComponent:0.15];
-				}
-				else
-				{
-					return [UIColor.systemGray2Color colorWithAlphaComponent:0.35];
-				}
-			}];
-		} else {
-			_highlightView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.1];
-		}
 		_highlightView.alpha = 0.0;
 		[_contentView addSubview:_highlightView];
-		
-		_marqueeScrollEnabled = NO;
-		_marqueeScrollRate = 30;
-		_marqueeScrollDelay = 2.0;
-		_coordinateMarqueeScroll = YES;
 		
 		self.semanticContentAttribute = UISemanticContentAttributeUnspecified;
 		self.barItemsSemanticContentAttribute = UISemanticContentAttributePlayback;
 		
 		self.isAccessibilityElement = NO;
+		
+		[self _recalcActiveAppearanceChain];
 	}
 	
 	return self;
@@ -454,10 +399,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)_applyGroupingIdentifier:(NSString*)groupingIdentifier toVisualEffectView:(UIVisualEffectView*)visualEffectView
 {
-	if(@available(iOS 13.0, *))
-	{
-		[visualEffectView setValue:groupingIdentifier ?: [NSString stringWithFormat:@"<%@:%p> Backdrop Group", self.class, self] forKey:self._effectGroupingIdentifierKey];
-	}
+	[visualEffectView setValue:groupingIdentifier ?: [NSString stringWithFormat:@"<%@:%p> Backdrop Group", self.class, self] forKey:self._effectGroupingIdentifierKey];
 }
 
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView
@@ -467,12 +409,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (NSString *)effectGroupingIdentifier
 {
-	if(@available(iOS 13.0, *))
-	{
-		return [self.backgroundView valueForKey:self._effectGroupingIdentifierKey];
-	}
-	
-	return nil;
+	return [self.backgroundView valueForKey:self._effectGroupingIdentifierKey];
 }
 
 - (void)setEffectGroupingIdentifier:(NSString *)groupingIdentifier
@@ -481,118 +418,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[self _applyGroupingIdentifier:groupingIdentifier toVisualEffectView:self.interactionBackgroundView];
 	
 	[self._barDelegate _popupBarStyleDidChange:self];
-}
-
-- (UIBlurEffectStyle)backgroundStyle
-{
-	return _userBackgroundStyle;
-}
-
-- (void)_innerSetBackgroundStyle:(UIBlurEffectStyle)backgroundStyle tintColor:(UIColor*)tintColor
-{
-	_userBackgroundStyle = backgroundStyle;
-	
-	_actualBackgroundStyle = _userBackgroundStyle == LNBackgroundStyleInherit ? _LNBlurEffectStyleForSystemBarStyle(_systemBarStyle, _resolvedStyle) : _userBackgroundStyle;
-
-	BOOL hasOS13 = NO;
-#ifndef LNPopupControllerEnforceStrictClean
-	if(@available(iOS 13.0, *))
-	{
-		hasOS13 = YES;
-	}
-	
-	if(tintColor != nil && hasOS13)
-	{
-		_customBlurEffect = _effectWithStyle_tintColor_invertAutomaticStyle(UIBlurEffect.class, _effectWithStyle_tintColor_invertAutomaticStyle_SEL, 100, tintColor, NO);
-	}
-	else
-	{
-#endif
-		_customBlurEffect = [UIBlurEffect effectWithStyle:_actualBackgroundStyle];
-#ifndef LNPopupControllerEnforceStrictClean
-	}
-#endif
-	
-	if(hasOS13 == NO)
-	{
-		_interactionBackgroundView.alpha = _backgroundView.alpha = tintColor != nil ? 0.0 : 1.0;
-		self.backgroundColor = tintColor;
-	}
-	
-	_interactionBackgroundView.effect = _backgroundView.effect = _customBlurEffect;
-	
-	if(_userBackgroundStyle == LNBackgroundStyleInherit)
-	{
-		if(@available(iOS 13.0, *))
-		{
-			_interactionBackgroundView.backgroundColor = _backgroundView.backgroundColor = nil;
-		}
-		else if(_actualBackgroundStyle == UIBlurEffectStyleDark)
-		{
-			_interactionBackgroundView.backgroundColor = _backgroundView.backgroundColor = [UIColor clearColor];
-		}
-		else if(_actualBackgroundStyle == UIBlurEffectStyleLight)
-		{
-			_interactionBackgroundView.backgroundColor = _backgroundView.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:_resolvedStyle == LNPopupBarStyleProminent ? 0.5 : 0.0];
-		}
-	}
-	
-	//Recalculate labels
-	[self _setTitleLabelFontsAccordingToBarStyleAndTint];
-	
-	[self._barDelegate _popupBarStyleDidChange:self];
-}
-
-- (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
-{
-	[self _innerSetBackgroundStyle:backgroundStyle tintColor:self._internalBarTintColor];
-}
-
-- (UIColor *)tintColor
-{
-	return _userTintColor;
-}
-
-- (void)setTintColor:(UIColor *)tintColor
-{
-	_userTintColor = tintColor;
-	
-	[super setTintColor:_userTintColor ?: _systemTintColor];
-}
-
-- (UIColor*)barTintColor
-{
-	return _userBarTintColor;
-}
-
-- (UIColor*)_internalBarTintColor
-{
-	return _userBarTintColor ?: _systemBarTintColor;
-}
-
-- (void)_internalSetBarTintColor:(UIColor*)barTintColor
-{
-	_userBarTintColor = barTintColor;
-	
-	UIColor* colorToUse = _userBarTintColor ?: _systemBarTintColor;
-	
-	if(_translucent == NO)
-	{
-		if (@available(iOS 13.0, *)) {
-			colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : UIColor.systemBackgroundColor;
-		} else {
-			colorToUse = colorToUse ? [colorToUse colorWithAlphaComponent:1.0] : (_actualBackgroundStyle == UIBlurEffectStyleLight || _actualBackgroundStyle == UIBlurEffectStyleExtraLight) ? [UIColor whiteColor] : [UIColor blackColor];
-		}
-	}
-	
-	[self _innerSetBackgroundStyle:self.backgroundStyle tintColor:colorToUse];
-	
-	[self._barDelegate _popupBarStyleDidChange:self];
-}
-
-- (void)setBarTintColor:(UIColor *)barTintColor
-{
-	[self _internalSetBarTintColor:barTintColor];
 }
 
 - (UIColor *)backgroundColor
@@ -614,16 +439,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[self _internalSetBackgroundColor:backgroundColor];
 }
 
-- (void)setTitleTextAttributes:(NSDictionary<NSString *,id> *)titleTextAttributes
-{
-	_titleTextAttributes = titleTextAttributes;
-}
-
-- (void)setSubtitleTextAttributes:(NSDictionary<NSString *,id> *)subtitleTextAttributes
-{
-	_subtitleTextAttributes = subtitleTextAttributes;
-}
-
 - (void)setSystemBackgroundColor:(UIColor *)systemBackgroundColor
 {
 	_systemBackgroundColor = systemBackgroundColor;
@@ -631,11 +446,80 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	[self _internalSetBackgroundColor:_userBackgroundColor];
 }
 
-- (void)setSystemBarStyle:(UIBarStyle)systemBarStyle
+- (void)setSystemAppearance:(UIBarAppearance *)systemAppearance
 {
-	_systemBarStyle = systemBarStyle;
+	_systemAppearance = [systemAppearance copy];
 	
-	[self _innerSetBackgroundStyle:_userBackgroundStyle tintColor:self._internalBarTintColor];
+	[self _recalcActiveAppearanceChain];
+}
+
+- (void)setStandardAppearance:(LNPopupBarAppearance *)standardAppearance
+{
+	_standardAppearance = [standardAppearance copy];
+	if(_standardAppearance == nil)
+	{
+		_standardAppearance = [LNPopupBarAppearance new];
+	}
+	
+	[self _recalcActiveAppearanceChain];
+}
+
+- (void)_recalcActiveAppearanceChain
+{
+	if(_activeAppearanceChain)
+	{
+		[_activeAppearanceChain setChainDelegate:nil];
+	}
+	
+	NSMutableArray* chain = [NSMutableArray new];
+	
+	if(self.popupItem.standardAppearance != nil)
+	{
+		[chain addObject:self.popupItem.standardAppearance];
+	}
+	
+	if(self.systemAppearance != nil)
+	{
+		[chain addObject:self.systemAppearance];
+	}
+	
+	[chain addObject:self.standardAppearance];
+	
+	_activeAppearanceChain = [[_LNPopupBarAppearanceChainProxy alloc] initWithAppearanceChain:chain];
+	[_activeAppearanceChain setChainDelegate:self];
+	
+	[self _appearanceDidChange];
+}
+
+- (void)setPopupItem:(LNPopupItem *)popupItem
+{
+	_popupItem = popupItem;
+	
+	[self _recalcActiveAppearanceChain];
+}
+
+- (void)popupBarAppearanceDidChange:(LNPopupBarAppearance*)popupBarAppearance
+{
+	[self _appearanceDidChange];
+}
+
+- (void)_appearanceDidChange
+{
+	_highlightView.backgroundColor =  [self.activeAppearanceChain objectForKey:@"highlightColor"];
+	self.backgroundView.effect = [self.activeAppearanceChain objectForKey:@"backgroundEffect"];
+	self.backgroundView.colorView.backgroundColor = [self.activeAppearanceChain objectForKey:@"backgroundColor"];
+	self.backgroundView.imageView.image = [self.activeAppearanceChain objectForKey:@"backgroundImage"];
+	self.backgroundView.imageView.contentMode = [self.activeAppearanceChain unsignedIntegerForKey:@"backgroundImageContentMode"];
+	_toolbar.standardAppearance.buttonAppearance = [self.activeAppearanceChain objectForKey:@"buttonAppearance"] ?: _toolbar.standardAppearance.buttonAppearance;
+	_toolbar.standardAppearance.doneButtonAppearance = [self.activeAppearanceChain objectForKey:@"doneButtonAppearance"] ?: _toolbar.standardAppearance.doneButtonAppearance;
+	_shadowView.backgroundColor = [self.activeAppearanceChain objectForKey:@"shadowColor"];
+	
+	//Recalculate labels
+	[self _setTitleLabelFontsAccordingToBarStyleAndTint];
+	[self _setNeedsTitleLayout];
+	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
+	
+	[self._barDelegate _popupBarStyleDidChange:self];
 }
 
 - (void)setProgressViewStyle:(LNPopupBarProgressViewStyle)progressViewStyle
@@ -648,11 +532,16 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_progressViewStyle = progressViewStyle;
 }
 
-- (void)setSystemBarTintColor:(UIColor *)systemBarTintColor
+- (UIColor *)tintColor
 {
-	_systemBarTintColor = systemBarTintColor;
+	return _userTintColor;
+}
+
+- (void)setTintColor:(UIColor *)tintColor
+{
+	_userTintColor = tintColor;
 	
-	[self _internalSetBarTintColor:_userBarTintColor];
+	[super setTintColor:_userTintColor ?: _systemTintColor];
 }
 
 - (void)setSystemTintColor:(UIColor *)systemTintColor
@@ -660,23 +549,6 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	_systemTintColor = systemTintColor;
 	
 	[self setTintColor:_userTintColor];
-}
-
-- (void)setSystemShadowColor:(UIColor *)systemShadowColor
-{
-	_systemShadowColor = systemShadowColor;
-	
-	_shadowView.backgroundColor = systemShadowColor;
-	_bottomShadowView.backgroundColor = systemShadowColor;
-}
-
-- (void)setTranslucent:(BOOL)translucent
-{
-	_translucent = translucent;
-	
-	_interactionBackgroundView.hidden = _backgroundView.hidden = _translucent == NO;
-	
-	[self _internalSetBarTintColor:_userBarTintColor];
 }
 
 - (void)setTitle:(NSString *)title
@@ -777,18 +649,17 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (UILabel<__MarqueeLabelType>*)_newMarqueeLabel
 {
-	if(_marqueeScrollEnabled == NO)
+	if([self.activeAppearanceChain boolForKey:@"marqueeScrollEnabled"] == NO)
 	{
 		__FakeMarqueeLabel* rv = [[__FakeMarqueeLabel alloc] initWithFrame:_titlesView.bounds];
 		rv.minimumScaleFactor = 1.0;
 		rv.lineBreakMode = NSLineBreakByTruncatingTail;
 		return rv;
 	}
-	
-	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:_marqueeScrollRate andFadeLength:10];
+	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:[self.activeAppearanceChain doubleForKey:@"marqueeScrollRate"] andFadeLength:10];
 	rv.leadingBuffer = 0.0;
 	rv.trailingBuffer = 20.0;
-	rv.animationDelay = _marqueeScrollDelay;
+	rv.animationDelay = [self.activeAppearanceChain doubleForKey:@"marqueeScrollDelay"];
 	rv.marqueeType = MLContinuous;
 	rv.holdScrolling = YES;
 	return rv;
@@ -962,7 +833,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		
 		BOOL reset = NO;
 		
-		NSAttributedString* attr = _title ? [[NSAttributedString alloc] initWithString:_title attributes:_titleTextAttributes] : nil;
+		NSAttributedString* attr = _title ? [[NSAttributedString alloc] initWithString:_title attributes:[self.activeAppearanceChain objectForKey:@"titleTextAttributes"]] : nil;
 		if(_title != nil && [_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
 		{
 			_titleLabel.attributedText = attr;
@@ -976,7 +847,7 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 			[_titlesView addSubview:_subtitleLabel];
 		}
 		
-		attr = _subtitle ? [[NSAttributedString alloc] initWithString:_subtitle attributes:_subtitleTextAttributes] : nil;
+		attr = _subtitle ? [[NSAttributedString alloc] initWithString:_subtitle attributes:[self.activeAppearanceChain objectForKey:@"subtitleTextAttributes"]] : nil;
 		if(_subtitle != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
 		{
 			_subtitleLabel.attributedText = attr;
@@ -998,13 +869,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	titleLabelFrame.size.height = barHeight;
 	
 	//Add some padding for compact bar
-	if(@available(iOS 13.0, *))
+	if(_resolvedStyle == LNPopupBarStyleCompact)
 	{
-		if(_resolvedStyle == LNPopupBarStyleCompact)
-		{
-			titleLabelFrame.origin.x += 8;
-			titleLabelFrame.size.width -= 16;
-		}
+		titleLabelFrame.origin.x += 8;
+		titleLabelFrame.size.width -= 16;
 	}
 	
 	if(_subtitle.length > 0)
@@ -1020,11 +888,8 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 		else
 		{
 			//Add some padding for compact bar
-			if(@available(iOS 13.0, *))
-			{
-				subtitleLabelFrame.origin.x += 8;
-				subtitleLabelFrame.size.width -= 16;
-			}
+			subtitleLabelFrame.origin.x += 8;
+			subtitleLabelFrame.size.width -= 16;
 			
 			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
 			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
@@ -1144,24 +1009,11 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 - (void)_setTitleLabelFontsAccordingToBarStyleAndTint
 {
-	if (@available(iOS 13.0, *))
-	{
-		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor labelColor];
-		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor secondaryLabelColor];
-		
-		return;
-	}
+	NSDictionary* titleTextAttributes = [self.activeAppearanceChain objectForKey:@"titleTextAttributes"];
+	NSDictionary* subtitleTextAttributes = [self.activeAppearanceChain objectForKey:@"subtitleTextAttributes"];
 	
-	if(_actualBackgroundStyle != UIBlurEffectStyleDark)
-	{
-		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: _resolvedStyle == LNPopupBarStyleProminent ? [UIColor colorWithWhite:(38.0 / 255.0) alpha:1.0] : [UIColor blackColor];
-		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: _resolvedStyle == LNPopupBarStyleProminent ? [UIColor colorWithWhite:(38.0 / 255.0) alpha:1.0] : [UIColor blackColor];
-	}
-	else
-	{
-		_titleLabel.textColor = _titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor whiteColor];
-		_subtitleLabel.textColor = _subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor whiteColor];
-	}
+	_titleLabel.textColor = titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor labelColor];
+	_subtitleLabel.textColor = subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor secondaryLabelColor];
 }
 
 - (void)_setTitleViewMarqueesPaused:(BOOL)paused
@@ -1334,40 +1186,9 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	}
 }
 
-- (void)setMarqueeScrollEnabled:(BOOL)marqueeScrollEnabled
-{
-	_marqueeScrollEnabled = marqueeScrollEnabled;
-	
-	[self _setNeedsTitleLayout];
-}
-
-- (void)setMarqueeScrollRate:(CGFloat)marqueeScrollRate
-{
-	_marqueeScrollRate = marqueeScrollRate;
-	
-	_titleLabel.rate = _marqueeScrollRate;
-	_subtitleLabel.rate = _marqueeScrollRate;
-	
-	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
-}
-
-- (void)setMarqueeScrollDelay:(NSTimeInterval)marqueeScrollDelay
-{
-	_marqueeScrollDelay = marqueeScrollDelay;
-	
-	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
-}
-
-- (void)setCoordinateMarqueeScroll:(BOOL)coordinateMarqueeScroll
-{
-	_coordinateMarqueeScroll = coordinateMarqueeScroll;
-	
-	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
-}
-
 - (void)_recalculateCoordinatedMarqueeScrollIfNeeded
 {
-	if(_marqueeScrollEnabled == NO)
+	if([self.activeAppearanceChain boolForKey:@"marqueeScrollEnabled"] == NO)
 	{
 		return;
 	}
@@ -1380,10 +1201,10 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 	MarqueeLabel* titleLabel = (id)_titleLabel;
 	MarqueeLabel* subtitleLabel = (id)_subtitleLabel;
 	
-	titleLabel.animationDelay = _marqueeScrollDelay;
-	subtitleLabel.animationDelay = _marqueeScrollDelay;
+	titleLabel.animationDelay = [self.activeAppearanceChain doubleForKey:@"marqueeScrollDelay"];
+	subtitleLabel.animationDelay = [self.activeAppearanceChain doubleForKey:@"marqueeScrollDelay"];
 	
-	if(_coordinateMarqueeScroll == YES && _title.length > 0 && _subtitle.length > 0)
+	if([self.activeAppearanceChain boolForKey:@"coordinateMarqueeScroll"] == YES && _title.length > 0 && _subtitle.length > 0)
 	{
 		titleLabel.holdScrolling = YES;
 		subtitleLabel.holdScrolling = YES;
@@ -1529,7 +1350,120 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 
 #pragma mark - Deprecations
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @implementation LNPopupBar (Deprecated)
+
+- (BOOL)inheritsVisualStyleFromDockingView
+{
+	return self.inheritsAppearanceFromDockingView;
+}
+
+- (void)setInheritsVisualStyleFromDockingView:(BOOL)inheritsVisualStyleFromDockingView
+{
+	self.inheritsAppearanceFromDockingView = inheritsVisualStyleFromDockingView;
+}
+
+- (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
+{
+	UIBlurEffectStyle blurEffectStyle = backgroundStyle == LNBackgroundStyleInherit ? UIBlurEffectStyleSystemChromeMaterial : backgroundStyle;
+	
+	self.standardAppearance.backgroundEffect = [UIBlurEffect effectWithStyle:blurEffectStyle];
+}
+
+- (UIBlurEffectStyle)backgroundStyle
+{
+	return [[self.standardAppearance.backgroundEffect valueForKey:@"style"] unsignedIntegerValue];
+}
+
+- (void)setBarTintColor:(UIColor *)barTintColor
+{
+	self.standardAppearance.backgroundColor = barTintColor;
+}
+
+- (UIColor *)barTintColor
+{
+	return self.standardAppearance.backgroundColor;
+}
+
+- (void)setTranslucent:(BOOL)translucent
+{
+	if(translucent)
+	{
+		[self.standardAppearance configureWithDefaultBackground];
+	}
+	else
+	{
+		[self.standardAppearance configureWithOpaqueBackground];
+	}
+}
+
+- (BOOL)isTranslucent
+{
+	//TODO: Implement
+	return NO;
+}
+
+- (void)setTitleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleTextAttributes
+{
+	self.standardAppearance.titleTextAttributes = titleTextAttributes;
+}
+
+- (NSDictionary<NSAttributedStringKey,id> *)titleTextAttributes
+{
+	return self.standardAppearance.titleTextAttributes;
+}
+
+- (void)setSubtitleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)subtitleTextAttributes
+{
+	self.standardAppearance.subtitleTextAttributes = subtitleTextAttributes;
+}
+
+- (NSDictionary<NSAttributedStringKey,id> *)subtitleTextAttributes
+{
+	return self.standardAppearance.subtitleTextAttributes;
+}
+
+- (void)setMarqueeScrollEnabled:(BOOL)marqueeScrollEnabled
+{
+	self.standardAppearance.marqueeScrollEnabled = marqueeScrollEnabled;
+}
+
+- (BOOL)marqueeScrollEnabled
+{
+	return self.standardAppearance.marqueeScrollEnabled;
+}
+
+- (void)setMarqueeScrollRate:(CGFloat)marqueeScrollRate
+{
+	self.standardAppearance.marqueeScrollRate = marqueeScrollRate;
+}
+
+- (CGFloat)marqueeScrollRate
+{
+	return self.standardAppearance.marqueeScrollRate;
+}
+
+- (void)setMarqueeScrollDelay:(NSTimeInterval)marqueeScrollDelay
+{
+	self.standardAppearance.marqueeScrollDelay = marqueeScrollDelay;
+}
+
+- (NSTimeInterval)marqueeScrollDelay
+{
+	return self.standardAppearance.marqueeScrollDelay;
+}
+
+- (void)setCoordinateMarqueeScroll:(BOOL)coordinateMarqueeScroll
+{
+	self.standardAppearance.coordinateMarqueeScroll = coordinateMarqueeScroll;
+}
+
+- (BOOL)coordinateMarqueeScroll
+{
+	return self.standardAppearance.coordinateMarqueeScroll;
+}
 
 - (NSArray<UIBarButtonItem *> *)leftBarButtonItems
 {
@@ -1542,3 +1476,5 @@ static inline __attribute__((always_inline)) UIBlurEffectStyle _LNBlurEffectStyl
 }
 
 @end
+
+#pragma clang diagnostic pop

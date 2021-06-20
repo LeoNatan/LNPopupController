@@ -35,7 +35,8 @@ static NSArray* __keys;
 			NSStringFromSelector(@selector(accessibilityImageLabel)),
 			NSStringFromSelector(@selector(accessibilityProgressLabel)),
 			NSStringFromSelector(@selector(accessibilityProgressValue)),
-			NSStringFromSelector(@selector(swiftuiImageController))
+			NSStringFromSelector(@selector(swiftuiImageController)),
+			NSStringFromSelector(@selector(standardAppearance))
 		];
 	});
 }

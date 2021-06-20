@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupBarAppearance.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -63,6 +64,11 @@ NS_ASSUME_NONNULL_BEGIN
  * @note For prominent popup bars, this property is synonymous with @c barButtonItems.
  */
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
+
+/**
+ * When set and this item is displayed, overrides the hosting popup bar's @c standardAppearance as well as any appearance inherited from the docking view. See @c LNPopupBarAppearance.standardAppearance for further details.
+ */
+@property (nonatomic, readwrite, copy, nullable) LNPopupBarAppearance* standardAppearance API_AVAILABLE(ios(13.0));
 
 @end
 

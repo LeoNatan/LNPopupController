@@ -1,5 +1,5 @@
 //
-//  _LNPopupBarSupportObject.m
+//  LNPopupController.m
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/24/15.
@@ -199,10 +199,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	if (@available(iOS 13.0, *))
-	{
-		[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
-	}
+	[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
 	currentContentController.view.translatesAutoresizingMaskIntoConstraints = YES;
 	_currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 	currentContentController.view.frame = self.popupContentView.contentView.bounds;
@@ -855,66 +852,38 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		self.popupBar.effectGroupingIdentifier = _bottomBar._effectGroupingIdentifierIfAvailable;
 	});
 	
-	if(self.popupBar.inheritsVisualStyleFromDockingView == NO)
+	if(self.popupBar.inheritsAppearanceFromDockingView == NO)
 	{
 		return;
 	}
 	
-	if([_bottomBar respondsToSelector:@selector(barStyle)])
-	{
-		[self.popupBar setSystemBarStyle:[(id<_LNPopupBarSupport>)_bottomBar barStyle]];
-	}
-	self.popupBar.systemTintColor = _bottomBar.tintColor;
-	if([_bottomBar respondsToSelector:@selector(barTintColor)])
-	{
-		[self.popupBar setSystemBarTintColor:[(id<_LNPopupBarSupport>)_bottomBar barTintColor]];
-	}
-	self.popupBar.systemBackgroundColor = _bottomBar.backgroundColor;
+	UIBarAppearance* appearanceToUse = nil;
 	
-	if([_bottomBar respondsToSelector:@selector(isTranslucent)])
+	//TODO: HIDE
+	if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:@"visualProvider.toolbarIsSmall"] boolValue] == YES)
 	{
-		self.popupBar.translucent = [(id<_LNPopupBarSupport>)_bottomBar isTranslucent];
+		appearanceToUse = [(UIToolbar*)_bottomBar compactAppearance];
 	}
 	
-	static UIColor* systemShadowColor;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		if(@available(iOS 13.0, *))
-		{
-			UIToolbarAppearance* appearance = [UIToolbarAppearance new];
-			[appearance configureWithDefaultBackground];
-			systemShadowColor = appearance.shadowColor;
-		}
-		else
-		{
-			systemShadowColor = [UIColor lightGrayColor];
-		}
-	});
-	
-	UIColor* shadowColorToUse = systemShadowColor;
-	if(@available(iOS 13.0, *))
+	if(appearanceToUse == nil && [_bottomBar respondsToSelector:@selector(standardAppearance)])
 	{
-		UIBarAppearance* appearanceToUse = nil;
-		if([_bottomBar respondsToSelector:@selector(standardAppearance)])
-		{
-			appearanceToUse = [(id<_LNPopupBarSupport>)_bottomBar standardAppearance];
-		}
-		
-		if(appearanceToUse != nil)
-		{
-			shadowColorToUse = appearanceToUse.shadowColor;
-		}
+		appearanceToUse = [(id<_LNPopupBarSupport>)_bottomBar standardAppearance];
 	}
-	self.popupBar.systemShadowColor = shadowColorToUse;
+	
+	self.popupBar.tintColor = _bottomBar.tintColor;
+	self.popupBar.backgroundColor = _bottomBar.backgroundColor;
+	
+	self.popupBar.systemAppearance = appearanceToUse;
 }
 
 - (void)_updateBarExtensionStyleFromPopupBar
 {
 	_containerController._ln_bottomBarExtension_nocreate.backgroundColor = _containerController.popupBar.backgroundColor;
-	_containerController._ln_bottomBarExtension_nocreate.effectView.backgroundColor = _containerController.popupBar.backgroundView.backgroundColor;
-	_containerController._ln_bottomBarExtension_nocreate.effectView.alpha = _containerController.popupBar.backgroundView.alpha;
-	_containerController._ln_bottomBarExtension_nocreate.effectView.effect = _containerController.popupBar.backgroundView.effect;
-	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:_containerController._ln_bottomBarExtension_nocreate.effectView];
+	_containerController._ln_bottomBarExtension_nocreate.colorView.backgroundColor = _containerController.popupBar.backgroundView.colorView.backgroundColor;
+	_containerController._ln_bottomBarExtension_nocreate.imageView.image = _containerController.popupBar.backgroundView.imageView.image;
+	_containerController._ln_bottomBarExtension_nocreate.imageView.contentMode = _containerController.popupBar.backgroundView.imageView.contentMode;
+	_containerController._ln_bottomBarExtension_nocreate.effect = _containerController.popupBar.backgroundView.effect;
+	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:_containerController._ln_bottomBarExtension_nocreate];
 	_popupContentView.clipsToBounds = YES;
 }
 
@@ -1290,18 +1259,13 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		return 0;
 	}
 	
-	if (@available(iOS 13.0, *))
+	if(view.window.safeAreaInsets.top == 0)
 	{
-		if(view.window.safeAreaInsets.top == 0)
-		{
-			//Probably 🤷‍♂️ an old iPhone
-			return view.window.windowScene.statusBarManager.statusBarHidden ? 0 : 20;
-		}
-		
-		return view.window.safeAreaInsets.top;
+		//Probably 🤷‍♂️ an old iPhone
+		return view.window.windowScene.statusBarManager.statusBarHidden ? 0 : 20;
 	}
 	
-	return UIApplication.sharedApplication.statusBarFrame.size.height;
+	return view.window.safeAreaInsets.top;
 #endif
 }
 

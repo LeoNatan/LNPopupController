@@ -46,11 +46,8 @@ UIContextMenuInteractionDelegate
 #if LNPOPUP
 	_demoVC = [IntroWebViewController new];
 	
-	self.navigationController.popupBar.marqueeScrollEnabled = YES;
-	if (@available(iOS 13.0, *))
-	{
-		self.navigationController.popupContentView.popupCloseButton.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
-	}
+	self.navigationController.popupBar.standardAppearance.marqueeScrollEnabled = YES;
+	self.navigationController.popupContentView.popupCloseButton.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
 #endif
 }
 
@@ -62,11 +59,8 @@ UIContextMenuInteractionDelegate
 	self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
 	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:YES completion:nil];
 	
-	if (@available(iOS 13.0, *))
-	{
-		UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-		[self.navigationController.popupBar addInteraction:i];
-	}
+	UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+	[self.navigationController.popupBar addInteraction:i];
 #endif
 }
 

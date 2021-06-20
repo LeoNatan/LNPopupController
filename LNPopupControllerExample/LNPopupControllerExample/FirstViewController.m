@@ -102,12 +102,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	}
 	
 	NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
-	if (@available(iOS 13.0, *))
-	{
-		self.view.backgroundColor = LNSeedAdaptiveColor(seed);
-	} else {
-		self.view.backgroundColor = LNSeedLightColor(seed);
-	}
+	self.view.backgroundColor = LNSeedAdaptiveColor(seed);
 	
 	self.navigationController.delegate = self;
 }
@@ -120,6 +115,15 @@ extern UIImage* LNSystemImage(NSString* named);
 	self.tabBarController.view.tintColor = self.view.tintColor;
 	//Ugly hack to fix split view controller tint color.
 	self.splitViewController.view.tintColor = self.view.tintColor;
+	//Ugly hack to fix navigation view controller tint color.
+	self.navigationController.view.tintColor = self.view.tintColor;
+	
+	if(@available(iOS 15.0, *))
+	{
+		self.tabBarController.tabBar.scrollEdgeAppearance = self.tabBarController.tabBar.standardAppearance;
+		self.navigationController.toolbar.scrollEdgeAppearance = self.navigationController.toolbar.standardAppearance;
+		self.navigationController.toolbar.compactScrollEdgeAppearance = self.navigationController.toolbar.compactAppearance;
+	}
 	
 	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
 	_nextButton.hidden = self.splitViewController != nil;
@@ -142,33 +146,15 @@ extern UIImage* LNSystemImage(NSString* named);
 
 - (IBAction)_changeBarStyle:(id)sender
 {
-	if (@available(iOS 13.0, *))
-	{
-		UIUserInterfaceStyle currentStyle = self.navigationController.traitCollection.userInterfaceStyle;
-		
-		self.navigationController.overrideUserInterfaceStyle = currentStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
-	}
-	else
-	{
-		self.navigationController.toolbar.barStyle = 1 - self.navigationController.toolbar.barStyle;
-	}
-	
-	if (@available(iOS 13.0, *))
-	{
-		self.navigationController.toolbar.tintColor = LNRandomSystemColor();
-	}
-	else
-	{
-		self.navigationController.toolbar.tintColor = self.navigationController.toolbar.barStyle ? LNRandomLightColor() : LNRandomDarkColor();
-	}
+	UIUserInterfaceStyle currentStyle = self.navigationController.traitCollection.userInterfaceStyle;
+	self.navigationController.overrideUserInterfaceStyle = currentStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+	self.navigationController.toolbar.tintColor = LNRandomSystemColor();
 	[self.navigationController.toolbar.items enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		obj.tintColor = self.navigationController.toolbar.tintColor;
 	}];
-	self.navigationController.navigationBar.barStyle = self.navigationController.toolbar.barStyle;
 	self.navigationController.navigationBar.tintColor = self.navigationController.toolbar.tintColor;
-	
 #if LNPOPUP
-	[self.navigationController updatePopupBarAppearance];
+	[self.navigationController setNeedsPopupBarAppearanceUpdate];
 #endif
 }
 
@@ -269,11 +255,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 	UILabel* topLabel = [UILabel new];
 	topLabel.text = NSLocalizedString(@"Top", @"");
-	if (@available(iOS 13.0, *)) {
-		topLabel.textColor = [UIColor systemBackgroundColor];
-	} else {
-		topLabel.textColor = [UIColor lightTextColor];
-	}
+	topLabel.textColor = [UIColor systemBackgroundColor];
 	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:topLabel];
@@ -291,11 +273,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 	UILabel* bottomLabel = [UILabel new];
 	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
-	if (@available(iOS 13.0, *)) {
-		bottomLabel.textColor = [UIColor systemBackgroundColor];
-	} else {
-		bottomLabel.textColor = [UIColor lightTextColor];
-	}
+	bottomLabel.textColor = [UIColor systemBackgroundColor];
 	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[demoVC.view addSubview:bottomLabel];
@@ -316,36 +294,42 @@ extern UIImage* LNSystemImage(NSString* named);
 	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
 	
 	NSNumber* marqueeEnabledSetting = [[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsMarqueeStyle];
+	NSNumber* marqueeEnabledCalculated = nil;
 	if(marqueeEnabledSetting && [marqueeEnabledSetting isEqualToNumber:@0] == NO)
 	{
-		targetVC.popupBar.marqueeScrollEnabled = [marqueeEnabledSetting unsignedIntegerValue] - 1;
-	}
-	
-	if([[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsEnableCustomizations])
-	{
-		NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-		paragraphStyle.alignment = NSTextAlignmentRight;
-		paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
-		
-		[targetVC.popupBar setTitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]}];
-		[targetVC.popupBar setSubtitleTextAttributes:@{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]}];
-		[targetVC.popupBar setBackgroundStyle:UIBlurEffectStyleDark];
-		[targetVC.popupBar setTintColor:[UIColor yellowColor]];
+		marqueeEnabledCalculated = @((BOOL)([marqueeEnabledSetting unsignedIntegerValue] - 1));
+		targetVC.popupBar.standardAppearance.marqueeScrollEnabled = marqueeEnabledCalculated.boolValue;
 	}
 	
 	NSNumber* effectOverride = [NSUserDefaults.standardUserDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
 	if(effectOverride != nil)
 	{
-		targetVC.popupBar.backgroundStyle = effectOverride.unsignedIntegerValue;
+		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
+		targetVC.popupBar.standardAppearance.backgroundEffect = [UIBlurEffect effectWithStyle:effectOverride.unsignedIntegerValue];
+	}
+	
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsEnableCustomizations])
+	{
+		LNPopupBarAppearance* appearance = [LNPopupBarAppearance new];
+		appearance.marqueeScrollEnabled = marqueeEnabledCalculated.boolValue;
+		
+		NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		paragraphStyle.alignment = NSTextAlignmentRight;
+		paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+	
+		appearance.titleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]};
+		appearance.subtitleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]};
+		appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+		
+		[targetVC.popupBar setTintColor:[UIColor systemYellowColor]];
+		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
+		targetVC.popupBar.standardAppearance = appearance;
 	}
 	
 	targetVC.shouldExtendPopupBarUnderSafeArea = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
 	
-//	if (@available(iOS 13.0, *))
-//	{
-//		UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-//		[targetVC.popupBar addInteraction:i];
-//	}
+	UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+	[targetVC.popupBar addInteraction:i];
 	
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];

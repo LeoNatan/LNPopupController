@@ -80,37 +80,6 @@ static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
 
 @end
 
-@implementation _LNPopupBarExtensionView
-
-- (instancetype)initWithEffect:(nullable UIVisualEffect *)effect
-{
-	self = [super init];
-	
-	if(self)
-	{
-		_effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
-		[self addSubview:_effectView];
-	}
-	
-	return self;
-}
-
-- (void)layoutSubviews
-{
-	_effectView.frame = self.bounds;
-	
-	[super layoutSubviews];
-}
-
-- (void)setFrame:(CGRect)frame
-{
-	[super setFrame:frame];
-
-	_effectView.frame = (CGRect){0, 0, CGSizeMake(MAX(20, frame.size.width), MAX(20, frame.size.height))};
-}
-
-@end
-
 #ifndef LNPopupControllerEnforceStrictClean
 static id __accessibilityBundleLoadObserver;
 __attribute__((constructor))
@@ -164,16 +133,13 @@ static void __accessibilityBundleLoadHandler()
 		dispatch_once(&onceToken, ^{
 			__LNPopupBuggyAdditionalSafeAreaClasses = [NSSet setWithObjects:UINavigationController.class, UITabBarController.class, nil];
 			
-			if (@available(iOS 13.0, *))
-			{
-				LNSwizzleMethod(self,
-								@selector(isModalInPresentation),
-								@selector(_ln_isModalInPresentation));
-				
-				LNSwizzleMethod(self,
-								@selector(setOverrideUserInterfaceStyle:),
-								@selector(_ln_popup_setOverrideUserInterfaceStyle:));
-			}
+			LNSwizzleMethod(self,
+							@selector(isModalInPresentation),
+							@selector(_ln_isModalInPresentation));
+			
+			LNSwizzleMethod(self,
+							@selector(setOverrideUserInterfaceStyle:),
+							@selector(_ln_popup_setOverrideUserInterfaceStyle:));
 			
 			LNSwizzleMethod(self,
 							@selector(viewDidLayoutSubviews),
@@ -499,10 +465,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	if(self.popupContentViewController)
 	{
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[UIView animateWithDuration:UIApplication.sharedApplication.statusBarOrientationAnimationDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options: UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
+//			[UIView animateWithDuration:UIApplication.sharedApplication.statusBarOrientationAnimationDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options: UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
 				[self.popupContentViewController _uLFSBAIO];
 				[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];
-			} completion:nil];
+//			} completion:nil];
 		});
 	}
 #endif
@@ -545,43 +511,25 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 
 - (void)_layoutPopupBarOrderForTransition
 {
-	if(@available(ios 13.0, *))
-	{
-		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
-		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self._ln_popupController_nocreate.popupBar];
-		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
-	}
-	else
-	{
-		[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
-		[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
-		[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
-	}
+	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self._ln_popupController_nocreate.popupBar];
+	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
 }
 
 - (void)_layoutPopupBarOrderForUse
 {
-	if(@available(ios 13.0, *))
-	{
-		[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
-		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
-		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self._ln_popupController_nocreate.popupBar];
-		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
-	}
-	else
-	{
-		[self._ln_popupController_nocreate.popupBar.superview bringSubviewToFront:self._ln_popupController_nocreate.popupBar];
-		[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
-		[self._ln_popupController_nocreate.popupContentView.superview bringSubviewToFront:self._ln_popupController_nocreate.popupContentView];
-	}
+	[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
+	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self._ln_popupController_nocreate.popupBar];
+	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
 }
 
-- (_LNPopupBarExtensionView*)_ln_bottomBarExtension_nocreate
+- (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate
 {
 	return objc_getAssociatedObject(self, LNPopupBarExtensionView);
 }
 
-- (_LNPopupBarExtensionView*)_ln_bottomBarExtension
+- (_LNPopupBarBackgroundView*)_ln_bottomBarExtension
 {
 	if(self.shouldExtendPopupBarUnderSafeArea == NO)
 	{
@@ -590,19 +538,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		return nil;
 	}
 	
-	_LNPopupBarExtensionView* rv = objc_getAssociatedObject(self, LNPopupBarExtensionView);
+	_LNPopupBarBackgroundView* rv = objc_getAssociatedObject(self, LNPopupBarExtensionView);
 	if(rv == nil)
 	{
-		UIBlurEffectStyle blurStyle;
-		if (@available(iOS 13.0, *))
-		{
-			blurStyle = UIBlurEffectStyleSystemChromeMaterial;
-		}
-		else
-		{
-			blurStyle = UIBlurEffectStyleLight;
-		}
-		rv = [[_LNPopupBarExtensionView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
+		rv = [[_LNPopupBarBackgroundView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial]];
 		objc_setAssociatedObject(self, LNPopupBarExtensionView, rv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 		[self._ln_popupController _updateBarExtensionStyleFromPopupBar];
 	}
@@ -956,13 +895,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
 		
 		[self.selectedViewController.transitionCoordinator animateAlongsideTransition:^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-			
-			if(@available(iOS 13.0, *))
-			{
-				[UIView performWithoutAnimation:^{
-					self.tabBar.frame = frame;
-				}];
-			}
+			[UIView performWithoutAnimation:^{
+				self.tabBar.frame = frame;
+			}];
 			
 			frame.origin.x += self.view.bounds.size.width;
 			self._ln_bottomBarExtension.frame = frame;

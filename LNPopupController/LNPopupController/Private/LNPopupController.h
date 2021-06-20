@@ -1,5 +1,5 @@
 //
-//  _LNPopupBarSupportObject.h
+//  LNPopupController.h
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/24/15.

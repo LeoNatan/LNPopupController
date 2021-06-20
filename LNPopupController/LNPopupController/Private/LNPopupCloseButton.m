@@ -111,15 +111,7 @@
 
 - (void)_setupForCircularButton
 {
-	UIBlurEffectStyle blurStyle;
-	if(@available(iOS 13.0, *))
-	{
-		blurStyle = UIBlurEffectStyleSystemChromeMaterial;
-	}
-	else
-	{
-		blurStyle = UIBlurEffectStyleExtraLight;
-	}
+	UIBlurEffectStyle blurStyle = UIBlurEffectStyleSystemChromeMaterial;
 	
 	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
 	_effectView.userInteractionEnabled = NO;
@@ -150,19 +142,9 @@
 	
 	[self setTitleColor:self.tintColor forState:UIControlStateNormal];
 	
-	if(@available(iOS 13.0, *))
-	{
-		UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
-		UIImage* image = [[UIImage systemImageNamed:@"chevron.down" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-		[self setImage:image forState:UIControlStateNormal];
-	}
-	else
-	{
-		_chevronView = [[LNChevronView alloc] initWithFrame:CGRectMake(4, 4.5, 16, 16)];
-		_chevronView.width = 3.0;
-		[_chevronView setState:LNChevronViewStateUp animated:NO];
-		[self addSubview:_chevronView];
-	}
+	UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
+	UIImage* image = [[UIImage systemImageNamed:@"chevron.down" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	[self setImage:image forState:UIControlStateNormal];
 }
 
 - (void)_didTouchDown

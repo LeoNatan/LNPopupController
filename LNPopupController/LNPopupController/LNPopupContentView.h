@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <LNPopupController/LNPopupCloseButton.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
 
-extern const UIBlurEffectStyle LNBackgroundStyleInherit;
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Holds the popup content container view, as well as the popup close button and the popup interaction gesture recognizer.
@@ -42,18 +42,35 @@ extern const UIBlurEffectStyle LNBackgroundStyleInherit;
 @property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars;
 
 /**
+* The popup content view background effect, used when the popup content controller's view has transparency.
+*
+* Use @c nil value to inherit the popup bar's background effect if possible, or use a default effect..
+*
+* Defaults to @c nil.
+*/
+@property (nonatomic, copy, nullable) UIBlurEffect* backgroundEffect UI_APPEARANCE_SELECTOR;
+
+/**
+ * A Boolean value that indicates whether the popup conetnt view is translucent (@c true) or not (@c false).
+ */
+@property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
+
+@end
+
+#pragma mark Deprecations
+
+extern const UIBlurEffectStyle LNBackgroundStyleInherit LN_DEPRECATED_API("Use backgroundEffect instead.");
+
+@interface LNPopupContentView (Deprecated)
+
+/**
  * The popup content view background style, used when the popup content controller's view has transparency.
  *
  * Use @c LNBackgroundStyleInherit value to inherit the popup bar's background style if possible.
  *
  * Defaults to @c LNBackgroundStyleInherit.
  */
-@property (nonatomic, assign) UIBlurEffectStyle backgroundStyle UI_APPEARANCE_SELECTOR;
-
-/**
- * A Boolean value that indicates whether the popup conetnt view is translucent (@c true) or not (@c false).
- */
-@property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
+@property (nonatomic, assign) UIBlurEffectStyle backgroundStyle UI_APPEARANCE_SELECTOR LN_DEPRECATED_API("Use backgroundEffect instead.");
 
 @end
 

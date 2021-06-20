@@ -220,11 +220,11 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 @property (nonatomic, assign) BOOL shouldExtendPopupBarUnderSafeArea;
 
 /**
- * Call this method to update the popup bar appearance (style, tint color, etc.) according to its docking view. You should call this after updating the docking view.
+ * Call this method to update the popup bar appearance (background effect, tint color, etc.) according to its docking view. You should call this after updating the docking view.
  *
- * If the popup bar's @c inheritsVisualStyleFromDockingView property is set to @c false, or a custom popup bar view controller is used, this method has no effect. See @c LNPopupBar.inheritsVisualStyleFromDockingView and @c LNPopupBar.customBarViewController for more information.
+ * If the popup bar's @c inheritsAppearanceFromDockingView property is set to @c false, or a custom popup bar view controller is used, this method has no effect. See @c LNPopupBar.inheritsAppearanceFromDockingView and @c LNPopupBar.customBarViewController for more information.
  */
-- (void)updatePopupBarAppearance;
+- (void)setNeedsPopupBarAppearanceUpdate;
 
 /**
  * The popup content container view. (read-only)
@@ -292,6 +292,13 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
  * @warning This API is no longer used. Use @c bottomDockingViewForPopupBar instead.
  */
 @property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopup LN_UNAVAILABLE_API("Use bottomDockingViewForPopupBar instead.");
+
+/**
+ * Call this method to update the popup bar appearance (style, tint color, etc.) according to its docking view. You should call this after updating the docking view.
+ *
+ * If the popup bar's @c inheritsAppearanceFromDockingView property is set to @c false, or a custom popup bar view controller is used, this method has no effect. See @c LNPopupBar.inheritsAppearanceFromDockingView and @c LNPopupBar.customBarViewController for more information.
+ */
+- (void)updatePopupBarAppearance LN_DEPRECATED_API("Use setNeedsPopupBarAppearanceUpdate instead.");
 
 @end
 
