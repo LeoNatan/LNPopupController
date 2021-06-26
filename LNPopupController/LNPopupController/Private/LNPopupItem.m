@@ -84,6 +84,7 @@ static NSArray* __keys;
 {
 	[self willChangeValueForKey:NSStringFromSelector(_cmd)];
 	if(progress > 1.0) { progress = 1.0; }
+	if(progress < 0.0) { progress = 0.0; }
 	_progress = progress;
 	[self didChangeValueForKey:NSStringFromSelector(_cmd)];
 }
@@ -99,6 +100,9 @@ static NSArray* __keys;
 }
 
 @end
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 @implementation LNPopupItem (Deprecated)
 
@@ -123,3 +127,5 @@ static NSArray* __keys;
 }
 
 @end
+
+#pragma clang diagnostic pop

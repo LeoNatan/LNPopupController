@@ -7,6 +7,12 @@
 //
 
 #import "LNPopupBarAppearance+Private.h"
+#import "_LNPopupSwizzlingUtils.h"
+
+//appearance:categoriesChanged:
+static NSString* const aCC = @"YXBwZWFyYW5jZTpjYXRlZ29yaWVzQ2hhbmdlZDo=";
+//changeObserver
+static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 
 @implementation _LNPopupBarAppearanceChainProxy
 {
@@ -76,12 +82,22 @@
 
 @implementation LNPopupBarAppearance
 
++ (void)load
+{
+	@autoreleasepool
+	{
+		Method m1 = class_getInstanceMethod(self, @selector(a:cC:));
+		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(aCC)), method_getImplementation(m1), method_getTypeEncoding(m1));
+	}
+}
+
 - (void)_notify
 {
 	[self.delegate popupBarAppearanceDidChange:self];
 }
 
-- (void)appearance:(UIBarAppearance *)arg1 categoriesChanged:(NSUInteger)arg2
+//appearance:categoriesChanged:
+- (void)a:(UIBarAppearance *)arg1 cC:(NSUInteger)arg2
 {
 	[self _notify];
 }
@@ -151,8 +167,8 @@
 
 - (void)_commonInit
 {
-	//TODO: HIDE
-	[self setValue:self forKey:@"changeObserver"];
+	//changeObserver
+	[self setValue:self forKey:_LNPopupDecodeBase64String(cO)];
 }
 
 - (instancetype)initWithIdiom:(UIUserInterfaceIdiom)idiom

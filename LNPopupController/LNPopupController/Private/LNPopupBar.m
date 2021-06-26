@@ -1401,8 +1401,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (BOOL)isTranslucent
 {
-	//TODO: Implement
-	return NO;
+	return self.standardAppearance.backgroundEffect == nil;
 }
 
 - (void)setTitleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleTextAttributes

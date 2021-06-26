@@ -54,6 +54,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong) UIBarAppearance* systemAppearance;
 @property (nonatomic, readonly, strong) _LNPopupBarAppearanceChainProxy* activeAppearanceChain;
 
+- (void)_recalcActiveAppearanceChain;
+
 @property (nonatomic, strong) UIView* bottomShadowView;
 
 @property (nonatomic, weak, readwrite) LNPopupItem* popupItem;

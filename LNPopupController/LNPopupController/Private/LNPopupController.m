@@ -18,6 +18,9 @@
 #import "LNPopupCustomBarViewController+Private.h"
 @import ObjectiveC;
 
+//visualProvider.toolbarIsSmall
+static NSString* const vPTIS = @"dmlzdWFsUHJvdmlkZXIudG9vbGJhcklzU21hbGw=";
+
 #if TARGET_OS_MACCATALYST
 @import AppKit;
 #endif
@@ -754,6 +757,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
+- (void)_reconfigure_standardAppearance
+{
+	[self.popupBarStorage _recalcActiveAppearanceChain];
+}
+
 - (void)_popupItem:(LNPopupItem*)popupItem didChangeValueForKey:(NSString*)key
 {
 	if(self.popupBarStorage.customBarViewController)
@@ -859,8 +867,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	UIBarAppearance* appearanceToUse = nil;
 	
-	//TODO: HIDE
-	if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:@"visualProvider.toolbarIsSmall"] boolValue] == YES)
+	//visualProvider.toolbarIsSmall
+	if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:_LNPopupDecodeBase64String(vPTIS)] boolValue] == YES)
 	{
 		appearanceToUse = [(UIToolbar*)_bottomBar compactAppearance];
 	}
