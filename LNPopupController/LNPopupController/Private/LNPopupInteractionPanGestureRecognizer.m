@@ -45,7 +45,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	
 	BOOL rv = resolvedStyle != LNPopupInteractionStyleNone;
 	
-	if(rv && [_popupController.currentContentController respondsToSelector:@selector(_ln_interactionLimitRect)])
+	if(rv && gestureRecognizer.view == _popupController.currentContentController.view && [_popupController.currentContentController respondsToSelector:@selector(_ln_interactionLimitRect)])
 	{
 		CGRect limit = [_popupController.currentContentController _ln_interactionLimitRect];
 		CGPoint interactionPoint = [gestureRecognizer locationInView:gestureRecognizer.view];
