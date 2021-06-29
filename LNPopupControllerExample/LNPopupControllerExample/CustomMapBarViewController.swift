@@ -47,7 +47,7 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 	}
 	
 	override func popupItemDidUpdate() {
-		searchBar.text = containingPopupBar.popupItem?.title
+		searchBar.text = containingPopupBar?.popupItem?.title
 	}
 	
 	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

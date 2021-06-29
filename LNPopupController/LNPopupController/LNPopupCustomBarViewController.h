@@ -20,7 +20,7 @@
 /**
  * The containing popup bar. (read-only)
  */
-@property (nonatomic, weak, readonly) LNPopupBar* containingPopupBar;
+@property (nonatomic, weak, readonly, nullable) LNPopupBar* containingPopupBar;
 
 /**
  * Indicates whether the default tap gesture recognizer should be added to the popup bar.

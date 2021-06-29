@@ -41,10 +41,10 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		
 		#if LNPOPUP
 		if let customMapBar = storyboard!.instantiateViewController(withIdentifier: "CustomMapBarViewController") as? CustomMapBarViewController {
+			popupBar.customBarViewController = customMapBar
+			
 			customMapBar.view.backgroundColor = .clear
 			customMapBar.searchBar.delegate = self
-			
-			popupBar.customBarViewController = customMapBar
 		} else {
 			//Manual layout bar scene
 			popupBar.customBarViewController = ManualLayoutCustomBarViewController()
