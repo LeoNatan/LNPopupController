@@ -53,15 +53,22 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
 #endif
 
+		#if compiler(>=5.5)
 		if #available(iOS 15.0, *) {
 			let tabBarAppearance = UITabBarAppearance()
 			tabBarAppearance.configureWithDefaultBackground()
 			tabBarController?.tabBar.scrollEdgeAppearance = tabBarAppearance
-		} else {
+		}
+		else {
 			let appearance = UINavigationBarAppearance()
 			appearance.configureWithTransparentBackground()
 			navigationItem.standardAppearance = appearance
 		}
+		#else
+		let appearance = UINavigationBarAppearance()
+		appearance.configureWithTransparentBackground()
+		navigationItem.standardAppearance = appearance
+		#endif
 
 		demoAlbumImageView.layer.cornerCurve = .continuous
 		demoAlbumImageView.layer.cornerRadius = 8
