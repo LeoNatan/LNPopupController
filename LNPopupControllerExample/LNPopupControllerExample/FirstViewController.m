@@ -118,7 +118,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	//Ugly hack to fix navigation view controller tint color.
 	self.navigationController.view.tintColor = self.view.tintColor;
 	
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_14_5
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
 	if(@available(iOS 15.0, *))
 	{
 		self.tabBarController.tabBar.scrollEdgeAppearance = self.tabBarController.tabBar.standardAppearance;

@@ -236,7 +236,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:self.bounds];
 		[_toolbar.standardAppearance configureWithTransparentBackground];
 		_toolbar.compactAppearance = nil;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_14_5
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
 		if(@available(iOS 15.0, *))
 		{
 			_toolbar.scrollEdgeAppearance = nil;
