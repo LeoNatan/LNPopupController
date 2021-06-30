@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
 	name: "LNPopupController",
 	platforms: [
-		.iOS(.v12),
+		.iOS(.v13),
 		.macOS(.v10_15)
 	],
 	products: [
@@ -24,10 +24,6 @@ let package = Package(
 			name: "LNPopupController",
 			dependencies: [],
 			path: "LNPopupController",
-			exclude: [
-				"LNPopupControllerExample",
-				"Supplements"
-			],
 			publicHeadersPath: "include",
 			cSettings: [
 				.headerSearchPath("."),

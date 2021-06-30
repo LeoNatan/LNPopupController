@@ -29,7 +29,7 @@ Check the demo project for many common use cases of the framework in various sce
 
 ### Features
 
-* Available for iOS 11 and above, as an Xcode framework or an SPM package
+* Available for iOS 13 and above, as an Xcode framework or an SPM package
 * Good citizen in modern UIKit world
 * Modern Objective C syntax and great Swift interoperability
 * For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
