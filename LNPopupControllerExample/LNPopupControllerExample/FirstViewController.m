@@ -330,8 +330,8 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 	targetVC.shouldExtendPopupBarUnderSafeArea = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
 	
-	UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-	[targetVC.popupBar addInteraction:i];
+//	UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
+//	[targetVC.popupBar addInteraction:i];
 	
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
