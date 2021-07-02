@@ -10,7 +10,6 @@
 #import "LNPopupContentView+Private.h"
 #import "LNPopupCloseButton+Private.h"
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
-#import "_LNPopupSwizzlingUtils.h"
 
 LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPopupCloseButtonStyle style)
 {
@@ -36,21 +35,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	NSLayoutConstraint* _popupCloseButtonCenterConstraint;
 	NSLayoutConstraint* _popupCloseButtonLeadingConstraint;
 }
-
-#ifndef LNPopupControllerEnforceStrictClean
-
-//_actingParentViewForGestureRecognizers
-static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2duaXplcnM=";
-
-+ (void)load
-{
-	@autoreleasepool
-	{
-		Method m = class_getInstanceMethod(self, @selector(_aPVFGR));
-		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(_aPVFGR)), method_getImplementation(m), method_getTypeEncoding(m));
-	}
-}
-#endif
 
 - (nonnull instancetype)initWithFrame:(CGRect)frame
 {
@@ -315,14 +299,6 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 		}
 	}
 }
-
-#ifndef LNPopupControllerEnforceStrictClean
-//_actingParentViewForGestureRecognizers
-- (id)_aPVFGR
-{
-	return self.currentPopupContentViewController.view ?: self.superview;
-}
-#endif
 
 @end
 
