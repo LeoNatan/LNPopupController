@@ -11,6 +11,8 @@
 
 @interface LNPopupCloseButton ()
 
+- (instancetype)initWithContainingContentView:(LNPopupContentView*)contentView;
+
 @property (nonatomic, weak) LNPopupContentView* popupContentView;
 
 - (void)_setStyle:(LNPopupCloseButtonStyle)style;

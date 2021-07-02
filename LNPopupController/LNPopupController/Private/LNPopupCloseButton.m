@@ -9,21 +9,49 @@
 #import "LNPopupCloseButton+Private.h"
 @import ObjectiveC;
 #import "LNChevronView.h"
+#import "_LNPopupSwizzlingUtils.h"
+#import "LNPopupContentView+Private.h"
 
 @implementation LNPopupCloseButton
 {
+	__weak LNPopupContentView* _contentView;
+	
 	UIVisualEffectView* _effectView;
 	UIView* _highlightView;
 	
 	LNChevronView* _chevronView;
 }
 
-- (instancetype)init
+#ifndef LNPopupControllerEnforceStrictClean
+
+//_actingParentViewForGestureRecognizers
+static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2duaXplcnM=";
+
++ (void)load
+{
+	@autoreleasepool
+	{
+		Method m = class_getInstanceMethod(self, @selector(_aPVFGR));
+		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(_aPVFGR)), method_getImplementation(m), method_getTypeEncoding(m));
+	}
+}
+
+//_actingParentViewForGestureRecognizers
+- (id)_aPVFGR
+{
+	return _contentView.currentPopupContentViewController.view;
+}
+
+#endif
+
+- (instancetype)initWithContainingContentView:(LNPopupContentView*)contentView
 {
 	self = [super init];
 	
 	if(self)
 	{
+		_contentView = contentView;
+		
 		self.accessibilityLabel = NSLocalizedString(@"Close", @"");
 		
 		[self setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];

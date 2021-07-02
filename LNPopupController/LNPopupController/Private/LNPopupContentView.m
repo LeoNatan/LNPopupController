@@ -52,7 +52,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		_translucent = YES;
 		_backgroundEffect = nil;
 		
-		_popupCloseButton = [LNPopupCloseButton new];
+		_popupCloseButton = [[LNPopupCloseButton alloc] initWithContainingContentView:self];
 		_popupCloseButton.popupContentView = self;
 		
 		[_popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
