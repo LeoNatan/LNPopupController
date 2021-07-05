@@ -282,7 +282,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[_backgroundView.contentView addSubview:_shadowView];
 		
 		_bottomShadowView = [_LNPopupBarShadowView new];
-		_bottomShadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.3];
 		_bottomShadowView.hidden = YES;
 		[_contentView addSubview:_bottomShadowView];
 		
@@ -521,6 +520,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_toolbar.standardAppearance.buttonAppearance = [self.activeAppearanceChain objectForKey:@"buttonAppearance"] ?: _toolbar.standardAppearance.buttonAppearance;
 	_toolbar.standardAppearance.doneButtonAppearance = [self.activeAppearanceChain objectForKey:@"doneButtonAppearance"] ?: _toolbar.standardAppearance.doneButtonAppearance;
 	_shadowView.backgroundColor = [self.activeAppearanceChain objectForKey:@"shadowColor"];
+	_bottomShadowView.backgroundColor = [self.activeAppearanceChain objectForKey:@"shadowColor"];
+
 	
 	//Recalculate labels
 	[self _setTitleLabelFontsAccordingToBarStyleAndTint];
