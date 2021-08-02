@@ -53,7 +53,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		popupContentView.popupCloseButtonStyle = .none
 		popupContentView.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
 //		popupContentView.isTranslucent = false
-		popupInteractionStyle = .snap
+		popupInteractionStyle = .customizedSnap(percent: 0.15)
 		
 		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)
 		popupContentVC.tableView.backgroundColor = .clear

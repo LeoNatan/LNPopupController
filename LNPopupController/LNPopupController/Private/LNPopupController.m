@@ -461,8 +461,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (CGFloat)rubberbandFromHeight:(CGFloat)height
 {
-	CGFloat c = 0.55, x = height, d = self.popupBar.superview.bounds.size.height / 5;
-	return (1.0 - (1.0 / ((x * c / d) + 1.0))) * d;
+	/*
+	 f(x, d, c) = (x * d * c) / (d + c * x)
+	 
+	 where,
+	 x – distance from the edge
+	 c – constant (UIScrollView uses 0.55)
+	 d – dimension, either width or height
+	 */
+	CGFloat c = _containerController.popupSnapPercent, x = height, d = self.popupBar.superview.bounds.size.height;
+	
+	return (x * d * c) / (d + c * x);
 }
 
 - (void)_popupBarPresentationByUserPanGestureHandler_changed:(UIPanGestureRecognizer*)pgr
@@ -578,7 +587,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		[_popupContentView.popupCloseButton _setButtonContainerTransitioning];
 		
-		if(resolvedStyle == LNPopupInteractionStyleSnap && realTargetCenterY / self.popupBar.superview.bounds.size.height > 0.275)
+		if(resolvedStyle == LNPopupInteractionStyleSnap && realTargetCenterY / self.popupBar.superview.bounds.size.height > _containerController.popupSnapPercent)
 		{
 			_dismissGestureStarted = NO;
 			

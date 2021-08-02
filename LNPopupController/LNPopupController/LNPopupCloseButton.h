@@ -21,10 +21,12 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 	 * Round close button style
 	 */
 	LNPopupCloseButtonStyleRound,
+	
 	/**
 	 * Chevron close button style
 	 */
 	LNPopupCloseButtonStyleChevron,
+	
 	/**
 	 * No close button
 	 */

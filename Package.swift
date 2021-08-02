@@ -21,13 +21,19 @@ let package = Package(
 	dependencies: [],
 	targets: [
 		.target(
-			name: "LNPopupController",
+			name: "LNPopupController-ObjC",
 			dependencies: [],
 			path: "LNPopupController",
+			exclude: ["Info.plist"],
 			publicHeadersPath: "include",
 			cSettings: [
 				.headerSearchPath("."),
 				.headerSearchPath("Private"),
 			]),
-	]
+		.target(
+			name: "LNPopupController",
+			dependencies: ["LNPopupController-ObjC"],
+			path: "LNPCSwiftRefinements")
+	],
+	cxxLanguageStandard: CXXLanguageStandard(rawValue: "gnu++17")
 )

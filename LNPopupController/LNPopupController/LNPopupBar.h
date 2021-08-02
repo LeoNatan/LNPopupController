@@ -31,10 +31,12 @@ typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	 * Compact bar style
 	 */
 	LNPopupBarStyleCompact,
+	
 	/**
 	 * Prominent bar style
 	 */
 	LNPopupBarStyleProminent,
+	
 	/**
 	 * Custom bar style
 	 *
@@ -53,10 +55,12 @@ typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
 	 * Progress view on bottom
 	 */
 	LNPopupBarProgressViewStyleBottom,
+	
     /**
      * Progress view on bottom
      */
     LNPopupBarProgressViewStyleTop,
+	
 	/**
 	 * No progress view
 	 */

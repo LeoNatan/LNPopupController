@@ -16,6 +16,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern const double LNSnapPercentDefault;
+
 /**
  * Available interaction styles with the popup bar and popup content view.
  */
@@ -48,7 +50,7 @@ typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	 * No interaction
 	 */
 	LNPopupInteractionStyleNone = 0xFFFF
-};
+} NS_REFINED_FOR_SWIFT;
 
 /**
  * The state of the popup presentation.
@@ -203,7 +205,12 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 /**
  * The popup bar interaction style.
  */
-@property (nonatomic, assign) LNPopupInteractionStyle popupInteractionStyle;
+@property (nonatomic, assign) LNPopupInteractionStyle popupInteractionStyle NS_REFINED_FOR_SWIFT;
+
+/**
+ * The percent of the container controller's view height to drag before closing the popup.
+ */
+@property (nonatomic, assign) double popupSnapPercent NS_REFINED_FOR_SWIFT;
 
 /**
  * The popup bar managed by the system. (read-only)
