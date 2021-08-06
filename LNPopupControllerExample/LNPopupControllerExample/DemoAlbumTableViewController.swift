@@ -53,22 +53,17 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
 #endif
 
-		#if compiler(>=5.5)
-		if #available(iOS 15.0, *) {
-			let tabBarAppearance = UITabBarAppearance()
-			tabBarAppearance.configureWithDefaultBackground()
-			tabBarController?.tabBar.scrollEdgeAppearance = tabBarAppearance
-		}
-		else {
-			let appearance = UINavigationBarAppearance()
-			appearance.configureWithTransparentBackground()
-			navigationItem.standardAppearance = appearance
-		}
-		#else
 		let appearance = UINavigationBarAppearance()
 		appearance.configureWithTransparentBackground()
-		navigationItem.standardAppearance = appearance
-		#endif
+		if #available(iOS 15.0, *) {
+			navigationItem.compactScrollEdgeAppearance = appearance
+		}
+		navigationItem.scrollEdgeAppearance = appearance
+		
+		let appearance2 = UINavigationBarAppearance()
+		appearance2.configureWithDefaultBackground()
+		navigationItem.compactAppearance = appearance2
+		navigationItem.standardAppearance = appearance2
 
 		demoAlbumImageView.layer.cornerCurve = .continuous
 		demoAlbumImageView.layer.cornerRadius = 8
@@ -80,19 +75,6 @@ class DemoAlbumTableViewController: UITableViewController {
 			subtitles += [LoremIpsum.sentence]
 		}
     }
-	
-	override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-		if #available(iOS 15.0, *) { } else {
-			let appearance = UINavigationBarAppearance()
-			
-			if scrollView.contentOffset.y > -scrollView.adjustedContentInset.top {
-				appearance.configureWithDefaultBackground()
-			} else {
-				appearance.configureWithTransparentBackground()
-			}
-			navigationItem.standardAppearance = appearance
-		}
-	}
 	
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1

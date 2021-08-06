@@ -7,6 +7,8 @@
 //
 
 #import "UIView+LNPopupSupportPrivate.h"
+#import "UIViewController+LNPopupSupportPrivate.h"
+#import "LNPopupController.h"
 #import "_LNPopupSwizzlingUtils.h"
 @import ObjectiveC;
 #if TARGET_OS_MACCATALYST
@@ -17,8 +19,10 @@ static const void* LNPopupAwaitingViewInWindowHierarchyKey = &LNPopupAwaitingVie
 static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
 
 #if ! LNPopupControllerEnforceStrictClean
+//_viewControllerForAncestor
+static NSString* _vCFA = @"X3ZpZXdDb250cm9sbGVyRm9yQW5jZXN0b3I=";
 //_didMoveFromWindow:toWindow:
-static NSString* dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
+static NSString* _dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
 //_backdropViewLayerGroupName
 static NSString* _bVLGN = @"X2JhY2tkcm9wVmlld0xheWVyR3JvdXBOYW1l";
 //hostWindow
@@ -42,7 +46,7 @@ static NSString* _cE = @"Y3VycmVudEV2ZW50";
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 #if ! LNPopupControllerEnforceStrictClean
-		NSString* sel = _LNPopupDecodeBase64String(dMFWtW);
+		NSString* sel = _LNPopupDecodeBase64String(_dMFWtW);
 		LNSwizzleMethod(self,
 						NSSelectorFromString(sel),
 						@selector(_ln__dMFW:tW:));
@@ -52,6 +56,35 @@ static NSString* _cE = @"Y3VycmVudEV2ZW50";
 						@selector(_ln_didMoveToWindow));
 #endif
 	});
+}
+
+- (UIViewController*)_ln_containerController
+{
+#if ! LNPopupControllerEnforceStrictClean
+	static NSString* property = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		property = _LNPopupDecodeBase64String(_vCFA);
+	});
+	return [self valueForKey:property];
+#else
+	UIResponder* next = self.nextResponder;
+	while(next)
+	{
+		if([next isKindOfClass:UIViewController.class])
+		{
+			return (id)next;
+		}
+		next = next.nextResponder;
+	}
+	
+	return nil;
+#endif
+}
+
+- (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded
+{
+	//Do nothing on UIView.
 }
 
 #if ! LNPopupControllerEnforceStrictClean
@@ -202,3 +235,89 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 
 
 #endif
+
+LNAlwaysInline
+id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(UIView* self, SEL standardAppearanceSelector, SEL scrollEdgeAppearanceSelector)
+{
+	UIViewController* vc = self._ln_containerController;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+	if(vc != nil && vc._ln_popupController_nocreate.currentContentController != nil)
+	{
+		return [self performSelector:standardAppearanceSelector];
+	}
+	else
+	{
+		return [self performSelector:scrollEdgeAppearanceSelector];
+	}
+#pragma clang diagnostic pop
+}
+
+@interface UIToolbar (ScrollEdgeSupport) @end
+@implementation UIToolbar (ScrollEdgeSupport)
+
++ (void)load
+{
+	@autoreleasepool
+	{
+		if(@available(iOS 15.0, *))
+		{
+			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+			LNSwizzleMethod(self, @selector(compactScrollEdgeAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
+		}
+	}
+}
+
+- (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded
+{
+	if(@available(iOS 15.0, *))
+	{
+		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
+		self.compactScrollEdgeAppearance = self._lnpopup_compactScrollEdgeAppearance;
+		[self setNeedsLayout];
+		[self layoutIfNeeded];
+	}
+}
+
+- (UIToolbarAppearance *)_lnpopup_scrollEdgeAppearance
+{
+	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+}
+
+- (UIToolbarAppearance *)_lnpopup_compactScrollEdgeAppearance
+{
+	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
+}
+
+@end
+
+@interface UITabBar (ScrollEdgeSupport) @end
+@implementation UITabBar (ScrollEdgeSupport)
+
++ (void)load
+{
+	@autoreleasepool
+	{
+		if(@available(iOS 15.0, *))
+		{
+			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+		}
+	}
+}
+
+- (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded
+{
+	if(@available(iOS 15.0, *))
+	{
+		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
+		[self setNeedsLayout];
+		[self layoutIfNeeded];
+	}
+}
+
+- (UITabBarAppearance *)_lnpopup_scrollEdgeAppearance
+{
+	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+}
+
+@end

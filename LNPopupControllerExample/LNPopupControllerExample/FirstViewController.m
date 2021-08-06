@@ -118,15 +118,6 @@ extern UIImage* LNSystemImage(NSString* named);
 	//Ugly hack to fix navigation view controller tint color.
 	self.navigationController.view.tintColor = self.view.tintColor;
 	
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
-	if(@available(iOS 15.0, *))
-	{
-		self.tabBarController.tabBar.scrollEdgeAppearance = self.tabBarController.tabBar.standardAppearance;
-		self.navigationController.toolbar.scrollEdgeAppearance = self.navigationController.toolbar.standardAppearance;
-		self.navigationController.toolbar.compactScrollEdgeAppearance = self.navigationController.toolbar.compactAppearance;
-	}
-#endif
-	
 	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
 	_nextButton.hidden = self.splitViewController != nil;
 	
