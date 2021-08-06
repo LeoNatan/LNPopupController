@@ -150,13 +150,15 @@ override var defaultFrameForBottomDockingView: CGRect {
 
 #### Modern Look and Feel
 
-`LNPopupController` provides two distinct style of popup look and feel, one based on modern Music app look and feel, and one based on the previous, iOS 9-style look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9-style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current operating system version.
+`LNPopupController` provides two distinct style of popup look and feel, one based on modern Music app look and feel, and one based on the previous, iOS 9-style look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9-style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current platform and operating system version.
 
 The defaults are:
 * Prominent bar style
 * Snap interaction style
 * Chevron close button style
 * No progress view style
+
+You can also present completely custom popup bars. For more information, see [Custom Popup Bars](#custom-popup-bars).
 
 ##### Bar Style
 
@@ -204,11 +206,11 @@ To hide the popup close button, set the `popupCloseButtonStyle` property to `LNP
 
 #### Popup Bar Appearance and Behavior
 
-For navigation and tab bar container controllers, the appearance of the popup bar is determined according to the bottom bar's appearance. For other container controllers, a default appearance is used, most suitable for the current environment.
-
-To update the popup bar appearance after updating the appearance of the bottom bar of the container controller, call the `setNeedsPopupBarAppearanceUpdate()` method.
+By default, for navigation and tab bar container controllers, the appearance of the popup bar is determined according to the bottom bar's appearance. For other container controllers, a default appearance is used, most suitable for the current environment.
 
 <p align="center"><img src="./Supplements/modern_bar_style.gif" width="360"/></p>
+
+To disable inheriting the bottom bar’s appearance, set the `inheritsAppearanceFromDockingView` property to `false`.
 
 Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee is enabled. Otherwise, the text will be truncated.
 
@@ -232,9 +234,11 @@ Pointer interactions are supported, and a default implementation is provided for
 
 For custom popup bar controllers, the `LNPopupCustomBarViewController` class implements the `UIPointerInteractionDelegate` protocol. Implement the protocol's methods inside your subclass to implement custom pointer interactions.
 
+On iOS 15, scroll edge appearance is automatically disabled for toolbars and tab bars when a popup bar is presented, regardless of the scroll position of the content. Once the popup bar is dismissed, the scroll edge appearance is restored.
+
 #### Interaction Gesture Recognizer
 
-```LNPopupContentView``` exposes access to the popup interaction gesture recognizer in the way of the `popupInteractionGestureRecognizer` property. This gesture recognizer is shared between opening the popup content, by panning the popup bar up (when the popup bar is closed), and closing the popup content, by panning the popup content view (when the popup bar is open).
+`LNPopupContentView` exposes access to the popup interaction gesture recognizer in the way of the `popupInteractionGestureRecognizer` property. This gesture recognizer is shared between opening the popup content, by panning the popup bar up (when the popup bar is closed), and closing the popup content, by panning the popup content view (when the popup bar is open).
 
 When opening the popup, the system queries the `viewForPopupInteractionGestureRecognizer` property of the popup content view controller to determine to which view to add the interaction gesture recognizer. By default, the property returns the controller's root view. Override the property's getter to change this behavior.
 
@@ -253,11 +257,13 @@ To customize this behavior, modify the popup bar's ```semanticContentAttribute``
 
 ### Customization
 
-Customization can be achieved through the `LNPopupBarAppearance`, ```LNPopupBar```, ```LNPopupContentView``` and ```LNPopupCustomBarViewController``` classes.
+Customization can be achieved through the `LNPopupBarAppearance`, ```LNPopupBar```, ```LNPopupContentView``` and ```LNPopupCustomBarViewController``` classes. Remember to 
 
 #### Popup Bar Customization
 
-```LNPopupBar``` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on a specific popup bar object. Use `LNPopupBarAppearance` objects to define the standard appearance of the bar.
+`LNPopupBar` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on a specific popup bar object. Use `LNPopupBarAppearance` objects to define the standard appearance of the bar.
+
+Remember to set the `inheritsAppearanceFromDockingView` property to `false`, or your customization is likely to be overridden by the bottom bar’s appearance.
 
 ```swift
 let appearance = LNPopupBarAppearance()
@@ -330,7 +336,7 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 
 * Non-translucent bars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars themselves, and supporting those is not a priority for LNPopupController.
   * Instead, either use translucent bars, or set a background color to your bar instead of setting it as not translucent or set `extendedLayoutIncludesOpaqueBars` to true for contained controllers
-* Manually hiding tab bars is not supported by the framework or by Apple. **Do not hide the tab bar using `tabBar.hidden = YES`**, this will lead to undefined behavior by the framework. 
+* Manually setting bottom bar properties, such as setting a tab bar’s or a toolbar’s `isHidden = true` **is explicitly discouraged by Apple and not supported by the framework**; it will lead to undefined behavior by the framework
 
 ## Acknowledgements
 

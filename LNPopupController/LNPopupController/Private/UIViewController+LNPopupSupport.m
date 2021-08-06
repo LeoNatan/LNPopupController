@@ -6,16 +6,14 @@
 //  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
-extern "C" {
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupItem+Private.h"
 #import "_LNWeakRef.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupSwizzlingUtils.h"
-#import <objc/message.h>
-}
-#include <algorithm>
+#import "C++Math.h"
+@import ObjectiveC;
 
 static const void* _LNPopupItemKey = &_LNPopupItemKey;
 static const void* _LNPopupControllerKey = &_LNPopupControllerKey;
@@ -289,7 +287,7 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 
 - (void)setPopupSnapPercent:(double)popupDragPercent
 {
-	objc_setAssociatedObject(self, _LNPopupInteractionSnapPercentKey, @(std::clamp(popupDragPercent, 0.1, 0.9)), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	objc_setAssociatedObject(self, _LNPopupInteractionSnapPercentKey, @(_ln_clamp(popupDragPercent, 0.1, 0.9)), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (LNPopupController*)_ln_popupController_nocreate

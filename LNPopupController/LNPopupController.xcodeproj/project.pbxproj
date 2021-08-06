@@ -20,7 +20,7 @@
 		393E4EA72670F12500929E47 /* LNPopupBarAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 393E4EA52670F12500929E47 /* LNPopupBarAppearance.m */; };
 		393E4EAA2670F2D000929E47 /* LNPopupBarAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.mm */; };
+		3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */; };
 		3947E1A61B61CD650001178B /* LNPopupBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A41B61CD650001178B /* LNPopupBar.m */; };
 		3947E1A91B61CDA40001178B /* LNPopupCloseButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 3947E1A71B61CDA40001178B /* LNPopupCloseButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3947E1AA1B61CDA40001178B /* LNPopupCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A81B61CDA40001178B /* LNPopupCloseButton.m */; };
@@ -56,6 +56,8 @@
 		39DE26592686617300B140B7 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 39DE26582686617300B140B7 /* LoremIpsum */; };
 		39E7A604200B5157007AF3AD /* _LNPopupSwizzlingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */; };
 		39E7A605200B5157007AF3AD /* _LNPopupSwizzlingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */; };
+		39EFF0BB26BD9FC10022DA63 /* C++Math.h in Headers */ = {isa = PBXBuildFile; fileRef = 39EFF0B926BD9FC10022DA63 /* C++Math.h */; };
+		39EFF0BC26BD9FC10022DA63 /* C++Math.cc in Sources */ = {isa = PBXBuildFile; fileRef = 39EFF0BA26BD9FC10022DA63 /* C++Math.cc */; };
 		39F8228826B80B6F0070DDBA /* SwiftRefinements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */; };
 /* End PBXBuildFile section */
 
@@ -76,7 +78,7 @@
 		393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupBarAppearance.h; sourceTree = "<group>"; };
 		393E4EAC26713E5700929E47 /* LNPopupBarAppearance+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupBarAppearance+Private.h"; sourceTree = "<group>"; };
 		3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIViewController+LNPopupSupport.h"; sourceTree = "<group>"; };
-		3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = "UIViewController+LNPopupSupport.mm"; sourceTree = "<group>"; };
+		3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+LNPopupSupport.m"; sourceTree = "<group>"; };
 		3947E1A41B61CD650001178B /* LNPopupBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNPopupBar.m; sourceTree = "<group>"; };
 		3947E1A71B61CDA40001178B /* LNPopupCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupCloseButton.h; sourceTree = "<group>"; };
 		3947E1A81B61CDA40001178B /* LNPopupCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNPopupCloseButton.m; sourceTree = "<group>"; };
@@ -110,6 +112,8 @@
 		39DB52E51B5823330061C589 /* LNPopupController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LNPopupController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupSwizzlingUtils.h; sourceTree = "<group>"; };
 		39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupSwizzlingUtils.m; sourceTree = "<group>"; };
+		39EFF0B926BD9FC10022DA63 /* C++Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "C++Math.h"; sourceTree = "<group>"; };
+		39EFF0BA26BD9FC10022DA63 /* C++Math.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "C++Math.cc"; sourceTree = "<group>"; };
 		39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftRefinements.swift; path = ../../LNPCSwiftRefinements/SwiftRefinements.swift; sourceTree = "<group>"; };
 		46ECC2AE1BF31025005CE96C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -160,9 +164,11 @@
 				396D62712610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.m */,
 				39B3EB0B24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h */,
 				39B3EB0C24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.m */,
-				3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.mm */,
+				3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */,
 				394A85C71B63FB96004FFC61 /* UIViewController+LNPopupSupportPrivate.h */,
 				394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */,
+				39EFF0B926BD9FC10022DA63 /* C++Math.h */,
+				39EFF0BA26BD9FC10022DA63 /* C++Math.cc */,
 			);
 			name = Implementation;
 			path = Private;
@@ -230,6 +236,7 @@
 				394A85B61B630409004FFC61 /* LNPopupBar.h in Headers */,
 				398C2903260CCDA6000690FB /* LNPopupContentView+Private.h in Headers */,
 				39599BAA1E02CD65008EE386 /* LNPopupCustomBarViewController.h in Headers */,
+				39EFF0BB26BD9FC10022DA63 /* C++Math.h in Headers */,
 				39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */,
 				3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */,
 				393E4EAA2670F2D000929E47 /* LNPopupBarAppearance.h in Headers */,
@@ -337,6 +344,7 @@
 				390F246222AC310A007E0CAE /* NSObject+AltKVC.m in Sources */,
 				39B3EB0E24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.m in Sources */,
 				394A85C21B630992004FFC61 /* _LNWeakRef.m in Sources */,
+				39EFF0BC26BD9FC10022DA63 /* C++Math.cc in Sources */,
 				394A85BA1B6304F5004FFC61 /* LNPopupItem.m in Sources */,
 				3947E1B31B61CE4A0001178B /* LNPopupController.m in Sources */,
 				397AFBFC1F1A1ED200E7D95C /* LNForwardingDelegate.m in Sources */,
@@ -349,7 +357,7 @@
 				397AFC061F1A229400E7D95C /* LNPopupInteractionPanGestureRecognizer.m in Sources */,
 				393E4EA72670F12500929E47 /* LNPopupBarAppearance.m in Sources */,
 				396D62732610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.m in Sources */,
-				3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.mm in Sources */,
+				3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.m in Sources */,
 				39599BAB1E02CD65008EE386 /* LNPopupCustomBarViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
