@@ -236,6 +236,8 @@ For custom popup bar controllers, the `LNPopupCustomBarViewController` class imp
 
 On iOS 15, scroll edge appearance is automatically disabled for toolbars and tab bars when a popup bar is presented, regardless of the scroll position of the content. Once the popup bar is dismissed, the scroll edge appearance is restored.
 
+<p align="center"><img src="./Supplements/scroll_edge_appearance.gif" width="360"/></p>
+
 #### Interaction Gesture Recognizer
 
 `LNPopupContentView` exposes access to the popup interaction gesture recognizer in the way of the `popupInteractionGestureRecognizer` property. This gesture recognizer is shared between opening the popup content, by panning the popup bar up (when the popup bar is closed), and closing the popup content, by panning the popup content view (when the popup bar is open).
