@@ -7,6 +7,7 @@
 //
 
 #import <LNPopupController/LNPopupBar.h>
+#import "LNPopupBarAppearanceChainProxy.h"
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupBarBackgroundView.h"
 
@@ -52,7 +53,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong) UIColor* systemTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
 @property (nonatomic, strong) UIBarAppearance* systemAppearance;
-@property (nonatomic, readonly, strong) _LNPopupBarAppearanceChainProxy* activeAppearanceChain;
+@property (nonatomic, readonly, strong) LNPopupBarAppearance* activeAppearance;
+@property (nonatomic, readonly, strong) LNPopupBarAppearanceChainProxy* activeAppearanceChain;
 
 - (void)_recalcActiveAppearanceChain;
 

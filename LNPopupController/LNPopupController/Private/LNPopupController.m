@@ -848,9 +848,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	_currentContentController = newContentController;
 	
-	if(self.popupBar.customBarViewController != nil)
+	if(self.popupBarStorage.customBarViewController != nil)
 	{
-		[self.popupBar.customBarViewController popupItemDidUpdate];
+		[self.popupBarStorage.customBarViewController popupItemDidUpdate];
 	}
 	else
 	{

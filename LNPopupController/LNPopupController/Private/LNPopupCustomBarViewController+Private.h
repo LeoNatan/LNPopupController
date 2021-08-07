@@ -15,4 +15,6 @@
 @property (nonatomic, weak, readwrite) LNPopupBar* containingPopupBar;
 @property (nonatomic, weak) LNPopupController* popupController;
 
+- (void)_activeAppearanceDidChange:(LNPopupBarAppearance*)activeAppearance;
+
 @end

@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  * Move close button under navigation bars
  */
-@property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars;
+@property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars UI_APPEARANCE_SELECTOR;
 
 /**
 * The popup content view background effect, used when the popup content controller's view has transparency.

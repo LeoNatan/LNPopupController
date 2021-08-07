@@ -8,6 +8,8 @@
 
 #import <LNPopupController/LNPopupBarAppearance.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _LNPopupBarAppearanceDelegate <NSObject>
 
 - (void)popupBarAppearanceDidChange:(LNPopupBarAppearance*)popupBarAppearance;
@@ -20,14 +22,4 @@
 
 @end
 
-@interface _LNPopupBarAppearanceChainProxy : NSObject
-
-- (instancetype)initWithAppearanceChain:(NSArray<UIBarAppearance*>*)chain;
-- (id)objectForKey:(NSString*)key;
-- (BOOL)boolForKey:(NSString*)key;
-- (NSUInteger)unsignedIntegerForKey:(NSString*)key;
-- (double)doubleForKey:(NSString*)key;
-
-- (void)setChainDelegate:(id<_LNPopupBarAppearanceDelegate>)delegate;
-
-@end
+NS_ASSUME_NONNULL_END

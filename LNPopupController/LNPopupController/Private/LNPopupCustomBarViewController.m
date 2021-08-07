@@ -56,6 +56,22 @@
 
 - (void)popupItemDidUpdate
 {
+	
+}
+
+- (void)_activeAppearanceDidChange:(LNPopupBarAppearance*)activeAppearance
+{
+	if(activeAppearance == nil)
+	{
+		return;
+	}
+	
+	[self activeAppearanceDidChange:activeAppearance];
+}
+
+- (void)activeAppearanceDidChange:(LNPopupBarAppearance *)activeAppearance
+{
+	
 }
 
 - (UIViewController*)popupContentViewController

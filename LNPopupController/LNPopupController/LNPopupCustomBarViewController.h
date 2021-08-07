@@ -10,6 +10,8 @@
 
 @class LNPopupBar;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * An object that manages a custom popup bar view hierarchy.
  *
@@ -57,9 +59,14 @@
 
 /**
  * Called by the framework to notify the popup bar content view controller that one or more keys of the the popup item have been updated, or the entire popup item has changed.
- *
- * @note You must call the @c super implementation of this method.
  */
-- (void)popupItemDidUpdate NS_REQUIRES_SUPER;
+- (void)popupItemDidUpdate;
+
+/**
+ * Called by the framework to notify the popup bar content view controller that the active appearance has changed. The provided @c activeAppearance object contains a merged appearance from the popup item, the system appearance and popup bar appearance, as appropriate.
+ */
+- (void)activeAppearanceDidChange:(LNPopupBarAppearance*)activeAppearance;
 
 @end
+
+NS_ASSUME_NONNULL_END

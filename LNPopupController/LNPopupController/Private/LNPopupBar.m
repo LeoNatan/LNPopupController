@@ -143,6 +143,16 @@ const UIBlurEffectStyle LNBackgroundStyleInherit = -9876;
 	UIView* _shadowView;
 }
 
+- (LNPopupBarAppearance *)activeAppearance
+{
+	if(self.activeAppearanceChain.chain.count == 0)
+	{
+		return nil;
+	}
+	
+	return (LNPopupBarAppearance*)self.activeAppearanceChain;
+}
+
 static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyle(LNPopupBarProgressViewStyle style)
 {
 	LNPopupBarProgressViewStyle rv = style;
@@ -492,7 +502,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	[chain addObject:self.standardAppearance];
 	
-	_activeAppearanceChain = [[_LNPopupBarAppearanceChainProxy alloc] initWithAppearanceChain:chain];
+	if([_activeAppearanceChain.chain isEqualToArray:chain])
+	{
+		return;
+	}
+	
+	_activeAppearanceChain = [[LNPopupBarAppearanceChainProxy alloc] initWithAppearanceChain:chain];
 	[_activeAppearanceChain setChainDelegate:self];
 	
 	[self _appearanceDidChange];
@@ -512,16 +527,17 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)_appearanceDidChange
 {
-	_highlightView.backgroundColor =  [self.activeAppearanceChain objectForKey:@"highlightColor"];
-	self.backgroundView.effect = [self.activeAppearanceChain objectForKey:@"backgroundEffect"];
-	self.backgroundView.colorView.backgroundColor = [self.activeAppearanceChain objectForKey:@"backgroundColor"];
-	self.backgroundView.imageView.image = [self.activeAppearanceChain objectForKey:@"backgroundImage"];
-	self.backgroundView.imageView.contentMode = [self.activeAppearanceChain unsignedIntegerForKey:@"backgroundImageContentMode"];
-	_toolbar.standardAppearance.buttonAppearance = [self.activeAppearanceChain objectForKey:@"buttonAppearance"] ?: _toolbar.standardAppearance.buttonAppearance;
-	_toolbar.standardAppearance.doneButtonAppearance = [self.activeAppearanceChain objectForKey:@"doneButtonAppearance"] ?: _toolbar.standardAppearance.doneButtonAppearance;
-	_shadowView.backgroundColor = [self.activeAppearanceChain objectForKey:@"shadowColor"];
-	_bottomShadowView.backgroundColor = [self.activeAppearanceChain objectForKey:@"shadowColor"];
+	_highlightView.backgroundColor = self.activeAppearance.highlightColor;
+	self.backgroundView.effect = self.activeAppearance.backgroundEffect;
+	self.backgroundView.colorView.backgroundColor = self.activeAppearance.backgroundColor;
+	self.backgroundView.imageView.image = self.activeAppearance.backgroundImage;
+	self.backgroundView.imageView.contentMode = self.activeAppearance.backgroundImageContentMode;
+	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
+	_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.doneButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
+	_shadowView.backgroundColor = self.activeAppearance.shadowColor;
+	_bottomShadowView.backgroundColor = self.activeAppearance.shadowColor;
 
+	[self.customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 	
 	//Recalculate labels
 	[self _setTitleLabelFontsAccordingToBarStyleAndTint];
@@ -658,17 +674,17 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (UILabel<__MarqueeLabelType>*)_newMarqueeLabel
 {
-	if([self.activeAppearanceChain boolForKey:@"marqueeScrollEnabled"] == NO)
+	if(self.activeAppearance.marqueeScrollEnabled == NO)
 	{
 		__FakeMarqueeLabel* rv = [[__FakeMarqueeLabel alloc] initWithFrame:_titlesView.bounds];
 		rv.minimumScaleFactor = 1.0;
 		rv.lineBreakMode = NSLineBreakByTruncatingTail;
 		return rv;
 	}
-	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:[self.activeAppearanceChain doubleForKey:@"marqueeScrollRate"] andFadeLength:10];
+	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:self.activeAppearance.marqueeScrollRate andFadeLength:10];
 	rv.leadingBuffer = 0.0;
 	rv.trailingBuffer = 20.0;
-	rv.animationDelay = [self.activeAppearanceChain doubleForKey:@"marqueeScrollDelay"];
+	rv.animationDelay = self.activeAppearance.marqueeScrollDelay;
 	rv.marqueeType = MLContinuous;
 	rv.holdScrolling = YES;
 	return rv;
@@ -842,7 +858,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		BOOL reset = NO;
 		
-		NSAttributedString* attr = _title ? [[NSAttributedString alloc] initWithString:_title attributes:[self.activeAppearanceChain objectForKey:@"titleTextAttributes"]] : nil;
+		NSAttributedString* attr = _title ? [[NSAttributedString alloc] initWithString:_title attributes:self.activeAppearance.titleTextAttributes] : nil;
 		if(_title != nil && [_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
 		{
 			_titleLabel.attributedText = attr;
@@ -856,7 +872,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			[_titlesView addSubview:_subtitleLabel];
 		}
 		
-		attr = _subtitle ? [[NSAttributedString alloc] initWithString:_subtitle attributes:[self.activeAppearanceChain objectForKey:@"subtitleTextAttributes"]] : nil;
+		attr = _subtitle ? [[NSAttributedString alloc] initWithString:_subtitle attributes:self.activeAppearance.subtitleTextAttributes] : nil;
 		if(_subtitle != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
 		{
 			_subtitleLabel.attributedText = attr;
@@ -1018,8 +1034,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)_setTitleLabelFontsAccordingToBarStyleAndTint
 {
-	NSDictionary* titleTextAttributes = [self.activeAppearanceChain objectForKey:@"titleTextAttributes"];
-	NSDictionary* subtitleTextAttributes = [self.activeAppearanceChain objectForKey:@"subtitleTextAttributes"];
+	NSDictionary* titleTextAttributes = self.activeAppearance.titleTextAttributes;
+	NSDictionary* subtitleTextAttributes = self.activeAppearance.subtitleTextAttributes;
 	
 	_titleLabel.textColor = titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor labelColor];
 	_subtitleLabel.textColor = subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor secondaryLabelColor];
@@ -1138,7 +1154,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	[self layoutIfNeeded];
 	
-	if (customBarViewController.containingPopupBar)
+	if(customBarViewController.containingPopupBar)
 	{
 		//Cleanly move the custom bar view controller from the previos popup bar.
 		customBarViewController.containingPopupBar.customBarViewController = nil;
@@ -1156,6 +1172,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_customBarViewController.containingPopupBar = self;
 		[self._barDelegate _popupBar:self updateCustomBarController:_customBarViewController cleanup:NO];
 		[_customBarViewController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
+		
+		[_customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 		
 		[self.contentView addSubview:_customBarViewController.view];
 		
@@ -1197,7 +1215,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)_recalculateCoordinatedMarqueeScrollIfNeeded
 {
-	if([self.activeAppearanceChain boolForKey:@"marqueeScrollEnabled"] == NO)
+	if(self.activeAppearance.marqueeScrollEnabled == NO)
 	{
 		return;
 	}
@@ -1210,10 +1228,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	MarqueeLabel* titleLabel = (id)_titleLabel;
 	MarqueeLabel* subtitleLabel = (id)_subtitleLabel;
 	
-	titleLabel.animationDelay = [self.activeAppearanceChain doubleForKey:@"marqueeScrollDelay"];
-	subtitleLabel.animationDelay = [self.activeAppearanceChain doubleForKey:@"marqueeScrollDelay"];
+	titleLabel.animationDelay = self.activeAppearance.marqueeScrollDelay;
+	subtitleLabel.animationDelay = self.activeAppearance.marqueeScrollDelay;
 	
-	if([self.activeAppearanceChain boolForKey:@"coordinateMarqueeScroll"] == YES && _title.length > 0 && _subtitle.length > 0)
+	if(self.activeAppearance.coordinateMarqueeScroll == YES && _title.length > 0 && _subtitle.length > 0)
 	{
 		titleLabel.holdScrolling = YES;
 		subtitleLabel.holdScrolling = YES;

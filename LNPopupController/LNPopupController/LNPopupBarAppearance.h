@@ -15,6 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 
 API_AVAILABLE(ios(13.0)) NS_SWIFT_UI_ACTOR
+
+/**
+ * An object for customizing the appearance of a popup bar.
+ *
+ * After creating a @c LNPopupBarAppearance object, use the methods and properties of this class to specify the appearance of items in the popup bar. Use the inherited properties from @c UIBarAppearance to configure the background and shadow attributes of the popup bar itself.
+ */
 @interface LNPopupBarAppearance : UIBarAppearance
 
 /**
@@ -37,14 +43,14 @@ API_AVAILABLE(ios(13.0)) NS_SWIFT_UI_ACTOR
 @property (nonatomic, readwrite, copy) UIBarButtonItemAppearance* buttonAppearance;
 
 /**
- * The color to apply for the bar's highlight.
- */
-@property (nonatomic, copy) UIColor* highlightColor;
-
-/**
  * The appearance for done-style bar button items.
  */
 @property (nonatomic, readwrite, copy) UIBarButtonItemAppearance* doneButtonAppearance;
+
+/**
+ * The color to apply for the bar's highlight.
+ */
+@property (nonatomic, copy) UIColor* highlightColor;
 
 /**
  * When enabled, titles and subtitles that are longer than the space available will scroll text over time.
