@@ -236,6 +236,7 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 
 #endif
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
 LNAlwaysInline
 id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(UIView* self, SEL standardAppearanceSelector, SEL scrollEdgeAppearanceSelector)
 {
@@ -321,3 +322,4 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(UIView* self, SEL stan
 }
 
 @end
+#endif

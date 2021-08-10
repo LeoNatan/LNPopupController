@@ -55,9 +55,11 @@ class DemoAlbumTableViewController: UITableViewController {
 
 		let appearance = UINavigationBarAppearance()
 		appearance.configureWithTransparentBackground()
+#if compiler(>=5.5)
 		if #available(iOS 15.0, *) {
 			navigationItem.compactScrollEdgeAppearance = appearance
 		}
+#endif
 		navigationItem.scrollEdgeAppearance = appearance
 		
 		let appearance2 = UINavigationBarAppearance()
