@@ -12,7 +12,7 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupSwizzlingUtils.h"
-#import "C++Math.h"
+#import "LNMath.h"
 @import ObjectiveC;
 
 static const void* _LNPopupItemKey = &_LNPopupItemKey;

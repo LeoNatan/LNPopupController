@@ -1,9 +1,9 @@
 //
-//  C++Math.h
-//  C++Math
+//  LNMath.h
+//  LNPopupController
 //
 //  Created by Leo Natan on 8/6/21.
-//  Copyright © 2021 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #ifndef C__Math_h
