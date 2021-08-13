@@ -240,7 +240,22 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 LNAlwaysInline
 id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(UIView* self, SEL standardAppearanceSelector, SEL scrollEdgeAppearanceSelector)
 {
-	UIViewController* vc = self._ln_containerController;
+	UIViewController* vc = nil;
+	if([self respondsToSelector:@selector(delegate)])
+	{
+		//Terrible logic to find UITabBarController when a UINavigationController is embedded inside it.
+		vc = [self valueForKey:@"delegate"];
+		if([vc isKindOfClass:UIViewController.class] == NO)
+		{
+			vc = nil;
+		}
+	}
+	
+	if(vc == nil)
+	{
+		vc = self._ln_containerController;
+	}
+	
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 	if(vc != nil && vc._ln_popupController_nocreate.currentContentController != nil)
