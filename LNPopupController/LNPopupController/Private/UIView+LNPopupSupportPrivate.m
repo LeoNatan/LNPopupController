@@ -17,6 +17,7 @@
 
 static const void* LNPopupAwaitingViewInWindowHierarchyKey = &LNPopupAwaitingViewInWindowHierarchyKey;
 static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
+static const void* LNPopupTabBarProgressKey = &LNPopupTabBarProgressKey;
 
 #if ! LNPopupControllerEnforceStrictClean
 //_viewControllerForAncestor
@@ -31,6 +32,8 @@ static NSString* _hW = @"aG9zdFdpbmRvdw==";
 static NSString* _aW = @"YXR0YWNoZWRXaW5kb3c=";
 //currentEvent
 static NSString* _cE = @"Y3VycmVudEV2ZW50";
+//_setBackgroundTransitionProgress:forceUpdate:
+static NSString* _sBTPfU = @"X3NldEJhY2tncm91bmRUcmFuc2l0aW9uUHJvZ3Jlc3M6Zm9yY2VVcGRhdGU6";
 #endif
 
 @interface UIViewController ()
@@ -238,7 +241,7 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
 LNAlwaysInline
-id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(UIView* self, SEL standardAppearanceSelector, SEL scrollEdgeAppearanceSelector)
+BOOL _LNBottomBarIsInPopupPresentation(id self)
 {
 	UIViewController* vc = nil;
 	if([self respondsToSelector:@selector(delegate)])
@@ -253,12 +256,18 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(UIView* self, SEL stan
 	
 	if(vc == nil)
 	{
-		vc = self._ln_containerController;
+		vc = [self _ln_containerController];
 	}
 	
+	return vc != nil && vc._ln_popupController_nocreate.popupControllerTargetState >= LNPopupPresentationStateBarPresented;
+}
+
+LNAlwaysInline
+id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardAppearanceSelector, SEL scrollEdgeAppearanceSelector)
+{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-	if(vc != nil && vc._ln_popupController_nocreate.currentContentController != nil)
+	if(_LNBottomBarIsInPopupPresentation(self))
 	{
 		return [self performSelector:standardAppearanceSelector];
 	}
