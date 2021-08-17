@@ -68,7 +68,7 @@ Drag the `LNPopupController.xcodeproj` project to your project, and add `LNPopup
 
 ### CocoaPods
 
-CocoaPods is not supported. There are many reasons for this. Instead of CocoaPods, use Carthage. You can continue using CocoaPods for for your other dependencies and Swift Package Manager for `LNPopupController`.
+CocoaPods is not supported. There are many reasons for this. Instead of CocoaPods, use Swift Package Manager from within Xcode. You can continue using CocoaPods for for your other dependencies and Swift Package Manager for `LNPopupController`.
 
 ## Using the Framework
 
