@@ -330,8 +330,8 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 
 ## Notes
 
-* Non-translucent bars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars themselves, and supporting those is not a priority for `LNPopupController`.
-  * Instead, either use translucent bars, or set a background color to your bar instead of setting it as not translucent or set `extendedLayoutIncludesOpaqueBars` to true for contained controllers
+* Legacy non-translucent tab bar and toolbars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars, and supporting those is not a priority for `LNPopupController`
+  * The correct way to achieve an opaque bar is to use the `UIBarAppearance.configureWithOpaqueBackground()` API, which is supported by `LNPopupController`
 * Manually setting bottom bar properties, such as setting a tab bar’s or a toolbar’s `isHidden = true` **is explicitly discouraged by Apple and not supported by the framework**; it will lead to undefined behavior by the framework
 
 ## Acknowledgements

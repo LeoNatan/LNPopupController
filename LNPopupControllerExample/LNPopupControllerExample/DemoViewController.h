@@ -1,5 +1,5 @@
 //
-//  FirstViewController.h
+//  DemoViewController.h
 //  LNPopupControllerExample
 //
 //  Created by Leo Natan on 7/16/15.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstViewController : UIViewController
+@interface DemoViewController : UIViewController
 
 
 @end

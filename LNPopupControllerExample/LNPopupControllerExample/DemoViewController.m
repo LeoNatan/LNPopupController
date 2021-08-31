@@ -1,5 +1,5 @@
 //
-//  FirstViewController.m
+//  DemoViewController.m
 //  LNPopupControllerExample
 //
 //  Created by Leo Natan on 7/16/15.
@@ -9,7 +9,7 @@
 #if LNPOPUP
 @import LNPopupController;
 #endif
-#import "FirstViewController.h"
+#import "DemoViewController.h"
 #import "DemoPopupContentViewController.h"
 #import "LoremIpsum.h"
 #import "RandomColors.h"
@@ -17,35 +17,13 @@
 #import "SplitViewController.h"
 @import UIKit;
 
+#import <LNPopupController/LNPopupController.h>
+
 extern UIImage* LNSystemImage(NSString* named);
 
-@interface TabBar : UITabBar @end
-@implementation TabBar
+@interface DemoView : UIView @end
 
-- (void)setFrame:(CGRect)frame
-{
-//	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
-
-	[super setFrame:frame];
-}
-
-@end
-
-@interface Toolbar : UIToolbar @end
-@implementation Toolbar
-
-- (void)setFrame:(CGRect)frame
-{
-//	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
-	
-	[super setFrame:frame];
-}
-
-@end
-
-@interface FirstView : UIView @end
-
-@implementation FirstView
+@implementation DemoView
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
@@ -59,18 +37,17 @@ extern UIImage* LNSystemImage(NSString* named);
 
 @end
 
-@interface FirstViewController () <UINavigationControllerDelegate
+@interface DemoViewController ()
 #if LNPOPUP
-, UIContextMenuInteractionDelegate, LNPopupPresentationDelegate
+< UIContextMenuInteractionDelegate, LNPopupPresentationDelegate >
 #endif
->
 
 @property (nonatomic, strong) NSString* colorSeedString;
 @property (nonatomic) NSInteger colorSeedCount;
 
 @end
 
-@implementation FirstViewController
+@implementation DemoViewController
 {
 	__weak IBOutlet UIButton *_galleryButton;
 	__weak IBOutlet UIButton *_nextButton;
@@ -103,8 +80,6 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 	NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
 	self.view.backgroundColor = LNSeedAdaptiveColor(seed);
-	
-	self.navigationController.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -119,7 +94,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	self.navigationController.view.tintColor = self.view.tintColor;
 	
 	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
-	_nextButton.hidden = self.splitViewController != nil;
+	_nextButton.hidden = self.navigationController == nil || self.splitViewController != nil;
 	
 	if(self.tabBarController == nil || self.navigationController.topViewController == self.navigationController.viewControllers.firstObject)
 	{
@@ -340,26 +315,10 @@ extern UIImage* LNSystemImage(NSString* named);
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	segue.destinationViewController.hidesBottomBarWhenPushed = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed];
-	if([segue.destinationViewController isKindOfClass:FirstViewController.class])
+	if([segue.destinationViewController isKindOfClass:DemoViewController.class])
 	{
-		[(FirstViewController*)segue.destinationViewController setColorSeedString:self.colorSeedString];
-		[(FirstViewController*)segue.destinationViewController setColorSeedCount:self.colorSeedCount + 1];
-	}
-}
-
-#pragma mark UINavigationControllerDelegate
-
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-	//Mask Apple's push bug. This uses private API, so don't copy it as is in your app!
-	
-	if(@available(iOS 14.0, *))
-	{
-		UIViewController* disappearing = [navigationController valueForKey:@"disappearingViewController"];
-		UIViewController* target = viewController;
-		BOOL isPushing = [[navigationController valueForKey:@"isPushing"] boolValue];
-		
-		self.tabBarController.view.backgroundColor = (isPushing ? target : disappearing).view.backgroundColor;
+		[(DemoViewController*)segue.destinationViewController setColorSeedString:self.colorSeedString];
+		[(DemoViewController*)segue.destinationViewController setColorSeedCount:self.colorSeedCount + 1];
 	}
 }
 

@@ -13,16 +13,6 @@
 #import "IntroWebViewController.h"
 #endif
 
-@interface DemoGalleryControllerTableView : UITableView @end
-@implementation DemoGalleryControllerTableView
-
-- (BOOL)canBecomeFocused
-{
-	return NO;
-}
-
-@end
-
 @interface DemoGalleryController : UITableViewController <
 #if LNPOPUP
 UIContextMenuInteractionDelegate
