@@ -1,6 +1,0 @@
-[submodule "LNPopupControllerExample/LNPreviewToContextMenu"]
-	path = LNPopupControllerExample/LNPreviewToContextMenu
-	url = https://github.com/LeoNatan/LNPreviewToContextMenu.git
-[submodule "LNPopupControllerExample/LNTouchVisualizer"]
-	path = LNPopupControllerExample/LNTouchVisualizer
-	url = https://github.com/LeoNatan/LNTouchVisualizer.git

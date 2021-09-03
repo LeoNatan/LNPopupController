@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		3901289526CFC1D60002612D /* LNPopupControllerExampleSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */; };
-		3908159224E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */; };
-		3908159324E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3908C34C1E7C9EA200451B5D /* SettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3908C34B1E7C9EA200451B5D /* SettingsTableViewController.m */; };
+		39114ECA26E2B0D9004FC75B /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39114EC926E2B0D9004FC75B /* LNTouchVisualizer */; };
+		39114ED926E2BF7A004FC75B /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */; };
+		39114EE026E2BF97004FC75B /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */; };
+		39114EE126E2BF9A004FC75B /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39114EC926E2B0D9004FC75B /* LNTouchVisualizer */; };
 		39140B901DBD69540036A6C5 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 397C560D1B74DA66007A67F0 /* Music.storyboard */; };
 		39277A091B58228000293F95 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A081B58228000293F95 /* main.m */; };
 		39277A0C1B58228000293F95 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
@@ -29,10 +31,6 @@
 		39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 39837A1F1B756F1A004D2DA9 /* RandomColors.m */; };
 		39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
 		39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A251B759721004D2DA9 /* PortraitTabBarController.swift */; };
-		39843F23260BA6E6004CCF55 /* LNTouchVisualizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39843F22260BA6DD004CCF55 /* LNTouchVisualizer.framework */; };
-		39843F24260BA6E6004CCF55 /* LNTouchVisualizer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39843F22260BA6DD004CCF55 /* LNTouchVisualizer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		39843F29260BA6FA004CCF55 /* LNTouchVisualizer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39843F22260BA6DD004CCF55 /* LNTouchVisualizer.framework */; };
-		39843F2A260BA6FA004CCF55 /* LNTouchVisualizer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39843F22260BA6DD004CCF55 /* LNTouchVisualizer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3985DE602549539B00CD76EE /* IntroWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3985DE5F2549539B00CD76EE /* IntroWebViewController.m */; };
 		3988E3581B59C3000039C09B /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3988E3571B59C3000039C09B /* DemoViewController.m */; };
 		399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399748711D5652250079492B /* DemoPopupContentViewController.m */; };
@@ -65,51 +63,14 @@
 		39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39631FAC230DA03E0059D119 /* SceneDelegate.m */; };
 		39FAFC4624E71A6C008BBC2D /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56291B753A45007A67F0 /* MusicCell.swift */; };
 		39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
-		39FAFC4A24E71A6C008BBC2D /* LNPreviewToContextMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */; };
 		39FAFC4B24E71A6C008BBC2D /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 39FAFC3324E71A6C008BBC2D /* LoremIpsum */; };
 		39FAFC4D24E71A6C008BBC2D /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 397C560D1B74DA66007A67F0 /* Music.storyboard */; };
 		39FAFC4E24E71A6C008BBC2D /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 393F23221E16BF1D000E969D /* MapScene.storyboard */; };
 		39FAFC4F24E71A6C008BBC2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39277A161B58228000293F95 /* Assets.xcassets */; };
 		39FAFC5024E71A6C008BBC2D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
-		39FAFC5224E71A6C008BBC2D /* LNPreviewToContextMenu.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3908158E24E1A8C8007AADDE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 39C7BBB623342F5700052DF0;
-			remoteInfo = LNPreviewToContextMenu;
-		};
-		3908159024E1A8D0007AADDE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 39C7BBB523342F5700052DF0;
-			remoteInfo = LNPreviewToContextMenu;
-		};
-		39843F21260BA6DD004CCF55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 39843F1D260BA6DD004CCF55 /* LNTouchVisualizer.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 39C38069260B783E00ACF910;
-			remoteInfo = LNTouchVisualizer;
-		};
-		39843F25260BA6EC004CCF55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 39843F1D260BA6DD004CCF55 /* LNTouchVisualizer.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 39C38068260B783E00ACF910;
-			remoteInfo = LNTouchVisualizer;
-		};
-		39843F27260BA6F1004CCF55 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 39843F1D260BA6DD004CCF55 /* LNTouchVisualizer.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 39C38068260B783E00ACF910;
-			remoteInfo = LNTouchVisualizer;
-		};
 		39DB52F41B5823490061C589 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */;
@@ -124,13 +85,6 @@
 			remoteGlobalIDString = 39DB52E41B5823330061C589;
 			remoteInfo = LNPopupController;
 		};
-		39FAFC3024E71A6C008BBC2D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 39C7BBB523342F5700052DF0;
-			remoteInfo = LNPreviewToContextMenu;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -140,9 +94,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3908159324E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Embed Frameworks */,
-				39843F24260BA6E6004CCF55 /* LNTouchVisualizer.framework in Embed Frameworks */,
 				39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */,
+				39114EE126E2BF9A004FC75B /* LNTouchVisualizer in Embed Frameworks */,
+				39114EE026E2BF97004FC75B /* LNPreviewToContextMenu in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -153,8 +107,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				39843F2A260BA6FA004CCF55 /* LNTouchVisualizer.framework in Embed Frameworks */,
-				39FAFC5224E71A6C008BBC2D /* LNPreviewToContextMenu.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -164,7 +116,6 @@
 /* Begin PBXFileReference section */
 		3901289326CFC1D60002612D /* LNPopupControllerExampleSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupControllerExampleSupport.h; sourceTree = "<group>"; };
 		3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupControllerExampleSupport.m; sourceTree = "<group>"; };
-		3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPreviewToContextMenu.xcodeproj; path = LNPreviewToContextMenu/LNPreviewToContextMenu/LNPreviewToContextMenu.xcodeproj; sourceTree = "<group>"; };
 		3908C34A1E7C9EA200451B5D /* SettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsTableViewController.h; sourceTree = "<group>"; };
 		3908C34B1E7C9EA200451B5D /* SettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsTableViewController.m; sourceTree = "<group>"; };
 		39277A041B58228000293F95 /* LNPopupControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,7 +142,6 @@
 		39837A211B756F4C004D2DA9 /* RandomColors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RandomColors.h; sourceTree = "<group>"; };
 		39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoMusicPlayerController.swift; sourceTree = "<group>"; };
 		39837A251B759721004D2DA9 /* PortraitTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitTabBarController.swift; sourceTree = "<group>"; };
-		39843F1D260BA6DD004CCF55 /* LNTouchVisualizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNTouchVisualizer.xcodeproj; path = LNTouchVisualizer/LNTouchVisualizer/LNTouchVisualizer.xcodeproj; sourceTree = "<group>"; };
 		3985DE5E2549539B00CD76EE /* IntroWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntroWebViewController.h; sourceTree = "<group>"; };
 		3985DE5F2549539B00CD76EE /* IntroWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntroWebViewController.m; sourceTree = "<group>"; };
 		3988E3571B59C3000039C09B /* DemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewController.m; sourceTree = "<group>"; };
@@ -217,11 +167,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39114ED926E2BF7A004FC75B /* LNPreviewToContextMenu in Frameworks */,
 				3980E7FC26DEBCAF00AC0728 /* LoremIpsum in Frameworks */,
 				39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */,
 				39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */,
-				39843F23260BA6E6004CCF55 /* LNTouchVisualizer.framework in Frameworks */,
-				3908159224E1A8DA007AADDE /* LNPreviewToContextMenu.framework in Frameworks */,
+				39114ECA26E2B0D9004FC75B /* LNTouchVisualizer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,8 +180,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */,
-				39FAFC4A24E71A6C008BBC2D /* LNPreviewToContextMenu.framework in Frameworks */,
-				39843F29260BA6FA004CCF55 /* LNTouchVisualizer.framework in Frameworks */,
 				39FAFC4B24E71A6C008BBC2D /* LoremIpsum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,14 +187,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3908158B24E1A8C8007AADDE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		3908C3491E7C9E8A00451B5D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -259,8 +199,6 @@
 		392779FB1B58228000293F95 = {
 			isa = PBXGroup;
 			children = (
-				39843F1D260BA6DD004CCF55 /* LNTouchVisualizer.xcodeproj */,
-				3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */,
 				39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */,
 				39277A061B58228000293F95 /* LNPopupControllerExample */,
 				39277A051B58228000293F95 /* Products */,
@@ -372,14 +310,6 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
-		39843F1E260BA6DD004CCF55 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				39843F22260BA6DD004CCF55 /* LNTouchVisualizer.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		39BBA86324FEC16600D9712A /* Demo - Custom Pupup Bar Scene - Manual Layout (Swift) */ = {
 			isa = PBXGroup;
 			children = (
@@ -420,13 +350,16 @@
 			buildRules = (
 			);
 			dependencies = (
-				39843F26260BA6EC004CCF55 /* PBXTargetDependency */,
-				3908159124E1A8D0007AADDE /* PBXTargetDependency */,
+				39114EDB26E2BF8B004FC75B /* PBXTargetDependency */,
+				39114EDD26E2BF8B004FC75B /* PBXTargetDependency */,
+				39114EDF26E2BF8B004FC75B /* PBXTargetDependency */,
 				39DB61831B8891EE001BFF8F /* PBXTargetDependency */,
 			);
 			name = LNPopupControllerExample;
 			packageProductDependencies = (
 				3980E7FB26DEBCAF00AC0728 /* LoremIpsum */,
+				39114EC926E2B0D9004FC75B /* LNTouchVisualizer */,
+				39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */,
 			);
 			productName = LNPopupControllerExample;
 			productReference = 39277A041B58228000293F95 /* LNPopupControllerExample.app */;
@@ -444,8 +377,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				39843F28260BA6F1004CCF55 /* PBXTargetDependency */,
-				39FAFC2F24E71A6C008BBC2D /* PBXTargetDependency */,
 			);
 			name = LNPopupControllerExampleNoPopup;
 			packageProductDependencies = (
@@ -482,6 +413,8 @@
 			mainGroup = 392779FB1B58228000293F95;
 			packageReferences = (
 				3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */,
+				39114EC826E2B0D9004FC75B /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */,
+				39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */,
 			);
 			productRefGroup = 39277A051B58228000293F95 /* Products */;
 			projectDirPath = "";
@@ -489,14 +422,6 @@
 				{
 					ProductGroup = 39DB52F11B5823480061C589 /* Products */;
 					ProjectRef = 39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */;
-				},
-				{
-					ProductGroup = 3908158B24E1A8C8007AADDE /* Products */;
-					ProjectRef = 3908158A24E1A8C8007AADDE /* LNPreviewToContextMenu.xcodeproj */;
-				},
-				{
-					ProductGroup = 39843F1E260BA6DD004CCF55 /* Products */;
-					ProjectRef = 39843F1D260BA6DD004CCF55 /* LNTouchVisualizer.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -508,20 +433,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		3908158F24E1A8C8007AADDE /* LNPreviewToContextMenu.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = LNPreviewToContextMenu.framework;
-			remoteRef = 3908158E24E1A8C8007AADDE /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		39843F22260BA6DD004CCF55 /* LNTouchVisualizer.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = LNTouchVisualizer.framework;
-			remoteRef = 39843F21260BA6DD004CCF55 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		39DB52F51B5823490061C589 /* LNPopupController.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -617,30 +528,22 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3908159124E1A8D0007AADDE /* PBXTargetDependency */ = {
+		39114EDB26E2BF8B004FC75B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = LNPreviewToContextMenu;
-			targetProxy = 3908159024E1A8D0007AADDE /* PBXContainerItemProxy */;
+			productRef = 39114EDA26E2BF8B004FC75B /* LoremIpsum */;
 		};
-		39843F26260BA6EC004CCF55 /* PBXTargetDependency */ = {
+		39114EDD26E2BF8B004FC75B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = LNTouchVisualizer;
-			targetProxy = 39843F25260BA6EC004CCF55 /* PBXContainerItemProxy */;
+			productRef = 39114EDC26E2BF8B004FC75B /* LNTouchVisualizer */;
 		};
-		39843F28260BA6F1004CCF55 /* PBXTargetDependency */ = {
+		39114EDF26E2BF8B004FC75B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = LNTouchVisualizer;
-			targetProxy = 39843F27260BA6F1004CCF55 /* PBXContainerItemProxy */;
+			productRef = 39114EDE26E2BF8B004FC75B /* LNPreviewToContextMenu */;
 		};
 		39DB61831B8891EE001BFF8F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = LNPopupController;
 			targetProxy = 39DB61821B8891EE001BFF8F /* PBXContainerItemProxy */;
-		};
-		39FAFC2F24E71A6C008BBC2D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = LNPreviewToContextMenu;
-			targetProxy = 39FAFC3024E71A6C008BBC2D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -923,6 +826,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		39114EC826E2B0D9004FC75B /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeoNatan/LNTouchVisualizer.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeoNatan/LNPreviewToContextMenu.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/LeoNatan/LoremIpsum";
@@ -942,6 +861,31 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		39114EC926E2B0D9004FC75B /* LNTouchVisualizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39114EC826E2B0D9004FC75B /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
+			productName = LNTouchVisualizer;
+		};
+		39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
+			productName = LNPreviewToContextMenu;
+		};
+		39114EDA26E2BF8B004FC75B /* LoremIpsum */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
+			productName = LoremIpsum;
+		};
+		39114EDC26E2BF8B004FC75B /* LNTouchVisualizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39114EC826E2B0D9004FC75B /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
+			productName = LNTouchVisualizer;
+		};
+		39114EDE26E2BF8B004FC75B /* LNPreviewToContextMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
+			productName = LNPreviewToContextMenu;
+		};
 		3980E7FB26DEBCAF00AC0728 /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
