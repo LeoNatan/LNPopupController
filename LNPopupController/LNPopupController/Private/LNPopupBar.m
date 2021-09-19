@@ -1081,7 +1081,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		UIView* spacing = [UIView new];
 		spacing.translatesAutoresizingMaskIntoConstraints = NO;
-		[spacing.widthAnchor constraintEqualToConstant:20].active = YES;
+		[spacing.widthAnchor constraintEqualToConstant:8].active = YES;
 //		[spacing.heightAnchor constraintEqualToConstant:20].active = YES;
 //		spacing.backgroundColor = UIColor.greenColor;
 		
@@ -1100,7 +1100,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		UIView* spacing = [UIView new];
 		spacing.translatesAutoresizingMaskIntoConstraints = NO;
-		[spacing.widthAnchor constraintEqualToConstant:20].active = YES;
+		[spacing.widthAnchor constraintEqualToConstant:8].active = YES;
 //		[spacing.heightAnchor constraintEqualToConstant:20].active = YES;
 //		spacing.backgroundColor = UIColor.greenColor;
 		[items addObject:[[UIBarButtonItem alloc] initWithCustomView:spacing]];
@@ -1119,6 +1119,27 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _setNeedsTitleLayout];
 	
 	_delaysBarButtonItemLayout = NO;
+	
+	if(__applySwiftUILayoutFixes)
+	{
+		// 🤦‍♂️ This code fixes a layout issue with SwiftUI bar button items under certain conditions.
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[items enumerateObjectsUsingBlock:^(UIBarButtonItem* _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+				if(obj.customView != nil)
+				{
+					CGRect frame = obj.customView.frame;
+					
+					frame.size.width -= 1;
+					
+					obj.customView.frame = frame;
+					
+					frame.size.width += 1;
+					
+					obj.customView.frame = frame;
+				}
+			}];
+		});
+	}
 }
 
 - (void)_updateViewsAfterCustomBarViewControllerUpdate
