@@ -9,6 +9,8 @@
 #import <LNPopupController/LNPopupItem.h>
 #import "LNPopupController.h"
 
+extern NSArray* __LNPopupItemObservedKeys;
+
 @class LNPopupItem;
 
 @protocol _LNPopupItemDelegate <NSObject>

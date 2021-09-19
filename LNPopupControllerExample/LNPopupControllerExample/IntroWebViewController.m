@@ -49,7 +49,14 @@ extern UIImage* LNSystemImage(NSString* named);
 		[self.view.trailingAnchor constraintEqualToAnchor:effectView.trailingAnchor],
 	]];
 	
-	self.popupItem.title = @"Welcome to LNPopupController!";
+	NSString* title = @"Welcome to LNPopupController!";
+	
+	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
+	[attribTitle addAttributes: @{
+		NSFontAttributeName: [UIFont systemFontOfSize:18 weight:UIFontWeightBold],
+	} range:[title rangeOfString:@"LNPopupController"]];
+	
+	self.popupItem.attributedTitle = attribTitle;
 	self.popupItem.image = [UIImage imageNamed:@"genre10"];
 	self.popupItem.barButtonItems = @[
 		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill") style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],

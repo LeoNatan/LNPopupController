@@ -64,8 +64,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, weak) id<_LNPopupBarDelegate> _barDelegate;
 
-@property (nonatomic, copy) NSString* title;
-@property (nonatomic, copy) NSString* subtitle;
+@property (nonatomic, copy) NSAttributedString* attributedTitle;
+@property (nonatomic, copy) NSAttributedString* attributedSubtitle;
 
 @property (nonatomic, strong) UIImage* image;
 @property (nonatomic, strong) UIViewController* swiftuiImageController;

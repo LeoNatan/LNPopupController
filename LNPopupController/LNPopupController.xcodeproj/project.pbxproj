@@ -51,6 +51,8 @@
 		398C2901260CCDA0000690FB /* UIViewController+LNPopupSupportPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85C71B63FB96004FFC61 /* UIViewController+LNPopupSupportPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		398C2902260CCDA6000690FB /* LNPopupCloseButton+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 39109DA11DD8A305004B5FAB /* LNPopupCloseButton+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		398C2903260CCDA6000690FB /* LNPopupContentView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 3907CDB924D9BD8A007C9300 /* LNPopupContentView+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		39A0DDB326F7894700E5D751 /* NSAttributedString+LNPopupSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A0DDB126F7894700E5D751 /* NSAttributedString+LNPopupSupport.h */; };
+		39A0DDB426F7894700E5D751 /* NSAttributedString+LNPopupSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A0DDB226F7894700E5D751 /* NSAttributedString+LNPopupSupport.m */; };
 		39A9249A1B58530A003C1C19 /* LNPopupController.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A924991B5852ED003C1C19 /* LNPopupController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39AC479126C69ACA001D53C2 /* LNMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 39AC478F26C69AC9001D53C2 /* LNMath.h */; };
 		39AC479226C69ACA001D53C2 /* LNMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 39AC479026C69AC9001D53C2 /* LNMath.m */; };
@@ -109,6 +111,8 @@
 		397AFC041F1A229400E7D95C /* LNPopupInteractionPanGestureRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupInteractionPanGestureRecognizer.m; sourceTree = "<group>"; };
 		397D9A152687474D005164AB /* _LNPopupBarBackgroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupBarBackgroundView.h; sourceTree = "<group>"; };
 		397D9A162687474D005164AB /* _LNPopupBarBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupBarBackgroundView.m; sourceTree = "<group>"; };
+		39A0DDB126F7894700E5D751 /* NSAttributedString+LNPopupSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+LNPopupSupport.h"; sourceTree = "<group>"; };
+		39A0DDB226F7894700E5D751 /* NSAttributedString+LNPopupSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+LNPopupSupport.m"; sourceTree = "<group>"; };
 		39A924991B5852ED003C1C19 /* LNPopupController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupController.h; sourceTree = "<group>"; };
 		39AC478F26C69AC9001D53C2 /* LNMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNMath.h; sourceTree = "<group>"; };
 		39AC479026C69AC9001D53C2 /* LNMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNMath.m; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 				394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m */,
 				39AC478F26C69AC9001D53C2 /* LNMath.h */,
 				39AC479026C69AC9001D53C2 /* LNMath.m */,
+				39A0DDB126F7894700E5D751 /* NSAttributedString+LNPopupSupport.h */,
+				39A0DDB226F7894700E5D751 /* NSAttributedString+LNPopupSupport.m */,
 			);
 			name = Implementation;
 			path = Private;
@@ -241,6 +247,7 @@
 				398C2903260CCDA6000690FB /* LNPopupContentView+Private.h in Headers */,
 				39599BAA1E02CD65008EE386 /* LNPopupCustomBarViewController.h in Headers */,
 				39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */,
+				39A0DDB326F7894700E5D751 /* NSAttributedString+LNPopupSupport.h in Headers */,
 				3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */,
 				393E4EAA2670F2D000929E47 /* LNPopupBarAppearance.h in Headers */,
 				3947E1B21B61CE4A0001178B /* LNPopupController.h in Headers */,
@@ -356,6 +363,7 @@
 				391481BA1DCFA514002416D1 /* LNChevronView.m in Sources */,
 				397D9A182687474E005164AB /* _LNPopupBarBackgroundView.m in Sources */,
 				3947E1A61B61CD650001178B /* LNPopupBar.m in Sources */,
+				39A0DDB426F7894700E5D751 /* NSAttributedString+LNPopupSupport.m in Sources */,
 				394A85C91B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.m in Sources */,
 				397AFC061F1A229400E7D95C /* LNPopupInteractionPanGestureRecognizer.m in Sources */,
 				393E4EA72670F12500929E47 /* LNPopupBarAppearance.m in Sources */,

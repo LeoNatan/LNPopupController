@@ -685,12 +685,22 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_reconfigure_title
 {
-	self.popupBarStorage.title = _currentPopupItem.title;
+	self.popupBarStorage.attributedTitle = _currentPopupItem.attributedTitle;
 }
 
 - (void)_reconfigure_subtitle
 {
-	self.popupBarStorage.subtitle = _currentPopupItem.subtitle;
+	self.popupBarStorage.attributedSubtitle = _currentPopupItem.attributedSubtitle;
+}
+
+- (void)_reconfigure_attributedTitle
+{
+	self.popupBarStorage.attributedTitle = _currentPopupItem.attributedTitle;
+}
+
+- (void)_reconfigure_attributedSubtitle
+{
+	self.popupBarStorage.attributedSubtitle = _currentPopupItem.attributedSubtitle;
 }
 
 - (void)_reconfigure_image
@@ -710,7 +720,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}];
 }
 
-- (void)_reconfigure_accessibilityLavel
+- (void)_reconfigure_accessibilityLabel
 {
 	self.popupBarStorage.accessibilityCenterLabel = _currentPopupItem.accessibilityLabel;
 }
@@ -854,8 +864,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	else
 	{
-		NSArray<NSString*>* keys = @[@"title", @"subtitle", @"image", @"progress", @"leadingBarButtonItems", @"trailingBarButtonItems", @"accessibilityLavel", @"accessibilityHint", @"accessibilityImageLabel", @"accessibilityProgressLabel", @"accessibilityProgressValue"];
-		[keys enumerateObjectsUsingBlock:^(NSString * __nonnull key, NSUInteger idx, BOOL * __nonnull stop) {
+		[__LNPopupItemObservedKeys enumerateObjectsUsingBlock:^(NSString * __nonnull key, NSUInteger idx, BOOL * __nonnull stop) {
 			[self _popupItem:_currentPopupItem didChangeValueForKey:key];
 		}];
 	}

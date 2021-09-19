@@ -10,6 +10,7 @@
 #import "LNPopupCustomBarViewController+Private.h"
 #import "MarqueeLabel.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "NSAttributedString+LNPopupSupport.h"
 
 #ifndef LNPopupControllerEnforceStrictClean
 //_effectWithStyle:tintColor:invertAutomaticStyle:
@@ -540,7 +541,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self.customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 	
 	//Recalculate labels
-	[self _setTitleLabelFontsAccordingToBarStyleAndTint];
 	[self _setNeedsTitleLayout];
 	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
 	
@@ -576,16 +576,16 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self setTintColor:_userTintColor];
 }
 
-- (void)setTitle:(NSString *)title
+- (void)setAttributedTitle:(NSAttributedString *)attributedTitle
 {
-	_title = [title copy];
+	_attributedTitle = [attributedTitle copy];
 	
 	[self _setNeedsTitleLayout];
 }
 
-- (void)setSubtitle:(NSString *)subtitle
+- (void)setAttributedSubtitle:(NSAttributedString *)attributedSubtitle
 {
-	_subtitle = [subtitle copy];
+	_attributedSubtitle = [attributedSubtitle copy];
 	
 	[self _setNeedsTitleLayout];
 }
@@ -852,14 +852,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(_titleLabel == nil)
 		{
 			_titleLabel = [self _newMarqueeLabel];
+			_titleLabel.textColor = UIColor.labelColor;
 			_titleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:14];
 			[_titlesView addSubview:_titleLabel];
 		}
 		
 		BOOL reset = NO;
 		
-		NSAttributedString* attr = _title ? [[NSAttributedString alloc] initWithString:_title attributes:self.activeAppearance.titleTextAttributes] : nil;
-		if(_title != nil && [_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
+		NSAttributedString* attr = _attributedTitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedTitle defaultAttributes:self.activeAppearance.titleTextAttributes] : nil;
+		if(attr != nil && [_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
 		{
 			_titleLabel.attributedText = attr;
 			reset = YES;
@@ -868,12 +869,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(_subtitleLabel == nil)
 		{
 			_subtitleLabel = [self _newMarqueeLabel];
+			_subtitleLabel.textColor = UIColor.secondaryLabelColor;
 			_subtitleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:14 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:11];
 			[_titlesView addSubview:_subtitleLabel];
 		}
 		
-		attr = _subtitle ? [[NSAttributedString alloc] initWithString:_subtitle attributes:self.activeAppearance.subtitleTextAttributes] : nil;
-		if(_subtitle != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
+		attr = _attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedSubtitle defaultAttributes:self.activeAppearance.subtitleTextAttributes] : nil;
+		if(attr != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
 		{
 			_subtitleLabel.attributedText = attr;
 			reset = YES;
@@ -885,8 +887,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			[_subtitleLabel resetLabel];
 		}
 	}
-	
-	[self _setTitleLabelFontsAccordingToBarStyleAndTint];
 	
 	CGRect titleLabelFrame = _titlesView.bounds;
 	
@@ -900,7 +900,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		titleLabelFrame.size.width -= 16;
 	}
 	
-	if(_subtitle.length > 0)
+	if(_attributedSubtitle.length > 0)
 	{
 		CGRect subtitleLabelFrame = _titlesView.bounds;
 		subtitleLabelFrame.size.height = barHeight;
@@ -959,14 +959,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	else
 	{
 		NSMutableString* accessibilityLabel = [NSMutableString new];
-		if(_title.length > 0)
+		if(_attributedTitle.length > 0)
 		{
-			[accessibilityLabel appendString:_title];
+			[accessibilityLabel appendString:_attributedTitle.string];
 			[accessibilityLabel appendString:@"\n"];
 		}
-		if(_subtitle.length > 0)
+		if(_attributedSubtitle.length > 0)
 		{
-			[accessibilityLabel appendString:_subtitle];
+			[accessibilityLabel appendString:_attributedSubtitle.string];
 		}
 		_titlesView.accessibilityLabel = accessibilityLabel;
 	}
@@ -1030,15 +1030,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		[self _setNeedsTitleLayout];
 	}
-}
-
-- (void)_setTitleLabelFontsAccordingToBarStyleAndTint
-{
-	NSDictionary* titleTextAttributes = self.activeAppearance.titleTextAttributes;
-	NSDictionary* subtitleTextAttributes = self.activeAppearance.subtitleTextAttributes;
-	
-	_titleLabel.textColor = titleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor labelColor];
-	_subtitleLabel.textColor = subtitleTextAttributes[NSForegroundColorAttributeName] ?: [UIColor secondaryLabelColor];
 }
 
 - (void)_setTitleViewMarqueesPaused:(BOOL)paused
@@ -1231,7 +1222,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	titleLabel.animationDelay = self.activeAppearance.marqueeScrollDelay;
 	subtitleLabel.animationDelay = self.activeAppearance.marqueeScrollDelay;
 	
-	if(self.activeAppearance.coordinateMarqueeScroll == YES && _title.length > 0 && _subtitle.length > 0)
+	if(self.activeAppearance.coordinateMarqueeScroll == YES && _attributedTitle.length > 0 && _attributedSubtitle.length > 0)
 	{
 		titleLabel.holdScrolling = YES;
 		subtitleLabel.holdScrolling = YES;
