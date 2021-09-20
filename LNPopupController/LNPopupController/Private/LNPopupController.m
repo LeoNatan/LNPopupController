@@ -776,6 +776,24 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
+- (void)_reconfigure_swiftuiTitleController
+{
+	if(_currentPopupItem.swiftuiTitleController != nil)
+	{
+		self.popupBarStorage.swiftuiTitleController = _currentPopupItem.swiftuiTitleController;
+		_currentPopupItem.title = nil;
+	}
+}
+
+- (void)_reconfigure_swiftuiSubtitleController
+{
+	if(_currentPopupItem.swiftuiSubtitleController != nil)
+	{
+		self.popupBarStorage.swiftuiSubtitleController = _currentPopupItem.swiftuiSubtitleController;
+		_currentPopupItem.subtitle = nil;
+	}
+}
+
 - (void)_reconfigure_standardAppearance
 {
 	[self.popupBarStorage _recalcActiveAppearanceChain];

@@ -606,6 +606,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	_swiftuiImageController = swiftuiImageController;
+	_swiftuiImageController.view.backgroundColor = UIColor.clearColor;
 	
 	_swiftuiImageController.view.translatesAutoresizingMaskIntoConstraints = NO;
 	[_imageView addSubview:_swiftuiImageController.view];
@@ -617,6 +618,32 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	]];
 	
 	[self _layoutImageView];
+	[self _setNeedsTitleLayout];
+}
+
+- (void)setSwiftuiTitleController:(UIViewController *)swiftuiTitleController
+{
+	if(_swiftuiTitleController != nil)
+	{
+		[_swiftuiTitleController.view removeFromSuperview];
+	}
+	
+	_swiftuiTitleController = swiftuiTitleController;
+	_swiftuiTitleController.view.backgroundColor = UIColor.clearColor;
+	
+	[self _setNeedsTitleLayout];
+}
+
+- (void)setSwiftuiSubtitleController:(UIViewController *)swiftuiSubtitleController
+{
+	if(_swiftuiSubtitleController != nil)
+	{
+		[_swiftuiSubtitleController.view removeFromSuperview];
+	}
+	
+	_swiftuiSubtitleController = swiftuiSubtitleController;
+	_swiftuiSubtitleController.view.backgroundColor = UIColor.clearColor;
+	
 	[self _setNeedsTitleLayout];
 }
 
@@ -824,6 +851,26 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	titleInsets->right = widthRight;
 }
 
+- (UIFont*)_titleFont
+{
+	return _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:14];
+}
+
+- (UIColor*)_titleColor
+{
+	return UIColor.labelColor;
+}
+
+- (UIFont*)_subtitleFont
+{
+	return _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:14 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:11];
+}
+
+- (UIColor*)_subtitleColor
+{
+	return UIColor.secondaryLabelColor;
+}
+
 - (void)_layoutTitles
 {
 	UIEdgeInsets titleInsets = UIEdgeInsetsZero;
@@ -852,33 +899,63 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(_titleLabel == nil)
 		{
 			_titleLabel = [self _newMarqueeLabel];
-			_titleLabel.textColor = UIColor.labelColor;
-			_titleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:18 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:14];
+			_titleLabel.textColor = self._titleColor;
+			_titleLabel.font = self._titleFont;
 			[_titlesView addSubview:_titleLabel];
 		}
 		
 		BOOL reset = NO;
 		
-		NSAttributedString* attr = _attributedTitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedTitle defaultAttributes:self.activeAppearance.titleTextAttributes] : nil;
-		if(attr != nil && [_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
+		if(_swiftuiTitleController != nil)
 		{
-			_titleLabel.attributedText = attr;
+			_swiftuiTitleController.view.translatesAutoresizingMaskIntoConstraints = NO;
+			[_titleLabel addSubview:_swiftuiTitleController.view];
+			[NSLayoutConstraint activateConstraints:@[
+				[_titleLabel.topAnchor constraintEqualToAnchor:_swiftuiTitleController.view.topAnchor],
+				[_titleLabel.bottomAnchor constraintEqualToAnchor:_swiftuiTitleController.view.bottomAnchor],
+				[_titleLabel.leadingAnchor constraintEqualToAnchor:_swiftuiTitleController.view.leadingAnchor],
+				[_titleLabel.trailingAnchor constraintEqualToAnchor:_swiftuiTitleController.view.trailingAnchor],
+			]];
 			reset = YES;
+		}
+		else
+		{
+			NSAttributedString* attr = _attributedTitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedTitle defaultAttributes:self.activeAppearance.titleTextAttributes] : nil;
+			if(attr != nil && [_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
+			{
+				_titleLabel.attributedText = attr;
+				reset = YES;
+			}
 		}
 		
 		if(_subtitleLabel == nil)
 		{
 			_subtitleLabel = [self _newMarqueeLabel];
-			_subtitleLabel.textColor = UIColor.secondaryLabelColor;
-			_subtitleLabel.font = _resolvedStyle == LNPopupBarStyleProminent ? [UIFont systemFontOfSize:14 weight:UIFontWeightRegular] : [UIFont systemFontOfSize:11];
+			_subtitleLabel.textColor = self._subtitleColor;
+			_subtitleLabel.font = self._subtitleFont;
 			[_titlesView addSubview:_subtitleLabel];
 		}
 		
-		attr = _attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedSubtitle defaultAttributes:self.activeAppearance.subtitleTextAttributes] : nil;
-		if(attr != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
+		if(_swiftuiSubtitleController != nil)
 		{
-			_subtitleLabel.attributedText = attr;
+			_swiftuiSubtitleController.view.translatesAutoresizingMaskIntoConstraints = NO;
+			[_subtitleLabel addSubview:_swiftuiSubtitleController.view];
+			[NSLayoutConstraint activateConstraints:@[
+				[_subtitleLabel.topAnchor constraintEqualToAnchor:_swiftuiSubtitleController.view.topAnchor],
+				[_subtitleLabel.bottomAnchor constraintEqualToAnchor:_swiftuiSubtitleController.view.bottomAnchor],
+				[_subtitleLabel.leadingAnchor constraintEqualToAnchor:_swiftuiSubtitleController.view.leadingAnchor],
+				[_subtitleLabel.trailingAnchor constraintEqualToAnchor:_swiftuiSubtitleController.view.trailingAnchor],
+			]];
 			reset = YES;
+		}
+		else
+		{
+			NSAttributedString* attr = _attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedSubtitle defaultAttributes:self.activeAppearance.subtitleTextAttributes] : nil;
+			if(attr != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
+			{
+				_subtitleLabel.attributedText = attr;
+				reset = YES;
+			}
 		}
 		
 		if(reset)
@@ -900,7 +977,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		titleLabelFrame.size.width -= 16;
 	}
 	
-	if(_attributedSubtitle.length > 0)
+	if(_attributedSubtitle.length > 0 || _swiftuiSubtitleController != nil)
 	{
 		CGRect subtitleLabelFrame = _titlesView.bounds;
 		subtitleLabelFrame.size.height = barHeight;
@@ -948,6 +1025,30 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
 	
 	_needsLabelsLayout = NO;
+	
+	if(__applySwiftUILayoutFixes)
+	{
+		// 🤦‍♂️ This code fixes a layout issue with SwiftUI bar button items under certain conditions.
+		dispatch_async(dispatch_get_main_queue(), ^{
+			if(self.swiftuiTitleController)
+			{
+				CGRect frame = self.swiftuiTitleController.view.frame;
+				frame.size.width -= 1;
+				self.swiftuiTitleController.view.frame = frame;
+				frame.size.width += 1;
+				self.swiftuiTitleController.view.frame = frame;
+			}
+			
+			if(self.swiftuiSubtitleController)
+			{
+				CGRect frame = self.swiftuiSubtitleController.view.frame;
+				frame.size.width -= 1;
+				self.swiftuiSubtitleController.view.frame = frame;
+				frame.size.width += 1;
+				self.swiftuiSubtitleController.view.frame = frame;
+			}
+		});
+	}
 }
 
 - (void)_updateAccessibility
