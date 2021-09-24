@@ -150,7 +150,6 @@
 		39A134DA1B73FFC0003AB4C5 /* LNPopupControllerExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupControllerExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		39A3B589230D400B00E10425 /* SplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitViewController.h; sourceTree = "<group>"; };
 		39A3B58A230D400B00E10425 /* SplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
-		39A3B58C230D433100E10425 /* LNPopupControllerExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupControllerExample.entitlements; sourceTree = "<group>"; };
 		39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ManualLayoutScene.storyboard; sourceTree = "<group>"; };
 		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
 		39DA0E8122D7B9C6001E63A0 /* NSObject+XcodeBugs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+XcodeBugs.h"; sourceTree = "<group>"; };
@@ -218,7 +217,6 @@
 		39277A061B58228000293F95 /* LNPopupControllerExample */ = {
 			isa = PBXGroup;
 			children = (
-				39A3B58C230D433100E10425 /* LNPopupControllerExample.entitlements */,
 				39277A131B58228000293F95 /* Main.storyboard */,
 				397C560B1B74D47D007A67F0 /* Demo - Testing Scene (Objective-C) */,
 				397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */,
@@ -674,11 +672,12 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
-				DEVELOPMENT_TEAM = 6Z9ASVU98Y;
+				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"LNPOPUP=1",
 					"DEBUG=1",
@@ -691,9 +690,11 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_SWIFT_FLAGS = "-DLNPOPUP";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample---";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -709,11 +710,12 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
-				DEVELOPMENT_TEAM = 6Z9ASVU98Y;
+				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				GCC_PREPROCESSOR_DEFINITIONS = "LNPOPUP=1";
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -725,6 +727,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
@@ -741,20 +745,23 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
-				DEVELOPMENT_TEAM = 6Z9ASVU98Y;
+				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				INFOPLIST_FILE = "LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample---";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -770,20 +777,23 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
 				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
-				DEVELOPMENT_TEAM = 6Z9ASVU98Y;
+				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				INFOPLIST_FILE = "LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample---";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
