@@ -50,6 +50,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @interface LNPopupBar () <UIPointerInteractionDelegate, _LNPopupBarAppearanceDelegate>
 
++ (void)setAnimatesItemSetter:(BOOL)animate;
+
 @property (nonatomic, strong) UIColor* systemTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
 @property (nonatomic, strong) UIBarAppearance* systemAppearance;

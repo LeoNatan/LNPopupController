@@ -126,6 +126,8 @@ const CGFloat LNPopupBarProminentImageWidth = 48.0;
 
 const UIBlurEffectStyle LNBackgroundStyleInherit = -9876;
 
+static BOOL __animatesItemSetter = NO;
+
 @implementation LNPopupBar
 {
 	LNPopupBarStyle _resolvedStyle;
@@ -142,6 +144,11 @@ const UIBlurEffectStyle LNBackgroundStyleInherit = -9876;
 	
 	UIToolbar* _toolbar;
 	UIView* _shadowView;
+}
+
++ (void)setAnimatesItemSetter:(BOOL)animate
+{
+	__animatesItemSetter = animate;
 }
 
 - (LNPopupBarAppearance *)activeAppearance
@@ -1215,7 +1222,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	fixedSpacer.width = _resolvedStyle == LNPopupBarStyleProminent ? 2 : -2;
 	[items addObject:fixedSpacer];
 	
-	[_toolbar setItems:items animated:YES];
+	[_toolbar setItems:items animated:__animatesItemSetter];
 	
 	[self _setNeedsTitleLayout];
 	

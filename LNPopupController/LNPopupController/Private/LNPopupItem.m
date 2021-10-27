@@ -177,6 +177,33 @@ NSArray* __LNPopupItemObservedKeys;
 	self.trailingBarButtonItems = barButtonItems;
 }
 
+- (void)setBarButtonItems:(NSArray<UIBarButtonItem *> *)barButtonItems animated:(BOOL)animated
+{
+	[LNPopupBar setAnimatesItemSetter:animated];
+	
+	[self setBarButtonItems:barButtonItems];
+	
+	[LNPopupBar setAnimatesItemSetter:NO];
+}
+
+- (void)setLeadingBarButtonItems:(NSArray<UIBarButtonItem *> *)leadingBarButtonItems animated:(BOOL)animated
+{
+	[LNPopupBar setAnimatesItemSetter:animated];
+	
+	[self setLeadingBarButtonItems:leadingBarButtonItems];
+	
+	[LNPopupBar setAnimatesItemSetter:NO];
+}
+
+- (void)setTrailingBarButtonItems:(NSArray<UIBarButtonItem *> *)trailingBarButtonItems animated:(BOOL)animated
+{
+	[LNPopupBar setAnimatesItemSetter:animated];
+	
+	[self setTrailingBarButtonItems:trailingBarButtonItems];
+	
+	[LNPopupBar setAnimatesItemSetter:NO];
+}
+
 @end
 
 #pragma clang diagnostic push

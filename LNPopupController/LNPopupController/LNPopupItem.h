@@ -69,6 +69,13 @@ NS_SWIFT_UI_ACTOR
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* barButtonItems;
 
 /**
+ * Sets the bar button items of the popup bar, optionally animating the transition to the new items.
+ *
+ * @note For compact popup bars, this is equivalent to @c setTrailingBarButtonItems:animated:.
+ */
+- (void)setBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)barButtonItems animated:(BOOL)animated;
+
+/**
  * An array of custom bar button items to display on the leading side of the popup bar.
  *
  * @note For prominent popup bars, these buttons are positioned on the trailing side, before items in @c trailingBarButtonItems.
@@ -76,11 +83,25 @@ NS_SWIFT_UI_ACTOR
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leadingBarButtonItems;
 
 /**
+ * Sets the leading bar button items of the popup bar, optionally animating the transition to the new items.
+ *
+ * @note For prominent popup bars, these buttons are positioned on the trailing side, before items in @c trailingBarButtonItems.
+ */
+- (void)setLeadingBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)leadingBarButtonItems animated:(BOOL)animated;
+
+/**
  * An array of custom bar button items to display on the trailing side of the popup bar.
  *
  * @note For prominent popup bars, this property is synonymous with @c barButtonItems.
  */
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
+
+/**
+ * Sets the trailing bar button items of the popup bar, optionally animating the transition to the new items.
+ *
+ * @note For prominent popup bars, this property is synonymous with @c setBarButtonItems:animated:.
+ */
+- (void)setTrailingBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)trailingBarButtonItems animated:(BOOL)animated;
 
 /**
  * When set and this item is displayed, overrides the hosting popup bar's @c standardAppearance as well as any appearance inherited from the docking view. See @c LNPopupBarAppearance.standardAppearance for further details.

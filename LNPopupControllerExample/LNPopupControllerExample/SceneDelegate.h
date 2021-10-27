@@ -1,9 +1,9 @@
 //
 //  SceneDelegate.h
-//  ZZZ
+//  LNPopupControllerExample
 //
 //  Created by Leo Natan on 8/21/19.
-//  Copyright © 2019 wix. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

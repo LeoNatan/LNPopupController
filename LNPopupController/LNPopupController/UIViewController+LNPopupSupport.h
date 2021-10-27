@@ -75,7 +75,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 };
 
 /**
- * Popup presentation support for @c UIViewController subclasses.
+ * Popup content support for @c UIViewController subclasses.
  */
 @interface UIViewController (LNPopupContent)
 
@@ -149,6 +149,9 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 
 @end
 
+/**
+ * Popup presentation support for @c UIViewController subclasses.
+ */
 @interface UIViewController (LNPopupPresentation)
 
 /**
