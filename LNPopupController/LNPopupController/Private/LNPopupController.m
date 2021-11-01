@@ -1082,8 +1082,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		[_containerController.view layoutIfNeeded];
 		
+		_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
 		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^ {
 			[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
+			_containerController._ln_bottomBarExtension_nocreate.alpha = 1.0;
 			
 			CGRect barFrame = self.popupBar.frame;
 			barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.customBarViewController);
@@ -1190,6 +1192,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				 _LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
 				
 				[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
+				_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
 			 } completion:^(BOOL finished) {
 				 _popupControllerInternalState = LNPopupPresentationStateBarHidden;
 				 

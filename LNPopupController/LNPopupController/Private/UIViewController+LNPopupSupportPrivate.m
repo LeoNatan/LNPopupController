@@ -531,7 +531,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension
 {
-	if(self.shouldExtendPopupBarUnderSafeArea == NO)
+	if(self.shouldExtendPopupBarUnderSafeArea == NO || self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden)
 	{
 		[self._ln_bottomBarExtension_nocreate removeFromSuperview];
 		
@@ -542,6 +542,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	if(rv == nil)
 	{
 		rv = [[_LNPopupBarBackgroundView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial]];
+		rv.alpha = 0.0;
 		objc_setAssociatedObject(self, LNPopupBarExtensionView, rv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 		[self._ln_popupController _updateBarExtensionStyleFromPopupBar];
 	}
@@ -581,20 +582,12 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	UIView* extensionView = self._ln_bottomBarExtension_nocreate;
 	dispatch_block_t removeFromSuperview = ^ {
 		[extensionView removeFromSuperview];
-		extensionView.alpha = 1.0;
+		extensionView.alpha = 0.0;
 	};
 	
-	if(self.shouldExtendPopupBarUnderSafeArea == NO)
+	if(self.shouldExtendPopupBarUnderSafeArea == NO || (self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden && extensionView.superview != nil))
 	{
 		removeFromSuperview();
-	}
-	else if(self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden && extensionView.superview != nil)
-	{
-		[UIView animateWithDuration:0.15 animations:^{
-			extensionView.alpha = 0.0;
-		} completion:^(BOOL finished) {
-			removeFromSuperview();
-		}];
 	}
 }
 
@@ -855,6 +848,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		
 		[self _layoutPopupBarOrderForTransition];
 		
+		self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 		[self.selectedViewController.transitionCoordinator animateAlongsideTransition: ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 			self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
@@ -923,6 +917,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			[self _setIgnoringLayoutDuringTransition:NO];
 			
 			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
+			
+			if(context.isCancelled == NO)
+			{
+				self._ln_bottomBarExtension_nocreate.alpha = 0.0;
+			}
 		}];
 	}
 }
@@ -1114,6 +1113,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	if(hidden == YES)
 	{
 		self._ln_bottomBarExtension.frame = frame;
+		self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 	}
 	
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = hidden == NO ? 0.0 : 1.0;
@@ -1129,7 +1129,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		CGRect frame;
 		if(hidden)
 		{
-			self._ln_bottomBarExtension.frame = CGRectMake(0, self.view.bounds.size.height - safeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
+			self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - safeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
 			
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 		}
@@ -1141,7 +1141,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			{
 				frame.origin.x = self.view.bounds.size.width;
 			}
-			self._ln_bottomBarExtension.frame = frame;
+			self._ln_bottomBarExtension_nocreate.frame = frame;
 			
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
 		}
@@ -1151,6 +1151,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		if(hidden)
 		{
 			self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - safeArea, self.view.bounds.size.width, safeArea);
+		}
+		else if(finished)
+		{
+			self._ln_bottomBarExtension_nocreate.alpha = 0.0;
 		}
 		
 		//Position the popup bar and content to the superview of the toolbar for the transition.
