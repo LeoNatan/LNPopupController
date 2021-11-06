@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * The popup close button style.
+ *
+ * Defaults to @c LNPopupCloseButtonStyleDefault.
  */
 @property (nonatomic) LNPopupCloseButtonStyle popupCloseButtonStyle UI_APPEARANCE_SELECTOR;
 
@@ -37,7 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) LNPopupCloseButton* popupCloseButton;
 
 /**
- * Move close button under navigation bars
+ * Attempt to automatically move the popup close button under top bars, such as navigation bars.
+ *
+ * Defaults to @c true.
  */
 @property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars UI_APPEARANCE_SELECTOR;
 
@@ -51,7 +55,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) UIBlurEffect* backgroundEffect UI_APPEARANCE_SELECTOR;
 
 /**
- * A Boolean value that indicates whether the popup conetnt view is translucent (@c true) or not (@c false).
+ * A Boolean value that indicates whether the popup content view is translucent (@c true) or not (@c false).
+ *
+ * Defaults to @c true.
  */
 @property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
 

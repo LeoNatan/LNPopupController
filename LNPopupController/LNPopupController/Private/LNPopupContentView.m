@@ -263,40 +263,17 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect
 {
-	__block BOOL alphaLessThanZero;
-	void (^block)(void) = ^ {
-		alphaLessThanZero = CGColorGetAlpha(vc.view.backgroundColor.CGColor) < 1.0;
-	};
-	
-	[vc.traitCollection performAsCurrentTraitCollection:block];
-	
-	if(alphaLessThanZero)
+	if(self.translucent == NO)
 	{
-		if(self.translucent == NO)
-		{
-			_effectView.effect = nil;
-		}
-		else if(_backgroundEffect == nil)
-		{
-			_effectView.effect = barEffect;
-		}
-		else
-		{
-			_effectView.effect = _backgroundEffect;
-		}
-		
-		if(self.popupCloseButton.style == LNPopupCloseButtonStyleRound)
-		{
-			self.popupCloseButton.layer.shadowOpacity = 0.2;
-		}
+		_effectView.effect = nil;
+	}
+	else if(_backgroundEffect == nil)
+	{
+		_effectView.effect = barEffect;
 	}
 	else
 	{
-		_effectView.effect = nil;
-		if(self.popupCloseButton.style == LNPopupCloseButtonStyleRound)
-		{
-			self.popupCloseButton.layer.shadowOpacity = 0.1;
-		}
+		_effectView.effect = _backgroundEffect;
 	}
 }
 
