@@ -1425,6 +1425,16 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 }
 
+- (void)_cancelGestureRecognizers
+{
+	for(UIGestureRecognizer* gr in self.gestureRecognizers)
+	{
+		BOOL enabled = gr.enabled;
+		gr.enabled = NO;
+		gr.enabled = enabled;
+	}
+}
+
 #pragma mark UIPointerInteractionDelegate
 
 - (nullable UIPointerRegion *)pointerInteraction:(UIPointerInteraction *)interaction regionForRequest:(UIPointerRegionRequest *)request defaultRegion:(UIPointerRegion *)defaultRegion API_AVAILABLE(ios(13.4))

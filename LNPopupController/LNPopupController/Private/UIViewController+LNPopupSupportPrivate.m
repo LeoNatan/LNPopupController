@@ -737,6 +737,14 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 						@selector(viewDidLayoutSubviews),
 						@selector(_ln_popup_viewDidLayoutSubviews_tvc));
 		
+		LNSwizzleMethod(self,
+						@selector(setSelectedViewController:),
+						@selector(_ln_setSelectedViewController:));
+		
+		LNSwizzleMethod(self,
+						@selector(setViewControllers:animated:),
+						@selector(_ln_setViewControllers:animated:));
+		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
 		
@@ -795,6 +803,20 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 }
 
+- (void)_ln_setSelectedViewController:(__kindof UIViewController *)selectedViewController
+{
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
+	
+	[self _ln_setSelectedViewController:selectedViewController];
+}
+
+- (void)_ln_setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated
+{
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
+	
+	[self _ln_setViewControllers:viewControllers animated:animated];
+}
+
 #ifndef LNPopupControllerEnforceStrictClean
 
 //_accessibilitySpeakThisViewController
@@ -829,6 +851,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)hBWT:(NSInteger)t iE:(BOOL)e
 {
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
 	[self _setTabBarHiddenDuringTransition:YES];
 	
@@ -874,6 +898,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
 	[self _setPrepareTabBarIgnored:t > 0];
 	
@@ -1012,6 +1038,26 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 						@selector(viewDidLayoutSubviews),
 						@selector(_ln_popup_viewDidLayoutSubviews_nvc));
 		
+		LNSwizzleMethod(self,
+						@selector(pushViewController:animated:),
+						@selector(_ln_pushViewController:animated:));
+		
+		LNSwizzleMethod(self,
+						@selector(popViewControllerAnimated:),
+						@selector(_ln_popViewControllerAnimated:));
+		
+		LNSwizzleMethod(self,
+						@selector(popToViewController:animated:),
+						@selector(_ln_popToViewController:animated:));
+		
+		LNSwizzleMethod(self,
+						@selector(popToRootViewControllerAnimated:),
+						@selector(_ln_popToRootViewControllerAnimated:));
+		
+		LNSwizzleMethod(self,
+						@selector(setViewControllers:animated:),
+						@selector(_ln_setViewControllers:animated:));
+		
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
 		
@@ -1065,6 +1111,41 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 }
 
+- (void)_ln_pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
+	
+	[self _ln_pushViewController:viewController animated:animated];
+}
+
+- (UIViewController *)_ln_popViewControllerAnimated:(BOOL)animated
+{
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
+	
+	return [self _ln_popViewControllerAnimated:animated];
+}
+
+- (NSArray<__kindof UIViewController *> *)_ln_popToViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
+	
+	return [self _ln_popToViewController:viewController animated:animated];
+}
+
+- (NSArray<__kindof UIViewController *> *)_ln_popToRootViewControllerAnimated:(BOOL)animated
+{
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
+	
+	return [self _ln_popToRootViewControllerAnimated:animated];
+}
+
+- (void)_ln_setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated
+{
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
+	
+	return [self _ln_setViewControllers:viewControllers animated:animated];
+}
+
 #ifndef LNPopupControllerEnforceStrictClean
 
 //_accessibilitySpeakThisViewController
@@ -1092,6 +1173,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)_sTH:(BOOL)hidden e:(UIRectEdge)edge d:(CGFloat)duration;
 {
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	
+	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
 	//Move popup bar and content according to current state of the toolbar.
 	[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
