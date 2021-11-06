@@ -150,7 +150,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 				_popupCloseButtonCenterConstraint.active = YES;
 			}
 			
-			[self _repositionPopupCloseButton];
+			[self _repositionPopupCloseButtonAnimated:YES];
 		}
 		else
 		{
@@ -181,8 +181,12 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	return nil;
 }
 
-
 - (void)_repositionPopupCloseButton
+{
+	[self _repositionPopupCloseButtonAnimated:YES];
+}
+
+- (void)_repositionPopupCloseButtonAnimated:(BOOL)animated
 {
 	if(self.popupCloseButton.superview != self.contentView)
 	{
@@ -223,9 +227,18 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
 	{
-		[UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
-			[self layoutIfNeeded];
-		} completion:nil];
+		if(animated == NO)
+		{
+			[UIView performWithoutAnimation:^{
+				[self layoutIfNeeded];
+			}];
+		}
+		else
+		{
+			[UIView animateWithDuration:0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
+				[self layoutIfNeeded];
+			} completion:nil];
+		}
 	}
 }
 

@@ -124,7 +124,7 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 	return CGRectMake(0, defaultFrame.origin.y - self.popupBar.frame.size.height - insets.bottom, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
 }
 
-- (void)_repositionPopupContentMovingBottomBar:(BOOL)bottomBar
+- (void)_repositionPopupContentMovingBottomBar:(BOOL)bottomBar animated:(BOOL)animated
 {
 	CGFloat percent = [self _percentFromPopupBarForBottomBarDisplacement];
 	
@@ -153,7 +153,7 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 	
 	_containerController.popupContentViewController.view.frame = _containerController.view.bounds;
 	
-	[self.popupContentView _repositionPopupCloseButton];
+	[self.popupContentView _repositionPopupCloseButtonAnimated:animated];
 }
 
 static CGFloat __saturate(CGFloat x)
@@ -181,6 +181,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_setContentToState:(LNPopupPresentationState)state
 {
+	[self _setContentToState:state animated:YES];
+}
+
+- (void)_setContentToState:(LNPopupPresentationState)state animated:(BOOL)animated
+{
 	CGRect targetFrame = self.popupBar.frame;
 	if(state == LNPopupPresentationStateOpen)
 	{
@@ -206,7 +211,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_containerController setNeedsStatusBarAppearanceUpdate];
 	}
 	
-	[self _repositionPopupContentMovingBottomBar:_containerController._ignoringLayoutDuringTransition == NO];
+	[self _repositionPopupContentMovingBottomBar:_containerController._ignoringLayoutDuringTransition == NO animated:animated];
 }
 
 - (void)_addContentControllerSubview:(UIViewController*)currentContentController
@@ -248,8 +253,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_popupControllerInternalState == LNPopupPresentationStateBarPresented)
 	{
-		[_currentContentController _ln_beginAppearanceTransition:YES animated:NO];
+		[_currentContentController beginAppearanceTransition:YES animated:NO];
 		[UIView performWithoutAnimation:^{
+			if(notifyDelegate == YES && state == _LNPopupPresentationStateTransitioning)
+			{
+				[_currentContentController _userFacing_viewWillAppear:NO];
+			}
 //			_currentContentController.view.frame = _containerController.view.bounds;
 			
 			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController barEffect:(id)self.popupBar.backgroundView.effect];
@@ -259,8 +268,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			[self.popupContentView.contentView setNeedsLayout];
 			[self.popupContentView.contentView layoutIfNeeded];
+			if(notifyDelegate == YES && state == _LNPopupPresentationStateTransitioning)
+			{
+				[_currentContentController _userFacing_viewDidAppear:NO];
+			}
 		}];
-		[_currentContentController _ln_endAppearanceTransition];
+		[_currentContentController endAppearanceTransition];
 	};
 	
 	BOOL shouldNotifyDelegateWillClose = NO;
@@ -280,6 +293,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		shouldNotifyDelegateWillOpen = YES;
 	}
 	
+	__unused LNPopupPresentationState stateAtStart = _popupControllerInternalState;
 	_popupControllerInternalState = _LNPopupPresentationStateTransitioning;
 	_popupControllerTargetState = state;
 	
@@ -322,12 +336,18 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			updatePopupBarAlpha();
 		}
 		
-		if(state == LNPopupPresentationStateBarPresented)
+		if(state == LNPopupPresentationStateOpen && stateAtStart == LNPopupPresentationStateBarPresented)
 		{
-			[_currentContentController _ln_beginAppearanceTransition:NO animated:YES];
+			[_currentContentController _userFacing_viewWillAppear:animated];
 		}
 		
-		[self _setContentToState:state];
+		if(state == LNPopupPresentationStateBarPresented)
+		{
+			[_currentContentController beginAppearanceTransition:NO animated:animated];
+			[_currentContentController _userFacing_viewWillDisappear:animated];
+		}
+		
+		[self _setContentToState:state animated:animated];
 		[_containerController.view layoutIfNeeded];
 	};
 	
@@ -340,7 +360,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(state == LNPopupPresentationStateBarPresented)
 		{
-			[_currentContentController _ln_endAppearanceTransition];
+			[_currentContentController endAppearanceTransition];
+			[_currentContentController _userFacing_viewDidDisappear:animated];
 			
 			[self _cleanupGestureRecognizersForController:_currentContentController];
 			
@@ -362,6 +383,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 		else if(state == LNPopupPresentationStateOpen)
 		{
+			if(stateAtStart == LNPopupPresentationStateBarPresented)
+			{
+				[_currentContentController _userFacing_viewDidAppear:animated];
+			}
+			
 			[self.popupBar _setTitleViewMarqueesPaused:YES];
 			
 			[self.popupBar removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
@@ -394,8 +420,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(animated == NO)
 	{
-		animationBlock();
-		completionBlock(YES);
+		[UIView performWithoutAnimation:^{
+			animationBlock();
+			completionBlock(YES);
+			[_currentContentController.view layoutIfNeeded];
+		}];
 		return;
 	}
 	
@@ -432,11 +461,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	switch (tgr.state) {
 		case UIGestureRecognizerStateEnded:
 		{
-			[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:NO completion:^{
+//			[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:NO completion:^{
 				[_containerController.view setNeedsLayout];
 				[_containerController.view layoutIfNeeded];
 				[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
-			} transitionOriginatedByUser:NO];
+//			} transitionOriginatedByUser:NO];
 		}	break;
 		default:
 			break;
@@ -583,7 +612,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		_stateBeforeDismissStarted = _popupControllerInternalState;
 		
-		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
 		
 		_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 		_cachedInsets = [_containerController insetsForBottomDockingView];
@@ -620,7 +649,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		CGFloat currentCenterY = self.popupBar.center.y;
 		
 		self.popupBar.center = CGPointMake(self.popupBar.center.x, targetCenterY);
-		[self _repositionPopupContentMovingBottomBar:(resolvedStyle == LNPopupInteractionStyleDrag || resolvedStyle == LNPopupInteractionStyleScroll)];
+		[self _repositionPopupContentMovingBottomBar:(resolvedStyle == LNPopupInteractionStyleDrag || resolvedStyle == LNPopupInteractionStyleScroll) animated:YES];
 		_lastSeenMovement = CACurrentMediaTime();
 		
 		[_popupContentView.popupCloseButton _setButtonContainerTransitioning];
@@ -867,8 +896,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
 	{
-		[oldContentController _ln_beginAppearanceTransition:NO animated:NO];
-		[newContentController _ln_beginAppearanceTransition:YES animated:NO];
+		[oldContentController beginAppearanceTransition:NO animated:NO];
+		[oldContentController _userFacing_viewWillDisappear:NO];
+		[newContentController beginAppearanceTransition:YES animated:NO];
+		[newContentController _userFacing_viewWillAppear:NO];
 	}
 	
 	_LNPopupTransitionCoordinator* coordinator = [_LNPopupTransitionCoordinator new];
@@ -898,8 +929,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
 	{
-		[oldContentController _ln_endAppearanceTransition];
-		[newContentController _ln_endAppearanceTransition];
+		[newContentController _userFacing_viewDidAppear:NO];
+		[newContentController endAppearanceTransition];
+		[oldContentController _userFacing_viewDidDisappear:NO];
+		[oldContentController endAppearanceTransition];
 		
 		UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
 		
@@ -1114,12 +1147,11 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		[self.popupBar addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 		
-		[self _setContentToState:LNPopupPresentationStateBarPresented];
+		[self _setContentToState:LNPopupPresentationStateBarPresented animated:animated];
 		
 		[_containerController.view layoutIfNeeded];
 		
-		_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
-		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+		dispatch_block_t animations = ^{
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
 			[self.popupBar.customBarViewController _userFacing_viewWillAppear:animated];
 			
@@ -1145,7 +1177,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				}
 				[self openPopupAnimated:animated completion:completionBlock];
 			}
-		} completion:^(BOOL finished) {
+		};
+		
+		void (^completion)(BOOL) = ^(BOOL finished) {
 			if(!open)
 			{
 				_popupControllerInternalState = LNPopupPresentationStateBarPresented;
@@ -1167,7 +1201,20 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			{
 				completionBlock();
 			}
-		}];
+		};
+		
+		_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
+		
+		if(animated == NO)
+		{
+			[UIView performWithoutAnimation:^{
+				animations();
+				completion(YES);
+			}];
+			return;
+		}
+		
+		[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:animations completion:completion];
 	}
 	else
 	{
@@ -1186,11 +1233,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 {
 	if(_popupControllerTargetState == LNPopupPresentationStateBarPresented)
 	{
-		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:^{
-			[_containerController.view setNeedsLayout];
-			[_containerController.view layoutIfNeeded];
-			[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:NO];
-		} transitionOriginatedByUser:YES];
+		[_containerController.view setNeedsLayout];
+		[_containerController.view layoutIfNeeded];
+		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:NO];
 	}
 	else if(completionBlock != nil)
 	{

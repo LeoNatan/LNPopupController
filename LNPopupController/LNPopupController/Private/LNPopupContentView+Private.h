@@ -24,6 +24,7 @@
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect;
 
 - (void)_repositionPopupCloseButton;
+- (void)_repositionPopupCloseButtonAnimated:(BOOL)animated;
 
 @end
 

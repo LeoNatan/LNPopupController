@@ -46,9 +46,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (BOOL)_isContainedInPopupController;
 - (BOOL)_isContainedInPopupControllerOrDeallocated;
-- (BOOL)_ln_isInPopupAppearanceTransition;
-- (void)_ln_beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated;
-- (void)_ln_endAppearanceTransition;
 
 - (BOOL)_ignoringLayoutDuringTransition;
 
@@ -60,6 +57,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate;
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension;
+
+- (void)_userFacing_viewWillAppear:(BOOL)animated;
+- (void)_userFacing_viewDidAppear:(BOOL)animated;
+- (void)_userFacing_viewWillDisappear:(BOOL)animated;
+- (void)_userFacing_viewDidDisappear:(BOOL)animated;
 
 @end
 

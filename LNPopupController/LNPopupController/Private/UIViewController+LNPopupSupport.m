@@ -22,7 +22,6 @@ const void* _LNPopupContentViewControllerKey = &_LNPopupContentViewControllerKey
 static const void* _LNPopupInteractionStyleKey = &_LNPopupInteractionStyleKey;
 static const void* _LNPopupInteractionSnapPercentKey = &_LNPopupInteractionSnapPercentKey;
 static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
-static const void* _LNPopupIsInPopupAppearanceTransitionKey = &_LNPopupIsInPopupAppearanceTransitionKey;
 static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendUnderSafeAreaKey;
 
 const double LNSnapPercentDefault = 0.32;
@@ -298,25 +297,6 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 - (__kindof UIView *)viewForPopupInteractionGestureRecognizer
 {
 	return self.view;
-}
-
-- (BOOL)_ln_isInPopupAppearanceTransition
-{
-	return [objc_getAssociatedObject(self, _LNPopupIsInPopupAppearanceTransitionKey) boolValue];
-}
-
-- (void)_ln_beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
-{
-	objc_setAssociatedObject(self, _LNPopupIsInPopupAppearanceTransitionKey, @YES, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-	
-	[self beginAppearanceTransition:isAppearing animated:animated];
-}
-
-- (void)_ln_endAppearanceTransition
-{
-	[self endAppearanceTransition];
-	
-	objc_setAssociatedObject(self, _LNPopupIsInPopupAppearanceTransitionKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end

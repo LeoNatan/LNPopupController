@@ -601,6 +601,38 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	objc_setAssociatedObject(self, LNPopupAdjustingInsets, @(ignoringLayoutDuringTransition), OBJC_ASSOCIATION_RETAIN);
 }
 
+- (void)_userFacing_viewWillAppear:(BOOL)animated
+{
+	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewWillAppear:), animated);
+}
+
+- (void)_userFacing_viewDidAppear:(BOOL)animated
+{
+	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewDidAppear:), animated);
+}
+
+- (void)_userFacing_viewWillDisappear:(BOOL)animated
+{
+	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewWillDisappear:), animated);
+}
+
+- (void)_userFacing_viewDidDisappear:(BOOL)animated
+{
+	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewDidDisappear:), animated);
+}
+
 @end
 
 static BOOL __LNPopupIsClassBuggyForAdditionalSafeArea(UIViewController* controller)
@@ -1348,54 +1380,22 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	if(self._isContainedInPopupControllerOrDeallocated && self._ln_isInPopupAppearanceTransition == NO)
-	{
-		return;
-	}
-
-	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
-	struct objc_super super = {.receiver = self, .super_class = superclass};
-	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
-	super_class(&super, _cmd, animated);
+	//Ignore
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-	if(self._isContainedInPopupControllerOrDeallocated && self._ln_isInPopupAppearanceTransition == NO)
-	{
-		return;
-	}
-	
-	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
-	struct objc_super super = {.receiver = self, .super_class = superclass};
-	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
-	super_class(&super, _cmd, animated);
+	//Ignore
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	if(self._isContainedInPopupControllerOrDeallocated && self._ln_isInPopupAppearanceTransition == NO)
-	{
-		return;
-	}
-	
-	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
-	struct objc_super super = {.receiver = self, .super_class = superclass};
-	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
-	super_class(&super, _cmd, animated);
+	//Ignore
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-	if(self._isContainedInPopupControllerOrDeallocated && self._ln_isInPopupAppearanceTransition == NO)
-	{
-		return;
-	}
-	
-	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
-	struct objc_super super = {.receiver = self, .super_class = superclass};
-	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
-	super_class(&super, _cmd, animated);
+	//Ignore
 }
 
 - (Class)class
