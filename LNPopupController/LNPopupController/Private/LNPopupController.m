@@ -1121,6 +1121,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
 		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
+			[self.popupBar.customBarViewController _userFacing_viewWillAppear:animated];
 			
 			[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
 			_containerController._ln_bottomBarExtension_nocreate.alpha = 1.0;
@@ -1151,6 +1152,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				[_containerController _ln_setPopupPresentationState:LNPopupPresentationStateBarPresented];
 			}
 			
+			[self.popupBar.customBarViewController _userFacing_viewDidAppear:animated];
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidPresentPopupBar:animated:), animated);
 			
 			if(open)
@@ -1227,6 +1229,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
 				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillDismissPopupBar:animated:), animated);
+				[self.popupBar.customBarViewController _userFacing_viewWillDisappear:animated];
 				
 				CGRect barFrame = self.popupBar.frame;
 				barFrame.size.height = 0;
@@ -1237,6 +1240,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
 				_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
 			} completion:^(BOOL finished) {
+				[self.popupBar.customBarViewController _userFacing_viewDidDisappear:animated];
+				
 				_popupControllerInternalState = LNPopupPresentationStateBarHidden;
 				
 				[self _removeContentControllerFromContentView:_currentContentController];

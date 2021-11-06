@@ -1272,6 +1272,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		return;
 	}
 	
+	if(customBarViewController != nil)
+	{
+		LNDynamicallySubclass(customBarViewController, _LNPopupCustomBarViewController_AppearanceControl.class);
+	}
+	
 	[self layoutIfNeeded];
 	
 	if(customBarViewController.containingPopupBar)
@@ -1402,6 +1407,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)dealloc
 {
+	[_customBarViewController _userFacing_viewWillDisappear:NO];
+	[_customBarViewController _userFacing_viewDidDisappear:NO];
 	[_customBarViewController removeObserver:self forKeyPath:@"preferredContentSize"];
 }
 

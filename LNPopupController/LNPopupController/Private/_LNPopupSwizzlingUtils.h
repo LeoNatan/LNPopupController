@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-//@import ObjectiveC;
+@import ObjectiveC;
 #import <objc/runtime.h>
 
 #define unavailable(...) @available(__VA_ARGS__)) { } else if(YES

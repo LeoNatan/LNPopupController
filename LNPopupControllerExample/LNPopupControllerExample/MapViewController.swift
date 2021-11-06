@@ -39,7 +39,31 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		#if LNPOPUP
+		self.presentPopupBarIfNeeded(animated: false)
+	}
+	
+	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+#if LNPOPUP
+		openPopup(animated: true, completion: nil)
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			self.popupContentVC.searchBar.becomeFirstResponder()
+		}
+#endif
+		
+		return false;
+	}
+	
+	@IBAction private func presentButtonTapped(_ sender: Any) {
+		presentPopupBarIfNeeded(animated: true)
+	}
+	
+	private func presentPopupBarIfNeeded(animated: Bool) {
+#if LNPOPUP
+		guard popupBar.customBarViewController == nil else {
+			return
+		}
+		
 		if let customMapBar = storyboard!.instantiateViewController(withIdentifier: "CustomMapBarViewController") as? CustomMapBarViewController {
 			popupBar.customBarViewController = customMapBar
 			
@@ -58,22 +82,15 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)
 		popupContentVC.tableView.backgroundColor = .clear
 		
-		self.presentPopupBar(withContentViewController: self.popupContentVC, animated: false, completion: nil)
-		#endif
+		presentPopupBar(withContentViewController: self.popupContentVC, animated: animated, completion: nil)
+#endif
 	}
 	
-	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-		#if LNPOPUP
-		openPopup(animated: true, completion: nil)
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { 
-			self.popupContentVC.searchBar.becomeFirstResponder()
+	@IBAction private func dismissButtonTapped(_ sender: Any) {
+#if LNPOPUP
+		dismissPopupBar(animated: true) {
+			self.popupBar.customBarViewController = nil
 		}
-		#endif
-		
-		return false;
-	}
-	
-	@IBAction private func backButtonTapped(_ sender: Any) {
+#endif
 	}
 }

@@ -7,6 +7,7 @@
 //
 
 #import "LNPopupCustomBarViewController+Private.h"
+#import "_LNPopupSwizzlingUtils.h"
 
 @interface LNPopupCustomBarViewController ()
 
@@ -82,6 +83,69 @@
 - (UIViewController*)popupPresentationContainerViewController
 {
 	return self.popupController.containerController;
+}
+
+- (void)_userFacing_viewWillAppear:(BOOL)animated
+{
+	Class superclass = LNDynamicSubclassSuper(self, _LNPopupCustomBarViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewWillAppear:), animated);
+}
+
+- (void)_userFacing_viewDidAppear:(BOOL)animated
+{
+	Class superclass = LNDynamicSubclassSuper(self, _LNPopupCustomBarViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewDidAppear:), animated);
+}
+
+- (void)_userFacing_viewWillDisappear:(BOOL)animated
+{
+	Class superclass = LNDynamicSubclassSuper(self, _LNPopupCustomBarViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewWillDisappear:), animated);
+}
+
+- (void)_userFacing_viewDidDisappear:(BOOL)animated
+{
+	Class superclass = LNDynamicSubclassSuper(self, _LNPopupCustomBarViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewDidDisappear:), animated);
+}
+
+@end
+
+#pragma mark - Custom bar controller appearance control
+
+@implementation _LNPopupCustomBarViewController_AppearanceControl
+
+- (void)viewWillAppear:(BOOL)animated
+{
+	//Ignored
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+	//Ignored
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+	//Ignored
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+	//Ignored
+}
+
+- (Class)class
+{
+	return LNDynamicSubclassSuper(self, _LNPopupCustomBarViewController_AppearanceControl.class);
 }
 
 @end
