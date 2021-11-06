@@ -1095,8 +1095,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	{
 		_dismissalOverride = NO;
 		
-		_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
-		
 		if(open)
 		{
 			_popupControllerInternalState = LNPopupPresentationStateBarPresented;
@@ -1121,7 +1119,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		[_containerController.view layoutIfNeeded];
 		
 		_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
-		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^ {
+		[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
+			
 			[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
 			_containerController._ln_bottomBarExtension_nocreate.alpha = 1.0;
 			
@@ -1225,48 +1225,47 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			_popupControllerInternalState = _LNPopupPresentationStateTransitioning;
 			_popupControllerTargetState = LNPopupPresentationStateBarHidden;
 			
-			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillDismissPopupBar:animated:), animated);
-			
-			[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^
-			 {
-				 CGRect barFrame = self.popupBar.frame;
-				 barFrame.size.height = 0;
-				 self.popupBar.frame = barFrame;
-				 
-				 _LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
+			[UIView animateWithDuration:animated ? 0.5 : 0.0 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillDismissPopupBar:animated:), animated);
+				
+				CGRect barFrame = self.popupBar.frame;
+				barFrame.size.height = 0;
+				self.popupBar.frame = barFrame;
+				
+				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
 				
 				[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
 				_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
-			 } completion:^(BOOL finished) {
-				 _popupControllerInternalState = LNPopupPresentationStateBarHidden;
-				 
-				 [self _removeContentControllerFromContentView:_currentContentController];
-				 
-				 CGRect bottomBarFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
-				 bottomBarFrame.origin.y -= _cachedInsets.bottom;
-				 _bottomBar.frame = bottomBarFrame;
-				 
-				 self.popupBarStorage.hidden = YES;
-				 [self.popupBar removeFromSuperview];
-				 
-				 [self.popupContentView removeFromSuperview];
-				 self.popupContentView.popupInteractionGestureRecognizer = nil;
-				 self.popupContentView = nil;
-				 
-				 _LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
-				 
-				 _currentContentController = nil;
-				 
-				 _effectiveStatusBarUpdateController = nil;
-				 
-				 _LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidDismissPopupBar:animated:), animated);
-				 
-				 [_containerController _ln_setPopupPresentationState:LNPopupPresentationStateBarHidden];
-				 
-				 _bottomBar = nil;
-				 
-				 if(completionBlock != nil) { completionBlock(); }
-			 }];
+			} completion:^(BOOL finished) {
+				_popupControllerInternalState = LNPopupPresentationStateBarHidden;
+				
+				[self _removeContentControllerFromContentView:_currentContentController];
+				
+				CGRect bottomBarFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
+				bottomBarFrame.origin.y -= _cachedInsets.bottom;
+				_bottomBar.frame = bottomBarFrame;
+				
+				self.popupBarStorage.hidden = YES;
+				[self.popupBar removeFromSuperview];
+				
+				[self.popupContentView removeFromSuperview];
+				self.popupContentView.popupInteractionGestureRecognizer = nil;
+				self.popupContentView = nil;
+				
+				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
+				
+				_currentContentController = nil;
+				
+				_effectiveStatusBarUpdateController = nil;
+				
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidDismissPopupBar:animated:), animated);
+				
+				[_containerController _ln_setPopupPresentationState:LNPopupPresentationStateBarHidden];
+				
+				_bottomBar = nil;
+				
+				if(completionBlock != nil) { completionBlock(); }
+			}];
 		};
 		
 		_dismissalOverride = YES;
