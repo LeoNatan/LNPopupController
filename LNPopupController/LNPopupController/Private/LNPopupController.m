@@ -45,13 +45,27 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 }
 
 OS_ALWAYS_INLINE
-static void _LNCallDelegateObjectBool(UIViewController* controller, SEL selector, BOOL animated)
+static BOOL _LNCallDelegateObjectObjectBool(UIViewController* controller, UIViewController* content, SEL selector, BOOL animated)
+{
+	if([controller.popupPresentationDelegate respondsToSelector:selector])
+	{
+		void (*msgSendObjectObjectBool)(id, SEL, id, id, BOOL) = (void*)objc_msgSend;
+		msgSendObjectObjectBool(controller.popupPresentationDelegate, selector, controller, content, animated);
+		return YES;
+	}
+	return NO;
+}
+
+OS_ALWAYS_INLINE
+static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector, BOOL animated)
 {
 	if([controller.popupPresentationDelegate respondsToSelector:selector])
 	{
 		void (*msgSendObjectBool)(id, SEL, id, BOOL) = (void*)objc_msgSend;
 		msgSendObjectBool(controller.popupPresentationDelegate, selector, controller, animated);
+		return YES;
 	}
+	return NO;
 }
 
 #pragma mark Popup Controller
@@ -249,19 +263,21 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_currentContentController _ln_endAppearanceTransition];
 	};
 	
+	BOOL shouldNotifyDelegateWillClose = NO;
 	if(_popupControllerPublicState == LNPopupPresentationStateOpen && state == LNPopupPresentationStateBarPresented)
 	{
 		[_currentContentController.view endEditing:YES];
 		
 		if(notifyDelegate)
 		{
-			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillClosePopup:animated:), animated);
+			shouldNotifyDelegateWillClose = YES;
 		}
 	}
 	
+	BOOL shouldNotifyDelegateWillOpen = NO;
 	if(notifyDelegate && _popupControllerPublicState == LNPopupPresentationStateBarPresented && state == LNPopupPresentationStateOpen)
 	{
-		_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillOpenPopup:animated:), animated);
+		shouldNotifyDelegateWillOpen = YES;
 	}
 	
 	_popupControllerInternalState = _LNPopupPresentationStateTransitioning;
@@ -285,6 +301,22 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	void (^animationBlock)(void) = ^
 	{
+		if(shouldNotifyDelegateWillOpen == YES)
+		{
+			if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willOpenPopupWithContentController:animated:), animated) == NO)
+			{
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillOpenPopup:animated:), animated);
+			}
+		}
+		
+		if(shouldNotifyDelegateWillClose == YES)
+		{
+			if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willClosePopupWithContentController:animated:), animated) == NO)
+			{
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillClosePopup:animated:), animated);
+			}
+		}
+		
 		if(state != _LNPopupPresentationStateTransitioning)
 		{
 			updatePopupBarAlpha();
@@ -322,7 +354,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			if(_popupControllerPublicState == LNPopupPresentationStateOpen)
 			{
-				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidClosePopup:animated:), animated);
+				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:didClosePopupWithContentController:animated:), animated) == NO)
+				{
+					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidClosePopup:animated:), animated);
+				}
 			}
 		}
 		else if(state == LNPopupPresentationStateOpen)
@@ -338,7 +373,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			if(_popupControllerPublicState == LNPopupPresentationStateBarPresented)
 			{
-				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
+				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:didOpenPopupWithContentController:animated:), animated) == NO)
+				{
+					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
+				}
 			}
 		}
 		
@@ -1100,7 +1138,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			if(open)
 			{
-				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillOpenPopup:animated:), animated);
+				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willOpenPopupWithContentController:animated:), animated) == NO)
+				{
+					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillOpenPopup:animated:), animated);
+				}
 				[self openPopupAnimated:animated completion:completionBlock];
 			}
 		} completion:^(BOOL finished) {
@@ -1114,7 +1155,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			if(open)
 			{
-				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
+				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:didOpenPopupWithContentController:animated:), animated) == NO)
+				{
+					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
+				}
 			}
 			
 			if(completionBlock != nil && !open)

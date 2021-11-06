@@ -130,22 +130,38 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 - (void)popupPresentationControllerDidDismissPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated;
 
 /**
+ * Notifies the delegate that the popup is about to be opened with the specified popup content controller.
+ */
+- (void)popupPresentationController:(UIViewController*)popupPresentationController willOpenPopupWithContentController:(UIViewController*)popupContentController animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup has been opened with the specified popup content controller.
+ */
+- (void)popupPresentationController:(UIViewController*)popupPresentationController didOpenPopupWithContentController:(UIViewController*)popupContentController  animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup is about to be closed with the specified popup content controller.
+ */
+- (void)popupPresentationController:(UIViewController*)popupPresentationController willClosePopupWithContentController:(UIViewController*)popupContentController animated:(BOOL)animated;
+/**
+ * Notifies the delegate that the popup has been closed with the specified popup content controller.
+ */
+- (void)popupPresentationController:(UIViewController*)popupPresentationController didClosePopupWithContentController:(UIViewController*)popupContentController animated:(BOOL)animated;
+
+/**
  * Notifies the delegate that the popup is about to be opened.
  */
-- (void)popupPresentationControllerWillOpenPopup:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+- (void)popupPresentationControllerWillOpenPopup:(UIViewController*)popupPresentationController animated:(BOOL)animated LN_DEPRECATED_API("Use popupPresentationController:willOpenPopupWithContentController:animated: instead");
 /**
  * Notifies the delegate that the popup has been opened.
  */
-- (void)popupPresentationControllerDidOpenPopup:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+- (void)popupPresentationControllerDidOpenPopup:(UIViewController*)popupPresentationController animated:(BOOL)animated LN_DEPRECATED_API("Use popupPresentationController:didOpenPopupWithContentController:animated: instead");
 /**
  * Notifies the delegate that the popup is about to be closed.
  */
-- (void)popupPresentationControllerWillClosePopup:(UIViewController*)popupPresentationController animated:(BOOL)animated;
+- (void)popupPresentationControllerWillClosePopup:(UIViewController*)popupPresentationController animated:(BOOL)animated LN_DEPRECATED_API("Use popupPresentationController:willClosePopupWithContentController:animated: instead");
 /**
  * Notifies the delegate that the popup has been closed.
  */
-- (void)popupPresentationControllerDidClosePopup:(UIViewController*)popupPresentationController animated:(BOOL)animated;
-
+- (void)popupPresentationControllerDidClosePopup:(UIViewController*)popupPresentationController animated:(BOOL)animated LN_DEPRECATED_API("Use popupPresentationController:didClosePopupWithContentController:animated: instead");
 
 @end
 
