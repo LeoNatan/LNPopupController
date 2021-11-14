@@ -113,7 +113,7 @@ NS_SWIFT_UI_ACTOR
 /**
  * Describes the appearance attributes for the popup bar to use.
  */
-@property (nonatomic, copy) LNPopupBarAppearance *standardAppearance UI_APPEARANCE_SELECTOR API_AVAILABLE(ios(13.0));
+@property (nonatomic, copy) LNPopupBarAppearance *standardAppearance UI_APPEARANCE_SELECTOR;
 
 /**
  * The popup bar's progress style.

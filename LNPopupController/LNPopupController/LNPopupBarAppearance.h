@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define NS_SWIFT_UI_ACTOR
 #endif
 
-API_AVAILABLE(ios(13.0)) NS_SWIFT_UI_ACTOR
+NS_SWIFT_UI_ACTOR
 
 /**
  * An object for customizing the appearance of a popup bar.

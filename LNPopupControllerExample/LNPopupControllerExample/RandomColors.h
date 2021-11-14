@@ -10,13 +10,9 @@
 
 extern UIColor* LNRandomSystemColor(void);
 
-API_AVAILABLE(ios(13.0))
 extern UIColor* LNSeedAdaptiveColor(NSString* seed);
-API_AVAILABLE(ios(13.0))
 extern UIColor* LNSeedAdaptiveInvertedColor(NSString* seed);
-API_AVAILABLE(ios(13.0))
 extern UIColor* LNRandomAdaptiveColor(void);
-API_AVAILABLE(ios(13.0))
 extern UIColor* LNRandomAdaptiveInvertedColor(void);
 
 extern UIColor* LNSeedDarkColor(NSString* seed);

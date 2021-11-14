@@ -216,7 +216,7 @@ static void __accessibilityBundleLoadHandler()
 	return [self _ln_isModalInPresentation];
 }
 
-- (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle API_AVAILABLE(ios(13.0))
+- (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
 {
 	[self _ln_popup_setOverrideUserInterfaceStyle:overrideUserInterfaceStyle];
 	
