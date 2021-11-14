@@ -85,6 +85,16 @@
 	return self.popupController.containerController;
 }
 
+- (LNPopupItem *)popupItem
+{
+	return self.popupContentViewController.popupItem;
+}
+
+- (LNPopupBar *)popupBar
+{
+	return self.containingPopupBar;
+}
+
 - (void)_userFacing_viewWillAppear:(BOOL)animated
 {
 	Class superclass = LNDynamicSubclassSuper(self, _LNPopupCustomBarViewController_AppearanceControl.class);
