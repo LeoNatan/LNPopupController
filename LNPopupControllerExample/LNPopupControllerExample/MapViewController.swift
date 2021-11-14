@@ -64,14 +64,25 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			return
 		}
 		
+		popupBar.standardAppearance.shadowColor = .clear
 		if let customMapBar = storyboard!.instantiateViewController(withIdentifier: "CustomMapBarViewController") as? CustomMapBarViewController {
 			popupBar.customBarViewController = customMapBar
 			
 			customMapBar.view.backgroundColor = .clear
 			customMapBar.searchBar.delegate = self
+			
+			if let searchTextField = customMapBar.searchBar.value(forKey: "searchField") as? UITextField, let clearButton = searchTextField.value(forKey: "_clearButton") as? UIButton {
+				clearButton.addTarget(self, action: #selector(self.clearButtonTapped), for: .primaryActionTriggered)
+			}
+			
+			popupBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+			popupBar.layer.cornerRadius = 15
+			popupBar.layer.cornerCurve = .continuous
 		} else {
 			//Manual layout bar scene
+			shouldExtendPopupBarUnderSafeArea = false
 			popupBar.customBarViewController = ManualLayoutCustomBarViewController()
+			popupBar.standardAppearance.configureWithTransparentBackground()
 		}
 		
 		popupContentView.popupCloseButtonStyle = .none
@@ -84,6 +95,11 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		
 		presentPopupBar(withContentViewController: self.popupContentVC, animated: animated, completion: nil)
 #endif
+	}
+	
+	@objc private func clearButtonTapped(_ sender: Any) {
+		popupContentVC.popupItem.title = nil
+		popupContentVC.searchBar.text = nil
 	}
 	
 	@IBAction private func dismissButtonTapped(_ sender: Any) {

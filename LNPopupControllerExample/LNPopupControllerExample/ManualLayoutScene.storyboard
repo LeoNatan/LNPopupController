@@ -163,13 +163,13 @@
             <objects>
                 <viewController storyboardIdentifier="CustomMapBarViewController" id="j90-1P-ujA" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="G4p-Rd-ytf">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="WVS-Y3-6zc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="414" height="100"/>
+                    <size key="freeformSize" width="414" height="50"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vgo-JS-Eah" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -226,6 +226,7 @@ extern UIImage* LNSystemImage(NSString* named);
 		demoVC.popupItem.title = [LoremIpsum sentence];
 		demoVC.popupItem.subtitle = [LoremIpsum sentence];
 	}
+	
 	demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
 	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
 	
