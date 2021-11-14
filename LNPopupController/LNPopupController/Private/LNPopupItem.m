@@ -95,12 +95,8 @@ NSArray* __LNPopupItemObservedKeys;
 		return;
 	}
 	
-	[self willChangeValueForKey:@"title"];
-	
-	self.attributedTitle = nil;
+	_attributedTitle = nil;
 	_title = [title copy];
-	
-	[self didChangeValueForKey:@"title"];
 }
 
 - (void)setSubtitle:(NSString *)subtitle
@@ -110,12 +106,8 @@ NSArray* __LNPopupItemObservedKeys;
 		return;
 	}
 	
-	[self willChangeValueForKey:@"subtitle"];
-	
-	self.attributedSubtitle = nil;
+	_attributedSubtitle = nil;
 	_subtitle = [subtitle copy];
-	
-	[self didChangeValueForKey:@"subtitle"];
 }
 
 - (NSAttributedString *)attributedTitle
@@ -130,12 +122,8 @@ NSArray* __LNPopupItemObservedKeys;
 		return;
 	}
 	
-	[self willChangeValueForKey:@"attributedTitle"];
-	
-	self.title = [attributedTitle.string copy];
-	_attributedTitle = [attributedTitle copy];;
-	
-	[self didChangeValueForKey:@"attributedTitle"];
+	_title = nil;
+	_attributedTitle = [attributedTitle copy];
 }
 
 - (NSAttributedString *)attributedSubtitle
@@ -150,21 +138,15 @@ NSArray* __LNPopupItemObservedKeys;
 		return;
 	}
 	
-	[self willChangeValueForKey:@"attributedSubtitle"];
-	
-	self.subtitle = [attributedSubtitle.string copy];
+	_subtitle = nil;
 	_attributedSubtitle = [attributedSubtitle copy];
-	
-	[self didChangeValueForKey:@"attributedSubtitle"];
 }
 
 - (void)setProgress:(float)progress
 {
-	[self willChangeValueForKey:NSStringFromSelector(_cmd)];
 	if(progress > 1.0) { progress = 1.0; }
 	if(progress < 0.0) { progress = 0.0; }
 	_progress = progress;
-	[self didChangeValueForKey:NSStringFromSelector(_cmd)];
 }
 
 - (NSArray<UIBarButtonItem *> *)barButtonItems
