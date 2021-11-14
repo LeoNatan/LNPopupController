@@ -554,7 +554,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 {
 	[self _ln_popup_viewDidLayoutSubviews];
 	
-	if(self.bottomDockingViewForPopup_nocreateOrDeveloper != nil)
+	if(self._ln_popupController_nocreate.popupControllerInternalState > LNPopupPresentationStateBarHidden)
 	{
 		if(self.bottomDockingViewForPopup_nocreateOrDeveloper == self._ln_bottomBarSupport_nocreate)
 		{
@@ -1360,7 +1360,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	[self _ln_popup_viewDidLayoutSubviews_SplitViewNastyApple];
 	
-	if(self.bottomDockingViewForPopup_nocreateOrDeveloper != nil)
+	if(self._ln_popupController_nocreate.popupControllerInternalState > LNPopupPresentationStateBarHidden)
 	{
 		//Apple forgot to call the super implementation of viewDidLayoutSubviews, but we need that to layout the popup bar correctly.
 		struct objc_super superInfo = {

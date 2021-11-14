@@ -18,6 +18,10 @@
 		39277A0C1B58228000293F95 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
 		39277A151B58228000293F95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
 		39277A171B58228000293F95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39277A161B58228000293F95 /* Assets.xcassets */; };
+		3932CDA32741A77500FD81FC /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */; };
+		3932CDA42741A77500FD81FC /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		3932CDA62741A77A00FD81FC /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA52741A77A00FD81FC /* LNTouchVisualizer */; };
+		3932CDA72741A77A00FD81FC /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA52741A77A00FD81FC /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		393F23231E16BF1D000E969D /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 393F23221E16BF1D000E969D /* MapScene.storyboard */; };
 		393F23251E16C04A000E969D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23241E16C04A000E969D /* MapViewController.swift */; };
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
@@ -107,6 +111,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3932CDA72741A77A00FD81FC /* LNTouchVisualizer in Embed Frameworks */,
+				3932CDA42741A77500FD81FC /* LNPreviewToContextMenu in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -178,7 +184,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3932CDA62741A77A00FD81FC /* LNTouchVisualizer in Frameworks */,
 				39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */,
+				3932CDA32741A77500FD81FC /* LNPreviewToContextMenu in Frameworks */,
 				39FAFC4B24E71A6C008BBC2D /* LoremIpsum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -379,6 +387,8 @@
 			name = LNPopupControllerExampleNoPopup;
 			packageProductDependencies = (
 				39FAFC3324E71A6C008BBC2D /* LoremIpsum */,
+				3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */,
+				3932CDA52741A77A00FD81FC /* LNTouchVisualizer */,
 			);
 			productName = LNPopupControllerExample;
 			productReference = 39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */;
@@ -895,6 +905,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
 			productName = LNPreviewToContextMenu;
+		};
+		3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
+			productName = LNPreviewToContextMenu;
+		};
+		3932CDA52741A77A00FD81FC /* LNTouchVisualizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39114EC826E2B0D9004FC75B /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
+			productName = LNTouchVisualizer;
 		};
 		3980E7FB26DEBCAF00AC0728 /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;

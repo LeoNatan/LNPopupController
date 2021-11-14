@@ -60,6 +60,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 - (void)_recalcActiveAppearanceChain;
 
+@property (nonatomic, strong) UIView* shadowView;
 @property (nonatomic, strong) UIView* bottomShadowView;
 
 @property (nonatomic, weak, readwrite) LNPopupItem* popupItem;
@@ -106,8 +107,6 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 - (void)_layoutBarButtonItems;
 
 - (void)_setTitleViewMarqueesPaused:(BOOL)paused;
-
-- (void)_removeAnimationFromBarItems;
 
 - (void)_transitionCustomBarViewControllerWithPopupContainerSize:(CGSize)size withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
 - (void)_transitionCustomBarViewControllerWithPopupContainerTraitCollection:(UITraitCollection *)newCollection withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;

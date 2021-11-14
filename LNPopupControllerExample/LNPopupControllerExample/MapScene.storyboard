@@ -22,16 +22,16 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </mapView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-d1-mBI">
-                                <rect key="frame" x="20" y="64" width="120" height="33"/>
+                                <rect key="frame" x="20" y="64" width="130" height="40"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="3Gn-n8-hKm">
-                                    <rect key="frame" x="0.0" y="0.0" width="120" height="33"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="130" height="40"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="gPf-Kz-XWq">
-                                            <rect key="frame" x="0.0" y="0.0" width="120" height="33"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="130" height="40"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dOj-8I-c7R">
-                                                    <rect key="frame" x="0.0" y="0.0" width="40" height="33"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="43.333333333333336" height="40"/>
                                                     <state key="normal">
                                                         <imageReference key="image" image="chevron.left" catalog="system" symbolScale="large"/>
                                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="bold"/>
@@ -41,15 +41,19 @@
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d7I-dq-XZa">
-                                                    <rect key="frame" x="40" y="0.0" width="40" height="33"/>
-                                                    <state key="normal" image="dock.arrow.up.rectangle" catalog="system"/>
+                                                    <rect key="frame" x="43.333333333333329" y="0.0" width="43.333333333333329" height="40"/>
+                                                    <state key="normal">
+                                                        <imageReference key="image" image="dock.arrow.up.rectangle" catalog="system" symbolScale="large"/>
+                                                    </state>
                                                     <connections>
                                                         <action selector="presentButtonTapped:" destination="ZEq-0J-wEi" eventType="primaryActionTriggered" id="3zw-2U-fsH"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="znm-En-IYT">
-                                                    <rect key="frame" x="80" y="0.0" width="40" height="33"/>
-                                                    <state key="normal" image="dock.arrow.down.rectangle" catalog="system"/>
+                                                    <rect key="frame" x="86.666666666666671" y="0.0" width="43.333333333333329" height="40"/>
+                                                    <state key="normal">
+                                                        <imageReference key="image" image="dock.arrow.down.rectangle" catalog="system" symbolScale="large"/>
+                                                    </state>
                                                     <connections>
                                                         <action selector="dismissButtonTapped:" destination="ZEq-0J-wEi" eventType="primaryActionTriggered" id="ZBU-Qz-CSG"/>
                                                     </connections>
@@ -65,8 +69,8 @@
                                     </constraints>
                                 </view>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="Ivf-su-R5N"/>
-                                    <constraint firstAttribute="height" constant="33" id="nLJ-eD-32h"/>
+                                    <constraint firstAttribute="width" constant="130" id="Ivf-su-R5N"/>
+                                    <constraint firstAttribute="height" constant="40" id="nLJ-eD-32h"/>
                                 </constraints>
                                 <blurEffect style="regular"/>
                             </visualEffectView>
@@ -144,14 +148,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="7 min to work" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="erT-G3-HBb">
-                                                    <rect key="frame" x="19.999999999999993" y="23.666666666666671" width="113.33333333333333" height="23"/>
+                                                    <rect key="frame" x="20" y="19" width="127" height="26.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Take Market St." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="CnG-y0-rK9">
-                                                    <rect key="frame" x="20" y="50" width="87.666666666666671" height="14.333333333333334"/>
+                                                    <rect key="frame" x="20" y="49.333333333333329" width="106" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -169,14 +173,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Home" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YFg-LF-k2d">
-                                                    <rect key="frame" x="19.999999999999996" y="23.666666666666671" width="50.666666666666664" height="23"/>
+                                                    <rect key="frame" x="19.999999999999996" y="19" width="57.666666666666664" height="26.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Directions from my location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aaO-Yd-xQO">
-                                                    <rect key="frame" x="20" y="50" width="155.66666666666666" height="14.333333333333334"/>
+                                                    <rect key="frame" x="20" y="49.333333333333329" width="188" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -194,14 +198,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Restaurant" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OJa-Gr-emV">
-                                                    <rect key="frame" x="20.000000000000007" y="23.666666666666671" width="91.666666666666671" height="23"/>
+                                                    <rect key="frame" x="19.999999999999993" y="19" width="103.33333333333333" height="26.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Cheapest prices" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="cOx-0L-Baz">
-                                                    <rect key="frame" x="20" y="50" width="92" height="14.333333333333334"/>
+                                                    <rect key="frame" x="20.000000000000007" y="49.333333333333329" width="111.66666666666667" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor"/>
@@ -219,14 +223,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Favorites" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BzK-EW-JJD">
-                                                    <rect key="frame" x="20" y="23.666666666666671" width="76.333333333333329" height="23"/>
+                                                    <rect key="frame" x="20" y="19" width="86" height="26.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="10 Places" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1Im-KD-s0N">
-                                                    <rect key="frame" x="19.999999999999996" y="50" width="53.666666666666664" height="14.333333333333334"/>
+                                                    <rect key="frame" x="20" y="49.333333333333329" width="65" height="18"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor"/>

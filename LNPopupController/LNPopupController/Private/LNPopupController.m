@@ -1149,6 +1149,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		[self _setContentToState:LNPopupPresentationStateBarPresented animated:animated];
 		
+		[_containerController.view setNeedsLayout];
 		[_containerController.view layoutIfNeeded];
 		
 		dispatch_block_t animations = ^{
@@ -1280,11 +1281,18 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				barFrame.size.height = 0;
 				self.popupBar.frame = barFrame;
 				
+				self.popupBar.shadowView.alpha = 0.0;
 				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
 				
 				[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
-				_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
+				[UIView animateKeyframesWithDuration:1.0 delay:0.0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+					[UIView addKeyframeWithRelativeStartTime:0.3 relativeDuration:0.6 animations:^{
+						_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
+					}];
+				} completion:nil];
 			} completion:^(BOOL finished) {
+				self.popupBar.shadowView.alpha = 1.0;
+				
 				[self.popupBar.customBarViewController _userFacing_viewDidDisappear:animated];
 				
 				_popupControllerInternalState = LNPopupPresentationStateBarHidden;

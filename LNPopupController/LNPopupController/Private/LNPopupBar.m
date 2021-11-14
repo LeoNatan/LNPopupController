@@ -143,7 +143,6 @@ static BOOL __animatesItemSetter = NO;
 	UIColor* _userBackgroundColor;
 	
 	UIToolbar* _toolbar;
-	UIView* _shadowView;
 }
 
 + (void)setAnimatesItemSetter:(BOOL)animate
@@ -1383,15 +1382,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		titleLabel.holdScrolling = NO;
 		subtitleLabel.holdScrolling = NO;
 	}
-}
-
-- (void)_removeAnimationFromBarItems
-{
-	[_toolbar.items enumerateObjectsUsingBlock:^(UIBarButtonItem* barButtonItem, NSUInteger idx, BOOL* stop)
-	 {
-		 UIView* itemView = [barButtonItem valueForKey:@"view"];
-		 [itemView.layer removeAllAnimations];
-	 }];
 }
 
 - (void)_transitionCustomBarViewControllerWithPopupContainerSize:(CGSize)size withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
