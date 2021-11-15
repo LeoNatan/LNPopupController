@@ -88,10 +88,11 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 		}
 		else
 		{
+			NSUInteger lastIdxInSection = [tableView numberOfRowsInSection:indexPath.section] - 1;
 			NSUInteger value = [[NSUserDefaults.standardUserDefaults objectForKey:key] unsignedIntegerValue];
 			if(value == 0xFFFF)
 			{
-				value = 3;
+				value = lastIdxInSection;
 			}
 			
 			if(indexPath.row == value)
@@ -180,17 +181,18 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 	}
 	else
 	{
+		NSUInteger lastIdxInSection = [tableView numberOfRowsInSection:indexPath.section] - 1;
 		NSUInteger prevValue = [[NSUserDefaults.standardUserDefaults objectForKey:key] unsignedIntegerValue];
 		if(prevValue == 0xFFFF)
 		{
-			prevValue = 3;
+			prevValue = lastIdxInSection;
 		}
 		
 		[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:prevValue inSection:indexPath.section]].accessoryType = UITableViewCellAccessoryNone;
 		[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
 		
 		NSUInteger value = indexPath.row;
-		if(value == 3)
+		if(value == lastIdxInSection)
 		{
 			value = 0xFFFF;
 		}

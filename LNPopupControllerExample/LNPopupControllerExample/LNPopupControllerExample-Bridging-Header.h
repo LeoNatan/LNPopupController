@@ -8,3 +8,9 @@
 #import "LoremIpsum.h"
 #import "RandomColors.h"
 #import "SettingsTableViewController.h"
+
+@interface UIBlurEffect ()
+
++ (instancetype)effectWithBlurRadius:(double)arg1;
+
+@end

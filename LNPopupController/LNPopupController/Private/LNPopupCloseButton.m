@@ -202,17 +202,20 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 
 - (void)_setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
-	dispatch_block_t alphaBlock = ^{
-		_highlightView.alpha = highlighted ? 1.0 : 0.0;
-		_highlightView.alpha = highlighted ? 1.0 : 0.0;
-	};
-	
-	if (animated) {
-		[UIView animateWithDuration:0.47 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+	if(_style == LNPopupCloseButtonStyleRound)
+	{
+		dispatch_block_t alphaBlock = ^{
+			_highlightView.alpha = highlighted ? 1.0 : 0.0;
+			_highlightView.alpha = highlighted ? 1.0 : 0.0;
+		};
+		
+		if (animated) {
+			[UIView animateWithDuration:0.47 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+				alphaBlock();
+			} completion:nil];
+		} else {
 			alphaBlock();
-		} completion:nil];
-	} else {
-		alphaBlock();
+		}
 	}
 }
 
@@ -220,24 +223,27 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 {
 	[super layoutSubviews];
 	
-	[self sendSubviewToBack:_effectView];
-	
-	CGFloat minSideSize = MIN(self.bounds.size.width, self.bounds.size.height);
-	
-	_effectView.frame = self.bounds;
-	CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-	maskLayer.rasterizationScale = [UIScreen mainScreen].nativeScale;
-	maskLayer.shouldRasterize = YES;
-	
-	CGPathRef path = CGPathCreateWithRoundedRect(self.bounds, minSideSize / 2, minSideSize / 2, NULL);
-	maskLayer.path = path;
-	CGPathRelease(path);
-	
-	_effectView.layer.mask = maskLayer;
-	
-	CGRect imageFrame = self.imageView.frame;
-	imageFrame.origin.y += 0.5;
-	self.imageView.frame = imageFrame;
+	if(_style == LNPopupCloseButtonStyleRound)
+	{
+		[self sendSubviewToBack:_effectView];
+		
+		CGFloat minSideSize = MIN(self.bounds.size.width, self.bounds.size.height);
+		
+		_effectView.frame = self.bounds;
+		CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+		maskLayer.rasterizationScale = [UIScreen mainScreen].nativeScale;
+		maskLayer.shouldRasterize = YES;
+		
+		CGPathRef path = CGPathCreateWithRoundedRect(self.bounds, minSideSize / 2, minSideSize / 2, NULL);
+		maskLayer.path = path;
+		CGPathRelease(path);
+		
+		_effectView.layer.mask = maskLayer;
+		
+		CGRect imageFrame = self.imageView.frame;
+		imageFrame.origin.y += 0.5;
+		self.imageView.frame = imageFrame;
+	}
 }
 
 - (CGSize)sizeThatFits:(CGSize)size

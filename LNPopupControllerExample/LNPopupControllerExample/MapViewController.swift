@@ -21,11 +21,14 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		mapView.showsTraffic = false
+		mapView.pointOfInterestFilter = .includingAll
+		
 		backButtonBackground.layer.cornerRadius = 10.0
 		backButtonBackground.layer.borderWidth = 1.0
 		backButtonBackground.layer.borderColor = self.view.tintColor.cgColor
 		
-		topVisualEffectView.effect = UIBlurEffect(style: .systemChromeMaterial)
+		topVisualEffectView.effect = UIBlurEffect(blurRadius: 10.0)
 		backButtonBackground.effect = UIBlurEffect(style: .systemChromeMaterial)
 		backButtonBackground.layer.cornerCurve = .continuous
 	}
