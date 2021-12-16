@@ -17,6 +17,7 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "LNPopupCustomBarViewController+Private.h"
 @import ObjectiveC;
+@import os.log;
 
 //visualProvider.toolbarIsSmall
 static NSString* const vPTIS = @"dmlzdWFsUHJvdmlkZXIudG9vbGJhcklzU21hbGw=";
@@ -91,6 +92,8 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 	CGFloat _statusBarThresholdDir;
 	
 	CGFloat _bottomBarOffset;
+	
+	CADisplayLink* _displayLinkFor120Hz;
 }
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
@@ -410,6 +413,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		if(state != _LNPopupPresentationStateTransitioning)
 		{
 			[_containerController _ln_setPopupPresentationState:state];
+			[self _end120HzHack];
 		}
 		
 		if(completion)
@@ -486,6 +490,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 #endif
+	
+	[self _start120HzHack];
 	
 	if(self.popupBar.customBarViewController != nil && self.popupBar.customBarViewController.wantsDefaultPanGestureRecognizer == NO)
 	{
@@ -1121,6 +1127,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock
 {
+	[self _start120HzHack];
+	
 	UIViewController* old = _currentContentController;
 	[self _reconfigureContentWithOldContentController:old newContentController:_containerController.popupContentViewController];
 	
@@ -1185,6 +1193,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			{
 				_popupControllerInternalState = LNPopupPresentationStateBarPresented;
 				[_containerController _ln_setPopupPresentationState:LNPopupPresentationStateBarPresented];
+				
+				[self _end120HzHack];
 			}
 			
 			[self.popupBar.customBarViewController _userFacing_viewDidAppear:animated];
@@ -1223,9 +1233,14 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		{
 			[self openPopupAnimated:animated completion:completionBlock];
 		}
-		else if(completionBlock != nil)
+		else
 		{
-			completionBlock();
+			[self _end120HzHack];
+			
+			if(completionBlock != nil)
+			{
+				completionBlock();
+			}
 		}
 	}
 }
@@ -1401,6 +1416,49 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 }
 
 #pragma mark Utils
+
+- (void)_120HzTick:(CADisplayLink*)displayLink
+{
+}
+
+- (void)_check120HzHackAndNotifyIfNeeded
+{
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		if (@available(iOS 15.0, *))
+		{
+			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && UIScreen.mainScreen.maximumFramesPerSecond > 60 && [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CADisableMinimumFrameDurationOnPhone"] boolValue] == NO)
+			{
+				os_log_t customLog = os_log_create("com.LeoNatan.LNPopupController", "LNPopupController");
+				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "This device supports ProMotion, but %s does not enable the full range of refresh rates using the “CADisableMinimumFrameDurationOnPhone” Info.plist key.", NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
+			}
+		}
+	});
+}
+
+- (void)_start120HzHack
+{
+	[self _check120HzHackAndNotifyIfNeeded];
+	
+	[_displayLinkFor120Hz invalidate];
+	_displayLinkFor120Hz = [CADisplayLink displayLinkWithTarget:self selector:@selector(_120HzTick:)];
+	CGFloat max = UIScreen.mainScreen.maximumFramesPerSecond;
+	if(@available(iOS 15.0, *))
+	{
+		_displayLinkFor120Hz.preferredFrameRateRange = CAFrameRateRangeMake(max, max, max);
+	}
+	else
+	{
+		_displayLinkFor120Hz.preferredFramesPerSecond = max;
+	}
+	[_displayLinkFor120Hz addToRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
+}
+
+- (void)_end120HzHack
+{
+	[_displayLinkFor120Hz invalidate];
+	_displayLinkFor120Hz = nil;
+}
 
 + (CGFloat)_statusBarHeightForView:(UIView*)view
 {

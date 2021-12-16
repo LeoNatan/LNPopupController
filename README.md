@@ -274,6 +274,12 @@ Starting with iOS 15, scroll edge appearance is automatically disabled for toolb
 
 <p align="center"><img src="./Supplements/scroll_edge_appearance.gif" width="360"/></p>
 
+#### ProMotion Support
+
+`LNPopupController` fully supports ProMotion on iPhone and iPad.
+
+For iPhone 13 Pro and above, you need to add the `CADisableMinimumFrameDurationOnPhone` key to your Info.plist and set it to `true`. See [Optimizing ProMotion Refresh Rates for iPhone 13 Pro and iPad Pro](https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro?language=objc) for more information. `LNPopupController` will log a single warning message in the console if this key is missing, or is set to `false`.
+
 #### Interaction Gesture Recognizer
 
 `LNPopupContentView` exposes access to the popup interaction gesture recognizer in the way of the `popupInteractionGestureRecognizer` property. This gesture recognizer is shared between opening the popup content, by panning the popup bar up (when the popup bar is closed), and closing the popup content, by panning the popup content view (when the popup bar is open).
