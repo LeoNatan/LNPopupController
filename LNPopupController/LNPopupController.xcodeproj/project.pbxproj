@@ -61,6 +61,7 @@
 		39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85B71B6304F5004FFC61 /* LNPopupItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39E7A604200B5157007AF3AD /* _LNPopupSwizzlingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */; };
 		39E7A605200B5157007AF3AD /* _LNPopupSwizzlingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */; };
+		39E9FE11275B984B00A47D61 /* LNPopupDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39F8228826B80B6F0070DDBA /* SwiftRefinements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */; };
 /* End PBXBuildFile section */
 
@@ -121,6 +122,7 @@
 		39DB52E51B5823330061C589 /* LNPopupController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LNPopupController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupSwizzlingUtils.h; sourceTree = "<group>"; };
 		39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupSwizzlingUtils.m; sourceTree = "<group>"; };
+		39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDefinitions.h; sourceTree = "<group>"; };
 		39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftRefinements.swift; path = ../../LNPCSwiftRefinements/SwiftRefinements.swift; sourceTree = "<group>"; };
 		46ECC2AE1BF31025005CE96C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -220,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				3947E1AB1B61CDD70001178B /* Implementation */,
+				39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */,
 				393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */,
 				394A85B51B630409004FFC61 /* LNPopupBar.h */,
 				3947E1A71B61CDA40001178B /* LNPopupCloseButton.h */,
@@ -251,6 +254,7 @@
 				3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */,
 				393E4EAA2670F2D000929E47 /* LNPopupBarAppearance.h in Headers */,
 				3947E1B21B61CE4A0001178B /* LNPopupController.h in Headers */,
+				39E9FE11275B984B00A47D61 /* LNPopupDefinitions.h in Headers */,
 				39B3EB0D24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h in Headers */,
 				3947E1BA1B6300370001178B /* LNPopupBar+Private.h in Headers */,
 				398C2901260CCDA0000690FB /* UIViewController+LNPopupSupportPrivate.h in Headers */,

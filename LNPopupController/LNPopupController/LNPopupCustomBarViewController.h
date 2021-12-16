@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupDefinitions.h>
 
 @class LNPopupBar;
 
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  * Implement the @c UIPointerInteractionDelegate methods to customize pointer interactions.
  */
+NS_SWIFT_UI_ACTOR
 @interface LNPopupCustomBarViewController : UIViewController <UIPointerInteractionDelegate>
 
 /**

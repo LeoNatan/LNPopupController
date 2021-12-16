@@ -7,14 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupDefinitions.h>
 #import <LNPopupController/LNPopupItem.h>
 #import <LNPopupController/LNPopupCustomBarViewController.h>
 #import <LNPopupController/LNPopupBarAppearance.h>
 
-#define LN_UNAVAILABLE_API(x) __attribute__((unavailable(x)))
 #define LN_UNAVAILABLE_PREVIEWING_MSG "Add context menu interaction or register for previewing directly on the popup bar view."
-
-#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -68,7 +66,7 @@ typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
 };
 
 /**
- * A popup bar is a control that displays popup information. Content is popuplated from @c LNPopupItem items.
+ * A popup bar is a control that displays popup information. Content is populated from @c LNPopupItem items.
  */
 NS_SWIFT_UI_ACTOR
 @interface LNPopupBar : UIView <UIAppearanceContainer>

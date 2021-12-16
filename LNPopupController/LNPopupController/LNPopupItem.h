@@ -7,15 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupDefinitions.h>
 #import <LNPopupController/LNPopupBarAppearance.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
-
-#ifndef NS_SWIFT_UI_ACTOR
-#define NS_SWIFT_UI_ACTOR
-#endif
 
 /**
  * An @c LNPopupItem object manages the buttons and text to be displayed in a popup bar. Each view controller in popup presentation must have an @c LNPopupItem object that contains the buttons and text it wants displayed in the popup bar.

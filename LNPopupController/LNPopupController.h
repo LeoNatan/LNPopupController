@@ -6,6 +6,7 @@
 //  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
+#import <LNPopupController/LNPopupDefinitions.h>
 #import <LNPopupController/LNPopupContentView.h>
 #import <LNPopupController/LNPopupCloseButton.h>
 #import <LNPopupController/LNPopupItem.h>

@@ -7,20 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupDefinitions.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-#ifndef NS_SWIFT_UI_ACTOR
-#define NS_SWIFT_UI_ACTOR
-#endif
-
-NS_SWIFT_UI_ACTOR
 
 /**
  * An object for customizing the appearance of a popup bar.
  *
  * After creating a @c LNPopupBarAppearance object, use the methods and properties of this class to specify the appearance of items in the popup bar. Use the inherited properties from @c UIBarAppearance to configure the background and shadow attributes of the popup bar itself.
  */
+NS_SWIFT_UI_ACTOR
 @interface LNPopupBarAppearance : UIBarAppearance
 
 /**

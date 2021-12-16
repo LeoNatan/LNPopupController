@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupDefinitions.h>
 #import <LNPopupController/LNPopupContentView.h>
 #import <LNPopupController/LNPopupBar.h>
 #import <LNPopupController/LNPopupItem.h>
-
-#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
-#define LN_UNAVAILABLE_API(x) __attribute__((unavailable(x)))
 
 NS_ASSUME_NONNULL_BEGIN
 

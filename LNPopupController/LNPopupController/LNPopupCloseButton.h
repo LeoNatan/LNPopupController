@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupDefinitions.h>
 
 /**
  * Available styles for the popup close button
@@ -35,6 +36,7 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 
 NS_ASSUME_NONNULL_BEGIN
 
+NS_SWIFT_UI_ACTOR
 @interface LNPopupCloseButton : UIButton <UIAppearanceContainer>
 
 /**

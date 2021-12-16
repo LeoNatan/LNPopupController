@@ -7,15 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupDefinitions.h>
 #import <LNPopupController/LNPopupCloseButton.h>
-
-#define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
 
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Holds the popup content container view, as well as the popup close button and the popup interaction gesture recognizer.
  */
+NS_SWIFT_UI_ACTOR
 @interface LNPopupContentView : UIView <UIAppearanceContainer>
 
 /**
