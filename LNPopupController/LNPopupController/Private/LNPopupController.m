@@ -1429,7 +1429,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		{
 			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && UIScreen.mainScreen.maximumFramesPerSecond > 60 && [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CADisableMinimumFrameDurationOnPhone"] boolValue] == NO)
 			{
-				os_log_t customLog = os_log_create("com.LeoNatan.LNPopupController", "LNPopupController");
+				NSString* frameworkName = NSClassFromString(@"__LNPopupUI") ? @"LNPopupUI" : @"LNPopupController";
+				NSString* subsystem = [NSString stringWithFormat:@"com.LeoNatan.%@", frameworkName];
+				os_log_t customLog = os_log_create(subsystem.UTF8String, frameworkName.UTF8String);
 				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "This device supports ProMotion, but %s does not enable the full range of refresh rates using the “CADisableMinimumFrameDurationOnPhone” Info.plist key.", NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
 			}
 		}
