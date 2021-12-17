@@ -296,6 +296,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		shouldNotifyDelegateWillOpen = YES;
 	}
 	
+	if(state != _LNPopupPresentationStateTransitioning)
+	{
+		[self _start120HzHack];
+	}
+	
 	__unused LNPopupPresentationState stateAtStart = _popupControllerInternalState;
 	_popupControllerInternalState = _LNPopupPresentationStateTransitioning;
 	_popupControllerTargetState = state;
@@ -465,11 +470,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	switch (tgr.state) {
 		case UIGestureRecognizerStateEnded:
 		{
-//			[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:NO animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:NO completion:^{
-				[_containerController.view setNeedsLayout];
-				[_containerController.view layoutIfNeeded];
-				[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
-//			} transitionOriginatedByUser:NO];
+			[_containerController.view setNeedsLayout];
+			[_containerController.view layoutIfNeeded];
+			[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
 		}	break;
 		default:
 			break;
@@ -1247,6 +1250,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	[self _start120HzHack];
+	
 	if(_popupControllerTargetState == LNPopupPresentationStateBarPresented)
 	{
 		[_containerController.view setNeedsLayout];
@@ -1275,6 +1280,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	[self _start120HzHack];
+	
 	if(_dismissalOverride == YES)
 	{
 		if(completionBlock != nil) { completionBlock(); }
@@ -1345,7 +1352,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		if(_popupControllerTargetState != LNPopupPresentationStateBarPresented)
 		{
-//			self.popupBarStorage.hidden = YES;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			
@@ -1417,10 +1423,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 #pragma mark Utils
 
-- (void)_120HzTick:(CADisplayLink*)displayLink
-{
-}
-
 - (void)_check120HzHackAndNotifyIfNeeded
 {
 	static dispatch_once_t onceToken;
@@ -1432,7 +1434,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				NSString* frameworkName = NSClassFromString(@"__LNPopupUI") ? @"LNPopupUI" : @"LNPopupController";
 				NSString* subsystem = [NSString stringWithFormat:@"com.LeoNatan.%@", frameworkName];
 				os_log_t customLog = os_log_create(subsystem.UTF8String, frameworkName.UTF8String);
-				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "This device supports ProMotion, but %s does not enable the full range of refresh rates using the “CADisableMinimumFrameDurationOnPhone” Info.plist key.", NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
+				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "This device supports ProMotion, but %s does not enable the full range of refresh rates by setting the “CADisableMinimumFrameDurationOnPhone” Info.plist key to “true”. See https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro", NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
 			}
 		}
 	});
@@ -1442,8 +1444,12 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 {
 	[self _check120HzHackAndNotifyIfNeeded];
 	
-	[_displayLinkFor120Hz invalidate];
-	_displayLinkFor120Hz = [CADisplayLink displayLinkWithTarget:self selector:@selector(_120HzTick:)];
+	if(_displayLinkFor120Hz != nil)
+	{
+		return;
+	}
+	
+	_displayLinkFor120Hz = [CADisplayLink displayLinkWithTarget:self selector:@selector(_120HzTick)];
 	CGFloat max = UIScreen.mainScreen.maximumFramesPerSecond;
 	if(@available(iOS 15.0, *))
 	{
@@ -1481,5 +1487,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	return view.window.safeAreaInsets.top;
 #endif
 }
+
+- (void)_120HzTick {}
 
 @end
