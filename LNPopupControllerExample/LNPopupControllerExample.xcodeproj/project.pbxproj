@@ -27,6 +27,9 @@
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
 		393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
+		394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */; };
+		394E1AA8276C0D9300C5BE31 /* LNPopupControllerExampleSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */; };
+		394E1AA9276C0DA600C5BE31 /* DemoGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 39756326254ED9EB0066981E /* DemoGallery.m */; };
 		39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39631FAC230DA03E0059D119 /* SceneDelegate.m */; };
 		39756327254ED9EB0066981E /* DemoGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 39756326254ED9EB0066981E /* DemoGallery.m */; };
 		397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
@@ -137,6 +140,8 @@
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
 		393F232A1E16D1E4000E969D /* HigherSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HigherSearchBar.swift; sourceTree = "<group>"; };
+		394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDemoContextMenuInteraction.h; sourceTree = "<group>"; };
+		394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupDemoContextMenuInteraction.m; sourceTree = "<group>"; };
 		39631FAB230DA03D0059D119 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		39631FAC230DA03E0059D119 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		39756325254ED9EB0066981E /* DemoGallery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoGallery.h; sourceTree = "<group>"; };
@@ -288,6 +293,8 @@
 				3985DE5F2549539B00CD76EE /* IntroWebViewController.m */,
 				3901289326CFC1D60002612D /* LNPopupControllerExampleSupport.h */,
 				3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */,
+				394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */,
+				394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */,
 			);
 			name = "Demo - Testing Scene (Objective-C)";
 			sourceTree = "<group>";
@@ -492,6 +499,7 @@
 				39A3B58B230D400B00E10425 /* SplitViewController.m in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
 				39DA0E8322D7B9C6001E63A0 /* NSObject+XcodeBugs.m in Sources */,
+				394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */,
 				39277A091B58228000293F95 /* main.m in Sources */,
 				39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */,
 				393F23291E16CF90000E969D /* LocationsController.swift in Sources */,
@@ -512,6 +520,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				39FAFC3624E71A6C008BBC2D /* SettingsTableViewController.m in Sources */,
+				394E1AA8276C0D9300C5BE31 /* LNPopupControllerExampleSupport.m in Sources */,
+				394E1AA9276C0DA600C5BE31 /* DemoGallery.m in Sources */,
 				39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */,
 				39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */,
 				39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */,
@@ -767,7 +777,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -799,7 +809,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.LeoNatan.LNPopupControllerExample-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";

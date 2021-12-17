@@ -101,8 +101,10 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	}
 	
 	@objc private func clearButtonTapped(_ sender: Any) {
+#if LNPOPUP
 		popupContentVC.popupItem.title = nil
 		popupContentVC.searchBar.text = nil
+#endif
 	}
 	
 	@IBAction private func dismissButtonTapped(_ sender: Any) {

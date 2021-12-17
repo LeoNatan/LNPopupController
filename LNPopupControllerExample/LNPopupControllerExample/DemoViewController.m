@@ -17,8 +17,6 @@
 #import "SplitViewController.h"
 @import UIKit;
 
-#import <LNPopupController/LNPopupController.h>
-
 extern UIImage* LNSystemImage(NSString* named);
 
 @interface DemoView : UIView @end

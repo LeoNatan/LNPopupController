@@ -11,13 +11,10 @@
 #if LNPOPUP
 @import LNPopupController;
 #import "IntroWebViewController.h"
+#import "LNPopupDemoContextMenuInteraction.h"
 #endif
 
-@interface DemoGalleryController : UITableViewController <
-#if LNPOPUP
-UIContextMenuInteractionDelegate
-#endif
->
+@interface DemoGalleryController : UITableViewController
 @end
 
 @implementation DemoGalleryController
@@ -50,8 +47,7 @@ UIContextMenuInteractionDelegate
 	self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
 	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:YES completion:nil];
 	
-	UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-	[self.navigationController.popupBar addInteraction:i];
+	[self.navigationController.popupBar addInteraction:[LNPopupDemoContextMenuInteraction new]];
 #endif
 }
 
@@ -81,28 +77,5 @@ UIContextMenuInteractionDelegate
 	
 	return YES;
 }
-
-#pragma mark UIContextMenuInteractionDelegate
-
-#if LNPOPUP
-- (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location
-{
-	return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:nil];
-}
-
-- (void)contextMenuInteraction:(UIContextMenuInteraction *)interaction willEndForConfiguration:(UIContextMenuConfiguration *)configuration animator:(nullable id<UIContextMenuInteractionAnimating>)animator
-{
-	interaction.view.userInteractionEnabled = NO;
-	
-	[animator addCompletion:^{
-		UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]] applicationActivities:nil];
-		avc.modalPresentationStyle = UIModalPresentationFormSheet;
-		avc.popoverPresentationController.sourceView = self.navigationController.popupBar;
-		[self presentViewController:avc animated:YES completion:nil];
-		
-		interaction.view.userInteractionEnabled = YES;
-	}];
-}
-#endif
 
 @end
