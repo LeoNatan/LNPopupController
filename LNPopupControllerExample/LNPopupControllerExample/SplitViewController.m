@@ -2,48 +2,56 @@
 //  SplitViewController.m
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan (Wix) on 8/21/19.
+//  Created by Leo Natan on 8/21/19.
 //  Copyright © 2019 Leo Natan. All rights reserved.
 //
 
 #import "SplitViewController.h"
 
-@interface SplitViewController ()
+@implementation UIViewController (LNSplitViewController)
+
+- (LNSplitViewController *)ln_splitViewController
+{
+	return (id)self.splitViewController;
+}
 
 @end
 
-@implementation SplitViewController
+@implementation LNSplitViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-	self.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
+	if(@available(iOS 14.0, *))
+	{
+		self.minimumPrimaryColumnWidth = 400;
+		self.maximumPrimaryColumnWidth = 400;
+		
+		if(self.style == UISplitViewControllerStyleTripleColumn)
+		{
+			self.minimumSupplementaryColumnWidth = 400;
+			self.maximumSupplementaryColumnWidth = 400;
+		}
+	}
+	else
+	{
+		self.preferredDisplayMode = UISplitViewControllerDisplayModeOneBesideSecondary;
+	}
+}
+
+- (nullable __kindof UIViewController *)viewControllerForColumn:(LNSplitViewControllerColumn)column
+{
+	if(@available(iOS 14.0, *))
+	{
+		return [super viewControllerForColumn:(NSInteger)column];
+	}
+	
+	return column == LNSplitViewControllerColumnSecondary ? self.viewControllers.lastObject : self.viewControllers.firstObject;
 }
 
 @end
 
-@interface SceneSplitViewController : UISplitViewController <UISplitViewControllerDelegate> @end
-@implementation SceneSplitViewController
-
-- (void)awakeFromNib
-{
-	[super awakeFromNib];
-	
-	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-	{
-		self.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
-	}
-}
-
-- (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController
-{
-	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
-	{
-		return YES;
-	}
-	
-	return splitViewController.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
-}
-
-@end
+@implementation SplitViewControllerPrimaryPopup @end
+@implementation SplitViewControllerSecondaryPopup @end
+@implementation SplitViewControllerGlobalPopup @end

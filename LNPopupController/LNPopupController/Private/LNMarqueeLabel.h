@@ -6,6 +6,16 @@
 //  Copyright (c) 2011-2015 Charles Powell. All rights reserved.
 //
 
+#define MarqueeLabel __MarqueeLabel
+#define MarqueeType __MarqueeType
+#define MLLeftRight __MLLeftRight
+#define MLRightLeft __MLRightLeft
+#define MLContinuous __MLContinuous
+#define MLContinuousReverse __MLContinuousReverse
+#define MLLeft __MLLeft
+#define MLRight __MLRight
+#define GradientSetupAnimation __GradientSetupAnimation
+
 #import <UIKit/UIKit.h>
 
 /** An enum that defines the types of `LNMarqueeLabel` scrolling */
@@ -275,6 +285,8 @@ IB_DESIGNABLE
 /** The length of delay in seconds that the label pauses at the completion of a scroll. */
 
 @property (nonatomic, assign) IBInspectable CGFloat animationDelay;
+
+@property (nonatomic, weak) MarqueeLabel* synchronizedLabel;
 
 
 /** The read-only duration of the scroll animation (not including delay). 

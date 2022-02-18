@@ -1,4 +1,7 @@
 #import "SceneDelegate.h"
+#import "SettingsTableViewController.h"
+
+@import LNTouchVisualizer;
 
 @interface SceneDelegate ()
 
@@ -6,11 +9,7 @@
 
 @implementation SceneDelegate
 
-
 - (void)scene:(UIWindowScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
-	// Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-	// If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-	// This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
 #if TARGET_OS_MACCATALYST
 	scene.sizeRestrictions.maximumSize = CGSizeMake(DBL_MAX, DBL_MAX);
@@ -25,6 +24,12 @@
 		UISplitViewController* split = (id)self.window.rootViewController;
 		split.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
 	}
+#else
+	scene.touchVisualizerEnabled = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled];
+	
+	LNTouchConfig* rippleConfig = [LNTouchConfig rippleConfig];
+	rippleConfig.fillColor = UIColor.systemPinkColor;
+	scene.touchVisualizerWindow.touchRippleConfig = rippleConfig;
 #endif
 }
 
@@ -60,6 +65,5 @@
 	// Use this method to save data, release shared resources, and store enough scene-specific state information
 	// to restore the scene back to its current state.
 }
-
 
 @end

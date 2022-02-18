@@ -1,28 +1,18 @@
 //
-//  _LNPopupBarSupportObject.h
+//  LNPopupController.h
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/24/15.
-//  Copyright © 2015 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "LNPopupBar+Private.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
-#import "LNPopupCloseButton.h"
-#import "LNPopupContentView.h"
+#import <LNPopupController/LNPopupCloseButton.h>
+#import "LNPopupContentView+Private.h"
 
-@interface LNPopupContentView ()
-
-- (instancetype)initWithFrame:(CGRect)frame;
-
-@property (nonatomic, strong, readwrite) UIPanGestureRecognizer* popupInteractionGestureRecognizer;
-@property (nonatomic, strong, readwrite) LNPopupCloseButton* popupCloseButton;
-@property (nonatomic, strong) UIVisualEffectView* effectView;
-
-@property (nonatomic, weak) UIViewController* currentPopupContentViewController;
-
-@end
+extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
 @interface LNPopupController : NSObject
 
@@ -35,9 +25,13 @@
 @property (nonatomic, strong) LNPopupContentView* popupContentView;
 @property (nonatomic, strong) UIScrollView* popupContentContainerView;
 
-@property (nonatomic) LNPopupPresentationState popupControllerState;
+@property (nonatomic) LNPopupPresentationState popupControllerPublicState;
+@property (nonatomic) LNPopupPresentationState popupControllerInternalState;
 @property (nonatomic) LNPopupPresentationState popupControllerTargetState;
 
+@property (nonatomic, weak) id<LNPopupPresentationDelegate> userPopupPresentationDelegate;
+
+@property (nonatomic, strong) __kindof UIViewController* currentContentController;
 @property (nonatomic, weak) __kindof UIViewController* containerController;
 
 @property (nonatomic) CGPoint lastPopupBarLocation;
@@ -48,10 +42,9 @@
 - (CGFloat)_percentFromPopupBar;
 
 - (void)_setContentToState:(LNPopupPresentationState)state;
+- (void)_setContentToState:(LNPopupPresentationState)state animated:(BOOL)animated;
 
 - (void)_movePopupBarAndContentToBottomBarSuperview;
-
-- (void)_repositionPopupCloseButton;
 
 - (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock;
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
@@ -59,6 +52,7 @@
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 
 - (void)_configurePopupBarFromBottomBar;
+- (void)_updateBarExtensionStyleFromPopupBar;
 
 + (CGFloat)_statusBarHeightForView:(UIView*)view;
 

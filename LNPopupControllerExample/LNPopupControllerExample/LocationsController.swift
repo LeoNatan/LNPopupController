@@ -8,13 +8,21 @@
 
 import UIKit
 
-class LocationsController: UITableViewController {
+class LocationsController: UITableViewController, UISearchBarDelegate {
 	@IBOutlet weak var searchBar: HigherSearchBar!
 		
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		searchBar.delegate = self
+	}
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
+#if LNPOPUP
 		searchBar.text = popupItem.title
+#endif
 	}
 	
 	override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -22,9 +30,17 @@ class LocationsController: UITableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		tableView .deselectRow(at: indexPath, animated: true)
+		tableView.deselectRow(at: indexPath, animated: true)
 		searchBar.resignFirstResponder()
+#if LNPOPUP
 		popupItem.title = tableView.cellForRow(at: indexPath)?.textLabel?.text
 		popupPresentationContainer?.closePopup(animated: true, completion: nil)
+#endif
+	}
+	
+	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+#if LNPOPUP
+		popupItem.title = searchText
+#endif
 	}
 }

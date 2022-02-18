@@ -7,7 +7,10 @@
 //
 
 import UIKit
+#if LNPOPUP
 import LNPopupController
+#endif
+import LoremIpsum
 
 class DemoAlbumTableViewController: UITableViewController {
 
@@ -30,37 +33,50 @@ class DemoAlbumTableViewController: UITableViewController {
 		
         super.viewDidLoad()
 		
-		if #available(iOS 13.0, *) {
-			demoAlbumImageView.layer.cornerCurve = .continuous
+		let backgroundImageView = UIImageView(image: UIImage(named: "demoAlbum"))
+		backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		backgroundImageView.contentMode = .scaleAspectFill
+		let backgroundEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+		backgroundEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		let container = UIView(frame: tableView.bounds)
+		container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		backgroundImageView.frame = container.bounds
+		backgroundEffectView.frame = container.bounds
+		container.addSubview(backgroundImageView)
+		container.addSubview(backgroundEffectView)
+		
+		tableView.backgroundView = container
+		
+		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
+		
+#if LNPOPUP
+		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
+#endif
+
+		let appearance = UINavigationBarAppearance()
+		appearance.configureWithTransparentBackground()
+#if compiler(>=5.5)
+		if #available(iOS 15.0, *) {
+			navigationItem.compactScrollEdgeAppearance = appearance
 		}
+#endif
+		navigationItem.scrollEdgeAppearance = appearance
+		
+		let appearance2 = UINavigationBarAppearance()
+		appearance2.configureWithDefaultBackground()
+		navigationItem.compactAppearance = appearance2
+		navigationItem.standardAppearance = appearance2
+
+		demoAlbumImageView.layer.cornerCurve = .continuous
 		demoAlbumImageView.layer.cornerRadius = 8
 		demoAlbumImageView.layer.masksToBounds = true
 		
 		for idx in 1...self.tableView(tableView, numberOfRowsInSection: 0) {
 			images += [UIImage(named: "genre\(idx)")!]
-			titles += [LoremIpsum.title()]
-			subtitles += [LoremIpsum.sentence()]
+			titles += [LoremIpsum.title]
+			subtitles += [LoremIpsum.sentence]
 		}
-		
-		tableView.backgroundColor = LNRandomDarkColor()
     }
-	
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-		#if !targetEnvironment(macCatalyst)
-		if ProcessInfo.processInfo.operatingSystemVersion.majorVersion <= 10 {
-			let insets = UIEdgeInsets.init(top: topLayoutGuide.length, left: 0, bottom: bottomLayoutGuide.length, right: 0)
-			tableView.contentInset = insets
-			tableView.scrollIndicatorInsets = insets
-		}
-		#endif
-	}
-	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-		tableView.setContentOffset(CGPoint(x: 0, y: -tableView.contentInset.top), animated: false)
-	}
 	
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -75,8 +91,8 @@ class DemoAlbumTableViewController: UITableViewController {
 	}
 	
 	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		let separator = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 1 / UIScreen.main.scale))
-		separator.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+		let separator = UIView(frame: CGRect(x: view.layoutMargins.left, y: 0, width: tableView.bounds.size.width - view.layoutMargins.left, height: 1 / UIScreen.main.scale))
+		separator.backgroundColor = .separator
 		separator.autoresizingMask = .flexibleWidth
 		let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 2))
 		view.addSubview(separator)
@@ -88,19 +104,14 @@ class DemoAlbumTableViewController: UITableViewController {
 
 		cell.imageView?.image = images[(indexPath as NSIndexPath).row]
 		cell.textLabel?.text = titles[(indexPath as NSIndexPath).row]
-		cell.textLabel?.textColor = UIColor.white
 		cell.detailTextLabel?.text = subtitles[(indexPath as NSIndexPath).row]
-		cell.detailTextLabel?.textColor = UIColor.white
-		
-		let selectionView = UIView()
-		selectionView.backgroundColor = UIColor.white.withAlphaComponent(0.45)
-		cell.selectedBackgroundView = selectionView
 		
         return cell
     }
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let popupContentController = storyboard?.instantiateViewController(withIdentifier: "DemoMusicPlayerController") as! DemoMusicPlayerController
+		#if LNPOPUP
+		let popupContentController = DemoMusicPlayerController()
 		popupContentController.songTitle = titles[(indexPath as NSIndexPath).row]
 		popupContentController.albumTitle = subtitles[(indexPath as NSIndexPath).row]
 		popupContentController.albumArt = images[(indexPath as NSIndexPath).row]
@@ -108,22 +119,14 @@ class DemoAlbumTableViewController: UITableViewController {
 		popupContentController.popupItem.accessibilityHint = NSLocalizedString("Double Tap to Expand the Mini Player", comment: "")
 		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
-		#if targetEnvironment(macCatalyst)
-		tabBarController?.popupBar.inheritsVisualStyleFromDockingView = true
-		#endif
-		
+//		tabBarController?.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
+		tabBarController?.popupBar.imageView.layer.cornerRadius = 3
+		tabBarController?.popupBar.tintColor = UIColor.label
+		tabBarController?.popupBar.progressViewStyle = .top
 		
-		if #available(iOS 13.0, *) {
-			tabBarController?.popupBar.tintColor = UIColor.label
-		} else {
-			tabBarController?.popupBar.tintColor = UIColor(white: 38.0 / 255.0, alpha: 1.0)
-		}
+		#endif
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}
-	
-//	override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//		cell.backgroundColor = UIColor.clear
-//	}
 }

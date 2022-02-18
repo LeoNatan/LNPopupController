@@ -2,8 +2,8 @@
 //  NSObject+AltKVC.m
 //  LNPopupController
 //
-//  Created by Leo Natan (Wix) on 6/8/19.
-//  Copyright © 2019 Leo Natan. All rights reserved.
+//  Created by Leo Natan on 6/8/19.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import "NSObject+AltKVC.h"

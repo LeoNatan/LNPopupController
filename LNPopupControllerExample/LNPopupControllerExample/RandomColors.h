@@ -8,10 +8,14 @@
 
 @import UIKit;
 
-API_AVAILABLE(ios(13.0))
-extern UIColor* LNRandomAdaptiveColor(void);
-API_AVAILABLE(ios(13.0))
-UIColor* LNRandomAdaptiveInvertedColor(void);
+extern UIColor* LNRandomSystemColor(void);
 
+extern UIColor* LNSeedAdaptiveColor(NSString* seed);
+extern UIColor* LNSeedAdaptiveInvertedColor(NSString* seed);
+extern UIColor* LNRandomAdaptiveColor(void);
+extern UIColor* LNRandomAdaptiveInvertedColor(void);
+
+extern UIColor* LNSeedDarkColor(NSString* seed);
+extern UIColor* LNSeedLightColor(NSString* seed);
 extern UIColor* LNRandomDarkColor(void);
 extern UIColor* LNRandomLightColor(void);

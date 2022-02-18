@@ -2,8 +2,8 @@
 //  LNPopupInteractionPanGestureRecognizer.m
 //  LNPopupController
 //
-//  Created by Leo Natan (Wix) on 15/07/2017.
-//  Copyright © 2017 Leo Natan. All rights reserved.
+//  Created by Leo Natan on 15/07/2017.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
 #import "LNPopupInteractionPanGestureRecognizer.h"
@@ -12,6 +12,12 @@
 #import "LNPopupController.h"
 
 extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style);
+
+@interface UIViewController ()
+
+- (CGRect)_ln_interactionLimitRect;
+
+@end
 
 @interface LNPopupInteractionPanGestureRecognizerDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate>
 @end
@@ -39,6 +45,17 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	
 	BOOL rv = resolvedStyle != LNPopupInteractionStyleNone;
 	
+	if(rv && gestureRecognizer.view == _popupController.currentContentController.view && [_popupController.currentContentController respondsToSelector:@selector(_ln_interactionLimitRect)])
+	{
+		CGRect limit = [_popupController.currentContentController _ln_interactionLimitRect];
+		CGPoint interactionPoint = [gestureRecognizer locationInView:gestureRecognizer.view];
+		
+		if(CGRectContainsPoint(limit, interactionPoint) == NO)
+		{
+			return NO;
+		}
+	}
+	
 	if(rv && [self.forwardedDelegate respondsToSelector:_cmd])
 	{
 		return [self.forwardedDelegate gestureRecognizerShouldBegin:gestureRecognizer];
@@ -48,7 +65,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{	
+{
 	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"DropShadow"])
 	{
 		otherGestureRecognizer.state = UIGestureRecognizerStateFailed;
@@ -60,7 +77,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return NO;
 	}
 	
-	if(_popupController.popupControllerState != LNPopupPresentationStateOpen)
+	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)
 	{
 		if([self.forwardedDelegate respondsToSelector:_cmd])
 		{
@@ -83,7 +100,14 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	
 	if([otherGestureRecognizer.view isKindOfClass:[UIScrollView class]])
 	{
-		return YES;
+		if(otherGestureRecognizer.view == gestureRecognizer.view)
+		{
+			return NO;
+		}
+		else
+		{
+			return YES;
+		}
 	}
 	
 	if([self.forwardedDelegate respondsToSelector:_cmd])
@@ -96,8 +120,18 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-	if(_popupController.popupControllerState != LNPopupPresentationStateOpen)
+	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)
 	{
+		return NO;
+	}
+	
+	if(_popupController.popupBar._applySwiftUILayoutFixes)
+	{
+		if([otherGestureRecognizer isKindOfClass:UIPanGestureRecognizer.class])
+		{
+			return YES;
+		}
+		
 		return NO;
 	}
 	
@@ -106,12 +140,14 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
 	}
 	
-	if (@available(iOS 13.0, *))
+	if([otherGestureRecognizer.name hasPrefix:@"undointeraction"])
 	{
-		if([otherGestureRecognizer.name hasPrefix:@"undointeraction"])
-		{
-			return NO;
-		}
+		return NO;
+	}
+
+	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"SwiftUI"])
+	{
+		return NO;
 	}
 	
 	return YES;

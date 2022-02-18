@@ -2,8 +2,14 @@
 //  LNChevronView.h
 //
 //  Created by Leo Natan on 16/9/16.
-//  Copyright © 2016 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
+
+#define LNChevronView __LNChevronView
+#define LNChevronViewState __LNChevronViewState
+#define LNChevronViewStateUp __LNChevronViewStateUp
+#define LNChevronViewStateFlat __LNChevronViewStateFlat
+#define LNChevronViewStateDown __LNChevronViewStateDown
 
 #import <UIKit/UIKit.h>
 
@@ -18,7 +24,6 @@ typedef NS_ENUM(NSInteger, LNChevronViewState) {
 @interface LNChevronView : UIView
 
 @property (nonatomic, assign) LNChevronViewState state;
-@property (nonatomic, strong, null_resettable) UIColor* color;
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) NSTimeInterval animationDuration;
 

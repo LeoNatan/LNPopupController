@@ -9,11 +9,66 @@
 @import UIKit;
 #import "RandomColors.h"
 
-API_AVAILABLE(ios(13.0))
-UIColor* LNRandomAdaptiveColor(void)
+static NSMutableArray<UIColor*>* namedSystemColors;
+static NSUInteger lastNamedSystemColorIdx = 0;
+
+__attribute__((constructor))
+static void LNInitializeDemoColors(void)
 {
-	UIColor* light = LNRandomLightColor();
-	UIColor* dark = LNRandomDarkColor();
+	namedSystemColors = @[
+		UIColor.systemRedColor,
+		UIColor.systemGreenColor,
+		UIColor.systemBlueColor,
+		UIColor.systemOrangeColor,
+		UIColor.systemYellowColor,
+		UIColor.systemPinkColor,
+		UIColor.systemPurpleColor,
+		UIColor.systemTealColor,
+		UIColor.systemIndigoColor,
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
+		UIColor.systemBrownColor,
+#endif
+	].mutableCopy;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
+	if(@available(iOS 15.0, *))
+	{
+		[namedSystemColors addObject:UIColor.systemMintColor];
+		[namedSystemColors addObject:UIColor.systemCyanColor];
+	}
+#endif
+}
+
+UIColor* LNRandomSystemColor(void)
+{
+//	return namedSystemColors[arc4random_uniform((uint32_t)namedSystemColors.count)];
+	
+	NSUInteger rv = lastNamedSystemColorIdx;
+	lastNamedSystemColorIdx = (lastNamedSystemColorIdx + 1) % namedSystemColors.count;
+	return namedSystemColors[rv];
+}
+
+UIColor* _LNSeedDarkColor(long seed)
+{
+	srand48(seed);
+	CGFloat hue = drand48();
+	CGFloat saturation = 0.5;
+	CGFloat brightness = 0.3 + 0.1 * drand48();
+	return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+}
+
+UIColor* _LNSeedLightColor(long seed)
+{
+	srand48(seed);
+	CGFloat hue = drand48();
+	CGFloat saturation = 0.5;
+	CGFloat brightness = 1.0 - 0.1 * drand48();
+	return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+}
+
+UIColor* _LNSeedAdaptiveColor(long seed)
+{
+	UIColor* light = _LNSeedLightColor(seed);
+	UIColor* dark = _LNSeedDarkColor(seed);
 	return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull collection) {
 		if(collection.userInterfaceStyle == UIUserInterfaceStyleDark)
 		{
@@ -26,11 +81,10 @@ UIColor* LNRandomAdaptiveColor(void)
 	}];
 }
 
-API_AVAILABLE(ios(13.0))
-UIColor* LNRandomAdaptiveInvertedColor(void)
+UIColor* _LNSeedAdaptiveInvertedColor(long seed)
 {
-	UIColor* light = LNRandomLightColor();
-	UIColor* dark = LNRandomDarkColor();
+	UIColor* light = _LNSeedLightColor(seed);
+	UIColor* dark = _LNSeedDarkColor(seed);
 	return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull collection) {
 		if(collection.userInterfaceStyle == UIUserInterfaceStyleDark)
 		{
@@ -41,20 +95,44 @@ UIColor* LNRandomAdaptiveInvertedColor(void)
 			return dark;
 		}
 	}];
+}
+
+UIColor* LNRandomAdaptiveColor(void)
+{
+	return _LNSeedAdaptiveColor(arc4random());
+}
+
+UIColor* LNRandomAdaptiveInvertedColor(void)
+{
+	return _LNSeedAdaptiveInvertedColor(arc4random());
+}
+
+UIColor* LNSeedAdaptiveColor(NSString* seed)
+{
+	return _LNSeedAdaptiveColor(seed.hash);
+}
+
+UIColor* LNSeedAdaptiveInvertedColor(NSString* seed)
+{
+	return _LNSeedAdaptiveInvertedColor(seed.hash);
 }
 
 UIColor* LNRandomDarkColor(void)
 {
-	CGFloat hue = ( arc4random() % 256 / 256.0 );
-	CGFloat saturation = 0.5;
-	CGFloat brightness = 0.1 + ( arc4random() % 64 / 256.0 );
-	return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+	return _LNSeedDarkColor(arc4random());
 }
 
 UIColor* LNRandomLightColor(void)
 {
-	CGFloat hue = ( arc4random() % 256 / 256.0 );
-	CGFloat saturation = 0.5;
-	CGFloat brightness = 1.0 - ( arc4random() % 64 / 256.0 );
-	return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+	return _LNSeedLightColor(arc4random());
+}
+
+UIColor* LNSeedDarkColor(NSString* seed)
+{
+	return _LNSeedDarkColor(seed.hash);
+}
+
+UIColor* LNSeedLightColor(NSString* seed)
+{
+	return _LNSeedLightColor(seed.hash);
 }

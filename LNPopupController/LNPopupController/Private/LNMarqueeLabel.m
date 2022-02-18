@@ -694,15 +694,16 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         // 2) The instance is still attached to a window - this completion block is called for
         //    many reasons, including if the animation is removed due to the view being removed
         //    from the UIWindow (typically when the view controller is no longer the "top" view)
-        if (weakSelf.window && ![weakSelf.subLabel.layer animationForKey:@"position"]) {
-            // Begin again, if conditions met
-            if (weakSelf.labelShouldScroll && !weakSelf.tapToScroll && !weakSelf.holdScrolling) {
-                [weakSelf scrollContinuousWithInterval:interval
-                                             after:delayAmount
-                                    labelAnimation:labelAnimation
-                                 gradientAnimation:gradientAnimation];
-            }
-        }
+		
+		if (weakSelf.window && ![weakSelf.subLabel.layer animationForKey:@"position"]) {
+			// Begin again, if conditions met
+			if (weakSelf.labelShouldScroll && !weakSelf.tapToScroll && !weakSelf.holdScrolling) {
+				[weakSelf scrollContinuousWithInterval:interval
+												 after:delayAmount
+										labelAnimation:labelAnimation
+									 gradientAnimation:gradientAnimation];
+			}
+		}
     };
     
     
@@ -970,6 +971,12 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 {
     // Create new animation
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:property];
+	
+	if (@available(iOS 15.0, *))
+	{
+		CGFloat max = UIScreen.mainScreen.maximumFramesPerSecond;
+		animation.preferredFrameRateRange = CAFrameRateRangeMake(max, max, max);
+	}
     
     // Get timing function
     CAMediaTimingFunction *timingFunction = [self timingFunctionForAnimationOptions:self.animationCurve];
@@ -1147,8 +1154,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 }
 
 - (void)labelWillBeginScroll {
-    // Default implementation does nothing
-    return;
+	[self.synchronizedLabel beginScroll];
 }
 
 - (void)labelReturnedToHome:(BOOL)finished {

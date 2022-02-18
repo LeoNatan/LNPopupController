@@ -3,38 +3,54 @@
 //  LNPopupController
 //
 //  Created by Leo Natan on 7/24/15.
-//  Copyright © 2015 Leo Natan. All rights reserved.
+//  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
-#import "LNPopupCloseButton.h"
+#import "LNPopupCloseButton+Private.h"
 @import ObjectiveC;
 #import "LNChevronView.h"
+#import "_LNPopupSwizzlingUtils.h"
+#import "LNPopupContentView+Private.h"
 
 @implementation LNPopupCloseButton
 {
+	__weak LNPopupContentView* _contentView;
+	
 	UIVisualEffectView* _effectView;
 	UIView* _highlightView;
-	LNPopupCloseButtonStyle _style;
 	
 	LNChevronView* _chevronView;
 }
 
-- (instancetype)initWithStyle:(LNPopupCloseButtonStyle)style
+#ifndef LNPopupControllerEnforceStrictClean
+
+//_actingParentViewForGestureRecognizers
+static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2duaXplcnM=";
+
++ (void)load
 {
-	self = [self init];
+	@autoreleasepool
+	{
+		Method m = class_getInstanceMethod(self, @selector(_aPVFGR));
+		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(_aPVFGR)), method_getImplementation(m), method_getTypeEncoding(m));
+	}
+}
+
+//_actingParentViewForGestureRecognizers
+- (id)_aPVFGR
+{
+	return _contentView.currentPopupContentViewController.view;
+}
+
+#endif
+
+- (instancetype)initWithContainingContentView:(LNPopupContentView*)contentView
+{
+	self = [super init];
 	
 	if(self)
 	{
-		_style = style;
-		
-		if(_style == LNPopupCloseButtonStyleRound)
-		{
-			[self _setupForCircularButton];
-		}
-		else
-		{
-			[self _setupForChevronButton];
-		}
+		_contentView = contentView;
 		
 		self.accessibilityLabel = NSLocalizedString(@"Close", @"");
 		
@@ -44,15 +60,73 @@
 		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		
-		return self;
+		if (@available(iOS 13.4, *))
+		{
+			self.pointerInteractionEnabled = YES;
+			self.pointerStyleProvider = ^ UIPointerStyle* (UIButton *button, UIPointerEffect *proposedEffect, UIPointerShape *proposedShape) {
+				NSValue* rectValue = [proposedShape valueForKey:@"rect"];
+				if(rectValue == nil)
+				{
+					return [UIPointerStyle styleWithEffect:proposedEffect shape:proposedShape];
+				}
+				
+				CGRect rect = CGRectInset(rectValue.CGRectValue, -5, -5);
+				
+				return [UIPointerStyle styleWithEffect:proposedEffect shape:[UIPointerShape shapeWithRoundedRect:rect]];
+			};
+		}
+		
+		_style = LNPopupCloseButtonStyleChevron;
+		[self _setupForChevronButton];
 	}
 	
 	return self;
 }
 
+- (void)setStyle:(LNPopupCloseButtonStyle)style
+{
+	//This will take care of cases where the user sets LNPopupCloseButtonStyleDefault as well as close button repositioning.
+	[self.popupContentView setPopupCloseButtonStyle:style];
+}
+
+- (void)_setStyle:(LNPopupCloseButtonStyle)style
+{
+	if(_style == style)
+	{
+		return;
+	}
+	
+	_style = style;
+	
+	[self _cleanup];
+	
+	if(_style == LNPopupCloseButtonStyleRound)
+	{
+		[self _setupForCircularButton];
+	}
+	else if(_style == LNPopupCloseButtonStyleChevron)
+	{
+		[self _setupForChevronButton];
+	}
+}
+
 - (UIVisualEffectView*)backgroundView
 {
 	return _effectView;
+}
+
+- (void)_cleanup
+{
+	[_chevronView removeFromSuperview];
+	_chevronView = nil;
+	
+	[_effectView removeFromSuperview];
+	_effectView = nil;
+	
+	[_highlightView removeFromSuperview];
+	_highlightView = nil;
+	
+	[self setImage:nil forState:UIControlStateNormal];
 }
 
 - (void)_setupForChevronButton
@@ -65,7 +139,9 @@
 
 - (void)_setupForCircularButton
 {
-	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+	UIBlurEffectStyle blurStyle = UIBlurEffectStyleSystemChromeMaterial;
+	
+	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
 	_effectView.userInteractionEnabled = NO;
 	[self addSubview:_effectView];
 	
@@ -87,14 +163,16 @@
 	[self addTarget:self action:@selector(_didTouchCancel) forControlEvents:UIControlEventTouchCancel];
 	
 	self.layer.shadowColor = [UIColor blackColor].CGColor;
-	self.layer.shadowOpacity = 0.1;
-	self.layer.shadowRadius = 3.0;
+	self.layer.shadowOpacity = 0.15;
+	self.layer.shadowRadius = 4.0;
 	self.layer.shadowOffset = CGSizeMake(0, 0);
 	self.layer.masksToBounds = NO;
 	
-	[self setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[self setTitleColor:self.tintColor forState:UIControlStateNormal];
 	
-	[self setImage:[UIImage imageNamed:@"DismissChevron" inBundle:[NSBundle bundleForClass:self.class] compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+	UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
+	UIImage* image = [[UIImage systemImageNamed:@"chevron.down" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	[self setImage:image forState:UIControlStateNormal];
 }
 
 - (void)_didTouchDown
@@ -124,17 +202,20 @@
 
 - (void)_setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
-	dispatch_block_t alphaBlock = ^{
-		_highlightView.alpha = highlighted ? 1.0 : 0.0;
-		_highlightView.alpha = highlighted ? 1.0 : 0.0;
-	};
-	
-	if (animated) {
-		[UIView animateWithDuration:0.47 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+	if(_style == LNPopupCloseButtonStyleRound)
+	{
+		dispatch_block_t alphaBlock = ^{
+			_highlightView.alpha = highlighted ? 1.0 : 0.0;
+			_highlightView.alpha = highlighted ? 1.0 : 0.0;
+		};
+		
+		if (animated) {
+			[UIView animateWithDuration:0.47 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+				alphaBlock();
+			} completion:nil];
+		} else {
 			alphaBlock();
-		} completion:nil];
-	} else {
-		alphaBlock();
+		}
 	}
 }
 
@@ -142,24 +223,27 @@
 {
 	[super layoutSubviews];
 	
-	[self sendSubviewToBack:_effectView];
-	
-	CGFloat minSideSize = MIN(self.bounds.size.width, self.bounds.size.height);
-	
-	_effectView.frame = self.bounds;
-	CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-	maskLayer.rasterizationScale = [UIScreen mainScreen].nativeScale;
-	maskLayer.shouldRasterize = YES;
-	
-	CGPathRef path = CGPathCreateWithRoundedRect(self.bounds, minSideSize / 2, minSideSize / 2, NULL);
-	maskLayer.path = path;
-	CGPathRelease(path);
-	
-	_effectView.layer.mask = maskLayer;
-	
-	CGRect imageFrame = self.imageView.frame;
-	imageFrame.origin.y += 0.5;
-	self.imageView.frame = imageFrame;
+	if(_style == LNPopupCloseButtonStyleRound)
+	{
+		[self sendSubviewToBack:_effectView];
+		
+		CGFloat minSideSize = MIN(self.bounds.size.width, self.bounds.size.height);
+		
+		_effectView.frame = self.bounds;
+		CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+		maskLayer.rasterizationScale = [UIScreen mainScreen].nativeScale;
+		maskLayer.shouldRasterize = YES;
+		
+		CGPathRef path = CGPathCreateWithRoundedRect(self.bounds, minSideSize / 2, minSideSize / 2, NULL);
+		maskLayer.path = path;
+		CGPathRelease(path);
+		
+		_effectView.layer.mask = maskLayer;
+		
+		CGRect imageFrame = self.imageView.frame;
+		imageFrame.origin.y += 0.5;
+		self.imageView.frame = imageFrame;
+	}
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
@@ -197,6 +281,11 @@
 	}
 	
 	[_chevronView setState:LNChevronViewStateFlat animated:YES];
+}
+
+- (void)tintColorDidChange
+{
+	[self setTitleColor:self.tintColor forState:UIControlStateNormal];
 }
 
 @end
