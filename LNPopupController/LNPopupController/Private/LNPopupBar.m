@@ -97,7 +97,7 @@ static void __setupFunction()
 
 @property (nonatomic, assign) CGFloat rate;
 @property (nonatomic, assign) CGFloat animationDelay;
-@property (nonatomic, weak) MarqueeLabel* synchronizedLabel;
+@property (nonatomic, weak) LNMarqueeLabel* synchronizedLabel;
 @property (nonatomic, readonly) NSTimeInterval animationDuration;
 @property (nonatomic, assign) BOOL holdScrolling;
 
@@ -714,12 +714,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		rv.lineBreakMode = NSLineBreakByTruncatingTail;
 		return rv;
 	}
-<<<<<<< HEAD
-	
-	LNMarqueeLabel* rv = [[LNMarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:20 andFadeLength:10];
-=======
-	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:self.activeAppearance.marqueeScrollRate andFadeLength:10];
->>>>>>> upstream/master
+
+	LNMarqueeLabel* rv = [[LNMarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:self.activeAppearance.marqueeScrollRate andFadeLength:10];
 	rv.leadingBuffer = 0.0;
 	rv.trailingBuffer = 20.0;
 	rv.animationDelay = self.activeAppearance.marqueeScrollDelay;
@@ -1354,8 +1350,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		return;
 	}
 	
-	MarqueeLabel* titleLabel = (id)_titleLabel;
-	MarqueeLabel* subtitleLabel = (id)_subtitleLabel;
+	LNMarqueeLabel* titleLabel = (id)_titleLabel;
+	LNMarqueeLabel* subtitleLabel = (id)_subtitleLabel;
 	
 	titleLabel.animationDelay = self.activeAppearance.marqueeScrollDelay;
 	subtitleLabel.animationDelay = self.activeAppearance.marqueeScrollDelay;

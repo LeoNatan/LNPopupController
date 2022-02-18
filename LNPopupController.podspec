@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |spec|
   spec.name             = 'LNPopupController'
-  spec.version          = '2.8.5'
+  spec.version          = '2.13.3'
   spec.summary          = 'LNPopupController is a framework for presenting view controllers as popups of other view controllers'
   spec.description      = <<-DESC
 LNPopupController is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.
@@ -27,7 +27,5 @@ LNPopupController is a framework for presenting view controllers as popups of ot
   spec.requires_arc = true
 
   spec.frameworks = 'UIKit', 'Foundation'
-
-  spec.prefix_header_file = 'LNPopupController/LNPopupController.pch'
 
 end
