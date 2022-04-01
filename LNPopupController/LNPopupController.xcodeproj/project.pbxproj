@@ -284,9 +284,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 39DB52ED1B5823330061C589 /* Build configuration list for PBXNativeTarget "LNPopupController" */;
 			buildPhases = (
+				39DB52E21B5823330061C589 /* Headers */,
 				39DB52E01B5823330061C589 /* Sources */,
 				39DB52E11B5823330061C589 /* Frameworks */,
-				39DB52E21B5823330061C589 /* Headers */,
 				39DB52E31B5823330061C589 /* Resources */,
 			);
 			buildRules = (
