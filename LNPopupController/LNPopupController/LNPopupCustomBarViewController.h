@@ -65,6 +65,18 @@ NS_SWIFT_UI_ACTOR
 - (void)popupItemDidUpdate;
 
 /**
+ * Called by the framework no notify the popup bar content view controller that the custom bar is about to move to a popup bar.
+ *
+ * @param newPopupBar		The new popup bar
+ */
+- (void)willMoveToPopupBar:(nullable LNPopupBar*)newPopupBar;
+
+/**
+ * Called by the framework no notify the popup bar content view controller that the custom bar has moved to a popup bar.
+ */
+- (void)didMoveToPopupBar;
+
+/**
  * Called by the framework to notify the popup bar content view controller that the active appearance has changed. The provided @c activeAppearance object contains a merged appearance from the popup item, the system appearance and popup bar appearance, as appropriate.
  */
 - (void)activeAppearanceDidChange:(LNPopupBarAppearance*)activeAppearance;

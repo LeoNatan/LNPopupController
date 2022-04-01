@@ -28,6 +28,15 @@
 	return [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 }
 
+- (void)setContainingPopupBar:(LNPopupBar *)containingPopupBar
+{
+	[self willMoveToPopupBar:containingPopupBar];
+	
+	_containingPopupBar = containingPopupBar;
+	
+	[self didMoveToPopupBar];
+}
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -56,6 +65,16 @@
 }
 
 - (void)popupItemDidUpdate
+{
+	
+}
+
+- (void)willMoveToPopupBar:(LNPopupBar *)newPopupBar
+{
+	
+}
+
+- (void)didMoveToPopupBar
 {
 	
 }
