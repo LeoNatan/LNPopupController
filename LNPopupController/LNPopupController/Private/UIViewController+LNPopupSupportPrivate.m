@@ -52,6 +52,8 @@ static NSString* const uiNVCA = @"VUlOYXZpZ2F0aW9uQ29udHJvbGxlckFjY2Vzc2liaWxpdH
 static NSString* const uiTBCA = @"VUlUYWJCYXJDb250cm9sbGVyQWNjZXNzaWJpbGl0eQ==";
 //_prepareTabBar
 static NSString* const pTBBase64 = @"X3ByZXBhcmVUYWJCYXI=";
+//_existingPresentationControllerImmediate:effective:
+static NSString* const ePCIe = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlckltbWVkaWF0ZTplZmZlY3RpdmU6";
 
 //_accessibilitySpeakThisViewController
 static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
@@ -59,6 +61,40 @@ static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
 
 #endif
+
+@interface __LNFakePresentationController : NSObject @end
+@implementation __LNFakePresentationController
+{
+    UIViewController* _popupPresentationContainerViewController;
+}
+
+- (instancetype)initWithPopupPresentationContainerViewController:(UIViewController*)popupPresentationContainerViewController
+{
+    self = [super init];
+    if(self)
+    {
+        _popupPresentationContainerViewController = popupPresentationContainerViewController;
+    }
+    return self;
+}
+
+- (id)presentedViewController
+{
+    return nil;
+}
+
+- (id)presentingViewController
+{
+    return nil;
+}
+
+- (UIEdgeInsets)_baseContentInsetsWithLeftMargin:(double*)arg1 rightMargin:(double*)arg2
+{
+    return __LNEdgeInsetsSum(_popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(_popupPresentationContainerViewController).bottom, 0));
+}
+
+@end
+
 
 /**
  A helper view for view controllers without real bottom bars.
@@ -201,6 +237,12 @@ static void __accessibilityBundleLoadHandler()
 			LNSwizzleMethod(self,
 							NSSelectorFromString(selName),
 							@selector(_vSAIFS));
+            
+            //_existingPresentationControllerImmediate:effective:
+            selName = _LNPopupDecodeBase64String(ePCIe);
+            LNSwizzleMethod(self,
+                            NSSelectorFromString(selName),
+                            @selector(_ePCI:e:));
 #endif
 		});
 	}
@@ -482,12 +524,26 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	[self _common_uLFSBAIO];
 }
 
+//_existingPresentationControllerImmediate:effective:
+- (id)_ePCI:(_Bool)arg1 e:(_Bool)arg2
+{
+    if(@available(iOS 16, *))
+    {
+        if([self _isContainedInPopupController])
+        {
+            return [[__LNFakePresentationController alloc] initWithPopupPresentationContainerViewController:self.popupPresentationContainerViewController];
+        }
+    }
+    
+    return [self _ePCI:arg1 e:arg2];
+}
+
 //_viewSafeAreaInsetsFromScene
 - (UIEdgeInsets)_vSAIFS
 {
 	if([self _isContainedInPopupController])
 	{
-		return __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.popupPresentationContainerViewController).bottom, 0));		
+		return __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.popupPresentationContainerViewController).bottom, 0));
 	}
 	
 	UIEdgeInsets insets = [self _vSAIFS];

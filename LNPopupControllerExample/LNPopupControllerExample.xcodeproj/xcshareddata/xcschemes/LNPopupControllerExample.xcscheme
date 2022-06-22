@@ -65,7 +65,7 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-_UIConstraintBasedLayoutPlaySoundOnUnsatisfiable YES"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-LNUseDemoRandomColors YES"
