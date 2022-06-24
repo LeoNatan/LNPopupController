@@ -62,35 +62,27 @@ static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
 
 #endif
 
-@interface __LNFakePresentationController : NSObject @end
+@interface __LNFakePresentationController : UIPresentationController @end
 @implementation __LNFakePresentationController
-{
-    UIViewController* _popupPresentationContainerViewController;
-}
 
-- (instancetype)initWithPopupPresentationContainerViewController:(UIViewController*)popupPresentationContainerViewController
+- (instancetype)initWithPopupPresentationContainerViewController:(UIViewController*)popupPresentationContainerViewController contentController:(UIViewController*)contentController
 {
-    self = [super init];
-    if(self)
-    {
-        _popupPresentationContainerViewController = popupPresentationContainerViewController;
-    }
-    return self;
-}
-
-- (id)presentedViewController
-{
-    return nil;
-}
-
-- (id)presentingViewController
-{
-    return nil;
+    return [super initWithPresentedViewController:contentController presentingViewController:popupPresentationContainerViewController];
 }
 
 - (UIEdgeInsets)_baseContentInsetsWithLeftMargin:(double*)arg1 rightMargin:(double*)arg2
 {
-    return __LNEdgeInsetsSum(_popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(_popupPresentationContainerViewController).bottom, 0));
+	if(arg1 != NULL)
+	{
+		*arg1 = self.presentingViewController.view.layoutMargins.left;
+	}
+	
+	if(arg2 != NULL)
+	{
+		*arg2 = self.presentingViewController.view.layoutMargins.right;
+	}
+	
+    return __LNEdgeInsetsSum(self.presentingViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.presentingViewController).bottom, 0));
 }
 
 @end
@@ -531,7 +523,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
     {
         if([self _isContainedInPopupController])
         {
-            return [[__LNFakePresentationController alloc] initWithPopupPresentationContainerViewController:self.popupPresentationContainerViewController];
+            return [[__LNFakePresentationController alloc] initWithPopupPresentationContainerViewController:self.popupPresentationContainerViewController contentController:self];
         }
     }
     
