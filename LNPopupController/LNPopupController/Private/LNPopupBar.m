@@ -1278,9 +1278,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	[self layoutIfNeeded];
 	
-	if(customBarViewController.containingPopupBar)
+	if(customBarViewController.containingPopupBar && customBarViewController.containingPopupBar != self)
 	{
-		//Cleanly move the custom bar view controller from the previos popup bar.
+		//Cleanly move the custom bar view controller from the previous popup bar.
 		customBarViewController.containingPopupBar.customBarViewController = nil;
 	}
 	

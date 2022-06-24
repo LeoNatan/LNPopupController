@@ -1211,6 +1211,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				}
 			}
 			
+			self.popupBar.acceptsSizing = YES;
+			
 			if(completionBlock != nil && !open)
 			{
 				completionBlock();
@@ -1290,6 +1292,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	
 	if(_popupControllerInternalState != LNPopupPresentationStateBarHidden)
 	{
+		self.popupBar.acceptsSizing = NO;
+		
 		void (^dismissalAnimationCompletionBlock)(void) = ^
 		{
 			_popupControllerInternalState = _LNPopupPresentationStateTransitioning;
@@ -1325,7 +1329,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				bottomBarFrame.origin.y -= _cachedInsets.bottom;
 				_bottomBar.frame = bottomBarFrame;
 				
-				self.popupBarStorage.hidden = YES;
+				self.popupBar.hidden = YES;
 				[self.popupBar removeFromSuperview];
 				
 				[self.popupContentView removeFromSuperview];
@@ -1394,6 +1398,12 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)_popupBarMetricsDidChange:(LNPopupBar*)bar
 {
+	if(self.popupBar.acceptsSizing == NO)
+	{
+		//Ignore frame changes before a bar is fully presented.
+		return;
+	}
+	
 	CGRect barFrame = self.popupBar.frame;
 	CGFloat currentHeight = barFrame.size.height;
 	barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.customBarViewController);
