@@ -391,3 +391,21 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 }
 
 @end
+
+@implementation UINavigationController (LNPopupSupport)
+
+- (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton
+{
+	return [self.topViewController positionPopupCloseButton:popupCloseButton];
+}
+
+@end
+
+@implementation UITabBarController (LNPopupSupport)
+
+- (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton
+{
+	return [self.selectedViewController positionPopupCloseButton:popupCloseButton];
+}
+
+@end

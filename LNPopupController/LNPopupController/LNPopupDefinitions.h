@@ -15,6 +15,10 @@
 #define NS_SWIFT_UI_ACTOR
 #endif
 
+#ifndef NS_SWIFT_DISABLE_ASYNC
+#define NS_SWIFT_DISABLE_ASYNC
+#endif
+
 #define LN_UNAVAILABLE_API(x) __attribute__((unavailable(x)))
 #define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
 

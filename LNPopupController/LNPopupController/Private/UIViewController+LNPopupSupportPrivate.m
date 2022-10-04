@@ -40,6 +40,8 @@ static NSString* const hSNBDSfcBase64 = @"X2hpZGVTaG93TmF2aWdhdGlvbkJhckRpZFN0b3
 static NSString* const vSAIFSBase64 = @"X3ZpZXdTYWZlQXJlYUluc2V0c0Zyb21TY2VuZQ==";
 //_updateLayoutForStatusBarAndInterfaceOrientation
 static NSString* const uLFSBAIO = @"X3VwZGF0ZUxheW91dEZvclN0YXR1c0JhckFuZEludGVyZmFjZU9yaWVudGF0aW9u";
+//_updateContentOverlayInsetsFromParentIfNecessary
+static NSString* const uCOIFPIN = @"X3VwZGF0ZUNvbnRlbnRPdmVybGF5SW5zZXRzRnJvbVBhcmVudElmTmVjZXNzYXJ5";
 //_accessibilitySpeakThisViewController
 static NSString* const aSTVC = @"X2FjY2Vzc2liaWxpdHlTcGVha1RoaXNWaWV3Q29udHJvbGxlcg==";
 //setParentViewController:
@@ -52,8 +54,13 @@ static NSString* const uiNVCA = @"VUlOYXZpZ2F0aW9uQ29udHJvbGxlckFjY2Vzc2liaWxpdH
 static NSString* const uiTBCA = @"VUlUYWJCYXJDb250cm9sbGVyQWNjZXNzaWJpbGl0eQ==";
 //_prepareTabBar
 static NSString* const pTBBase64 = @"X3ByZXBhcmVUYWJCYXI=";
-//_existingPresentationControllerImmediate:effective:
-static NSString* const ePCIe = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlckltbWVkaWF0ZTplZmZlY3RpdmU6";
+
+//_setContentOverlayInsets:andLeftMargin:rightMargin:
+static NSString* const sCOIaLMrM = @"X3NldENvbnRlbnRPdmVybGF5SW5zZXRzOmFuZExlZnRNYXJnaW46cmlnaHRNYXJnaW46";
+//_contentMargin
+static NSString* const cM = @"X2NvbnRlbnRNYXJnaW4=";
+//_setContentMargin:
+static NSString* const sCM = @"X3NldENvbnRlbnRNYXJnaW46";
 
 //_accessibilitySpeakThisViewController
 static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
@@ -61,32 +68,6 @@ static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
 
 #endif
-
-@interface __LNFakePresentationController : UIPresentationController @end
-@implementation __LNFakePresentationController
-
-- (instancetype)initWithPopupPresentationContainerViewController:(UIViewController*)popupPresentationContainerViewController contentController:(UIViewController*)contentController
-{
-    return [super initWithPresentedViewController:contentController presentingViewController:popupPresentationContainerViewController];
-}
-
-- (UIEdgeInsets)_baseContentInsetsWithLeftMargin:(double*)arg1 rightMargin:(double*)arg2
-{
-	if(arg1 != NULL)
-	{
-		*arg1 = self.presentingViewController.view.layoutMargins.left;
-	}
-	
-	if(arg2 != NULL)
-	{
-		*arg2 = self.presentingViewController.view.layoutMargins.right;
-	}
-	
-    return __LNEdgeInsetsSum(self.presentingViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.presentingViewController).bottom, 0));
-}
-
-@end
-
 
 /**
  A helper view for view controllers without real bottom bars.
@@ -218,6 +199,17 @@ static void __accessibilityBundleLoadHandler()
 							NSSelectorFromString(selName),
 							@selector(_uLFSBAIO));
 			
+			if(@available(iOS 16.0, *))
+			{
+				//_updateContentOverlayInsetsFromParentIfNecessary
+				selName = _LNPopupDecodeBase64String(uCOIFPIN);
+				LNSwizzleMethod(self,
+								NSSelectorFromString(selName),
+								@selector(_uCOIFPIN));
+				
+				
+			}
+			
 			//setParentViewController:
 			selName = _LNPopupDecodeBase64String(sPVC);
 			LNSwizzleMethod(self,
@@ -229,12 +221,6 @@ static void __accessibilityBundleLoadHandler()
 			LNSwizzleMethod(self,
 							NSSelectorFromString(selName),
 							@selector(_vSAIFS));
-            
-            //_existingPresentationControllerImmediate:effective:
-            selName = _LNPopupDecodeBase64String(ePCIe);
-            LNSwizzleMethod(self,
-                            NSSelectorFromString(selName),
-                            @selector(_ePCI:e:));
 #endif
 		});
 	}
@@ -516,26 +502,44 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	[self _common_uLFSBAIO];
 }
 
-//_existingPresentationControllerImmediate:effective:
-- (id)_ePCI:(_Bool)arg1 e:(_Bool)arg2
+//_updateContentOverlayInsetsFromParentIfNecessary
+- (void)_uCOIFPIN
 {
-    if(@available(iOS 16, *))
-    {
-        if([self _isContainedInPopupController])
-        {
-            return [[__LNFakePresentationController alloc] initWithPopupPresentationContainerViewController:self.popupPresentationContainerViewController contentController:self];
-        }
-    }
-    
-    return [self _ePCI:arg1 e:arg2];
+	[self _uCOIFPIN];
+	
+	if(self.popupPresentationContainerViewController != nil)
+	{
+		static SEL contentMarginSEL;
+		static SEL setContentMarginSEL;
+		static SEL _setContentOverlayInsets_andLeftMargin_rightMarginSEL;
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			contentMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(cM));
+			setContentMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(sCM));
+			_setContentOverlayInsets_andLeftMargin_rightMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(sCOIaLMrM));
+		});
+		
+		CGFloat (*contentMarginFunc)(id, SEL) = (void*)objc_msgSend;
+		void (*setContentMarginFunc)(id, SEL, CGFloat) = (void*)objc_msgSend;
+		void (*_setContentOverlayInsets_andLeftMargin_rightMarginFUNC)(id, SEL, UIEdgeInsets, CGFloat, CGFloat) = (void*)objc_msgSend;
+		
+		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
+		
+		_setContentOverlayInsets_andLeftMargin_rightMarginFUNC(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, self.popupPresentationContainerViewController.view.window.safeAreaInsets, contentMargin, contentMargin);
+		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
+	}
 }
+
 
 //_viewSafeAreaInsetsFromScene
 - (UIEdgeInsets)_vSAIFS
 {
-	if([self _isContainedInPopupController])
+	if(unavailable(iOS 16, *))
 	{
-		return __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.popupPresentationContainerViewController).bottom, 0));
+		if([self _isContainedInPopupController])
+		{
+			return __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.popupPresentationContainerViewController).bottom, 0));
+		}
 	}
 	
 	UIEdgeInsets insets = [self _vSAIFS];

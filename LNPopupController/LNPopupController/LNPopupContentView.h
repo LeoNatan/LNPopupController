@@ -39,13 +39,6 @@ NS_SWIFT_UI_ACTOR
 @property (nonatomic, strong, readonly) LNPopupCloseButton* popupCloseButton;
 
 /**
- * Attempt to automatically move the popup close button under top bars, such as navigation bars.
- *
- * Defaults to @c true.
- */
-@property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars UI_APPEARANCE_SELECTOR;
-
-/**
 * The popup content view background effect, used when the popup content controller's view has transparency.
 *
 * Use @c nil value to inherit the popup bar's background effect if possible, or use a default effect..
@@ -68,6 +61,13 @@ NS_SWIFT_UI_ACTOR
 extern const UIBlurEffectStyle LNBackgroundStyleInherit LN_DEPRECATED_API("Use backgroundEffect instead.");
 
 @interface LNPopupContentView (Deprecated)
+
+/**
+ * Attempt to automatically move the popup close button under top bars, such as navigation bars.
+ *
+ * Note: No longer supported. Instead, implement @c UIViewController.positionPopupCloseButton() and position the button in your content controller's view hierarchy.
+ */
+@property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars UI_APPEARANCE_SELECTOR LN_DEPRECATED_API("No longer supported. Instead, implement UIViewController.positionPopupCloseButton() and position the button in your content controller's view hierarchy.");
 
 /**
  * The popup content view background style, used when the popup content controller's view has transparency.

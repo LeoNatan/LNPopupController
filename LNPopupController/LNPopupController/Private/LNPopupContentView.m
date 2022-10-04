@@ -47,8 +47,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		_effectView.autoresizingMask = UIViewAutoresizingNone;
 		[self addSubview:_effectView];
 		
-		_popupCloseButtonAutomaticallyUnobstructsTopBars = YES;
-		
 		_translucent = YES;
 		_backgroundEffect = nil;
 		
@@ -214,16 +212,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	}
 
 	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
-
-	id hitTest = [_currentPopupContentViewController.view hitTest:CGPointMake(12, _popupCloseButtonTopConstraint.constant) withEvent:nil];
-	UINavigationBar* possibleBar = (id)[self _view:hitTest selfOrSuperviewKindOfClass:[UINavigationBar class]];
-	if(possibleBar)
-	{
-		if (self.popupCloseButtonAutomaticallyUnobstructsTopBars)
-			_popupCloseButtonTopConstraint.constant += CGRectGetHeight(possibleBar.bounds);
-		else
-			_popupCloseButtonTopConstraint.constant += 6;
-	}
 
 	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
 	{
