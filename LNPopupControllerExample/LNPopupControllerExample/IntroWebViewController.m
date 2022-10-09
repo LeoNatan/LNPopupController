@@ -57,7 +57,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	} range:[title rangeOfString:@"LNPopupController"]];
 	
 	self.popupItem.attributedTitle = attribTitle;
-	self.popupItem.image = [UIImage imageNamed:@"genre10"];
+	self.popupItem.image = [UIImage imageNamed:@"AppIcon60x60"];
 	self.popupItem.barButtonItems = @[
 		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill") style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
