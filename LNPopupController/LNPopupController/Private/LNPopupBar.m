@@ -175,6 +175,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[super setHidden:hidden];
 }
 
+- (void)_fixupSwiftUIControllersWithBarStyle
+{
+	if(self.swiftuiHiddenLeadingController != nil)
+	{
+		[self.swiftuiHiddenLeadingController setValue:@(_resolvedStyle == LNPopupBarStyleCompact ? UIUserInterfaceSizeClassCompact : UIUserInterfaceSizeClassRegular) forKey:@"overrideSizeClass"];
+	}
+	if(self.swiftuiHiddenTrailingController != nil)
+	{
+		[self.swiftuiHiddenTrailingController setValue:@(_resolvedStyle == LNPopupBarStyleCompact ? UIUserInterfaceSizeClassCompact : UIUserInterfaceSizeClassRegular) forKey:@"overrideSizeClass"];
+	}
+}
+
 - (void)setBarStyle:(LNPopupBarStyle)barStyle
 {
 	if(_customBarViewController == nil && barStyle == LNPopupBarStyleCustom)
@@ -190,6 +202,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		[self _layoutBarButtonItems];
 		_needsLabelsLayout = YES;
+		
+		[self _fixupSwiftUIControllersWithBarStyle];
+		
 		[self setNeedsLayout];
 		
 		[self._barDelegate _popupBarMetricsDidChange:self];
@@ -261,7 +276,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 #endif
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
-		_toolbar.layer.masksToBounds = YES;
+		_toolbar.layer.masksToBounds = NO;
 		[_contentView addSubview:_toolbar];
 		
 		_titlesView = [[_LNPopupBarTitlesView alloc] initWithFrame:self.bounds];
@@ -651,6 +666,34 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_swiftuiSubtitleController.view.backgroundColor = UIColor.clearColor;
 	
 	[self _setNeedsTitleLayout];
+}
+
+- (void)setSwiftuiHiddenLeadingController:(UIViewController *)swiftuiHiddenLeadingController
+{
+	if(_swiftuiHiddenLeadingController != nil)
+	{
+		[_swiftuiHiddenLeadingController.view removeFromSuperview];
+	}
+	
+	_swiftuiHiddenLeadingController = swiftuiHiddenLeadingController;
+	_swiftuiHiddenLeadingController.view.frame = CGRectMake(-200, -200, 100, 160);
+	[self addSubview:_swiftuiHiddenLeadingController.view];
+	
+	[self _fixupSwiftUIControllersWithBarStyle];
+}
+
+- (void)setSwiftuiHiddenTrailingController:(UIViewController *)swiftuiHiddenTrailingController
+{
+	if(_swiftuiHiddenTrailingController != nil)
+	{
+		[_swiftuiHiddenTrailingController.view removeFromSuperview];
+	}
+	
+	_swiftuiHiddenTrailingController = swiftuiHiddenTrailingController;
+	_swiftuiHiddenTrailingController.view.frame = CGRectMake(-200, -200, 100, 160);
+	[self addSubview:_swiftuiHiddenTrailingController.view];
+	
+	[self _fixupSwiftUIControllersWithBarStyle];
 }
 
 - (void)setAccessibilityCenterHint:(NSString *)accessibilityCenterHint
@@ -1184,17 +1227,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[items addObject:flexibleSpacer];
 	}
 	
-	if(resolvedStyle == LNPopupBarStyleProminent && __applySwiftUILayoutFixes)
-	{
-		UIView* spacing = [UIView new];
-		spacing.translatesAutoresizingMaskIntoConstraints = NO;
-		[spacing.widthAnchor constraintEqualToConstant:8].active = YES;
-//		[spacing.heightAnchor constraintEqualToConstant:20].active = YES;
-//		spacing.backgroundColor = UIColor.greenColor;
-		
-		[items addObject:[[UIBarButtonItem alloc] initWithCustomView:spacing]];
-	}
-	
 	[self.leadingBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
 		[items addObject:barButtonItem];
 	}];
@@ -1203,22 +1235,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		[items addObject:flexibleSpacer];
 	}
-	else if(__applySwiftUILayoutFixes)
-	{
-		UIView* spacing = [UIView new];
-		spacing.translatesAutoresizingMaskIntoConstraints = NO;
-		[spacing.widthAnchor constraintEqualToConstant:8].active = YES;
-//		[spacing.heightAnchor constraintEqualToConstant:20].active = YES;
-//		spacing.backgroundColor = UIColor.greenColor;
-		[items addObject:[[UIBarButtonItem alloc] initWithCustomView:spacing]];
-	}
 
 	[self.trailingBarButtonItems enumerateObjectsWithOptions:enumerationOptions usingBlock:^(UIBarButtonItem * _Nonnull barButtonItem, NSUInteger idx, BOOL * _Nonnull stop) {
 		[items addObject:barButtonItem];
 	}];
 	
 	UIBarButtonItem* fixedSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-	fixedSpacer.width = _resolvedStyle == LNPopupBarStyleProminent ? 2 : -2;
+	CGFloat prominentSpacing = __applySwiftUILayoutFixes ? -1 : 2;
+	fixedSpacer.width = _resolvedStyle == LNPopupBarStyleProminent ? prominentSpacing : -2;
 	[items addObject:fixedSpacer];
 	
 	[_toolbar setItems:items animated:__animatesItemSetter];
@@ -1226,27 +1250,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _setNeedsTitleLayout];
 	
 	_delaysBarButtonItemLayout = NO;
-	
-	if(__applySwiftUILayoutFixes)
-	{
-		// 🤦‍♂️ This code fixes a layout issue with SwiftUI bar button items under certain conditions.
-		dispatch_async(dispatch_get_main_queue(), ^{
-			[items enumerateObjectsUsingBlock:^(UIBarButtonItem* _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-				if(obj.customView != nil)
-				{
-					CGRect frame = obj.customView.frame;
-					
-					frame.size.width -= 1;
-					
-					obj.customView.frame = frame;
-					
-					frame.size.width += 1;
-					
-					obj.customView.frame = frame;
-				}
-			}];
-		});
-	}
 }
 
 - (void)_updateViewsAfterCustomBarViewControllerUpdate

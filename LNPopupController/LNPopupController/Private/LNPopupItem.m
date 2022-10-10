@@ -44,6 +44,8 @@ NSArray* __LNPopupItemObservedKeys;
 			NSStringFromSelector(@selector(swiftuiImageController)),
 			NSStringFromSelector(@selector(swiftuiTitleController)),
 			NSStringFromSelector(@selector(swiftuiSubtitleController)),
+			NSStringFromSelector(@selector(swiftuiHiddenLeadingController)),
+			NSStringFromSelector(@selector(swiftuiHiddenTrailingController)),
 			NSStringFromSelector(@selector(standardAppearance))
 		];
 	});

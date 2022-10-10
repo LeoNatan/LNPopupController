@@ -24,6 +24,8 @@ extern NSArray* __LNPopupItemObservedKeys;
 @property (nonatomic, strong) UIViewController* swiftuiImageController;
 @property (nonatomic, strong) UIViewController* swiftuiTitleController;
 @property (nonatomic, strong) UIViewController* swiftuiSubtitleController;
+@property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController;
+@property (nonatomic, strong) UIViewController* swiftuiHiddenTrailingController;
 
 /**
  * The accessibility label of the image, in a localized string.

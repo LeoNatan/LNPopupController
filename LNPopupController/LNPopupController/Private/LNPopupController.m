@@ -870,6 +870,16 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
+- (void)_reconfigure_swiftuiHiddenLeadingController
+{
+	self.popupBarStorage.swiftuiHiddenLeadingController = _currentPopupItem.swiftuiHiddenLeadingController;
+}
+
+- (void)_reconfigure_swiftuiHiddenTrailingController
+{
+	self.popupBarStorage.swiftuiHiddenTrailingController = _currentPopupItem.swiftuiHiddenTrailingController;
+}
+
 - (void)_reconfigure_standardAppearance
 {
 	[self.popupBarStorage _recalcActiveAppearanceChain];

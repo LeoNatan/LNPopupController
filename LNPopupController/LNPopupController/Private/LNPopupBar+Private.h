@@ -105,6 +105,9 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic) BOOL _applySwiftUILayoutFixes;
 
+@property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController;
+@property (nonatomic, strong) UIViewController* swiftuiHiddenTrailingController;
+
 - (void)_delayBarButtonLayout;
 - (void)_layoutBarButtonItems;
 
