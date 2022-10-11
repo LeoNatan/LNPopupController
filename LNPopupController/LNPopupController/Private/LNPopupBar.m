@@ -389,7 +389,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	[self _layoutImageView];
 	
-	CGFloat swiftuiOffset = __applySwiftUILayoutFixes ? 20 : 0;
+	CGFloat swiftuiOffset = __applySwiftUILayoutFixes ? 0 : 0;
 	
 	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX)];
 	_toolbar.bounds = CGRectMake(0, 0, self.bounds.size.width - swiftuiOffset, toolbarSize.height);
@@ -1241,7 +1241,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}];
 	
 	UIBarButtonItem* fixedSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-	CGFloat prominentSpacing = __applySwiftUILayoutFixes ? -1 : 2;
+	CGFloat prominentSpacing = __applySwiftUILayoutFixes ? 14 : 0;
 	fixedSpacer.width = _resolvedStyle == LNPopupBarStyleProminent ? prominentSpacing : -2;
 	[items addObject:fixedSpacer];
 	
