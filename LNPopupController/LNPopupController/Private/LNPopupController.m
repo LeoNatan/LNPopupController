@@ -1321,11 +1321,17 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
 				
 				[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
-				[UIView animateKeyframesWithDuration:1.0 delay:0.0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
-					[UIView addKeyframeWithRelativeStartTime:0.3 relativeDuration:0.6 animations:^{
-						_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
-					}];
-				} completion:nil];
+				
+				CGFloat currentBarAlpha = self.popupBarStorage.alpha;
+				[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{					
+					if(_containerController.shouldFadePopupBarOnDismiss)
+					{
+						self.popupBar.alpha = 0.0;
+					}
+					_containerController._ln_bottomBarExtension_nocreate.alpha = 0.0;
+				} completion:^(BOOL finished) {
+					self.popupBarStorage.alpha = currentBarAlpha;
+				}];
 			} completion:^(BOOL finished) {
 				self.popupBar.shadowView.alpha = 1.0;
 				

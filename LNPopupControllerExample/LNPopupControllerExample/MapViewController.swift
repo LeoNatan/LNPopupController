@@ -114,4 +114,8 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		}
 #endif
 	}
+	
+	override var shouldFadePopupBarOnDismiss: Bool {
+		return true
+	}
 }

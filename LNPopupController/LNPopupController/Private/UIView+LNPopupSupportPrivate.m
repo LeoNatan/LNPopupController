@@ -10,6 +10,7 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupController.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "LNPopupBar+Private.h"
 @import ObjectiveC;
 #if TARGET_OS_MACCATALYST
 @import AppKit;
@@ -32,8 +33,9 @@ static NSString* _hW = @"aG9zdFdpbmRvdw==";
 static NSString* _aW = @"YXR0YWNoZWRXaW5kb3c=";
 //currentEvent
 static NSString* _cE = @"Y3VycmVudEV2ZW50";
-//_setBackgroundTransitionProgress:forceUpdate:
-static NSString* _sBTPfU = @"X3NldEJhY2tncm91bmRUcmFuc2l0aW9uUHJvZ3Jlc3M6Zm9yY2VVcGRhdGU6";
+//backgroundTransitionProgress
+static NSString* _bTP = @"YmFja2dyb3VuZFRyYW5zaXRpb25Qcm9ncmVzcw==";
+
 #endif
 
 @interface UIViewController ()
@@ -88,6 +90,11 @@ static NSString* _sBTPfU = @"X3NldEJhY2tncm91bmRUcmFuc2l0aW9uUHJvZ3Jlc3M6Zm9yY2V
 - (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded
 {
 	//Do nothing on UIView.
+}
+
+- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar
+{
+	return NO;
 }
 
 #if ! LNPopupControllerEnforceStrictClean
@@ -278,6 +285,26 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardA
 #pragma clang diagnostic pop
 }
 
+static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPopupBar* popupBar)
+{
+	static NSString* bTP = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		bTP = _LNPopupDecodeBase64String(_bTP);
+	});
+	
+	BOOL isAtScrollEdge = [[bottomBar valueForKey:bTP] doubleValue] > 0;
+	
+	if(isAtScrollEdge == NO)
+	{
+		return NO;
+	}
+	
+	UIBarAppearance* scrollEdgeAppearance = [bottomBar _lnpopup_scrollEdgeAppearance];
+	
+	return scrollEdgeAppearance.backgroundEffect == nil && scrollEdgeAppearance.backgroundColor == nil && scrollEdgeAppearance.backgroundImage == nil;
+}
+
 @interface UIToolbar (ScrollEdgeSupport) @end
 @implementation UIToolbar (ScrollEdgeSupport)
 
@@ -302,6 +329,11 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardA
 		[self setNeedsLayout];
 		[self layoutIfNeeded];
 	}
+}
+
+- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar
+{
+	return __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(self, popupBar);
 }
 
 - (UIToolbarAppearance *)_lnpopup_scrollEdgeAppearance
@@ -338,6 +370,11 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardA
 		[self setNeedsLayout];
 		[self layoutIfNeeded];
 	}
+}
+
+- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar
+{
+	return __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(self, popupBar);
 }
 
 - (UITabBarAppearance *)_lnpopup_scrollEdgeAppearance

@@ -293,6 +293,13 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 @property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopupBar;
 
 /**
+ * Controls whether the popup bar should fade out during its dismissal animation.
+ *
+ * By default, this property's value is @c true if the popup bar is extended (see @c UIViewController.shouldExtendPopupBarUnderSafeArea) and the extension is visible, or if the bottom bar (toolbar or tab bar) is about to transition to its scroll edge appearance, and the scroll edge appearance has a transparent background.
+ */
+@property (nonatomic, assign, readonly) BOOL shouldFadePopupBarOnDismiss;
+
+/**
  * Return the default frame for the docking view, when the popup is in hidden or closed state. If @c bottomDockingViewForPopupBar returns @c nil, this method is not called, and the default system-provided frame is used.
  *
  * A default implementation is provided for @c UIViewController, @c UINavigationController and @c UITabBarController.

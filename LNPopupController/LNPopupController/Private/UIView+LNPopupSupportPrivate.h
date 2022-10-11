@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class LNPopupBar;
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^LNInWindowBlock)(dispatch_block_t);
@@ -15,11 +17,18 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 @interface UIView (LNPopupSupportPrivate)
 
 - (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded;
+- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar;
 - (UIViewController*)_ln_containerController;
 
 - (void)_ln_letMeKnowWhenViewInWindowHierarchy:(LNInWindowBlock)block;
 - (void)_ln_forgetAboutIt;
 - (nullable NSString*)_ln_effectGroupingIdentifierIfAvailable;
+
+@end
+
+@interface UIView ()
+
+- (id)_lnpopup_scrollEdgeAppearance;
 
 @end
 
