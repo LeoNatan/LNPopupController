@@ -11,7 +11,6 @@
 #endif
 #import "DemoViewController.h"
 #import "DemoPopupContentViewController.h"
-#import "LoremIpsum.h"
 #import "RandomColors.h"
 #import "SettingsTableViewController.h"
 #import "SplitViewController.h"
@@ -214,53 +213,7 @@ extern UIImage* LNSystemImage(NSString* named);
 //	UIViewController* demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
 	UIViewController* demoVC = [DemoPopupContentViewController new];
 	
-	if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
-	{
-		demoVC.popupItem.title = @"עברית";
-		demoVC.popupItem.subtitle = @"עברית";
-	}
-	else
-	{
-		demoVC.popupItem.title = [LoremIpsum sentence];
-		demoVC.popupItem.subtitle = [LoremIpsum sentence];
-	}
-	
-	demoVC.popupItem.image = [UIImage imageNamed:@"genre7"];
-	demoVC.popupItem.progress = (float) arc4random() / UINT32_MAX;
-	
 	LNPopupCloseButtonStyle closeButtonStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsCloseButtonStyle] unsignedIntegerValue];
-	
-	UILabel* topLabel = [UILabel new];
-	topLabel.text = NSLocalizedString(@"Top", @"");
-	topLabel.textColor = [UIColor systemBackgroundColor];
-	topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
-	[demoVC.view addSubview:topLabel];
-	
-	CGFloat offset =
-#if ! TARGET_OS_MACCATALYST
-	closeButtonStyle == LNPopupCloseButtonStyleDefault ||
-#endif
-	closeButtonStyle == LNPopupCloseButtonStyleChevron ? 40 : 0;
-	
-	[NSLayoutConstraint activateConstraints:@[
-		[topLabel.topAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.topAnchor],
-		[topLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.centerXAnchor constant:offset]
-	]];
-	
-	UILabel* bottomLabel = [UILabel new];
-	bottomLabel.text = NSLocalizedString(@"Bottom", @"");
-	bottomLabel.textColor = [UIColor systemBackgroundColor];
-	bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-	bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
-	[demoVC.view addSubview:bottomLabel];
-	[NSLayoutConstraint activateConstraints:@[
-		[bottomLabel.bottomAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.bottomAnchor],
-		[bottomLabel.centerXAnchor constraintEqualToAnchor:demoVC.view.safeAreaLayoutGuide.centerXAnchor]
-	]];
-	
-	demoVC.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
-	demoVC.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");
 	
 	targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
