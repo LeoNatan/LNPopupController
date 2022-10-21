@@ -14,7 +14,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern const double LNSnapPercentDefault;
+/**
+ * The default popup snap percent. See @c UIViewController.popupSnapPercent for more information.
+ */
+extern const double LNSnapPercentDefault NS_REFINED_FOR_SWIFT;
 
 /**
  * Available interaction styles with the popup bar and popup content view.

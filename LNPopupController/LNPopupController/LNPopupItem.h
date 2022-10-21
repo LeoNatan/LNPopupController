@@ -30,7 +30,7 @@ NS_SWIFT_UI_ACTOR
  *
  * @note If no title or subtitle is set, the property will return its view controller's title.
  */
-@property (nullable, nonatomic, copy) NSAttributedString* attributedTitle;
+@property (nullable, nonatomic, copy) NSAttributedString* attributedTitle NS_REFINED_FOR_SWIFT;
 
 /**
  * The popup item's subtitle.
@@ -40,7 +40,7 @@ NS_SWIFT_UI_ACTOR
 /**
  * The popup item's attributed subtitle.
  */
-@property (nullable, nonatomic, copy) NSAttributedString* attributedSubtitle;
+@property (nullable, nonatomic, copy) NSAttributedString* attributedSubtitle NS_REFINED_FOR_SWIFT;
 
 /**
  * The popup item's image.

@@ -11,25 +11,15 @@ import UIKit
 @_exported import LNPopupController_ObjC
 #endif
 
+extension Double {
+	/// The default popup snap percent. See `LNPopupInteractionStyle.customizedSnap(percent:)` for more information.
+	static var defaultPopupSnapPercent: Double {
+		return __LNSnapPercentDefault
+	}
+}
+
 /// Available interaction styles with the popup bar and popup content view.
 public enum LNPopupInteractionStyle {
-	public init?(rawValue: Int) {
-		guard let objc = __LNPopupInteractionStyle(rawValue: rawValue) else {
-			return nil
-		}
-		
-		switch objc {
-		case .none:
-			self = .none
-		case .drag:
-			self = .drag
-		case .snap:
-			self = .snap
-		default:
-			self = .default
-		}
-	}
-	
 	/// The default interaction style for the current environment.
 	///
 	/// On iOS, the default interaction style is `snap`.
@@ -59,7 +49,7 @@ public extension UIViewController {
 			case .drag:
 				return .drag
 			case .snap:
-				return __popupSnapPercent == LNSnapPercentDefault ? .snap : .customizedSnap(percent: __popupSnapPercent)
+				return __popupSnapPercent == .defaultPopupSnapPercent ? .snap : .customizedSnap(percent: __popupSnapPercent)
 			default:
 				return .default
 			}
@@ -74,6 +64,7 @@ public extension UIViewController {
 				return
 			case .snap:
 				__popupInteractionStyle = .snap
+				__popupSnapPercent = .defaultPopupSnapPercent
 				return
 			case .customizedSnap(let percent):
 				__popupInteractionStyle = .snap
@@ -84,5 +75,34 @@ public extension UIViewController {
 				return
 			}
 		}
+	}
+}
+
+public extension LNPopupItem {
+	@available(iOS 15, *)
+	var attributedTitle: AttributedString? {
+		get {
+			return __attributedTitle != nil ? AttributedString(__attributedTitle!) : nil
+		}
+		set {
+			__attributedTitle = newValue == nil ? nil : NSAttributedString(newValue!)
+		}
+	}
+	
+	@available(iOS 15, *)
+	var attributedSubtitle: AttributedString? {
+		get {
+			return __attributedSubtitle != nil ? AttributedString(__attributedSubtitle!) : nil
+		}
+		set {
+			__attributedSubtitle = newValue == nil ? nil : NSAttributedString(newValue!)
+		}
+	}
+}
+
+public extension UIBlurEffect.Style {
+	@available(*, deprecated, message: "Use LNPopupBarAppearance instead.")
+	static var popupBarBackgroundInheritEffectStyle: Self {
+		return __LNBackgroundStyleInherit
 	}
 }

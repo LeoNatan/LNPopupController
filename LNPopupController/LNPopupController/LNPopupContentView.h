@@ -41,7 +41,7 @@ NS_SWIFT_UI_ACTOR
 /**
 * The popup content view background effect, used when the popup content controller's view has transparency.
 *
-* Use @c nil value to inherit the popup bar's background effect if possible, or use a default effect..
+* Use @c nil value to inherit the popup bar's background effect if possible, or use a default effect.
 *
 * Defaults to @c nil.
 */

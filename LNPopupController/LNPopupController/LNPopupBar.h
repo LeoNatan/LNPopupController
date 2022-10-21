@@ -151,7 +151,7 @@ NS_SWIFT_UI_ACTOR
 
 #pragma mark Deprecations
 
-extern const UIBlurEffectStyle LNBackgroundStyleInherit LN_DEPRECATED_API("Use LNPopupBarAppearance instead.");
+extern const UIBlurEffectStyle LNBackgroundStyleInherit LN_DEPRECATED_API("Use LNPopupBarAppearance instead.") NS_REFINED_FOR_SWIFT;
 
 #if ! TARGET_OS_MACCATALYST
 LN_UNAVAILABLE_API(LN_UNAVAILABLE_PREVIEWING_MSG)

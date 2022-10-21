@@ -28,6 +28,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	_webView = [WKWebView new];
 	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]]];
 	_webView.translatesAutoresizingMaskIntoConstraints = NO;
+	_webView.allowsBackForwardNavigationGestures = YES;
 //	_webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
 	_webView.scrollView.automaticallyAdjustsScrollIndicatorInsets = NO;
 	[self.view addSubview:_webView];
