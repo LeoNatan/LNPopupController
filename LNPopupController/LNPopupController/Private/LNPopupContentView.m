@@ -191,30 +191,24 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		return;
 	}
 	
-	CGFloat startingTopConstant = _popupCloseButtonTopConstraint.constant;
-
-	_popupCloseButtonTopConstraint.constant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 4;
-
-	CGFloat windowTopSafeAreaInset = 0;
-
-	if([NSStringFromClass(_currentPopupContentViewController.popupPresentationContainerViewController.nonMemoryLeakingPresentationController.class) containsString:@"Fullscreen"])
+	if(self.currentPopupContentViewController == nil)
 	{
-		windowTopSafeAreaInset += self.window.safeAreaInsets.top;
+		return;
 	}
-	else
+	
+	CGRect layoutFrame = [self convertRect:_currentPopupContentViewController.view.layoutMarginsGuide.layoutFrame fromView:_currentPopupContentViewController.view];
+	
+	CGFloat topConstant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 0 : 4;
+	topConstant += layoutFrame.origin.y;
+	topConstant = MAX(self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
+	
+	CGFloat leadingConstant = layoutFrame.origin.x;
+	
+	if(topConstant != _popupCloseButtonTopConstraint.constant || leadingConstant != _popupCloseButtonLeadingConstraint.constant)
 	{
-		UIView* viewToUse = _currentPopupContentViewController.popupPresentationContainerViewController.presentingViewController.presentedViewController.view;
-		if(viewToUse == nil)
-		{
-			viewToUse = self.superview;
-		}
-		windowTopSafeAreaInset += viewToUse.safeAreaInsets.top + 5;
-	}
-
-	_popupCloseButtonTopConstraint.constant += windowTopSafeAreaInset;
-
-	if(startingTopConstant != _popupCloseButtonTopConstraint.constant)
-	{
+		_popupCloseButtonTopConstraint.constant = topConstant;
+		_popupCloseButtonLeadingConstraint.constant = leadingConstant;
+		
 		if(animated == NO)
 		{
 			[UIView performWithoutAnimation:^{

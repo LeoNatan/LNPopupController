@@ -486,12 +486,8 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 #if ! TARGET_OS_MACCATALYST
 	if(self.popupContentViewController)
 	{
-		dispatch_async(dispatch_get_main_queue(), ^{
-//			[UIView animateWithDuration:UIApplication.sharedApplication.statusBarOrientationAnimationDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options: UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionAllowAnimatedContent animations:^{
-				[self.popupContentViewController _uLFSBAIO];
-				[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];
-//			} completion:nil];
-		});
+		[self.popupContentViewController _uLFSBAIO];
+		[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];
 	}
 #endif
 }

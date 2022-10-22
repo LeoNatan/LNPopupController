@@ -252,6 +252,16 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 	return NO;
 }
 
+- (void)viewWillMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
+{
+	
+}
+
+- (void)viewDidMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
+{
+	
+}
+
 - (LNPopupBar *)popupBar
 {
 	return self._ln_popupController.popupBarStorage;

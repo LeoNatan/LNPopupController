@@ -125,9 +125,14 @@ UIImage* LNSystemImage(NSString* named)
 	return self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact;
 }
 
-- (void)viewDidLoad
+- (void)viewDidMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
 {
-	[super viewDidLoad];
+	[super viewDidMoveToPopupContainerContentView:popupContentView];
+	
+	if(popupContentView == nil)
+	{
+		return;
+	}
 	
 	if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
 	{
@@ -150,17 +155,12 @@ UIImage* LNSystemImage(NSString* named)
 	topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.view addSubview:topLabel];
 	
-	LNPopupCloseButtonStyle closeButtonStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsCloseButtonStyle] unsignedIntegerValue];
-	
-	CGFloat offset =
-#if ! TARGET_OS_MACCATALYST
-	closeButtonStyle == LNPopupCloseButtonStyleDefault ||
-#endif
-	closeButtonStyle == LNPopupCloseButtonStyleChevron ? 40 : 0;
-	
+	NSLayoutConstraint* center = [topLabel.centerXAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.centerXAnchor];
+	center.priority = 500;
 	[NSLayoutConstraint activateConstraints:@[
 		[topLabel.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor],
-		[topLabel.centerXAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.centerXAnchor constant:offset]
+		center,
+		[topLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:popupContentView.popupCloseButton.trailingAnchor constant:8],
 	]];
 	
 	UILabel* bottomLabel = [UILabel new];
@@ -221,29 +221,29 @@ UIImage* LNSystemImage(NSString* named)
 	self.popupItem.accessibilityLabel = NSLocalizedString(@"Custom popup bar accessibility label", @"");
 	self.popupItem.accessibilityHint = NSLocalizedString(@"Custom popup bar accessibility hint", @"");
 	
-	UIView* safeAreaMask = [UIView new];
-	safeAreaMask.translatesAutoresizingMaskIntoConstraints = NO;
-	safeAreaMask.layer.borderColor = [UIColor.greenColor colorWithAlphaComponent:0.5].CGColor;
-	safeAreaMask.layer.borderWidth = 2.0;
-	[self.view addSubview:safeAreaMask];
-	[NSLayoutConstraint activateConstraints:@[
-		[self.view.safeAreaLayoutGuide.leadingAnchor constraintEqualToAnchor:safeAreaMask.leadingAnchor],
-		[self.view.safeAreaLayoutGuide.trailingAnchor constraintEqualToAnchor:safeAreaMask.trailingAnchor],
-		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:safeAreaMask.topAnchor],
-		[self.view.safeAreaLayoutGuide.bottomAnchor constraintEqualToAnchor:safeAreaMask.bottomAnchor],
-	]];
-
-	UIView* layoutMarginsMask = [UIView new];
-	layoutMarginsMask.translatesAutoresizingMaskIntoConstraints = NO;
-	layoutMarginsMask.layer.borderColor = [UIColor.whiteColor colorWithAlphaComponent:0.5].CGColor;
-	layoutMarginsMask.layer.borderWidth = 2.0;
-	[self.view addSubview:layoutMarginsMask];
-	[NSLayoutConstraint activateConstraints:@[
-		[self.view.layoutMarginsGuide.leadingAnchor constraintEqualToAnchor:layoutMarginsMask.leadingAnchor],
-		[self.view.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:layoutMarginsMask.trailingAnchor],
-		[self.view.layoutMarginsGuide.topAnchor constraintEqualToAnchor:layoutMarginsMask.topAnchor],
-		[self.view.layoutMarginsGuide.bottomAnchor constraintEqualToAnchor:layoutMarginsMask.bottomAnchor],
-	]];
+//	UIView* safeAreaMask = [UIView new];
+//	safeAreaMask.translatesAutoresizingMaskIntoConstraints = NO;
+//	safeAreaMask.layer.borderColor = [UIColor.greenColor colorWithAlphaComponent:0.5].CGColor;
+//	safeAreaMask.layer.borderWidth = 2.0;
+//	[self.view addSubview:safeAreaMask];
+//	[NSLayoutConstraint activateConstraints:@[
+//		[self.view.safeAreaLayoutGuide.leadingAnchor constraintEqualToAnchor:safeAreaMask.leadingAnchor],
+//		[self.view.safeAreaLayoutGuide.trailingAnchor constraintEqualToAnchor:safeAreaMask.trailingAnchor],
+//		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:safeAreaMask.topAnchor],
+//		[self.view.safeAreaLayoutGuide.bottomAnchor constraintEqualToAnchor:safeAreaMask.bottomAnchor],
+//	]];
+//
+//	UIView* layoutMarginsMask = [UIView new];
+//	layoutMarginsMask.translatesAutoresizingMaskIntoConstraints = NO;
+//	layoutMarginsMask.layer.borderColor = [UIColor.whiteColor colorWithAlphaComponent:0.5].CGColor;
+//	layoutMarginsMask.layer.borderWidth = 2.0;
+//	[self.view addSubview:layoutMarginsMask];
+//	[NSLayoutConstraint activateConstraints:@[
+//		[self.view.layoutMarginsGuide.leadingAnchor constraintEqualToAnchor:layoutMarginsMask.leadingAnchor],
+//		[self.view.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:layoutMarginsMask.trailingAnchor],
+//		[self.view.layoutMarginsGuide.topAnchor constraintEqualToAnchor:layoutMarginsMask.topAnchor],
+//		[self.view.layoutMarginsGuide.bottomAnchor constraintEqualToAnchor:layoutMarginsMask.bottomAnchor],
+//	]];
 	
 	[self _updateBackgroundColor];
 	

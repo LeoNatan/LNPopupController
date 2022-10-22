@@ -226,9 +226,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
 	currentContentController.view.translatesAutoresizingMaskIntoConstraints = YES;
-	_currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
+	currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 	currentContentController.view.frame = self.popupContentView.contentView.bounds;
+	[currentContentController viewWillMoveToPopupContainerContentView:self.popupContentView];
 	[self.popupContentView.contentView addSubview:currentContentController.view];
+	[currentContentController viewDidMoveToPopupContainerContentView:self.popupContentView];
 }
 
 - (void)_removeContentControllerFromContentView:(UIViewController*)currentContentController
@@ -238,7 +240,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	[_currentContentController.view removeFromSuperview];
+	[currentContentController viewWillMoveToPopupContainerContentView:nil];
+	[currentContentController.view removeFromSuperview];
+	[currentContentController viewDidMoveToPopupContainerContentView:nil];
 }
 
 - (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser

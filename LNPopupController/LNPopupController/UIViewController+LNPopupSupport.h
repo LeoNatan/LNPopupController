@@ -107,6 +107,16 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
  */
 - (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton;
 
+/// Called to notify the view controller that its view is about to be added to the container controller's popup content view.
+///
+/// - Parameter popupContentView: The popup content view, or `nil`.
+- (void)viewWillMoveToPopupContainerContentView:(nullable LNPopupContentView*)popupContentView NS_REQUIRES_SUPER;
+
+/// Called to notify the view controller that its view has just been added to the container controller's popup content view.
+///
+/// - Parameter popupContentView: The popup content view, or `nil`.
+- (void)viewDidMoveToPopupContainerContentView:(nullable LNPopupContentView*)popupContentView NS_REQUIRES_SUPER;
+
 @end
 
 @protocol LNPopupPresentationDelegate <NSObject>
