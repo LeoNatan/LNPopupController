@@ -25,6 +25,8 @@ static NSSet<Class>* __LNPopupBuggyAdditionalSafeAreaClasses;
 static void __LNPopupUpdateChildInsets(UIViewController* controller);
 static BOOL __LNPopupIsClassBuggyForAdditionalSafeArea(UIViewController* controller);
 
+BOOL __ln_popup_suppressViewControllerLifecycle = NO;
+
 #ifndef LNPopupControllerEnforceStrictClean
 //_hideBarWithTransition:isExplicit:
 static NSString* const hBWTiEBase64 = @"X2hpZGVCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0Og==";
@@ -149,6 +151,22 @@ static void __accessibilityBundleLoadHandler()
 			LNSwizzleMethod(self,
 							@selector(setOverrideUserInterfaceStyle:),
 							@selector(_ln_popup_setOverrideUserInterfaceStyle:));
+			
+			LNSwizzleMethod(self,
+							@selector(viewWillAppear:),
+							@selector(_ln_popup_viewWillAppear:));
+			
+			LNSwizzleMethod(self,
+							@selector(viewDidAppear:),
+							@selector(_ln_popup_viewDidAppear:));
+			
+			LNSwizzleMethod(self,
+							@selector(viewWillDisappear:),
+							@selector(_ln_popup_viewWillDisappear:));
+			
+			LNSwizzleMethod(self,
+							@selector(viewDidDisappear:),
+							@selector(_ln_popup_viewDidDisappear:));
 			
 			LNSwizzleMethod(self,
 							@selector(viewDidLayoutSubviews),
@@ -603,6 +621,46 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	return rv;
 }
 
+- (void)_ln_popup_viewWillAppear:(BOOL)animated
+{
+	if(__ln_popup_suppressViewControllerLifecycle == YES)
+	{
+		return;
+	}
+	
+	[self _ln_popup_viewWillAppear:animated];
+}
+
+- (void)_ln_popup_viewDidAppear:(BOOL)animated
+{
+	if(__ln_popup_suppressViewControllerLifecycle == YES)
+	{
+		return;
+	}
+	
+	[self _ln_popup_viewDidAppear:animated];
+}
+
+- (void)_ln_popup_viewWillDisappear:(BOOL)animated
+{
+	if(__ln_popup_suppressViewControllerLifecycle == YES)
+	{
+		return;
+	}
+	
+	[self _ln_popup_viewWillDisappear:animated];
+}
+
+- (void)_ln_popup_viewDidDisappear:(BOOL)animated
+{
+	if(__ln_popup_suppressViewControllerLifecycle == YES)
+	{
+		return;
+	}
+	
+	[self _ln_popup_viewDidDisappear:animated];
+}
+
 - (void)_ln_popup_viewDidLayoutSubviews
 {
 	[self _ln_popup_viewDidLayoutSubviews];
@@ -656,34 +714,50 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 
 - (void)_userFacing_viewWillAppear:(BOOL)animated
 {
+	__ln_popup_suppressViewControllerLifecycle = YES;
+	
 	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
 	struct objc_super super = {.receiver = self, .super_class = superclass};
 	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
 	super_class(&super, @selector(viewWillAppear:), animated);
+	
+	__ln_popup_suppressViewControllerLifecycle = NO;
 }
 
 - (void)_userFacing_viewDidAppear:(BOOL)animated
 {
+	__ln_popup_suppressViewControllerLifecycle = YES;
+	
 	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
 	struct objc_super super = {.receiver = self, .super_class = superclass};
 	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
 	super_class(&super, @selector(viewDidAppear:), animated);
+	
+	__ln_popup_suppressViewControllerLifecycle = NO;
 }
 
 - (void)_userFacing_viewWillDisappear:(BOOL)animated
 {
+	__ln_popup_suppressViewControllerLifecycle = YES;
+	
 	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
 	struct objc_super super = {.receiver = self, .super_class = superclass};
 	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
 	super_class(&super, @selector(viewWillDisappear:), animated);
+	
+	__ln_popup_suppressViewControllerLifecycle = NO;
 }
 
 - (void)_userFacing_viewDidDisappear:(BOOL)animated
 {
+	__ln_popup_suppressViewControllerLifecycle = YES;
+	
 	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
 	struct objc_super super = {.receiver = self, .super_class = superclass};
 	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
 	super_class(&super, @selector(viewDidDisappear:), animated);
+	
+	__ln_popup_suppressViewControllerLifecycle = NO;
 }
 
 @end
