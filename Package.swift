@@ -11,6 +11,9 @@ let package = Package(
 	products: [
 		.library(
 			name: "LNPopupController",
+			targets: ["LNPopupController"]),
+		.library(
+			name: "LNPopupController-Dynamic",
 			type: .dynamic,
 			targets: ["LNPopupController"]),
 		.library(
