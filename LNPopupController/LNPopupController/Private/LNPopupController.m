@@ -384,16 +384,24 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			_popupContentView.accessibilityViewIsModal = NO;
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
-			
-			if(_popupControllerPublicState == LNPopupPresentationStateOpen)
+		}
+		
+		_popupControllerInternalState = state;
+		if(state != _LNPopupPresentationStateTransitioning)
+		{
+			[_containerController _ln_setPopupPresentationState:state];
+			[self _end120HzHack];
+		}
+		
+		if(state == LNPopupPresentationStateBarPresented && _popupControllerPublicState == LNPopupPresentationStateBarPresented)
+		{
+			if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:didClosePopupWithContentController:animated:), animated) == NO)
 			{
-				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:didClosePopupWithContentController:animated:), animated) == NO)
-				{
-					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidClosePopup:animated:), animated);
-				}
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidClosePopup:animated:), animated);
 			}
 		}
-		else if(state == LNPopupPresentationStateOpen)
+		
+		if(state == LNPopupPresentationStateOpen)
 		{
 			if(stateAtStart == LNPopupPresentationStateBarPresented)
 			{
@@ -409,20 +417,13 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			_popupContentView.accessibilityViewIsModal = YES;
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _popupContentView.popupCloseButton);
 			
-			if(_popupControllerPublicState == LNPopupPresentationStateBarPresented)
+			if(_popupControllerPublicState == LNPopupPresentationStateOpen)
 			{
 				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:didOpenPopupWithContentController:animated:), animated) == NO)
 				{
 					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
 				}
 			}
-		}
-		
-		_popupControllerInternalState = state;
-		if(state != _LNPopupPresentationStateTransitioning)
-		{
-			[_containerController _ln_setPopupPresentationState:state];
-			[self _end120HzHack];
 		}
 		
 		if(completion)
@@ -1362,9 +1363,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				
 				_effectiveStatusBarUpdateController = nil;
 				
-				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidDismissPopupBar:animated:), animated);
-				
 				[_containerController _ln_setPopupPresentationState:LNPopupPresentationStateBarHidden];
+				
+				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidDismissPopupBar:animated:), animated);
 				
 				_bottomBar = nil;
 				
