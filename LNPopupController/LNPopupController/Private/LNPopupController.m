@@ -1218,14 +1218,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			[self.popupBar.customBarViewController _userFacing_viewDidAppear:animated];
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidPresentPopupBar:animated:), animated);
 			
-			if(open)
-			{
-				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:didOpenPopupWithContentController:animated:), animated) == NO)
-				{
-					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidOpenPopup:animated:), animated);
-				}
-			}
-			
 			self.popupBar.acceptsSizing = YES;
 			
 			if(completionBlock != nil && !open)
