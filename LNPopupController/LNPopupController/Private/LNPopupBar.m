@@ -19,7 +19,7 @@ static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
 static id(*_effectWithStyle_tintColor_invertAutomaticStyle)(id, SEL, NSUInteger, UIColor*, BOOL);
 
 __attribute__((constructor))
-static void __setupFunction()
+static void __setupFunction(void)
 {
 	_effectWithStyle_tintColor_invertAutomaticStyle_SEL = NSSelectorFromString(_LNPopupDecodeBase64String(_eWSti));
 	Method m = class_getClassMethod(UIBlurEffect.class, _effectWithStyle_tintColor_invertAutomaticStyle_SEL);

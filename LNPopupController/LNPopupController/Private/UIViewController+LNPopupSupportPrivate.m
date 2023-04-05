@@ -94,7 +94,7 @@ static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
 #ifndef LNPopupControllerEnforceStrictClean
 static id __accessibilityBundleLoadObserver;
 __attribute__((constructor))
-static void __accessibilityBundleLoadHandler()
+static void __accessibilityBundleLoadHandler(void)
 {
 	__accessibilityBundleLoadObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSBundleDidLoadNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
 		NSBundle* bundle = note.object;
