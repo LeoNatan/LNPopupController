@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.5
 
 import PackageDescription
 
@@ -6,7 +6,7 @@ let package = Package(
 	name: "LNPopupController",
 	platforms: [
 		.iOS(.v13),
-		.macOS(.v10_15)
+		.macCatalyst(.v13)
 	],
 	products: [
 		.library(

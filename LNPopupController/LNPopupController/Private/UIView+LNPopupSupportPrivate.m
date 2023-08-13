@@ -19,6 +19,7 @@
 static const void* LNPopupAwaitingViewInWindowHierarchyKey = &LNPopupAwaitingViewInWindowHierarchyKey;
 static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
 static const void* LNPopupTabBarProgressKey = &LNPopupTabBarProgressKey;
+static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgroundViewForceAnimatedKey;
 
 #if ! LNPopupControllerEnforceStrictClean
 //_viewControllerForAncestor
@@ -35,6 +36,12 @@ static NSString* _aW = @"YXR0YWNoZWRXaW5kb3c=";
 static NSString* _cE = @"Y3VycmVudEV2ZW50";
 //backgroundTransitionProgress
 static NSString* _bTP = @"YmFja2dyb3VuZFRyYW5zaXRpb25Qcm9ncmVzcw==";
+//_UIBarBackground
+static NSString* _UBB = @"X1VJQmFyQmFja2dyb3VuZA==";
+//transitionBackgroundViewsAnimated:
+static NSString* _tBVA = @"dHJhbnNpdGlvbkJhY2tncm91bmRWaWV3c0FuaW1hdGVkOg==";
+//_backgroundView
+static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 
 #endif
 
@@ -359,16 +366,46 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 		{
 			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 		}
+		
+#if ! LNPopupControllerEnforceStrictClean
+		if(@available(iOS 17.0, *))
+		{
+			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UBB));
+			SEL sel = NSSelectorFromString(_LNPopupDecodeBase64String(_tBVA));
+			Method m = class_getInstanceMethod(cls, sel);
+			void (*orig)(id, SEL, BOOL) = (void*)method_getImplementation(m);
+			method_setImplementation(m, imp_implementationWithBlock(^(id _self, BOOL animated) {
+				if([objc_getAssociatedObject(_self, LNPopupBarBackgroundViewForceAnimatedKey) boolValue] == YES)
+				{
+					animated = YES;
+				}
+				
+				orig(_self, sel, animated);
+			}));
+		}
+#endif
 	}
+}
+
+- (void)_ln_transitionBackgroundViewsAnimated:(BOOL)arg1
+{
+	[self _ln_transitionBackgroundViewsAnimated:YES];
 }
 
 - (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded
 {
 	if(@available(iOS 15.0, *))
 	{
+#if ! LNPopupControllerEnforceStrictClean
+		id backgroundView = [self valueForKey:_LNPopupDecodeBase64String(_bV)];
+		objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+#endif
 		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
 		[self setNeedsLayout];
 		[self layoutIfNeeded];
+#if ! LNPopupControllerEnforceStrictClean
+		objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+#endif
 	}
 }
 
