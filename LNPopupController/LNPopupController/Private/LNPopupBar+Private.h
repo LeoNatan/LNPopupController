@@ -13,12 +13,21 @@
 
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
+extern const CGFloat LNPopupBarHeightFloating;
 
 inline __attribute__((always_inline)) CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC)
 {
 	if(customBarVC) { return customBarVC.preferredContentSize.height; }
 	
-	return style == LNPopupBarStyleCompact ? LNPopupBarHeightCompact : LNPopupBarHeightProminent;
+	switch(style)
+	{
+		case LNPopupBarStyleCompact:
+			return LNPopupBarHeightCompact;
+		case LNPopupBarStyleFloating:
+			return LNPopupBarHeightFloating;
+		default:
+			return LNPopupBarHeightProminent;
+	}
 }
 
 inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
@@ -26,7 +35,13 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 	LNPopupBarStyle rv = style;
 	if(rv == LNPopupBarStyleDefault)
 	{
-		rv = LNPopupBarStyleProminent;
+		if(@available(iOS 17, *)) {
+			rv = LNPopupBarStyleFloating;
+		}
+		else
+		{
+			rv = LNPopupBarStyleProminent;
+		}
 	}
 	return rv;
 }
@@ -51,6 +66,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @interface LNPopupBar () <UIPointerInteractionDelegate, _LNPopupBarAppearanceDelegate>
 
 + (void)setAnimatesItemSetter:(BOOL)animate;
+
+@property (nonatomic, assign, readonly) LNPopupBarStyle resolvedStyle;
 
 @property (nonatomic, strong) UIColor* systemTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
@@ -83,7 +100,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, strong) UIView* contentView;
 @property (nonatomic, strong) _LNPopupBarBackgroundView* backgroundView;
-@property (nonatomic, strong) UIVisualEffectView* interactionBackgroundView;
+
+@property (nonatomic, strong) _LNPopupBarBackgroundView* floatingBackgroundView;
 
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView;

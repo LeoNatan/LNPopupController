@@ -246,7 +246,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	
 	@objc func _timerTicked(_ timer: Timer) {
 		if playerView.playbackSettings.progressEditedByUser == false {
-			playerView.playbackSettings.playbackProgress += 0.0002
+			playerView.playbackSettings.playbackProgress += 0.01
 		}
 		
 		popupItem.progress = playerView.playbackSettings.playbackProgress

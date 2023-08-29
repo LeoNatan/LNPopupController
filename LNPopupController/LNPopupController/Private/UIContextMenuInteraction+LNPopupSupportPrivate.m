@@ -43,7 +43,18 @@ static NSString* const dCMIWEFCpBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY
 	
 	if([self.view isKindOfClass:LNPopupBar.class] && x == nil)
 	{
-		x = [[UITargetedPreview alloc] initWithView:[(LNPopupBar*)self.view contentView]];
+		LNPopupBar* bar = (LNPopupBar*)self.view;
+		
+		UIPreviewParameters* params = [UIPreviewParameters new];
+		if(bar.resolvedStyle == LNPopupBarStyleFloating)
+		{
+			if (@available(iOS 14.0, *))
+			{
+				params.shadowPath = [UIBezierPath new];
+			}
+		}
+		
+		x = [[UITargetedPreview alloc] initWithView:bar.contentView parameters:params];
 	}
 	else if([self.view isKindOfClass:LNPopupBar.class] && x.view == self.view)
 	{
@@ -53,7 +64,7 @@ static NSString* const dCMIWEFCpBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY
 	if([self.view isKindOfClass:LNPopupBar.class])
 	{
 		LNPopupBar* popupBar = self.view;
-		[popupBar setHighlighted:YES animated:YES];
+		[popupBar setHighlighted:YES animated:NO];
 		[popupBar _cancelAnyUserInteraction];
 	}
 	

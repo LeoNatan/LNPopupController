@@ -25,17 +25,13 @@ static void LNInitializeDemoColors(void)
 		UIColor.systemPurpleColor,
 		UIColor.systemTealColor,
 		UIColor.systemIndigoColor,
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
 		UIColor.systemBrownColor,
-#endif
 	].mutableCopy;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
 	if(@available(iOS 15.0, *))
 	{
 		[namedSystemColors addObject:UIColor.systemMintColor];
 		[namedSystemColors addObject:UIColor.systemCyanColor];
 	}
-#endif
 }
 
 UIColor* LNRandomSystemColor(void)

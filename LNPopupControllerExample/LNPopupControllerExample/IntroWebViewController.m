@@ -54,7 +54,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
 	[attribTitle addAttributes: @{
-		NSFontAttributeName: [UIFont systemFontOfSize:18 weight:UIFontWeightHeavy],
+		NSFontAttributeName: [UIFont systemFontOfSize:16 weight:UIFontWeightHeavy],
 	} range:[title rangeOfString:@"LNPopupController"]];
 	
 	self.popupItem.attributedTitle = attribTitle;

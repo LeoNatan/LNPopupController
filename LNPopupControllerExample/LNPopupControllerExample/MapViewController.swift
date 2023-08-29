@@ -114,8 +114,10 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		}
 #endif
 	}
-	
+
+#if LNPOPUP
 	override var shouldFadePopupBarOnDismiss: Bool {
 		return true
 	}
+#endif
 }

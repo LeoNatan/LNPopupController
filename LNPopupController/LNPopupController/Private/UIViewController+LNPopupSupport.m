@@ -390,6 +390,11 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 	return [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
 }
 
+- (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea
+{
+	return self.popupBar.resolvedStyle != LNPopupBarStyleFloating && self.shouldExtendPopupBarUnderSafeArea;
+}
+
 - (BOOL)shouldExtendPopupBarUnderSafeArea
 {
 	return [(objc_getAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey) ?: @1) boolValue];
@@ -398,6 +403,11 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 - (void)setShouldExtendPopupBarUnderSafeArea:(BOOL)shouldExtendPopupBarUnderSafeArea
 {
 	objc_setAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey, @(shouldExtendPopupBarUnderSafeArea), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	
+	self._ln_bottomBarExtension.alpha = shouldExtendPopupBarUnderSafeArea ? 1.0 : 0.0;
+	
+	[self.view setNeedsLayout];
+	[self.view layoutIfNeeded];
 }
 
 - (BOOL)shouldFadePopupBarOnDismiss

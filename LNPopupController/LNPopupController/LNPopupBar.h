@@ -27,10 +27,13 @@ typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	/// Prominent bar style.
 	LNPopupBarStyleProminent,
 	
+	/// Floating bar style.
+	LNPopupBarStyleFloating,
+	
 	/// Custom bar style.
 	///
 	/// Do not set this style directly. Instead, set the `LNPopupBar.customBarViewController` property and the framework will use this style.
-	LNPopupBarStyleCustom
+	LNPopupBarStyleCustom = 0xFFFF
 };
 
 /// Available styles for the popup bar progress view.
@@ -45,7 +48,7 @@ typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
     LNPopupBarProgressViewStyleTop,
 	
 	/// No progress view
-	LNPopupBarProgressViewStyleNone
+	LNPopupBarProgressViewStyleNone = 0xFFFF
 };
 
 NS_SWIFT_UI_ACTOR
@@ -75,8 +78,13 @@ NS_SWIFT_UI_ACTOR
 /// The popup bar style.
 @property (nonatomic, assign) LNPopupBarStyle barStyle UI_APPEARANCE_SELECTOR;
 
+/// The effective popup bar style used by the system. (read-only)
+///
+/// Use this property's value to determine at runtime what the result of `LNPopupBarStyleDefault` is.
+@property (nonatomic, assign, readonly) LNPopupBarStyle effectiveBarStyle;
+
 /// Describes the appearance attributes for the popup bar to use.
-@property (nonatomic, copy) LNPopupBarAppearance *standardAppearance UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy, null_resettable) LNPopupBarAppearance* standardAppearance UI_APPEARANCE_SELECTOR;
 
 /// The popup bar's progress view style.
 @property (nonatomic, assign) LNPopupBarProgressViewStyle progressViewStyle UI_APPEARANCE_SELECTOR;

@@ -285,6 +285,7 @@
 				39756326254ED9EB0066981E /* DemoGallery.m */,
 				39277A0D1B58228000293F95 /* DemoViewController.h */,
 				3988E3571B59C3000039C09B /* DemoViewController.m */,
+				39E9746D250193B8009F24DF /* ColorfulButton.swift */,
 				399748701D5652250079492B /* DemoPopupContentViewController.h */,
 				399748711D5652250079492B /* DemoPopupContentViewController.m */,
 				39A3B589230D400B00E10425 /* SplitViewController.h */,
@@ -307,7 +308,6 @@
 				39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */,
 				397C56291B753A45007A67F0 /* MusicCell.swift */,
 				39837A251B759721004D2DA9 /* PortraitTabBarController.swift */,
-				39E9746D250193B8009F24DF /* ColorfulButton.swift */,
 			);
 			name = "Demo - Music Scene (Swift)";
 			sourceTree = "<group>";
@@ -696,7 +696,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				DOCC_EXTRACT_OBJC_INFO_FOR_SWIFT_SYMBOLS = YES;
 				DOCC_EXTRACT_SWIFT_INFO_FOR_OBJC_SYMBOLS = YES;
@@ -737,7 +736,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
 				DOCC_EXTRACT_OBJC_INFO_FOR_SWIFT_SYMBOLS = YES;
 				DOCC_EXTRACT_SWIFT_INFO_FOR_OBJC_SYMBOLS = YES;

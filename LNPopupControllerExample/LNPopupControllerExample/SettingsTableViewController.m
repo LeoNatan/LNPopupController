@@ -24,6 +24,7 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 @interface SettingsTableViewController ()
 {
 	NSDictionary<NSNumber*, NSString*>* _sectionToKeyMapping;
+	NSArray* _sectionsToSkip0xFFFF;
 	
 	IBOutlet UISwitch* _customizations;
 	IBOutlet UISwitch* _extendBars;
@@ -55,6 +56,8 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 		@7: PopupSettingsVisualEffectViewBlurEffect,
 		@8: PopupSettingsVisualEffectViewBlurEffect,
 	};
+	
+	_sectionsToSkip0xFFFF = @[@0];
 	
 	[self _resetSwitchesAnimated:NO];
 }
@@ -192,7 +195,7 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 		[tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
 		
 		NSUInteger value = indexPath.row;
-		if(value == lastIdxInSection)
+		if(value == lastIdxInSection && [_sectionsToSkip0xFFFF containsObject:@(indexPath.section)] == NO)
 		{
 			value = 0xFFFF;
 		}

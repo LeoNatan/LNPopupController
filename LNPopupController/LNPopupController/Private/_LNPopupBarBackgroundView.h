@@ -10,10 +10,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface _LNPopupBarBackgroundView : UIVisualEffectView
+@interface _LNPopupBarBackgroundView : UIView
+
+- (instancetype)initWithEffect:(nullable UIVisualEffect *)effect;
+
+@property (nonatomic, strong, readonly) UIVisualEffectView* effectView;
+@property (nonatomic, copy, nullable) UIVisualEffect* effect;
+@property (nonatomic, strong, readonly) UIView* contentView;
 
 @property (nonatomic, strong, readonly) UIView* colorView;
 @property (nonatomic, strong, readonly) UIImageView* imageView;
+
+@property (nonatomic, assign) CGFloat cornerRadius;
+@property (nonatomic, assign) BOOL castsShadow;
 
 @end
 

@@ -17,7 +17,6 @@ NS_SWIFT_UI_ACTOR
 /// After creating a `LNPopupBarAppearance` object, use the methods and properties of this class to specify the appearance of items in the popup bar. Use the inherited properties from `UIBarAppearance` to configure the background and shadow attributes of the popup bar itself.
 @interface LNPopupBarAppearance : UIBarAppearance
 
-
 /// Display attributes for the popup bar’s title text.
 ///
 /// You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in `NSAttributedString.h`.
@@ -62,12 +61,29 @@ NS_SWIFT_UI_ACTOR
 /// Configures the popup bar with marquee scroll enabled and sets the default marquee scroll configuration values.
 - (void)configureWithDefaultMarqueeScroll;
 
-
 /// Configures the popup bar with marquee scroll disabled.
 - (void)configureWithDisabledMarqueeScroll;
 
 /// Configures the popup bar with the default highlight color.
 - (void)configureWithDefaultHighlightColor;
+
+/// A specific blur effect to use for the bar floating background. This effect is composited first when constructing the bar's floating background.
+@property (nonatomic, readwrite, copy, nullable) UIBlurEffect* floatingBackgroundEffect;
+/// A color to use for the bar floating background. This color is composited over `floatingBackgroundEffect`.
+@property (nonatomic, readwrite, copy, nullable) UIColor* floatingBackgroundColor;
+/// An image to use for the bar floating background. This image is composited over the `floatingBackgroundColor`, and resized per the `floatingBackgroundImageContentMode`.
+@property (nonatomic, readwrite, strong, nullable) UIImage* floatingBackgroundImage;
+/// The content mode to use when rendering the `floatingBackgroundImage`. Defaults to `UIViewContentModeScaleToFill`. `UIViewContentModeRedraw` will be reinterpreted as `UIViewContentModeScaleToFill`.
+@property (nonatomic, readwrite, assign) UIViewContentMode floatingBackgroundImageContentMode;
+
+/// Reset floating background and shadow properties to their defaults.
+- (void)configureWithDefaultFloatingBackground;
+
+/// Reset floating background and shadow properties to display theme-appropriate opaque colors.
+- (void)configureWithOpaqueFloatingBackground;
+
+/// Reset floating background and shadow properties to be transparent.
+- (void)configureWithTransparentFloatingBackground;
 
 @end
 

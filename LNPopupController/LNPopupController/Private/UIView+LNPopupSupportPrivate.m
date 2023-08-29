@@ -22,6 +22,16 @@ static const void* LNPopupTabBarProgressKey = &LNPopupTabBarProgressKey;
 static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgroundViewForceAnimatedKey;
 
 #if ! LNPopupControllerEnforceStrictClean
+//backdropGroupName
+static NSString* _bGN = @"YmFja2Ryb3BHcm91cE5hbWU=";
+//_UINavigationBarVisualProvider
+static NSString* _UINBVP = @"X1VJTmF2aWdhdGlvbkJhclZpc3VhbFByb3ZpZGVy";
+//_UINavigationBarVisualProviderLegacyIOS
+static NSString* _UINBVPLI = @"X1VJTmF2aWdhdGlvbkJhclZpc3VhbFByb3ZpZGVyTGVnYWN5SU9T";
+//_UINavigationBarVisualProviderModernIOS
+static NSString* _UINBVPMI = @"X1VJTmF2aWdhdGlvbkJhclZpc3VhbFByb3ZpZGVyTW9kZXJuSU9T";
+//updateBackgroundGroupName
+static NSString* _uBGN = @"dXBkYXRlQmFja2dyb3VuZEdyb3VwTmFtZQ==";
 //_viewControllerForAncestor
 static NSString* _vCFA = @"X3ZpZXdDb250cm9sbGVyRm9yQW5jZXN0b3I=";
 //_didMoveFromWindow:toWindow:
@@ -58,6 +68,52 @@ static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 #if ! LNPopupControllerEnforceStrictClean
+		//updateBackgroundGroupName
+		SEL updateBackgroundGroupNameSEL = NSSelectorFromString(_LNPopupDecodeBase64String(_uBGN));
+		
+		id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){
+			return ^ (id _self) {
+				orig(_self, updateBackgroundGroupNameSEL);
+				
+				static NSString* key = nil;
+				static dispatch_once_t onceToken;
+				dispatch_once(&onceToken, ^{
+					//backdropGroupName
+					key = _LNPopupDecodeBase64String(_bGN);
+				});
+				
+				NSString* groupName = [_self valueForKey:key];
+				if([groupName hasSuffix:@"🤡"] == NO)
+				{
+					[_self setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:key];
+				}
+			};
+		};
+		
+		{
+			//_UINavigationBarVisualProvider
+			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVP));
+			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+		}
+		
+		{
+			//_UINavigationBarVisualProviderLegacyIOS
+			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPLI));
+			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+		}
+		
+		{
+			//_UINavigationBarVisualProviderModernIOS
+			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPMI));
+			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+		}
+		
 		NSString* sel = _LNPopupDecodeBase64String(_dMFWtW);
 		LNSwizzleMethod(self,
 						NSSelectorFromString(sel),
@@ -294,6 +350,7 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardA
 
 static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPopupBar* popupBar)
 {
+	//backgroundTransitionProgress
 	static NSString* bTP = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{

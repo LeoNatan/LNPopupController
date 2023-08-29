@@ -83,6 +83,8 @@ extern UIImage* LNSystemImage(NSString* named);
 {
 	[super viewWillAppear:animated];
 	
+	[self updateBottomDockingViewEffectForBarPresentation];
+	
 	//Ugly hack to fix tab bar tint color.
 	self.tabBarController.view.tintColor = self.view.tintColor;
 	//Ugly hack to fix split view controller tint color.
@@ -132,6 +134,29 @@ extern UIImage* LNSystemImage(NSString* named);
 	[self.navigationController setNeedsPopupBarAppearanceUpdate];
 #endif
 }
+
+- (void)updateBottomDockingViewEffectForBarPresentation
+{
+#if LNPOPUP
+	LNPopupBarStyle popupBarStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
+	if(popupBarStyle == LNPopupBarStyleFloating || (popupBarStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
+	{
+#endif
+		UITabBarAppearance* tba = [UITabBarAppearance new];
+		[tba configureWithDefaultBackground];
+		tba.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterial];
+		
+		self.tabBarController.tabBar.standardAppearance = tba;
+		
+		UIToolbarAppearance* ta = [UIToolbarAppearance new];
+		[ta configureWithDefaultBackground];
+		ta.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterial];
+		
+		self.navigationController.toolbar.standardAppearance = ta;
+	}
+#if LNPOPUP
+}
+#endif
 
 - (UIViewController*)_targetVCForPopup
 {
@@ -220,6 +245,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 	targetVC.popupBar.progressViewStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsProgressViewStyle] unsignedIntegerValue];
 	targetVC.popupBar.barStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
+	
 	targetVC.popupInteractionStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsInteractionStyle] unsignedIntegerValue];
 	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
 	
@@ -234,8 +260,15 @@ extern UIImage* LNSystemImage(NSString* named);
 	NSNumber* effectOverride = [NSUserDefaults.standardUserDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
 	if(effectOverride != nil)
 	{
-		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
-		targetVC.popupBar.standardAppearance.backgroundEffect = [UIBlurEffect effectWithStyle:effectOverride.unsignedIntegerValue];
+		if(targetVC.popupBar.effectiveBarStyle == LNPopupBarStyleFloating)
+		{
+			targetVC.popupBar.standardAppearance.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:effectOverride.unsignedIntegerValue];
+		}
+		else
+		{
+			targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
+			targetVC.popupBar.standardAppearance.backgroundEffect = [UIBlurEffect effectWithStyle:effectOverride.unsignedIntegerValue];
+		}
 	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsEnableCustomizations])
@@ -249,7 +282,15 @@ extern UIImage* LNSystemImage(NSString* named);
 	
 		appearance.titleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]};
 		appearance.subtitleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]};
-		appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+		
+		if(targetVC.popupBar.barStyle == LNPopupBarStyleFloating || (targetVC.popupBar.barStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
+		{
+			appearance.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+		}
+		else
+		{
+			appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+		}
 		
 		[targetVC.popupBar setTintColor:[UIColor systemYellowColor]];
 		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;

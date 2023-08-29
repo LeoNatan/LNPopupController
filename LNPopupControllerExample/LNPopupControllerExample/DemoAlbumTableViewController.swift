@@ -50,22 +50,21 @@ class DemoAlbumTableViewController: UITableViewController {
 		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		
 #if LNPOPUP
-		tabBarController?.popupBar.barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
-#endif
+		let barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
+		tabBarController?.popupBar.barStyle = barStyle
+	
+		if tabBarController?.popupBar.effectiveBarStyle == .floating {
 
-		let appearance = UINavigationBarAppearance()
-		appearance.configureWithTransparentBackground()
-#if compiler(>=5.5)
-		if #available(iOS 15.0, *) {
-			navigationItem.compactScrollEdgeAppearance = appearance
+			let tba = UITabBarAppearance()
+			tba.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
+			tba.shadowColor = .green
+			tabBarController!.tabBar.standardAppearance = tba
+			
+			let nba = UINavigationBarAppearance()
+			nba.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
+			navigationController!.navigationBar.standardAppearance = nba
 		}
 #endif
-		navigationItem.scrollEdgeAppearance = appearance
-		
-		let appearance2 = UINavigationBarAppearance()
-		appearance2.configureWithDefaultBackground()
-		navigationItem.compactAppearance = appearance2
-		navigationItem.standardAppearance = appearance2
 
 		demoAlbumImageView.layer.cornerCurve = .continuous
 		demoAlbumImageView.layer.cornerRadius = 8
@@ -119,7 +118,6 @@ class DemoAlbumTableViewController: UITableViewController {
 		popupContentController.popupItem.accessibilityHint = NSLocalizedString("Double Tap to Expand the Mini Player", comment: "")
 		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
-//		tabBarController?.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
 		tabBarController?.presentPopupBar(withContentViewController: popupContentController, animated: true, completion: nil)
 		tabBarController?.popupBar.imageView.layer.cornerRadius = 3
 		tabBarController?.popupBar.tintColor = UIColor.label

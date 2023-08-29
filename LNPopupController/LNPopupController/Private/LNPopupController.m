@@ -19,8 +19,10 @@
 @import ObjectiveC;
 @import os.log;
 
+#ifndef LNPopupControllerEnforceStrictClean
 //visualProvider.toolbarIsSmall
-static NSString* const vPTIS = @"dmlzdWFsUHJvdmlkZXIudG9vbGJhcklzU21hbGw=";
+static NSString* const _vPTIS = @"dmlzdWFsUHJvdmlkZXIudG9vbGJhcklzU21hbGw=";
+#endif
 
 #if TARGET_OS_MACCATALYST
 @import AppKit;
@@ -998,11 +1000,20 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	UIBarAppearance* appearanceToUse = nil;
 	
+#ifndef LNPopupControllerEnforceStrictClean
+	static NSString* vPTIS = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		vPTIS = _LNPopupDecodeBase64String(_vPTIS);
+	});
+	
 	//visualProvider.toolbarIsSmall
-	if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:_LNPopupDecodeBase64String(vPTIS)] boolValue] == YES)
+	if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:vPTIS] boolValue] == YES)
 	{
 		appearanceToUse = [(UIToolbar*)_bottomBar compactAppearance];
 	}
+	
+#endif
 	
 	if(appearanceToUse == nil && [_bottomBar respondsToSelector:@selector(standardAppearance)])
 	{
@@ -1022,7 +1033,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_containerController._ln_bottomBarExtension_nocreate.imageView.image = _containerController.popupBar.backgroundView.imageView.image;
 	_containerController._ln_bottomBarExtension_nocreate.imageView.contentMode = _containerController.popupBar.backgroundView.imageView.contentMode;
 	_containerController._ln_bottomBarExtension_nocreate.effect = _containerController.popupBar.backgroundView.effect;
-	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:_containerController._ln_bottomBarExtension_nocreate];
+	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:_containerController._ln_bottomBarExtension_nocreate.effectView];
 	_popupContentView.clipsToBounds = YES;
 }
 

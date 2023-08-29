@@ -99,6 +99,34 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	[self _notify];
 }
 
+- (void)setFloatingBackgroundColor:(UIColor *)floatingBackgroundColor
+{
+	_floatingBackgroundColor = floatingBackgroundColor;
+	
+	[self _notify];
+}
+
+- (void)setFloatingBackgroundImage:(UIImage *)floatingBackgroundImage
+{
+	_floatingBackgroundImage = floatingBackgroundImage;
+	
+	[self _notify];
+}
+
+-(void)setFloatingBackgroundEffect:(UIBlurEffect *)floatingBackgroundEffect
+{
+	_floatingBackgroundEffect = floatingBackgroundEffect;
+	
+	[self _notify];
+}
+
+-(void)setFloatingBackgroundImageContentMode:(UIViewContentMode)floatingBackgroundImageContentMode
+{
+	_floatingBackgroundImageContentMode = floatingBackgroundImageContentMode;
+	
+	[self _notify];
+}
+
 - (void)_commonInit
 {
 	//changeObserver
@@ -115,7 +143,9 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 		
 		[self configureWithDefaultHighlightColor];
 		[self configureWithDefaultMarqueeScroll];
-		[self configureWithDisabledMarqueeScroll];	
+		[self configureWithDisabledMarqueeScroll];
+		
+		[self configureWithDefaultFloatingBackground];
 
 		[self _commonInit];
 	}
@@ -141,6 +171,11 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	[coder encodeDouble:self.marqueeScrollDelay forKey:@"marqueeScrollDelay"];
 	[coder encodeBool:self.coordinateMarqueeScroll forKey:@"coordinateMarqueeScroll"];
 	[coder encodeObject:self.highlightColor forKey:@"highlightColor"];
+	
+	[coder encodeObject:self.floatingBackgroundEffect forKey:@"floatingBackgroundEffect"];
+	[coder encodeObject:self.floatingBackgroundColor forKey:@"floatingBackgroundColor"];
+	[coder encodeObject:self.floatingBackgroundImage forKey:@"floatingBackgroundImage"];
+	[coder encodeInteger:self.floatingBackgroundImageContentMode forKey:@"floatingBackgroundImageContentMode"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -165,6 +200,11 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 		self.coordinateMarqueeScroll = [coder decodeBoolForKey:@"coordinateMarqueeScroll"];
 		self.highlightColor = [coder decodeObjectForKey:@"highlightColor"];
 		
+		self.floatingBackgroundEffect = [coder decodeObjectForKey:@"floatingBackgroundEffect"];
+		self.floatingBackgroundColor = [coder decodeObjectForKey:@"floatingBackgroundColor"];
+		self.floatingBackgroundImage = [coder decodeObjectForKey:@"floatingBackgroundImage"];
+		self.floatingBackgroundImageContentMode = [coder decodeIntegerForKey:@"floatingBackgroundImageContentMode"];
+		
 		[self _commonInit];
 	}
 	
@@ -187,6 +227,11 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 		self.marqueeScrollDelay = other.marqueeScrollDelay;
 		self.coordinateMarqueeScroll = other.coordinateMarqueeScroll;
 		self.highlightColor = other.highlightColor;
+		
+		self.floatingBackgroundColor = other.floatingBackgroundColor;
+		self.floatingBackgroundImage = other.floatingBackgroundImage;
+		self.floatingBackgroundEffect = other.floatingBackgroundEffect;
+		self.floatingBackgroundImageContentMode = other.floatingBackgroundImageContentMode;
 		
 		[self _commonInit];
 	}
@@ -213,7 +258,53 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	copy.coordinateMarqueeScroll = self.coordinateMarqueeScroll;
 	copy.highlightColor = self.highlightColor;
 	
+	copy.floatingBackgroundColor = self.floatingBackgroundColor;
+	copy.floatingBackgroundImage = self.floatingBackgroundImage;
+	copy.floatingBackgroundEffect = self.floatingBackgroundEffect;
+	copy.floatingBackgroundImageContentMode = self.floatingBackgroundImageContentMode;
+	
 	return copy;
+}
+
+- (BOOL)isEqual:(LNPopupBarAppearance*)other
+{
+	if([other isKindOfClass:LNPopupBarAppearance.class] == NO)
+	{
+		return NO;
+	}
+	
+	BOOL rv = [super isEqual:other];
+	
+	NSLog(@" 0: %@", @(rv));
+	
+	rv = rv && [self.titleTextAttributes isEqualToDictionary:other.titleTextAttributes];
+	NSLog(@" 1: %@", @(rv));
+	rv = rv && [self.subtitleTextAttributes isEqualToDictionary:other.subtitleTextAttributes];
+	NSLog(@" 2: %@", @(rv));
+	rv = rv && [self.buttonAppearance isEqual:other.buttonAppearance];
+	NSLog(@" 3: %@", @(rv));
+	rv = rv && [self.doneButtonAppearance isEqual:other.doneButtonAppearance];
+	NSLog(@" 4: %@", @(rv));
+	rv = rv && (self.marqueeScrollEnabled == other.marqueeScrollEnabled);
+	NSLog(@" 5: %@", @(rv));
+	rv = rv && (self.marqueeScrollRate == other.marqueeScrollRate);
+	NSLog(@" 6: %@", @(rv));
+	rv = rv && (self.marqueeScrollDelay == other.marqueeScrollDelay);
+	NSLog(@" 7: %@", @(rv));
+	rv = rv && (self.coordinateMarqueeScroll == other.coordinateMarqueeScroll);
+	NSLog(@" 8: %@", @(rv));
+	rv = rv && [self.highlightColor isEqual:other.highlightColor];
+	NSLog(@" 9: %@", @(rv));
+	rv = rv && [self.floatingBackgroundColor isEqual:other.floatingBackgroundColor];
+	NSLog(@"10: %@", @(rv));
+	rv = rv && [self.floatingBackgroundImage isEqual:other.floatingBackgroundImage];
+	NSLog(@"11: %@", @(rv));
+	rv = rv && [self.floatingBackgroundEffect isEqual:other.floatingBackgroundEffect];
+	NSLog(@"12: %@", @(rv));
+	rv = rv && (self.floatingBackgroundImageContentMode == other.floatingBackgroundImageContentMode);
+	NSLog(@"13: %@", @(rv));
+	
+	return rv;
 }
 
 - (void)configureWithDefaultHighlightColor
@@ -225,9 +316,11 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 		}
 		else
 		{
-			return [UIColor.systemGray2Color colorWithAlphaComponent:0.35];
+			return [UIColor.systemGray3Color colorWithAlphaComponent:0.25];
 		}
 	}];
+	
+	[self _notify];
 }
 
 - (void)configureWithDefaultMarqueeScroll
@@ -236,11 +329,54 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	_marqueeScrollRate = 30;
 	_marqueeScrollDelay = 2.0;
 	_coordinateMarqueeScroll = YES;
+	
+	[self _notify];
 }
 
 - (void)configureWithDisabledMarqueeScroll
 {
 	_marqueeScrollEnabled = NO;
+	
+	[self _notify];
+}
+
+- (void)configureWithDefaultFloatingBackground
+{
+	UIBarAppearance* temp = [UIBarAppearance new];
+	[temp configureWithDefaultBackground];
+	
+	self.floatingBackgroundColor = temp.backgroundColor;
+	self.floatingBackgroundImage = temp.backgroundImage;
+	self.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
+	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
+	
+	[self _notify];
+}
+
+- (void)configureWithOpaqueFloatingBackground
+{
+	UIBarAppearance* temp = [UIBarAppearance new];
+	[temp configureWithOpaqueBackground];
+	
+	self.floatingBackgroundColor = temp.backgroundColor;
+	self.floatingBackgroundImage = temp.backgroundImage;
+	self.floatingBackgroundEffect = temp.backgroundEffect;
+	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
+	
+	[self _notify];
+}
+
+- (void)configureWithTransparentFloatingBackground;
+{
+	UIBarAppearance* temp = [UIBarAppearance new];
+	[temp configureWithTransparentBackground];
+	
+	self.floatingBackgroundColor = temp.backgroundColor;
+	self.floatingBackgroundImage = temp.backgroundImage;
+	self.floatingBackgroundEffect = temp.backgroundEffect;
+	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
+	
+	[self _notify];
 }
 
 @end

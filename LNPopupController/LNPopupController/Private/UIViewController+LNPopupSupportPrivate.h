@@ -33,6 +33,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 @interface UIViewController (LNPopupSupportPrivate)
 
+- (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea;
+
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
 
 - (nullable UIViewController*)_ln_common_childViewControllerForStatusBarStyle;
