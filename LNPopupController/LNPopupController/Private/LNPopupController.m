@@ -444,7 +444,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	[UIView animateWithDuration:resolvedStyle == LNPopupInteractionStyleSnap ? 0.4 : 0.5 delay:0.0 usingSpringWithDamping:spring ? 0.8 : 1.0 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:animationBlock completion:completionBlock];
+	[UIView animateWithDuration:resolvedStyle == LNPopupInteractionStyleSnap ? 0.4 : 0.5 delay:0.0 usingSpringWithDamping:spring ? 0.85 : 1.0 initialSpringVelocity:0 options:UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:animationBlock completion:completionBlock];
 }
 
 - (void)_popupBarLongPressGestureRecognized:(UILongPressGestureRecognizer*)lpgr

@@ -8,9 +8,7 @@ For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopu
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/graphs/contributors) [![Swift Package Manager compatible](https://img.shields.io/badge/swift%20package%20manager-compatible-green)](https://swift.org/package-manager/) [![Carthage compatible](https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-<p align="center"><img src="./Supplements/open_modern_popup.gif" width="360"/></p>
-
-See a video of the modern popup look & feel [here](https://vimeo.com/194064291) and a video of the classic popup look & feel [here](https://vimeo.com/137020302).
+<p align="center"><img src="./Supplements/open_floating_popup.gif" width="360"/></p>
 
 Once a popup bar is presented with a content view controller, the user can swipe or tap the popup bar at any point to present the popup. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
 
@@ -148,19 +146,35 @@ override var defaultFrameForBottomDockingView: CGRect {
 
 ### Appearance and Behavior
 
-`LNPopupController` provides two distinct styles of popup look and feel, one based on modern Music app look and feel, and one based on the previous, iOS 9-style look and feel. Popup bar styles are arbitrarily labeled "prominent" for modern style popup bar and "compact" for iOS 9-style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current platform and operating system version.
+`LNPopupController` provides three distinct styles of popup look and feel, each based on Music app looks and feels, that Apple has introduced over the years. Popup bar styles are labeled "floating”, “prominent" and "compact", matching the appropriate Apple style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current platform and operating system version.
 
 The defaults are:
-* Prominent bar style
-* Snap interaction style
-* Chevron close button style
-* No progress view style
+
+- iOS 17:
+
+  * Floating bar style
+
+  * Snap interaction style
+
+  * Chevron close button style
+
+  * No progress view style
+
+- iOS 16 and below:
+
+  - Prominent bar style
+
+  * Snap interaction style
+
+  * Chevron close button style
+
+  * No progress view style
 
 You can also present completely custom popup bars. For more information, see [Custom Popup Bars](#custom-popup-bars).
 
 By default, for navigation and tab bar container controllers, the appearance of the popup bar is determined according to the bottom bar's appearance. For other container controllers, a default appearance is used, most suitable for the current environment.
 
-<p align="center"><img src="./Supplements/modern_bar_style.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_bar_style.gif" width="360"/></p>
 
 To disable inheriting the bottom bar’s appearance, set the `inheritsAppearanceFromDockingView` property to `false`.
 
@@ -172,7 +186,7 @@ Customizing the popup bar style is achieved by setting the popup bar's `barStyle
 navigationController?.popupBar.barStyle = .compact
 ```
 
-<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="300"/> <img src="./Supplements/modern_no_scroll.gif" width="300"/> <img src="./Supplements/scroll.gif" width="300"/></p>
 
 #### Interaction Style
 
@@ -232,7 +246,7 @@ appearanceProxy.standardAppearance = appearance
 appearanceProxy.tintColor = .yellow
 ```
 
-<p align="center"><img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_custom.png" width="360"/> <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/></p>
 
 #### Custom Popup Bars
 

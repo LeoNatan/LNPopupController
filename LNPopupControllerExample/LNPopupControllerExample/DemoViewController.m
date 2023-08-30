@@ -287,11 +287,11 @@ extern UIImage* LNSystemImage(NSString* named);
 		}
 		else
 		{
+			targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
 			appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
 		}
 		
 		[targetVC.popupBar setTintColor:[UIColor systemYellowColor]];
-		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
 		targetVC.popupBar.standardAppearance = appearance;
 	}
 	
