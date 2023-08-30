@@ -1406,6 +1406,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		if(hidden == YES)
 		{
 			self._ln_bottomBarExtension.frame = frame;
+			self._ln_bottomBarExtension_nocreate.hidden = NO;
 			self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 		}
 		
@@ -1486,7 +1487,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			
 			//Position the popup bar and content to the superview of the toolbar for the transition.
 			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
-			[self _layoutPopupBarOrderForUse];
+//			[self _layoutPopupBarOrderForUse];
 			
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;

@@ -93,6 +93,11 @@ static void __LNCopyMethods(Class orig, Class target)
 LNAlwaysInline
 static BOOL LNDynamicallySubclass(id obj, Class target)
 {
+	if(obj == nil)
+	{
+		return NO;
+	}
+	
 	SEL canarySEL = NSSelectorFromString([NSString stringWithFormat:@"__LN_canaryInTheCoalMine_%@", NSStringFromClass(target)]);
 	if([object_getClass(obj) instancesRespondToSelector:canarySEL])
 	{

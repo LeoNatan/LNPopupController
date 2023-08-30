@@ -112,6 +112,11 @@ return super_class(&super, _cmd); \
 		//_backgroundData
 		LN_ADD_PROPERTY_GETTER(self, _bD, ^id(_LNPopupUIBarAppearanceProxy* _self, SEL _cmd) {
 			id rv = [_self->_proxiedObject performSelector:_cmd];
+			if(rv == nil)
+			{
+				return rv;
+			}
+			
 			LNDynamicallySubclass(rv, _LNPopupBarBackgroundDataSubclass.class);
 			[rv setValue:_self->_shadowColorHandler forKey:@"_ln_shadowColorHandler"];
 			

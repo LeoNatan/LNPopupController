@@ -446,7 +446,14 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 {
 	__weak __typeof(self) weakSelf = self;
 	
-	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:self._lnpopup_standardAppearance shadowColorHandler:^BOOL{
+	UIToolbarAppearance* rv = self._lnpopup_standardAppearance;
+	
+	if(rv == nil)
+	{
+		return rv;
+	}
+	
+	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
 		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
 		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
 	}];
@@ -456,7 +463,14 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 {
 	__weak __typeof(self) weakSelf = self;
 	
-	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:self._lnpopup_compactAppearance shadowColorHandler:^BOOL{
+	UIToolbarAppearance* rv = self._lnpopup_compactAppearance;
+	
+	if(rv == nil)
+	{
+		return rv;
+	}
+	
+	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
 		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
 		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
 	}];
@@ -545,7 +559,14 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 {
 	__weak __typeof(self) weakSelf = self;
 	
-	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:self._lnpopup_standardAppearance shadowColorHandler:^BOOL{
+	UITabBarAppearance* rv = self._lnpopup_standardAppearance;
+	
+	if(rv == nil)
+	{
+		return rv;
+	}
+	
+	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
 		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
 		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
 	}];
