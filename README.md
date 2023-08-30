@@ -186,7 +186,7 @@ Customizing the popup bar style is achieved by setting the popup bar's `barStyle
 navigationController?.popupBar.barStyle = .compact
 ```
 
-<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="300"/> <img src="./Supplements/modern_no_scroll.gif" width="300"/> <img src="./Supplements/scroll.gif" width="300"/></p>
+<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/> <img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
 
 #### Interaction Style
 
