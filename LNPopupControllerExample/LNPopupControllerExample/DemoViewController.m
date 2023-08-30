@@ -145,13 +145,11 @@ extern UIImage* LNSystemImage(NSString* named);
 		UITabBarAppearance* tba = [UITabBarAppearance new];
 		[tba configureWithDefaultBackground];
 		tba.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterial];
-		
 		self.tabBarController.tabBar.standardAppearance = tba;
 		
 		UIToolbarAppearance* ta = [UIToolbarAppearance new];
 		[ta configureWithDefaultBackground];
 		ta.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterial];
-		
 		self.navigationController.toolbar.standardAppearance = ta;
 	}
 #if LNPOPUP

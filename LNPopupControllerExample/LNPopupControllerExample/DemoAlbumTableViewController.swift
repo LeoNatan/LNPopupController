@@ -54,10 +54,8 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupBar.barStyle = barStyle
 	
 		if tabBarController?.popupBar.effectiveBarStyle == .floating {
-
 			let tba = UITabBarAppearance()
 			tba.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
-			tba.shadowColor = .green
 			tabBarController!.tabBar.standardAppearance = tba
 			
 			let nba = UINavigationBarAppearance()

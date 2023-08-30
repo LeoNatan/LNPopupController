@@ -173,7 +173,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	required init() {
 		super.init(rootView: playerView)
 		
-		timer = Timer.scheduledTimer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
+		timer = Timer(timeInterval: 0.05, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
+		RunLoop.current.add(timer!, forMode: .common)
 		
 		let pause = UIBarButtonItem(image: LNSystemImage(named: "pause.fill"), style: .plain, target: nil, action: nil)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")

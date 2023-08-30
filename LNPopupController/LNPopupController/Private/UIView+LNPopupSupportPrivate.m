@@ -11,6 +11,7 @@
 #import "LNPopupController.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "LNPopupBar+Private.h"
+#import "_LNPopupUIBarAppearanceProxy.h"
 @import ObjectiveC;
 #if TARGET_OS_MACCATALYST
 @import AppKit;
@@ -150,7 +151,7 @@ static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 #endif
 }
 
-- (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded
+- (void)_ln_triggerBarAppearanceRefreshIfNeeded
 {
 	//Do nothing on UIView.
 }
@@ -309,7 +310,6 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 
 #endif
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
 LNAlwaysInline
 BOOL _LNBottomBarIsInPopupPresentation(id self)
 {
@@ -330,6 +330,33 @@ BOOL _LNBottomBarIsInPopupPresentation(id self)
 	}
 	
 	return vc != nil && vc._ln_popupController_nocreate.popupControllerTargetState >= LNPopupPresentationStateBarPresented;
+}
+
+LNAlwaysInline
+LNPopupBar* _LNPopupBarForBottomBarIfInPopupPresentation(id self)
+{
+	UIViewController* vc = nil;
+	if([self respondsToSelector:@selector(delegate)])
+	{
+		//Terrible logic to find UITabBarController when a UINavigationController is embedded inside it.
+		vc = [self valueForKey:@"delegate"];
+		if([vc isKindOfClass:UIViewController.class] == NO)
+		{
+			vc = nil;
+		}
+	}
+	
+	if(vc == nil)
+	{
+		vc = [self _ln_containerController];
+	}
+	
+	if(vc != nil && vc._ln_popupController_nocreate.popupControllerTargetState >= LNPopupPresentationStateBarPresented)
+	{
+		return vc.popupBar;
+	}
+	
+	return nil;
 }
 
 LNAlwaysInline
@@ -378,13 +405,17 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	{
 		if(@available(iOS 15.0, *))
 		{
+#if ! LNPopupControllerEnforceStrictClean
+			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
+			LNSwizzleMethod(self, @selector(compactAppearance), @selector(_lnpopup_compactAppearance));
+#endif
 			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 			LNSwizzleMethod(self, @selector(compactScrollEdgeAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
 		}
 	}
 }
 
-- (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded
+- (void)_ln_triggerBarAppearanceRefreshIfNeeded
 {
 	if(@available(iOS 15.0, *))
 	{
@@ -410,6 +441,28 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
 }
 
+#if ! LNPopupControllerEnforceStrictClean
+- (UIToolbarAppearance*)_lnpopup_standardAppearance
+{
+	__weak __typeof(self) weakSelf = self;
+	
+	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:self._lnpopup_standardAppearance shadowColorHandler:^BOOL{
+		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
+		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
+	}];
+}
+
+- (UIToolbarAppearance*)_lnpopup_compactAppearance
+{
+	__weak __typeof(self) weakSelf = self;
+	
+	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:self._lnpopup_compactAppearance shadowColorHandler:^BOOL{
+		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
+		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
+	}];
+}
+#endif
+
 @end
 
 @interface UITabBar (ScrollEdgeSupport) @end
@@ -421,6 +474,9 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	{
 		if(@available(iOS 15.0, *))
 		{
+#if ! LNPopupControllerEnforceStrictClean
+			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
+#endif
 			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 		}
 		
@@ -449,17 +505,25 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	[self _ln_transitionBackgroundViewsAnimated:YES];
 }
 
-- (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded
+- (void)_ln_triggerBarAppearanceRefreshIfNeeded
 {
+	id backgroundView = nil;
+	
 	if(@available(iOS 15.0, *))
 	{
 #if ! LNPopupControllerEnforceStrictClean
-		id backgroundView = [self valueForKey:_LNPopupDecodeBase64String(_bV)];
+		backgroundView = [self valueForKey:_LNPopupDecodeBase64String(_bV)];
 		objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 #endif
 		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
-		[self setNeedsLayout];
-		[self layoutIfNeeded];
+	}
+	
+	//This triggers a refresh of the bar appearance.
+	[self setNeedsLayout];
+	[self layoutIfNeeded];
+	
+	if(@available(iOS 15.0, *))
+	{
 #if ! LNPopupControllerEnforceStrictClean
 		objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 #endif
@@ -476,5 +540,16 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 }
 
-@end
+#if ! LNPopupControllerEnforceStrictClean
+- (UITabBarAppearance *)_lnpopup_standardAppearance
+{
+	__weak __typeof(self) weakSelf = self;
+	
+	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:self._lnpopup_standardAppearance shadowColorHandler:^BOOL{
+		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
+		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
+	}];
+}
 #endif
+
+@end

@@ -16,7 +16,7 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 
 @interface UIView (LNPopupSupportPrivate)
 
-- (void)_ln_triggerScrollEdgeAppearanceRefreshIfNeeded;
+- (void)_ln_triggerBarAppearanceRefreshIfNeeded;
 - (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar;
 - (UIViewController*)_ln_containerController;
 

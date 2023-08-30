@@ -1193,7 +1193,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
 			[self.popupBar.customBarViewController _userFacing_viewWillAppear:animated];
 			
-			[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
+			[_bottomBar _ln_triggerBarAppearanceRefreshIfNeeded];
 			_containerController._ln_bottomBarExtension_nocreate.alpha = 1.0;
 			
 			CGRect barFrame = self.popupBar.frame;
@@ -1328,7 +1328,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				self.popupBar.shadowView.alpha = 0.0;
 				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
 				
-				[_bottomBar _ln_triggerScrollEdgeAppearanceRefreshIfNeeded];
+				[_bottomBar _ln_triggerBarAppearanceRefreshIfNeeded];
 				
 				CGFloat currentBarAlpha = self.popupBarStorage.alpha;
 				[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{					
