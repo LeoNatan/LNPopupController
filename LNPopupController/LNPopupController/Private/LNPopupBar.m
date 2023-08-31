@@ -12,6 +12,8 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSAttributedString+LNPopupSupport.h"
 
+#define LN_POPUP_BAR_LAYOUT_DEBUG 0
+
 #ifndef LNPopupControllerEnforceStrictClean
 //_effectWithStyle:tintColor:invertAutomaticStyle:
 static NSString* const _eWSti = @"X2VmZmVjdFdpdGhTdHlsZTp0aW50Q29sb3I6aW52ZXJ0QXV0b21hdGljU3R5bGU6";
@@ -280,7 +282,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:self.bounds];
 		[_toolbar.standardAppearance configureWithTransparentBackground];
-		_toolbar.compactAppearance = nil;
+#if LN_POPUP_BAR_LAYOUT_DEBUG
+		_toolbar.standardAppearance.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
+#endif
+		_toolbar.compactAppearance = _toolbar.standardAppearance;
 		if(@available(iOS 15.0, *))
 		{
 			_toolbar.scrollEdgeAppearance = nil;
@@ -290,7 +295,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_toolbar.layer.masksToBounds = NO;
 		[_contentView addSubview:_toolbar];
 		
-		_titlesView = [[_LNPopupBarTitlesView alloc] initWithFrame:self.bounds];
+		_titlesView = [[_LNPopupBarTitlesView alloc] initWithFrame:_contentView.bounds];
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
 		_titlesView.accessibilityTraits = UIAccessibilityTraitButton;
 		_titlesView.isAccessibilityElement = YES;
@@ -399,9 +404,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[_backgroundView setFrame:frame];
 	_backgroundView.layer.mask.frame = _backgroundView.bounds;
 	
-	CGRect floatingBackgroundFrame = CGRectOffset(CGRectInset(frame, 12, 4), 0, -2);
+	CGRect floatingBackgroundFrame = CGRectOffset(CGRectInset(UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, self.safeAreaInsets.left, 0, self.safeAreaInsets.right)), 12, 4), 0, -2);
 	
-	if(_resolvedStyle != LNPopupBarStyleFloating)
+	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
+	if(!isFloating)
 	{
 		_contentView.frame = frame;
 		_contentView.layer.cornerRadius = 0;
@@ -414,15 +420,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	_floatingBackgroundView.frame = floatingBackgroundFrame;
 	
+	_contentView.preservesSuperviewLayoutMargins = !isFloating;
+	
 	[self _layoutCustomBarController];
 	
 	[self _layoutImageView];
-	
-	CGFloat floatingOffset = _resolvedStyle == LNPopupBarStyleFloating ? 4 : 0;
-	
-	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(self.bounds.size.width - floatingOffset, CGFLOAT_MAX)];
-	_toolbar.bounds = CGRectMake(0, 0, self.bounds.size.width - floatingOffset, toolbarSize.height);
-	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2 - floatingOffset / 2, _contentView.bounds.size.height / 2 - 1);
+		
+	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(_contentView.bounds.size.width, CGFLOAT_MAX)];
+	_toolbar.bounds = CGRectMake(0, 0, _contentView.bounds.size.width, toolbarSize.height);
+	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2, _contentView.bounds.size.height / 2 - 1);
 	[_toolbar layoutIfNeeded];
 	
 	[_contentView sendSubviewToBack:_highlightView];
@@ -928,27 +934,28 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[leftViewLast.superview layoutIfNeeded];
 	[rightViewFirst.superview layoutIfNeeded];
 	
-	CGFloat imageToTitlePadding = _resolvedStyle == LNPopupBarStyleFloating ? -4 : 20;
+	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
+	CGFloat imageToTitlePadding = isFloating ? 8 : 20;
 	
 	CGRect leftViewLastFrame = CGRectZero;
 	if(leftViewLast != nil)
 	{
-		leftViewLastFrame = [self convertRect:leftViewLast.bounds fromView:leftViewLast];
+		leftViewLastFrame = [_contentView convertRect:leftViewLast.bounds fromView:leftViewLast];
 		
 		if(leftViewLast == _imageView)
 		{
-			leftViewLastFrame.size.width += MIN(self.layoutMargins.left, imageToTitlePadding);
+			leftViewLastFrame.size.width += isFloating ? imageToTitlePadding : MIN(_contentView.layoutMargins.left, imageToTitlePadding);
 		}
 	}
 	
-	CGRect rightViewFirstFrame = CGRectMake(self.bounds.size.width, 0, 0, 0);
+	CGRect rightViewFirstFrame = CGRectMake(_contentView.bounds.size.width, 0, 0, 0);
 	if(rightViewFirst != nil)
 	{
-		rightViewFirstFrame = [self convertRect:rightViewFirst.bounds fromView:rightViewFirst];
+		rightViewFirstFrame = [_contentView convertRect:rightViewFirst.bounds fromView:rightViewFirst];
 		
 		if(rightViewFirst == _imageView)
 		{
-			rightViewFirstFrame.origin.x -= MIN(self.layoutMargins.left, imageToTitlePadding);
+			rightViewFirstFrame.origin.x -= isFloating ? imageToTitlePadding : MIN(_contentView.layoutMargins.left, imageToTitlePadding);
 		}
 	}
 	
@@ -956,10 +963,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	CGFloat widthRight = 0;
 	
 	widthLeft = leftViewLastFrame.origin.x + leftViewLastFrame.size.width;
-	widthRight = self.bounds.size.width - rightViewFirstFrame.origin.x;
+	widthRight = _contentView.bounds.size.width - rightViewFirstFrame.origin.x;
 	
-	widthLeft = MAX(widthLeft, self.layoutMargins.left);
-	widthRight = MAX(widthRight, self.layoutMargins.right);
+	if(isFloating == NO)
+	{
+		widthLeft = MAX(widthLeft, _contentView.layoutMargins.left);
+		widthRight = MAX(widthRight, _contentView.layoutMargins.right);
+	}
 	
 	//The added padding is for iOS 10 and below, or for certain conditions where iOS 11 won't put its own padding
 	titleInsets->left = widthLeft;
@@ -1041,21 +1051,24 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[self _updateTitleInsetsForProminentBar:&titleInsets];
 	}
 	
-	titleInsets.left = MAX(titleInsets.left, self.layoutMargins.left);
-	titleInsets.right = MAX(titleInsets.right, self.layoutMargins.right);
-	
-	CGRect frame = _titlesView.frame;
-	frame.size.width = self.bounds.size.width - titleInsets.left - titleInsets.right;
+	CGRect frame = _contentView.bounds;
+	frame.size.width = _contentView.bounds.size.width - titleInsets.left - titleInsets.right;
 	frame.size.height = _contentView.bounds.size.height;
 	frame.origin.x = titleInsets.left;
 	
 	_titlesView.frame = frame;
+#if LN_POPUP_BAR_LAYOUT_DEBUG
+	_titlesView.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.6];
+#endif
 	
 	if(_needsLabelsLayout == YES)
 	{
 		if(_titleLabel == nil)
 		{
 			_titleLabel = [self _newMarqueeLabel];
+#if LN_POPUP_BAR_LAYOUT_DEBUG
+			_titleLabel.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.5];
+#endif
 			_titleLabel.textColor = self._titleColor;
 			_titleLabel.font = self._titleFont;
 			[_titlesView addSubview:_titleLabel];
@@ -1088,6 +1101,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(_subtitleLabel == nil)
 		{
 			_subtitleLabel = [self _newMarqueeLabel];
+#if LN_POPUP_BAR_LAYOUT_DEBUG
+			_subtitleLabel.backgroundColor = [UIColor.cyanColor colorWithAlphaComponent:0.5];
+#endif
 			_subtitleLabel.textColor = self._subtitleColor;
 			_subtitleLabel.font = self._subtitleFont;
 			[_titlesView addSubview:_subtitleLabel];
