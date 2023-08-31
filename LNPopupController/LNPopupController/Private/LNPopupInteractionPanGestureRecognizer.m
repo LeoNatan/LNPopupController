@@ -77,6 +77,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return NO;
 	}
 	
+	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"SwiftUI"])
+	{
+		return YES;
+	}
+	
 	if(_popupController.popupControllerInternalState != LNPopupPresentationStateOpen)
 	{
 		if([self.forwardedDelegate respondsToSelector:_cmd])
@@ -125,16 +130,6 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return NO;
 	}
 	
-	if(_popupController.popupBar._applySwiftUILayoutFixes)
-	{
-		if([otherGestureRecognizer isKindOfClass:UIPanGestureRecognizer.class])
-		{
-			return YES;
-		}
-		
-		return NO;
-	}
-	
 	if([self.forwardedDelegate respondsToSelector:_cmd])
 	{
 		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldRequireFailureOfGestureRecognizer:otherGestureRecognizer];
@@ -147,7 +142,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"SwiftUI"])
 	{
-		return NO;
+		return YES;
 	}
 	
 	return YES;
