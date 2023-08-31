@@ -347,6 +347,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
+	[super traitCollectionDidChange:previousTraitCollection];
+	
 	[self._barDelegate _traitCollectionForPopupBarDidChange:self];
 }
 
@@ -609,6 +611,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
 	_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.doneButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
+	
 	_shadowView.backgroundColor = self.activeAppearance.shadowColor;
 	_bottomShadowView.backgroundColor = self.activeAppearance.shadowColor;
 	

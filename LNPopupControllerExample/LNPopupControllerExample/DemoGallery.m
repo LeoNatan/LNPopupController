@@ -14,9 +14,10 @@
 #import "LNPopupDemoContextMenuInteraction.h"
 #endif
 
-@interface DemoGalleryController : UITableViewController
-@end
+@interface DemoGalleryToolbar : UIToolbar @end
+@implementation DemoGalleryToolbar @end
 
+@interface DemoGalleryController : UITableViewController@end
 @implementation DemoGalleryController
 {
 #if LNPOPUP

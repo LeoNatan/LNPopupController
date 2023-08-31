@@ -12,11 +12,13 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupUIBarAppearanceProxy.h"
+#import "_LNWeakRef.h"
 @import ObjectiveC;
 #if TARGET_OS_MACCATALYST
 @import AppKit;
 #endif
 
+static const void* LNPopupAttachedPopupController = &LNPopupAttachedPopupController;
 static const void* LNPopupAwaitingViewInWindowHierarchyKey = &LNPopupAwaitingViewInWindowHierarchyKey;
 static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
 static const void* LNPopupTabBarProgressKey = &LNPopupTabBarProgressKey;
@@ -127,28 +129,24 @@ static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 	});
 }
 
-- (UIViewController*)_ln_containerController
+- (LNPopupController *)attachedPopupController
 {
-#if ! LNPopupControllerEnforceStrictClean
-	static NSString* property = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		property = _LNPopupDecodeBase64String(_vCFA);
-	});
-	return [self valueForKey:property];
-#else
-	UIResponder* next = self.nextResponder;
-	while(next)
+	_LNWeakRef* rv = objc_getAssociatedObject(self, LNPopupAttachedPopupController);
+	if(rv != nil && rv.object == nil)
 	{
-		if([next isKindOfClass:UIViewController.class])
-		{
-			return (id)next;
-		}
-		next = next.nextResponder;
+		[self setAttachedPopupController:nil];
 	}
-	
-	return nil;
-#endif
+	return rv.object;
+}
+
+-(void)setAttachedPopupController:(LNPopupController *)attachedPopupController
+{
+	id objToSet = nil;
+	if(attachedPopupController != nil)
+	{
+		objToSet = [_LNWeakRef refWithObject:attachedPopupController];
+	}
+	objc_setAssociatedObject(self, LNPopupAttachedPopupController, objToSet, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeeded
@@ -311,49 +309,19 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 #endif
 
 LNAlwaysInline
-BOOL _LNBottomBarIsInPopupPresentation(id self)
+BOOL _LNBottomBarIsInPopupPresentation(UIView* self)
 {
-	UIViewController* vc = nil;
-	if([self respondsToSelector:@selector(delegate)])
-	{
-		//Terrible logic to find UITabBarController when a UINavigationController is embedded inside it.
-		vc = [self valueForKey:@"delegate"];
-		if([vc isKindOfClass:UIViewController.class] == NO)
-		{
-			vc = nil;
-		}
-	}
-	
-	if(vc == nil)
-	{
-		vc = [self _ln_containerController];
-	}
-	
-	return vc != nil && vc._ln_popupController_nocreate.popupControllerTargetState >= LNPopupPresentationStateBarPresented;
+	LNPopupController* attachedController = self.attachedPopupController;
+	return attachedController != nil && attachedController.popupControllerTargetState >= LNPopupPresentationStateBarPresented;
 }
 
 LNAlwaysInline
-LNPopupBar* _LNPopupBarForBottomBarIfInPopupPresentation(id self)
+LNPopupBar* _LNPopupBarForBottomBarIfInPopupPresentation(UIView* self)
 {
-	UIViewController* vc = nil;
-	if([self respondsToSelector:@selector(delegate)])
+	LNPopupController* attachedController = self.attachedPopupController;
+	if(attachedController != nil && attachedController.popupControllerTargetState >= LNPopupPresentationStateBarPresented)
 	{
-		//Terrible logic to find UITabBarController when a UINavigationController is embedded inside it.
-		vc = [self valueForKey:@"delegate"];
-		if([vc isKindOfClass:UIViewController.class] == NO)
-		{
-			vc = nil;
-		}
-	}
-	
-	if(vc == nil)
-	{
-		vc = [self _ln_containerController];
-	}
-	
-	if(vc != nil && vc._ln_popupController_nocreate.popupControllerTargetState >= LNPopupPresentationStateBarPresented)
-	{
-		return vc.popupBar;
+		return attachedController.popupBar;
 	}
 	
 	return nil;

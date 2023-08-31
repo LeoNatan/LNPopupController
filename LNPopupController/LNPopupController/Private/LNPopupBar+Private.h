@@ -82,16 +82,13 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, weak, readwrite) LNPopupItem* popupItem;
 
+@property (nonatomic, weak) __kindof UIViewController* barContainingController;
 @property (nonatomic, weak) id<_LNPopupBarDelegate> _barDelegate;
 
 @property (nonatomic, copy) NSAttributedString* attributedTitle;
 @property (nonatomic, copy) NSAttributedString* attributedSubtitle;
 
-@property (nonatomic, strong) UIViewController* swiftuiTitleController;
-@property (nonatomic, strong) UIViewController* swiftuiSubtitleController;
-
 @property (nonatomic, strong) UIImage* image;
-@property (nonatomic, strong) UIViewController* swiftuiImageController;
 
 @property (nonatomic, strong) UIView* highlightView;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
@@ -122,7 +119,9 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic) BOOL acceptsSizing;
 
 @property (nonatomic) BOOL _applySwiftUILayoutFixes;
-
+@property (nonatomic, strong) UIViewController* swiftuiTitleController;
+@property (nonatomic, strong) UIViewController* swiftuiSubtitleController;
+@property (nonatomic, strong) UIViewController* swiftuiImageController;
 @property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController;
 @property (nonatomic, strong) UIViewController* swiftuiHiddenTrailingController;
 

@@ -46,6 +46,11 @@ id (*super_class)(struct objc_super*, SEL) = (void*)objc_msgSendSuper; \
 return super_class(&super, _cmd); \
 }
 
+@interface NSObject ()
+
+- (id)replicate;
+
+@end
 
 @interface _LNPopupBarBackgroundDataSubclass: NSObject
 
@@ -81,7 +86,6 @@ return super_class(&super, _cmd); \
 - (BOOL)_ln_shouldHideShadow
 {
 	BOOL (^handler)(void) = self._ln_shadowColorHandler;
-	
 	return handler != nil && handler();
 }
 
@@ -105,29 +109,36 @@ return super_class(&super, _cmd); \
 
 + (void)load
 {
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
+	@autoreleasepool 
+	{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 		//_backgroundData
-		LN_ADD_PROPERTY_GETTER(self, _bD, ^id(_LNPopupUIBarAppearanceProxy* _self, SEL _cmd) {
+		id block = ^id(_LNPopupUIBarAppearanceProxy* _self, SEL _cmd) {
 			id rv = [_self->_proxiedObject performSelector:_cmd];
 			if(rv == nil)
 			{
 				return rv;
 			}
 			
+			rv = [rv replicate];
 			LNDynamicallySubclass(rv, _LNPopupBarBackgroundDataSubclass.class);
 			[rv setValue:_self->_shadowColorHandler forKey:@"_ln_shadowColorHandler"];
 			
 			return rv;
-		});
+		};
+		LN_ADD_PROPERTY_GETTER(_LNPopupUIBarAppearanceProxy.class, _bD, block);
 #pragma clang diagnostic pop
-	});
+	}
 }
 
 - (instancetype)initWithProxiedObject:(id)obj shadowColorHandler:(BOOL(^)(void))shadowColorHandler
 {
+	if(obj == nil)
+	{
+		return nil;
+	}
+	
 	self = [super init];
 	if(self)
 	{

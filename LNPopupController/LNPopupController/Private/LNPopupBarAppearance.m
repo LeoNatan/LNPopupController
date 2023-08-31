@@ -20,6 +20,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 {
 	@autoreleasepool
 	{
+		//appearance:categoriesChanged:
 		Method m1 = class_getInstanceMethod(self, @selector(a:cC:));
 		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(aCC)), method_getImplementation(m1), method_getTypeEncoding(m1));
 	}

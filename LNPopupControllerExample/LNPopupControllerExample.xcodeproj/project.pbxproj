@@ -46,7 +46,6 @@
 		39BBA86A24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */; };
 		39BBA86B24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */; };
 		39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
-		39DA0E8322D7B9C6001E63A0 /* NSObject+XcodeBugs.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */; };
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
@@ -59,7 +58,6 @@
 		39FAFC3A24E71A6C008BBC2D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
 		39FAFC3B24E71A6C008BBC2D /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* SplitViewController.m */; };
 		39FAFC3C24E71A6C008BBC2D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
-		39FAFC3D24E71A6C008BBC2D /* NSObject+XcodeBugs.m in Sources */ = {isa = PBXBuildFile; fileRef = 39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */; };
 		39FAFC3E24E71A6C008BBC2D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A081B58228000293F95 /* main.m */; };
 		39FAFC3F24E71A6C008BBC2D /* RandomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 39837A1F1B756F1A004D2DA9 /* RandomColors.m */; };
 		39FAFC4024E71A6C008BBC2D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
@@ -163,8 +161,6 @@
 		39A3B58A230D400B00E10425 /* SplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
 		39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ManualLayoutScene.storyboard; sourceTree = "<group>"; };
 		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
-		39DA0E8122D7B9C6001E63A0 /* NSObject+XcodeBugs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+XcodeBugs.h"; sourceTree = "<group>"; };
-		39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+XcodeBugs.m"; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
 		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E9746D250193B8009F24DF /* ColorfulButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorfulButton.swift; sourceTree = "<group>"; };
@@ -315,8 +311,6 @@
 		39837A221B756F9B004D2DA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				39DA0E8122D7B9C6001E63A0 /* NSObject+XcodeBugs.h */,
-				39DA0E8222D7B9C6001E63A0 /* NSObject+XcodeBugs.m */,
 				39837A211B756F4C004D2DA9 /* RandomColors.h */,
 				39837A1F1B756F1A004D2DA9 /* RandomColors.m */,
 			);
@@ -498,7 +492,6 @@
 				393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */,
 				39A3B58B230D400B00E10425 /* SplitViewController.m in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
-				39DA0E8322D7B9C6001E63A0 /* NSObject+XcodeBugs.m in Sources */,
 				394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */,
 				39277A091B58228000293F95 /* main.m in Sources */,
 				39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */,
@@ -529,7 +522,6 @@
 				39FAFC3A24E71A6C008BBC2D /* HigherSearchBar.swift in Sources */,
 				39FAFC3B24E71A6C008BBC2D /* SplitViewController.m in Sources */,
 				39FAFC3C24E71A6C008BBC2D /* AppDelegate.m in Sources */,
-				39FAFC3D24E71A6C008BBC2D /* NSObject+XcodeBugs.m in Sources */,
 				39FAFC3E24E71A6C008BBC2D /* main.m in Sources */,
 				39FAFC3F24E71A6C008BBC2D /* RandomColors.m in Sources */,
 				39FAFC4024E71A6C008BBC2D /* LocationsController.swift in Sources */,

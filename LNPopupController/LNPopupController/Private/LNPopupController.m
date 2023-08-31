@@ -1071,6 +1071,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	_popupBar = [[LNPopupBar alloc] initWithFrame:[self _frameForClosedPopupBar]];
 	_popupBar.hidden = YES;
+	_popupBar.barContainingController = _containerController;
 	_popupBar._barDelegate = self;
 	_popupBar.popupOpenGestureRecognizer = [[LNPopupOpenTapGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
 	[_popupBar addGestureRecognizer:_popupBar.popupOpenGestureRecognizer];
@@ -1176,6 +1177,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		_popupControllerTargetState = LNPopupPresentationStateBarPresented;
 		
 		_bottomBar = _containerController.bottomDockingViewForPopup_internalOrDeveloper;
+		_bottomBar.attachedPopupController = self;
 		
 		self.popupBarStorage.hidden = NO;
 		
@@ -1370,6 +1372,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				
 				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidDismissPopupBar:animated:), animated);
 				
+				_bottomBar.attachedPopupController = nil;
 				_bottomBar = nil;
 				
 				if(completionBlock != nil) { completionBlock(); }
