@@ -33,7 +33,7 @@ static void __setupFunction(void)
 @interface _LNPopupBarTitlesView : UIView @end
 @implementation _LNPopupBarTitlesView @end
 
-@interface _LNPopupBarShadowView : UIView @end
+@interface _LNPopupBarShadowView : UIImageView @end
 @implementation _LNPopupBarShadowView @end
 
 @interface _LNPopupToolbar : UIToolbar @end
@@ -612,7 +612,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
 	_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.doneButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
 	
+	_shadowView.image = self.activeAppearance.shadowImage;
 	_shadowView.backgroundColor = self.activeAppearance.shadowColor;
+	_bottomShadowView.image = self.activeAppearance.shadowImage;
 	_bottomShadowView.backgroundColor = self.activeAppearance.shadowColor;
 	
 	_shadowView.hidden = _resolvedStyle == LNPopupBarStyleFloating ? YES : NO;
