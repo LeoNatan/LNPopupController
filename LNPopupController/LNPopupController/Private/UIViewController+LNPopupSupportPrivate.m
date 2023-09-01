@@ -1127,6 +1127,12 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				[self _setTabBarHiddenDuringTransition:YES];
 			}
 			
+			if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+			{
+				self._ln_popupController_nocreate.popupBar.backgroundView.frame = backgroundViewFrame;
+				self._ln_popupController_nocreate.popupBar.backgroundView.alpha = context.isCancelled ? 0.0 : 1.0;
+			}
+			
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
 			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];

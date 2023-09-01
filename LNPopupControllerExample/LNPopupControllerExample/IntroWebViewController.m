@@ -7,10 +7,9 @@
 //
 
 #import "IntroWebViewController.h"
+#import "SafeSystemImages.h"
 @import WebKit;
 @import LNPopupController;
-
-extern UIImage* LNSystemImage(NSString* named);
 
 @interface IntroWebViewController ()
 {
@@ -60,7 +59,7 @@ extern UIImage* LNSystemImage(NSString* named);
 	self.popupItem.attributedTitle = attribTitle;
 	self.popupItem.image = [UIImage imageNamed:@"AppIcon60x60"];
 	self.popupItem.barButtonItems = @[
-		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill") style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
+		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill", NO) style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
 }
 

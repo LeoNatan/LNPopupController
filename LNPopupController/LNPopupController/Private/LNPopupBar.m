@@ -208,6 +208,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		[self _fixupSwiftUIControllersWithBarStyle];
 		
+		[_barContainingController.bottomDockingViewForPopup_nocreateOrDeveloper setNeedsLayout];
 		[self setNeedsLayout];
 		
 		[self _appearanceDidChange];
@@ -425,9 +426,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _layoutCustomBarController];
 	
 	[self _layoutImageView];
-		
-	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(_contentView.bounds.size.width, CGFLOAT_MAX)];
-	_toolbar.bounds = CGRectMake(0, 0, _contentView.bounds.size.width, toolbarSize.height);
+	
+	CGFloat toolbarWidth = _contentView.bounds.size.width;
+	if(_resolvedStyle == LNPopupBarStyleCompact)
+	{
+		toolbarWidth += 12;
+	}
+	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(toolbarWidth, CGFLOAT_MAX)];
+	_toolbar.bounds = CGRectMake(0, 0, toolbarWidth, toolbarSize.height);
 	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2, _contentView.bounds.size.height / 2 - 1);
 	[_toolbar layoutIfNeeded];
 	
@@ -474,6 +480,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 - (void)_applyGroupingIdentifier:(NSString*)groupingIdentifier toVisualEffectView:(UIVisualEffectView*)visualEffectView
 {
 	if(visualEffectView == nil)
+	{
+		return;
+	}
+	
+	if([[visualEffectView valueForKey:self._effectGroupingIdentifierKey] isEqualToString:groupingIdentifier])
 	{
 		return;
 	}
@@ -593,8 +604,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		CAGradientLayer* mask = [CAGradientLayer new];
 		mask.frame = _backgroundView.bounds;
-		mask.colors = @[(id)UIColor.clearColor.CGColor, (id)UIColor.whiteColor.CGColor, (id)UIColor.whiteColor.CGColor];
-		mask.locations = @[@0, @0.5, @1];
+		mask.colors = @[(id)UIColor.clearColor.CGColor, (id)UIColor.whiteColor.CGColor];
+		mask.locations = @[@0, @0.85];
 		_backgroundView.layer.mask = mask;
 		
 		_floatingBackgroundView.hidden = NO;
@@ -906,9 +917,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	widthLeft = MAX(widthLeft, self.layoutMargins.left);
 	widthRight = MAX(widthRight, self.layoutMargins.right);
 	
-	//The added padding is for iOS 10 and below, or for certain conditions where iOS 11 won't put its own padding
-	titleInsets->left = widthLeft;
-	titleInsets->right = widthRight;
+	titleInsets->left = MAX(widthLeft + 8, widthRight + 8);
+	titleInsets->right = MAX(widthLeft + 8, widthRight + 8);
+//	titleInsets->left = widthLeft + 8;
+//	titleInsets->right = widthRight + 8;
 }
 
 - (void)_updateTitleInsetsForProminentBar:(UIEdgeInsets*)titleInsets
@@ -935,7 +947,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[rightViewFirst.superview layoutIfNeeded];
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
-	CGFloat imageToTitlePadding = isFloating ? 8 : 20;
+	CGFloat imageToTitlePadding = isFloating ? 8 : self.layoutMargins.left;
 	
 	CGRect leftViewLastFrame = CGRectZero;
 	if(leftViewLast != nil)
@@ -945,6 +957,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(leftViewLast == _imageView)
 		{
 			leftViewLastFrame.size.width += isFloating ? imageToTitlePadding : MIN(_contentView.layoutMargins.left, imageToTitlePadding);
+		}
+		else
+		{
+			leftViewLastFrame.size.width -= 8;
 		}
 	}
 	
@@ -956,6 +972,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(rightViewFirst == _imageView)
 		{
 			rightViewFirstFrame.origin.x -= isFloating ? imageToTitlePadding : MIN(_contentView.layoutMargins.left, imageToTitlePadding);
+		}
+		else
+		{
+			rightViewFirstFrame.origin.x += 8;
 		}
 	}
 	
@@ -976,6 +996,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	titleInsets->right = widthRight;
 }
 
+//DO NOT CHANGE NAME! Used by LNPopupUI
 - (UIFont*)_titleFont
 {
 	CGFloat fontSize = 15;
@@ -1002,11 +1023,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	return [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
 }
 
+//DO NOT CHANGE NAME! Used by LNPopupUI
 - (UIColor*)_titleColor
 {
 	return UIColor.labelColor;
 }
 
+//DO NOT CHANGE NAME! Used by LNPopupUI
 - (UIFont*)_subtitleFont
 {
 	CGFloat fontSize = 15;
@@ -1033,6 +1056,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	return [[UIFontMetrics metricsForTextStyle:UIFontTextStyleFootnote] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
 }
 
+//DO NOT CHANGE NAME! Used by LNPopupUI
 - (UIColor*)_subtitleColor
 {
 	return UIColor.secondaryLabelColor;
@@ -1071,6 +1095,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 #endif
 			_titleLabel.textColor = self._titleColor;
 			_titleLabel.font = self._titleFont;
+			if(_resolvedStyle == LNPopupBarStyleCompact)
+			{
+				_titleLabel.textAlignment = NSTextAlignmentCenter;
+			}
 			[_titlesView addSubview:_titleLabel];
 		}
 		
@@ -1106,6 +1134,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 #endif
 			_subtitleLabel.textColor = self._subtitleColor;
 			_subtitleLabel.font = self._subtitleFont;
+			if(_resolvedStyle == LNPopupBarStyleCompact)
+			{
+				_subtitleLabel.textAlignment = NSTextAlignmentCenter;
+			}
 			[_titlesView addSubview:_subtitleLabel];
 		}
 		
@@ -1143,13 +1175,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	CGFloat height = _contentView.bounds.size.height;
 	titleLabelFrame.size.height = height;
 	
-	//Add some padding for compact bar
-	if(_resolvedStyle == LNPopupBarStyleCompact)
-	{
-		titleLabelFrame.origin.x += 8;
-		titleLabelFrame.size.width -= 16;
-	}
-	
 	if(_attributedSubtitle.length > 0 || _swiftuiSubtitleController != nil)
 	{
 		CGRect subtitleLabelFrame = _titlesView.bounds;
@@ -1157,10 +1182,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		if(_resolvedStyle == LNPopupBarStyleCompact)
 		{
-			//Add some padding for compact bar
-			subtitleLabelFrame.origin.x += 8;
-			subtitleLabelFrame.size.width -= 16;
-			
 			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
 			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
 		}
@@ -1299,7 +1320,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	else
 	{
 		CGFloat safeLeading = isFloating ? 8 : MAX(self.window.safeAreaInsets.right, self.layoutMargins.right);
-		_imageView.center = CGPointMake(self.bounds.size.width - safeLeading - imageSize / 2, barHeight / 2);
+		_imageView.center = CGPointMake(_contentView.bounds.size.width - safeLeading - imageSize / 2, barHeight / 2);
 	}
 	
 	_imageView.bounds = CGRectMake(0, 0, imageSize, imageSize);

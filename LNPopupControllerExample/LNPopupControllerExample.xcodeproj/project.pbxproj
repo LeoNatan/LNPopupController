@@ -41,6 +41,8 @@
 		3985DE602549539B00CD76EE /* IntroWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3985DE5F2549539B00CD76EE /* IntroWebViewController.m */; };
 		3988E3581B59C3000039C09B /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3988E3571B59C3000039C09B /* DemoViewController.m */; };
 		399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399748711D5652250079492B /* DemoPopupContentViewController.m */; };
+		39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 39988C752AA1557F00C3BB04 /* SafeSystemImages.m */; };
+		39988C772AA1557F00C3BB04 /* SafeSystemImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 39988C752AA1557F00C3BB04 /* SafeSystemImages.m */; };
 		39A3B58B230D400B00E10425 /* SplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* SplitViewController.m */; };
 		39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
 		39BBA86A24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */; };
@@ -156,6 +158,8 @@
 		3988E3571B59C3000039C09B /* DemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewController.m; sourceTree = "<group>"; };
 		399748701D5652250079492B /* DemoPopupContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoPopupContentViewController.h; sourceTree = "<group>"; };
 		399748711D5652250079492B /* DemoPopupContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoPopupContentViewController.m; sourceTree = "<group>"; };
+		39988C742AA1557F00C3BB04 /* SafeSystemImages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SafeSystemImages.h; sourceTree = "<group>"; };
+		39988C752AA1557F00C3BB04 /* SafeSystemImages.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SafeSystemImages.m; sourceTree = "<group>"; };
 		39A134DA1B73FFC0003AB4C5 /* LNPopupControllerExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupControllerExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		39A3B589230D400B00E10425 /* SplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitViewController.h; sourceTree = "<group>"; };
 		39A3B58A230D400B00E10425 /* SplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplitViewController.m; sourceTree = "<group>"; };
@@ -313,6 +317,8 @@
 			children = (
 				39837A211B756F4C004D2DA9 /* RandomColors.h */,
 				39837A1F1B756F1A004D2DA9 /* RandomColors.m */,
+				39988C742AA1557F00C3BB04 /* SafeSystemImages.h */,
+				39988C752AA1557F00C3BB04 /* SafeSystemImages.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -488,6 +494,7 @@
 				39756327254ED9EB0066981E /* DemoGallery.m in Sources */,
 				397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */,
 				39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */,
+				39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
 				393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */,
 				39A3B58B230D400B00E10425 /* SplitViewController.m in Sources */,
@@ -530,6 +537,7 @@
 				39FAFC4324E71A6C008BBC2D /* DemoViewController.m in Sources */,
 				39FAFC4424E71A6C008BBC2D /* PortraitTabBarController.swift in Sources */,
 				39E9746F250193B8009F24DF /* ColorfulButton.swift in Sources */,
+				39988C772AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */,
 				39FAFC4624E71A6C008BBC2D /* MusicCell.swift in Sources */,
 			);

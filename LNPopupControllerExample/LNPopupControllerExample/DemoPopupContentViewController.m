@@ -11,6 +11,7 @@
 #import "SettingsTableViewController.h"
 #import "RandomColors.h"
 #import "LoremIpsum.h"
+#import "SafeSystemImages.h"
 
 @import LNPopupController;
 
@@ -66,47 +67,26 @@
 	NSLog(@"✓");
 }
 
-UIImage* LNSystemImage(NSString* named)
-{
-	static UIImageSymbolConfiguration* largeConfig = nil;
-	static UIImageSymbolConfiguration* compactConfig = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		largeConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleUnspecified];
-		compactConfig = [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium];
-	});
-	
-	UIImageSymbolConfiguration* config;
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
-	{
-		config = compactConfig;
-	}
-	else
-	{
-		config = largeConfig;
-	}
-	
-	return [UIImage systemImageNamed:named withConfiguration:config];
-}
-
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection
 {
-	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"play.fill") style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	BOOL useCompact = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact;
+	
+	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"play.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
 	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
 	play.accessibilityIdentifier = @"PlayButton";
 	play.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* stop = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"stop.fill") style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	UIBarButtonItem* stop = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"stop.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
 	stop.accessibilityLabel = NSLocalizedString(@"Stop", @"");
 	stop.accessibilityIdentifier = @"StopButton";
 	stop.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"forward.fill") style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"forward.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
 	next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
 	next.accessibilityIdentifier = @"NextButton";
 	next.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	if([[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
+	if(useCompact)
 	{
 		self.popupItem.leadingBarButtonItems = @[ play ];
 		self.popupItem.trailingBarButtonItems = @[ next, stop ];

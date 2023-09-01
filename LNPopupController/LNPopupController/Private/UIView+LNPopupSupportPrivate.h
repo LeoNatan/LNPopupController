@@ -19,7 +19,7 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 
 @property (nonatomic, weak, nullable) LNPopupController* attachedPopupController;
 
-- (void)_ln_triggerBarAppearanceRefreshIfNeeded;
+- (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout;
 - (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar;
 
 - (void)_ln_letMeKnowWhenViewInWindowHierarchy:(LNInWindowBlock)block;

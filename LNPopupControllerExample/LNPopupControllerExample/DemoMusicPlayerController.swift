@@ -159,34 +159,23 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	
 	let playerView = PlayerView()
 	
-	fileprivate func LNSystemImage(named: String) -> UIImage {
-		let config : UIImage.SymbolConfiguration
-		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == LNPopupBarStyle.compact {
-			config = UIImage.SymbolConfiguration(scale: .unspecified)
-		} else {
-			config = UIImage.SymbolConfiguration(weight: .bold)
-		}
-		
-		return UIImage(systemName: named, withConfiguration: config)!
-	}
-	
 	required init() {
 		super.init(rootView: playerView)
 		
 		timer = Timer(timeInterval: 0.01, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 		RunLoop.current.add(timer!, forMode: .common)
 		
-		let pause = UIBarButtonItem(image: LNSystemImage(named: "pause.fill"), style: .plain, target: nil, action: nil)
+		let pause = UIBarButtonItem(image: LNSystemImage(named: "pause.fill", useCompactConfig: false), style: .plain, target: nil, action: nil)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-		let next = UIBarButtonItem(image: LNSystemImage(named: "forward.fill"), style: .plain, target: nil, action: nil)
+		let next = UIBarButtonItem(image: LNSystemImage(named: "forward.fill", useCompactConfig: false), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
 		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == LNPopupBarStyle.compact {
 			popupItem.leadingBarButtonItems = [ pause ]
 			popupItem.trailingBarButtonItems = [ next ]
 		} else {
-			pause.width = 60
-			next.width = 60
+			pause.width = 40
+			next.width = 40
 			popupItem.barButtonItems = [ pause, next ]
 		}
 		

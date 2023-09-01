@@ -289,7 +289,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="always" id="JYD-6c-4Kf">
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="gears" style="done" id="PjS-ok-m0Q">
+                        <barButtonItem key="rightBarButtonItem" title="Settings" image="gears" style="done" id="PjS-ok-m0Q">
                             <connections>
                                 <segue destination="Xmg-Iw-fcI" kind="popoverPresentation" popoverAnchorBarButtonItem="PjS-ok-m0Q" id="uvn-C9-GfA">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES"/>
@@ -544,7 +544,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="peO-3C-gmF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6" y="-2439"/>
+            <point key="canvasLocation" x="904.18604651162786" y="-2439.2703862660946"/>
         </scene>
         <!--Settings-->
         <scene sceneID="VnF-0o-TTi">
@@ -1270,7 +1270,7 @@
                 </switch>
                 <exit id="wfg-ir-axY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="855" y="-2439"/>
+            <point key="canvasLocation" x="1752.5581395348836" y="-2439.2703862660946"/>
         </scene>
         <!--Demo Tab Bar Controller-->
         <scene sceneID="08l-cu-6cc">

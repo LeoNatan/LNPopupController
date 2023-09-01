@@ -28,16 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "39F611C71E9AD9E5002859BA"
-               BuildableName = "LNPopupControllerExampleUITests.xctest"
-               BlueprintName = "LNPopupControllerExampleUITests"
-               ReferencedContainer = "container:LNPopupControllerExample.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

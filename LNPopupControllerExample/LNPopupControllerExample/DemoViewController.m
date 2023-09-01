@@ -16,8 +16,6 @@
 #import "SplitViewController.h"
 @import UIKit;
 
-extern UIImage* LNSystemImage(NSString* named);
-
 @interface DemoView : UIView @end
 
 @implementation DemoView

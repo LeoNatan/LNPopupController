@@ -149,7 +149,7 @@ static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 	objc_setAssociatedObject(self, LNPopupAttachedPopupController, objToSet, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (void)_ln_triggerBarAppearanceRefreshIfNeeded
+- (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
 	//Do nothing on UIView.
 }
@@ -377,20 +377,25 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
 			LNSwizzleMethod(self, @selector(compactAppearance), @selector(_lnpopup_compactAppearance));
 #endif
+			LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
+			LNSwizzleMethod(self, @selector(setCompactAppearance:), @selector(_lnpopup_setCompactAppearance:));
 			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 			LNSwizzleMethod(self, @selector(compactScrollEdgeAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
 		}
 	}
 }
 
-- (void)_ln_triggerBarAppearanceRefreshIfNeeded
+- (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
 	if(@available(iOS 15.0, *))
 	{
 		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
 		self.compactScrollEdgeAppearance = self._lnpopup_compactScrollEdgeAppearance;
-		[self setNeedsLayout];
-		[self layoutIfNeeded];
+		if(layout)
+		{
+			[self setNeedsLayout];
+			[self layoutIfNeeded];
+		}
 	}
 }
 
@@ -445,6 +450,20 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 }
 #endif
 
+- (void)_lnpopup_setStandardAppearance:(UIToolbarAppearance *)standardAppearance
+{
+	[self _lnpopup_setStandardAppearance:standardAppearance];
+	
+	[self _ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:YES];
+}
+
+- (void)_lnpopup_setCompactAppearance:(UIToolbarAppearance *)compactAppearance
+{
+	[self _lnpopup_setCompactAppearance:compactAppearance];
+	
+	[self _ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:YES];
+}
+
 @end
 
 @interface UITabBar (ScrollEdgeSupport) @end
@@ -459,6 +478,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 #if ! LNPopupControllerEnforceStrictClean
 			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
 #endif
+			LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
 			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 		}
 		
@@ -487,7 +507,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	[self _ln_transitionBackgroundViewsAnimated:YES];
 }
 
-- (void)_ln_triggerBarAppearanceRefreshIfNeeded
+- (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
 	id backgroundView = nil;
 	
@@ -495,19 +515,28 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	{
 #if ! LNPopupControllerEnforceStrictClean
 		backgroundView = [self valueForKey:_LNPopupDecodeBase64String(_bV)];
-		objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		if(backgroundView != nil)
+		{
+			objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		}
 #endif
 		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
 	}
 	
-	//This triggers a refresh of the bar appearance.
-	[self setNeedsLayout];
-	[self layoutIfNeeded];
+	if(layout)
+	{
+		//This triggers a refresh of the bar appearance.
+		[self setNeedsLayout];
+		[self layoutIfNeeded];
+	}
 	
 	if(@available(iOS 15.0, *))
 	{
 #if ! LNPopupControllerEnforceStrictClean
-		objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		if(backgroundView != nil)
+		{
+			objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		}
 #endif
 	}
 }
@@ -540,5 +569,12 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	}];
 }
 #endif
+
+- (void)_lnpopup_setStandardAppearance:(UITabBarAppearance *)standardAppearance
+{
+	[self _lnpopup_setStandardAppearance:standardAppearance];
+	
+	[self _ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:YES];
+}
 
 @end
