@@ -434,7 +434,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(toolbarWidth, CGFLOAT_MAX)];
 	_toolbar.bounds = CGRectMake(0, 0, toolbarWidth, toolbarSize.height);
-	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2, _contentView.bounds.size.height / 2 - 1);
+	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2, _contentView.bounds.size.height / 2);
 	[_toolbar layoutIfNeeded];
 	
 	[_contentView sendSubviewToBack:_highlightView];
@@ -1182,8 +1182,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		if(_resolvedStyle == LNPopupBarStyleCompact)
 		{
-			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2;
-			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2;
+			titleLabelFrame.origin.y -= _titleLabel.font.lineHeight / 2 - 1;
+			subtitleLabelFrame.origin.y += _subtitleLabel.font.lineHeight / 2 + 1;
 		}
 		else
 		{
