@@ -29,7 +29,7 @@ static void __setupFunction(void)
 }
 #endif
 
-@interface _LNPopupBarContentView : UIView @end
+@interface _LNPopupBarContentView : _LNPopupBarBackgroundView @end
 @implementation _LNPopupBarContentView @end
 
 @interface _LNPopupBarTitlesView : UIView @end
@@ -264,17 +264,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
 		
-		_floatingBackgroundView = [[_LNPopupBarBackgroundView alloc] initWithEffect:nil];
-		_floatingBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_floatingBackgroundView.userInteractionEnabled = NO;
-		_floatingBackgroundView.cornerRadius = 14;
-		_floatingBackgroundView.castsShadow = YES;
-		
-		[self addSubview:_floatingBackgroundView];
-		
-		_contentView = [_LNPopupBarContentView new];
-		_contentView.clipsToBounds = YES;
-		_contentView.layer.cornerCurve = kCACornerCurveContinuous;
+		_contentView = [[_LNPopupBarContentView alloc] initWithEffect:nil];
 		[self addSubview:_contentView];
 		
 		self.effectGroupingIdentifier = nil;
@@ -411,15 +401,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	if(!isFloating)
 	{
 		_contentView.frame = frame;
-		_contentView.layer.cornerRadius = 0;
+		_contentView.cornerRadius = 0;
+		_contentView.castsShadow = NO;
 	}
 	else
 	{
 		_contentView.frame = floatingBackgroundFrame;
-		_contentView.layer.cornerRadius = _floatingBackgroundView.cornerRadius;
+		_contentView.cornerRadius = 14;
+		_contentView.castsShadow = YES;
 	}
-	
-	_floatingBackgroundView.frame = floatingBackgroundFrame;
 	
 	_contentView.preservesSuperviewLayoutMargins = !isFloating;
 	
@@ -600,7 +590,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 {
 	_highlightView.backgroundColor = self.activeAppearance.highlightColor;
 	
-	if(_resolvedStyle == LNPopupBarStyleFloating)
+	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
+	
+	if(isFloating)
 	{
 		CAGradientLayer* mask = [CAGradientLayer new];
 		mask.frame = _backgroundView.bounds;
@@ -608,23 +600,25 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		mask.locations = @[@0, @0.85];
 		_backgroundView.layer.mask = mask;
 		
-		_floatingBackgroundView.hidden = NO;
+		_contentView.effect = self.activeAppearance.floatingBackgroundEffect;
+		_contentView.colorView.backgroundColor = self.activeAppearance.floatingBackgroundColor;
+		_contentView.imageView.image = self.activeAppearance.floatingBackgroundImage;
+		_contentView.contentMode = self.activeAppearance.floatingBackgroundImageContentMode;
 	}
 	else
 	{
 		_backgroundView.layer.mask = nil;
-		_floatingBackgroundView.hidden = YES;
+		
+		_contentView.effect = nil;
+		_contentView.colorView.backgroundColor = UIColor.clearColor;
+		_contentView.imageView.image = nil;
+		_contentView.contentMode = self.activeAppearance.floatingBackgroundImageContentMode;
 	}
 	
 	_backgroundView.effect = self.activeAppearance.backgroundEffect;
 	_backgroundView.colorView.backgroundColor = self.activeAppearance.backgroundColor;
 	_backgroundView.imageView.image = self.activeAppearance.backgroundImage;
 	_backgroundView.imageView.contentMode = self.activeAppearance.backgroundImageContentMode;
-	
-	_floatingBackgroundView.effect = self.activeAppearance.floatingBackgroundEffect;
-	_floatingBackgroundView.colorView.backgroundColor = self.activeAppearance.floatingBackgroundColor;
-	_floatingBackgroundView.imageView.image = self.activeAppearance.floatingBackgroundImage;
-	_floatingBackgroundView.contentMode = self.activeAppearance.floatingBackgroundImageContentMode;
 	
 	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
 	_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.doneButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;

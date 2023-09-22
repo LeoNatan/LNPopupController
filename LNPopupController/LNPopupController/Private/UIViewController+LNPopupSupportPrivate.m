@@ -1024,7 +1024,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_hideBarWithTransition:isExplicit:
 - (void)hBWT:(NSInteger)t iE:(BOOL)e
 {
-	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	BOOL isFloating = self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating;
+	if(!isFloating)
+	{
+		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	}
 	
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
@@ -1052,7 +1056,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[self.selectedViewController.transitionCoordinator animateAlongsideTransition: ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 			self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
-			if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+			if(isFloating)
 			{
 				self._ln_popupController_nocreate.popupBar.backgroundView.frame = CGRectOffset(backgroundViewFrame, -CGRectGetWidth(backgroundViewFrame), 0);
 				self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 0.0;
@@ -1079,8 +1083,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_showBarWithTransition:isExplicit:
 - (void)sBWT:(NSInteger)t iE:(BOOL)e
 {
+	BOOL isFloating = self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating;
+	if(!isFloating)
+	{
+		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	}
+	
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
-	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
 	
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
@@ -1091,7 +1100,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	if(t > 0)
 	{
 		CGRect backgroundViewFrame = self._ln_popupController_nocreate.popupBar.backgroundView.frame;
-		if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+		if(isFloating)
 		{
 			self._ln_popupController_nocreate.popupBar.backgroundView.frame = CGRectOffset(backgroundViewFrame, -CGRectGetWidth(backgroundViewFrame), 0);
 		}
@@ -1110,7 +1119,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			frame.origin.x += self.view.bounds.size.width;
 			self._ln_bottomBarExtension.frame = frame;
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
-			if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+			if(isFloating)
 			{
 				self._ln_popupController_nocreate.popupBar.backgroundView.frame = backgroundViewFrame;
 				self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;
@@ -1127,7 +1136,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				[self _setTabBarHiddenDuringTransition:YES];
 			}
 			
-			if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+			if(isFloating)
 			{
 				self._ln_popupController_nocreate.popupBar.backgroundView.frame = backgroundViewFrame;
 				self._ln_popupController_nocreate.popupBar.backgroundView.alpha = context.isCancelled ? 0.0 : 1.0;
@@ -1384,7 +1393,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_setToolbarHidden:edge:duration:
 - (void)_sTH:(BOOL)hidden e:(UIRectEdge)edge d:(CGFloat)duration;
 {
-	self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	BOOL isFloating = self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating;
+	if(isFloating == NO)
+	{
+		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	}
 	
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
@@ -1430,7 +1443,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			targetBackgroundViewFrame = backgroundViewFrame;
 		}
 		
-		if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+		if(isFloating)
 		{
 			self._ln_popupController_nocreate.popupBar.backgroundView.frame = initialBackgroundViewFrame;
 		}
@@ -1445,7 +1458,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			//During the transition, animate the popup bar and content together with the toolbar transition.
 			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 			
-			if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+			if(isFloating)
 			{
 				self._ln_popupController_nocreate.popupBar.backgroundView.frame = targetBackgroundViewFrame;
 			}
@@ -1457,7 +1470,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				
 				self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 				
-				if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+				if(isFloating)
 				{
 					self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 0.0;
 				}
@@ -1474,7 +1487,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				
 				self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
 				
-				if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+				if(isFloating)
 				{
 					self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;
 				}

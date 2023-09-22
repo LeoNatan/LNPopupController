@@ -14,6 +14,7 @@
 #import "RandomColors.h"
 #import "SettingsTableViewController.h"
 #import "SplitViewController.h"
+#import "LNPopupControllerExample-Swift.h"
 @import UIKit;
 
 @interface DemoView : UIView @end
@@ -297,6 +298,14 @@
 	
 //	UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
 //	[targetVC.popupBar addInteraction:i];
+	
+	if([[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsCustomBarEverywhereEnabled])
+	{
+		targetVC.shouldExtendPopupBarUnderSafeArea = NO;
+		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
+		targetVC.popupBar.customBarViewController = [ManualLayoutCustomBarViewController new];
+		[targetVC.popupBar.standardAppearance configureWithTransparentBackground];
+	}
 	
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];

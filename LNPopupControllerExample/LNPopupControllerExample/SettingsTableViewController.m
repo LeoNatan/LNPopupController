@@ -20,6 +20,7 @@ NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 NSString* const PopupSettingsHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";
 NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
 NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
+NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
 
 @interface SettingsTableViewController ()
 {
@@ -30,6 +31,7 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 	IBOutlet UISwitch* _extendBars;
 	IBOutlet UISwitch* _hidesBottomBarWhenPushed;
 	IBOutlet UISwitch* _touchVisualizer;
+	IBOutlet UISwitch* _customBar;
 }
 
 @end
@@ -68,6 +70,7 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 	[_extendBars setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar] animated:animated];
 	[_hidesBottomBarWhenPushed setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed] animated:animated];
 	[_touchVisualizer setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled] animated:animated];
+	[_customBar setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsCustomBarEverywhereEnabled] animated:animated];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -114,6 +117,7 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsExtendBar];
 	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsHidesBottomBarWhenPushed];
 	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsTouchVisualizerEnabled];
+	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsCustomBarEverywhereEnabled];
 	self.view.window.windowScene.touchVisualizerEnabled = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled];
 	
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsVisualEffectViewBlurEffect];
@@ -151,6 +155,11 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 {
 	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsTouchVisualizerEnabled];
 	self.view.window.windowScene.touchVisualizerEnabled = sender.isOn;
+}
+
+- (IBAction)_customBarEnabledDidChange:(UISwitch*)sender
+{
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsCustomBarEverywhereEnabled];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

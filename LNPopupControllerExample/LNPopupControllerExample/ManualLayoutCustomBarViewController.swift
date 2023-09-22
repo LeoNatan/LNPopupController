@@ -7,12 +7,12 @@
 //
 
 #if LNPOPUP
-class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
+@objc public class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 	let centeredButton = UIButton(type: .system)
 	let leftButton = UIButton(type: .system)
 	let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
 	
-	override func viewDidLoad() {
+	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		backgroundView.layer.masksToBounds = true
@@ -33,23 +33,23 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 		preferredContentSize = CGSize(width: 0, height: 50)
 	}
 	
-	override func viewDidLayoutSubviews() {
+	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
-		backgroundView.frame = view.bounds.insetBy(dx: view.layoutMargins.left, dy: 0)
-		centeredButton.center = view.center
-		leftButton.frame = CGRect(x: view.layoutMargins.left + 20, y: view.center.y - leftButton.bounds.size.height / 2, width: leftButton.bounds.size.width, height: leftButton.bounds.size.height)
+		backgroundView.frame = view.bounds.insetBy(dx: view.layoutMargins.left, dy: 2).offsetBy(dx: 0, dy: -2)
+		centeredButton.center = backgroundView.center
+		leftButton.frame = CGRect(x: view.layoutMargins.left + 20, y: backgroundView.center.y - leftButton.bounds.size.height / 2, width: leftButton.bounds.size.width, height: leftButton.bounds.size.height)
 	}
 	
-	override var wantsDefaultTapGestureRecognizer: Bool {
+	public override var wantsDefaultTapGestureRecognizer: Bool {
 		return false
 	}
 	
-	override var wantsDefaultPanGestureRecognizer: Bool {
+	public override var wantsDefaultPanGestureRecognizer: Bool {
 		return false
 	}
 	
-	override var wantsDefaultHighlightGestureRecognizer: Bool {
+	public override var wantsDefaultHighlightGestureRecognizer: Bool {
 		return false
 	}
 }

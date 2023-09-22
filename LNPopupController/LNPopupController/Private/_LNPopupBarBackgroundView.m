@@ -68,6 +68,7 @@
 {
 	[super layoutSubviews];
 
+	[self sendSubviewToBack:_effectView];
 	_effectView.frame = self.bounds;
 	
 	_imageView.frame = _effectView.contentView.bounds;
@@ -97,11 +98,14 @@
 		self.layer.shadowColor = UIColor.blackColor.CGColor;
 		self.layer.shadowOffset = CGSizeMake(0.0, 1.0);
 		self.layer.shadowOpacity = 0.15;
-		self.layer.shadowRadius = 3;
+		self.layer.shadowRadius = 3.0;
 	}
 	else
 	{
 		self.layer.shadowColor = nil;
+		self.layer.shadowOffset = CGSizeMake(0.0, 0.0);
+		self.layer.shadowOpacity = 0.0;
+		self.layer.shadowRadius = 0.0;
 	}
 }
 
