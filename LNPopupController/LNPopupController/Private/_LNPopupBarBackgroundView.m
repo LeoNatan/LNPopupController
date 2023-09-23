@@ -8,6 +8,15 @@
 
 #import "_LNPopupBarBackgroundView.h"
 
+@interface _LNPopupBarBackgroundColorView : UIView @end
+@implementation _LNPopupBarBackgroundColorView @end
+
+@interface _LNPopupBarBackgroundImageView : UIImageView @end
+@implementation _LNPopupBarBackgroundImageView @end
+
+@interface _LNPopupBarBackgroundEffectView : UIVisualEffectView @end
+@implementation _LNPopupBarBackgroundEffectView @end
+
 @implementation _LNPopupBarBackgroundView
 {
 	UIView* _colorView;
@@ -20,11 +29,11 @@
 	
 	if(self)
 	{
-		_effectView = [[UIVisualEffectView alloc] initWithEffect:effect];
+		_effectView = [[_LNPopupBarBackgroundEffectView alloc] initWithEffect:effect];
 		_effectView.clipsToBounds = YES;
 		
-		_colorView = [UIView new];
-		_imageView = [UIImageView new];
+		_colorView = [_LNPopupBarBackgroundColorView new];
+		_imageView = [_LNPopupBarBackgroundImageView new];
 		
 		self.cornerRadius = 0;
 		self.castsShadow = NO;
@@ -37,6 +46,11 @@
 	}
 	
 	return self;
+}
+
+- (void)setAlpha:(CGFloat)alpha
+{
+	[super setAlpha:alpha];
 }
 
 - (UIVisualEffect *)effect
@@ -81,9 +95,6 @@
 - (void)setCornerRadius:(CGFloat)cornerRadius
 {
 	_cornerRadius = cornerRadius;
-	
-	self.layer.cornerRadius = cornerRadius;
-	self.layer.cornerCurve = kCACornerCurveContinuous;
 	
 	_effectView.layer.cornerRadius = cornerRadius;
 	_effectView.layer.cornerCurve = kCACornerCurveContinuous;

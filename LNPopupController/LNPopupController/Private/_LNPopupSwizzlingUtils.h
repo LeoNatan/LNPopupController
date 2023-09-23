@@ -15,7 +15,7 @@
 #define LNSwizzleComplain(FORMAT, ...) \
 if(shouldTrapAndPrint) { \
 NSString *errStr = [NSString stringWithFormat:@"%s: " FORMAT,__func__,##__VA_ARGS__]; \
-NSLog(@"%@", errStr); \
+NSLog(@"LNPopupController: %@", errStr); \
 raise(SIGTRAP); \
 }
 

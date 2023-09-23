@@ -27,6 +27,21 @@ static BOOL __LNPopupIsClassBuggyForAdditionalSafeArea(UIViewController* control
 
 BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 
+@interface _LNPopupBarExtensionView : _LNPopupBarBackgroundView @end
+@implementation _LNPopupBarExtensionView
+
+- (void)didMoveToSuperview
+{
+	[super didMoveToSuperview];
+}
+
+- (void)setAlpha:(CGFloat)alpha
+{
+	[super setAlpha:alpha];
+}
+
+@end
+
 #ifndef LNPopupControllerEnforceStrictClean
 //_hideBarWithTransition:isExplicit:
 static NSString* const hBWTiEBase64 = @"X2hpZGVCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0Og==";
@@ -605,6 +620,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	if(self._ln_reallyShouldExtendPopupBarUnderSafeArea == NO || self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden)
 	{
 		[self._ln_bottomBarExtension_nocreate removeFromSuperview];
+		objc_setAssociatedObject(self, LNPopupBarExtensionView, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 		
 		return nil;
 	}
@@ -612,7 +628,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	_LNPopupBarBackgroundView* rv = objc_getAssociatedObject(self, LNPopupBarExtensionView);
 	if(rv == nil)
 	{
-		rv = [[_LNPopupBarBackgroundView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial]];
+		rv = [[_LNPopupBarExtensionView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial]];
 		rv.alpha = 0.0;
 		objc_setAssociatedObject(self, LNPopupBarExtensionView, rv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 		[self._ln_popupController _updateBarExtensionStyleFromPopupBar];
@@ -704,6 +720,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	if(self._ln_reallyShouldExtendPopupBarUnderSafeArea == NO || (self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden && extensionView.superview != nil))
 	{
 		removeFromSuperview();
+	}
+	else if([self isKindOfClass:UINavigationController.class] == NO && [self isKindOfClass:UITabBarController.class] == NO)
+	{
+		extensionView.alpha = 1.0;
 	}
 }
 
@@ -1296,6 +1316,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	{
 		if(self._ignoringLayoutDuringTransition == NO)
 		{
+			BOOL isFloating = self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating;
+			
 			if(self.isToolbarHidden == NO)
 			{
 				self._ln_bottomBarExtension_nocreate.hidden = YES;
@@ -1309,15 +1331,19 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			else
 			{
 				self._ln_bottomBarExtension.hidden = NO;
-				
-				if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
-				{
-					self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 0.0;
-				}
+				self._ln_bottomBarExtension_nocreate.alpha = 1.0;
+				self._ln_popupController_nocreate.popupBar.backgroundView.alpha = isFloating ? 0.0 : 1.0;
 			}
 		}
 	}
 	
+	if(@available(iOS 16.0, *))
+	{
+		//This will call this class' actual implementation of `viewDidLayoutSubviews` (which doesn't call `super.viewDidLayoutSubviews`).
+		[self _ln_popup_viewDidLayoutSubviews_nvc];
+	}
+	
+	//This will call `UIViewController.viewDidLayoutSubviews`.
 	struct objc_super superInfo = {
 		self,
 		[UIViewController class]

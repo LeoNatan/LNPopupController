@@ -1044,7 +1044,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if([_bottomBar.superview isKindOfClass:[UIScrollView class]])
 	{
-		NSLog(@"Attempted to present popup bar %@ on top of a UIScrollView subclass %@. This is unsupported and may result in unexpected behavior.", self.popupBar, _bottomBar.superview);
+		NSLog(@"LNPopupController: Attempted to present popup bar %@ on top of a UIScrollView subclass %@. This is unsupported and may result in unexpected behavior.", self.popupBar, _bottomBar.superview);
 	}
 	
 	if(_bottomBar.superview != nil)

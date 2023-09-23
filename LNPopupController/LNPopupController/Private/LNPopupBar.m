@@ -209,6 +209,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[self _fixupSwiftUIControllersWithBarStyle];
 		
 		[_barContainingController.bottomDockingViewForPopup_nocreateOrDeveloper setNeedsLayout];
+		[_barContainingController.view setNeedsLayout];
 		[self setNeedsLayout];
 		
 		[self _appearanceDidChange];
@@ -398,17 +399,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	CGRect floatingBackgroundFrame = CGRectOffset(CGRectInset(UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, self.safeAreaInsets.left, 0, self.safeAreaInsets.right)), 12, 4), 0, -2);
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
-	if(!isFloating)
-	{
-		_contentView.frame = frame;
-		_contentView.cornerRadius = 0;
-		_contentView.castsShadow = NO;
-	}
-	else
+	if(isFloating)
 	{
 		_contentView.frame = floatingBackgroundFrame;
 		_contentView.cornerRadius = 14;
 		_contentView.castsShadow = YES;
+		
+	}
+	else
+	{
+		_contentView.frame = frame;
+		_contentView.cornerRadius = 0;
+		_contentView.castsShadow = NO;
 	}
 	
 	_contentView.preservesSuperviewLayoutMargins = !isFloating;

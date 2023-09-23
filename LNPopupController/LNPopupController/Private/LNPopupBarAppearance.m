@@ -275,36 +275,19 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	}
 	
 	BOOL rv = [super isEqual:other];
-	
-	NSLog(@" 0: %@", @(rv));
-	
 	rv = rv && [self.titleTextAttributes isEqualToDictionary:other.titleTextAttributes];
-	NSLog(@" 1: %@", @(rv));
 	rv = rv && [self.subtitleTextAttributes isEqualToDictionary:other.subtitleTextAttributes];
-	NSLog(@" 2: %@", @(rv));
 	rv = rv && [self.buttonAppearance isEqual:other.buttonAppearance];
-	NSLog(@" 3: %@", @(rv));
 	rv = rv && [self.doneButtonAppearance isEqual:other.doneButtonAppearance];
-	NSLog(@" 4: %@", @(rv));
 	rv = rv && (self.marqueeScrollEnabled == other.marqueeScrollEnabled);
-	NSLog(@" 5: %@", @(rv));
 	rv = rv && (self.marqueeScrollRate == other.marqueeScrollRate);
-	NSLog(@" 6: %@", @(rv));
 	rv = rv && (self.marqueeScrollDelay == other.marqueeScrollDelay);
-	NSLog(@" 7: %@", @(rv));
 	rv = rv && (self.coordinateMarqueeScroll == other.coordinateMarqueeScroll);
-	NSLog(@" 8: %@", @(rv));
 	rv = rv && [self.highlightColor isEqual:other.highlightColor];
-	NSLog(@" 9: %@", @(rv));
 	rv = rv && [self.floatingBackgroundColor isEqual:other.floatingBackgroundColor];
-	NSLog(@"10: %@", @(rv));
 	rv = rv && [self.floatingBackgroundImage isEqual:other.floatingBackgroundImage];
-	NSLog(@"11: %@", @(rv));
 	rv = rv && [self.floatingBackgroundEffect isEqual:other.floatingBackgroundEffect];
-	NSLog(@"12: %@", @(rv));
 	rv = rv && (self.floatingBackgroundImageContentMode == other.floatingBackgroundImageContentMode);
-	NSLog(@"13: %@", @(rv));
-	
 	return rv;
 }
 
