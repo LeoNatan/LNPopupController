@@ -266,6 +266,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[UIView performWithoutAnimation:^{
 			if(notifyDelegate == YES && state == _LNPopupPresentationStateTransitioning)
 			{
+				_popupContentView.hidden = NO;
 				[_currentContentController _userFacing_viewWillAppear:NO];
 			}
 //			_currentContentController.view.frame = _containerController.view.bounds;
@@ -352,6 +353,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(state == LNPopupPresentationStateOpen && stateAtStart == LNPopupPresentationStateBarPresented)
 		{
+			_popupContentView.hidden = NO;
 			[_currentContentController _userFacing_viewWillAppear:animated];
 		}
 		
@@ -376,6 +378,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		{
 			[_currentContentController endAppearanceTransition];
 			[_currentContentController _userFacing_viewDidDisappear:animated];
+			
+			_popupContentView.hidden = YES;
 			
 			[self _cleanupGestureRecognizersForController:_currentContentController];
 			
@@ -1047,6 +1051,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		NSLog(@"LNPopupController: Attempted to present popup bar %@ on top of a UIScrollView subclass %@. This is unsupported and may result in unexpected behavior.", self.popupBar, _bottomBar.superview);
 	}
 	
+	[self.popupBar layoutIfNeeded];
+	
 	if(_bottomBar.superview != nil)
 	{
 		[_bottomBar.superview insertSubview:self.popupBar belowSubview:_bottomBar];
@@ -1155,6 +1161,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	}];
 }
 
+#if TARGET_IPHONE_SIMULATOR
+extern float UIAnimationDragCoefficient(void);
+#endif
+
 - (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock
 {
 	[self _start120HzHack];
@@ -1191,6 +1201,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		[_containerController.view setNeedsLayout];
 		[_containerController.view layoutIfNeeded];
 		
+		self.popupBar.clipsToBounds = NO;
+		
 		dispatch_block_t animations = ^{
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
 			[self.popupBar.customBarViewController _userFacing_viewWillAppear:animated];
@@ -1206,6 +1218,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			[self.popupBar setNeedsLayout];
 			[self.popupBar layoutIfNeeded];
+			
+			self.popupBar.floatingBackgroundShadowView.alpha = 1.0;
 			
 			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height, 0));
 			
@@ -1223,6 +1237,12 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			if(!open)
 			{
 				_popupControllerInternalState = LNPopupPresentationStateBarPresented;
+				
+				if(_popupContentView.frame.size.height == 0)
+				{
+					_popupContentView.hidden = YES;
+				}
+				
 				[_containerController _ln_setPopupPresentationState:LNPopupPresentationStateBarPresented];
 				
 				[self _end120HzHack];
@@ -1313,6 +1333,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	if(_popupControllerInternalState != LNPopupPresentationStateBarHidden)
 	{
 		self.popupBar.acceptsSizing = NO;
+		self.popupBar.clipsToBounds = YES;
 		
 		void (^dismissalAnimationCompletionBlock)(void) = ^
 		{
@@ -1326,6 +1347,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				CGRect barFrame = self.popupBar.frame;
 				barFrame.size.height = 0;
 				self.popupBar.frame = barFrame;
+				
+				self.popupBar.floatingBackgroundShadowView.alpha = 0.0;
 				
 				self.popupBar.shadowView.alpha = 0.0;
 				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
@@ -1374,6 +1397,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				
 				_bottomBar.attachedPopupController = nil;
 				_bottomBar = nil;
+				
+				[self _end120HzHack];
 				
 				if(completionBlock != nil) { completionBlock(); }
 			}];
@@ -1496,7 +1521,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	{
 		_displayLinkFor120Hz.preferredFramesPerSecond = max;
 	}
-	[_displayLinkFor120Hz addToRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
+	[_displayLinkFor120Hz addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
 }
 
 - (void)_end120HzHack

@@ -46,14 +46,6 @@ static NSString* const dCMIWEFCpBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY
 		LNPopupBar* bar = (LNPopupBar*)self.view;
 		
 		UIPreviewParameters* params = [UIPreviewParameters new];
-		if(bar.resolvedStyle == LNPopupBarStyleFloating)
-		{
-			if (@available(iOS 14.0, *))
-			{
-				params.shadowPath = [UIBezierPath new];
-			}
-		}
-		
 		x = [[UITargetedPreview alloc] initWithView:bar.contentView parameters:params];
 	}
 	else if([self.view isKindOfClass:LNPopupBar.class] && x.view == self.view)

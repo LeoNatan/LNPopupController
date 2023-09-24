@@ -36,7 +36,6 @@
 		_imageView = [_LNPopupBarBackgroundImageView new];
 		
 		self.cornerRadius = 0;
-		self.castsShadow = NO;
 		self.layer.masksToBounds = NO;
 		
 		[_effectView.contentView addSubview:_colorView];
@@ -96,28 +95,11 @@
 {
 	_cornerRadius = cornerRadius;
 	
+	self.layer.cornerRadius = cornerRadius;
+	self.layer.cornerCurve = kCACornerCurveContinuous;
+	
 	_effectView.layer.cornerRadius = cornerRadius;
 	_effectView.layer.cornerCurve = kCACornerCurveContinuous;
-}
-
-- (void)setCastsShadow:(BOOL)castsShadow
-{
-	_castsShadow = castsShadow;
-	
-	if(castsShadow)
-	{
-		self.layer.shadowColor = UIColor.blackColor.CGColor;
-		self.layer.shadowOffset = CGSizeMake(0.0, 1.0);
-		self.layer.shadowOpacity = 0.15;
-		self.layer.shadowRadius = 3.0;
-	}
-	else
-	{
-		self.layer.shadowColor = nil;
-		self.layer.shadowOffset = CGSizeMake(0.0, 0.0);
-		self.layer.shadowOpacity = 0.0;
-		self.layer.shadowRadius = 0.0;
-	}
 }
 
 @end

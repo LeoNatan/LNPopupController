@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) UIImageView* imageView;
 
 @property (nonatomic, assign) CGFloat cornerRadius;
-@property (nonatomic, assign) BOOL castsShadow;
 
 @end
 

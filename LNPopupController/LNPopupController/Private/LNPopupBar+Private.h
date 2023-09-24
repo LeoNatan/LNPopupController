@@ -10,6 +10,7 @@
 #import "LNPopupBarAppearanceChainProxy.h"
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupBarBackgroundView.h"
+#import "_LNPopupBackgroundShadowView.h"
 
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
@@ -97,6 +98,10 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, strong) _LNPopupBarBackgroundView* contentView;
 @property (nonatomic, strong) _LNPopupBarBackgroundView* backgroundView;
+@property (nonatomic, strong) _LNPopupBackgroundShadowView* floatingBackgroundShadowView;
+@property (nonatomic, strong) UIView* contentMaskView;
+@property (nonatomic, strong) UIView* backgroundMaskView;
+@property (nonatomic, strong) CAGradientLayer* backgroundMaskViewGradientLayer;
 
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView;

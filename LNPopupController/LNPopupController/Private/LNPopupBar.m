@@ -249,7 +249,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	if(self)
 	{
 		self.preservesSuperviewLayoutMargins = YES;
-		self.clipsToBounds = YES;
 		
 		if (@available(iOS 13.4, *))
 		{
@@ -265,8 +264,24 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_backgroundView.userInteractionEnabled = NO;
 		[self addSubview:_backgroundView];
 		
+		_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
+		_floatingBackgroundShadowView.userInteractionEnabled = NO;
+		_floatingBackgroundShadowView.alpha = 0.0;
+		[self addSubview:_floatingBackgroundShadowView];
+		
 		_contentView = [[_LNPopupBarContentView alloc] initWithEffect:nil];
+		_contentView.clipsToBounds = YES;
 		[self addSubview:_contentView];
+		
+		_contentMaskView = [UIView new];
+		_contentMaskView.backgroundColor = UIColor.whiteColor;
+		_contentMaskView.frame = self.bounds;
+		_contentView.maskView = _contentMaskView;
+		
+		_backgroundMaskView = [UIView new];
+		_backgroundMaskView.backgroundColor = UIColor.whiteColor;
+		_backgroundMaskView.frame = self.bounds;
+		_backgroundView.effectView.maskView = _backgroundMaskView;
 		
 		self.effectGroupingIdentifier = nil;
 		
@@ -285,7 +300,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		_toolbar.autoresizingMask = UIViewAutoresizingNone;
 		_toolbar.layer.masksToBounds = NO;
-		[_contentView addSubview:_toolbar];
+		[_contentView.contentView addSubview:_toolbar];
 		
 		_titlesView = [[_LNPopupBarTitlesView alloc] initWithFrame:_contentView.bounds];
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
@@ -295,12 +310,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_backgroundView.accessibilityTraits = UIAccessibilityTraitButton;
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
 		
-		[_contentView addSubview:_titlesView];
+		[_contentView.contentView addSubview:_titlesView];
 		
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
 		_progressView.progressViewStyle = UIProgressViewStyleBar;
 		_progressView.trackImage = [UIImage new];
-		[_contentView addSubview:_progressView];
+		[_contentView.contentView addSubview:_progressView];
 		[self _updateProgressViewWithStyle:self.progressViewStyle];
 		
 		_needsLabelsLayout = YES;
@@ -316,20 +331,20 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		// support smart invert and therefore do not invert image view colors
 		_imageView.accessibilityIgnoresInvertColors = YES;
 		
-		[_contentView addSubview:_imageView];
+		[_contentView.contentView addSubview:_imageView];
 		
 		_shadowView = [_LNPopupBarShadowView new];
 		[_backgroundView.contentView addSubview:_shadowView];
 		
 		_bottomShadowView = [_LNPopupBarShadowView new];
 		_bottomShadowView.hidden = YES;
-		[_contentView addSubview:_bottomShadowView];
+		[_contentView.contentView addSubview:_bottomShadowView];
 		
 		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
 		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_highlightView.userInteractionEnabled = NO;
 		_highlightView.alpha = 0.0;
-		[_contentView addSubview:_highlightView];
+		[_contentView.contentView addSubview:_highlightView];
 		
 		self.semanticContentAttribute = UISemanticContentAttributeUnspecified;
 		self.barItemsSemanticContentAttribute = UISemanticContentAttributePlayback;
@@ -396,24 +411,31 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[_backgroundView setFrame:frame];
 	_backgroundView.layer.mask.frame = _backgroundView.bounds;
 	
-	CGRect floatingBackgroundFrame = CGRectOffset(CGRectInset(UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, self.safeAreaInsets.left, 0, self.safeAreaInsets.right)), 12, 4), 0, -2);
+	CGFloat inset = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 30 : 12;
+	CGRect floatingBackgroundFrame = CGRectOffset(UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(4, MAX(self.safeAreaInsets.left + 12, inset), 4, MAX(self.safeAreaInsets.right + 12, inset))), 0, -2);
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
 	if(isFloating)
 	{
 		_contentView.frame = floatingBackgroundFrame;
 		_contentView.cornerRadius = 14;
-		_contentView.castsShadow = YES;
 		
+		_floatingBackgroundShadowView.hidden = NO;
+		_floatingBackgroundShadowView.frame = floatingBackgroundFrame;
+		_floatingBackgroundShadowView.cornerRadius = 14;
 	}
 	else
 	{
 		_contentView.frame = frame;
-		_contentView.cornerRadius = 0;
-		_contentView.castsShadow = NO;
+		_contentView.layer.cornerRadius = 0;
+		_floatingBackgroundShadowView.hidden = YES;
 	}
 	
 	_contentView.preservesSuperviewLayoutMargins = !isFloating;
+	
+	_contentMaskView.frame = self.bounds;
+	_backgroundMaskView.frame = self.bounds;
+	_backgroundMaskViewGradientLayer.frame = self.bounds;
 	
 	[self _layoutCustomBarController];
 	
@@ -429,15 +451,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2, _contentView.bounds.size.height / 2);
 	[_toolbar layoutIfNeeded];
 	
-	[_contentView sendSubviewToBack:_highlightView];
-	[_contentView insertSubview:_toolbar aboveSubview:_highlightView];
-	[_contentView insertSubview:_imageView aboveSubview:_toolbar];
-	[_contentView insertSubview:_titlesView aboveSubview:_imageView];
-	[_contentView insertSubview:_shadowView aboveSubview:_titlesView];
-	[_contentView insertSubview:_bottomShadowView aboveSubview:_shadowView];
+	[_contentView.contentView sendSubviewToBack:_highlightView];
+	[_contentView.contentView insertSubview:_toolbar aboveSubview:_highlightView];
+	[_contentView.contentView insertSubview:_imageView aboveSubview:_toolbar];
+	[_contentView.contentView insertSubview:_titlesView aboveSubview:_imageView];
+	[_contentView.contentView insertSubview:_shadowView aboveSubview:_titlesView];
+	[_contentView.contentView insertSubview:_bottomShadowView aboveSubview:_shadowView];
 	if(_customBarViewController != nil)
 	{
-		[_contentView insertSubview:_customBarViewController.view aboveSubview:_bottomShadowView];
+		[_contentView.contentView insertSubview:_customBarViewController.view aboveSubview:_bottomShadowView];
 	}
 	
 	UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
@@ -596,11 +618,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	if(isFloating)
 	{
-		CAGradientLayer* mask = [CAGradientLayer new];
-		mask.frame = _backgroundView.bounds;
-		mask.colors = @[(id)UIColor.clearColor.CGColor, (id)UIColor.whiteColor.CGColor];
-		mask.locations = @[@0, @0.85];
-		_backgroundView.layer.mask = mask;
+		if(_backgroundMaskViewGradientLayer != nil)
+		{
+			[_backgroundMaskViewGradientLayer removeFromSuperlayer];
+			_backgroundMaskViewGradientLayer = nil;
+		}
+		
+		_backgroundMaskViewGradientLayer = [CAGradientLayer new];
+		_backgroundMaskViewGradientLayer.frame = _backgroundView.effectView.bounds;
+		_backgroundMaskViewGradientLayer.colors = @[(id)UIColor.clearColor.CGColor, (id)UIColor.whiteColor.CGColor];
+		_backgroundMaskViewGradientLayer.locations = @[@0, @0.85];
+		
+		_backgroundView.layer.mask = _backgroundMaskViewGradientLayer;
 		
 		_contentView.effect = self.activeAppearance.floatingBackgroundEffect;
 		_contentView.colorView.backgroundColor = self.activeAppearance.floatingBackgroundColor;
@@ -609,6 +638,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
+		if(_backgroundMaskViewGradientLayer != nil)
+		{
+			[_backgroundMaskViewGradientLayer removeFromSuperlayer];
+			_backgroundMaskViewGradientLayer = nil;
+		}
 		_backgroundView.layer.mask = nil;
 		
 		_contentView.effect = nil;

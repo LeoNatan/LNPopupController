@@ -76,6 +76,7 @@
 	
 	NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
 	self.view.backgroundColor = LNSeedAdaptiveColor(seed);
+//	self.view.backgroundColor = UIColor.whiteColor;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -143,12 +144,12 @@
 #endif
 		UITabBarAppearance* tba = [UITabBarAppearance new];
 		[tba configureWithDefaultBackground];
-		tba.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterial];
+		tba.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
 		self.tabBarController.tabBar.standardAppearance = tba;
 		
 		UIToolbarAppearance* ta = [UIToolbarAppearance new];
 		[ta configureWithDefaultBackground];
-		ta.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterial];
+		ta.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
 		self.navigationController.toolbar.standardAppearance = ta;
 	}
 #if LNPOPUP

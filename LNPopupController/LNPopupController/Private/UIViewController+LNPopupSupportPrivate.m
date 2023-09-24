@@ -605,7 +605,14 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 - (void)_layoutPopupBarOrderForUse
 {
 	[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
-	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+	if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+	{
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+	}
+	else
+	{
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+	}
 	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self._ln_popupController_nocreate.popupBar];
 	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
 }

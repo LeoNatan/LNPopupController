@@ -955,14 +955,14 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" tag="17" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="GGa-2Q-GTh" style="IBUITableViewCellStyleDefault" id="4VE-0d-L70">
-                                        <rect key="frame" x="20" y="1275.0000190734863" width="390" height="44"/>
+                                        <rect key="frame" x="20" y="1317.0000190734863" width="390" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4VE-0d-L70" id="smt-q4-9UH">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Thin Material" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="GGa-2Q-GTh">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="44"/>
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -972,14 +972,14 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" tag="18" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="60H-iC-NPB" style="IBUITableViewCellStyleDefault" id="EZC-VC-zty">
-                                        <rect key="frame" x="20" y="1319.0000190734863" width="390" height="44"/>
+                                        <rect key="frame" x="20" y="1361.0000190734863" width="390" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EZC-VC-zty" id="FsW-eQ-FQ2">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Material" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="60H-iC-NPB">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="44"/>
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -989,14 +989,14 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" tag="19" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="xE8-o6-gd8" style="IBUITableViewCellStyleDefault" id="hdf-Sk-IYF">
-                                        <rect key="frame" x="20" y="1363.0000190734863" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="1405.0000190734863" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hdf-Sk-IYF" id="gnV-vv-uCE">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Thick Material" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="xE8-o6-gd8">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Thick Material" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="xE8-o6-gd8">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1006,14 +1006,14 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" tag="20" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="naY-jX-Bey" style="IBUITableViewCellStyleDefault" id="htv-Fm-soG">
-                                        <rect key="frame" x="20" y="1406.6666870117188" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="1448.6666870117188" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="htv-Fm-soG" id="BBT-3M-Imr">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Chrome Material" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="naY-jX-Bey">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Chrome Material" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="naY-jX-Bey">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1028,14 +1028,14 @@
                                 <string key="footerTitle">Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10.0 and above.</string>
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" tag="14" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="kdk-lY-0sJ" style="IBUITableViewCellStyleDefault" id="Vcj-D9-Ng4">
-                                        <rect key="frame" x="20" y="1514.3333549499512" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="1556.3333549499512" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Vcj-D9-Ng4" id="kX1-SH-612">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Regular" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="kdk-lY-0sJ">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Regular" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="kdk-lY-0sJ">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1045,14 +1045,14 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" tag="15" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="X9J-B5-9qW" style="IBUITableViewCellStyleDefault" id="sL6-oN-eYu">
-                                        <rect key="frame" x="20" y="1558.0000228881836" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="1600.0000228881836" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sL6-oN-eYu" id="CKo-KA-DxU">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Prominent" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="X9J-B5-9qW">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Prominent" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="X9J-B5-9qW">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1066,14 +1066,14 @@
                             <tableViewSection footerTitle="Traditional blur styles. Available in iOS 8.0 and above." id="9XO-hG-YZx">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" tag="10" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="n74-oK-aY7" style="IBUITableViewCellStyleDefault" id="dz9-IT-icv">
-                                        <rect key="frame" x="20" y="1681.6666889190674" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="1723.6666889190674" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dz9-IT-icv" id="FpA-Fe-m6I">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Extra Light" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="n74-oK-aY7">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Extra Light" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="n74-oK-aY7">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1083,14 +1083,14 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" tag="11" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="r1L-BA-sVc" style="IBUITableViewCellStyleDefault" id="ie7-be-7YO">
-                                        <rect key="frame" x="20" y="1725.3333568572998" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="1767.3333568572998" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ie7-be-7YO" id="grB-5w-AKR">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Light" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="r1L-BA-sVc">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Light" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="r1L-BA-sVc">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1100,14 +1100,14 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" tag="12" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="HT5-2O-D0b" style="IBUITableViewCellStyleDefault" id="fKI-yn-BYK">
-                                        <rect key="frame" x="20" y="1769.0000247955322" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="1811.0000247955322" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fKI-yn-BYK" id="bu8-cI-2am">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Dark" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="HT5-2O-D0b">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Dark" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="HT5-2O-D0b">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1121,14 +1121,14 @@
                             <tableViewSection headerTitle="Extend Bars Under Safe Area" id="0W7-xT-AZi">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="sIK-iP-AtO" style="IBUITableViewCellStyleDefault" id="7bH-7q-HqN">
-                                        <rect key="frame" x="20" y="1880.6666927337646" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="1922.6666927337646" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7bH-7q-HqN" id="YXC-P3-oY3">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="sIK-iP-AtO">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="sIK-iP-AtO">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1145,14 +1145,14 @@
                             <tableViewSection headerTitle="Hide Bottom Bar When Pushed" id="0NB-NV-YLQ">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="9Me-vs-LNp" style="IBUITableViewCellStyleDefault" id="mlW-fM-oUd">
-                                        <rect key="frame" x="20" y="1980.3333606719971" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="2022.3333606719971" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mlW-fM-oUd" id="q0T-kQ-4Np">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="9Me-vs-LNp">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="9Me-vs-LNp">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1169,14 +1169,14 @@
                             <tableViewSection headerTitle="Custom Popup Bar" id="B4j-wb-aXz">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="4NM-VO-fbr" style="IBUITableViewCellStyleDefault" id="N1M-th-PTx">
-                                        <rect key="frame" x="20" y="2080.0000286102295" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="2122.0000286102295" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="N1M-th-PTx" id="5nG-5F-fHO">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="4NM-VO-fbr">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="4NM-VO-fbr">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1193,14 +1193,14 @@
                             <tableViewSection headerTitle="Customizations" id="Xyw-Wi-iEa">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="Vuz-IM-D9A" style="IBUITableViewCellStyleDefault" id="0Ib-bg-3iP">
-                                        <rect key="frame" x="20" y="2179.6666965484619" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="2221.6666965484619" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0Ib-bg-3iP" id="Y99-Hp-kcb">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Vuz-IM-D9A">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="Vuz-IM-D9A">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1217,14 +1217,14 @@
                             <tableViewSection headerTitle="Touch Visualizer" id="fqW-FQ-z5l">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="LZa-uu-VZp" style="IBUITableViewCellStyleDefault" id="TP2-Qd-Ahf">
-                                        <rect key="frame" x="20" y="2088.0000330607095" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="2321.3333644866943" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TP2-Qd-Ahf" id="Uy8-vD-AiI">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="LZa-uu-VZp">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" ambiguous="YES" text="Enabled" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="LZa-uu-VZp">
+                                                    <rect key="frame" x="8" y="0.0" width="374" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
@@ -1319,7 +1319,6 @@
                         <segue destination="okN-9b-CNT" kind="relationship" relationship="viewControllers" id="mpW-FJ-VUz"/>
                         <segue destination="okN-9b-CNT" kind="relationship" relationship="viewControllers" id="LFb-4R-xoq"/>
                         <segue destination="okN-9b-CNT" kind="relationship" relationship="viewControllers" id="vYe-8f-bz7"/>
-                        <segue destination="okN-9b-CNT" kind="relationship" relationship="viewControllers" id="00m-bH-vwd"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RRw-0R-8hQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1384,7 +1383,7 @@
     <inferredMetricsTieBreakers>
         <segue reference="ie4-if-ZuB"/>
         <segue reference="8mZ-rN-tfh"/>
-        <segue reference="Skw-Eu-N7K"/>
+        <segue reference="vYe-8f-bz7"/>
         <segue reference="08s-5F-WiR"/>
         <segue reference="FoD-Oj-irL"/>
         <segue reference="SIC-fE-4sh"/>
