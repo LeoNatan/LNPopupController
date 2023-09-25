@@ -27,6 +27,7 @@
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
 		393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
+		394005F22AC237B900291421 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394005F12AC237B900291421 /* Settings.storyboard */; };
 		394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */; };
 		394E1AA8276C0D9300C5BE31 /* LNPopupControllerExampleSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */; };
 		394E1AA9276C0DA600C5BE31 /* DemoGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 39756326254ED9EB0066981E /* DemoGallery.m */; };
@@ -140,6 +141,7 @@
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
 		393F232A1E16D1E4000E969D /* HigherSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HigherSearchBar.swift; sourceTree = "<group>"; };
+		394005F12AC237B900291421 /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDemoContextMenuInteraction.h; sourceTree = "<group>"; };
 		394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupDemoContextMenuInteraction.m; sourceTree = "<group>"; };
 		39631FAB230DA03D0059D119 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
@@ -202,10 +204,11 @@
 		3908C3491E7C9E8A00451B5D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				394005F12AC237B900291421 /* Settings.storyboard */,
 				3908C34A1E7C9EA200451B5D /* SettingsTableViewController.h */,
 				3908C34B1E7C9EA200451B5D /* SettingsTableViewController.m */,
 			);
-			name = Settings;
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		392779FB1B58228000293F95 = {
@@ -465,6 +468,7 @@
 				39140B901DBD69540036A6C5 /* Music.storyboard in Resources */,
 				39BBA86A24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */,
 				393F23231E16BF1D000E969D /* MapScene.storyboard in Resources */,
+				394005F22AC237B900291421 /* Settings.storyboard in Resources */,
 				39277A171B58228000293F95 /* Assets.xcassets in Resources */,
 				39277A151B58228000293F95 /* Main.storyboard in Resources */,
 			);

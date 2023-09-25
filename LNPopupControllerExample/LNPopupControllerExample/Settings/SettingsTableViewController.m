@@ -21,6 +21,7 @@ NSString* const PopupSettingsHidesBottomBarWhenPushed = @"PopupSettingsHidesBott
 NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
 NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
 NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
+NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimationsEnabled";
 
 @interface SettingsTableViewController ()
 {
@@ -32,6 +33,7 @@ NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomB
 	IBOutlet UISwitch* _hidesBottomBarWhenPushed;
 	IBOutlet UISwitch* _touchVisualizer;
 	IBOutlet UISwitch* _customBar;
+	IBOutlet UISwitch* _slowAnimations;
 }
 
 @end
@@ -43,9 +45,14 @@ NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomB
 	[NSUserDefaults.standardUserDefaults registerDefaults:@{PopupSettingsExtendBar: @YES, PopupSettingsHidesBottomBarWhenPushed: @YES}];
 }
 
++ (instancetype)newSettingsTableViewController
+{
+	return [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
+}
+
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
 	_sectionToKeyMapping = @{
 		@0: PopupSettingsBarStyle,
@@ -71,6 +78,19 @@ NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomB
 	[_hidesBottomBarWhenPushed setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed] animated:animated];
 	[_touchVisualizer setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled] animated:animated];
 	[_customBar setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsCustomBarEverywhereEnabled] animated:animated];
+	[_slowAnimations setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsSlowAnimationsEnabled] animated:animated];
+	
+	if([NSProcessInfo.processInfo.processName isEqualToString:@"LNPopupUIExample"])
+	{
+		_hidesBottomBarWhenPushed.on = NO;
+		_hidesBottomBarWhenPushed.enabled = NO;
+		
+		_touchVisualizer.on = NO;
+		_touchVisualizer.enabled = NO;
+		
+		_slowAnimations.on = NO;
+		_slowAnimations.enabled = NO;
+	}
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -83,7 +103,7 @@ NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomB
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		cell.accessoryView = nil;
 		cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-	
+		
 		if(key == PopupSettingsVisualEffectViewBlurEffect)
 		{
 			NSNumber* effectStyle = [NSUserDefaults.standardUserDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
@@ -111,15 +131,14 @@ NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomB
 	return cell;
 }
 
-- (IBAction)_resetButtonTapped:(UIBarButtonItem *)sender
+- (void)reset
 {
-	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsEnableCustomizations];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsEnableCustomizations];
 	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsExtendBar];
 	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsHidesBottomBarWhenPushed];
-	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsTouchVisualizerEnabled];
-	[NSUserDefaults.standardUserDefaults setBool:NO forKey:PopupSettingsCustomBarEverywhereEnabled];
-	self.view.window.windowScene.touchVisualizerEnabled = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled];
-	
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsTouchVisualizerEnabled];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsCustomBarEverywhereEnabled];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsSlowAnimationsEnabled];
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsVisualEffectViewBlurEffect];
 	
 	[_sectionToKeyMapping enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
@@ -134,6 +153,11 @@ NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomB
 	[self _resetSwitchesAnimated:YES];
 	
 	[self.tableView reloadData];
+}
+
+- (IBAction)_resetButtonTapped:(UIBarButtonItem *)sender
+{
+	[self reset];
 }
 
 - (IBAction)_demoSwitchValueDidChange:(UISwitch*)sender
@@ -160,6 +184,11 @@ NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomB
 - (IBAction)_customBarEnabledDidChange:(UISwitch*)sender
 {
 	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsCustomBarEverywhereEnabled];
+}
+
+- (IBAction)_slowAnimationsEnabledDidChange:(UISwitch*)sender
+{
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsSlowAnimationsEnabled];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

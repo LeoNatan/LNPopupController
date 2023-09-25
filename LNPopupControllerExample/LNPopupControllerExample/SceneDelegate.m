@@ -9,8 +9,10 @@
 
 @implementation SceneDelegate
 
-- (void)scene:(UIWindowScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions {
-
+- (void)scene:(UIWindowScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions 
+{
+	self.windowScene = scene;
+	
 #if TARGET_OS_MACCATALYST
 	scene.sizeRestrictions.maximumSize = CGSizeMake(DBL_MAX, DBL_MAX);
 	
@@ -25,7 +27,8 @@
 		split.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
 	}
 #else
-	scene.touchVisualizerEnabled = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled];
+	[NSUserDefaults.standardUserDefaults addObserver:self forKeyPath:PopupSettingsSlowAnimationsEnabled options:NSKeyValueObservingOptionInitial context:NULL];
+	[NSUserDefaults.standardUserDefaults addObserver:self forKeyPath:PopupSettingsTouchVisualizerEnabled options:NSKeyValueObservingOptionInitial context:NULL];
 	
 	LNTouchConfig* rippleConfig = [LNTouchConfig rippleConfig];
 	rippleConfig.fillColor = UIColor.systemPinkColor;
@@ -33,12 +36,48 @@
 #endif
 }
 
+- (void)_updateWindowSpeed
+{
+	dispatch_async(dispatch_get_main_queue(), ^{
+		self.window.layer.speed = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsSlowAnimationsEnabled] ? 0.1 : 1.0;
+	});
+}
 
-- (void)sceneDidDisconnect:(UIScene *)scene {
+- (void)_updateTouchVisualizer
+{
+	self.windowScene.touchVisualizerEnabled = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+	if([keyPath isEqualToString:PopupSettingsSlowAnimationsEnabled])
+	{
+		[self _updateWindowSpeed];
+		
+		return;
+	}
+	
+	if([keyPath isEqualToString:PopupSettingsTouchVisualizerEnabled])
+	{
+		[self _updateTouchVisualizer];
+		
+		return;
+	}
+	
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+- (void)sceneDidDisconnect:(UIScene *)scene 
+{
 	// Called as the scene is being released by the system.
 	// This occurs shortly after the scene enters the background, or when its session is discarded.
 	// Release any resources associated with this scene that can be re-created the next time the scene connects.
 	// The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+	
+	self.windowScene = nil;
+	
+	[NSUserDefaults.standardUserDefaults removeObserver:self forKeyPath:PopupSettingsSlowAnimationsEnabled];
+	[NSUserDefaults.standardUserDefaults removeObserver:self forKeyPath:PopupSettingsTouchVisualizerEnabled];
 }
 
 
