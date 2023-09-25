@@ -412,14 +412,15 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 
 - (BOOL)shouldFadePopupBarOnDismiss
 {
-	BOOL bottomBarExtensionIsVisible = self._ln_bottomBarExtension_nocreate.isHidden == NO && self._ln_bottomBarExtension_nocreate.alpha > 0;
+	BOOL bottomBarExtensionIsVisible = self._ln_bottomBarExtension_nocreate.isHidden == NO && self._ln_bottomBarExtension_nocreate.alpha > 0 && self._ln_bottomBarExtension_nocreate.frame.size.height > 0;
+	BOOL backgroundVisible = self.ln_popupController.popupBar.backgroundView.isHidden == NO && self.ln_popupController.popupBar.backgroundView.alpha > 0;
 	BOOL scrollEdgeAppearanceRequiresFade = NO;
 	if(@available(iOS 15, *))
 	{
-		scrollEdgeAppearanceRequiresFade = [self.ln_popupController.bottomBar _ln_scrollEdgeAppearanceRequiresFadeForPopupBar:self.popupBar];
+		scrollEdgeAppearanceRequiresFade = self.ln_popupController.bottomBar.hidden == NO && [self.ln_popupController.bottomBar _ln_scrollEdgeAppearanceRequiresFadeForPopupBar:self.popupBar];
 	}
 	
-	return bottomBarExtensionIsVisible || scrollEdgeAppearanceRequiresFade;
+	return backgroundVisible && (bottomBarExtensionIsVisible || scrollEdgeAppearanceRequiresFade);
 }
 
 @end
