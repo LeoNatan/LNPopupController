@@ -38,8 +38,8 @@
 		self.cornerRadius = 0;
 		self.layer.masksToBounds = NO;
 		
-		[_effectView.contentView addSubview:_colorView];
-		[_effectView.contentView addSubview:_imageView];
+		[self addSubview:_colorView];
+		[self addSubview:_imageView];
 		
 		[self addSubview:_effectView];
 	}
@@ -81,14 +81,13 @@
 {
 	[super layoutSubviews];
 
-	[self sendSubviewToBack:_effectView];
+	[self sendSubviewToBack:_colorView];
+	[self insertSubview:_imageView aboveSubview:_colorView];
+	[self insertSubview:_effectView aboveSubview:_imageView];
+	
 	_effectView.frame = self.bounds;
-	
-	_imageView.frame = _effectView.contentView.bounds;
-	_colorView.frame = _effectView.contentView.bounds;
-	
-	[_effectView.contentView sendSubviewToBack:_imageView];
-	[_effectView.contentView sendSubviewToBack:_colorView];
+	_imageView.frame = self.bounds;
+	_colorView.frame = self.bounds;
 }
 
 - (void)setCornerRadius:(CGFloat)cornerRadius

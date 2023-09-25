@@ -990,7 +990,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		else
 		{
-			leftViewLastFrame.size.width -= 8;
+			leftViewLastFrame.size.width -= (__applySwiftUILayoutFixes ? -8 : 8);
 		}
 	}
 	
@@ -1005,7 +1005,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		else
 		{
-			rightViewFirstFrame.origin.x += 8;
+			rightViewFirstFrame.origin.x += (__applySwiftUILayoutFixes ? -8 : 8);
 		}
 	}
 	
@@ -1421,7 +1421,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	UIBarButtonItem* fixedSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
 	CGFloat prominentSpacing = __applySwiftUILayoutFixes ? 14 : 0;
-	fixedSpacer.width = _resolvedStyle == LNPopupBarStyleCompact ? -2 : prominentSpacing;
+	CGFloat compactSpacing = __applySwiftUILayoutFixes ? 18 : -2;
+	fixedSpacer.width = _resolvedStyle == LNPopupBarStyleCompact ? compactSpacing : prominentSpacing;
 	[items addObject:fixedSpacer];
 	
 	[_toolbar setItems:items animated:__animatesItemSetter];
