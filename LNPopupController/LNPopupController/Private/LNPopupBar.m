@@ -435,7 +435,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	_contentMaskView.frame = self.bounds;
 	_backgroundMaskView.frame = self.bounds;
-	_backgroundMaskViewGradientLayer.frame = self.bounds;
 	
 	[self _layoutCustomBarController];
 	
@@ -618,18 +617,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	if(isFloating)
 	{
-		if(_backgroundMaskViewGradientLayer != nil)
-		{
-			[_backgroundMaskViewGradientLayer removeFromSuperlayer];
-			_backgroundMaskViewGradientLayer = nil;
-		}
+		CAGradientLayer* mask = [CAGradientLayer new];
+		mask.frame = _backgroundView.effectView.bounds;
+		mask.colors = @[(id)UIColor.clearColor.CGColor, (id)UIColor.whiteColor.CGColor];
+		mask.locations = @[@0, @0.85];
 		
-		_backgroundMaskViewGradientLayer = [CAGradientLayer new];
-		_backgroundMaskViewGradientLayer.frame = _backgroundView.effectView.bounds;
-		_backgroundMaskViewGradientLayer.colors = @[(id)UIColor.clearColor.CGColor, (id)UIColor.whiteColor.CGColor];
-		_backgroundMaskViewGradientLayer.locations = @[@0, @0.85];
-		
-		_backgroundView.layer.mask = _backgroundMaskViewGradientLayer;
+		_backgroundView.layer.mask = mask;
 		
 		_contentView.effect = self.activeAppearance.floatingBackgroundEffect;
 		_contentView.colorView.backgroundColor = self.activeAppearance.floatingBackgroundColor;
@@ -638,11 +631,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
-		if(_backgroundMaskViewGradientLayer != nil)
-		{
-			[_backgroundMaskViewGradientLayer removeFromSuperlayer];
-			_backgroundMaskViewGradientLayer = nil;
-		}
 		_backgroundView.layer.mask = nil;
 		
 		_contentView.effect = nil;

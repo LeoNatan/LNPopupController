@@ -101,7 +101,6 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong) _LNPopupBackgroundShadowView* floatingBackgroundShadowView;
 @property (nonatomic, strong) UIView* contentMaskView;
 @property (nonatomic, strong) UIView* backgroundMaskView;
-@property (nonatomic, strong) CAGradientLayer* backgroundMaskViewGradientLayer;
 
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView;
