@@ -357,7 +357,8 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 ## Acknowledgements
 
 The framework uses:
-* [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel) Copyright (c) 2011-2020 Charles Powell
+* [MarqueeLabel](https://github.com/cbpowell/MarqueeLabel) Copyright (c) 2011-2023 Charles Powell
+* [smooth-gradient](https://github.com/janselv/smooth-gradient) Copyright (c) 2016 Jansel Valentin
 
 Additionally, the demo project uses:
 

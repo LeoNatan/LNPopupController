@@ -351,6 +351,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		self.isAccessibilityElement = NO;
 		
+		_wantsBackgroundCutout = YES;
+		
 		[self _recalcActiveAppearanceChain];
 	}
 	
@@ -399,6 +401,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_customBarViewController.view.frame = frame;
 }
 
+- (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout
+{
+	[CATransaction begin];
+	_wantsBackgroundCutout = wantsBackgroundCutout;
+	_backgroundMask.wantsCutout = wantsBackgroundCutout;
+	[_backgroundMask setNeedsDisplay];
+	[CATransaction commit];
+}
+
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
@@ -420,12 +431,31 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_contentView.frame = floatingBackgroundFrame;
 		_contentView.cornerRadius = 14;
 		
+		if(_backgroundMask == nil)
+		{
+			_backgroundMask = [_LNPopupBarBackgroundMaskLayer layer];
+		}
+		_backgroundMask.floatingFrame = floatingBackgroundFrame;
+		_backgroundMask.floatingCornerRadius = _contentView.cornerRadius;
+		_backgroundMask.wantsCutout = self.wantsBackgroundCutout;
+		_backgroundMask.frame = _backgroundView.effectView.bounds;
+		[_backgroundMask setNeedsDisplay];
+		
+		_backgroundView.layer.mask = _backgroundMask;
+		
 		_floatingBackgroundShadowView.hidden = NO;
 		_floatingBackgroundShadowView.frame = floatingBackgroundFrame;
 		_floatingBackgroundShadowView.cornerRadius = 14;
+		
+//		_contentView.hidden = YES;
+//		_floatingBackgroundShadowView.hidden = YES;
 	}
 	else
 	{
+		[_backgroundMask removeFromSuperlayer];
+		_backgroundMask = nil;
+		_backgroundView.layer.mask = nil;
+		
 		_contentView.frame = frame;
 		_contentView.layer.cornerRadius = 0;
 		_floatingBackgroundShadowView.hidden = YES;
@@ -617,13 +647,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	if(isFloating)
 	{
-		CAGradientLayer* mask = [CAGradientLayer new];
-		mask.frame = _backgroundView.effectView.bounds;
-		mask.colors = @[(id)UIColor.clearColor.CGColor, (id)UIColor.whiteColor.CGColor];
-		mask.locations = @[@0, @0.85];
-		
-		_backgroundView.layer.mask = mask;
-		
 		_contentView.effect = self.activeAppearance.floatingBackgroundEffect;
 		_contentView.colorView.backgroundColor = self.activeAppearance.floatingBackgroundColor;
 		_contentView.imageView.image = self.activeAppearance.floatingBackgroundImage;
@@ -631,8 +654,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
-		_backgroundView.layer.mask = nil;
-		
 		_contentView.effect = nil;
 		_contentView.colorView.backgroundColor = UIColor.clearColor;
 		_contentView.imageView.image = nil;

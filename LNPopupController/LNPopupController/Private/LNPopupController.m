@@ -1219,8 +1219,6 @@ extern float UIAnimationDragCoefficient(void);
 			[self.popupBar setNeedsLayout];
 			[self.popupBar layoutIfNeeded];
 			
-			self.popupBar.floatingBackgroundShadowView.alpha = 1.0;
-			
 			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height, 0));
 			
 			if(open)
@@ -1231,6 +1229,10 @@ extern float UIAnimationDragCoefficient(void);
 				}
 				[self openPopupAnimated:animated completion:completionBlock];
 			}
+		};
+		
+		dispatch_block_t middle = ^{
+			self.popupBar.floatingBackgroundShadowView.alpha = 1.0;
 		};
 		
 		void (^completion)(BOOL) = ^(BOOL finished) {
@@ -1265,12 +1267,14 @@ extern float UIAnimationDragCoefficient(void);
 		{
 			[UIView performWithoutAnimation:^{
 				animations();
+				middle();
 				completion(YES);
 			}];
 			return;
 		}
 		
 		[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:animations completion:completion];
+		[UIView animateWithDuration:0.3 delay:0.2 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:middle completion:completion];
 	}
 	else
 	{

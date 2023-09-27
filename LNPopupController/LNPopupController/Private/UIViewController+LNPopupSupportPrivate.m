@@ -1071,6 +1071,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	if(t > 0)
 	{
+		self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
+		
 		[self _setIgnoringLayoutDuringTransition:YES];
 		
 		CGFloat bottomSafeArea = self.view.superview.safeAreaInsets.bottom;
@@ -1090,6 +1092,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			}
 			[self __repositionPopupBarToClosed_hack];
 		} completion: ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+			self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = YES;
+			
 			self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, bottomSafeArea);
 			
 			[self _setIgnoringLayoutDuringTransition:NO];
@@ -1126,6 +1130,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	if(t > 0)
 	{
+		self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
+		
 		CGRect backgroundViewFrame = self._ln_popupController_nocreate.popupBar.backgroundView.frame;
 		if(isFloating)
 		{
@@ -1157,6 +1163,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			[self __repositionPopupBarToClosed_hack];
 		} completion: ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 			[self _setPrepareTabBarIgnored:NO];
+			
+			self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = YES;
 			
 			if(context.isCancelled)
 			{
@@ -1455,6 +1463,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	if(wasToolbarHidden != hidden)
 	{
+		self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
+		
 		if(hidden == YES)
 		{
 			self._ln_bottomBarExtension.frame = frame;
@@ -1528,6 +1538,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		};
 		
 		void (^completion)(BOOL finished) = ^ (BOOL finished) {
+			self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = YES;
+			
 			if(hidden)
 			{
 				self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - safeArea, self.view.bounds.size.width, safeArea);
