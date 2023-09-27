@@ -13,8 +13,6 @@
 #ifndef LNPopupControllerEnforceStrictClean
 //_delegate_previewForHighlightingForConfiguration:
 static NSString* const dPFHFCBase64 = @"X2RlbGVnYXRlX3ByZXZpZXdGb3JIaWdobGlnaHRpbmdGb3JDb25maWd1cmF0aW9uOg==";
-//_delegate_contextMenuInteractionWillEndForConfiguration:presentation:
-static NSString* const dCMIWEFCpBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3Rpb25XaWxsRW5kRm9yQ29uZmlndXJhdGlvbjpwcmVzZW50YXRpb246";
 
 @implementation UIContextMenuInteraction (LNPopupSupportPrivate)
 
@@ -27,12 +25,6 @@ static NSString* const dCMIWEFCpBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_ln_d_pFHFC:));
-		
-		//_delegate_contextMenuInteractionWillEndForConfiguration:presentation:
-		selName = _LNPopupDecodeBase64String(dCMIWEFCpBase64);
-		LNSwizzleMethod(self,
-						NSSelectorFromString(selName),
-						@selector(_ln_d_cMIWEFC:p:));
 	}
 }
 
@@ -56,35 +48,11 @@ static NSString* const dCMIWEFCpBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY
 	if([self.view isKindOfClass:LNPopupBar.class])
 	{
 		LNPopupBar* popupBar = self.view;
-		[popupBar setHighlighted:YES animated:NO];
+		[popupBar setHighlighted:NO animated:YES];
 		[popupBar _cancelAnyUserInteraction];
 	}
 	
 	return x;
-}
-
-//_delegate_contextMenuInteractionWillEndForConfiguration:presentation:
-- (id)_ln_d_cMIWEFC:(id)arg1 p:(id)arg2;
-{
-	id<UIContextMenuInteractionAnimating> animator = [self _ln_d_cMIWEFC:arg1 p:arg2];
-	
-	if([self.view isKindOfClass:LNPopupBar.class])
-	{
-		dispatch_block_t highlight = ^ {
-			[(LNPopupBar*)self.view setHighlighted:NO animated:YES];
-		};
-		
-		if(animator)
-		{
-			[animator addCompletion:highlight];
-		}
-		else
-		{
-			highlight();
-		}
-	}
-	
-	return animator;
 }
 
 @end
