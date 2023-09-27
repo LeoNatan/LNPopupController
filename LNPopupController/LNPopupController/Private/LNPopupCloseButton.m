@@ -76,7 +76,7 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 			};
 		}
 		
-		_style = LNPopupCloseButtonStyleChevron;
+		_style = LNPopupCloseButtonStyleFlat;
 		[self _setupForChevronButton];
 	}
 	
@@ -104,7 +104,7 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	{
 		[self _setupForCircularButton];
 	}
-	else if(_style == LNPopupCloseButtonStyleChevron)
+	else if(_style == LNPopupCloseButtonStyleChevron || _style == LNPopupCloseButtonStyleFlat)
 	{
 		[self _setupForChevronButton];
 	}
@@ -131,9 +131,9 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 
 - (void)_setupForChevronButton
 {
-	_chevronView = [[LNChevronView alloc] initWithFrame:CGRectMake(0, 0, 42, 15)];
-	_chevronView.width = 5.5;
-	[_chevronView setState:LNChevronViewStateUp animated:NO];
+	_chevronView = [[LNChevronView alloc] initWithFrame:CGRectMake(0, 0, 40, 15)];
+	_chevronView.width = 5.0;
+	[_chevronView setState:_style == LNPopupCloseButtonStyleFlat ? LNChevronViewStateFlat : LNChevronViewStateUp animated:NO];
 	[self addSubview:_chevronView];
 }
 
@@ -270,12 +270,22 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 		return;
 	}
 	
+	if(_style == LNPopupCloseButtonStyleFlat)
+	{
+		return;
+	}
+	
 	[_chevronView setState:LNChevronViewStateUp animated:YES];
 }
 
 - (void)_setButtonContainerTransitioning
 {
 	if(_style == LNPopupCloseButtonStyleRound)
+	{
+		return;
+	}
+	
+	if(_style == LNPopupCloseButtonStyleFlat)
 	{
 		return;
 	}

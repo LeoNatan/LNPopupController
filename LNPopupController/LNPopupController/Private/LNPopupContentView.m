@@ -19,7 +19,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 #if TARGET_OS_MACCATALYST
 		rv = LNPopupCloseButtonStyleRound;
 #else
-		rv = LNPopupCloseButtonStyleChevron;
+		rv = LNPopupCloseButtonStyleFlat;
 #endif
 	}
 	return rv;
@@ -101,7 +101,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		}
 		else
 		{
-				self.popupCloseButton.tintColor = [UIColor systemGray2Color];
+			self.popupCloseButton.tintColor = [UIColor systemGray2Color];
 		}
 		
 		if([_currentPopupContentViewController positionPopupCloseButton:self.popupCloseButton] == YES)
@@ -198,7 +198,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	
 	CGRect layoutFrame = [self convertRect:_currentPopupContentViewController.view.layoutMarginsGuide.layoutFrame fromView:_currentPopupContentViewController.view];
 	
-	CGFloat topConstant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 0 : 4;
+	CGFloat topConstant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 0 : 1.0;
 	topConstant += layoutFrame.origin.y;
 	topConstant = MAX(self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
 	
