@@ -12,6 +12,20 @@ import LNPopupController
 import UIKit
 import MapKit
 
+private extension UIImage {
+	class func gradientImage(withHeight height: CGFloat, scale: CGFloat, colors: [UIColor], locations: [CGFloat]) -> UIImage {
+		let renderer = UIGraphicsImageRenderer(size: CGSize(width: 1, height: height))
+		let image = renderer.image { context in
+			let context = UIGraphicsGetCurrentContext()!
+			let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: colors.map { $0.cgColor } as CFArray, locations: locations)!
+	
+			context.drawLinearGradient(gradient, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 0, y: height), options: [])
+		}
+		
+		return image
+	}
+}
+
 class MapViewController: UIViewController, UISearchBarDelegate {
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet weak var topVisualEffectView: UIVisualEffectView!
@@ -28,9 +42,14 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		backButtonBackground.layer.borderWidth = 1.0
 		backButtonBackground.layer.borderColor = self.view.tintColor.cgColor
 		
-		topVisualEffectView.effect = UIBlurEffect(blurRadius: 10.0)
 		backButtonBackground.effect = UIBlurEffect(style: .systemChromeMaterial)
 		backButtonBackground.layer.cornerCurve = .continuous
+	}
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		topVisualEffectView.effect = UIBlurEffect(variableBlurRadius: 5, imageMask: UIImage.gradientImage(withHeight: topVisualEffectView.bounds.size.height, scale: self.view.window!.screen.scale, colors: [UIColor.white, UIColor.clear], locations: [0.0, 0.85]))
 	}
 	
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

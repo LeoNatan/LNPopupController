@@ -135,7 +135,7 @@
 		39277A0D1B58228000293F95 /* DemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoViewController.h; sourceTree = "<group>"; };
 		39277A141B58228000293F95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		39277A161B58228000293F95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		39277A1B1B58228000293F95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		39277A1B1B58228000293F95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		393F23221E16BF1D000E969D /* MapScene.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MapScene.storyboard; sourceTree = "<group>"; };
 		393F23241E16C04A000E969D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E9746D250193B8009F24DF /* ColorfulButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorfulButton.swift; sourceTree = "<group>"; };
 		39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExampleNoPopup.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LNPopupControllerExampleNoPopup-Info.plist"; path = "/Users/lnatan/Desktop/GitHub (Private)/LNPopupController/LNPopupControllerExample/LNPopupControllerExample/LNPopupControllerExampleNoPopup-Info.plist"; sourceTree = "<absolute>"; };
+		39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LNPopupControllerExampleNoPopup-Info.plist"; path = "../LNPopupControllerExampleNoPopup-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -259,6 +259,7 @@
 				39277A081B58228000293F95 /* main.m */,
 			);
 			name = "Supporting Files";
+			path = Supporting;
 			sourceTree = "<group>";
 		};
 		393F23211E16BEF5000E969D /* Demo - Custom Pupup Bar Scene (Swift) */ = {
@@ -271,6 +272,7 @@
 				393F232A1E16D1E4000E969D /* HigherSearchBar.swift */,
 			);
 			name = "Demo - Custom Pupup Bar Scene (Swift)";
+			path = CustomBarScene;
 			sourceTree = "<group>";
 		};
 		397C560A1B74D45F007A67F0 /* Swift Bridging Header */ = {
@@ -301,6 +303,7 @@
 				394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */,
 			);
 			name = "Demo - Testing Scene (Objective-C)";
+			path = TestingScene;
 			sourceTree = "<group>";
 		};
 		397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */ = {
@@ -313,6 +316,7 @@
 				39837A251B759721004D2DA9 /* PortraitTabBarController.swift */,
 			);
 			name = "Demo - Music Scene (Swift)";
+			path = MusicScene;
 			sourceTree = "<group>";
 		};
 		39837A221B756F9B004D2DA9 /* Utils */ = {
@@ -323,7 +327,7 @@
 				39988C742AA1557F00C3BB04 /* SafeSystemImages.h */,
 				39988C752AA1557F00C3BB04 /* SafeSystemImages.m */,
 			);
-			name = Utils;
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		39BBA86324FEC16600D9712A /* Demo - Custom Pupup Bar Scene - Manual Layout (Swift) */ = {
@@ -333,6 +337,7 @@
 				39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */,
 			);
 			name = "Demo - Custom Pupup Bar Scene - Manual Layout (Swift)";
+			path = CustomBarScene_ManualLayout;
 			sourceTree = "<group>";
 		};
 		39DB52F11B5823480061C589 /* Products */ = {
@@ -576,6 +581,7 @@
 				39277A141B58228000293F95 /* Base */,
 			);
 			name = Main.storyboard;
+			path = TestingScene;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -722,7 +728,7 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				RUN_DOCUMENTATION_COMPILER = YES;
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/Supporting/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -759,7 +765,7 @@
 				RUN_DOCUMENTATION_COMPILER = YES;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/LNPopupControllerExample-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/Supporting/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

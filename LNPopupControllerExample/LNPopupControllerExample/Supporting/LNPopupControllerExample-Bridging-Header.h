@@ -10,8 +10,13 @@
 #import "SafeSystemImages.h"
 #import "SettingsTableViewController.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface UIBlurEffect ()
 
-+ (instancetype)effectWithBlurRadius:(double)arg1;
++ (instancetype)effectWithBlurRadius:(CGFloat)arg1;
++ (instancetype)effectWithVariableBlurRadius:(CGFloat)arg1 imageMask:(UIImage*)arg2;
 
 @end
+
+NS_ASSUME_NONNULL_END

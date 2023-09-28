@@ -291,7 +291,9 @@
                     <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="always" id="JYD-6c-4Kf">
                         <barButtonItem key="rightBarButtonItem" title="Settings" image="gears" style="done" id="PjS-ok-m0Q">
                             <connections>
-                                <segue destination="Rxt-Jt-GTT" kind="presentation" id="hNg-w3-Zdw"/>
+                                <segue destination="Rxt-Jt-GTT" kind="popoverPresentation" popoverAnchorBarButtonItem="PjS-ok-m0Q" id="hNg-w3-Zdw">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                </segue>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
