@@ -471,13 +471,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _layoutImageView];
 	
 	CGFloat toolbarWidth = _contentView.bounds.size.width;
-	if(_resolvedStyle == LNPopupBarStyleCompact)
-	{
-		toolbarWidth += 12;
-	}
 	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(toolbarWidth, CGFLOAT_MAX)];
 	_toolbar.bounds = CGRectMake(0, 0, toolbarWidth, toolbarSize.height);
 	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2, _contentView.bounds.size.height / 2);
+	[_toolbar setNeedsLayout];
 	[_toolbar layoutIfNeeded];
 	
 	[_contentView.contentView sendSubviewToBack:_highlightView];
@@ -1428,12 +1425,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[items addObject:barButtonItem];
 	}];
 	
-	UIBarButtonItem* fixedSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:NULL];
-	CGFloat prominentSpacing = __applySwiftUILayoutFixes ? 14 : 0;
-	CGFloat compactSpacing = __applySwiftUILayoutFixes ? 18 : -2;
-	fixedSpacer.width = _resolvedStyle == LNPopupBarStyleCompact ? compactSpacing : prominentSpacing;
-	[items addObject:fixedSpacer];
-	
 	[_toolbar setItems:items animated:__animatesItemSetter];
 	
 	[self _setNeedsTitleLayout];
@@ -1444,6 +1435,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 - (void)_updateViewsAfterCustomBarViewControllerUpdate
 {
 	BOOL hide = _customBarViewController != nil;
+	_imageView.hidden = hide;
 	_toolbar.hidden = hide;
 	_titlesView.hidden = hide;
 }
