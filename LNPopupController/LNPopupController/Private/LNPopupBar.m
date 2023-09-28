@@ -340,8 +340,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_bottomShadowView.hidden = YES;
 		[_contentView.contentView addSubview:_bottomShadowView];
 		
-		_highlightView = [[UIView alloc] initWithFrame:self.bounds];
-		_highlightView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_highlightView = [[UIView alloc] initWithFrame:_contentView.bounds];
 		_highlightView.userInteractionEnabled = NO;
 		_highlightView.alpha = 0.0;
 		[_contentView.contentView addSubview:_highlightView];
@@ -403,10 +402,29 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout
 {
+	[self setWantsBackgroundCutout:wantsBackgroundCutout allowImplicitAnimations:NO];
+}
+
+- (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout allowImplicitAnimations:(BOOL)allowImplicitAnimations
+{
 	[CATransaction begin];
+	
+	{
+		if(allowImplicitAnimations == NO)
+		{
+			[CATransaction setDisableActions:YES];
+		}
+		else
+		{
+			[CATransaction setAnimationDuration:0.25];
+		}
+	}
+	
 	_wantsBackgroundCutout = wantsBackgroundCutout;
 	_backgroundMask.wantsCutout = wantsBackgroundCutout;
 	[_backgroundMask setNeedsDisplay];
+	[_backgroundMask displayIfNeeded];
+	
 	[CATransaction commit];
 }
 
@@ -476,6 +494,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2, _contentView.bounds.size.height / 2);
 	[_toolbar setNeedsLayout];
 	[_toolbar layoutIfNeeded];
+	
+	_highlightView.frame = _contentView.bounds;
 	
 	[_contentView.contentView sendSubviewToBack:_highlightView];
 	[_contentView.contentView insertSubview:_toolbar aboveSubview:_highlightView];

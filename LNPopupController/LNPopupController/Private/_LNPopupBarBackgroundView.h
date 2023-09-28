@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) CGFloat cornerRadius;
 
+@property (nonatomic, strong, readonly) UIView* transitionShadingView;
+
 @end
 
 NS_ASSUME_NONNULL_END

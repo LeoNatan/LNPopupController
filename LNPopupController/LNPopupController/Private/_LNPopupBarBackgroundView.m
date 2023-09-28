@@ -42,6 +42,13 @@
 		[self addSubview:_imageView];
 		
 		[self addSubview:_effectView];
+		
+		_transitionShadingView = [UIView new];
+		_transitionShadingView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.1];
+		_transitionShadingView.alpha = 0.0;
+		_transitionShadingView.hidden = YES;
+		
+		[self addSubview:_transitionShadingView];
 	}
 	
 	return self;
@@ -84,10 +91,12 @@
 	[self sendSubviewToBack:_colorView];
 	[self insertSubview:_imageView aboveSubview:_colorView];
 	[self insertSubview:_effectView aboveSubview:_imageView];
+	[self bringSubviewToFront:_transitionShadingView];
 	
 	_effectView.frame = self.bounds;
 	_imageView.frame = self.bounds;
 	_colorView.frame = self.bounds;
+	_transitionShadingView.frame = self.bounds;
 }
 
 - (void)setCornerRadius:(CGFloat)cornerRadius

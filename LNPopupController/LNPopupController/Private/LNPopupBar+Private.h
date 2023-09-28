@@ -104,6 +104,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong) UIView* backgroundMaskView;
 
 @property (nonatomic) BOOL wantsBackgroundCutout;
+- (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout allowImplicitAnimations:(BOOL)allowImplicitAnimations;
 @property (nonatomic, strong) _LNPopupBarBackgroundMaskLayer* backgroundMask;
 
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;
