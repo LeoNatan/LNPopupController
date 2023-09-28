@@ -37,7 +37,6 @@
 	self.navigationController.popupBar.barStyle = LNPopupBarStyleFloating;
 	self.navigationController.popupBar.standardAppearance.marqueeScrollDelay = 0.0;
 	self.navigationController.popupBar.standardAppearance.marqueeScrollEnabled = YES;
-	self.navigationController.popupContentView.popupCloseButton.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
 #endif
 }
 

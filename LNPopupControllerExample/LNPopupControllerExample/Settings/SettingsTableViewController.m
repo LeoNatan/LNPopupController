@@ -57,8 +57,8 @@ NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimatio
 	_sectionToKeyMapping = @{
 		@0: PopupSettingsBarStyle,
 		@1: PopupSettingsInteractionStyle,
-		@2: PopupSettingsProgressViewStyle,
-		@3: PopupSettingsCloseButtonStyle,
+		@2: PopupSettingsCloseButtonStyle,
+		@3: PopupSettingsProgressViewStyle,
 		@4: PopupSettingsMarqueeStyle,
 		@5: PopupSettingsVisualEffectViewBlurEffect,
 		@6: PopupSettingsVisualEffectViewBlurEffect,
