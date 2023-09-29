@@ -7,17 +7,32 @@
 //
 
 #import "LNPopupDemoContextMenuInteraction.h"
-@import SafariServices;
+#import "IntroWebViewController.h"
 
 @interface LNPopupDemoContextMenuInteraction () <UIContextMenuInteractionDelegate>
 
 @end
 
 @implementation LNPopupDemoContextMenuInteraction
+{
+	BOOL _includeTitle;
+}
 
 - (instancetype)init
 {
-	return [super initWithDelegate:self];
+	return [self initWithTitle:NO];
+}
+
+- (instancetype)initWithTitle:(BOOL)title
+{
+	self = [super initWithDelegate:self];
+	
+	if(self)
+	{
+		_includeTitle = title;
+	}
+	
+	return self;
 }
 
 + (instancetype)new
@@ -29,8 +44,8 @@
 
 - (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location
 {
-	return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil  actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
-		return [UIMenu menuWithTitle:@"" children:@[
+	return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
+		return [UIMenu menuWithTitle: self->_includeTitle ? @"LNPopupController" : @"" children:@[
 			[UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:@[
 				[UIAction actionWithTitle:@"Visit GitHub Page" image:[UIImage systemImageNamed:@"safari"] identifier:nil handler:^(__kindof UIAction * _Nonnull action)
 				 {

@@ -15,6 +15,7 @@
 #import "SettingsTableViewController.h"
 #import "SplitViewController.h"
 #import "LNPopupControllerExample-Swift.h"
+#import "LNPopupDemoContextMenuInteraction.h"
 @import UIKit;
 
 @interface DemoView : UIView @end
@@ -297,8 +298,10 @@
 	
 	targetVC.shouldExtendPopupBarUnderSafeArea = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
 	
-//	UIContextMenuInteraction* i = [[UIContextMenuInteraction alloc] initWithDelegate:self];
-//	[targetVC.popupBar addInteraction:i];
+	if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsContextMenuEnabled])
+	{
+		[targetVC.popupBar addInteraction:[[LNPopupDemoContextMenuInteraction alloc] initWithTitle:YES]];
+	}
 	
 	if([[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsCustomBarEverywhereEnabled])
 	{

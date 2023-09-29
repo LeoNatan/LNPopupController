@@ -21,7 +21,7 @@ NSString* const PopupSettingsHidesBottomBarWhenPushed = @"PopupSettingsHidesBott
 NSString* const PopupSettingsVisualEffectViewBlurEffect = @"PopupSettingsVisualEffectViewBlurEffect";
 NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisualizerEnabled";
 NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
-NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimationsEnabled";
+NSString* const PopupSettingsContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
 
 @interface SettingsTableViewController ()
 {
@@ -33,7 +33,7 @@ NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimatio
 	IBOutlet UISwitch* _hidesBottomBarWhenPushed;
 	IBOutlet UISwitch* _touchVisualizer;
 	IBOutlet UISwitch* _customBar;
-	IBOutlet UISwitch* _slowAnimations;
+	IBOutlet UISwitch* _contextMenus;
 }
 
 @end
@@ -78,7 +78,7 @@ NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimatio
 	[_hidesBottomBarWhenPushed setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed] animated:animated];
 	[_touchVisualizer setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled] animated:animated];
 	[_customBar setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsCustomBarEverywhereEnabled] animated:animated];
-	[_slowAnimations setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsSlowAnimationsEnabled] animated:animated];
+	[_contextMenus setOn:[NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsContextMenuEnabled] animated:animated];
 	
 	if([NSProcessInfo.processInfo.processName isEqualToString:@"LNPopupUIExample"])
 	{
@@ -87,9 +87,6 @@ NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimatio
 		
 		_touchVisualizer.on = NO;
 		_touchVisualizer.enabled = NO;
-		
-		_slowAnimations.on = NO;
-		_slowAnimations.enabled = NO;
 	}
 }
 
@@ -138,7 +135,7 @@ NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimatio
 	[NSUserDefaults.standardUserDefaults setBool:YES forKey:PopupSettingsHidesBottomBarWhenPushed];
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsTouchVisualizerEnabled];
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsCustomBarEverywhereEnabled];
-	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsSlowAnimationsEnabled];
+	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsContextMenuEnabled];
 	[NSUserDefaults.standardUserDefaults removeObjectForKey:PopupSettingsVisualEffectViewBlurEffect];
 	
 	[_sectionToKeyMapping enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
@@ -186,9 +183,9 @@ NSString* const PopupSettingsSlowAnimationsEnabled = @"PopupSettingsSlowAnimatio
 	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsCustomBarEverywhereEnabled];
 }
 
-- (IBAction)_slowAnimationsEnabledDidChange:(UISwitch*)sender
+- (IBAction)_contextMenuEnabledDidChange:(UISwitch*)sender
 {
-	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsSlowAnimationsEnabled];
+	[NSUserDefaults.standardUserDefaults setBool:sender.isOn forKey:PopupSettingsContextMenuEnabled];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

@@ -21,7 +21,7 @@ extern NSString* const PopupSettingsHidesBottomBarWhenPushed;
 extern NSString* const PopupSettingsVisualEffectViewBlurEffect;
 extern NSString* const PopupSettingsTouchVisualizerEnabled;
 extern NSString* const PopupSettingsCustomBarEverywhereEnabled;
-extern NSString* const PopupSettingsSlowAnimationsEnabled;
+extern NSString* const PopupSettingsContextMenuEnabled;
 
 @interface SettingsTableViewController : UITableViewController
 

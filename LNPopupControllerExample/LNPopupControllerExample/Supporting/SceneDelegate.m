@@ -27,20 +27,12 @@
 		split.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
 	}
 #else
-	[NSUserDefaults.standardUserDefaults addObserver:self forKeyPath:PopupSettingsSlowAnimationsEnabled options:NSKeyValueObservingOptionInitial context:NULL];
 	[NSUserDefaults.standardUserDefaults addObserver:self forKeyPath:PopupSettingsTouchVisualizerEnabled options:NSKeyValueObservingOptionInitial context:NULL];
 	
 	LNTouchConfig* rippleConfig = [LNTouchConfig rippleConfig];
 	rippleConfig.fillColor = UIColor.systemPinkColor;
 	scene.touchVisualizerWindow.touchRippleConfig = rippleConfig;
 #endif
-}
-
-- (void)_updateWindowSpeed
-{
-	dispatch_async(dispatch_get_main_queue(), ^{
-		self.window.layer.speed = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsSlowAnimationsEnabled] ? 0.1 : 1.0;
-	});
 }
 
 - (void)_updateTouchVisualizer
@@ -50,13 +42,6 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-	if([keyPath isEqualToString:PopupSettingsSlowAnimationsEnabled])
-	{
-		[self _updateWindowSpeed];
-		
-		return;
-	}
-	
 	if([keyPath isEqualToString:PopupSettingsTouchVisualizerEnabled])
 	{
 		[self _updateTouchVisualizer];
@@ -76,7 +61,6 @@
 	
 	self.windowScene = nil;
 	
-	[NSUserDefaults.standardUserDefaults removeObserver:self forKeyPath:PopupSettingsSlowAnimationsEnabled];
 	[NSUserDefaults.standardUserDefaults removeObserver:self forKeyPath:PopupSettingsTouchVisualizerEnabled];
 }
 

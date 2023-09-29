@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LNPopupDemoContextMenuInteraction : UIContextMenuInteraction
 
 - (instancetype)init;
+- (instancetype)initWithTitle:(BOOL)title;
 + (instancetype)new;
 
 @end
