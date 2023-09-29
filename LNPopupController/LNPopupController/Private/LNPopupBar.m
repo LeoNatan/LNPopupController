@@ -416,7 +416,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		else
 		{
-			[CATransaction setAnimationDuration:0.25];
+			[CATransaction setAnimationDuration:0.5];
 		}
 	}
 	
@@ -475,7 +475,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_backgroundView.layer.mask = nil;
 		
 		_contentView.frame = frame;
-		_contentView.layer.cornerRadius = 0;
+		_contentView.cornerRadius = 0;
 		_floatingBackgroundShadowView.hidden = YES;
 	}
 	
@@ -667,14 +667,20 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_contentView.effect = self.activeAppearance.floatingBackgroundEffect;
 		_contentView.colorView.backgroundColor = self.activeAppearance.floatingBackgroundColor;
 		_contentView.imageView.image = self.activeAppearance.floatingBackgroundImage;
-		_contentView.contentMode = self.activeAppearance.floatingBackgroundImageContentMode;
+		_contentView.imageView.contentMode = self.activeAppearance.floatingBackgroundImageContentMode;
+		
+		_contentView.colorView.hidden = NO;
+		_contentView.imageView.hidden = NO;
 	}
 	else
 	{
 		_contentView.effect = nil;
 		_contentView.colorView.backgroundColor = UIColor.clearColor;
 		_contentView.imageView.image = nil;
-		_contentView.contentMode = self.activeAppearance.floatingBackgroundImageContentMode;
+		_contentView.imageView.contentMode = 0;
+		
+		_contentView.colorView.hidden = YES;
+		_contentView.imageView.hidden = YES;
 	}
 	
 	_backgroundView.effect = self.activeAppearance.backgroundEffect;

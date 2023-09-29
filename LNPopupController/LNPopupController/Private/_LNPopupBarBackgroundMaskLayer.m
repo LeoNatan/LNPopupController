@@ -134,7 +134,7 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 		CGContextSetBlendMode(ctx, kCGBlendModeClear);
 		
 		[UIColor.blackColor setFill];
-		[[UIBezierPath bezierPathWithRoundedRect:self.floatingFrame cornerRadius:self.floatingCornerRadius] fill];
+		[[UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.floatingFrame, 1, 1) cornerRadius:self.floatingCornerRadius] fill];
 	}
 	
 	UIGraphicsPopContext();

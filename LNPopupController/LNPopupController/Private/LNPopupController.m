@@ -145,7 +145,7 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 	}
 	
 	[self.popupBar layoutIfNeeded];
-	[self.popupBar.contentView setAlpha:1.0 - percent];
+	self.popupBar.contentView.contentView.alpha = 1.0 - percent;
 	
 	CGRect contentFrame = _containerController.view.bounds;
 	contentFrame.origin.x = self.popupBar.frame.origin.x;

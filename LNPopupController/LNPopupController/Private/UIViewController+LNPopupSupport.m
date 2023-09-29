@@ -392,7 +392,7 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 
 - (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea
 {
-	return self.popupBar.resolvedStyle != LNPopupBarStyleFloating && self.shouldExtendPopupBarUnderSafeArea;
+	return self._ln_popupController_nocreate.popupBar.resolvedStyle != LNPopupBarStyleFloating && self.shouldExtendPopupBarUnderSafeArea;
 }
 
 - (BOOL)shouldExtendPopupBarUnderSafeArea
