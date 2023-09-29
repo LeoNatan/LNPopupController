@@ -57,7 +57,7 @@ static NSString* const dCMIWDFCBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3
 		UIPreviewTarget* target = [[UIPreviewTarget alloc] initWithContainer:targetView center:[targetView convertPoint:CGPointMake(CGRectGetMidX(view.bounds), CGRectGetMidY(view.bounds)) fromView:view]];
 		
 		UIPreviewParameters* params = [UIPreviewParameters new];
-		params.backgroundColor = [UIColor.systemBackgroundColor colorWithAlphaComponent:0.5];
+		params.backgroundColor = [UIColor.systemBackgroundColor colorWithAlphaComponent:0.0];
 		rv = [[UITargetedPreview alloc] initWithView:view parameters:params target:target];
 	}
 	else if([self.view isKindOfClass:LNPopupBar.class] && rv.view == self.view)
@@ -73,6 +73,7 @@ static NSString* const dCMIWDFCBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3
 		LNPopupBar* popupBar = self.view;
 		[popupBar setHighlighted:NO animated:YES];
 		[popupBar _cancelAnyUserInteraction];
+		[popupBar setWantsBackgroundCutout:NO allowImplicitAnimations:NO];
 	}
 	
 	return rv;
@@ -83,7 +84,7 @@ static NSString* const dCMIWDFCBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3
 {
 	id<UIContextMenuInteractionCommitAnimating> animator = [self _ln_d_cMIWDFC:arg1];
 	
-	if([self.view isKindOfClass:LNPopupBar.class] && [arg1 valueForKey:@"previewProvider"] != nil)
+	if([self.view isKindOfClass:LNPopupBar.class])
 	{
 		dispatch_block_t animation = ^ {
 			[(LNPopupBar*)self.view floatingBackgroundShadowView].alpha = 0.0;
@@ -113,13 +114,19 @@ static NSString* const dCMIWDFCBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3
 			[[(LNPopupBar*)self.view floatingBackgroundShadowView] setAlpha:1.0];
 		};
 		
+		dispatch_block_t completion = ^ {
+			[(LNPopupBar*)self.view setWantsBackgroundCutout:YES allowImplicitAnimations:NO];
+		};
+		
 		if(animator)
 		{
-			[UIView animateWithDuration:0.2 delay:0.2 options:0 animations:animation completion:nil];
+			[animator addCompletion:completion];
+			[UIView animateWithDuration:0.2 delay:0.15 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:0 animations:animation completion:nil];
 		}
 		else
 		{
 			animation();
+			completion();
 		}
 	}
 	

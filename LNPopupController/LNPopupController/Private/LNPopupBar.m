@@ -249,6 +249,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	if(self)
 	{
 		self.preservesSuperviewLayoutMargins = YES;
+		self.clipsToBounds = NO;
 		
 		if (@available(iOS 13.4, *))
 		{
