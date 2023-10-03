@@ -8,7 +8,7 @@
 #import "LoremIpsum.h"
 #import "RandomColors.h"
 #import "SafeSystemImages.h"
-#import "SettingsTableViewController.h"
+#import "SettingKeys.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

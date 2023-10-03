@@ -8,7 +8,7 @@
 
 #if LNPOPUP
 #import "DemoPopupContentViewController.h"
-#import "SettingsTableViewController.h"
+#import "SettingKeys.h"
 #import "RandomColors.h"
 #import "LoremIpsum.h"
 #import "SafeSystemImages.h"

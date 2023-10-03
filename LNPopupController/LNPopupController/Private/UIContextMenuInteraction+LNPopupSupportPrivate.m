@@ -6,6 +6,7 @@
 //  Copyright © 2015-2021 Leo Natan. All rights reserved.
 //
 
+#import "UIViewController+LNPopupSupportPrivate.h"
 #import "UIContextMenuInteraction+LNPopupSupportPrivate.h"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
@@ -110,16 +111,31 @@ static NSString* const dCMIWDFCBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3
 	
 	if([self.view isKindOfClass:LNPopupBar.class])
 	{
+		LNPopupBar* popupBar = (LNPopupBar*)self.view;
+		
+		popupBar.bottomShadowView.alpha = 0.0;
+		popupBar.bottomShadowView.hidden = NO;
+		
+		dispatch_block_t alongside = ^ {
+			if(popupBar.resolvedStyle != LNPopupBarStyleFloating && popupBar.barContainingController._ln_shouldDisplayBottomShadowViewDuringTransition)
+			{
+				popupBar.bottomShadowView.alpha = 1.0;
+			}
+		};
+		
 		dispatch_block_t animation = ^ {
-			[[(LNPopupBar*)self.view floatingBackgroundShadowView] setAlpha:1.0];
+			popupBar.floatingBackgroundShadowView.alpha = 1.0;
 		};
 		
 		dispatch_block_t completion = ^ {
-			[(LNPopupBar*)self.view setWantsBackgroundCutout:YES allowImplicitAnimations:NO];
+			popupBar.bottomShadowView.alpha = 0.0;
+			popupBar.bottomShadowView.hidden = YES;
+			[popupBar setWantsBackgroundCutout:YES allowImplicitAnimations:NO];
 		};
 		
 		if(animator)
 		{
+			[animator addAnimations:alongside];
 			[animator addCompletion:completion];
 			[UIView animateWithDuration:0.2 delay:0.15 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:0 animations:animation completion:nil];
 		}

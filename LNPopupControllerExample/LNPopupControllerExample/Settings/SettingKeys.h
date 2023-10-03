@@ -1,5 +1,5 @@
 //
-//  SettingsTableViewController.h
+//  SettingKeys.h
 //  LNPopupControllerExample
 //
 //  Created by Leo Natan on 18/03/2017.
@@ -22,12 +22,5 @@ extern NSString* const PopupSettingsVisualEffectViewBlurEffect;
 extern NSString* const PopupSettingsTouchVisualizerEnabled;
 extern NSString* const PopupSettingsCustomBarEverywhereEnabled;
 extern NSString* const PopupSettingsContextMenuEnabled;
-
-@interface SettingsTableViewController : UITableViewController
-
-+ (instancetype)newSettingsTableViewController;
-- (void)reset;
-
-@end
 
 NS_ASSUME_NONNULL_END

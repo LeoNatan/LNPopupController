@@ -33,6 +33,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 @interface UIViewController (LNPopupSupportPrivate)
 
+- (BOOL)_ln_shouldDisplayBottomShadowViewDuringTransition;
+
 - (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea;
 
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;

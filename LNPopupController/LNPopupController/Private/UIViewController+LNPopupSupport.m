@@ -9,7 +9,6 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupItem+Private.h"
 #import "_LNWeakRef.h"
-#import "UIViewController+LNPopupSupportPrivate.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "LNMath.h"
@@ -388,11 +387,6 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 - (CGRect)defaultFrameForBottomDockingView_internalOrDeveloper
 {
 	return [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
-}
-
-- (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea
-{
-	return self._ln_popupController_nocreate.popupBar.resolvedStyle != LNPopupBarStyleFloating && self.shouldExtendPopupBarUnderSafeArea;
 }
 
 - (BOOL)shouldExtendPopupBarUnderSafeArea

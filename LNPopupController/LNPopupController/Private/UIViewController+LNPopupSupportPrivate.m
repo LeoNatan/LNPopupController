@@ -288,6 +288,20 @@ static void __accessibilityBundleLoadHandler(void)
 	}
 }
 
+- (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea
+{
+	return self._ln_popupController_nocreate.popupBar.resolvedStyle != LNPopupBarStyleFloating && self.shouldExtendPopupBarUnderSafeArea;
+}
+
+- (BOOL)_ln_shouldDisplayBottomShadowViewDuringTransition
+{
+	BOOL bottomBarExtensionIsVisible = self._ln_bottomBarExtension_nocreate.isHidden == NO && self._ln_bottomBarExtension_nocreate.alpha > 0 && self._ln_bottomBarExtension_nocreate.frame.size.height > 0;
+	BOOL backgroundVisible = self.ln_popupController.popupBar.backgroundView.isHidden == NO && self.ln_popupController.popupBar.backgroundView.alpha > 0;
+	BOOL bottomBarVisible = self.ln_popupController.bottomBar.hidden == NO;
+	
+	return bottomBarExtensionIsVisible == NO && backgroundVisible == YES && bottomBarVisible == YES;
+}
+
 static inline __attribute__((always_inline)) void _LNUpdateUserSafeAreaInsets(id self, UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
 {
 	UIEdgeInsets final = __LNEdgeInsetsSum(userEdgeInsets, popupUserEdgeInsets);

@@ -1,5 +1,5 @@
 #import "SceneDelegate.h"
-#import "SettingsTableViewController.h"
+#import "SettingKeys.h"
 
 @import LNTouchVisualizer;
 

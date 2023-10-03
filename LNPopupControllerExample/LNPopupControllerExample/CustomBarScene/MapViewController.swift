@@ -44,12 +44,9 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		
 		backButtonBackground.effect = UIBlurEffect(style: .systemChromeMaterial)
 		backButtonBackground.layer.cornerCurve = .continuous
-	}
-	
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
 		
-		topVisualEffectView.effect = UIBlurEffect(variableBlurRadius: 5, imageMask: UIImage.gradientImage(withHeight: topVisualEffectView.bounds.size.height, scale: self.view.window!.screen.scale, colors: [UIColor.white, UIColor.clear], locations: [0.0, 0.85]))
+		topVisualEffectView.effect = UIBlurEffect(variableBlurRadius: 3, imageMask: UIImage(named: "statusBarMask")!)
+		
 	}
 	
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

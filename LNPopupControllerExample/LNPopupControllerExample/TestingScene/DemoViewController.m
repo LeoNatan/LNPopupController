@@ -12,7 +12,7 @@
 #import "DemoViewController.h"
 #import "DemoPopupContentViewController.h"
 #import "RandomColors.h"
-#import "SettingsTableViewController.h"
+#import "SettingKeys.h"
 #import "SplitViewController.h"
 #import "LNPopupControllerExample-Swift.h"
 #import "LNPopupDemoContextMenuInteraction.h"
@@ -257,7 +257,7 @@
 	}
 	
 	NSNumber* effectOverride = [NSUserDefaults.standardUserDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
-	if(effectOverride != nil)
+	if(effectOverride != nil && effectOverride.unsignedIntValue != 0xffff)
 	{
 		if(targetVC.popupBar.effectiveBarStyle == LNPopupBarStyleFloating)
 		{

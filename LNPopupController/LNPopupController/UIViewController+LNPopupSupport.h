@@ -39,7 +39,7 @@ typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	
 	/// No interaction
 	LNPopupInteractionStyleNone = 0xFFFF
-};
+} NS_SWIFT_NAME(__LNPopupInteractionStyle);
 
 /// The state of the popup presentation.
 typedef NS_ENUM(NSInteger, LNPopupPresentationState){
