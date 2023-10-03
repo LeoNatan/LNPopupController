@@ -1,7 +1,4 @@
 #import "SceneDelegate.h"
-#import "SettingKeys.h"
-
-@import LNTouchVisualizer;
 
 @interface SceneDelegate ()
 
@@ -26,30 +23,7 @@
 		UISplitViewController* split = (id)self.window.rootViewController;
 		split.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
 	}
-#else
-	[NSUserDefaults.standardUserDefaults addObserver:self forKeyPath:PopupSettingsTouchVisualizerEnabled options:NSKeyValueObservingOptionInitial context:NULL];
-	
-	LNTouchConfig* rippleConfig = [LNTouchConfig rippleConfig];
-	rippleConfig.fillColor = UIColor.systemPinkColor;
-	scene.touchVisualizerWindow.touchRippleConfig = rippleConfig;
 #endif
-}
-
-- (void)_updateTouchVisualizer
-{
-	self.windowScene.touchVisualizerEnabled = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsTouchVisualizerEnabled];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
-	if([keyPath isEqualToString:PopupSettingsTouchVisualizerEnabled])
-	{
-		[self _updateTouchVisualizer];
-		
-		return;
-	}
-	
-	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (void)sceneDidDisconnect:(UIScene *)scene 
@@ -60,8 +34,6 @@
 	// The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
 	
 	self.windowScene = nil;
-	
-	[NSUserDefaults.standardUserDefaults removeObserver:self forKeyPath:PopupSettingsTouchVisualizerEnabled];
 }
 
 

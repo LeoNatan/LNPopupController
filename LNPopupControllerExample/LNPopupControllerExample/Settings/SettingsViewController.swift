@@ -9,7 +9,7 @@
 import SwiftUI
 import LNPopupController
 
-fileprivate extension UIBlurEffect.Style {
+extension UIBlurEffect.Style {
 	static let `default` = UIBlurEffect.Style(rawValue: 0xffff)!
 }
 
@@ -94,6 +94,8 @@ struct SettingsView : View {
 				}
 			} header: {
 				Text("Background Blur Style")
+			} footer: {
+				Text("Uses the default material chosen by the system.")
 			}
 			
 			Section {
@@ -129,16 +131,30 @@ struct SettingsView : View {
 			
 			Section {
 				Toggle("Extend Bar Under Safe Area", isOn: $extendBar)
+			} header: {
+				Text("Settings")
 			} footer: {
-				Text("Enables setting the `shouldExtendPopupBarUnderSafeArea` variable.")
+				if isLNPopupUIExample {
+					Text("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
+				} else {
+					Text("Sets the `shouldExtendPopupBarUnderSafeArea` property to `true` in standard demo scenes.")
+				}
 			}
 			
-			if !isLNPopupUIExample {
-				Section {
-					Toggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar)
-				} footer: {
-					Text("Enables setting the `hidesBottomBarWhenPushed` variable of pushed controllers.")
+			Section {
+				Toggle("Hides Bottom Bar When Pushed", isOn: !isLNPopupUIExample ? $hideBottomBar : Binding.constant(false))
+			} footer: {
+				if isLNPopupUIExample {
+					Text("Not supported in SwiftUI yet.")
+				} else {
+					Text("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
 				}
+			}.disabled(isLNPopupUIExample)
+			
+			Section {
+				Toggle("Context Menu Interactions", isOn: $contextMenu)
+			} footer: {
+				Text("Enables popup bar context menu interaction in standard demo scenes.")
 			}
 			
 			Section {
@@ -154,17 +170,9 @@ struct SettingsView : View {
 			}
 			
 			Section {
-				Toggle("Context Menu Interactions", isOn: $contextMenu)
+				Toggle("Touch Visualizer", isOn: $touchVisualizer)
 			} footer: {
-				Text("Enables popup bar context menu interaction in standard demo scenes.")
-			}
-			
-			if !isLNPopupUIExample {
-				Section {
-					Toggle("Touch Visualizer", isOn: $touchVisualizer)
-				} footer: {
-					Text("Enables visualization of touches within the app, for demo purposes.")
-				}
+				Text("Enables visualization of touches within the app, for demo purposes.")
 			}
 		}.accentColor(.pink).pickerStyle(.inline)
 	}
@@ -175,7 +183,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		super.init(coder: aDecoder, rootView: SettingsView())
 	}
 	
-	@IBAction func reset() {
+	class func reset() {
 		UserDefaults.standard.removeObject(forKey: PopupSettingsEnableCustomizations)
 		UserDefaults.standard.set(true, forKey: PopupSettingsExtendBar)
 		UserDefaults.standard.set(true, forKey: PopupSettingsHidesBottomBarWhenPushed)
@@ -187,7 +195,36 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
 			UserDefaults.standard.removeObject(forKey: key)
 		}
-
+		
 		UserDefaults.standard.setValue(0xffff, forKey: PopupSettingsVisualEffectViewBlurEffect)
+	}
+	
+	@IBAction func reset() {
+		SettingsViewController.reset()
+	}
+}
+
+@available(iOS 16.0, *)
+struct SettingsNavView: View {
+	@Environment(\.presentationMode) var presentationMode
+	
+	var body: some View {
+		NavigationStack {
+			SettingsView()
+				.navigationTitle("Settings")
+				.toolbar {
+					ToolbarItem(placement: .navigationBarLeading) {
+						Button("Reset") {
+							SettingsViewController.reset()
+						}
+					}
+					ToolbarItem(placement: .confirmationAction) {
+						Button("Done") {
+							self.presentationMode.wrappedValue.dismiss()
+						}
+					}
+				}
+				.navigationBarTitleDisplayMode(.inline)
+		}.frame(minWidth: 320, minHeight: 480)
 	}
 }
