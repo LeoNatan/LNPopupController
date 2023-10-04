@@ -11,7 +11,7 @@
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupBarBackgroundView.h"
 #import "_LNPopupBackgroundShadowView.h"
-#import "_LNPopupBarBackgroundMaskLayer.h"
+#import "_LNPopupBarBackgroundMaskView.h"
 
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
@@ -105,7 +105,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic) BOOL wantsBackgroundCutout;
 - (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout allowImplicitAnimations:(BOOL)allowImplicitAnimations;
-@property (nonatomic, strong) _LNPopupBarBackgroundMaskLayer* backgroundMask;
+@property (nonatomic, strong) _LNPopupBarBackgroundMaskView* backgroundGradientMaskView;
 
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView;

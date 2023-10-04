@@ -284,6 +284,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_backgroundMaskView.frame = self.bounds;
 		_backgroundView.effectView.maskView = _backgroundMaskView;
 		
+		_backgroundGradientMaskView = [_LNPopupBarBackgroundMaskView new];
+		_backgroundView.maskView = _backgroundGradientMaskView;
+		
 		self.effectGroupingIdentifier = nil;
 		
 		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
@@ -292,6 +295,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[_toolbar.standardAppearance configureWithTransparentBackground];
 #if LN_POPUP_BAR_LAYOUT_DEBUG
 		_toolbar.standardAppearance.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
+		_toolbar.layer.borderColor = UIColor.blackColor.CGColor;
+		_toolbar.layer.borderWidth = 1.0;
 #endif
 		_toolbar.compactAppearance = _toolbar.standardAppearance;
 		if(@available(iOS 15.0, *))
@@ -380,12 +385,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	if(_customBarViewController)
 	{
 		CGRect frame = self.bounds;
-
+		
 		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
 		frame.size.height = barHeight;
 		[_contentView setFrame:frame];
 	}
-
+	
 	[super updateConstraints];
 }
 
@@ -408,31 +413,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout allowImplicitAnimations:(BOOL)allowImplicitAnimations
 {
-	[CATransaction begin];
-	
-	{
-		if(allowImplicitAnimations == NO)
-		{
-			[CATransaction setDisableActions:YES];
-		}
-		else
-		{
-			[CATransaction setAnimationDuration:0.5];
-		}
-	}
-	
 	_wantsBackgroundCutout = wantsBackgroundCutout;
-	_backgroundMask.wantsCutout = wantsBackgroundCutout;
-	[_backgroundMask setNeedsDisplay];
-	[_backgroundMask displayIfNeeded];
-	
-	[CATransaction commit];
+	_backgroundGradientMaskView.wantsCutout = wantsBackgroundCutout;
+	[_backgroundGradientMaskView setNeedsDisplay];
+	[_backgroundGradientMaskView.layer displayIfNeeded];
 }
 
-- (void)layoutSubviews
+- (void)_layoutSubviews
 {
-	[super layoutSubviews];
-	
 	CGRect frame = self.bounds;
 	
 	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
@@ -450,17 +438,16 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_contentView.frame = floatingBackgroundFrame;
 		_contentView.cornerRadius = 14;
 		
-		if(_backgroundMask == nil)
-		{
-			_backgroundMask = [_LNPopupBarBackgroundMaskLayer layer];
-		}
-		_backgroundMask.floatingFrame = floatingBackgroundFrame;
-		_backgroundMask.floatingCornerRadius = _contentView.cornerRadius;
-		_backgroundMask.wantsCutout = self.wantsBackgroundCutout;
-		_backgroundMask.frame = _backgroundView.effectView.bounds;
-		[_backgroundMask setNeedsDisplay];
+		_backgroundGradientMaskView.frame = _backgroundView.bounds;
+		_backgroundGradientMaskView.floatingFrame = floatingBackgroundFrame;
+		_backgroundGradientMaskView.floatingCornerRadius = _contentView.cornerRadius;
+		_backgroundGradientMaskView.wantsCutout = self.wantsBackgroundCutout;
+		[_backgroundGradientMaskView setNeedsDisplay];
 		
-		_backgroundView.layer.mask = _backgroundMask;
+		if(_backgroundView.maskView != _backgroundGradientMaskView)
+		{
+			_backgroundView.maskView = _backgroundGradientMaskView;
+		}
 		
 		_floatingBackgroundShadowView.hidden = NO;
 		_floatingBackgroundShadowView.frame = floatingBackgroundFrame;
@@ -471,9 +458,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
-		[_backgroundMask removeFromSuperlayer];
-		_backgroundMask = nil;
-		_backgroundView.layer.mask = nil;
+		_backgroundView.maskView = nil;
 		
 		_contentView.frame = frame;
 		_contentView.cornerRadius = 0;
@@ -489,10 +474,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	[self _layoutImageView];
 	
-	CGFloat toolbarWidth = _contentView.bounds.size.width;
-	CGSize toolbarSize = [_toolbar sizeThatFits:CGSizeMake(toolbarWidth, CGFLOAT_MAX)];
-	_toolbar.bounds = CGRectMake(0, 0, toolbarWidth, toolbarSize.height);
-	_toolbar.center = CGPointMake(_contentView.bounds.size.width / 2, _contentView.bounds.size.height / 2);
+	_toolbar.bounds = CGRectMake(0, 0, _contentView.bounds.size.width, 44);
+	_toolbar.center = CGPointMake(CGRectGetMidX(_contentView.bounds), CGRectGetMidY(_contentView.bounds));
 	[_toolbar setNeedsLayout];
 	[_toolbar layoutIfNeeded];
 	
@@ -525,6 +508,59 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	[self _layoutTitles];
+}
+
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	
+	if(unavailable(iOS 17, *)) {
+		if(__applySwiftUILayoutFixes)
+		{
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self _layoutSubviews];
+			});
+		}
+	}
+	
+	[self _layoutSubviews];
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+	static NSString* willRotate = nil;
+	static NSString* didRotate = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		//UIWindowWillRotateNotification
+		willRotate = _LNPopupDecodeBase64String(@"VUlXaW5kb3dXaWxsUm90YXRlTm90aWZpY2F0aW9u");
+		//UIWindowDidRotateNotification
+		didRotate = _LNPopupDecodeBase64String(@"VUlXaW5kb3dEaWRSb3RhdGVOb3RpZmljYXRpb24=");
+	});
+	
+	if(self.window)
+	{
+		[NSNotificationCenter.defaultCenter removeObserver:self name:willRotate object:self.window];
+		[NSNotificationCenter.defaultCenter removeObserver:self name:didRotate object:self.window];
+	}
+	
+	[super willMoveToWindow:newWindow];
+	
+	if(newWindow)
+	{
+		[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_windowWillRotate:) name:willRotate object:newWindow];
+		[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_windowDidRotate:) name:didRotate object:newWindow];
+	}
+}
+
+- (void)_windowWillRotate:(NSNotification*)note
+{
+	[self setWantsBackgroundCutout:NO allowImplicitAnimations:NO];
+}
+
+- (void)_windowDidRotate:(NSNotification*)note
+{
+	[self setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
 }
 
 - (NSString*)_effectGroupingIdentifierKey
@@ -1010,7 +1046,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[rightViewFirst.superview layoutIfNeeded];
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
-	CGFloat imageToTitlePadding = isFloating ? 8 : self.layoutMargins.left;
+	CGFloat imageToTitlePadding = isFloating ? 8 : _contentView.layoutMargins.left - _contentView.safeAreaInsets.left;
 	
 	CGRect leftViewLastFrame = CGRectZero;
 	if(leftViewLast != nil)
@@ -1019,7 +1055,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		if(leftViewLast == _imageView)
 		{
-			leftViewLastFrame.size.width += isFloating ? imageToTitlePadding : MIN(_contentView.layoutMargins.left, imageToTitlePadding);
+			leftViewLastFrame.size.width += imageToTitlePadding;
 		}
 		else
 		{
@@ -1034,7 +1070,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		if(rightViewFirst == _imageView)
 		{
-			rightViewFirstFrame.origin.x -= isFloating ? imageToTitlePadding : MIN(_contentView.layoutMargins.left, imageToTitlePadding);
+			rightViewFirstFrame.origin.x -= imageToTitlePadding;
 		}
 		else
 		{

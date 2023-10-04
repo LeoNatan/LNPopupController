@@ -21,8 +21,8 @@
 		39314A531B6AE7A400574D3C /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 39314A511B6AE7A400574D3C /* MarqueeLabel.m */; };
 		393E4EA72670F12500929E47 /* LNPopupBarAppearance.m in Sources */ = {isa = PBXBuildFile; fileRef = 393E4EA52670F12500929E47 /* LNPopupBarAppearance.m */; };
 		393E4EAA2670F2D000929E47 /* LNPopupBarAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		394005FC2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.h */; };
-		394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.m */; };
+		394005FC2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h in Headers */ = {isa = PBXBuildFile; fileRef = 394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */; };
+		394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m */; };
 		3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */; };
 		3947E1A61B61CD650001178B /* LNPopupBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A41B61CD650001178B /* LNPopupBar.m */; };
@@ -89,8 +89,8 @@
 		393E4EA52670F12500929E47 /* LNPopupBarAppearance.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupBarAppearance.m; sourceTree = "<group>"; };
 		393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupBarAppearance.h; sourceTree = "<group>"; };
 		393E4EAC26713E5700929E47 /* LNPopupBarAppearance+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupBarAppearance+Private.h"; sourceTree = "<group>"; };
-		394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupBarBackgroundMaskLayer.h; sourceTree = "<group>"; };
-		394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupBarBackgroundMaskLayer.m; sourceTree = "<group>"; };
+		394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupBarBackgroundMaskView.h; sourceTree = "<group>"; };
+		394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupBarBackgroundMaskView.m; sourceTree = "<group>"; };
 		3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIViewController+LNPopupSupport.h"; sourceTree = "<group>"; };
 		3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIViewController+LNPopupSupport.m"; sourceTree = "<group>"; };
 		3947E1A41B61CD650001178B /* LNPopupBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNPopupBar.m; sourceTree = "<group>"; };
@@ -164,8 +164,8 @@
 				390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.m */,
 				397D9A152687474D005164AB /* _LNPopupBarBackgroundView.h */,
 				397D9A162687474D005164AB /* _LNPopupBarBackgroundView.m */,
-				394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.h */,
-				394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.m */,
+				394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */,
+				394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m */,
 				3947E1B81B6300370001178B /* LNPopupBar+Private.h */,
 				3947E1A41B61CD650001178B /* LNPopupBar.m */,
 				393E4EAC26713E5700929E47 /* LNPopupBarAppearance+Private.h */,
@@ -277,7 +277,7 @@
 				39B3EB0D24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h in Headers */,
 				3947E1BA1B6300370001178B /* LNPopupBar+Private.h in Headers */,
 				398C2901260CCDA0000690FB /* UIViewController+LNPopupSupportPrivate.h in Headers */,
-				394005FC2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.h in Headers */,
+				394005FC2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h in Headers */,
 				397D9A172687474E005164AB /* _LNPopupBarBackgroundView.h in Headers */,
 				397AFC051F1A229400E7D95C /* LNPopupInteractionPanGestureRecognizer.h in Headers */,
 				396A8DE826BEA36B005914B0 /* LNPopupBarAppearanceChainProxy.h in Headers */,
@@ -387,7 +387,7 @@
 				39314A531B6AE7A400574D3C /* MarqueeLabel.m in Sources */,
 				3907CDB824D9BD6E007C9300 /* LNPopupContentView.m in Sources */,
 				391481BA1DCFA514002416D1 /* LNChevronView.m in Sources */,
-				394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskLayer.m in Sources */,
+				394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m in Sources */,
 				399BA1D52A9E975E00CA5167 /* _LNPopupUIBarAppearanceProxy.m in Sources */,
 				397D9A182687474E005164AB /* _LNPopupBarBackgroundView.m in Sources */,
 				3947E1A61B61CD650001178B /* LNPopupBar.m in Sources */,

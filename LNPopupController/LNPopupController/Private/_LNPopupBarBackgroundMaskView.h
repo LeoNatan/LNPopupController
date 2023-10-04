@@ -1,5 +1,5 @@
 //
-//  _LNPopupBarBackgroundMaskLayer.h
+//  _LNPopupBarBackgroundMaskView.h
 //  LNPopupController
 //
 //  Created by Leo Natan on 27/09/2023.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface _LNPopupBarBackgroundMaskLayer: CALayer
+@interface _LNPopupBarBackgroundMaskView: UIView
 
 @property (nonatomic) BOOL wantsCutout;
 @property (nonatomic) CGRect floatingFrame;

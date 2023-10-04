@@ -1529,10 +1529,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)_sTH:(BOOL)hidden e:(UIRectEdge)edge d:(NSTimeInterval)duration;
 {
 	BOOL isFloating = self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating;
-	if(isFloating == NO)
-	{
-		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
-	}
 	
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
@@ -1557,6 +1553,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	if(wasToolbarHidden != hidden)
 	{
+		if(isFloating == NO)
+		{
+			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+		}
+		
 		self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
 		
 		if(hidden == YES)

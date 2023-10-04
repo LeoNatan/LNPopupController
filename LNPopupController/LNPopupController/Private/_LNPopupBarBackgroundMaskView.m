@@ -1,12 +1,12 @@
 //
-//  _LNPopupBarBackgroundMaskLayer.m
+//  _LNPopupBarBackgroundMaskView.m
 //  LNPopupController
 //
 //  Created by Leo Natan on 27/09/2023.
 //  Copyright © 2023 Leo Natan. All rights reserved.
 //
 
-#import "_LNPopupBarBackgroundMaskLayer.h"
+#import "_LNPopupBarBackgroundMaskView.h"
 
 //https://github.com/janselv/smooth-gradient
 
@@ -100,7 +100,7 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 	return gradient;
 }
 
-@implementation _LNPopupBarBackgroundMaskLayer
+@implementation _LNPopupBarBackgroundMaskView
 {
 	CGGradientRef _gradient;
 }
@@ -112,6 +112,7 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 	if(self)
 	{
 		_gradient = _LNGradientCreateWithEaseFunction(_LNEaseInOutSine, UIColor.clearColor, UIColor.whiteColor);
+		self.backgroundColor = UIColor.clearColor;
 	}
 	
 	return self;
@@ -123,8 +124,10 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 	_gradient = NULL;
 }
 
-- (void)drawInContext:(CGContextRef)ctx
+- (void)drawRect:(CGRect)rect
 {
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	
 	UIGraphicsPushContext(ctx);
 	
 	CGContextDrawLinearGradient(ctx, _gradient, CGPointMake(self.bounds.size.width / 2, 0), CGPointMake(self.bounds.size.width / 2, self.bounds.size.height), 0);
