@@ -40,7 +40,7 @@ void UICollectionViewCell_fix_highglight(void)
 			animated = YES;
 		}
 		
-		orig(_self, sel, highlighted, YES);
+		orig(_self, sel, highlighted, animated);
 	}));
 }
 
