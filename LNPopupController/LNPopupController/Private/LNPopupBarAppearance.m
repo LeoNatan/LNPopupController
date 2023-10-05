@@ -312,7 +312,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 		}
 		else
 		{
-			return [UIColor.blackColor colorWithAlphaComponent:0.15];
+			return [UIColor.systemGray2Color colorWithAlphaComponent:0.2];
 		}
 	}];
 	
