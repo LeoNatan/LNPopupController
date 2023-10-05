@@ -20,6 +20,18 @@
 
 @implementation IntroWebViewController
 
+- (void)_updateTitle
+{
+	NSString* title = @"Welcome to LNPopupController!";
+	
+	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
+	[attribTitle addAttributes: @{
+		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:16 weight:UIFontWeightHeavy]],
+	} range:[title rangeOfString:@"LNPopupController"]];
+	
+	self.popupItem.attributedTitle = attribTitle;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -49,18 +61,14 @@
 		[self.view.trailingAnchor constraintEqualToAnchor:effectView.trailingAnchor],
 	]];
 	
-	NSString* title = @"Welcome to LNPopupController!";
-	
-	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
-	[attribTitle addAttributes: @{
-		NSFontAttributeName: [UIFont systemFontOfSize:16 weight:UIFontWeightHeavy],
-	} range:[title rangeOfString:@"LNPopupController"]];
-	
-	self.popupItem.attributedTitle = attribTitle;
 	self.popupItem.image = [UIImage imageNamed:@"AppIcon60x60"];
 	self.popupItem.barButtonItems = @[
 		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill", NO) style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
+	
+	[self _updateTitle];
+	
+	[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_updateTitle) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
 - (IBAction)_navigate:(id)sender

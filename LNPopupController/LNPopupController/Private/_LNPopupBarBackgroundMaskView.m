@@ -124,6 +124,13 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 	_gradient = NULL;
 }
 
+- (void)setWantsCutout:(BOOL)wantsCutout
+{
+	_wantsCutout = wantsCutout;
+	
+	[self setNeedsDisplay];
+}
+
 - (void)drawRect:(CGRect)rect
 {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();

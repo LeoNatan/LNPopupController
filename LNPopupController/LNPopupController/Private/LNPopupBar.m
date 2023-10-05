@@ -413,10 +413,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout allowImplicitAnimations:(BOOL)allowImplicitAnimations
 {
-	_wantsBackgroundCutout = wantsBackgroundCutout;
-	_backgroundGradientMaskView.wantsCutout = wantsBackgroundCutout;
-	[_backgroundGradientMaskView setNeedsDisplay];
-	[_backgroundGradientMaskView.layer displayIfNeeded];
+	if(_wantsBackgroundCutout != wantsBackgroundCutout)
+	{
+		_wantsBackgroundCutout = wantsBackgroundCutout;
+		_backgroundGradientMaskView.wantsCutout = wantsBackgroundCutout;
+	}
 }
 
 - (void)_layoutSubviews
@@ -438,6 +439,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_contentView.frame = floatingBackgroundFrame;
 		_contentView.cornerRadius = 14;
 		
+		_backgroundGradientMaskView.hidden = NO;
 		_backgroundGradientMaskView.frame = _backgroundView.bounds;
 		_backgroundGradientMaskView.floatingFrame = floatingBackgroundFrame;
 		_backgroundGradientMaskView.floatingCornerRadius = _contentView.cornerRadius;
@@ -458,6 +460,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
+		_backgroundGradientMaskView.hidden = YES;
 		_backgroundView.maskView = nil;
 		
 		_contentView.frame = frame;
@@ -738,6 +741,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		_bottomShadowView.hidden = YES;
 	}
+	
+	_floatingBackgroundShadowView.shadow = self.activeAppearance.floatingBarBackgroundShadow;
 
 	[self.customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 	
@@ -935,14 +940,17 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		__FakeMarqueeLabel* rv = [[__FakeMarqueeLabel alloc] initWithFrame:_titlesView.bounds];
 		rv.minimumScaleFactor = 1.0;
 		rv.lineBreakMode = NSLineBreakByTruncatingTail;
+		rv.adjustsFontForContentSizeCategory = YES;
 		return rv;
 	}
+	
 	MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:_titlesView.bounds rate:self.activeAppearance.marqueeScrollRate andFadeLength:10];
 	rv.leadingBuffer = 0.0;
 	rv.trailingBuffer = 20.0;
 	rv.animationDelay = self.activeAppearance.marqueeScrollDelay;
 	rv.marqueeType = MLContinuous;
 	rv.holdScrolling = YES;
+	rv.adjustsFontForContentSizeCategory = YES;
 	return rv;
 }
 

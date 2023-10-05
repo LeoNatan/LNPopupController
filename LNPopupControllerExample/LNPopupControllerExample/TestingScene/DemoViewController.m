@@ -36,7 +36,7 @@
 
 @interface DemoViewController ()
 #if LNPOPUP
-< UIContextMenuInteractionDelegate, LNPopupPresentationDelegate >
+< LNPopupPresentationDelegate >
 #endif
 
 @property (nonatomic, strong) NSString* colorSeedString;
@@ -152,10 +152,10 @@
 		[ta configureWithDefaultBackground];
 		ta.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
 		self.navigationController.toolbar.standardAppearance = ta;
-	}
 #if LNPOPUP
-}
+	}
 #endif
+}
 
 - (UIViewController*)_targetVCForPopup
 {
@@ -282,13 +282,15 @@
 		appearance.titleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]};
 		appearance.subtitleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]};
 		
+		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
 		if(targetVC.popupBar.barStyle == LNPopupBarStyleFloating || (targetVC.popupBar.barStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 		{
 			appearance.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+			appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
 		}
 		else
 		{
-			targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
+			
 			appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
 		}
 		
@@ -333,29 +335,6 @@
 		[(DemoViewController*)segue.destinationViewController setColorSeedCount:self.colorSeedCount + 1];
 	}
 }
-
-#pragma mark UIContextMenuInteractionDelegate
-
-#if LNPOPUP
-- (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location
-{
-	return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:nil];
-}
-
-- (void)contextMenuInteraction:(UIContextMenuInteraction *)interaction willEndForConfiguration:(UIContextMenuConfiguration *)configuration animator:(nullable id<UIContextMenuInteractionAnimating>)animator
-{
-	[animator addAnimations:^{
-		UIActivityViewController* avc = [[UIActivityViewController alloc] initWithActivityItems:@[[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]] applicationActivities:nil];
-		avc.modalPresentationStyle = UIModalPresentationFormSheet;
-		avc.popoverPresentationController.sourceView = [self _targetVCForPopup].popupBar;
-		[self presentViewController:avc animated:YES completion:nil];
-	}];
-	
-	[animator addCompletion:^{
-		
-	}];
-}
-#endif
 
 #pragma mark LNPopupPresentationDelegate
 

@@ -128,6 +128,13 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	[self _notify];
 }
 
+- (void)setFloatingBarBackgroundShadow:(NSShadow *)floatingBarBackgroundShadow
+{
+	_floatingBarBackgroundShadow = floatingBarBackgroundShadow;
+	
+	[self _notify];
+}
+
 - (void)_commonInit
 {
 	//changeObserver
@@ -177,6 +184,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	[coder encodeObject:self.floatingBackgroundColor forKey:@"floatingBackgroundColor"];
 	[coder encodeObject:self.floatingBackgroundImage forKey:@"floatingBackgroundImage"];
 	[coder encodeInteger:self.floatingBackgroundImageContentMode forKey:@"floatingBackgroundImageContentMode"];
+	[coder encodeObject:self.floatingBarBackgroundShadow forKey:@"floatingBarBackgroundShadow"];
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -205,6 +213,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 		self.floatingBackgroundColor = [coder decodeObjectForKey:@"floatingBackgroundColor"];
 		self.floatingBackgroundImage = [coder decodeObjectForKey:@"floatingBackgroundImage"];
 		self.floatingBackgroundImageContentMode = [coder decodeIntegerForKey:@"floatingBackgroundImageContentMode"];
+		self.floatingBarBackgroundShadow = [coder decodeObjectForKey:@"floatingBarBackgroundShadow"];
 		
 		[self _commonInit];
 	}
@@ -233,6 +242,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 		self.floatingBackgroundImage = other.floatingBackgroundImage;
 		self.floatingBackgroundEffect = other.floatingBackgroundEffect;
 		self.floatingBackgroundImageContentMode = other.floatingBackgroundImageContentMode;
+		self.floatingBarBackgroundShadow = other.floatingBarBackgroundShadow;
 		
 		[self _commonInit];
 	}
@@ -263,6 +273,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	copy.floatingBackgroundImage = self.floatingBackgroundImage;
 	copy.floatingBackgroundEffect = self.floatingBackgroundEffect;
 	copy.floatingBackgroundImageContentMode = self.floatingBackgroundImageContentMode;
+	copy.floatingBarBackgroundShadow = self.floatingBarBackgroundShadow;
 	
 	return copy;
 }
@@ -288,6 +299,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	rv = rv && [self.floatingBackgroundImage isEqual:other.floatingBackgroundImage];
 	rv = rv && [self.floatingBackgroundEffect isEqual:other.floatingBackgroundEffect];
 	rv = rv && (self.floatingBackgroundImageContentMode == other.floatingBackgroundImageContentMode);
+	rv = rv && [self.floatingBarBackgroundShadow isEqual:other.floatingBarBackgroundShadow];
 	return rv;
 }
 
@@ -300,7 +312,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 		}
 		else
 		{
-			return [UIColor.systemGray3Color colorWithAlphaComponent:0.25];
+			return [UIColor.blackColor colorWithAlphaComponent:0.15];
 		}
 	}];
 	
@@ -324,6 +336,15 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	[self _notify];
 }
 
+- (NSShadow*)_defaultFloatingBarBackgroundShadow
+{
+	NSShadow* shadow = [NSShadow new];
+	shadow.shadowColor = [UIColor.blackColor colorWithAlphaComponent:0.15];
+	shadow.shadowOffset = CGSizeMake(0.0, 0.0);
+	shadow.shadowBlurRadius = 8.0;
+	return shadow;
+}
+
 - (void)configureWithDefaultFloatingBackground
 {
 	UIBarAppearance* temp = [UIBarAppearance new];
@@ -333,6 +354,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	self.floatingBackgroundImage = temp.backgroundImage;
 	self.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
 	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
+	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;
 	
 	[self _notify];
 }
@@ -346,6 +368,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	self.floatingBackgroundImage = temp.backgroundImage;
 	self.floatingBackgroundEffect = temp.backgroundEffect;
 	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
+	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;
 	
 	[self _notify];
 }
@@ -359,6 +382,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	self.floatingBackgroundImage = temp.backgroundImage;
 	self.floatingBackgroundEffect = temp.backgroundEffect;
 	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
+	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;
 	
 	[self _notify];
 }

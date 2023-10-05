@@ -38,8 +38,8 @@
 		self.cornerRadius = 0;
 		self.layer.masksToBounds = NO;
 		
-		[self addSubview:_colorView];
-		[self addSubview:_imageView];
+		[_effectView.contentView addSubview:_colorView];
+		[_effectView.contentView addSubview:_imageView];
 		
 		[self addSubview:_effectView];
 		
@@ -88,9 +88,9 @@
 {
 	[super layoutSubviews];
 
-	[self sendSubviewToBack:_colorView];
-	[self insertSubview:_imageView aboveSubview:_colorView];
-	[self insertSubview:_effectView aboveSubview:_imageView];
+	[self sendSubviewToBack:_effectView];
+	[_effectView.contentView sendSubviewToBack:_imageView];
+	[_effectView.contentView sendSubviewToBack:_colorView];
 	[self bringSubviewToFront:_transitionShadingView];
 	
 	_effectView.frame = self.bounds;

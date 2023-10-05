@@ -68,13 +68,15 @@ NS_SWIFT_UI_ACTOR
 - (void)configureWithDefaultHighlightColor;
 
 /// A specific blur effect to use for the bar floating background. This effect is composited first when constructing the bar's floating background.
-@property (nonatomic, readwrite, copy, nullable) UIBlurEffect* floatingBackgroundEffect;
+@property (nonatomic, copy, nullable) UIBlurEffect* floatingBackgroundEffect;
 /// A color to use for the bar floating background. This color is composited over `floatingBackgroundEffect`.
-@property (nonatomic, readwrite, copy, nullable) UIColor* floatingBackgroundColor;
+@property (nonatomic, copy, nullable) UIColor* floatingBackgroundColor;
 /// An image to use for the bar floating background. This image is composited over the `floatingBackgroundColor`, and resized per the `floatingBackgroundImageContentMode`.
-@property (nonatomic, readwrite, strong, nullable) UIImage* floatingBackgroundImage;
+@property (nonatomic, strong, nullable) UIImage* floatingBackgroundImage;
 /// The content mode to use when rendering the `floatingBackgroundImage`. Defaults to `UIViewContentModeScaleToFill`. `UIViewContentModeRedraw` will be reinterpreted as `UIViewContentModeScaleToFill`.
-@property (nonatomic, readwrite, assign) UIViewContentMode floatingBackgroundImageContentMode;
+@property (nonatomic, assign) UIViewContentMode floatingBackgroundImageContentMode;
+/// The shadow displayed underneath the bar floating background.
+@property (nonatomic, copy, nullable) NSShadow* floatingBarBackgroundShadow;
 
 /// Reset floating background and shadow properties to their defaults.
 - (void)configureWithDefaultFloatingBackground;

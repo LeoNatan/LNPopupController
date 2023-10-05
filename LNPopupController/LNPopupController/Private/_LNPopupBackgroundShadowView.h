@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupBackgroundShadowView : UIView
 
+@property (nonatomic, strong) NSShadow* shadow;
 @property (nonatomic, assign) CGFloat cornerRadius;
 
 @end

@@ -98,14 +98,15 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, strong, readwrite) UIProgressView* progressView;
 
 @property (nonatomic, strong) _LNPopupBarBackgroundView* contentView;
-@property (nonatomic, strong) _LNPopupBarBackgroundView* backgroundView;
-@property (nonatomic, strong) _LNPopupBackgroundShadowView* floatingBackgroundShadowView;
 @property (nonatomic, strong) UIView* contentMaskView;
-@property (nonatomic, strong) UIView* backgroundMaskView;
 
+@property (nonatomic, strong) _LNPopupBarBackgroundView* backgroundView;
+@property (nonatomic, strong) UIView* backgroundMaskView;
 @property (nonatomic) BOOL wantsBackgroundCutout;
 - (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout allowImplicitAnimations:(BOOL)allowImplicitAnimations;
 @property (nonatomic, strong) _LNPopupBarBackgroundMaskView* backgroundGradientMaskView;
+
+@property (nonatomic, strong) _LNPopupBackgroundShadowView* floatingBackgroundShadowView;
 
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView;

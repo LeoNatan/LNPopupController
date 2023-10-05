@@ -25,6 +25,33 @@ fileprivate var isLNPopupUIExample: Bool = {
 	return ProcessInfo.processInfo.processName == "LNPopupUIExample"
 }()
 
+fileprivate struct CellPaddedText: View {
+	let text: Text
+	public init<S>(_ content: S) where S : StringProtocol {
+		text = Text(content)
+	}
+	
+	var body: some View {
+		text.padding([.top, .bottom], 4.167)
+	}
+}
+
+fileprivate struct CellPaddedToggle<S>: View where S: StringProtocol {
+	let title: S
+	let isOn: Binding<Bool>
+	
+	init(_ title: S, isOn: Binding<Bool>) {
+		self.title = title
+		self.isOn = isOn
+	}
+	
+	var body: some View {
+		Toggle(isOn: isOn, label: {
+			Text(title).padding([.top, .bottom], 4.167)
+		})
+	}
+}
+
 struct SettingsView : View {
 	@AppStorage(PopupSettingsBarStyle) var barStyle: LNPopupBarStyle = .default
 	@AppStorage(PopupSettingsInteractionStyle) var interactionStyle: __LNPopupInteractionStyle = .default
@@ -40,71 +67,75 @@ struct SettingsView : View {
 	@AppStorage(PopupSettingsContextMenuEnabled) var contextMenu: Bool = false
 	@AppStorage(PopupSettingsTouchVisualizerEnabled) var touchVisualizer: Bool = false
 	
+	@Environment(\.sizeCategory) var sizeCategory
+	
+	let sizeCategoryToCellHeight: [ContentSizeCategory: CGFloat] = [.extraLarge: 48, .extraExtraLarge: 52, .extraExtraExtraLarge: 58, .accessibilityMedium: 103, .accessibilityLarge: 121, .accessibilityExtraLarge: 193, .accessibilityExtraExtraLarge: 282, .accessibilityExtraExtraExtraLarge: 313]
+	
 	var body: some View {
 		Form {
 			Picker(selection: $barStyle) {
-				Text("Default").tag(LNPopupBarStyle.default)
-				Text("Compact").tag(LNPopupBarStyle.compact)
-				Text("Prominent").tag(LNPopupBarStyle.prominent)
-				Text("Floating").tag(LNPopupBarStyle.floating)
+				CellPaddedText("Default").tag(LNPopupBarStyle.default)
+				CellPaddedText("Compact").tag(LNPopupBarStyle.compact)
+				CellPaddedText("Prominent").tag(LNPopupBarStyle.prominent)
+				CellPaddedText("Floating").tag(LNPopupBarStyle.floating)
 			} label: {
 				Text("Bar Style")
 			}
 			
 			Picker(selection: $interactionStyle) {
-				Text("Default").tag(__LNPopupInteractionStyle.default)
-				Text("Drag").tag(__LNPopupInteractionStyle.drag)
-				Text("Snap").tag(__LNPopupInteractionStyle.snap)
-				Text("Scroll").tag(__LNPopupInteractionStyle.scroll)
-				Text("None").tag(__LNPopupInteractionStyle.none)
+				CellPaddedText("Default").tag(__LNPopupInteractionStyle.default)
+				CellPaddedText("Drag").tag(__LNPopupInteractionStyle.drag)
+				CellPaddedText("Snap").tag(__LNPopupInteractionStyle.snap)
+				CellPaddedText("Scroll").tag(__LNPopupInteractionStyle.scroll)
+				CellPaddedText("None").tag(__LNPopupInteractionStyle.none)
 			} label: {
 				Text("Interaction Style")
 			}
 			
 			Picker(selection: $closeButtonStyle) {
-				Text("Default").tag(LNPopupCloseButtonStyle.default)
-				Text("Round").tag(LNPopupCloseButtonStyle.round)
-				Text("Chevron").tag(LNPopupCloseButtonStyle.chevron)
-				Text("Flat").tag(LNPopupCloseButtonStyle.flat)
-				Text("None").tag(LNPopupCloseButtonStyle.none)
+				CellPaddedText("Default").tag(LNPopupCloseButtonStyle.default)
+				CellPaddedText("Round").tag(LNPopupCloseButtonStyle.round)
+				CellPaddedText("Chevron").tag(LNPopupCloseButtonStyle.chevron)
+				CellPaddedText("Flat").tag(LNPopupCloseButtonStyle.flat)
+				CellPaddedText("None").tag(LNPopupCloseButtonStyle.none)
 			} label: {
 				Text("Close Button Style")
 			}
 			
 			Picker(selection: $progressViewStyle) {
-				Text("Default").tag(LNPopupBarProgressViewStyle.default)
-				Text("Top").tag(LNPopupBarProgressViewStyle.top)
-				Text("Bottom").tag(LNPopupBarProgressViewStyle.bottom)
-				Text("None").tag(LNPopupBarProgressViewStyle.none)
+				CellPaddedText("Default").tag(LNPopupBarProgressViewStyle.default)
+				CellPaddedText("Top").tag(LNPopupBarProgressViewStyle.top)
+				CellPaddedText("Bottom").tag(LNPopupBarProgressViewStyle.bottom)
+				CellPaddedText("None").tag(LNPopupBarProgressViewStyle.none)
 			} label: {
 				Text("Progress View Style")
 			}
 			
 			Picker(selection: $marqueeStyle) {
-				Text("Default").tag(0)
-				Text("Disabled").tag(1)
-				Text("Enabled").tag(2)
+				CellPaddedText("Default").tag(0)
+				CellPaddedText("Disabled").tag(1)
+				CellPaddedText("Enabled").tag(2)
 			} label: {
 				Text("Marquee")
 			}
 			
 			Section {
 				Picker(selection: $blurEffectStyle) {
-					Text("Default").tag(UIBlurEffect.Style.default)
+					CellPaddedText("Default").tag(UIBlurEffect.Style.default)
 				}
 			} header: {
-				Text("Background Blur Style")
+				CellPaddedText("Background Blur Style")
 			} footer: {
 				Text("Uses the default material chosen by the system.")
 			}
 			
 			Section {
 				Picker(selection: $blurEffectStyle) {
-					Text("Ultra Thin Material").tag(UIBlurEffect.Style.systemUltraThinMaterial)
-					Text("Thin Material").tag(UIBlurEffect.Style.systemThinMaterial)
-					Text("Material").tag(UIBlurEffect.Style.systemMaterial)
-					Text("Thick Material").tag(UIBlurEffect.Style.systemThickMaterial)
-					Text("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
+					CellPaddedText("Ultra Thin Material").tag(UIBlurEffect.Style.systemUltraThinMaterial)
+					CellPaddedText("Thin Material").tag(UIBlurEffect.Style.systemThinMaterial)
+					CellPaddedText("Material").tag(UIBlurEffect.Style.systemMaterial)
+					CellPaddedText("Thick Material").tag(UIBlurEffect.Style.systemThickMaterial)
+					CellPaddedText("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
 				}
 			} footer: {
 				Text("Material styles which automatically adapt to the user interface style. Available in iOS 13 and above.")
@@ -112,8 +143,8 @@ struct SettingsView : View {
 			
 			Section {
 				Picker(selection: $blurEffectStyle) {
-					Text("Regular").tag(UIBlurEffect.Style.regular)
-					Text("Prominent").tag(UIBlurEffect.Style.prominent)
+					CellPaddedText("Regular").tag(UIBlurEffect.Style.regular)
+					CellPaddedText("Prominent").tag(UIBlurEffect.Style.prominent)
 				}
 			} footer: {
 				Text("Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
@@ -121,16 +152,16 @@ struct SettingsView : View {
 			
 			Section {
 				Picker(selection: $blurEffectStyle) {
-					Text("Extra Light").tag(UIBlurEffect.Style.extraLight)
-					Text("Light").tag(UIBlurEffect.Style.light)
-					Text("Dark").tag(UIBlurEffect.Style.dark)
+					CellPaddedText("Extra Light").tag(UIBlurEffect.Style.extraLight)
+					CellPaddedText("Light").tag(UIBlurEffect.Style.light)
+					CellPaddedText("Dark").tag(UIBlurEffect.Style.dark)
 				}
 			} footer: {
 				Text("Traditional blur styles. Available in iOS 8 and above.")
 			}
 			
 			Section {
-				Toggle("Extend Bar Under Safe Area", isOn: $extendBar)
+				CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar)
 			} header: {
 				Text("Settings")
 			} footer: {
@@ -142,7 +173,7 @@ struct SettingsView : View {
 			}
 			
 			Section {
-				Toggle("Hides Bottom Bar When Pushed", isOn: !isLNPopupUIExample ? $hideBottomBar : Binding.constant(false))
+				CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: !isLNPopupUIExample ? $hideBottomBar : Binding.constant(false))
 			} footer: {
 				if isLNPopupUIExample {
 					Text("Not supported in SwiftUI yet.")
@@ -152,25 +183,25 @@ struct SettingsView : View {
 			}.disabled(isLNPopupUIExample)
 			
 			Section {
-				Toggle("Context Menu Interactions", isOn: $contextMenu)
+				CellPaddedToggle("Context Menu Interactions", isOn: $contextMenu)
 			} footer: {
 				Text("Enables popup bar context menu interaction in standard demo scenes.")
 			}
 			
 			Section {
-				Toggle("Customizations", isOn: $enableCustomizations)
+				CellPaddedToggle("Customizations", isOn: $enableCustomizations)
 			} footer: {
 				Text("Enables popup bar customizations in standard demo scenes.")
 			}
 			
 			Section {
-				Toggle("Custom Popup Bar", isOn: $customPopupBar)
+				CellPaddedToggle("Custom Popup Bar", isOn: $customPopupBar)
 			} footer: {
 				Text("Enables a custom popup bar in standard demo scenes.")
 			}
 			
 			Section {
-				Toggle("Touch Visualizer", isOn: $touchVisualizer)
+				CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer)
 			} footer: {
 				Text("Enables visualization of touches within the app, for demo purposes.")
 			}
