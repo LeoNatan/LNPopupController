@@ -12,7 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupBarBackgroundMaskView: UIView
 
-@property (nonatomic) BOOL wantsCutout;
+@property (nonatomic, readonly) BOOL wantsCutout;
+- (void)setWantsCutout:(BOOL)wantsCutout animated:(BOOL)animated;
+
 @property (nonatomic) CGRect floatingFrame;
 @property (nonatomic) CGFloat floatingCornerRadius;
 

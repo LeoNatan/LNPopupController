@@ -223,18 +223,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	return _resolvedStyle;
 }
 
-- (void)_setHighlightAlpha:(CGFloat)alpha animated:(BOOL)animated
-{
-	
-}
-
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
 	id block = ^ { self.highlightView.alpha = highlighted ? 1.0 : 0.0; };
 	
 	if(animated)
 	{
-		[UIView animateWithDuration:0.2 animations:block];
+		[UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:block completion:nil];
 	}
 	else
 	{
@@ -416,7 +411,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	if(_wantsBackgroundCutout != wantsBackgroundCutout)
 	{
 		_wantsBackgroundCutout = wantsBackgroundCutout;
-		_backgroundGradientMaskView.wantsCutout = wantsBackgroundCutout;
+		[_backgroundGradientMaskView setWantsCutout:wantsBackgroundCutout animated:allowImplicitAnimations];
 	}
 }
 
@@ -443,7 +438,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_backgroundGradientMaskView.frame = _backgroundView.bounds;
 		_backgroundGradientMaskView.floatingFrame = floatingBackgroundFrame;
 		_backgroundGradientMaskView.floatingCornerRadius = _contentView.cornerRadius;
-		_backgroundGradientMaskView.wantsCutout = self.wantsBackgroundCutout;
+		[_backgroundGradientMaskView setWantsCutout:self.wantsBackgroundCutout animated:NO];
 		[_backgroundGradientMaskView setNeedsDisplay];
 		
 		if(_backgroundView.maskView != _backgroundGradientMaskView)

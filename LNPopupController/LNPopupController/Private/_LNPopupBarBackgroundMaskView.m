@@ -103,6 +103,11 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 @implementation _LNPopupBarBackgroundMaskView
 {
 	CGGradientRef _gradient;
+	CADisplayLink* _displayLink;
+	
+	CGFloat _targetAlpha;
+	CGFloat _currentAlpha;
+	CGFloat _step;
 }
 
 - (instancetype)init
@@ -124,9 +129,44 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 	_gradient = NULL;
 }
 
-- (void)setWantsCutout:(BOOL)wantsCutout
+- (void)setWantsCutout:(BOOL)wantsCutout animated:(BOOL)animated
 {
 	_wantsCutout = wantsCutout;
+	
+	_targetAlpha = wantsCutout ? 0.0 : 1.0;
+	if(animated == NO || self.superview.alpha == 0.0 || self.superview.isHidden)
+	{
+		[_displayLink invalidate];
+		_displayLink = nil;
+		
+		_currentAlpha = _targetAlpha;
+		
+		[self setNeedsDisplay];
+	}
+	else
+	{
+		_step = 0.02 * (_targetAlpha < _currentAlpha ? -1.0 : 1.0);
+		
+		if(_displayLink == nil)
+		{
+			_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_animationTick)];
+			_displayLink.preferredFramesPerSecond = 30;
+			[_displayLink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
+		}
+	}
+}
+
+- (void)_animationTick
+{
+	_currentAlpha += _step;
+	if((_step < 0 && _currentAlpha < _targetAlpha) ||
+	   (_step > 0 && _currentAlpha > _targetAlpha))
+	{
+		_currentAlpha = _targetAlpha;
+		
+		[_displayLink invalidate];
+		_displayLink = nil;
+	}
 	
 	[self setNeedsDisplay];
 }
@@ -139,12 +179,14 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 	
 	CGContextDrawLinearGradient(ctx, _gradient, CGPointMake(self.bounds.size.width / 2, 0), CGPointMake(self.bounds.size.width / 2, self.bounds.size.height), 0);
 	
+	CGContextSetBlendMode(ctx, kCGBlendModeDestinationIn);
+	
+	[[UIColor.blackColor colorWithAlphaComponent:_currentAlpha] setFill];
+	[[UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.floatingFrame, 1, 1) cornerRadius:self.floatingCornerRadius] fill];
+	
 	if(self.wantsCutout)
 	{
-		CGContextSetBlendMode(ctx, kCGBlendModeClear);
 		
-		[UIColor.blackColor setFill];
-		[[UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.floatingFrame, 1, 1) cornerRadius:self.floatingCornerRadius] fill];
 	}
 	
 	UIGraphicsPopContext();
