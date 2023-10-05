@@ -1024,7 +1024,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		appearanceToUse = [(id<_LNPopupBarSupport>)_bottomBar standardAppearance];
 	}
 	
-	self.popupBar.tintColor = _bottomBar.tintColor;
+	self.popupBar.systemTintColor = _bottomBar.tintColor;
 	self.popupBar.backgroundColor = _bottomBar.backgroundColor;
 	
 	self.popupBar.systemAppearance = appearanceToUse;

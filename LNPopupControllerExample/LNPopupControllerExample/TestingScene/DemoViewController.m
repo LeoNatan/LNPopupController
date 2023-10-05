@@ -282,16 +282,15 @@
 		appearance.titleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:14], NSForegroundColorAttributeName: [UIColor yellowColor]};
 		appearance.subtitleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [UIFont fontWithName:@"Chalkduster" size:12], NSForegroundColorAttributeName: [UIColor greenColor]};
 		
-		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
 		if(targetVC.popupBar.barStyle == LNPopupBarStyleFloating || (targetVC.popupBar.barStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 		{
 			appearance.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-			appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
 		}
 		else
 		{
 			
 			appearance.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+			targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
 		}
 		
 		[targetVC.popupBar setTintColor:[UIColor systemYellowColor]];
