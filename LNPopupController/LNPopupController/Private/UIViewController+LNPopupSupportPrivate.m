@@ -1123,7 +1123,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	};
 	
 	void (^completion)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self._ln_popupController_nocreate.popupBar setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
 		if(isFloating)
 		{
 			if(t == 1)
@@ -1133,6 +1132,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			}
 			self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 0.0;
 		}
+		[self._ln_popupController_nocreate.popupBar setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
 		
 		self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, bottomSafeArea);
 		
@@ -1181,6 +1181,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
+	BOOL wasHidden = self.tabBar.isHidden;
+	
 	[self sBWT:t iE:e d:duration];
 	
 	if(e == NO)
@@ -1191,7 +1193,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 	self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;
 	
-	self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
+	if(wasHidden == YES)
+	{
+		self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
+	}
 	
 	if(t == 2 && isFloating)
 	{
@@ -1237,7 +1242,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	void (^completion)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self _setPrepareTabBarIgnored:NO];
 		
-		[self._ln_popupController_nocreate.popupBar setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
+		if(wasHidden == YES)
+		{
+			[self._ln_popupController_nocreate.popupBar setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
+		}
 		
 		if(t == 2 && isFloating)
 		{
@@ -1647,6 +1655,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		};
 		
 		void (^completion)(BOOL finished) = ^ (BOOL finished) {
+			if(isFloating)
+			{
+				self._ln_popupController_nocreate.popupBar.backgroundView.alpha = hidden ? 0.0 : 1.0;
+			}
+			
 			[self._ln_popupController_nocreate.popupBar setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
 			
 			if(hidden)

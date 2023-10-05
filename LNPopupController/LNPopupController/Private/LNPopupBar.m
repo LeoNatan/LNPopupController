@@ -553,11 +553,21 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)_windowWillRotate:(NSNotification*)note
 {
+	if([note.userInfo[@"LNPopupIgnore"] boolValue])
+	{
+		return;
+	}
+	
 	[self setWantsBackgroundCutout:NO allowImplicitAnimations:NO];
 }
 
 - (void)_windowDidRotate:(NSNotification*)note
 {
+	if([note.userInfo[@"LNPopupIgnore"] boolValue])
+	{
+		return;
+	}
+	
 	[self setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
 }
 
