@@ -22,6 +22,10 @@ NSString* const PopupSettingsTouchVisualizerEnabled = @"PopupSettingsTouchVisual
 NSString* const PopupSettingsCustomBarEverywhereEnabled = @"PopupSettingsCustomBarEverywhereEnabled";
 NSString* const PopupSettingsContextMenuEnabled = @"PopupSettingsContextMenuEnabled";
 
+NSString* const __LNPopupBarHideContentView = @"__LNPopupBarHideContentView";
+NSString* const __LNPopupBarHideShadow = @"__LNPopupBarHideShadow";
+NSString* const __LNPopupBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug";
+
 @import ObjectiveC;
 
 __attribute__((constructor))

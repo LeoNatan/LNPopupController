@@ -23,4 +23,8 @@ extern NSString* const PopupSettingsTouchVisualizerEnabled;
 extern NSString* const PopupSettingsCustomBarEverywhereEnabled;
 extern NSString* const PopupSettingsContextMenuEnabled;
 
+extern NSString* const __LNPopupBarHideContentView;
+extern NSString* const __LNPopupBarHideShadow;
+extern NSString* const __LNPopupBarEnableLayoutDebug;
+
 NS_ASSUME_NONNULL_END

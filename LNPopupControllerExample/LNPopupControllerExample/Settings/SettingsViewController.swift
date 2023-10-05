@@ -67,6 +67,10 @@ struct SettingsView : View {
 	@AppStorage(PopupSettingsContextMenuEnabled) var contextMenu: Bool = false
 	@AppStorage(PopupSettingsTouchVisualizerEnabled) var touchVisualizer: Bool = false
 	
+	@AppStorage(__LNPopupBarHideContentView) var hidePopupBarContentView: Bool = false
+	@AppStorage(__LNPopupBarHideShadow) var hidePopupBarShadow: Bool = false
+	@AppStorage(__LNPopupBarEnableLayoutDebug) var layoutDebug: Bool = false
+	
 	@Environment(\.sizeCategory) var sizeCategory
 	
 	let sizeCategoryToCellHeight: [ContentSizeCategory: CGFloat] = [.extraLarge: 48, .extraExtraLarge: 52, .extraExtraExtraLarge: 58, .accessibilityMedium: 103, .accessibilityLarge: 121, .accessibilityExtraLarge: 193, .accessibilityExtraExtraLarge: 282, .accessibilityExtraExtraExtraLarge: 313]
@@ -205,6 +209,14 @@ struct SettingsView : View {
 			} footer: {
 				Text("Enables visualization of touches within the app, for demo purposes.")
 			}
+			
+			Section {
+				CellPaddedToggle("Layout Debug", isOn: $layoutDebug)
+				CellPaddedToggle("Hide Popup Bar Content View", isOn: $hidePopupBarContentView)
+				CellPaddedToggle("Hide Popup Bar Shadow", isOn: $hidePopupBarShadow)
+			} header: {
+				Text("Popup Bar Debug")
+			}
 		}.accentColor(.pink).pickerStyle(.inline)
 	}
 }
@@ -222,6 +234,9 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		UserDefaults.standard.removeObject(forKey: PopupSettingsCustomBarEverywhereEnabled)
 		UserDefaults.standard.removeObject(forKey: PopupSettingsContextMenuEnabled)
 		UserDefaults.standard.removeObject(forKey: PopupSettingsVisualEffectViewBlurEffect)
+		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideContentView)
+		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideShadow)
+		UserDefaults.standard.removeObject(forKey: __LNPopupBarEnableLayoutDebug)
 		
 		for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
 			UserDefaults.standard.removeObject(forKey: key)

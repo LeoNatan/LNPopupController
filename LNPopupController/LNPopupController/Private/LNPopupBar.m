@@ -12,7 +12,12 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSAttributedString+LNPopupSupport.h"
 
-#define LN_POPUP_BAR_LAYOUT_DEBUG 0
+#ifdef DEBUG
+static BOOL _LNEnableBarLayoutDebug(void)
+{
+	return [NSUserDefaults.standardUserDefaults boolForKey:@"__LNPopupBarEnableLayoutDebug"];
+}
+#endif
 
 #ifndef LNPopupControllerEnforceStrictClean
 //_effectWithStyle:tintColor:invertAutomaticStyle:
@@ -288,10 +293,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:self.bounds];
 		[_toolbar.standardAppearance configureWithTransparentBackground];
-#if LN_POPUP_BAR_LAYOUT_DEBUG
-		_toolbar.standardAppearance.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
-		_toolbar.layer.borderColor = UIColor.blackColor.CGColor;
-		_toolbar.layer.borderWidth = 1.0;
+		
+#if DEBUG
+		if(_LNEnableBarLayoutDebug())
+		{
+			_toolbar.standardAppearance.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
+			_toolbar.layer.borderColor = UIColor.blackColor.CGColor;
+			_toolbar.layer.borderWidth = 1.0;
+		}
 #endif
 		_toolbar.compactAppearance = _toolbar.standardAppearance;
 		if(@available(iOS 15.0, *))
@@ -450,8 +459,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_floatingBackgroundShadowView.frame = floatingBackgroundFrame;
 		_floatingBackgroundShadowView.cornerRadius = 14;
 		
-//		_contentView.hidden = YES;
-//		_floatingBackgroundShadowView.hidden = YES;
+#if DEBUG
+		_contentView.hidden = [NSUserDefaults.standardUserDefaults boolForKey:@"__LNPopupBarHideContentView"];
+		_floatingBackgroundShadowView.hidden = [NSUserDefaults.standardUserDefaults boolForKey:@"__LNPopupBarHideShadow"];
+#endif
 	}
 	else
 	{
@@ -1193,8 +1204,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	frame.origin.x = titleInsets.left;
 	
 	_titlesView.frame = frame;
-#if LN_POPUP_BAR_LAYOUT_DEBUG
-	_titlesView.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.6];
+#if DEBUG
+	if(_LNEnableBarLayoutDebug())
+	{
+		_titlesView.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.6];
+	}
 #endif
 	
 	if(_needsLabelsLayout == YES)
@@ -1202,8 +1216,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(_titleLabel == nil)
 		{
 			_titleLabel = [self _newMarqueeLabel];
-#if LN_POPUP_BAR_LAYOUT_DEBUG
-			_titleLabel.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.5];
+#if DEBUG
+			if(_LNEnableBarLayoutDebug())
+			{
+				_titleLabel.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.5];
+			}
 #endif
 			_titleLabel.textColor = self._titleColor;
 			_titleLabel.font = self._titleFont;
@@ -1241,8 +1258,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(_subtitleLabel == nil)
 		{
 			_subtitleLabel = [self _newMarqueeLabel];
-#if LN_POPUP_BAR_LAYOUT_DEBUG
-			_subtitleLabel.backgroundColor = [UIColor.cyanColor colorWithAlphaComponent:0.5];
+#if DEBUG
+			if(_LNEnableBarLayoutDebug())
+			{
+				_subtitleLabel.backgroundColor = [UIColor.cyanColor colorWithAlphaComponent:0.5];
+			}
 #endif
 			_subtitleLabel.textColor = self._subtitleColor;
 			_subtitleLabel.font = self._subtitleFont;
