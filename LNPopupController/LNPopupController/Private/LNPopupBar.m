@@ -19,6 +19,42 @@ static BOOL _LNEnableBarLayoutDebug(void)
 }
 #endif
 
+CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, UITraitCollection* barTraitCollection, LNPopupCustomBarViewController* customBarVC)
+{
+	if(customBarVC) { return customBarVC.preferredContentSize.height; }
+	
+	CGFloat additionalHeight = 0;
+	static NSDictionary<NSString*, NSNumber*>* additionalHeightMapping = nil;
+	static dispatch_once_t token;
+	dispatch_once(&token, ^{
+		additionalHeightMapping = @{
+			UIContentSizeCategoryExtraSmall : @0,
+			UIContentSizeCategorySmall : @0,
+			UIContentSizeCategoryMedium : @0,
+			UIContentSizeCategoryLarge : @0,
+			UIContentSizeCategoryExtraLarge : @0,
+			UIContentSizeCategoryExtraExtraLarge : @0,
+			UIContentSizeCategoryExtraExtraExtraLarge : @9,
+			UIContentSizeCategoryAccessibilityMedium : @18,
+			UIContentSizeCategoryAccessibilityLarge : @27,
+			UIContentSizeCategoryAccessibilityExtraLarge : @36,
+			UIContentSizeCategoryAccessibilityExtraExtraLarge : @45,
+			UIContentSizeCategoryAccessibilityExtraExtraExtraLarge : @54,
+		};
+	});
+	additionalHeight = [additionalHeightMapping[barTraitCollection.preferredContentSizeCategory] doubleValue];
+	
+	switch(style)
+	{
+		case LNPopupBarStyleCompact:
+			return LNPopupBarHeightCompact + additionalHeight;
+		case LNPopupBarStyleFloating:
+			return LNPopupBarHeightFloating + additionalHeight;
+		default:
+			return LNPopupBarHeightProminent + additionalHeight;
+	}
+}
+
 #ifndef LNPopupControllerEnforceStrictClean
 //_effectWithStyle:tintColor:invertAutomaticStyle:
 static NSString* const _eWSti = @"X2VmZmVjdFdpdGhTdHlsZTp0aW50Q29sb3I6aW52ZXJ0QXV0b21hdGljU3R5bGU6";
@@ -373,6 +409,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[super traitCollectionDidChange:previousTraitCollection];
 	
 	[self._barDelegate _traitCollectionForPopupBarDidChange:self];
+	[self._barDelegate _popupBarMetricsDidChange:self];
 }
 
 - (void)_updateProgressViewWithStyle:(LNPopupBarProgressViewStyle)style
@@ -390,7 +427,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		CGRect frame = self.bounds;
 		
-		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
+		CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, self.traitCollection, _customBarViewController);
 		frame.size.height = barHeight;
 		[_contentView setFrame:frame];
 	}
@@ -428,7 +465,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 {
 	CGRect frame = self.bounds;
 	
-	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController);
+	CGFloat barHeight = _LNPopupBarHeightForBarStyle(_resolvedStyle, self.traitCollection, _customBarViewController);
 	frame.size.height = barHeight;
 	
 	[_backgroundView setFrame:frame];
@@ -956,6 +993,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		__FakeMarqueeLabel* rv = [[__FakeMarqueeLabel alloc] initWithFrame:_titlesView.bounds];
 		rv.minimumScaleFactor = 1.0;
 		rv.lineBreakMode = NSLineBreakByTruncatingTail;
+		rv.numberOfLines = 1;
 		rv.adjustsFontForContentSizeCategory = YES;
 		return rv;
 	}
@@ -1666,7 +1704,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)_transitionCustomBarViewControllerWithPopupContainerSize:(CGSize)size withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
-	CGSize nextSize = CGSizeMake(size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, _customBarViewController));
+	CGSize nextSize = CGSizeMake(size.width, _LNPopupBarHeightForBarStyle(_resolvedStyle, self.traitCollection, _customBarViewController));
 	[self.customBarViewController viewWillTransitionToSize:nextSize withTransitionCoordinator:coordinator];
 }
 

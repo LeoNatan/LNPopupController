@@ -17,20 +17,7 @@ extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
 extern const CGFloat LNPopupBarHeightFloating;
 
-inline __attribute__((always_inline)) CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC)
-{
-	if(customBarVC) { return customBarVC.preferredContentSize.height; }
-	
-	switch(style)
-	{
-		case LNPopupBarStyleCompact:
-			return LNPopupBarHeightCompact;
-		case LNPopupBarStyleFloating:
-			return LNPopupBarHeightFloating;
-		default:
-			return LNPopupBarHeightProminent;
-	}
-}
+extern CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, UITraitCollection* barTraitCollection, LNPopupCustomBarViewController* customBarVC);
 
 inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
 {
