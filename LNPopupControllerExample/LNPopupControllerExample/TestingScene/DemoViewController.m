@@ -93,6 +93,9 @@
 	//Ugly hack to fix navigation view controller tint color.
 	self.navigationController.view.tintColor = self.view.tintColor;
 	
+	_galleryButton.titleLabel.adjustsFontForContentSizeCategory = YES;
+	_nextButton.titleLabel.adjustsFontForContentSizeCategory = YES;
+	
 	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
 	_nextButton.hidden = self.navigationController == nil || self.splitViewController != nil;
 	

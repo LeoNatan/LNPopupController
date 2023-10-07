@@ -25,6 +25,9 @@
 	NSString* title = @"Welcome to LNPopupController!";
 	
 	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
+	[attribTitle addAttributes:@{
+		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:15 weight:UIFontWeightRegular]],
+	} range:NSMakeRange(0, attribTitle.length)];
 	[attribTitle addAttributes: @{
 		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:16 weight:UIFontWeightHeavy]],
 	} range:[title rangeOfString:@"LNPopupController"]];

@@ -174,8 +174,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 			popupItem.leadingBarButtonItems = [ pause ]
 			popupItem.trailingBarButtonItems = [ next ]
 		} else {
-			pause.width = 40
-			next.width = 40
+			pause.width = 50
+			next.width = 50
 			popupItem.barButtonItems = [ pause, next ]
 		}
 		

@@ -212,8 +212,8 @@ struct SettingsView : View {
 			
 			Section {
 				CellPaddedToggle("Layout Debug", isOn: $layoutDebug)
-				CellPaddedToggle("Hide Popup Bar Content View", isOn: $hidePopupBarContentView)
-				CellPaddedToggle("Hide Popup Bar Shadow", isOn: $hidePopupBarShadow)
+				CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView)
+				CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow)
 			} header: {
 				Text("Popup Bar Debug")
 			}

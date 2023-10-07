@@ -86,16 +86,50 @@
 	next.accessibilityIdentifier = @"NextButton";
 	next.accessibilityTraits = UIAccessibilityTraitButton;
 	
+	UIBarButtonItem* prev = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"backward.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	prev.accessibilityLabel = NSLocalizedString(@"Previous Track", @"");
+	prev.accessibilityIdentifier = @"PrevButton";
+	prev.accessibilityTraits = UIAccessibilityTraitButton;
+	
+	UIBarButtonItem* more = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"ellipsis", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	prev.accessibilityLabel = NSLocalizedString(@"More", @"");
+	prev.accessibilityIdentifier = @"MoreButton";
+	prev.accessibilityTraits = UIAccessibilityTraitButton;
+	
 	if(useCompact)
 	{
-		self.popupItem.leadingBarButtonItems = @[ play ];
-		self.popupItem.trailingBarButtonItems = @[ next, stop ];
+		play.width = 44;
+		prev.width = 44;
+		next.width = 44;
+		stop.width = 44;
+		more.width = 44;
+		
+		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+		{
+			self.popupItem.leadingBarButtonItems = @[ play ];
+			self.popupItem.trailingBarButtonItems = @[ more ];
+		}
+		else
+		{
+			self.popupItem.leadingBarButtonItems = @[ prev, play, next ];
+			self.popupItem.trailingBarButtonItems = @[ more ];
+		}
 	}
 	else
 	{
+		prev.width = 50;
 		play.width = 50;
 		next.width = 50;
-		self.popupItem.barButtonItems = @[ play, next ];
+		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+		{
+			self.popupItem.barButtonItems = @[ play, next ];
+		}
+		else
+		{
+			prev.image = [prev.image imageWithConfiguration:[UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium]];
+			next.image = [next.image imageWithConfiguration:[UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium]];
+			self.popupItem.barButtonItems = @[ prev, play, next ];
+		}
 		self.popupItem.leadingBarButtonItems = nil;
 	}
 }
