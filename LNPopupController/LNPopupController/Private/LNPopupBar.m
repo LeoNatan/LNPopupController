@@ -527,7 +527,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	_highlightView.frame = _contentView.bounds;
 	
-	[_contentView.contentView sendSubviewToBack:_highlightView];
+	[_contentView.contentView insertSubview:_highlightView aboveSubview:_contentView.imageView];
 	[_contentView.contentView insertSubview:_toolbar aboveSubview:_highlightView];
 	[_contentView.contentView insertSubview:_imageView aboveSubview:_toolbar];
 	[_contentView.contentView insertSubview:_titlesView aboveSubview:_imageView];
