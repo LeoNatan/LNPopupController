@@ -1110,8 +1110,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	void (^animations)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
+		
+		[self __repositionPopupBarToClosed_hack];
 		if(isFloating)
 		{
+			[self._ln_popupController_nocreate.popupBar layoutIfNeeded];
 			self._ln_popupController_nocreate.popupBar.backgroundView.frame = CGRectOffset(backgroundViewFrame, -CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(frame) + bottomSafeArea);
 			self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;
 			if(t == 1)
@@ -1119,7 +1122,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				self._ln_popupController_nocreate.popupBar.backgroundView.transitionShadingView.alpha = 1.0;
 			}
 		}
-		[self __repositionPopupBarToClosed_hack];
 	};
 	
 	void (^completion)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {

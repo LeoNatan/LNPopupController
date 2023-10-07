@@ -131,7 +131,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         [self setupLabel];
         
         _scrollDuration = aLengthOfScroll;
-        self.fadeLength = MIN(aFadeLength, frame.size.width/2);
+		self.fadeLength = aFadeLength;
     }
     return self;
 }
@@ -142,7 +142,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         [self setupLabel];
         
         _rate = pixelsPerSec;
-        self.fadeLength = MIN(aFadeLength, frame.size.width/2);
+		self.fadeLength = aFadeLength;
     }
     return self;
 }

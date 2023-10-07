@@ -226,11 +226,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
+	[currentContentController viewWillMoveToPopupContainerContentView:self.popupContentView];
 	[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
 	currentContentController.view.translatesAutoresizingMaskIntoConstraints = YES;
 	currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 	currentContentController.view.frame = self.popupContentView.contentView.bounds;
-	[currentContentController viewWillMoveToPopupContainerContentView:self.popupContentView];
 	[self.popupContentView.contentView addSubview:currentContentController.view];
 	[currentContentController viewDidMoveToPopupContainerContentView:self.popupContentView];
 }
@@ -318,7 +318,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		if(allowBarAlpha && resolvedStyle == LNPopupInteractionStyleSnap)
 		{
 			CGRect frame = self.popupBar.frame;
-			frame.size.height = state < _LNPopupPresentationStateTransitioning ? _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.traitCollection, self.popupBar.customBarViewController) : 0.0;
+			frame.size.height = state < _LNPopupPresentationStateTransitioning ? _LNPopupBarHeightForPopupBar(self.popupBar) : 0.0;
 			self.popupBar.frame = frame;
 			self.popupBar.alpha = state < _LNPopupPresentationStateTransitioning;
 		}
@@ -1211,7 +1211,7 @@ extern float UIAnimationDragCoefficient(void);
 			_containerController._ln_bottomBarExtension_nocreate.alpha = 1.0;
 			
 			CGRect barFrame = self.popupBar.frame;
-			barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.traitCollection, self.popupBar.customBarViewController);
+			barFrame.size.height = _LNPopupBarHeightForPopupBar(self.popupBar);
 			self.popupBar.frame = barFrame;
 			
 			self.popupBar.frame = [self _frameForClosedPopupBar];
@@ -1462,7 +1462,7 @@ extern float UIAnimationDragCoefficient(void);
 	
 	CGRect barFrame = self.popupBar.frame;
 	CGFloat currentHeight = barFrame.size.height;
-	barFrame.size.height = _LNPopupBarHeightForBarStyle(_LNPopupResolveBarStyleFromBarStyle(self.popupBar.barStyle), self.popupBar.traitCollection, self.popupBar.customBarViewController);
+	barFrame.size.height = _LNPopupBarHeightForPopupBar(self.popupBar);
 	barFrame.origin.y -= (barFrame.size.height - currentHeight);
 	self.popupBar.frame = barFrame;
 	

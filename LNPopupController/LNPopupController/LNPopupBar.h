@@ -80,7 +80,7 @@ NS_SWIFT_UI_ACTOR
 
 /// The effective popup bar style used by the system. (read-only)
 ///
-/// Use this property's value to determine at runtime what the result of `LNPopupBarStyleDefault` is.
+/// Use this property's value to determine, at runtime, what the result of `LNPopupBarStyleDefault` is.
 @property (nonatomic, assign, readonly) LNPopupBarStyle effectiveBarStyle;
 
 /// Describes the appearance attributes for the popup bar to use.
@@ -105,7 +105,7 @@ NS_SWIFT_UI_ACTOR
 /// The gesture recognizer responsible for highlighting the popup bar when the user touches on the popup bar. (read-only)
 @property (nonatomic, strong, readonly) UILongPressGestureRecognizer* barHighlightGestureRecognizer;
 
-/// Set this property to an ``LNPopupCustomBarViewController`` subclass object to provide a popup bar with custom content controller.
+/// Set this property to an ``LNPopupCustomBarViewController`` subclass object to provide a popup bar with custom content.
 @property (nullable, nonatomic, strong) __kindof LNPopupCustomBarViewController* customBarViewController;
 
 @end

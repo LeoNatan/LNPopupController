@@ -17,7 +17,7 @@ extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
 extern const CGFloat LNPopupBarHeightFloating;
 
-extern CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, UITraitCollection* barTraitCollection, LNPopupCustomBarViewController* customBarVC);
+extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
 inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
 {
