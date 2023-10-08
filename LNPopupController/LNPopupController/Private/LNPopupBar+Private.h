@@ -114,8 +114,9 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic) BOOL acceptsSizing;
 
 @property (nonatomic) BOOL _applySwiftUILayoutFixes;
-@property (nonatomic, strong) UIViewController* swiftuiTitleController;
-@property (nonatomic, strong) UIViewController* swiftuiSubtitleController;
+
+@property (nonatomic, strong) UIView* swiftuiTitleContentView;
+
 @property (nonatomic, strong) UIViewController* swiftuiImageController;
 @property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController;
 @property (nonatomic, strong) UIViewController* swiftuiHiddenTrailingController;

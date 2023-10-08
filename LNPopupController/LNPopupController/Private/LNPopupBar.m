@@ -192,11 +192,14 @@ static BOOL __animatesItemSetter = NO;
 @implementation LNPopupBar
 {
 	BOOL _delaysBarButtonItemLayout;
+	
 	_LNPopupBarTitlesView* _titlesView;
 	NSLayoutConstraint* _titlesViewLeadingConstraint;
 	NSLayoutConstraint* _titlesViewTrailingConstraint;
+	
 	UILabel<__MarqueeLabelType>* _titleLabel;
 	UILabel<__MarqueeLabelType>* _subtitleLabel;
+	
 	BOOL _needsLabelsLayout;
 	BOOL _marqueePaused;
 	
@@ -935,30 +938,16 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _setNeedsTitleLayoutRemovingLabels:NO];
 }
 
-- (void)setSwiftuiTitleController:(UIViewController *)swiftuiTitleController
+- (void)setSwiftuiTitleContentView:(UIView *)swiftuiTitleContentView
 {
-	if(_swiftuiTitleController != nil)
+	if(_swiftuiTitleContentView != nil)
 	{
-		[_swiftuiTitleController.view removeFromSuperview];
+		[_swiftuiTitleContentView removeFromSuperview];
 	}
 	
-	_swiftuiTitleController = swiftuiTitleController;
-	_swiftuiTitleController.view.backgroundColor = UIColor.clearColor;
-	_swiftuiTitleController.view.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	[self _setNeedsTitleLayoutRemovingLabels:YES];
-}
-
-- (void)setSwiftuiSubtitleController:(UIViewController *)swiftuiSubtitleController
-{
-	if(_swiftuiSubtitleController != nil)
-	{
-		[_swiftuiSubtitleController.view removeFromSuperview];
-	}
-	
-	_swiftuiSubtitleController = swiftuiSubtitleController;
-	_swiftuiSubtitleController.view.backgroundColor = UIColor.clearColor;
-	_swiftuiSubtitleController.view.translatesAutoresizingMaskIntoConstraints = NO;
+	_swiftuiTitleContentView = swiftuiTitleContentView;
+	_swiftuiTitleContentView.backgroundColor = UIColor.clearColor;
+	_swiftuiTitleContentView.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	[self _setNeedsTitleLayoutRemovingLabels:YES];
 }
@@ -1135,8 +1124,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		leftViewLastFrame = [_toolbar convertRect:leftViewLast.bounds fromView:leftViewLast];
 	}
-	
-	NSLog(@"(%@) (%@)", @(leftViewLastFrame), @(_toolbar.safeAreaInsets.left));
 	
 	CGRect rightViewFirstFrame = CGRectMake(_toolbar.bounds.size.width, 0, 0, 0);
 	if(rightViewFirst != nil)
@@ -1333,15 +1320,20 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	if(_needsLabelsLayout == YES)
 	{
-		if(_swiftuiTitleController != nil)
+		if(_swiftuiTitleContentView != nil)
 		{
-			[_titlesView addArrangedSubview:_swiftuiTitleController.view];
+			[_titlesView addArrangedSubview:_swiftuiTitleContentView];
+			[_titlesView layoutIfNeeded];
+			UIView* textView = _swiftuiTitleContentView.subviews.firstObject;
+			[NSLayoutConstraint activateConstraints:@[
+				[_swiftuiTitleContentView.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
+			]];
 		}
 		else
 		{
 			if(_titleLabel == nil)
 			{
-				_titleLabel = [self _labelWithMarqueeEnabled:_swiftuiTitleController == nil && self.activeAppearance.marqueeScrollEnabled];
+				_titleLabel = [self _labelWithMarqueeEnabled:self.activeAppearance.marqueeScrollEnabled];
 #if DEBUG
 				if(_LNEnableBarLayoutDebug())
 				{
@@ -1364,17 +1356,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 				_titleLabel.attributedText = attr;
 				reset = YES;
 			}
-		}
-		
-		if(_swiftuiSubtitleController != nil)
-		{
-			[_titlesView addArrangedSubview:_swiftuiSubtitleController.view];
-		}
-		else
-		{
+			
 			if(_subtitleLabel == nil)
 			{
-				_subtitleLabel = [self _labelWithMarqueeEnabled:_swiftuiSubtitleController == nil && self.activeAppearance.marqueeScrollEnabled];
+				_subtitleLabel = [self _labelWithMarqueeEnabled:self.activeAppearance.marqueeScrollEnabled];
 #if DEBUG
 				if(_LNEnableBarLayoutDebug())
 				{
@@ -1391,7 +1376,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 				[_titlesView addArrangedSubview:_subtitleLabel];
 			}
 			
-			NSAttributedString* attr = _attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedSubtitle defaultAttributes:self.activeAppearance.subtitleTextAttributes] : nil;
+			attr = _attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedSubtitle defaultAttributes:self.activeAppearance.subtitleTextAttributes] : nil;
 			if(attr != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
 			{
 				_subtitleLabel.attributedText = attr;
@@ -1404,28 +1389,28 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			[_titleLabel resetLabel];
 			[_subtitleLabel resetLabel];
 		}
-	}
-	
-	if(_attributedSubtitle.length > 0 || _swiftuiSubtitleController != nil)
-	{
-		_subtitleLabel.hidden = NO;
 		
-		if(_needsLabelsLayout == YES)
+		if(_attributedSubtitle.length > 0)
 		{
-			if([_subtitleLabel isPaused] && [_titleLabel isPaused] == NO)
+			_subtitleLabel.hidden = NO;
+			
+			if(_needsLabelsLayout == YES)
 			{
-				[_subtitleLabel unpauseLabel];
+				if([_subtitleLabel isPaused] && [_titleLabel isPaused] == NO)
+				{
+					[_subtitleLabel unpauseLabel];
+				}
 			}
 		}
-	}
-	else
-	{
-		_subtitleLabel.hidden = YES;
-		
-		if(_needsLabelsLayout == YES)
+		else
 		{
-			[_subtitleLabel resetLabel];
-			[_subtitleLabel pauseLabel];
+			_subtitleLabel.hidden = YES;
+			
+			if(_needsLabelsLayout == YES)
+			{
+				[_subtitleLabel resetLabel];
+				[_subtitleLabel pauseLabel];
+			}
 		}
 	}
 		
@@ -1434,30 +1419,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
 	
 	_needsLabelsLayout = NO;
-	
-	if(__applySwiftUILayoutFixes)
-	{
-		// 🤦‍♂️ This code fixes a layout issue with SwiftUI bar button items under certain conditions.
-		dispatch_async(dispatch_get_main_queue(), ^{
-			if(self.swiftuiTitleController)
-			{
-				CGRect frame = self.swiftuiTitleController.view.frame;
-				frame.size.width -= 1;
-				self.swiftuiTitleController.view.frame = frame;
-				frame.size.width += 1;
-				self.swiftuiTitleController.view.frame = frame;
-			}
-			
-			if(self.swiftuiSubtitleController)
-			{
-				CGRect frame = self.swiftuiSubtitleController.view.frame;
-				frame.size.width -= 1;
-				self.swiftuiSubtitleController.view.frame = frame;
-				frame.size.width += 1;
-				self.swiftuiSubtitleController.view.frame = frame;
-			}
-		});
-	}
 }
 
 - (void)_updateAccessibility

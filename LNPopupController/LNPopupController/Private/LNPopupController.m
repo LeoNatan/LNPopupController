@@ -863,21 +863,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
-- (void)_reconfigure_swiftuiTitleController
+- (void)_reconfigure_swiftuiTitleContentView
 {
-	if(_currentPopupItem.swiftuiTitleController != nil)
+	if(_currentPopupItem.swiftuiTitleContentView != nil)
 	{
-		self.popupBarStorage.swiftuiTitleController = _currentPopupItem.swiftuiTitleController;
+		self.popupBarStorage.swiftuiTitleContentView = _currentPopupItem.swiftuiTitleContentView;
 		_currentPopupItem.title = nil;
-	}
-}
-
-- (void)_reconfigure_swiftuiSubtitleController
-{
-	if(_currentPopupItem.swiftuiSubtitleController != nil)
-	{
-		self.popupBarStorage.swiftuiSubtitleController = _currentPopupItem.swiftuiSubtitleController;
-		_currentPopupItem.subtitle = nil;
 	}
 }
 

@@ -42,8 +42,7 @@ NSArray* __LNPopupItemObservedKeys;
 			NSStringFromSelector(@selector(accessibilityProgressLabel)),
 			NSStringFromSelector(@selector(accessibilityProgressValue)),
 			NSStringFromSelector(@selector(swiftuiImageController)),
-			NSStringFromSelector(@selector(swiftuiTitleController)),
-			NSStringFromSelector(@selector(swiftuiSubtitleController)),
+			NSStringFromSelector(@selector(swiftuiTitleContentView)),
 			NSStringFromSelector(@selector(swiftuiHiddenLeadingController)),
 			NSStringFromSelector(@selector(swiftuiHiddenTrailingController)),
 			NSStringFromSelector(@selector(standardAppearance))
