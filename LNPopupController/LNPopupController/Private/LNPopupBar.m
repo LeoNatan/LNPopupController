@@ -443,6 +443,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 {
 	[super traitCollectionDidChange:previousTraitCollection];
 	
+	[self _setNeedsTitleLayoutRemovingLabels:NO];
+	[self layoutIfNeeded];
+	
 	[self._barDelegate _traitCollectionForPopupBarDidChange:self];
 	if(UIContentSizeCategoryCompareToCategory(previousTraitCollection.preferredContentSizeCategory, self.traitCollection.preferredContentSizeCategory) != NSOrderedSame)
 	{

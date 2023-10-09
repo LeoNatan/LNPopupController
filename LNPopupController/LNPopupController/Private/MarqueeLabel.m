@@ -1237,6 +1237,17 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     [self updateSublabel];
 }
 
+- (BOOL)adjustsFontForContentSizeCategory
+{
+	return self.subLabel.adjustsFontSizeToFitWidth;
+}
+
+- (void)setAdjustsFontForContentSizeCategory:(BOOL)adjustsFontForContentSizeCategory 
+{
+	self.subLabel.adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory;
+	super.adjustsFontForContentSizeCategory = adjustsFontForContentSizeCategory;
+}
+
 - (UIColor *)textColor {
     return self.subLabel.textColor;
 }

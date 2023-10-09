@@ -39,7 +39,7 @@ void UICollectionViewCell_fix_highglight(void)
 	method_setImplementation(m, imp_implementationWithBlock(^(UICollectionViewCell* _self, 
 															  BOOL highlighted,
 															  BOOL animated) {
-		if([NSStringFromClass(_self.class) hasPrefix:@"SwiftUI."])
+		if(highlighted == NO && [NSStringFromClass(_self.class) hasPrefix:@"SwiftUI."])
 		{
 			animated = YES;
 		}
