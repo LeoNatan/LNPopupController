@@ -1242,7 +1242,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		case LNPopupBarStyleFloating:
 			fontSize = 15;
 			fontWeight = UIFontWeightMedium;
-			fontTextStyle = UIFontTextStyleBody;
 			break;
 		case LNPopupBarStyleProminent:
 			fontSize = 18;
@@ -1252,7 +1251,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		case LNPopupBarStyleCompact:
 			fontSize = 14;
 			fontWeight = UIFontWeightRegular;
-			fontTextStyle = UIFontTextStyleBody;
 			break;
 		default:
 			break;
