@@ -1235,6 +1235,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 {
 	CGFloat fontSize = 15;
 	UIFontWeight fontWeight = UIFontWeightMedium;
+	UIFontTextStyle fontTextStyle = UIFontTextStyleSubheadline;
 	
 	switch(_resolvedStyle)
 	{
@@ -1244,7 +1245,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			break;
 		case LNPopupBarStyleProminent:
 			fontSize = 18;
-			fontWeight = UIFontWeightMedium;
+			fontWeight = UIFontWeightRegular;
+			fontTextStyle = UIFontTextStyleBody;
 			break;
 		case LNPopupBarStyleCompact:
 			fontSize = 14;
@@ -1254,7 +1256,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			break;
 	}
 	
-	return [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
+	return [[UIFontMetrics metricsForTextStyle:fontTextStyle] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
 }
 
 //DO NOT CHANGE NAME! Used by LNPopupUI
