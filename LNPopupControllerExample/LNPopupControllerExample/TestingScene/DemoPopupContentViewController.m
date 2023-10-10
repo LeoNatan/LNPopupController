@@ -106,13 +106,13 @@
 		
 		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
-			self.popupItem.leadingBarButtonItems = @[ play ];
-			self.popupItem.trailingBarButtonItems = @[ more ];
+			[self.popupItem setLeadingBarButtonItems:@[ play ] animated:YES];
+			[self.popupItem setTrailingBarButtonItems:@[ more ] animated:YES];
 		}
 		else
 		{
-			self.popupItem.leadingBarButtonItems = @[ prev, play, next ];
-			self.popupItem.trailingBarButtonItems = @[ more ];
+			[self.popupItem setLeadingBarButtonItems:@[ prev, play, next ] animated:YES];
+			[self.popupItem setTrailingBarButtonItems:@[ more ] animated:YES];
 		}
 	}
 	else
@@ -122,15 +122,15 @@
 		next.width = 50;
 		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
-			self.popupItem.barButtonItems = @[ play, next ];
+			[self.popupItem setBarButtonItems:@[ play, next ] animated:YES];
 		}
 		else
 		{
 			prev.image = [prev.image imageWithConfiguration:[UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium]];
 			next.image = [next.image imageWithConfiguration:[UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium]];
-			self.popupItem.barButtonItems = @[ prev, play, next ];
+			
+			[self.popupItem setBarButtonItems:@[ prev, play, next ] animated:YES];
 		}
-		self.popupItem.leadingBarButtonItems = nil;
 	}
 }
 

@@ -37,16 +37,9 @@
 	self.navigationController.popupBar.barStyle = LNPopupBarStyleFloating;
 	self.navigationController.popupBar.standardAppearance.marqueeScrollDelay = 0.0;
 	self.navigationController.popupBar.standardAppearance.marqueeScrollEnabled = YES;
-#endif
-}
 
-- (void)viewDidAppear:(BOOL)animated
-{
-	[super viewDidAppear:animated];
-	
-#if LNPOPUP
 	self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
-	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:YES completion:nil];
+	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:NO completion:nil];
 	
 	[self.navigationController.popupBar addInteraction:[LNPopupDemoContextMenuInteraction new]];
 #endif

@@ -18,6 +18,7 @@
 		39277A0C1B58228000293F95 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
 		39277A151B58228000293F95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
 		39277A171B58228000293F95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39277A161B58228000293F95 /* Assets.xcassets */; };
+		392E2AC52AD5CAB600944CB2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */; };
 		3932CDA32741A77500FD81FC /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */; };
 		3932CDA42741A77500FD81FC /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3932CDA62741A77A00FD81FC /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA52741A77A00FD81FC /* LNTouchVisualizer */; };
@@ -137,6 +138,7 @@
 		39277A141B58228000293F95 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		39277A161B58228000293F95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		39277A1B1B58228000293F95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		393F23221E16BF1D000E969D /* MapScene.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MapScene.storyboard; sourceTree = "<group>"; };
 		393F23241E16C04A000E969D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 			children = (
 				397C560A1B74D45F007A67F0 /* Swift Bridging Header */,
 				39277A161B58228000293F95 /* Assets.xcassets */,
+				392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */,
 				39277A1B1B58228000293F95 /* Info.plist */,
 				39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */,
 				39277A0A1B58228000293F95 /* AppDelegate.h */,
@@ -477,6 +480,7 @@
 				39BBA86A24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */,
 				393F23231E16BF1D000E969D /* MapScene.storyboard in Resources */,
 				394005F22AC237B900291421 /* Settings.storyboard in Resources */,
+				392E2AC52AD5CAB600944CB2 /* LaunchScreen.storyboard in Resources */,
 				39277A171B58228000293F95 /* Assets.xcassets in Resources */,
 				39277A151B58228000293F95 /* Main.storyboard in Resources */,
 			);

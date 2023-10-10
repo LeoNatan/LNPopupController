@@ -20,21 +20,6 @@
 
 @implementation IntroWebViewController
 
-- (void)_updateTitle
-{
-	NSString* title = @"Welcome to LNPopupController!";
-	
-	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
-	[attribTitle addAttributes:@{
-		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:15 weight:UIFontWeightRegular]],
-	} range:NSMakeRange(0, attribTitle.length)];
-	[attribTitle addAttributes: @{
-		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:16 weight:UIFontWeightHeavy]],
-	} range:[title rangeOfString:@"LNPopupController"]];
-	
-	self.popupItem.attributedTitle = attribTitle;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -69,9 +54,17 @@
 		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill", NO) style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
 	
-	[self _updateTitle];
+	NSString* title = @"Welcome to LNPopupController!";
 	
-	[NSNotificationCenter.defaultCenter addObserver:self selector:@selector(_updateTitle) name:UIContentSizeCategoryDidChangeNotification object:nil];
+	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
+	[attribTitle addAttributes:@{
+		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont systemFontOfSize:15 weight:UIFontWeightMedium]],
+	} range:NSMakeRange(0, attribTitle.length)];
+	[attribTitle addAttributes: @{
+		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:16 weight:UIFontWeightHeavy]],
+	} range:[title rangeOfString:@"LNPopupController"]];
+	
+	self.popupItem.attributedTitle = attribTitle;
 }
 
 - (IBAction)_navigate:(id)sender
