@@ -34,12 +34,12 @@ CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar)
 			UIContentSizeCategoryLarge : @0,
 			UIContentSizeCategoryExtraLarge : @0,
 			UIContentSizeCategoryExtraExtraLarge : @0,
-			UIContentSizeCategoryExtraExtraExtraLarge : @9,
-			UIContentSizeCategoryAccessibilityMedium : @18,
-			UIContentSizeCategoryAccessibilityLarge : @27,
-			UIContentSizeCategoryAccessibilityExtraLarge : @36,
-			UIContentSizeCategoryAccessibilityExtraExtraLarge : @45,
-			UIContentSizeCategoryAccessibilityExtraExtraExtraLarge : @54,
+			UIContentSizeCategoryExtraExtraExtraLarge : @7,
+			UIContentSizeCategoryAccessibilityMedium : @14,
+			UIContentSizeCategoryAccessibilityLarge : @21,
+			UIContentSizeCategoryAccessibilityExtraLarge : @28,
+			UIContentSizeCategoryAccessibilityExtraExtraLarge : @35,
+			UIContentSizeCategoryAccessibilityExtraExtraExtraLarge : @42,
 		};
 	});
 	additionalHeight = [additionalHeightMapping[popupBar.traitCollection.preferredContentSizeCategory] doubleValue];
@@ -375,7 +375,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_titlesView.axis = UILayoutConstraintAxisVertical;
 		_titlesView.alignment = UIStackViewAlignmentFill;
 		_titlesView.distribution = UIStackViewDistributionFill;
-		_titlesView.spacing = 2;
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
 		_titlesView.accessibilityTraits = UIAccessibilityTraitButton;
 		_titlesView.isAccessibilityElement = YES;
@@ -407,7 +406,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
 		_imageView.isAccessibilityElement = YES;
 		_imageView.layer.cornerCurve = kCACornerCurveContinuous;
-		_imageView.layer.cornerRadius = 6;
+		_imageView.layer.cornerRadius = 5;
 		_imageView.layer.masksToBounds = YES;
 		// support smart invert and therefore do not invert image view colors
 		_imageView.accessibilityIgnoresInvertColors = YES;
@@ -594,7 +593,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_highlightView.layer.cornerRadius = 0;
 	}
 	
-	[_contentView.contentView insertSubview:_toolbar aboveSubview:_highlightView];
 	[_contentView.contentView insertSubview:_imageView aboveSubview:_toolbar];
 	[_contentView.contentView insertSubview:_titlesView aboveSubview:_imageView];
 	if(_customBarViewController != nil)
@@ -620,6 +618,45 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	[self _layoutTitles];
+	
+	CGFloat titleSpacing = 1 + (1 / MAX(1, self.window.screen.scale));
+	if(_resolvedStyle == LNPopupBarStyleCompact)
+	{
+		titleSpacing = 0;
+	}
+	
+	if(UIContentSizeCategoryCompareToCategory(self.traitCollection.preferredContentSizeCategory, UIContentSizeCategoryExtraExtraExtraLarge) != NSOrderedAscending)
+	{
+		CGFloat additionalHeight = 0;
+		static NSDictionary<NSString*, NSNumber*>* additionalHeightMapping = nil;
+		static dispatch_once_t token;
+		dispatch_once(&token, ^{
+			additionalHeightMapping = @{
+				UIContentSizeCategoryExtraSmall : @0,
+				UIContentSizeCategorySmall : @0,
+				UIContentSizeCategoryMedium : @0,
+				UIContentSizeCategoryLarge : @0,
+				UIContentSizeCategoryExtraLarge : @0,
+				UIContentSizeCategoryExtraExtraLarge : @0,
+				UIContentSizeCategoryExtraExtraExtraLarge : @-1.5,
+				UIContentSizeCategoryAccessibilityMedium : @-3,
+				UIContentSizeCategoryAccessibilityLarge : @-5.5,
+				UIContentSizeCategoryAccessibilityExtraLarge : @-7,
+				UIContentSizeCategoryAccessibilityExtraExtraLarge : @-8.5,
+				UIContentSizeCategoryAccessibilityExtraExtraExtraLarge : @-10,
+			};
+		});
+		additionalHeight = [additionalHeightMapping[self.traitCollection.preferredContentSizeCategory] doubleValue];
+		
+		if(_resolvedStyle == LNPopupBarStyleCompact)
+		{
+			additionalHeight = 0.5 * additionalHeight;
+		}
+		
+		titleSpacing += additionalHeight;
+	}
+	
+	_titlesView.spacing = titleSpacing;
 	
 	_inLayout = NO;
 }
@@ -1235,26 +1272,30 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 {
 	CGFloat fontSize = 15;
 	UIFontWeight fontWeight = UIFontWeightMedium;
+	UIFontTextStyle textStyle = UIFontTextStyleBody;
 	
 	switch(_resolvedStyle)
 	{
 		case LNPopupBarStyleFloating:
 			fontSize = 15;
 			fontWeight = UIFontWeightMedium;
+			textStyle = UIFontTextStyleHeadline;
 			break;
 		case LNPopupBarStyleProminent:
-			fontSize = 18;
+			fontSize = 15;
 			fontWeight = UIFontWeightMedium;
+			textStyle = UIFontTextStyleBody;
 			break;
 		case LNPopupBarStyleCompact:
-			fontSize = 14;
+			fontSize = 13.5;
 			fontWeight = UIFontWeightRegular;
+			textStyle = UIFontTextStyleSubheadline;
 			break;
 		default:
 			break;
 	}
 	
-	return [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
+	return [[UIFontMetrics metricsForTextStyle:textStyle] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
 }
 
 //DO NOT CHANGE NAME! Used by LNPopupUI
@@ -1268,26 +1309,30 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 {
 	CGFloat fontSize = 15;
 	UIFontWeight fontWeight = UIFontWeightRegular;
+	UIFontTextStyle textStyle = UIFontTextStyleBody;
 	
 	switch(_resolvedStyle)
 	{
 		case LNPopupBarStyleFloating:
 			fontSize = 12.5;
 			fontWeight = UIFontWeightRegular;
+			textStyle = UIFontTextStyleSubheadline;
 			break;
 		case LNPopupBarStyleProminent:
-			fontSize = 14;
+			fontSize = 15;
 			fontWeight = UIFontWeightRegular;
+			textStyle = UIFontTextStyleBody;
 			break;
 		case LNPopupBarStyleCompact:
-			fontSize = 11;
+			fontSize = 12;
 			fontWeight = UIFontWeightRegular;
+			textStyle = UIFontTextStyleSubheadline;
 			break;
 		default:
 			break;
 	}
 	
-	return [[UIFontMetrics metricsForTextStyle:UIFontTextStyleFootnote] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
+	return [[UIFontMetrics metricsForTextStyle:textStyle] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
 }
 
 //DO NOT CHANGE NAME! Used by LNPopupUI
