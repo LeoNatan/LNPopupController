@@ -100,7 +100,7 @@ struct SettingsView : View {
 				CellPaddedText("Default").tag(LNPopupCloseButtonStyle.default)
 				CellPaddedText("Round").tag(LNPopupCloseButtonStyle.round)
 				CellPaddedText("Chevron").tag(LNPopupCloseButtonStyle.chevron)
-				CellPaddedText("Flat").tag(LNPopupCloseButtonStyle.flat)
+				CellPaddedText("Grabber").tag(LNPopupCloseButtonStyle.grabber)
 				CellPaddedText("None").tag(LNPopupCloseButtonStyle.none)
 			} label: {
 				Text("Close Button Style")

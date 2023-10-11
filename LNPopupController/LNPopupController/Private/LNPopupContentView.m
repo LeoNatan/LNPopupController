@@ -19,7 +19,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 #if TARGET_OS_MACCATALYST
 		rv = LNPopupCloseButtonStyleRound;
 #else
-		rv = LNPopupCloseButtonStyleFlat;
+		rv = LNPopupCloseButtonStyleGrabber;
 #endif
 	}
 	return rv;

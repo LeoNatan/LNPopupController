@@ -20,11 +20,13 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 	/// Chevron close button style.
 	LNPopupCloseButtonStyleChevron,
 	
-	/// Flat close button style.
-	LNPopupCloseButtonStyleFlat,
+	/// Grabber close button style.
+	LNPopupCloseButtonStyleGrabber,
 	
 	/// No close button.
-	LNPopupCloseButtonStyleNone = 0xFFFF
+	LNPopupCloseButtonStyleNone = 0xFFFF,
+	
+	LNPopupCloseButtonStyleFlat LN_DEPRECATED_API("Use LNPopupCloseButtonStyle.grabber instead.") = LNPopupCloseButtonStyleGrabber
 };
 
 NS_ASSUME_NONNULL_BEGIN
