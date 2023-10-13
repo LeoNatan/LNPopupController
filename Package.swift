@@ -12,11 +12,11 @@ let package = Package(
 		.library(
 			name: "LNPopupController",
 			type: .dynamic,
-			targets: ["LNPopupController"]),
+			targets: ["LNPopupController", "LNPopupController-ObjC"]),
 		.library(
 			name: "LNPopupController-Static",
 			type: .static,
-			targets: ["LNPopupController"]),
+			targets: ["LNPopupController", "LNPopupController-ObjC"]),
 	],
 	dependencies: [],
 	targets: [
