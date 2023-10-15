@@ -1016,20 +1016,24 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	self.popupBar.systemTintColor = _bottomBar.tintColor;
-	self.popupBar.backgroundColor = _bottomBar.backgroundColor;
 	
 	self.popupBar.systemAppearance = appearanceToUse;
 }
 
 - (void)_updateBarExtensionStyleFromPopupBar
 {
-	_containerController._ln_bottomBarExtension_nocreate.backgroundColor = _containerController.popupBar.backgroundColor;
-	_containerController._ln_bottomBarExtension_nocreate.colorView.backgroundColor = _containerController.popupBar.backgroundView.colorView.backgroundColor;
-	_containerController._ln_bottomBarExtension_nocreate.imageView.image = _containerController.popupBar.backgroundView.imageView.image;
-	_containerController._ln_bottomBarExtension_nocreate.imageView.contentMode = _containerController.popupBar.backgroundView.imageView.contentMode;
+	if(_containerController._ln_bottomBarExtension_nocreate == nil)
+	{
+		return;
+	}
+	
 	_containerController._ln_bottomBarExtension_nocreate.effect = _containerController.popupBar.backgroundView.effect;
 	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:_containerController._ln_bottomBarExtension_nocreate.effectView];
-	_popupContentView.clipsToBounds = YES;
+	
+	_containerController._ln_bottomBarExtension_nocreate.foregroundColor = _containerController.popupBar.backgroundView.foregroundColor;
+	_containerController._ln_bottomBarExtension_nocreate.foregroundImage = _containerController.popupBar.backgroundView.foregroundImage;
+	_containerController._ln_bottomBarExtension_nocreate.foregroundImageContentMode = _containerController.popupBar.backgroundView.foregroundImageContentMode;
+	[_containerController._ln_bottomBarExtension_nocreate hideOrShowImageViewIfNecessary];
 }
 
 - (void)_movePopupBarAndContentToBottomBarSuperview

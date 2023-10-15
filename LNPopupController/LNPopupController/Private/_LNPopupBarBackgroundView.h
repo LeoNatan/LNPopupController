@@ -18,8 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) UIVisualEffect* effect;
 @property (nonatomic, strong, readonly) UIView* contentView;
 
-@property (nonatomic, strong, readonly) UIView* colorView;
-@property (nonatomic, strong, readonly) UIImageView* imageView;
+@property(nonatomic, copy, nullable) UIColor* foregroundColor;
+@property(nonatomic, strong, nullable) UIImage* foregroundImage;
+@property(nonatomic) UIViewContentMode foregroundImageContentMode;
+- (void)hideOrShowImageViewIfNecessary;
 
 @property (nonatomic, assign) CGFloat cornerRadius;
 

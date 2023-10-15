@@ -559,12 +559,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	_contentView.frame = contentFrame;
 #if DEBUG
-	if(_LNEnableBarLayoutDebug())
-	{
-		_contentView.colorView.hidden = NO;
-		_contentView.colorView.backgroundColor = UIColor.magentaColor;
-	}
-	
 	_contentView.hidden = [NSUserDefaults.standardUserDefaults boolForKey:@"__LNPopupBarHideContentView"];
 #endif
 	
@@ -851,33 +845,28 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		__auto_type floatingBackgroundColor = self.activeAppearance.floatingBackgroundColor;
 		__auto_type floatingBackgroundImage = self.activeAppearance.floatingBackgroundImage;
 		
-		_contentView.colorView.backgroundColor = floatingBackgroundColor;
-		_contentView.imageView.image = floatingBackgroundImage;
-		_contentView.imageView.contentMode = self.activeAppearance.floatingBackgroundImageContentMode;
-		
-		_contentView.colorView.hidden = floatingBackgroundColor == nil;
-		_contentView.imageView.hidden = floatingBackgroundImage == nil;
+		_contentView.foregroundColor = floatingBackgroundColor;
+		_contentView.foregroundImage = floatingBackgroundImage;
+		_contentView.foregroundImageContentMode = self.activeAppearance.floatingBackgroundImageContentMode;
+		[_contentView hideOrShowImageViewIfNecessary];
 	}
 	else
 	{
 		_contentView.effect = nil;
-		_contentView.colorView.backgroundColor = UIColor.clearColor;
-		_contentView.imageView.image = nil;
-		_contentView.imageView.contentMode = 0;
-		_contentView.colorView.hidden = YES;
-		_contentView.imageView.hidden = YES;
+		_contentView.foregroundColor = nil;
+		_contentView.foregroundImage = nil;
+		_contentView.foregroundImageContentMode = 0;
+		[_contentView hideOrShowImageViewIfNecessary];
 	}
 	
 	__auto_type backgroundColor = self.activeAppearance.backgroundColor;
 	__auto_type backgroundImage = self.activeAppearance.backgroundImage;
 	
 	_backgroundView.effect = self.activeAppearance.backgroundEffect;
-	_backgroundView.colorView.backgroundColor = backgroundColor;
-	_backgroundView.imageView.image = backgroundImage;
-	_backgroundView.imageView.contentMode = self.activeAppearance.backgroundImageContentMode;
-	
-	_backgroundView.colorView.hidden = backgroundColor == nil;
-	_backgroundView.imageView.hidden = backgroundImage == nil;
+	_backgroundView.foregroundColor = backgroundColor;
+	_backgroundView.foregroundImage = backgroundImage;
+	_backgroundView.foregroundImageContentMode = self.activeAppearance.backgroundImageContentMode;
+	[_backgroundView hideOrShowImageViewIfNecessary];
 	
 	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
 	_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.doneButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;

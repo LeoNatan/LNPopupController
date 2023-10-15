@@ -8,9 +8,6 @@
 
 #import "_LNPopupBarBackgroundView.h"
 
-@interface _LNPopupBarBackgroundColorView : UIView @end
-@implementation _LNPopupBarBackgroundColorView @end
-
 @interface _LNPopupBarBackgroundImageView : UIImageView @end
 @implementation _LNPopupBarBackgroundImageView @end
 
@@ -19,8 +16,10 @@
 
 @implementation _LNPopupBarBackgroundView
 {
-	UIView* _colorView;
 	UIImageView* _imageView;
+	UIView* _transitionShadingView;
+	
+	UIViewContentMode _cachedImageMode;
 }
 
 - (instancetype)initWithEffect:(UIVisualEffect *)effect
@@ -32,23 +31,10 @@
 		_effectView = [[_LNPopupBarBackgroundEffectView alloc] initWithEffect:effect];
 		_effectView.clipsToBounds = YES;
 		
-		_colorView = [_LNPopupBarBackgroundColorView new];
-		_imageView = [_LNPopupBarBackgroundImageView new];
-		
 		self.cornerRadius = 0;
 		self.layer.masksToBounds = NO;
 		
-		[_effectView.contentView addSubview:_colorView];
-		[_effectView.contentView addSubview:_imageView];
-		
 		[self addSubview:_effectView];
-		
-		_transitionShadingView = [UIView new];
-		_transitionShadingView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.1];
-		_transitionShadingView.alpha = 0.0;
-		_transitionShadingView.hidden = YES;
-		
-		[self addSubview:_transitionShadingView];
 	}
 	
 	return self;
@@ -74,28 +60,106 @@
 	return _effectView.contentView;
 }
 
-- (UIView *)colorView
-{
-	return _colorView;
-}
-
 - (UIImageView *)imageView
 {
+	if(_imageView == nil)
+	{
+		_imageView = [_LNPopupBarBackgroundImageView new];
+		_imageView.contentMode = _cachedImageMode;
+		[_effectView.contentView addSubview:_imageView];
+	}
+	
 	return _imageView;
+}
+
+- (UIColor *)foregroundColor
+{
+	return _imageView.backgroundColor;
+}
+
+- (void)setForegroundColor:(nullable UIColor*)foregroundColor
+{
+	if(_imageView == nil && foregroundColor == nil && foregroundColor != UIColor.clearColor)
+	{
+		return;
+	}
+	
+	self.imageView.backgroundColor = foregroundColor;
+}
+
+- (UIImage *)foregroundImage
+{
+	return _imageView.image;
+}
+
+- (void)setForegroundImage:(nullable UIImage*)foregroundImage
+{
+	if(_imageView == nil && foregroundImage == nil)
+	{
+		return;
+	}
+	
+	self.imageView.image = foregroundImage;
+}
+
+- (UIViewContentMode)foregroundImageContentMode
+{
+	return _imageView == nil ? _cachedImageMode : _imageView.contentMode;
+}
+
+- (void)setForegroundImageContentMode:(UIViewContentMode)foregroundImageContentMode
+{
+	if(_imageView == nil)
+	{
+		_cachedImageMode = foregroundImageContentMode;
+		
+		return;
+	}
+	
+	_imageView.contentMode = foregroundImageContentMode;
+}
+
+- (void)hideOrShowImageViewIfNecessary
+{
+	if(_imageView == nil)
+	{
+		return;
+	}
+	
+	_imageView.hidden = _imageView.backgroundColor == nil && _imageView.image == nil;
+}
+
+- (UIView *)transitionShadingView
+{
+	if(_transitionShadingView == nil)
+	{
+		_transitionShadingView = [UIView new];
+		_transitionShadingView.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.1];
+		_transitionShadingView.alpha = 0.0;
+		_transitionShadingView.hidden = YES;
+		
+		[self addSubview:_transitionShadingView];
+	}
+	
+	return _transitionShadingView;
 }
 
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
 
-	[self sendSubviewToBack:_effectView];
-	[_effectView.contentView sendSubviewToBack:_imageView];
-	[_effectView.contentView sendSubviewToBack:_colorView];
-	[self bringSubviewToFront:_transitionShadingView];
+	if(_imageView != nil)
+	{
+		[_effectView.contentView sendSubviewToBack:_imageView];
+	}
+	
+	if(_transitionShadingView)
+	{
+		[self bringSubviewToFront:_transitionShadingView];
+	}
 	
 	_effectView.frame = self.bounds;
 	_imageView.frame = self.bounds;
-	_colorView.frame = self.bounds;
 	_transitionShadingView.frame = self.bounds;
 }
 
