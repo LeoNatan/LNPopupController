@@ -11,6 +11,7 @@
 #import "MarqueeLabel.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSAttributedString+LNPopupSupport.h"
+#import "_LNPopupBarShadowedImageView.h"
 
 #ifdef DEBUG
 static BOOL _LNEnableBarLayoutDebug(void)
@@ -192,6 +193,8 @@ static BOOL __animatesItemSetter = NO;
 @implementation LNPopupBar
 {
 	BOOL _delaysBarButtonItemLayout;
+	
+	_LNPopupBarShadowedImageView* _imageView;
 	
 	_LNPopupBarTitlesView* _titlesView;
 	NSLayoutConstraint* _titlesViewLeadingConstraint;
@@ -400,14 +403,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_needsLabelsLayout = YES;
 		
-		_imageView = [UIImageView new];
+		_imageView = [_LNPopupBarShadowedImageView new];
 		_imageView.autoresizingMask = UIViewAutoresizingNone;
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
 		_imageView.isAccessibilityElement = YES;
 		_imageView.layer.cornerCurve = kCACornerCurveContinuous;
-		_imageView.layer.cornerRadius = 5;
 		_imageView.layer.masksToBounds = YES;
+		_imageView.cornerRadius = 6;
+		
 		// support smart invert and therefore do not invert image view colors
 		_imageView.accessibilityIgnoresInvertColors = YES;
 		
@@ -548,7 +552,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	else
 	{
 		BOOL isProminent = _resolvedStyle == LNPopupBarStyleProminent;
-		CGFloat inset = isProminent ? MAX(self.safeAreaInsets.left, self.layoutMargins.left) : self.safeAreaInsets.left;
+		CGFloat inset = (isProminent ? MAX(self.safeAreaInsets.left, self.layoutMargins.left) : self.safeAreaInsets.left) - 8;
 		contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, inset, 0, 0));
 		
 		_backgroundGradientMaskView.hidden = YES;
@@ -564,7 +568,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	_contentView.preservesSuperviewLayoutMargins = !isFloating;
 	
-	_contentMaskView.frame = self.bounds;
+	_contentMaskView.frame = [_contentView convertRect:self.bounds fromView:self];
 	_backgroundMaskView.frame = self.bounds;
 	
 	[self _layoutCustomBarController];
@@ -883,6 +887,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	_floatingBackgroundShadowView.shadow = self.activeAppearance.floatingBarBackgroundShadow;
+	
+	_imageView.shadow = self.activeAppearance.imageShadow;
 
 	[self.customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 	

@@ -23,6 +23,7 @@
 		_maskLayer = [CAShapeLayer layer];
 		_maskLayer.fillRule = kCAFillRuleEvenOdd;
 		self.layer.mask = _maskLayer;
+		self.layer.shouldRasterize = YES;
 	}
 	
 	return self;
@@ -49,6 +50,7 @@
 {
 	[super traitCollectionDidChange:previousTraitCollection];
 	
+	self.layer.rasterizationScale = self.traitCollection.displayScale;
 	[self _updateShadowColor];
 }
 

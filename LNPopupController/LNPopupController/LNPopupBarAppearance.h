@@ -36,6 +36,9 @@ NS_SWIFT_UI_ACTOR
 /// The color to apply for the bar's highlight.
 @property (nonatomic, copy) UIColor* highlightColor;
 
+/// Configures the popup bar with the default highlight color.
+- (void)configureWithDefaultHighlightColor;
+
 /// When enabled, titles and subtitles that are longer than the space available will scroll text over time.
 ///
 /// Defaults to `false`.
@@ -64,17 +67,25 @@ NS_SWIFT_UI_ACTOR
 /// Configures the popup bar with marquee scroll disabled.
 - (void)configureWithDisabledMarqueeScroll;
 
-/// Configures the popup bar with the default highlight color.
-- (void)configureWithDefaultHighlightColor;
+/// The shadow displayed underneath the popup bar image view.
+@property (nonatomic, copy, nullable) NSShadow* imageShadow;
+
+- (void)configureWithDefaultImageShadow;
+- (void)configureWithStaticImageShadow;
+- (void)configureWithNoImageShadow;
 
 /// A specific blur effect to use for the bar floating background. This effect is composited first when constructing the bar's floating background.
 @property (nonatomic, copy, nullable) UIBlurEffect* floatingBackgroundEffect;
+
 /// A color to use for the bar floating background. This color is composited over `floatingBackgroundEffect`.
 @property (nonatomic, copy, nullable) UIColor* floatingBackgroundColor;
+
 /// An image to use for the bar floating background. This image is composited over the `floatingBackgroundColor`, and resized per the `floatingBackgroundImageContentMode`.
 @property (nonatomic, strong, nullable) UIImage* floatingBackgroundImage;
+
 /// The content mode to use when rendering the `floatingBackgroundImage`. Defaults to `UIViewContentModeScaleToFill`. `UIViewContentModeRedraw` will be reinterpreted as `UIViewContentModeScaleToFill`.
 @property (nonatomic, assign) UIViewContentMode floatingBackgroundImageContentMode;
+
 /// The shadow displayed underneath the bar floating background.
 @property (nonatomic, copy, nullable) NSShadow* floatingBarBackgroundShadow;
 

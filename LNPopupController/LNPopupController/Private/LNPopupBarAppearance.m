@@ -8,6 +8,7 @@
 
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
+@import ObjectiveC;
 
 //appearance:categoriesChanged:
 static NSString* const aCC = @"YXBwZWFyYW5jZTpjYXRlZ29yaWVzQ2hhbmdlZDo=";
@@ -16,13 +17,39 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 
 @implementation LNPopupBarAppearance
 
-+ (void)load
+static NSArray* __notifiedProperties = nil;
+
++ (void)initialize
 {
 	@autoreleasepool
 	{
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			unsigned int propertyCount = 0;
+			objc_property_t* properties = class_copyPropertyList(self, &propertyCount);
+			
+			NSMutableArray* props = [NSMutableArray new];
+			for(unsigned int idx = 0; idx < propertyCount; idx++)
+			{
+				NSString* propertyName = @(property_getName(properties[idx]));
+				if([@[@"delegate"] containsObject:propertyName])
+				{
+					continue;
+				}
+				
+				[props addObject:propertyName];
+			}
+			
+			__notifiedProperties = props;
+			
+			free(properties);
+		});
+		
+#ifndef LNPopupControllerEnforceStrictClean
 		//appearance:categoriesChanged:
 		Method m1 = class_getInstanceMethod(self, @selector(a:cC:));
 		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(aCC)), method_getImplementation(m1), method_getTypeEncoding(m1));
+#endif
 	}
 }
 
@@ -31,114 +58,30 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	[self.delegate popupBarAppearanceDidChange:self];
 }
 
+#ifndef LNPopupControllerEnforceStrictClean
 //appearance:categoriesChanged:
 - (void)a:(UIBarAppearance *)arg1 cC:(NSUInteger)arg2
 {
 	[self _notify];
 }
-
-- (void)setTitleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)titleTextAttributes
-{
-	_titleTextAttributes = [titleTextAttributes copy];
-	
-	[self _notify];
-}
-
-- (void)setSubtitleTextAttributes:(NSDictionary<NSAttributedStringKey,id> *)subtitleTextAttributes
-{
-	_subtitleTextAttributes = [subtitleTextAttributes copy];
-	
-	[self _notify];
-}
-
-- (void)setButtonAppearance:(UIBarButtonItemAppearance *)buttonAppearance
-{
-	_buttonAppearance = [buttonAppearance copy];
-	
-	[self _notify];
-}
-
-- (void)setDoneButtonAppearance:(UIBarButtonItemAppearance *)doneButtonAppearance
-{
-	_doneButtonAppearance = [doneButtonAppearance copy];
-	
-	[self _notify];
-}
-
-- (void)setMarqueeScrollEnabled:(BOOL)marqueeScrollEnabled
-{
-	_marqueeScrollEnabled = marqueeScrollEnabled;
-	
-	[self _notify];
-}
-
-- (void)setMarqueeScrollRate:(CGFloat)marqueeScrollRate
-{
-	_marqueeScrollRate = marqueeScrollRate;
-	
-	[self _notify];
-}
-
-- (void)setMarqueeScrollDelay:(NSTimeInterval)marqueeScrollDelay
-{
-	_marqueeScrollDelay = marqueeScrollDelay;
-	
-	[self _notify];
-}
-
-- (void)setCoordinateMarqueeScroll:(BOOL)coordinateMarqueeScroll
-{
-	_coordinateMarqueeScroll = coordinateMarqueeScroll;
-	
-	[self _notify];
-}
-
-- (void)setHighlightColor:(UIColor *)highlightColor
-{
-	_highlightColor = highlightColor;
-	
-	[self _notify];
-}
-
-- (void)setFloatingBackgroundColor:(UIColor *)floatingBackgroundColor
-{
-	_floatingBackgroundColor = floatingBackgroundColor;
-	
-	[self _notify];
-}
-
-- (void)setFloatingBackgroundImage:(UIImage *)floatingBackgroundImage
-{
-	_floatingBackgroundImage = floatingBackgroundImage;
-	
-	[self _notify];
-}
-
--(void)setFloatingBackgroundEffect:(UIBlurEffect *)floatingBackgroundEffect
-{
-	_floatingBackgroundEffect = floatingBackgroundEffect;
-	
-	[self _notify];
-}
-
--(void)setFloatingBackgroundImageContentMode:(UIViewContentMode)floatingBackgroundImageContentMode
-{
-	_floatingBackgroundImageContentMode = floatingBackgroundImageContentMode;
-	
-	[self _notify];
-}
-
-- (void)setFloatingBarBackgroundShadow:(NSShadow *)floatingBarBackgroundShadow
-{
-	_floatingBarBackgroundShadow = floatingBarBackgroundShadow;
-	
-	[self _notify];
-}
+#endif
 
 - (void)_commonInit
 {
+#ifndef LNPopupControllerEnforceStrictClean
 	//changeObserver
 	[self setValue:self forKey:_LNPopupDecodeBase64String(cO)];
+#endif
+	
+	for(NSString* key in __notifiedProperties)
+	{
+		[self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:NULL];
+	}
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+	[self _notify];
 }
 
 - (instancetype)initWithIdiom:(UIUserInterfaceIdiom)idiom
@@ -149,6 +92,7 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	{
 		[self configureWithDefaultBackground];
 		
+		[self configureWithDefaultImageShadow];
 		[self configureWithDefaultHighlightColor];
 		[self configureWithDefaultMarqueeScroll];
 		[self configureWithDisabledMarqueeScroll];
@@ -170,21 +114,10 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	
 	[super encodeWithCoder:coder];
 	
-	[coder encodeObject:self.titleTextAttributes forKey:@"titleTextAttributes"];
-	[coder encodeObject:self.subtitleTextAttributes forKey:@"subtitleTextAttributes"];
-	[coder encodeObject:self.buttonAppearance forKey:@"buttonAppearance"];
-	[coder encodeObject:self.doneButtonAppearance forKey:@"doneButtonAppearance"];
-	[coder encodeBool:self.marqueeScrollEnabled forKey:@"marqueeScrollEnabled"];
-	[coder encodeDouble:self.marqueeScrollRate forKey:@"marqueeScrollRate"];
-	[coder encodeDouble:self.marqueeScrollDelay forKey:@"marqueeScrollDelay"];
-	[coder encodeBool:self.coordinateMarqueeScroll forKey:@"coordinateMarqueeScroll"];
-	[coder encodeObject:self.highlightColor forKey:@"highlightColor"];
-	
-	[coder encodeObject:self.floatingBackgroundEffect forKey:@"floatingBackgroundEffect"];
-	[coder encodeObject:self.floatingBackgroundColor forKey:@"floatingBackgroundColor"];
-	[coder encodeObject:self.floatingBackgroundImage forKey:@"floatingBackgroundImage"];
-	[coder encodeInteger:self.floatingBackgroundImageContentMode forKey:@"floatingBackgroundImageContentMode"];
-	[coder encodeObject:self.floatingBarBackgroundShadow forKey:@"floatingBarBackgroundShadow"];
+	for(NSString* key in __notifiedProperties)
+	{
+		[coder encodeObject:[self valueForKey:key] forKey:key];
+	}
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder
@@ -199,21 +132,10 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	
 	if(self)
 	{
-		self.titleTextAttributes = [coder decodeObjectForKey:@"titleTextAttributes"];
-		self.subtitleTextAttributes = [coder decodeObjectForKey:@"subtitleTextAttributes"];
-		self.buttonAppearance = [coder decodeObjectForKey:@"buttonAppearance"];
-		self.doneButtonAppearance = [coder decodeObjectForKey:@"doneButtonAppearance"];
-		self.marqueeScrollEnabled = [coder decodeBoolForKey:@"marqueeScrollEnabled"];
-		self.marqueeScrollRate = [coder decodeDoubleForKey:@"coordinateMarqueeScroll"];
-		self.marqueeScrollDelay = [coder decodeDoubleForKey:@"marqueeScrollDelay"];
-		self.coordinateMarqueeScroll = [coder decodeBoolForKey:@"coordinateMarqueeScroll"];
-		self.highlightColor = [coder decodeObjectForKey:@"highlightColor"];
-		
-		self.floatingBackgroundEffect = [coder decodeObjectForKey:@"floatingBackgroundEffect"];
-		self.floatingBackgroundColor = [coder decodeObjectForKey:@"floatingBackgroundColor"];
-		self.floatingBackgroundImage = [coder decodeObjectForKey:@"floatingBackgroundImage"];
-		self.floatingBackgroundImageContentMode = [coder decodeIntegerForKey:@"floatingBackgroundImageContentMode"];
-		self.floatingBarBackgroundShadow = [coder decodeObjectForKey:@"floatingBarBackgroundShadow"];
+		for(NSString* key in __notifiedProperties)
+		{
+			[self setValue:[coder decodeObjectForKey:key] forKey:key];
+		}
 		
 		[self _commonInit];
 	}
@@ -228,54 +150,16 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	if(self && [barAppearance isKindOfClass:LNPopupBarAppearance.class])
 	{
 		LNPopupBarAppearance* other = (LNPopupBarAppearance*)barAppearance;
-		self.titleTextAttributes = other.titleTextAttributes;
-		self.subtitleTextAttributes = other.subtitleTextAttributes;
-		self.buttonAppearance = other.buttonAppearance;
-		self.doneButtonAppearance = other.doneButtonAppearance;
-		self.marqueeScrollEnabled = other.marqueeScrollEnabled;
-		self.marqueeScrollRate = other.marqueeScrollRate;
-		self.marqueeScrollDelay = other.marqueeScrollDelay;
-		self.coordinateMarqueeScroll = other.coordinateMarqueeScroll;
-		self.highlightColor = other.highlightColor;
 		
-		self.floatingBackgroundColor = other.floatingBackgroundColor;
-		self.floatingBackgroundImage = other.floatingBackgroundImage;
-		self.floatingBackgroundEffect = other.floatingBackgroundEffect;
-		self.floatingBackgroundImageContentMode = other.floatingBackgroundImageContentMode;
-		self.floatingBarBackgroundShadow = other.floatingBarBackgroundShadow;
+		for(NSString* key in __notifiedProperties) 
+		{
+			[self setValue:[other valueForKey:key] forKey:key];
+		}
 		
 		[self _commonInit];
 	}
 	
 	return self;
-}
-
-- (instancetype)copy
-{
-	return [self copyWithZone:nil];
-}
-
-- (instancetype)copyWithZone:(NSZone *)zone
-{
-	LNPopupBarAppearance* copy = [super copyWithZone:zone];
-	
-	copy.titleTextAttributes = self.titleTextAttributes;
-	copy.subtitleTextAttributes = self.subtitleTextAttributes;
-	copy.buttonAppearance = self.buttonAppearance;
-	copy.doneButtonAppearance = self.doneButtonAppearance;
-	copy.marqueeScrollEnabled = self.marqueeScrollEnabled;
-	copy.marqueeScrollRate = self.marqueeScrollRate;
-	copy.marqueeScrollDelay = self.marqueeScrollDelay;
-	copy.coordinateMarqueeScroll = self.coordinateMarqueeScroll;
-	copy.highlightColor = self.highlightColor;
-	
-	copy.floatingBackgroundColor = self.floatingBackgroundColor;
-	copy.floatingBackgroundImage = self.floatingBackgroundImage;
-	copy.floatingBackgroundEffect = self.floatingBackgroundEffect;
-	copy.floatingBackgroundImageContentMode = self.floatingBackgroundImageContentMode;
-	copy.floatingBarBackgroundShadow = self.floatingBarBackgroundShadow;
-	
-	return copy;
 }
 
 - (BOOL)isEqual:(LNPopupBarAppearance*)other
@@ -286,20 +170,12 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	}
 	
 	BOOL rv = [super isEqual:other];
-	rv = rv && [self.titleTextAttributes isEqualToDictionary:other.titleTextAttributes];
-	rv = rv && [self.subtitleTextAttributes isEqualToDictionary:other.subtitleTextAttributes];
-	rv = rv && [self.buttonAppearance isEqual:other.buttonAppearance];
-	rv = rv && [self.doneButtonAppearance isEqual:other.doneButtonAppearance];
-	rv = rv && (self.marqueeScrollEnabled == other.marqueeScrollEnabled);
-	rv = rv && (self.marqueeScrollRate == other.marqueeScrollRate);
-	rv = rv && (self.marqueeScrollDelay == other.marqueeScrollDelay);
-	rv = rv && (self.coordinateMarqueeScroll == other.coordinateMarqueeScroll);
-	rv = rv && [self.highlightColor isEqual:other.highlightColor];
-	rv = rv && [self.floatingBackgroundColor isEqual:other.floatingBackgroundColor];
-	rv = rv && [self.floatingBackgroundImage isEqual:other.floatingBackgroundImage];
-	rv = rv && [self.floatingBackgroundEffect isEqual:other.floatingBackgroundEffect];
-	rv = rv && (self.floatingBackgroundImageContentMode == other.floatingBackgroundImageContentMode);
-	rv = rv && [self.floatingBarBackgroundShadow isEqual:other.floatingBarBackgroundShadow];
+	
+	for(NSString* key in __notifiedProperties) 
+	{
+		rv = rv && [[self valueForKey:key] isEqual:[other valueForKey:key]];
+	}
+	
 	return rv;
 }
 
@@ -336,10 +212,60 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	[self _notify];
 }
 
++ (UIColor*)_defaultProminentShadowColor
+{
+	return [UIColor.blackColor colorWithAlphaComponent:0.15];
+}
+
++ (UIColor*)_defaultSecondaryShadowColor
+{
+	return [UIColor.blackColor colorWithAlphaComponent:0.1];
+}
+
+- (NSShadow*)_defaultImageShadow
+{
+	NSShadow* shadow = [NSShadow new];
+	shadow.shadowColor = LNPopupBarAppearance._defaultSecondaryShadowColor;
+	shadow.shadowOffset = CGSizeMake(0.0, 0.0);
+	shadow.shadowBlurRadius = 3.0;
+	return shadow;
+}
+
+- (void)configureWithDefaultImageShadow
+{
+	_imageShadow = [self _defaultImageShadow];
+
+	if(@available(iOS 17.0, *))
+	{
+		_imageShadow.shadowColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+			UIColor* rv = [traitCollection objectForTrait:_LNPopupDominantColorTrait.class];
+			if(rv == nil)
+			{
+				rv = LNPopupBarAppearance._defaultSecondaryShadowColor;
+			}
+			else
+			{
+				rv = [rv colorWithAlphaComponent:0.15];
+			}
+			return rv;
+		}];
+	}
+}
+
+- (void)configureWithStaticImageShadow
+{
+	_imageShadow = [self _defaultImageShadow];
+}
+
+- (void)configureWithNoImageShadow
+{
+	_imageShadow = nil;
+}
+
 - (NSShadow*)_defaultFloatingBarBackgroundShadow
 {
 	NSShadow* shadow = [NSShadow new];
-	shadow.shadowColor = [UIColor.blackColor colorWithAlphaComponent:0.15];
+	shadow.shadowColor = LNPopupBarAppearance._defaultProminentShadowColor;
 	shadow.shadowOffset = CGSizeMake(0.0, 0.0);
 	shadow.shadowBlurRadius = 8.0;
 	return shadow;
@@ -385,6 +311,25 @@ static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;
 	
 	[self _notify];
+}
+
+@end
+
+@implementation _LNPopupDominantColorTrait
+
++ (__kindof id<NSObject>)defaultValue
+{
+	return nil;
+}
+
++ (NSString *)name
+{
+	return @"PopupImageDominantColor";
+}
+
++ (BOOL)affectsColorAppearance
+{
+	return YES;
 }
 
 @end
