@@ -214,7 +214,7 @@ static NSArray* __notifiedProperties = nil;
 
 + (UIColor*)_defaultSecondaryShadowColor
 {
-	return [UIColor.blackColor colorWithAlphaComponent:0.1];
+	return [UIColor.blackColor colorWithAlphaComponent:0.12];
 }
 
 - (NSShadow*)_defaultImageShadow

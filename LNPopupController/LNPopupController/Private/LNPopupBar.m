@@ -1545,14 +1545,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	CGFloat imageSize = isFloating ? LNPopupBarFloatingImageWidth : LNPopupBarProminentImageWidth;
 	CGFloat barHeight = _contentView.bounds.size.height;
 	
+	CGFloat safeLeading = 8;
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
-		CGFloat safeLeading = isFloating ? 8 : 0;
 		_imageView.center = CGPointMake(safeLeading + imageSize / 2, barHeight / 2);
 	}
 	else
 	{
-		CGFloat safeLeading = isFloating ? 8 : 0;
 		_imageView.center = CGPointMake(_contentView.bounds.size.width - safeLeading - imageSize / 2, barHeight / 2);
 	}
 	

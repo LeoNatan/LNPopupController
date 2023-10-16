@@ -212,10 +212,15 @@ struct SettingsView : View {
 			}
 			
 			Section {
+				CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors)
+			} footer: {
+				Text("Disables random background colors in the demo scenes.")
+			}
+			
+			Section {
 				CellPaddedToggle("Layout Debug", isOn: $layoutDebug)
 				CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView)
 				CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow)
-				CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors)
 			} header: {
 				Text("Popup Bar Debug")
 			}
