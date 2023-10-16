@@ -13,7 +13,6 @@
 #import "LNPopupLongPressGestureRecognizer.h"
 #import "LNPopupInteractionPanGestureRecognizer.h"
 #import "_LNPopupSwizzlingUtils.h"
-#import "NSObject+AltKVC.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "LNPopupCustomBarViewController+Private.h"
 @import ObjectiveC;

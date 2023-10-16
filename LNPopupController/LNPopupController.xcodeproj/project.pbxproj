@@ -11,8 +11,6 @@
 		3900316A2AC06FE10046D3DD /* _LNPopupBackgroundShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.m */; };
 		3907CDB824D9BD6E007C9300 /* LNPopupContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */; };
 		390DD0111BB2EAC30064DB4A /* LNPopupContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		390F246122AC310A007E0CAE /* NSObject+AltKVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 390F245F22AC310A007E0CAE /* NSObject+AltKVC.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		390F246222AC310A007E0CAE /* NSObject+AltKVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 390F246022AC310A007E0CAE /* NSObject+AltKVC.m */; };
 		391481BA1DCFA514002416D1 /* LNChevronView.m in Sources */ = {isa = PBXBuildFile; fileRef = 391481B81DCFA514002416D1 /* LNChevronView.m */; };
 		391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */ = {isa = PBXBuildFile; fileRef = 391481B91DCFA514002416D1 /* LNChevronView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		39222ADB1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 39222AD91F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -79,8 +77,6 @@
 		3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupContentView.m; sourceTree = "<group>"; };
 		3907CDB924D9BD8A007C9300 /* LNPopupContentView+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupContentView+Private.h"; sourceTree = "<group>"; };
 		390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupContentView.h; sourceTree = "<group>"; };
-		390F245F22AC310A007E0CAE /* NSObject+AltKVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+AltKVC.h"; sourceTree = "<group>"; };
-		390F246022AC310A007E0CAE /* NSObject+AltKVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+AltKVC.m"; sourceTree = "<group>"; };
 		39109DA11DD8A305004B5FAB /* LNPopupCloseButton+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupCloseButton+Private.h"; sourceTree = "<group>"; };
 		391481B81DCFA514002416D1 /* LNChevronView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNChevronView.m; sourceTree = "<group>"; };
 		391481B91DCFA514002416D1 /* LNChevronView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNChevronView.h; sourceTree = "<group>"; };
@@ -190,8 +186,6 @@
 				394A85B81B6304F5004FFC61 /* LNPopupItem.m */,
 				39314A501B6AE7A400574D3C /* MarqueeLabel.h */,
 				39314A511B6AE7A400574D3C /* MarqueeLabel.m */,
-				390F245F22AC310A007E0CAE /* NSObject+AltKVC.h */,
-				390F246022AC310A007E0CAE /* NSObject+AltKVC.m */,
 				396D62702610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.h */,
 				396D62712610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.m */,
 				399BA1D22A9E975E00CA5167 /* _LNPopupUIBarAppearanceProxy.h */,
@@ -293,7 +287,6 @@
 				39314A521B6AE7A400574D3C /* MarqueeLabel.h in Headers */,
 				391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */,
 				39599BAD1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h in Headers */,
-				390F246122AC310A007E0CAE /* NSObject+AltKVC.h in Headers */,
 				397AFBFB1F1A1ED200E7D95C /* LNForwardingDelegate.h in Headers */,
 				39222ADB1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.h in Headers */,
 				397AFC011F1A21DD00E7D95C /* LNPopupLongPressGestureRecognizer.h in Headers */,
@@ -385,7 +378,6 @@
 				397AFC021F1A21DD00E7D95C /* LNPopupLongPressGestureRecognizer.m in Sources */,
 				39222ADC1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.m in Sources */,
 				3947E1AA1B61CDA40001178B /* LNPopupCloseButton.m in Sources */,
-				390F246222AC310A007E0CAE /* NSObject+AltKVC.m in Sources */,
 				396A8DE926BEA36B005914B0 /* LNPopupBarAppearanceChainProxy.m in Sources */,
 				39B3EB0E24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.m in Sources */,
 				394A85C21B630992004FFC61 /* _LNWeakRef.m in Sources */,
