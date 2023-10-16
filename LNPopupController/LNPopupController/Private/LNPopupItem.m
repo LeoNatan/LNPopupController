@@ -8,6 +8,7 @@
 
 #import "LNPopupItem+Private.h"
 #import "LNPopupController.h"
+#import "_LNPopupSwizzlingUtils.h"
 
 static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
@@ -23,30 +24,11 @@ NSArray* __LNPopupItemObservedKeys;
 @synthesize attributedTitle = _attributedTitle;
 @synthesize attributedSubtitle = _attributedSubtitle;
 
-+(void)load
++(void)initialize
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		__LNPopupItemObservedKeys = @[
-			NSStringFromSelector(@selector(title)),
-			NSStringFromSelector(@selector(subtitle)),
-			NSStringFromSelector(@selector(attributedTitle)),
-			NSStringFromSelector(@selector(attributedSubtitle)),
-			NSStringFromSelector(@selector(image)),
-			NSStringFromSelector(@selector(progress)),
-			NSStringFromSelector(@selector(leadingBarButtonItems)),
-			NSStringFromSelector(@selector(trailingBarButtonItems)),
-			NSStringFromSelector(@selector(accessibilityLabel)),
-			NSStringFromSelector(@selector(accessibilityHint)),
-			NSStringFromSelector(@selector(accessibilityImageLabel)),
-			NSStringFromSelector(@selector(accessibilityProgressLabel)),
-			NSStringFromSelector(@selector(accessibilityProgressValue)),
-			NSStringFromSelector(@selector(swiftuiImageController)),
-			NSStringFromSelector(@selector(swiftuiTitleContentView)),
-			NSStringFromSelector(@selector(swiftuiHiddenLeadingController)),
-			NSStringFromSelector(@selector(swiftuiHiddenTrailingController)),
-			NSStringFromSelector(@selector(standardAppearance))
-		];
+		__LNPopupItemObservedKeys = [_LNPopupGetPropertyNames(self, nil) arrayByAddingObjectsFromArray:@[@"accessibilityHint", @"accessibilityLabel"]];
 	});
 }
 
@@ -57,7 +39,7 @@ NSArray* __LNPopupItemObservedKeys;
 	if(self)
 	{
 		[__LNPopupItemObservedKeys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-			[self addObserver:self forKeyPath:obj options:0 context:_LNPopupItemObservationContext];
+			[self addObserver:self forKeyPath:obj options:NSKeyValueObservingOptionNew context:_LNPopupItemObservationContext];
 		}];
 	}
 	
@@ -75,7 +57,7 @@ NSArray* __LNPopupItemObservedKeys;
 {
 	if(context == _LNPopupItemObservationContext)
 	{
-		[self._itemDelegate _popupItem:self didChangeValueForKey:keyPath];
+		[self._itemDelegate _popupItem:self didChangeToValue:change[NSKeyValueChangeNewKey] forKey:keyPath];
 	}
 }
 
@@ -98,17 +80,11 @@ NSArray* __LNPopupItemObservedKeys;
 	
 	_attributedTitle = nil;
 	_title = [title copy];
-}
-
-- (void)setSubtitle:(NSString *)subtitle
-{
-	if(_subtitle == subtitle || [_subtitle isEqualToString:subtitle])
-	{
-		return;
-	}
 	
-	_attributedSubtitle = nil;
-	_subtitle = [subtitle copy];
+	if(self.swiftuiTitleContentView != nil)
+	{
+		self.swiftuiTitleContentView = nil;
+	}
 }
 
 - (NSAttributedString *)attributedTitle
@@ -125,6 +101,27 @@ NSArray* __LNPopupItemObservedKeys;
 	
 	_title = nil;
 	_attributedTitle = [attributedTitle copy];
+	
+	if(self.swiftuiTitleContentView != nil)
+	{
+		self.swiftuiTitleContentView = nil;
+	}
+}
+
+- (void)setSubtitle:(NSString *)subtitle
+{
+	if(_subtitle == subtitle || [_subtitle isEqualToString:subtitle])
+	{
+		return;
+	}
+	
+	_attributedSubtitle = nil;
+	_subtitle = [subtitle copy];
+	
+	if(self.swiftuiTitleContentView != nil)
+	{
+		self.swiftuiTitleContentView = nil;
+	}
 }
 
 - (NSAttributedString *)attributedSubtitle
@@ -141,6 +138,45 @@ NSArray* __LNPopupItemObservedKeys;
 	
 	_subtitle = nil;
 	_attributedSubtitle = [attributedSubtitle copy];
+	
+	if(self.swiftuiTitleContentView != nil)
+	{
+		self.swiftuiTitleContentView = nil;
+	}
+}
+
+- (void)setSwiftuiTitleContentView:(UIView *)swiftuiTitleContentView
+{
+	_swiftuiTitleContentView = swiftuiTitleContentView;
+	
+	if(self.title != nil)
+	{
+		self.title = nil;
+	}
+	if(self.attributedTitle != nil)
+	{
+		self.attributedTitle = nil;
+	}
+}
+
+- (void)setImage:(UIImage *)image
+{
+	_image = image;
+	
+	if(self.swiftuiImageController != nil)
+	{
+		self.swiftuiImageController = nil;
+	}
+}
+
+- (void)setSwiftuiImageController:(UIViewController *)swiftuiImageController
+{
+	_swiftuiImageController = swiftuiImageController;
+	
+	if(self.image != nil)
+	{
+		self.image = nil;
+	}
 }
 
 - (void)setProgress:(float)progress

@@ -145,3 +145,4 @@ static Class LNDynamicSubclassSuper(id obj, Class dynamic)
 
 
 NSString* _LNPopupDecodeBase64String(NSString* base64String);
+NSArray<NSString*>* _LNPopupGetPropertyNames(Class cls, NSArray<NSString*>* excludedProperties);

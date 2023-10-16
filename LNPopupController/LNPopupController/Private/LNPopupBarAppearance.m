@@ -8,7 +8,8 @@
 
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
-@import ObjectiveC;
+
+static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
 //appearance:categoriesChanged:
 static NSString* const aCC = @"YXBwZWFyYW5jZTpjYXRlZ29yaWVzQ2hhbmdlZDo=";
@@ -25,24 +26,7 @@ static NSArray* __notifiedProperties = nil;
 	{
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
-			unsigned int propertyCount = 0;
-			objc_property_t* properties = class_copyPropertyList(self, &propertyCount);
-			
-			NSMutableArray* props = [NSMutableArray new];
-			for(unsigned int idx = 0; idx < propertyCount; idx++)
-			{
-				NSString* propertyName = @(property_getName(properties[idx]));
-				if([@[@"delegate"] containsObject:propertyName])
-				{
-					continue;
-				}
-				
-				[props addObject:propertyName];
-			}
-			
-			__notifiedProperties = props;
-			
-			free(properties);
+			__notifiedProperties = _LNPopupGetPropertyNames(self, nil);
 		});
 		
 #ifndef LNPopupControllerEnforceStrictClean
@@ -75,13 +59,24 @@ static NSArray* __notifiedProperties = nil;
 	
 	for(NSString* key in __notifiedProperties)
 	{
-		[self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:NULL];
+		[self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:_LNPopupItemObservationContext];
 	}
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-	[self _notify];
+	if(context == _LNPopupItemObservationContext)
+	{
+		[self _notify];
+	}
+}
+
+- (void)dealloc
+{
+	for(NSString* key in __notifiedProperties)
+	{
+		[self removeObserver:self forKeyPath:key context:_LNPopupItemObservationContext];
+	}
 }
 
 - (instancetype)initWithIdiom:(UIUserInterfaceIdiom)idiom

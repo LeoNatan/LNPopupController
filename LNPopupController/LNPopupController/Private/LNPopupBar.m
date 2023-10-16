@@ -958,16 +958,19 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	_swiftuiImageController = swiftuiImageController;
-	_swiftuiImageController.view.backgroundColor = UIColor.clearColor;
-	
-	_swiftuiImageController.view.translatesAutoresizingMaskIntoConstraints = NO;
-	[_imageView addSubview:_swiftuiImageController.view];
-	[NSLayoutConstraint activateConstraints:@[
-		[_imageView.topAnchor constraintEqualToAnchor:_swiftuiImageController.view.topAnchor],
-		[_imageView.bottomAnchor constraintEqualToAnchor:_swiftuiImageController.view.bottomAnchor],
-		[_imageView.leadingAnchor constraintEqualToAnchor:_swiftuiImageController.view.leadingAnchor],
-		[_imageView.trailingAnchor constraintEqualToAnchor:_swiftuiImageController.view.trailingAnchor],
-	]];
+	if(_swiftuiImageController != nil)
+	{
+		_swiftuiImageController.view.backgroundColor = UIColor.clearColor;
+		
+		_swiftuiImageController.view.translatesAutoresizingMaskIntoConstraints = NO;
+		[_imageView addSubview:_swiftuiImageController.view];
+		[NSLayoutConstraint activateConstraints:@[
+			[_imageView.topAnchor constraintEqualToAnchor:_swiftuiImageController.view.topAnchor],
+			[_imageView.bottomAnchor constraintEqualToAnchor:_swiftuiImageController.view.bottomAnchor],
+			[_imageView.leadingAnchor constraintEqualToAnchor:_swiftuiImageController.view.leadingAnchor],
+			[_imageView.trailingAnchor constraintEqualToAnchor:_swiftuiImageController.view.trailingAnchor],
+		]];
+	}
 	
 	[self _layoutImageView];
 	[self _setNeedsTitleLayoutRemovingLabels:NO];

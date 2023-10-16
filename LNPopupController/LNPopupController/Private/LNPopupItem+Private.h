@@ -15,7 +15,7 @@ extern NSArray* __LNPopupItemObservedKeys;
 
 @protocol _LNPopupItemDelegate <NSObject>
 
-- (void)_popupItem:(LNPopupItem*)popupItem didChangeValueForKey:(NSString*)key;
+- (void)_popupItem:(LNPopupItem*)popupItem didChangeToValue:(id)value forKey:(NSString*)key;
 
 @end
 

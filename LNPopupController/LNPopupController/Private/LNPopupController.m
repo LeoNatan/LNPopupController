@@ -769,66 +769,31 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[self closePopupAnimated:YES completion:nil];
 }
 
-- (void)_reconfigure_title
+- (void)_popupItem_update_title
 {
 	self.popupBarStorage.attributedTitle = _currentPopupItem.attributedTitle;
 }
 
-- (void)_reconfigure_subtitle
+- (void)_popupItem_update_subtitle
 {
 	self.popupBarStorage.attributedSubtitle = _currentPopupItem.attributedSubtitle;
 }
 
-- (void)_reconfigure_attributedTitle
-{
-	self.popupBarStorage.attributedTitle = _currentPopupItem.attributedTitle;
-}
-
-- (void)_reconfigure_attributedSubtitle
-{
-	self.popupBarStorage.attributedSubtitle = _currentPopupItem.attributedSubtitle;
-}
-
-- (void)_reconfigure_image
-{
-	self.popupBarStorage.image = _currentPopupItem.image;
-	
-	if(_currentPopupItem.image != nil && _currentPopupItem.swiftuiImageController != nil)
-	{
-		_currentPopupItem.swiftuiImageController = nil;
-	}
-}
-
-- (void)_reconfigure_progress
+- (void)_popupItem_update_progress
 {
 	[UIView performWithoutAnimation:^{
 		[self.popupBarStorage.progressView setProgress:_currentPopupItem.progress animated:NO];
 	}];
 }
 
-- (void)_reconfigure_accessibilityLabel
+- (void)_popupItem_update_accessibilityLabel
 {
 	self.popupBarStorage.accessibilityCenterLabel = _currentPopupItem.accessibilityLabel;
 }
 
-- (void)_reconfigure_accessibilityHint
+- (void)_popupItem_update_accessibilityHint
 {
 	self.popupBarStorage.accessibilityCenterHint = _currentPopupItem.accessibilityHint;
-}
-
-- (void)_reconfigure_accessibilityImageLabel
-{
-	self.popupBarStorage.accessibilityImageLabel = _currentPopupItem.accessibilityImageLabel;
-}
-
-- (void)_reconfigure_accessibilityProgressLabel
-{
-	self.popupBarStorage.accessibilityProgressLabel = _currentPopupItem.accessibilityProgressLabel;
-}
-
-- (void)_reconfigure_accessibilityProgressValue
-{
-	self.popupBarStorage.accessibilityProgressValue = _currentPopupItem.accessibilityProgressValue;
 }
 
 - (void)_reconfigureBarItems
@@ -839,54 +804,22 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[self.popupBarStorage _layoutBarButtonItems];
 }
 
-- (void)_reconfigure_leadingBarButtonItems
+- (void)_popupItem_update_leadingBarButtonItems
 {
 	[self _reconfigureBarItems];
 }
 
-- (void)_reconfigure_trailingBarButtonItems
+- (void)_popupItem_update_trailingBarButtonItems
 {
 	[self _reconfigureBarItems];
 }
 
-- (void)_reconfigure_swiftuiImageController
-{
-	if(_currentPopupItem.swiftuiImageController != nil)
-	{
-		self.popupBarStorage.swiftuiImageController = _currentPopupItem.swiftuiImageController;
-	}
-	
-	if(_currentPopupItem.swiftuiImageController != nil && _currentPopupItem.image != nil)
-	{
-		_currentPopupItem.image = nil;
-	}
-}
-
-- (void)_reconfigure_swiftuiTitleContentView
-{
-	if(_currentPopupItem.swiftuiTitleContentView != nil)
-	{
-		self.popupBarStorage.swiftuiTitleContentView = _currentPopupItem.swiftuiTitleContentView;
-		_currentPopupItem.title = nil;
-	}
-}
-
-- (void)_reconfigure_swiftuiHiddenLeadingController
-{
-	self.popupBarStorage.swiftuiHiddenLeadingController = _currentPopupItem.swiftuiHiddenLeadingController;
-}
-
-- (void)_reconfigure_swiftuiHiddenTrailingController
-{
-	self.popupBarStorage.swiftuiHiddenTrailingController = _currentPopupItem.swiftuiHiddenTrailingController;
-}
-
-- (void)_reconfigure_standardAppearance
+- (void)_popupItem_update_standardAppearance
 {
 	[self.popupBarStorage _recalcActiveAppearanceChain];
 }
 
-- (void)_popupItem:(LNPopupItem*)popupItem didChangeValueForKey:(NSString*)key
+- (void)_popupItem:(LNPopupItem*)popupItem didChangeToValue:(id)value forKey:(NSString*)key
 {
 	if(self.popupBarStorage.customBarViewController)
 	{
@@ -894,10 +827,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	else
 	{
-		NSString* reconfigureSelector = [NSString stringWithFormat:@"_reconfigure_%@", key];
+		NSString* reconfigureSelector = [NSString stringWithFormat:@"_popupItem_update_%@", key];
 		
-		void (*configureDispatcher)(id, SEL) = (void(*)(id, SEL))objc_msgSend;
-		configureDispatcher(self, NSSelectorFromString(reconfigureSelector));
+		if([self respondsToSelector:NSSelectorFromString(reconfigureSelector)])
+		{
+			void (*configureDispatcher)(id, SEL) = (void(*)(id, SEL))objc_msgSend;
+			configureDispatcher(self, NSSelectorFromString(reconfigureSelector));
+		}
+		else
+		{
+			[self.popupBarStorage setValue:value forKey:key];
+		}
 	}
 }
 
@@ -973,9 +913,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	else
 	{
-		[__LNPopupItemObservedKeys enumerateObjectsUsingBlock:^(NSString * __nonnull key, NSUInteger idx, BOOL * __nonnull stop) {
-			[self _popupItem:_currentPopupItem didChangeValueForKey:key];
-		}];
+		for(NSString* key in __LNPopupItemObservedKeys)
+		{
+			[self _popupItem:_currentPopupItem didChangeToValue:[_currentPopupItem valueForKey:key] forKey:key];
+		}
 	}
 }
 
