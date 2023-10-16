@@ -56,7 +56,15 @@
 	if(self.view.traitCollection.userInterfaceStyle != _lastStyle)
 	{
 		_lastStyle = self.view.traitCollection.userInterfaceStyle;
-		self.view.backgroundColor = LNSeedAdaptiveInvertedColor(@"Popup");
+		
+		if([NSUserDefaults.standardUserDefaults boolForKey:__LNPopupBarDisableDemoSceneColors] == NO)
+		{
+			self.view.backgroundColor = LNSeedAdaptiveInvertedColor(@"Popup");
+		}
+		else
+		{
+			self.view.backgroundColor = UIColor.labelColor;
+		}
 	}
 	
 	[self setNeedsStatusBarAppearanceUpdate];
@@ -159,7 +167,14 @@
 		self.popupItem.subtitle = [LoremIpsum sentence];
 	}
 	
-	self.popupItem.image = [UIImage imageNamed:@"genre7"];
+	if([NSUserDefaults.standardUserDefaults boolForKey:__LNPopupBarDisableDemoSceneColors] == NO)
+	{
+		self.popupItem.image = [UIImage imageNamed:@"genre7"];
+	}
+	else
+	{
+		self.popupItem.image = [UIImage imageNamed:@"genre_white"];
+	}
 	self.popupItem.progress = (float) arc4random() / UINT32_MAX;
 	
 	UILabel* topLabel = [UILabel new];

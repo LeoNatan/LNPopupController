@@ -75,9 +75,15 @@
 		self.colorSeedCount = 0;
 	}
 	
-	NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
-	self.view.backgroundColor = LNSeedAdaptiveColor(seed);
-//	self.view.backgroundColor = UIColor.whiteColor;
+	if([NSUserDefaults.standardUserDefaults boolForKey:__LNPopupBarDisableDemoSceneColors] == NO)
+	{
+		NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
+		self.view.backgroundColor = LNSeedAdaptiveColor(seed);
+	}
+	else
+	{
+		self.view.backgroundColor = UIColor.systemBackgroundColor;
+	}
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -282,8 +288,8 @@
 		paragraphStyle.alignment = NSTextAlignmentRight;
 		paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
 		
-		appearance.titleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont fontWithName:@"Chalkduster" size:14]], NSForegroundColorAttributeName: [UIColor yellowColor]};
-		appearance.subtitleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont fontWithName:@"Chalkduster" size:12]], NSForegroundColorAttributeName: [UIColor greenColor]};
+		appearance.titleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont fontWithName:@"Chalkduster" size:14]], NSForegroundColorAttributeName: UIColor.yellowColor};
+		appearance.subtitleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont fontWithName:@"Chalkduster" size:12]], NSForegroundColorAttributeName: UIColor.greenColor};
 		
 		if(targetVC.popupBar.barStyle == LNPopupBarStyleFloating || (targetVC.popupBar.barStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 		{
@@ -296,7 +302,7 @@
 			targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
 		}
 		
-		[targetVC.popupBar setTintColor:[UIColor systemYellowColor]];
+		targetVC.popupBar.tintColor = UIColor.yellowColor;
 		targetVC.popupBar.standardAppearance = appearance;
 	}
 	

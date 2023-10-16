@@ -70,6 +70,7 @@ struct SettingsView : View {
 	@AppStorage(__LNPopupBarHideContentView) var hidePopupBarContentView: Bool = false
 	@AppStorage(__LNPopupBarHideShadow) var hidePopupBarShadow: Bool = false
 	@AppStorage(__LNPopupBarEnableLayoutDebug) var layoutDebug: Bool = false
+	@AppStorage(__LNPopupBarDisableDemoSceneColors) var disableDemoSceneColors: Bool = false
 	
 	@Environment(\.sizeCategory) var sizeCategory
 	
@@ -214,6 +215,7 @@ struct SettingsView : View {
 				CellPaddedToggle("Layout Debug", isOn: $layoutDebug)
 				CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView)
 				CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow)
+				CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors)
 			} header: {
 				Text("Popup Bar Debug")
 			}
@@ -237,6 +239,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideContentView)
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideShadow)
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarEnableLayoutDebug)
+		UserDefaults.standard.removeObject(forKey: __LNPopupBarDisableDemoSceneColors)
 		
 		for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
 			UserDefaults.standard.removeObject(forKey: key)
