@@ -95,15 +95,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	[UIView performWithoutAnimation:^{
 		[self.popupCloseButton _setStyle:buttonStyle];
 		
-		if(buttonStyle == LNPopupCloseButtonStyleRound)
-		{
-			self.popupCloseButton.tintColor = [UIColor labelColor];
-		}
-		else
-		{
-			self.popupCloseButton.tintColor = [UIColor systemGray2Color];
-		}
-		
 		if([_currentPopupContentViewController positionPopupCloseButton:self.popupCloseButton] == YES)
 		{
 			return;

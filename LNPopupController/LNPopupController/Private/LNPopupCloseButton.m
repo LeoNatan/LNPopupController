@@ -127,6 +127,7 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	_highlightView = nil;
 	
 	[self setImage:nil forState:UIControlStateNormal];
+	self.tintColor = nil;
 }
 
 - (void)_setupForChevronButton
@@ -134,6 +135,8 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	_chevronView = [[LNChevronView alloc] initWithFrame:CGRectMake(0, 0, 40, 15)];
 	_chevronView.width = 5.0;
 	[_chevronView setState:_style == LNPopupCloseButtonStyleGrabber ? LNChevronViewStateFlat : LNChevronViewStateUp animated:NO];
+	
+	self.tintColor = [UIColor colorWithWhite:0.5 alpha:1.0];
 	[self addSubview:_chevronView];
 }
 
@@ -168,6 +171,7 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	self.layer.shadowOffset = CGSizeMake(0, 0);
 	self.layer.masksToBounds = NO;
 	
+	self.tintColor = [UIColor labelColor];
 	[self setTitleColor:self.tintColor forState:UIControlStateNormal];
 	
 	UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
@@ -291,6 +295,13 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	}
 	
 	[_chevronView setState:LNChevronViewStateFlat animated:YES];
+}
+
+- (void)setTintColor:(UIColor *)tintColor
+{
+	[super setTintColor:tintColor];
+	
+	_chevronView.tintColor = self.tintColor;
 }
 
 - (void)tintColorDidChange
