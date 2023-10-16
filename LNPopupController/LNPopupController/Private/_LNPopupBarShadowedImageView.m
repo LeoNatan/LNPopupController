@@ -76,4 +76,11 @@
 	_shadowView.cornerRadius = cornerRadius;
 }
 
+- (void)setHidden:(BOOL)hidden
+{
+	[super setHidden:hidden];
+	
+	_shadowView.hidden = hidden;
+}
+
 @end

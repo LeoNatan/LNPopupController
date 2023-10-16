@@ -1229,6 +1229,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			leftViewLastFrame.size.width -= (__applySwiftUILayoutFixes ? -8 : 8);
 		}
 	}
+	else
+	{
+		leftViewLastFrame.size.width += isFloating ? 20 : 8;
+	}
 	
 	CGRect rightViewFirstFrame = CGRectMake(_contentView.bounds.size.width, 0, 0, 0);
 	if(rightViewFirst != nil)
@@ -1243,6 +1247,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		{
 			rightViewFirstFrame.origin.x += (__applySwiftUILayoutFixes ? -8 : 8);
 		}
+	}
+	else
+	{
+		rightViewFirstFrame.origin.x -= 20;
 	}
 	
 	CGFloat widthLeft = 0;
