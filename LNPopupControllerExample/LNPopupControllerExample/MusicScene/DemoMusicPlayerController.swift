@@ -32,13 +32,12 @@ class PlaybackSettings: ObservableObject {
 	@Published var progressEditedByUser: Bool = false
 	@Published var volume: Float = 0.5
 	@Published var isPlaying: Bool = true
+	
+	var onPlayPause: (() -> ())? = nil
 }
 
 struct PlayerView: View {
 	@ObservedObject var playbackSettings = PlaybackSettings()
-	
-	init() {
-	}
 	
 	var body: some View {
 		GeometryReader { geometry in
@@ -67,15 +66,10 @@ struct PlayerView: View {
 								.font(.title)
 						})
 					}
-//					if #available(iOS 14.0, *) {
-//						ProgressView(value: playbackSettings.playbackProgress)
-//							.padding([.bottom], geometry.size.height * 30.0 / 896.0)
-//					} else {
-						Slider(value: $playbackSettings.playbackProgress, onEditingChanged: { editing in
-							playbackSettings.progressEditedByUser = editing
-						})
-						.padding([.bottom], geometry.size.height * 30.0 / 896.0)
-//					}
+					Slider(value: $playbackSettings.playbackProgress, onEditingChanged: { editing in
+						playbackSettings.progressEditedByUser = editing
+					})
+					.padding([.bottom], geometry.size.height * 30.0 / 896.0)
 					HStack {
 						Button(action: {}, label: {
 							Image(systemName: "backward.fill")
@@ -83,6 +77,7 @@ struct PlayerView: View {
 						.frame(minWidth: 0, maxWidth: .infinity)
 						Button(action: {
 							playbackSettings.isPlaying.toggle()
+							playbackSettings.onPlayPause?()
 						}, label: {
 							Image(systemName: playbackSettings.isPlaying ? "pause.fill" : "play.fill")
 						})
@@ -162,24 +157,51 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	required init() {
 		super.init(rootView: playerView)
 		
+		playerView.playbackSettings.onPlayPause = { [weak self] in
+			self?.updateBarItems()
+		}
+		
 		timer = Timer(timeInterval: 0.01, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 		RunLoop.current.add(timer!, forMode: .common)
 		
-		let pause = UIBarButtonItem(image: LNSystemImage(named: "pause.fill", useCompactConfig: false), style: .plain, target: nil, action: nil)
+		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
+		
+		updateBarItems()
+	}
+	
+	fileprivate func updateBarItems() {
+		let playPauseAction = UIAction { [weak self] _ in
+			self?.playerView.playbackSettings.isPlaying.toggle()
+			self?.updateBarItems()
+		}
+		
+		let play = UIBarButtonItem(image: LNSystemImage(named: "play.fill", useCompactConfig: false), primaryAction: playPauseAction)
+		play.accessibilityLabel = NSLocalizedString("Play", comment: "")
+		let pause = UIBarButtonItem(image: LNSystemImage(named: "pause.fill", useCompactConfig: false), primaryAction: playPauseAction)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
 		let next = UIBarButtonItem(image: LNSystemImage(named: "forward.fill", useCompactConfig: false), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
+		let playPause = playerView.playbackSettings.isPlaying ? pause : play
+		
 		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == LNPopupBarStyle.compact {
-			popupItem.leadingBarButtonItems = [ pause ]
+			popupItem.leadingBarButtonItems = [ playPause ]
 			popupItem.trailingBarButtonItems = [ next ]
 		} else {
-			pause.width = 50
-			next.width = 50
-			popupItem.barButtonItems = [ pause, next ]
+			pause.width = 60
+			play.width = 60
+			next.width = 60
+			popupItem.barButtonItems = [ playPause, next ]
 		}
+	}
+	
+	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
+		super.viewDidMove(toPopupContainerContentView: popupContentView)
 		
-		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
+		if popupContentView == nil {
+			timer?.invalidate()
+			timer = nil
+		}
 	}
 	
 	override func positionPopupCloseButton(_ popupCloseButton: LNPopupCloseButton) -> Bool {
@@ -235,15 +257,18 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	}
 	
 	@objc func _timerTicked(_ timer: Timer) {
-		if playerView.playbackSettings.progressEditedByUser == false {
-			playerView.playbackSettings.playbackProgress += 0.0005
+		defer {
+			popupItem.accessibilityProgressLabel = NSLocalizedString("Playback Progress", comment: "")
+			let totalTime = TimeInterval(250)
+			popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: TimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: totalTime)!)"
 		}
 		
-		popupItem.progress = playerView.playbackSettings.playbackProgress
+		guard playerView.playbackSettings.isPlaying && playerView.playbackSettings.progressEditedByUser == false else {
+			return
+		}
 		
-		popupItem.accessibilityProgressLabel = NSLocalizedString("Playback Progress", comment: "")
-		let totalTime = TimeInterval(250)
-		popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.string(from: TimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.string(from: totalTime)!)"
+		playerView.playbackSettings.playbackProgress += 0.001
+		popupItem.progress = playerView.playbackSettings.playbackProgress
 		
 		if popupItem.progress >= 1.0 {
 			timer.invalidate()

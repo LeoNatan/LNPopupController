@@ -206,12 +206,6 @@ struct SettingsView : View {
 			}
 			
 			Section {
-				CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer)
-			} footer: {
-				Text("Enables visualization of touches within the app, for demo purposes.")
-			}
-			
-			Section {
 				CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors)
 			} footer: {
 				Text("Disables random background colors in the demo scenes.")
@@ -224,13 +218,31 @@ struct SettingsView : View {
 			} header: {
 				Text("Popup Bar Debug")
 			}
-		}.accentColor(.pink).pickerStyle(.inline)
+			
+			Section {
+				CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer)
+			} header: {
+				Text("Demonstration")
+			} footer: {
+				Text("Enables visualization of touches within the app, for demo purposes.")
+			}
+		}.pickerStyle(.inline)
 	}
 }
 
 class SettingsViewController: UIHostingController<SettingsView> {
 	required init?(coder aDecoder: NSCoder) {
 		super.init(coder: aDecoder, rootView: SettingsView())
+	}
+	
+	override func viewIsAppearing(_ animated: Bool) {
+		super.viewIsAppearing(animated)
+		
+		guard let parent = parent as? UINavigationController else {
+			return
+		}
+		
+		self.view.tintColor = parent.navigationBar.tintColor
 	}
 	
 	class func reset() {
