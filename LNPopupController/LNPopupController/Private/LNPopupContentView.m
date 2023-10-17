@@ -265,27 +265,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 @end
 
-#pragma mark Deprecations
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
-@implementation LNPopupContentView (Deprecations)
-
-- (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
-{
-	_backgroundEffect = backgroundStyle == LNBackgroundStyleInherit ? nil : [UIBlurEffect effectWithStyle:backgroundStyle];
-}
-
-- (UIBlurEffectStyle)backgroundStyle
-{
-	return _backgroundEffect == nil ? LNBackgroundStyleInherit : [[_backgroundEffect valueForKey:@"style"] unsignedIntegerValue];
-}
-
-@end
-
-#pragma clang diagnostic pop
-
 #pragma mark Popup Transition Coordinator
 
 @implementation _LNPopupTransitionCoordinator
@@ -399,3 +378,24 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 { }
 
 @end
+
+#pragma mark Deprecations
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+@implementation LNPopupContentView (Deprecations)
+
+- (void)setBackgroundStyle:(UIBlurEffectStyle)backgroundStyle
+{
+	_backgroundEffect = backgroundStyle == LNBackgroundStyleInherit ? nil : [UIBlurEffect effectWithStyle:backgroundStyle];
+}
+
+- (UIBlurEffectStyle)backgroundStyle
+{
+	return _backgroundEffect == nil ? LNBackgroundStyleInherit : [[_backgroundEffect valueForKey:@"style"] unsignedIntegerValue];
+}
+
+@end
+
+#pragma clang diagnostic pop

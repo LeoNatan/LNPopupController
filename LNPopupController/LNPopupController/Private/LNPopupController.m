@@ -231,6 +231,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 	currentContentController.view.frame = self.popupContentView.contentView.bounds;
 	[self.popupContentView.contentView addSubview:currentContentController.view];
+	currentContentController.popupPresentationContainerViewController = self.containerController;
 	[currentContentController viewDidMoveToPopupContainerContentView:self.popupContentView];
 }
 
@@ -243,6 +244,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	[currentContentController viewWillMoveToPopupContainerContentView:nil];
 	[currentContentController.view removeFromSuperview];
+	currentContentController.popupPresentationContainerViewController = nil;
 	[currentContentController viewDidMoveToPopupContainerContentView:nil];
 }
 
@@ -872,18 +874,16 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	self.popupContentView.currentPopupContentViewController = newContentController;
 	
-//	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
-//	{
-		if(oldContentController != nil)
-		{
-			[self.popupContentView.contentView insertSubview:newContentController.view belowSubview:oldContentController.view];
-		}
-		else
-		{
-			[self _addContentControllerSubview:newContentController];
-			[self.popupContentView.contentView sendSubviewToBack:newContentController.view];
-		}
-//	}
+	[self _addContentControllerSubview:newContentController];
+	
+	if(oldContentController != nil)
+	{
+		[self.popupContentView.contentView insertSubview:newContentController.view belowSubview:oldContentController.view];
+	}
+	else
+	{
+		[self.popupContentView.contentView sendSubviewToBack:newContentController.view];
+	}
 	
 	[self _removeContentControllerFromContentView:oldContentController];
 	

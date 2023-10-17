@@ -89,7 +89,6 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 	}
 	
 	self.popupContentViewController = controller;
-	controller.popupPresentationContainerViewController = self;
 	
 	[self._ln_popupController presentPopupBarAnimated:animated openPopup:openPopup completion:completionBlock];
 }
