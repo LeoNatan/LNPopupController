@@ -427,7 +427,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_highlightView = [[UIView alloc] initWithFrame:_contentView.bounds];
 		_highlightView.userInteractionEnabled = NO;
 		_highlightView.alpha = 0.0;
-		[self addSubview:_highlightView];
 		
 		self.semanticContentAttribute = UISemanticContentAttributeUnspecified;
 		self.barItemsSemanticContentAttribute = UISemanticContentAttributePlayback;
@@ -582,11 +581,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	if(isFloating)
 	{
-		_highlightView.frame = _contentView.frame;
+		[_contentView.contentView insertSubview:_highlightView belowSubview:_toolbar];
+		_highlightView.frame = _contentView.bounds;
 		_highlightView.layer.cornerRadius = _contentView.cornerRadius;
 	}
 	else
 	{
+		[self insertSubview:_highlightView aboveSubview:_backgroundView];
 		_highlightView.frame = self.bounds;
 		_highlightView.layer.cornerRadius = 0;
 	}
@@ -597,8 +598,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		[_contentView.contentView insertSubview:_customBarViewController.view aboveSubview:_bottomShadowView];
 	}
-	
-	[self insertSubview:_highlightView aboveSubview:_contentView];
 	
 	UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
 	CGFloat h = 1 / screen.scale;
