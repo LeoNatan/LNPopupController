@@ -57,7 +57,12 @@ NSArray* __LNPopupItemObservedKeys;
 {
 	if(context == _LNPopupItemObservationContext)
 	{
-		[self._itemDelegate _popupItem:self didChangeToValue:change[NSKeyValueChangeNewKey] forKey:keyPath];
+		id value = change[NSKeyValueChangeNewKey];
+		if([value isKindOfClass:NSNull.class])
+		{
+			value = nil;
+		}
+		[self._itemDelegate _popupItem:self didChangeToValue:value forKey:keyPath];
 	}
 }
 
