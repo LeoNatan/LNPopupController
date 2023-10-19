@@ -211,6 +211,9 @@ static BOOL __animatesItemSetter = NO;
 	
 	_LNPopupToolbar* _toolbar;
 	BOOL _inLayout;
+	
+	UIWindow* _swiftHacksWindow1;
+	UIWindow* _swiftHacksWindow2;
 }
 
 + (void)setAnimatesItemSetter:(BOOL)animate
@@ -991,28 +994,58 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)setSwiftuiHiddenLeadingController:(UIViewController *)swiftuiHiddenLeadingController
 {
+	if(_swiftuiHiddenLeadingController == swiftuiHiddenLeadingController)
+	{
+		return;
+	}
+	
 	if(_swiftuiHiddenLeadingController != nil)
 	{
 		[_swiftuiHiddenLeadingController.view removeFromSuperview];
 	}
 	
 	_swiftuiHiddenLeadingController = swiftuiHiddenLeadingController;
-	_swiftuiHiddenLeadingController.view.frame = CGRectMake(-200, -200, 100, 160);
-	[self addSubview:_swiftuiHiddenLeadingController.view];
+	_swiftuiHiddenLeadingController.view.frame = CGRectMake(0, 0, 400, 400);
+	
+	if(_swiftHacksWindow1 != nil)
+	{
+		_swiftHacksWindow1.hidden = YES;
+		_swiftHacksWindow1 = nil;
+	}
+	_swiftHacksWindow1 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
+	_swiftHacksWindow1.frame = CGRectMake(-4000, 0, 400, 400);
+	_swiftHacksWindow1.rootViewController = _swiftuiHiddenLeadingController;
+	_swiftHacksWindow1.hidden = NO;
+	_swiftHacksWindow1.alpha = 0.0;
 	
 	[self _fixupSwiftUIControllersWithBarStyle];
 }
 
 - (void)setSwiftuiHiddenTrailingController:(UIViewController *)swiftuiHiddenTrailingController
 {
+	if(_swiftuiHiddenTrailingController == swiftuiHiddenTrailingController)
+	{
+		return;
+	}
+	
 	if(_swiftuiHiddenTrailingController != nil)
 	{
 		[_swiftuiHiddenTrailingController.view removeFromSuperview];
 	}
 	
 	_swiftuiHiddenTrailingController = swiftuiHiddenTrailingController;
-	_swiftuiHiddenTrailingController.view.frame = CGRectMake(-200, -200, 100, 160);
-	[self addSubview:_swiftuiHiddenTrailingController.view];
+	_swiftuiHiddenTrailingController.view.frame = CGRectMake(0, 0, 400, 400);
+	
+	if(_swiftHacksWindow2 != nil)
+	{
+		_swiftHacksWindow2.hidden = YES;
+		_swiftHacksWindow2 = nil;
+	}
+	_swiftHacksWindow2 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
+	_swiftHacksWindow2.frame = CGRectMake(-4000, 0, 400, 400);
+	_swiftHacksWindow2.rootViewController = _swiftuiHiddenTrailingController;
+	_swiftHacksWindow2.hidden = NO;
+	_swiftHacksWindow2.alpha = 0.0;
 	
 	[self _fixupSwiftUIControllersWithBarStyle];
 }
