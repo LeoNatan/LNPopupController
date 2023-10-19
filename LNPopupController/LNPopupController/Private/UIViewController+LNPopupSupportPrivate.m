@@ -777,6 +777,18 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	__ln_popup_suppressViewControllerLifecycle = NO;
 }
 
+- (void)_userFacing_viewIsAppearing:(BOOL)animated
+{
+	__ln_popup_suppressViewControllerLifecycle = YES;
+	
+	Class superclass = LNDynamicSubclassSuper(self, _LN_UIViewController_AppearanceControl.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, BOOL) = (void*)objc_msgSendSuper;
+	super_class(&super, @selector(viewIsAppearing:), animated);
+	
+	__ln_popup_suppressViewControllerLifecycle = NO;
+}
+
 - (void)_userFacing_viewDidAppear:(BOOL)animated
 {
 	__ln_popup_suppressViewControllerLifecycle = YES;
@@ -1788,6 +1800,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 }
 
 - (void)viewDidAppear:(BOOL)animated
+{
+	//Ignore
+}
+
+- (void)viewIsAppearing:(BOOL)animated
 {
 	//Ignore
 }

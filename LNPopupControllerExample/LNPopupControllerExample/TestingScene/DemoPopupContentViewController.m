@@ -304,6 +304,11 @@
 	[super viewWillAppear:animated];
 }
 
+- (void)viewIsAppearing:(BOOL)animated
+{
+	[super viewIsAppearing:animated];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];

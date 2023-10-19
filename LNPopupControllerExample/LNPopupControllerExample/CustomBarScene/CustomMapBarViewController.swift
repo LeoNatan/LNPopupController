@@ -50,6 +50,10 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 		super.viewWillAppear(animated)
 	}
 	
+	override func viewIsAppearing(_ animated: Bool) {
+		super.viewIsAppearing(animated)
+	}
+	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 	}

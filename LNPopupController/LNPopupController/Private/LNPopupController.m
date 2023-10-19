@@ -281,6 +281,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self.popupContentView.contentView layoutIfNeeded];
 			if(notifyDelegate == YES && state == _LNPopupPresentationStateTransitioning)
 			{
+				[_currentContentController _userFacing_viewIsAppearing:NO];
 				[_currentContentController _userFacing_viewDidAppear:NO];
 			}
 		}];
@@ -366,6 +367,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		[self _setContentToState:state animated:animated];
 		[_containerController.view layoutIfNeeded];
+		
+		if(state == LNPopupPresentationStateOpen && stateAtStart == LNPopupPresentationStateBarPresented)
+		{
+			[_currentContentController _userFacing_viewIsAppearing:animated];
+		}
 	};
 	
 	void (^completionBlock)(BOOL) = ^(BOOL finished)
@@ -889,6 +895,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
 	{
+		[newContentController _userFacing_viewIsAppearing:NO];
 		[newContentController _userFacing_viewDidAppear:NO];
 		[newContentController endAppearanceTransition];
 		[oldContentController _userFacing_viewDidDisappear:NO];
@@ -1154,6 +1161,8 @@ extern float UIAnimationDragCoefficient(void);
 			[self.popupBar setNeedsLayout];
 			[self.popupBar layoutIfNeeded];
 			
+			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
+			
 			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height, 0));
 			
 			if(open)
@@ -1209,7 +1218,7 @@ extern float UIAnimationDragCoefficient(void);
 		}
 		
 		[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:animations completion:completion];
-		[UIView animateWithDuration:0.3 delay:0.2 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:middle completion:completion];
+		[UIView animateWithDuration:0.3 delay:0.2 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:middle completion:nil];
 	}
 	else
 	{
