@@ -291,6 +291,9 @@
 		appearance.titleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont fontWithName:@"Chalkduster" size:14]], NSForegroundColorAttributeName: UIColor.yellowColor};
 		appearance.subtitleTextAttributes = @{NSParagraphStyleAttributeName: paragraphStyle, NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont fontWithName:@"Chalkduster" size:12]], NSForegroundColorAttributeName: UIColor.greenColor};
 		
+		appearance.floatingBarBackgroundShadow.shadowColor = UIColor.redColor;
+		appearance.imageShadow.shadowColor = UIColor.yellowColor;
+		
 		if(targetVC.popupBar.barStyle == LNPopupBarStyleFloating || (targetVC.popupBar.barStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 		{
 			appearance.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
