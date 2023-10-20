@@ -319,7 +319,6 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="eEz-t1-9Ax" customClass="DemoToolbar">
-                        <rect key="frame" x="0.0" y="800" width="430" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
@@ -457,7 +456,7 @@
                             <constraint firstItem="dF7-sj-hbZ" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" constant="4" id="wc3-WW-zft"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" systemItem="featured" id="CHZ-OA-bCn"/>
+                    <tabBarItem key="tabBarItem" title="Tab" image="1.square.fill" catalog="system" id="wDA-8g-o9a"/>
                     <toolbarItems>
                         <barButtonItem title="Present Bar" id="L0d-F2-GTi">
                             <connections>
@@ -548,20 +547,21 @@
                         <segue destination="okN-9b-CNT" kind="relationship" relationship="viewControllers" id="mpW-FJ-VUz"/>
                         <segue destination="okN-9b-CNT" kind="relationship" relationship="viewControllers" id="LFb-4R-xoq"/>
                         <segue destination="okN-9b-CNT" kind="relationship" relationship="viewControllers" id="vYe-8f-bz7"/>
+                        <segue destination="okN-9b-CNT" kind="relationship" relationship="viewControllers" id="rYC-SC-1Ud"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RRw-0R-8hQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-459" y="-1782"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Tab-->
         <scene sceneID="ouL-tO-EtQ">
             <objects>
-                <navigationController id="okN-9b-CNT" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="favorites" id="moV-Wz-fLa"/>
+                <navigationController id="okN-9b-CNT" customClass="PassthroughNavigationController" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Tab" image="1.square.fill" catalog="system" id="moV-Wz-fLa"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="Ezi-fS-9Ny">
-                        <rect key="frame" x="0.0" y="59" width="430" height="96"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ezi-fS-9Ny">
+                        <rect key="frame" x="0.0" y="59" width="430" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -611,20 +611,21 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ie4-if-ZuB"/>
-        <segue reference="8mZ-rN-tfh"/>
+        <segue reference="QzR-Fj-x6F"/>
         <segue reference="vYe-8f-bz7"/>
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
-        <segue reference="7qJ-pK-ibQ"/>
+        <segue reference="Jqg-bQ-l0b"/>
         <segue reference="1U6-NV-9t4"/>
         <segue reference="iD8-2E-cMh"/>
         <segue reference="SDh-r0-h83"/>
         <segue reference="19O-Tx-Ntx"/>
-        <segue reference="gSl-m3-ZVG"/>
+        <segue reference="Yls-eT-pdu"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
+        <image name="1.square.fill" catalog="system" width="128" height="114"/>
         <image name="dock.arrow.down.rectangle" catalog="system" width="128" height="93"/>
         <image name="dock.arrow.up.rectangle" catalog="system" width="128" height="93"/>
         <image name="gears" width="25" height="25"/>
@@ -635,7 +636,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

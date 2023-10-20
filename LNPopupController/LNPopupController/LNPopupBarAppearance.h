@@ -20,12 +20,12 @@ NS_SWIFT_UI_ACTOR
 /// Display attributes for the popup bar’s title text.
 ///
 /// You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in `NSAttributedString.h`.
-@property (nullable, nonatomic, copy) NSDictionary<NSAttributedStringKey, id>* titleTextAttributes;
+@property (nullable, nonatomic, copy) NSDictionary<NSAttributedStringKey, id>* titleTextAttributes NS_REFINED_FOR_SWIFT;
 
 /// Display attributes for the popup bar’s subtitle text.
 ///
 /// You may specify the font, text color, and shadow properties for the title in the text attributes dictionary, using the keys found in `NSAttributedString.h`.
-@property (nullable, nonatomic, copy) NSDictionary<NSAttributedStringKey, id>* subtitleTextAttributes;
+@property (nullable, nonatomic, copy) NSDictionary<NSAttributedStringKey, id>* subtitleTextAttributes NS_REFINED_FOR_SWIFT;
 
 /// The appearance for plain-style bar button items.
 @property (nonatomic, readwrite, copy) UIBarButtonItemAppearance* buttonAppearance;

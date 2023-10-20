@@ -59,12 +59,20 @@ static NSArray* __notifiedProperties = nil;
 	
 	for(NSString* key in __notifiedProperties)
 	{
-		[self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionNew context:_LNPopupItemObservationContext];
+		[self addObserver:self forKeyPath:key options:NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew context:_LNPopupItemObservationContext];
 	}
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
+	id old = change[NSKeyValueChangeOldKey];
+	id new = change[NSKeyValueChangeNewKey];
+	
+	if([old isEqual:new])
+	{
+		return;
+	}
+	
 	if(context == _LNPopupItemObservationContext)
 	{
 		[self _notify];

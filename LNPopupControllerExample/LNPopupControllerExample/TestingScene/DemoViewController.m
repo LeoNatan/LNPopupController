@@ -53,6 +53,22 @@
 	BOOL _alreadyPresentedAutomatically;
 }
 
+- (UITabBarItem *)tabBarItem
+{
+	if(self.tabBarController != nil)
+	{
+		UIViewController* target = self;
+		if(self.navigationController != nil)
+		{
+			target = self.navigationController;
+		}
+		
+		super.tabBarItem.image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%lu.square.fill", [self.tabBarController.viewControllers indexOfObject:target] + 1]];
+	}
+	
+	return super.tabBarItem;
+}
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -86,9 +102,9 @@
 	}
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewIsAppearing:(BOOL)animated
 {
-	[super viewWillAppear:animated];
+	[super viewIsAppearing:animated];
 	
 	[self updateBottomDockingViewEffectForBarPresentation];
 	
@@ -387,6 +403,16 @@
 - (void)popupPresentationController:(UIViewController *)popupPresentationController didClosePopupWithContentController:(UIViewController *)popupContentController animated:(BOOL)animated
 {
 	
+}
+
+@end
+
+@interface PassthroughNavigationController : UINavigationController @end
+@implementation PassthroughNavigationController
+
+- (UITabBarItem *)tabBarItem
+{
+	return self.viewControllers.firstObject.tabBarItem;
 }
 
 @end

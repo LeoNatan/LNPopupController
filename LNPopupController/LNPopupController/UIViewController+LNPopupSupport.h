@@ -22,10 +22,6 @@ NS_REFINED_FOR_SWIFT
 /// Available interaction styles with the popup bar and popup content view.
 typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	/// The default interaction style for the current environment.
-	///
-	/// On iOS, the default interaction style is snap.
-	///
-	/// On macOS, the default interaction style is scroll.
 	LNPopupInteractionStyleDefault,
 	
 	/// Drag interaction style.

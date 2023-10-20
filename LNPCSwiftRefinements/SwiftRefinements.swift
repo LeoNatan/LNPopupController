@@ -21,10 +21,6 @@ extension Double {
 /// Available interaction styles with the popup bar and popup content view.
 public enum LNPopupInteractionStyle {
 	/// The default interaction style for the current environment.
-	///
-	/// On iOS, the default interaction style is `snap`.
-	///
-	/// On macOS, the default interaction style is `scroll`.
 	case `default`
 	/// Drag interaction style.
 	case drag
@@ -79,6 +75,9 @@ public extension UIViewController {
 }
 
 public extension LNPopupItem {
+	/// The popup item's attributed title.
+	///
+	/// If no title or subtitle is set, the system will use the view controller's title.
 	@available(iOS 15, *)
 	var attributedTitle: AttributedString? {
 		get {
@@ -89,6 +88,7 @@ public extension LNPopupItem {
 		}
 	}
 	
+	/// The popup item's attributed subtitle.
 	@available(iOS 15, *)
 	var attributedSubtitle: AttributedString? {
 		get {
@@ -96,6 +96,34 @@ public extension LNPopupItem {
 		}
 		set {
 			__attributedSubtitle = newValue == nil ? nil : NSAttributedString(newValue!)
+		}
+	}
+}
+
+public extension LNPopupBarAppearance {
+	/// Display attributes for the popup bar’s title text.
+	///
+	/// Only attributes from the UIKit scope are supported.
+	@available(iOS 15, *)
+	var titleTextAttributes: AttributeContainer? {
+		get {
+			return __titleTextAttributes != nil ? AttributeContainer(__titleTextAttributes!) : nil
+		}
+		set {
+			__titleTextAttributes = newValue != nil ? Dictionary(newValue!) : nil
+		}
+	}
+	
+	/// Display attributes for the popup bar’s subtitle text.
+	///
+	/// Only attributes from the UIKit scope are supported.
+	@available(iOS 15, *)
+	var subtitleTextAttributes: AttributeContainer? {
+		get {
+			return __subtitleTextAttributes != nil ? AttributeContainer(__subtitleTextAttributes!) : nil
+		}
+		set {
+			__subtitleTextAttributes = newValue != nil ? Dictionary(newValue!) : nil
 		}
 	}
 }
