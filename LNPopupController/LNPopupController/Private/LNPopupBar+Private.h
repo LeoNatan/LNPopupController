@@ -115,6 +115,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic) BOOL _applySwiftUILayoutFixes;
 
+@property (nonatomic, strong) UIFont* swiftuiInheritedFont;
+
 @property (nonatomic, strong) UIView* swiftuiTitleContentView;
 
 @property (nonatomic, strong) UIViewController* swiftuiImageController;

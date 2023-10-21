@@ -992,6 +992,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _setNeedsTitleLayoutRemovingLabels:YES];
 }
 
+- (void)setSwiftuiInheritedFont:(UIFont *)swiftuiInheritedFont
+{
+	if([_swiftuiInheritedFont isEqual:swiftuiInheritedFont])
+	{
+		return;
+	}
+	
+	_swiftuiInheritedFont = swiftuiInheritedFont;
+	
+	[self _setNeedsTitleLayoutRemovingLabels:YES];
+}
+
 - (void)setSwiftuiHiddenLeadingController:(UIViewController *)swiftuiHiddenLeadingController
 {
 	if(_swiftuiHiddenLeadingController == swiftuiHiddenLeadingController)
@@ -1308,6 +1320,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 //DO NOT CHANGE NAME! Used by LNPopupUI
 - (UIFont*)_titleFont
 {
+	if(_swiftuiInheritedFont)
+	{
+		return _swiftuiInheritedFont;
+	}
+	
 	CGFloat fontSize = 15;
 	UIFontWeight fontWeight = UIFontWeightMedium;
 	UIFontTextStyle textStyle = UIFontTextStyleBody;
@@ -1345,6 +1362,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 //DO NOT CHANGE NAME! Used by LNPopupUI
 - (UIFont*)_subtitleFont
 {
+	if(_swiftuiInheritedFont)
+	{
+		return [UIFont fontWithDescriptor:_swiftuiInheritedFont.fontDescriptor size:_swiftuiInheritedFont.pointSize - 2.5];
+	}
+	
 	CGFloat fontSize = 15;
 	UIFontWeight fontWeight = UIFontWeightRegular;
 	UIFontTextStyle textStyle = UIFontTextStyleBody;
