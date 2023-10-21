@@ -91,7 +91,7 @@
 		self.colorSeedCount = 0;
 	}
 	
-	if([NSUserDefaults.standardUserDefaults boolForKey:__LNPopupBarDisableDemoSceneColors] == NO)
+	if([NSUserDefaults.standardUserDefaults boolForKey:DemoAppDisableDemoSceneColors] == NO)
 	{
 		NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
 		self.view.backgroundColor = LNSeedAdaptiveColor(seed);

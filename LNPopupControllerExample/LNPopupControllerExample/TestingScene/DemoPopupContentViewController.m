@@ -57,7 +57,7 @@
 	{
 		_lastStyle = self.view.traitCollection.userInterfaceStyle;
 		
-		if([NSUserDefaults.standardUserDefaults boolForKey:__LNPopupBarDisableDemoSceneColors] == NO)
+		if([NSUserDefaults.standardUserDefaults boolForKey:DemoAppDisableDemoSceneColors] == NO)
 		{
 			self.view.backgroundColor = LNSeedAdaptiveInvertedColor(@"Popup");
 		}
@@ -167,7 +167,7 @@
 		self.popupItem.subtitle = [LoremIpsum sentence];
 	}
 	
-	if([NSUserDefaults.standardUserDefaults boolForKey:__LNPopupBarDisableDemoSceneColors] == NO)
+	if([NSUserDefaults.standardUserDefaults boolForKey:DemoAppDisableDemoSceneColors] == NO)
 	{
 		self.popupItem.image = [UIImage imageNamed:@"genre7"];
 	}

@@ -70,7 +70,9 @@ struct SettingsView : View {
 	@AppStorage(__LNPopupBarHideContentView) var hidePopupBarContentView: Bool = false
 	@AppStorage(__LNPopupBarHideShadow) var hidePopupBarShadow: Bool = false
 	@AppStorage(__LNPopupBarEnableLayoutDebug) var layoutDebug: Bool = false
-	@AppStorage(__LNPopupBarDisableDemoSceneColors) var disableDemoSceneColors: Bool = false
+	
+	@AppStorage(DemoAppDisableDemoSceneColors) var disableDemoSceneColors: Bool = false
+	@AppStorage(DemoAppEnableFunkyInheritedFont) var enableFunkyInheritedFont: Bool = false
 	
 	@Environment(\.sizeCategory) var sizeCategory
 	
@@ -211,6 +213,14 @@ struct SettingsView : View {
 				Text("Disables random background colors in the demo scenes.")
 			}
 			
+			if isLNPopupUIExample {
+				Section {
+					CellPaddedToggle("Enable Funky Inherited Font", isOn: $enableFunkyInheritedFont)
+				} footer: {
+					Text("Enables an environment font that is inherited by the popup bar.")
+				}
+			}
+			
 			Section {
 				CellPaddedToggle("Layout Debug", isOn: $layoutDebug)
 				CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView)
@@ -256,7 +266,8 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideContentView)
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideShadow)
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarEnableLayoutDebug)
-		UserDefaults.standard.removeObject(forKey: __LNPopupBarDisableDemoSceneColors)
+		UserDefaults.standard.removeObject(forKey: DemoAppDisableDemoSceneColors)
+		UserDefaults.standard.removeObject(forKey: DemoAppEnableFunkyInheritedFont)
 		
 		for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
 			UserDefaults.standard.removeObject(forKey: key)
@@ -278,6 +289,7 @@ struct SettingsNavView: View {
 		NavigationStack {
 			SettingsView()
 				.navigationTitle("Settings")
+				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {
 					ToolbarItem(placement: .navigationBarLeading) {
 						Button("Reset") {
@@ -290,7 +302,6 @@ struct SettingsNavView: View {
 						}
 					}
 				}
-				.navigationBarTitleDisplayMode(.inline)
 		}.frame(minWidth: 320, minHeight: 480)
 	}
 }
