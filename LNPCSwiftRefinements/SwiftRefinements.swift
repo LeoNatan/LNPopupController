@@ -18,26 +18,27 @@ extension Double {
 	}
 }
 
-/// Available interaction styles with the popup bar and popup content view.
-public enum LNPopupInteractionStyle {
-	/// The default interaction style for the current environment.
-	case `default`
-	/// Drag interaction style.
-	case drag
-	/// Snap interaction style.
-	case snap
-	/// Customized snap interaction style.
-	/// - Parameter percent: The percent of the container controller's view height to drag before closing the popup.
-	case customizedSnap(percent: Double)
-	/// Scroll interaction style.
-	case scroll
-	/// No interaction.
-	case none
-}
-
 public extension UIViewController {
+	/// Available interaction styles with the popup bar and popup content view.
+	enum PopupInteractionStyle {
+		/// The default interaction style for the current environment.
+		case `default`
+		/// Drag interaction style.
+		case drag
+		/// Snap interaction style.
+		case snap
+		/// Customized snap interaction style.
+		/// - Parameter percent: The percent of the container controller's view height to drag before closing the popup.
+		case customizedSnap(percent: Double)
+		/// Scroll interaction style.
+		case scroll
+		/// No interaction.
+		case none
+	}
+
+	
 	/// The popup bar interaction style.
-	var popupInteractionStyle: LNPopupInteractionStyle {
+	var popupInteractionStyle: PopupInteractionStyle {
 		get {
 			switch __popupInteractionStyle {
 			case .none:

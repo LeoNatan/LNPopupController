@@ -184,7 +184,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		
 		let playPause = playerView.playbackSettings.isPlaying ? pause : play
 		
-		if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == LNPopupBarStyle.compact {
+		if LNPopupBar.Style(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == LNPopupBar.Style.compact {
 			popupItem.leadingBarButtonItems = [ playPause ]
 			popupItem.trailingBarButtonItems = [ next ]
 		} else {
@@ -237,7 +237,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	
 	var albumTitle: String = "" {
 		didSet {
-			if LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == .compact {
+			if LNPopupBar.Style(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle) as? Int ?? 0)! == .compact {
 				popupItem.subtitle = albumTitle
 			}
 			playerView.playbackSettings.albumTitle = albumTitle

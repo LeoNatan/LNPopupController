@@ -206,7 +206,7 @@ Customizing the popup bar progress view style is achieved by setting the popup b
 navigationController?.popupBar.progressViewStyle = .top
 ```
 
-To hide the progress view, set the `progressViewStyle` property to `LNPopupBarProgressViewStyle.none`.
+To hide the progress view, set the `progressViewStyle` property to `LNPopupBar.ProgressViewStyle.none`.
 
 <p align="center"><img src="./Supplements/progress_view_none.png" width="360"/><br/><br/><img src="./Supplements/progress_view_top.png" width="360"/><br/><br/><img src="./Supplements/progress_view_bottom.png" width="360"/></p>
 
@@ -218,7 +218,7 @@ Customizing the popup close button style is achieved by setting the popup conten
 navigationController.popupContentView.popupCloseButtonStyle = .round
 ```
 
-To hide the popup close button, set the `popupCloseButtonStyle` property to `LNPopupCloseButtonStyle.none`.
+To hide the popup close button, set the `popupCloseButtonStyle` property to `LNPopupCloseButton.Style.none`.
 
 <p align="center"><img src="./Supplements/close_button_none.png" width="360"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="360"/><br/><br/><img src="./Supplements/close_button_round.png" width="360"/></p>
 
@@ -236,14 +236,17 @@ Remember to set the `inheritsAppearanceFromDockingView` property to `false`, or 
 
 ```swift
 let appearance = LNPopupBarAppearance()
-appearance.titleTextAttributes = [.font: UIFont(name: "Chalkduster", size: 14)!, .foregroundColor: UIColor.yellow]
-appearance.subtitleTextAttributes = [.font: UIFont(name: "Chalkduster", size: 12)!, .foregroundColor: UIColor.green]
+appearance.titleTextAttributes = AttributeContainer()
+				.font(UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!))
+				.foregroundColor(UIColor.yellow)
+appearance.subtitleTextAttributes = AttributeContainer()
+				.font(UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!))
+				.foregroundColor(UIColor.green)
 appearance.backgroundEffect = UIBlurEffect(style: .systemChromeMaterialDark)
 
-let appearanceProxy = LNPopupBar.appearance(whenContainedInInstancesOf: [UINavigationController.self])
-appearanceProxy.inheritsAppearanceFromDockingView = false
-appearanceProxy.standardAppearance = appearance
-appearanceProxy.tintColor = .yellow
+navigationController?.popupBar.inheritsAppearanceFromDockingView = false
+navigationController?.popupBar.standardAppearance = appearance
+navigationController?.popupBar.tintColor = .yellow
 ```
 
 <p align="center"><img src="./Supplements/floating_custom.png" width="360"/> <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/></p>
@@ -260,7 +263,7 @@ In your `LNPopupCustomBarViewController` subclass, build your popup bar's view h
 
 In your subclass, implement the `popupItemDidUpdate()` method to be notified of updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
 
-Finally, set the `customBarViewController` property of the popup bar object to an instance of your `LNPopupCustomBarViewController` subclass. This will change the bar style to `LNPopupBarStyle.custom`.
+Finally, set the `customBarViewController` property of the popup bar object to an instance of your `LNPopupCustomBarViewController` subclass. This will automatically change the bar style to `LNPopupBar.Style.custom`.
 
 The included demo project includes two example custom popup bar scenes.
 

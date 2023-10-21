@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	///
 	/// Do not set this style directly. Instead, set the `LNPopupBar.customBarViewController` property and the framework will use this style.
 	LNPopupBarStyleCustom = 0xFFFF
-};
+} NS_SWIFT_NAME(LNPopupBar.Style);
 
 /// Available styles for the popup bar progress view.
 typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
 	
 	/// No progress view
 	LNPopupBarProgressViewStyleNone = 0xFFFF
-};
+} NS_SWIFT_NAME(LNPopupBar.ProgressViewStyle);
 
 NS_SWIFT_UI_ACTOR
 /// A popup bar is a control that displays popup information. Content is populated from ``LNPopupItem`` items.

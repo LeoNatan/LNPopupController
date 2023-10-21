@@ -50,7 +50,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		
 #if LNPOPUP
-		let barStyle = LNPopupBarStyle(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
+		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
 		tabBarController?.popupBar.barStyle = barStyle
 	
 		if tabBarController?.popupBar.effectiveBarStyle == .floating {
