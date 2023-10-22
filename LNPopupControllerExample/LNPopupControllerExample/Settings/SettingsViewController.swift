@@ -179,15 +179,17 @@ struct SettingsView : View {
 				}
 			}
 			
-			Section {
-				CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: !isLNPopupUIExample ? $hideBottomBar : Binding.constant(false))
-			} footer: {
-				if isLNPopupUIExample {
-					Text("Not supported in SwiftUI yet.")
-				} else {
-					Text("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
-				}
-			}.disabled(isLNPopupUIExample)
+			if isLNPopupUIExample == false {
+				Section {
+					CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: !isLNPopupUIExample ? $hideBottomBar : Binding.constant(false))
+				} footer: {
+					if isLNPopupUIExample {
+						Text("Not supported in SwiftUI yet.")
+					} else {
+						Text("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
+					}
+				}.disabled(isLNPopupUIExample)
+			}
 			
 			Section {
 				CellPaddedToggle("Context Menu Interactions", isOn: $contextMenu)
