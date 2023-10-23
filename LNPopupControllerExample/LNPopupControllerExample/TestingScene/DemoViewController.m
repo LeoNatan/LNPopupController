@@ -13,8 +13,10 @@
 #import "DemoPopupContentViewController.h"
 #import "RandomColors.h"
 #import "SettingKeys.h"
-#import "SplitViewController.h"
+#import "LNSplitViewController.h"
+#if LNPOPUP
 #import "LNPopupControllerExample-Swift.h"
+#endif
 #import "LNPopupDemoContextMenuInteraction.h"
 @import UIKit;
 
@@ -102,6 +104,16 @@
 	}
 }
 
+- (void)viewSafeAreaInsetsDidChange
+{
+	[super viewSafeAreaInsetsDidChange];
+	
+	if(self.splitViewController != nil && [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnSupplementary] == self)
+	{
+		NSLog(@"%@", @(self.view.safeAreaInsets));
+	}
+}
+
 - (void)viewIsAppearing:(BOOL)animated
 {
 	[super viewIsAppearing:animated];
@@ -184,7 +196,7 @@
 
 - (UIViewController*)_targetVCForPopup
 {
-	if([self.splitViewController isKindOfClass:SplitViewControllerPrimaryPopup.class] && self.navigationController != [self.ln_splitViewController viewControllerForColumn:LNSplitViewControllerColumnPrimary])
+	if([self.splitViewController isKindOfClass:LNSplitViewControllerPrimaryPopup.class] && self.navigationController != [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary])
 	{
 		return nil;
 	}
@@ -194,17 +206,17 @@
 	{
 		[vcs addObject:self.navigationController];
 	}
-	if([self.splitViewController isKindOfClass:SplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.ln_splitViewController viewControllerForColumn:LNSplitViewControllerColumnPrimary]])
+	if([self.splitViewController isKindOfClass:LNSplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary]])
 	{
 		return nil;
 	}
 	
-	if([self.splitViewController isKindOfClass:SplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.ln_splitViewController viewControllerForColumn:LNSplitViewControllerColumnSupplementary]])
+	if([self.splitViewController isKindOfClass:LNSplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.splitViewController viewControllerForColumn:UISplitViewControllerColumnSupplementary]])
 	{
 		return nil;
 	}
 	
-	if([self.splitViewController isKindOfClass:SplitViewControllerGlobalPopup.class])
+	if([self.splitViewController isKindOfClass:LNSplitViewControllerGlobalPopup.class])
 	{
 		return self.splitViewController;
 	}

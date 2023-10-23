@@ -17,6 +17,39 @@
 @interface DemoGalleryToolbar : UIToolbar @end
 @implementation DemoGalleryToolbar @end
 
+@interface SizeClassGalleryCell : UITableViewCell
+
+@property (nonatomic, getter=isEnabled) BOOL enabled;
+
+@end
+
+@implementation SizeClassGalleryCell
+
+-(void)setEnabled:(BOOL)enabled
+{
+	if(enabled)
+	{
+		self.textLabel.textColor = UIColor.labelColor;
+		self.selectionStyle = UITableViewCellSelectionStyleDefault;
+	}
+	else
+	{
+		self.textLabel.textColor = UIColor.secondaryLabelColor;
+		self.selectionStyle = UITableViewCellSelectionStyleNone;
+	}
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+	[super traitCollectionDidChange:previousTraitCollection];
+	
+	[self setEnabled:self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular];
+}
+
+@end
+
+@import SafariServices;
+
 @interface DemoGalleryController : UITableViewController@end
 @implementation DemoGalleryController
 {
@@ -45,31 +78,24 @@
 #endif
 }
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+	if([identifier hasPrefix:@"split"] && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+	{
+		[self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:NO];
+		
+		return NO;
+	}
+	
+	return YES;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
 	if(segue.destinationViewController.modalPresentationStyle != UIModalPresentationFullScreen)
 	{
 		[self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 	}
-}
-
-- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
-{
-#if !TARGET_OS_MACCATALYST
-	if(((indexPath.section == 0 && indexPath.row > 3) || indexPath.section > 0) && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 13)
-	{
-		UITableViewCell* cell = [tableView cellForRowAtIndexPath:indexPath];
-		
-		UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"The “%@” scene requires iOS 13 and above.", cell.textLabel.text] preferredStyle:UIAlertControllerStyleAlert];
-		[alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
-		
-		[self presentViewController:alert animated:YES completion:nil];
-		
-		return NO;
-	}
-#endif
-	
-	return YES;
 }
 
 @end

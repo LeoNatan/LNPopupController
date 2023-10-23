@@ -280,12 +280,7 @@
 //	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];
 //	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
 //	[customCloseButton setTitleColor:UIColor.systemBackgroundColor forState:UIControlStateNormal];
-//
-//	if(@available(iOS 13.4, *))
-//	{
-//		customCloseButton.pointerInteractionEnabled = YES;
-//	}
-//
+//	customCloseButton.pointerInteractionEnabled = YES;
 //	[customCloseButton addTarget:self action:@selector(_closePopup) forControlEvents:UIControlEventTouchUpInside];
 //	[self.view addSubview:customCloseButton];
 //	[NSLayoutConstraint activateConstraints:@[
