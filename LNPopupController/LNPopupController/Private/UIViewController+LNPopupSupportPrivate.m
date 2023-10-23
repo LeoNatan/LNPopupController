@@ -239,7 +239,7 @@ static void __accessibilityBundleLoadHandler(void)
 							NSSelectorFromString(selName),
 							@selector(_uLFSBAIO));
 			
-			if(@available(iOS 16.0, *))
+			if(@available(iOS 15.0, *))
 			{
 				//_updateContentOverlayInsetsFromParentIfNecessary
 				selName = _LNPopupDecodeBase64String(uCOIFPIN);
@@ -537,13 +537,6 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 //_updateLayoutForStatusBarAndInterfaceOrientation
 - (void)_common_uLFSBAIO
 {
-#if ! TARGET_OS_MACCATALYST
-	if(self.popupContentViewController)
-	{
-		[self.popupContentViewController _uLFSBAIO];
-		[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];
-	}
-#endif
 }
 
 //_updateLayoutForStatusBarAndInterfaceOrientation
@@ -554,7 +547,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	[self _common_uLFSBAIO];
 }
 
-//_updateContentOverlayInsetsFromParentIfNecessary
+//_updateContentOverlayInsetsFromParentIfNecessary (iOS 15 and above)
 - (void)_uCOIFPIN
 {
 	[self _uCOIFPIN];
@@ -564,16 +557,21 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		static SEL contentMarginSEL;
 		static SEL setContentMarginSEL;
 		static SEL _setContentOverlayInsets_andLeftMargin_rightMarginSEL;
+		
+		static CGFloat (*contentMarginFunc)(id, SEL);
+		static void (*setContentMarginFunc)(id, SEL, CGFloat);
+		static void (*_setContentOverlayInsets_andLeftMargin_rightMarginFUNC)(id, SEL, UIEdgeInsets, CGFloat, CGFloat);
+		
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
 			contentMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(cM));
 			setContentMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(sCM));
 			_setContentOverlayInsets_andLeftMargin_rightMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(sCOIaLMrM));
+			
+			contentMarginFunc = (void*)objc_msgSend;
+			setContentMarginFunc = (void*)objc_msgSend;
+			_setContentOverlayInsets_andLeftMargin_rightMarginFUNC = (void*)objc_msgSend;
 		});
-
-		CGFloat (*contentMarginFunc)(id, SEL) = (void*)objc_msgSend;
-		void (*setContentMarginFunc)(id, SEL, CGFloat) = (void*)objc_msgSend;
-		void (*_setContentOverlayInsets_andLeftMargin_rightMarginFUNC)(id, SEL, UIEdgeInsets, CGFloat, CGFloat) = (void*)objc_msgSend;
 		
 		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
 		
@@ -586,10 +584,18 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		self.viewRespectsSystemMinimumLayoutMargins = NO;
 		self.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
 	}
+	
+#if ! TARGET_OS_MACCATALYST
+	if(self.popupContentViewController)
+	{
+		[self.popupContentViewController _uLFSBAIO];
+		[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];
+	}
+#endif
 }
 
 
-//_viewSafeAreaInsetsFromScene
+//_viewSafeAreaInsetsFromScene (iOS 14)
 - (UIEdgeInsets)_vSAIFS
 {
 	if([self _isContainedInPopupController])
@@ -932,16 +938,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (CGRect)defaultFrameForBottomDockingView
 {
 	CGRect bottomBarFrame = self.tabBar.frame;
-#if ! TARGET_OS_MACCATALYST
-	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 13)
-	{
-		CGSize bottomBarSizeThatFits = [self.tabBar sizeThatFits:CGSizeZero];
-		bottomBarFrame.size.height = MAX(bottomBarFrame.size.height, bottomBarSizeThatFits.height);
-	}
-#endif
-	
 	bottomBarFrame.origin = CGPointMake(0, self.view.bounds.size.height - (self._isTabBarHiddenDuringTransition ? 0.0 : bottomBarFrame.size.height));
-	
 	return bottomBarFrame;
 }
 
