@@ -952,7 +952,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	//visualProvider.toolbarIsSmall
 	if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:vPTIS] boolValue] == YES)
 	{
-		appearanceToUse = [(UIToolbar*)_bottomBar compactAppearance];
+		UIToolbar* toolbar = (UIToolbar*)_bottomBar;
+		appearanceToUse = toolbar.compactAppearance;
+	}
+	
+	if(appearanceToUse == nil && [_bottomBar isKindOfClass:UITabBar.class])
+	{
+		UITabBar* tabBar = (UITabBar*)_bottomBar;
+		appearanceToUse = tabBar.selectedItem.standardAppearance ?: tabBar.standardAppearance;
 	}
 	
 #endif

@@ -15,9 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^LNInWindowBlock)(dispatch_block_t);
 
-@interface UIView (LNPopupSupportPrivate)
+@interface NSObject (LNPopupSupportPrivate)
 
-@property (nonatomic, weak, nullable) LNPopupController* attachedPopupController;
+@property (nonatomic, weak, nullable, getter=_ln_attachedPopupController, setter=_ln_setAttachedPopupController:) LNPopupController* attachedPopupController;
+
+@end
+
+@interface UIView (LNPopupSupportPrivate)
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout;
 - (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar;

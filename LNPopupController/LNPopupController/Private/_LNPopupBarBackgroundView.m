@@ -40,6 +40,11 @@
 	return self;
 }
 
+- (void)setFrame:(CGRect)frame
+{
+	[super setFrame:frame];
+}
+
 - (void)setAlpha:(CGFloat)alpha
 {
 	[super setAlpha:alpha];

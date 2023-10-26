@@ -59,6 +59,11 @@ return super_class(&super, _cmd); \
 @end
 @implementation _LNPopupBarBackgroundDataSubclass
 
+- (Class)class
+{
+	return LNDynamicSubclassSuper(self, _LNPopupBarBackgroundDataSubclass.class);
+}
+
 + (void)load
 {
 	@autoreleasepool {
@@ -105,6 +110,11 @@ return super_class(&super, _cmd); \
 {
 	id _proxiedObject;
 	BOOL (^_shadowColorHandler)(void);
+}
+
+- (Class)class
+{
+	return [_proxiedObject class];
 }
 
 + (void)load

@@ -9,6 +9,7 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupController.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "UIView+LNPopupSupportPrivate.h"
 
 @import ObjectiveC;
 @import Darwin;
@@ -1039,6 +1040,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
 	[self _ln_setSelectedViewController:selectedViewController];
+	
+	[self.tabBar.selectedItem _ln_setAttachedPopupController:self._ln_popupController_nocreate];
 }
 
 - (void)_ln_setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated
@@ -1201,6 +1204,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return;
 	}
 	
+	if(wasHidden == NO)
+	{
+		return;
+	}
+	
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 	self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;
 	
@@ -1216,7 +1224,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	
 	CGRect backgroundViewFrame = self._ln_popupController_nocreate.popupBar.backgroundView.frame;
-	if(isFloating)
+	if(isFloating && wasHidden == YES)
 	{
 		self._ln_popupController_nocreate.popupBar.backgroundView.frame = CGRectOffset(backgroundViewFrame, -CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(self.tabBar.frame) + self.view.superview.safeAreaInsets.bottom);
 	}
@@ -1235,7 +1243,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		frame.origin.x += self.view.bounds.size.width;
 		self._ln_bottomBarExtension.frame = frame;
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
-		if(isFloating)
+		if(isFloating && wasHidden == YES)
 		{
 			self._ln_popupController_nocreate.popupBar.backgroundView.frame = backgroundViewFrame;
 			self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;

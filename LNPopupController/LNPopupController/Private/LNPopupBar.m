@@ -779,6 +779,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)setSystemAppearance:(UIBarAppearance *)systemAppearance
 {
+	if([_systemAppearance isEqual:systemAppearance] == YES)
+	{
+		return;
+	}
+	
 	_systemAppearance = [systemAppearance copy];
 	
 	[self _recalcActiveAppearanceChain];
