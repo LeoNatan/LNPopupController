@@ -28,27 +28,46 @@ NSString* const __LNPopupBarEnableLayoutDebug = @"__LNPopupBarEnableLayoutDebug"
 
 NSString* const DemoAppDisableDemoSceneColors = @"__LNPopupBarDisableDemoSceneColors";
 NSString* const DemoAppEnableFunkyInheritedFont = @"DemoAppEnableFunkyInheritedFont";
+NSString* const DemoAppEnableExternalScenes = @"DemoAppEnableExternalScenes";
 
 @import ObjectiveC;
 
 __attribute__((constructor))
-void UICollectionViewCell_fix_highglight(void)
+void fixUIKitSwiftUIShit(void)
 {
-	Class cls = UICollectionViewCell.class;
-	void (*orig)(id, SEL, BOOL, BOOL);
-	SEL sel = NSSelectorFromString(@"_setHighlighted:animated:");
-	Method m = class_getInstanceMethod(cls, sel);
-	orig = (void*)method_getImplementation(m);
-	method_setImplementation(m, imp_implementationWithBlock(^(UICollectionViewCell* _self,
-															  BOOL highlighted,
-															  BOOL animated) {
-		if(highlighted == NO && [NSStringFromClass(_self.class) hasPrefix:@"SwiftUI."])
-		{
-			animated = YES;
-		}
-		
-		orig(_self, sel, highlighted, animated);
-	}));
+	{
+		Class cls = UICollectionViewCell.class;
+		void (*orig)(id, SEL, BOOL, BOOL);
+		SEL sel = NSSelectorFromString(@"_setHighlighted:animated:");
+		Method m = class_getInstanceMethod(cls, sel);
+		orig = (void*)method_getImplementation(m);
+		method_setImplementation(m, imp_implementationWithBlock(^(UICollectionViewCell* _self,
+																  BOOL highlighted,
+																  BOOL animated) {
+			if(highlighted == NO && [NSStringFromClass(_self.class) hasPrefix:@"SwiftUI."])
+			{
+				animated = YES;
+			}
+			
+			orig(_self, sel, highlighted, animated);
+		}));
+	}
+	{
+		Class cls = NSClassFromString(@"UITabBarItem");
+		SEL sel = NSSelectorFromString(@"setScrollEdgeAppearance:");
+		void (*orig)(id, SEL, UITabBarAppearance*);
+		Method m = class_getInstanceMethod(cls, sel);
+		orig = (void*)method_getImplementation(m);
+		method_setImplementation(m, imp_implementationWithBlock(^(id _self, UITabBarAppearance* appearance) {
+			if([[appearance.class valueForKey:@"isFromSwiftUI"] boolValue] && appearance.backgroundEffect == nil && appearance.backgroundColor == nil && appearance.backgroundImage == nil)
+			{
+				appearance = nil;
+			}
+			
+			
+			orig(_self, sel, appearance);
+		}));
+	}
 }
 
 @interface LNTouchVisualizerSupport: NSObject @end

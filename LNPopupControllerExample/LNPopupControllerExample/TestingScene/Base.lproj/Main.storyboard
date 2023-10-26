@@ -157,31 +157,8 @@
                                             </segue>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitg" textLabel="mRf-7b-D7v" style="IBUITableViewCellStyleDefault" id="Z91-wv-EaJ" customClass="SizeClassGalleryCell">
-                                        <rect key="frame" x="20" y="317.33333969116211" width="390" height="43.666667938232422"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z91-wv-EaJ" id="1rv-3u-xHE">
-                                            <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Split View Controller (Global)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="mRf-7b-D7v">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="F0W-R7-jVc" kind="showDetail" identifier="splitg" id="SDh-r0-h83">
-                                                <segue key="commit" inheritsFrom="parent" id="stp-Qs-DKr"/>
-                                                <segue key="preview" inheritsFrom="commit" id="44r-L6-81t"/>
-                                            </segue>
-                                        </connections>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitg" textLabel="rjJ-Ax-bGN" style="IBUITableViewCellStyleDefault" id="TjV-b9-KIw" userLabel="splita" customClass="SizeClassGalleryCell">
-                                        <rect key="frame" x="20" y="361.00000762939453" width="390" height="43.666667938232422"/>
+                                        <rect key="frame" x="20" y="317.33333969116211" width="390" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TjV-b9-KIw" id="59B-nU-bAE">
                                             <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
@@ -200,6 +177,29 @@
                                             <segue destination="OMG-ri-qb5" kind="showDetail" identifier="splita" id="ie4-if-ZuB">
                                                 <segue key="commit" inheritsFrom="parent" id="5pE-ej-gUV"/>
                                                 <segue key="preview" inheritsFrom="commit" id="pb3-Pz-4cU"/>
+                                            </segue>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitg" textLabel="mRf-7b-D7v" style="IBUITableViewCellStyleDefault" id="Z91-wv-EaJ" customClass="SizeClassGalleryCell">
+                                        <rect key="frame" x="20" y="361.00000762939453" width="390" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z91-wv-EaJ" id="1rv-3u-xHE">
+                                            <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Split View Controller (Global)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="mRf-7b-D7v">
+                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="F0W-R7-jVc" kind="showDetail" identifier="splitg" id="SDh-r0-h83">
+                                                <segue key="commit" inheritsFrom="parent" id="stp-Qs-DKr"/>
+                                                <segue key="preview" inheritsFrom="commit" id="44r-L6-81t"/>
                                             </segue>
                                         </connections>
                                     </tableViewCell>

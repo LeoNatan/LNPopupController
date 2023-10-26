@@ -76,6 +76,7 @@ struct SettingsView : View {
 	
 	@AppStorage(DemoAppDisableDemoSceneColors) var disableDemoSceneColors: Bool = false
 	@AppStorage(DemoAppEnableFunkyInheritedFont) var enableFunkyInheritedFont: Bool = false
+	@AppStorage(DemoAppEnableExternalScenes) var enableExternalScenes: Bool = false
 	
 	@Environment(\.sizeCategory) var sizeCategory
 	
@@ -241,6 +242,16 @@ struct SettingsView : View {
 			} footer: {
 				Text("Enables visualization of touches within the app, for demo purposes.")
 			}
+			
+			if isLNPopupUIExample {
+				Section {
+					CellPaddedToggle("Enable", isOn: $enableExternalScenes)
+				} header: {
+					Text("External Libraries")
+				} footer: {
+					Text("Enables scenes for testing with external libraries.")
+				}
+			}
 		}.pickerStyle(.inline)
 	}
 }
@@ -273,6 +284,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		UserDefaults.standard.removeObject(forKey: __LNPopupBarEnableLayoutDebug)
 		UserDefaults.standard.removeObject(forKey: DemoAppDisableDemoSceneColors)
 		UserDefaults.standard.removeObject(forKey: DemoAppEnableFunkyInheritedFont)
+		UserDefaults.standard.removeObject(forKey: DemoAppEnableExternalScenes)
 		
 		for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
 			UserDefaults.standard.removeObject(forKey: key)

@@ -29,5 +29,6 @@ extern NSString* const __LNPopupBarEnableLayoutDebug;
 
 extern NSString* const DemoAppDisableDemoSceneColors;
 extern NSString* const DemoAppEnableFunkyInheritedFont;
+extern NSString* const DemoAppEnableExternalScenes;
 
 NS_ASSUME_NONNULL_END
