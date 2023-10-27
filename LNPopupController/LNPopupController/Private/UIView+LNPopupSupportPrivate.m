@@ -581,7 +581,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 {
 	[self _ln_layoutSubviews];
 	
-	[self._ln_attachedPopupController _configurePopupBarFromBottomBar];
+	[self._ln_attachedPopupController _configurePopupBarFromBottomBarModifyingGroupingIdentifier:NO];
 }
 
 - (void)_ln_transitionBackgroundViewsAnimated:(BOOL)arg1
@@ -639,7 +639,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 #if ! LNPopupControllerEnforceStrictClean
 - (UITabBarAppearance *)_lnpopup_standardAppearance
 {
-	__weak __typeof(self) weakSelf = self;
+//	__weak __typeof(self) weakSelf = self;
 	
 	UITabBarAppearance* rv = self._lnpopup_standardAppearance;
 	
@@ -648,10 +648,12 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 		return rv;
 	}
 	
-	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
-		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
-		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
-	}];
+	return rv;
+	
+//	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
+//		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
+//		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
+//	}];
 }
 #endif
 

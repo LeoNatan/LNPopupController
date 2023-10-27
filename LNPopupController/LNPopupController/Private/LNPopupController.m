@@ -929,11 +929,19 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_configurePopupBarFromBottomBar
 {
-	self.popupBar.effectGroupingIdentifier = _bottomBar._ln_effectGroupingIdentifierIfAvailable;
-	//Schedule one more effect identifier refresh, in case it's not yet ready at this point.
-	dispatch_async(dispatch_get_main_queue(), ^{
+	[self _configurePopupBarFromBottomBarModifyingGroupingIdentifier:YES];
+}
+
+- (void)_configurePopupBarFromBottomBarModifyingGroupingIdentifier:(BOOL)modifyingGroupingIdentifier
+{
+	if(modifyingGroupingIdentifier == YES)
+	{
 		self.popupBar.effectGroupingIdentifier = _bottomBar._ln_effectGroupingIdentifierIfAvailable;
-	});
+		//Schedule one more effect identifier refresh, in case it's not yet ready at this point.
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.popupBar.effectGroupingIdentifier = _bottomBar._ln_effectGroupingIdentifierIfAvailable;
+		});
+	}
 	
 	if(self.popupBar.inheritsAppearanceFromDockingView == NO)
 	{
