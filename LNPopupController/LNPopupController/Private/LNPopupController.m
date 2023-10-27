@@ -977,7 +977,15 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		appearanceToUse = [(id<_LNPopupBarSupport>)_bottomBar standardAppearance];
 	}
 	
-	self.popupBar.systemTintColor = _bottomBar.tintColor;
+	UIColor* bottomBarTintColor = _bottomBar.tintColor;
+	if(_bottomBar.window != nil || [_bottomBar.superview.tintColor isEqual:bottomBarTintColor] == NO)
+	{
+		self.popupBar.systemTintColor = bottomBarTintColor;
+	}
+	else
+	{
+		self.popupBar.systemTintColor = nil;
+	}
 	
 	self.popupBar.systemAppearance = appearanceToUse;
 }

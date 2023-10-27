@@ -111,11 +111,6 @@
 - (void)viewSafeAreaInsetsDidChange
 {
 	[super viewSafeAreaInsetsDidChange];
-	
-	if(self.splitViewController != nil && [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnSupplementary] == self)
-	{
-		NSLog(@"%@", @(self.view.safeAreaInsets));
-	}
 }
 
 - (void)viewIsAppearing:(BOOL)animated
