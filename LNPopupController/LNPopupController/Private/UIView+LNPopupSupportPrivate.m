@@ -547,6 +547,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	@autoreleasepool
 	{
 		LNSwizzleMethod(self, @selector(layoutSubviews), @selector(_ln_layoutSubviews));
+		LNSwizzleMethod(self, @selector(setSelectedItem:), @selector(_ln_setSelectedItem:));
 		
 		if(@available(iOS 15.0, *))
 		{
@@ -581,6 +582,14 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 {
 	[self _ln_layoutSubviews];
 	
+	[self._ln_attachedPopupController _configurePopupBarFromBottomBarModifyingGroupingIdentifier:NO];
+}
+
+- (void)_ln_setSelectedItem:(UITabBarItem *)selectedItem
+{
+	[self _ln_setSelectedItem:selectedItem];
+	
+	[selectedItem _ln_setAttachedPopupController:self._ln_attachedPopupController];
 	[self._ln_attachedPopupController _configurePopupBarFromBottomBarModifyingGroupingIdentifier:NO];
 }
 

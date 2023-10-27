@@ -1040,8 +1040,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
 	[self _ln_setSelectedViewController:selectedViewController];
-	
-	[self.tabBar.selectedItem _ln_setAttachedPopupController:self._ln_popupController_nocreate];
 }
 
 - (void)_ln_setViewControllers:(NSArray<__kindof UIViewController *> *)viewControllers animated:(BOOL)animated
