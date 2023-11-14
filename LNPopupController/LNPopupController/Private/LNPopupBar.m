@@ -335,7 +335,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[self addSubview:_floatingBackgroundShadowView];
 		
 		_contentView = [[_LNPopupBarContentView alloc] initWithEffect:nil];
-		_contentView.clipsToBounds = YES;
+		_contentView.clipsToBounds = NO;
 		[self addSubview:_contentView];
 		
 		_contentMaskView = [UIView new];
@@ -522,6 +522,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_backgroundView.layer.mask.frame = _backgroundView.bounds;
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
+	BOOL isProminent = _resolvedStyle == LNPopupBarStyleProminent;
 	
 	CGRect contentFrame;
 	if(isFloating)
@@ -553,7 +554,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
-		BOOL isProminent = _resolvedStyle == LNPopupBarStyleProminent;
 		CGFloat inset = (isProminent ? MAX(self.safeAreaInsets.left, self.layoutMargins.left) : self.safeAreaInsets.left) - 8;
 		contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, inset, 0, 0));
 		
@@ -608,14 +608,33 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_bottomShadowView.frame = CGRectMake(0, _backgroundView.bounds.size.height - h, _backgroundView.bounds.size.width, h);
 	
 	CGFloat cornerRadius = _contentView.layer.cornerRadius / 2.5;
-	if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+	CGFloat width = 0;
+	CGFloat height = 0;
+	CGFloat offset = 0;
+	if(isFloating)
 	{
-		_progressView.frame = CGRectMake(cornerRadius, 0, _contentView.bounds.size.width - 2 * cornerRadius, 1.5);
+		[_contentView.contentView insertSubview:_progressView aboveSubview:_toolbar];
+		width = _contentView.bounds.size.width;
+		height = _contentView.bounds.size.height;
 	}
 	else
 	{
-		_progressView.frame = CGRectMake(cornerRadius, _contentView.bounds.size.height - 2.5, _contentView.bounds.size.width - 2 * cornerRadius, 1.5);
+		[self insertSubview:_progressView aboveSubview:_contentView];
+		
+		offset = self.safeAreaInsets.left;
+		width = self.bounds.size.width - self.safeAreaInsets.left - self.safeAreaInsets.right;
+		height = self.bounds.size.height;
 	}
+	
+	if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+	{
+		_progressView.frame = CGRectMake(cornerRadius + offset, 0, width - 2 * cornerRadius, 1.5);
+	}
+	else
+	{
+		_progressView.frame = CGRectMake(cornerRadius + offset, height - 2.5, width - 2 * cornerRadius, 1.5);
+	}
+	
 	
 	[self _layoutTitles];
 	
@@ -1419,8 +1438,16 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[self _updateTitleInsetsForProminentBar:&titleInsets];
 	}
 	
-	_titlesViewLeadingConstraint.constant = titleInsets.left;
-	_titlesViewTrailingConstraint.constant = titleInsets.right;
+	if([UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		_titlesViewLeadingConstraint.constant = titleInsets.left;
+		_titlesViewTrailingConstraint.constant = titleInsets.right;
+	}
+	else
+	{
+		_titlesViewLeadingConstraint.constant = titleInsets.right;
+		_titlesViewTrailingConstraint.constant = titleInsets.left;
+	}
 	
 #if DEBUG
 	if(_LNEnableBarLayoutDebug())
