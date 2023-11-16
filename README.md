@@ -2,7 +2,7 @@
 
 `LNPopupController` is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.
 
-For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
+For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
 
 [![GitHub release](https://img.shields.io/github/release/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/releases) [![GitHub stars](https://img.shields.io/github/stars/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/stargazers) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/LeoNatan/LNPopupController/master/LICENSE) <span class="badge-paypal"><a href="https://paypal.me/LeoNatan25" title="Donate to this project using PayPal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg?style=flat" alt="PayPal Donation Button" /></a></span>
 
@@ -30,7 +30,7 @@ Check the demo project for many common use cases of the framework in various sce
 * Available for iOS 13 and above, as an Xcode framework or an SPM package
 * Good citizen in modern UIKit world
 * Modern Objective C syntax and great Swift interoperability
-* For SwiftUI, check out my [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
+* For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
 
 ## Adding to Your Project
 
