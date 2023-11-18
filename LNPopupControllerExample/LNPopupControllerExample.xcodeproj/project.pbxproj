@@ -162,7 +162,7 @@
 		39837A251B759721004D2DA9 /* PortraitTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitTabBarController.swift; sourceTree = "<group>"; };
 		3985DE5E2549539B00CD76EE /* IntroWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntroWebViewController.h; sourceTree = "<group>"; };
 		3985DE5F2549539B00CD76EE /* IntroWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntroWebViewController.m; sourceTree = "<group>"; };
-		3988E3571B59C3000039C09B /* DemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewController.m; sourceTree = "<group>"; };
+		3988E3571B59C3000039C09B /* DemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoViewController.m; sourceTree = "<group>"; tabWidth = 4; };
 		399748701D5652250079492B /* DemoPopupContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoPopupContentViewController.h; sourceTree = "<group>"; };
 		399748711D5652250079492B /* DemoPopupContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoPopupContentViewController.m; sourceTree = "<group>"; };
 		39988C742AA1557F00C3BB04 /* SafeSystemImages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SafeSystemImages.h; sourceTree = "<group>"; };

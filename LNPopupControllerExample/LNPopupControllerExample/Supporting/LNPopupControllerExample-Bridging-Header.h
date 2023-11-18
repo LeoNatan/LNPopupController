@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface UIBlurEffect ()
 
 + (instancetype)effectWithBlurRadius:(CGFloat)arg1;
-+ (instancetype)effectWithVariableBlurRadius:(CGFloat)arg1 imageMask:(UIImage*)arg2;
++ (instancetype)effectWithVariableBlurRadius:(CGFloat)arg1 imageMask:(UIImage*)arg2 API_AVAILABLE(ios(17.0));
 
 @end
 
