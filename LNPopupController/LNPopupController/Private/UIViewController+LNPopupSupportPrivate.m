@@ -1566,10 +1566,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	{
 		frame.origin.x = self.view.bounds.size.width;
 	}
-	else
-	{
-		frame.origin.y += frame.size.height;
-	}
 	
 	BOOL wasToolbarHidden = self.isToolbarHidden;
 	
