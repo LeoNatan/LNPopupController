@@ -15,6 +15,8 @@
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		view.autoresizingMask = []
+		
 		backgroundView.layer.masksToBounds = true
 		backgroundView.layer.cornerCurve = .continuous
 		backgroundView.layer.cornerRadius = 15

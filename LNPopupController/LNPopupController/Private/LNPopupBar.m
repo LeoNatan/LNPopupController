@@ -483,6 +483,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)_layoutCustomBarController
 {
+	_customBarViewController.view.preservesSuperviewLayoutMargins = NO;
+	
 	if(_customBarViewController == nil || _customBarViewController.view.translatesAutoresizingMaskIntoConstraints == NO)
 	{
 		return;
@@ -523,6 +525,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
 	BOOL isProminent = _resolvedStyle == LNPopupBarStyleProminent;
+	BOOL isCustom = _resolvedStyle == LNPopupBarStyleCustom;
 	
 	CGRect contentFrame;
 	if(isFloating)
@@ -554,8 +557,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
-		CGFloat inset = (isProminent ? MAX(self.safeAreaInsets.left, self.layoutMargins.left) : self.safeAreaInsets.left) - 8;
-		contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, inset, 0, 0));
+		if(isCustom)
+		{
+			contentFrame = frame;
+		}
+		else
+		{
+			CGFloat inset = (isProminent ? MAX(self.safeAreaInsets.left, self.layoutMargins.left) : self.safeAreaInsets.left) - 8;
+			contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, inset, 0, 0));
+		}
 		
 		_backgroundGradientMaskView.hidden = YES;
 		_backgroundView.maskView = nil;
@@ -568,7 +578,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_contentView.hidden = [NSUserDefaults.standardUserDefaults boolForKey:@"__LNPopupBarHideContentView"];
 #endif
 	
-	_contentView.preservesSuperviewLayoutMargins = !isFloating;
+	_contentView.preservesSuperviewLayoutMargins = !isFloating && !isCustom;
 	
 	_contentMaskView.frame = [_contentView convertRect:self.bounds fromView:self];
 	_backgroundMaskView.frame = self.bounds;
