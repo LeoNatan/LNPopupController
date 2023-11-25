@@ -18,12 +18,8 @@ class CustomMapBarView: UIView {
 }
 
 class CustomMapBarViewController: LNPopupCustomBarViewController {
-	@IBOutlet weak var searchBar: HigherSearchBar!
+	@IBOutlet weak var searchBar: UISearchBar!
 	@IBOutlet var heightConstraint: NSLayoutConstraint!
-	
-	override var wantsDefaultPanGestureRecognizer: Bool {
-		return false;
-	}
 
 	override var wantsDefaultTapGestureRecognizer: Bool {
 		return false
@@ -34,7 +30,7 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 	}
 	
 	fileprivate func updateConstraint() {
-		heightConstraint.constant = self.traitCollection.horizontalSizeClass == .regular ? 45 : 65
+		heightConstraint.constant = 65
 		self.preferredContentSize = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
 	}
 	
@@ -44,6 +40,15 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 		view.translatesAutoresizingMaskIntoConstraints = false
 		
 		updateConstraint()
+		
+		guard let bg = (containingPopupBar?.value(forKey: "backgroundView") as? UIView) else {
+			return
+		}
+		
+		bg.clipsToBounds = true
+		bg.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+		bg.layer.cornerRadius = 10
+		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {

@@ -9,7 +9,7 @@
 import UIKit
 
 class LocationsController: UITableViewController, UISearchBarDelegate {
-	@IBOutlet weak var searchBar: HigherSearchBar!
+	@IBOutlet weak var searchBar: UISearchBar!
 		
 	override func viewDidLoad() {
 		super.viewDidLoad()

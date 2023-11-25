@@ -13,7 +13,6 @@
         <!--Locations Controller-->
         <scene sceneID="QnM-zG-mBj">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="66n-0J-CHI" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController storyboardIdentifier="PopupContentController" id="i0p-MR-604" customClass="LocationsController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="90" sectionHeaderHeight="28" sectionFooterHeight="28" id="aJL-nE-WRG">
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
@@ -24,7 +23,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="430" height="65"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
-                                <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for a place or address" translatesAutoresizingMaskIntoConstraints="NO" id="l4J-iT-MKq" customClass="HigherSearchBar" customModule="LNPopupControllerExample" customModuleProvider="target">
+                                <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for a place or address" translatesAutoresizingMaskIntoConstraints="NO" id="l4J-iT-MKq">
                                     <rect key="frame" x="10" y="0.0" width="410" height="65"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="65" id="inZ-NR-YbV"/>
@@ -155,13 +154,13 @@
                         <outlet property="searchBar" destination="l4J-iT-MKq" id="DKl-ow-j4f"/>
                     </connections>
                 </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="66n-0J-CHI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="407" y="-9"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Ce9-X8-K7J">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Vgo-JS-Eah" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="CustomMapBarViewController" id="j90-1P-ujA" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="G4p-Rd-ytf">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
@@ -172,6 +171,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="414" height="50"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vgo-JS-Eah" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1072" y="-14"/>
         </scene>
@@ -276,11 +276,6 @@
             <point key="canvasLocation" x="-415.19999999999999" y="-18.440779610194905"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="l4J-iT-MKq">
-            <size key="intrinsicContentSize" width="-1" height="56"/>
-        </designable>
-    </designables>
     <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
         <image name="chevron.left" catalog="system" width="97" height="128"/>

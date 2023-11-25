@@ -29,7 +29,6 @@
 		393F23251E16C04A000E969D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23241E16C04A000E969D /* MapViewController.swift */; };
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
-		393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
 		394005F22AC237B900291421 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394005F12AC237B900291421 /* Settings.storyboard */; };
 		394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */; };
 		394E1AA8276C0D9300C5BE31 /* LNPopupControllerExampleSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */; };
@@ -62,7 +61,6 @@
 		39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
 		39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
 		39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
-		39FAFC3A24E71A6C008BBC2D /* HigherSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F232A1E16D1E4000E969D /* HigherSearchBar.swift */; };
 		39FAFC3B24E71A6C008BBC2D /* LNSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* LNSplitViewController.m */; };
 		39FAFC3C24E71A6C008BBC2D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
 		39FAFC3E24E71A6C008BBC2D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A081B58228000293F95 /* main.m */; };
@@ -145,7 +143,6 @@
 		393F23241E16C04A000E969D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
-		393F232A1E16D1E4000E969D /* HigherSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HigherSearchBar.swift; sourceTree = "<group>"; };
 		394005F12AC237B900291421 /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDemoContextMenuInteraction.h; sourceTree = "<group>"; };
 		394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupDemoContextMenuInteraction.m; sourceTree = "<group>"; };
@@ -278,7 +275,6 @@
 				393F23241E16C04A000E969D /* MapViewController.swift */,
 				393F23261E16C192000E969D /* CustomMapBarViewController.swift */,
 				393F23281E16CF90000E969D /* LocationsController.swift */,
-				393F232A1E16D1E4000E969D /* HigherSearchBar.swift */,
 			);
 			name = "Demo - Custom Pupup Bar Scene (Swift)";
 			path = CustomBarScene;
@@ -516,7 +512,6 @@
 				39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */,
 				39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
-				393F232B1E16D1E4000E969D /* HigherSearchBar.swift in Sources */,
 				39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
 				394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */,
@@ -547,7 +542,6 @@
 				39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */,
 				39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */,
 				39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */,
-				39FAFC3A24E71A6C008BBC2D /* HigherSearchBar.swift in Sources */,
 				39FAFC3B24E71A6C008BBC2D /* LNSplitViewController.m in Sources */,
 				39FAFC3C24E71A6C008BBC2D /* AppDelegate.m in Sources */,
 				39FAFC3E24E71A6C008BBC2D /* main.m in Sources */,

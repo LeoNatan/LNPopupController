@@ -328,6 +328,7 @@ struct SettingsNavView: View {
 struct NoSettingsView : View {
 	var body: some View {
 		Text("No Settings")
+			.fontWeight(.bold)
 			.foregroundStyle(.secondary)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.background(Color(UIColor.systemGroupedBackground))

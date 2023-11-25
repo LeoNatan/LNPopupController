@@ -38,9 +38,14 @@
 	public override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
-		backgroundView.frame = view.bounds.insetBy(dx: view.layoutMargins.left, dy: 2).offsetBy(dx: 0, dy: -2)
+		let insetLeft = CGFloat.maximum(view.safeAreaInsets.left, 20)
+		let insetRight = CGFloat.maximum(view.safeAreaInsets.right, 20)
+		
+		backgroundView.frame = CGRect(x: insetLeft, y: 2, width: view.bounds.width - insetLeft - insetRight, height: view.bounds.height - 4)
 		centeredButton.center = backgroundView.center
-		leftButton.frame = CGRect(x: view.layoutMargins.left + 20, y: backgroundView.center.y - leftButton.bounds.size.height / 2, width: leftButton.bounds.size.width, height: leftButton.bounds.size.height)
+		leftButton.frame = CGRect(x: insetLeft + 20, y: backgroundView.center.y - leftButton.bounds.size.height / 2, width: leftButton.bounds.size.width, height: leftButton.bounds.size.height)
+		
+		print("\(self) margins: \(view.layoutMargins) safe: \(view.safeAreaInsets)")
 	}
 	
 	public override var wantsDefaultTapGestureRecognizer: Bool {
