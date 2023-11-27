@@ -50,6 +50,12 @@ BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 
 @end
 
+@interface NSObject ()
+
+@property (nonatomic, readonly) BOOL _ln_popupUIRequiresZeroInsets;
+
+@end
+
 #ifndef LNPopupControllerEnforceStrictClean
 //_hideBarWithTransition:isExplicit:duration:
 static NSString* const hBWTiEDBase64 = @"X2hpZGVCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0OmR1cmF0aW9uOg==";
@@ -551,34 +557,42 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 //_updateContentOverlayInsetsFromParentIfNecessary (iOS 15 and above)
 - (void)_uCOIFPIN
 {
+	static SEL contentMarginSEL;
+	static SEL setContentMarginSEL;
+	static SEL _setContentOverlayInsets_andLeftMargin_rightMarginSEL;
+	
+	static CGFloat (*contentMarginFunc)(id, SEL);
+	static void (*setContentMarginFunc)(id, SEL, CGFloat);
+	static void (*_setContentOverlayInsets_andLeftMargin_rightMarginFunc)(id, SEL, UIEdgeInsets, CGFloat, CGFloat);
+	
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		contentMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(cM));
+		setContentMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(sCM));
+		_setContentOverlayInsets_andLeftMargin_rightMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(sCOIaLMrM));
+		
+		contentMarginFunc = (void*)objc_msgSend;
+		setContentMarginFunc = (void*)objc_msgSend;
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc = (void*)objc_msgSend;
+	});
+	
+	if([self respondsToSelector:@selector(_ln_popupUIRequiresZeroInsets)] && self._ln_popupUIRequiresZeroInsets == YES)
+	{
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, UIEdgeInsetsZero, 0, 0);
+		setContentMarginFunc(self, setContentMarginSEL, 0);
+		
+		return;
+	}
+	
 	[self _uCOIFPIN];
 	
 	if(self.popupPresentationContainerViewController != nil)
 	{
-		static SEL contentMarginSEL;
-		static SEL setContentMarginSEL;
-		static SEL _setContentOverlayInsets_andLeftMargin_rightMarginSEL;
-		
-		static CGFloat (*contentMarginFunc)(id, SEL);
-		static void (*setContentMarginFunc)(id, SEL, CGFloat);
-		static void (*_setContentOverlayInsets_andLeftMargin_rightMarginFUNC)(id, SEL, UIEdgeInsets, CGFloat, CGFloat);
-		
-		static dispatch_once_t onceToken;
-		dispatch_once(&onceToken, ^{
-			contentMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(cM));
-			setContentMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(sCM));
-			_setContentOverlayInsets_andLeftMargin_rightMarginSEL = NSSelectorFromString(_LNPopupDecodeBase64String(sCOIaLMrM));
-			
-			contentMarginFunc = (void*)objc_msgSend;
-			setContentMarginFunc = (void*)objc_msgSend;
-			_setContentOverlayInsets_andLeftMargin_rightMarginFUNC = (void*)objc_msgSend;
-		});
-		
 		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
 		
 		UIEdgeInsets insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.popupPresentationContainerViewController).bottom, 0));
 		
-		_setContentOverlayInsets_andLeftMargin_rightMarginFUNC(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
 		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
 		
 		self.view.insetsLayoutMarginsFromSafeArea = YES;
@@ -758,7 +772,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 	else if([self isKindOfClass:UINavigationController.class] == NO && [self isKindOfClass:UITabBarController.class] == NO)
 	{
-		extensionView.alpha = 1.0;
+		if([extensionView.layer.animationKeys containsObject:@"opacity"] == NO)
+		{
+			extensionView.alpha = 1.0;
+		}
 	}
 }
 
