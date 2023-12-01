@@ -526,6 +526,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
 	BOOL isProminent = _resolvedStyle == LNPopupBarStyleProminent;
 	BOOL isCustom = _resolvedStyle == LNPopupBarStyleCustom;
+	BOOL isRTL = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
 	
 	CGRect contentFrame;
 	if(isFloating)
@@ -563,8 +564,19 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		else
 		{
-			CGFloat inset = (isProminent ? MAX(self.safeAreaInsets.left, self.layoutMargins.left) : self.safeAreaInsets.left) - 8;
-			contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, inset, 0, 0));
+			UIEdgeInsets insets;
+			if(isRTL)
+			{
+				CGFloat inset = (isProminent ? MAX(self.safeAreaInsets.right, self.layoutMargins.right) : self.safeAreaInsets.right) - 8;
+				insets = UIEdgeInsetsMake(0, 0, 0, inset);
+			}
+			else
+			{
+				CGFloat inset = (isProminent ? MAX(self.safeAreaInsets.left, self.layoutMargins.left) : self.safeAreaInsets.left) - 8;
+				insets = UIEdgeInsetsMake(0, inset, 0, 0);
+			}
+			
+			contentFrame = UIEdgeInsetsInsetRect(frame, insets);
 		}
 		
 		_backgroundGradientMaskView.hidden = YES;
