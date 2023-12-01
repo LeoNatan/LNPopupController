@@ -28,29 +28,60 @@ fileprivate var isLNPopupUIExample: Bool = {
 	return ProcessInfo.processInfo.processName == "LNPopupUIExample"
 }()
 
-fileprivate struct CellPaddedText: View {
+fileprivate struct LNText: View {
 	let text: Text
-	public init<S>(_ content: S) where S : StringProtocol {
-		text = Text(content)
+	public init(_ content: String) {
+		@AppStorage(__LNForceRTL) var forceRTL: Bool = false
+		@AppStorage("___WTFBBQ") var forceRTLAtOpen: Bool = false
+		
+		if isLNPopupUIExample || forceRTL == false || forceRTL != forceRTLAtOpen {
+			text = Text(LocalizedStringKey(content))
+		} else {
+			text = Text(content.applyingTransform(.latinToHebrew, reverse: false)!)
+		}
 	}
 	
 	var body: some View {
-		text.padding([.top, .bottom], 4.167)
+		text
 	}
 }
 
-fileprivate struct CellPaddedToggle<S>: View where S: StringProtocol {
-	let title: S
+fileprivate struct LNHeaderFooterView: View {
+	let content: String
+	public init(_ content: String) {
+		self.content = content
+	}
+	
+	var body: some View {
+		LNText(content).font(.footnote)
+	}
+}
+
+fileprivate struct CellPaddedText: View {
+	let content: String
+	public init(_ content: String) {
+		self.content = content
+	}
+	
+	var body: some View {
+		LNText(content)
+		//			.padding([.top, .bottom], 4.167)
+	}
+}
+
+fileprivate struct CellPaddedToggle: View {
+	let title: String
 	let isOn: Binding<Bool>
 	
-	init(_ title: S, isOn: Binding<Bool>) {
+	init(_ title: String, isOn: Binding<Bool>) {
 		self.title = title
 		self.isOn = isOn
 	}
 	
 	var body: some View {
 		Toggle(isOn: isOn, label: {
-			Text(title).padding([.top, .bottom], 4.167)
+			LNText(title)
+			//				.padding([.top, .bottom], 4.167)
 		})
 	}
 }
@@ -65,6 +96,7 @@ struct SettingsView : View {
 	
 	@AppStorage(PopupSettingsExtendBar) var extendBar: Bool = true
 	@AppStorage(PopupSettingsHidesBottomBarWhenPushed) var hideBottomBar: Bool = true
+	@AppStorage(PopupSettingsDisableScrollEdgeAppearance) var disableScrollEdgeAppearance: Bool = false
 	@AppStorage(PopupSettingsCustomBarEverywhereEnabled) var customPopupBar: Bool = false
 	@AppStorage(PopupSettingsEnableCustomizations) var enableCustomizations: Bool = false
 	@AppStorage(PopupSettingsContextMenuEnabled) var contextMenu: Bool = false
@@ -73,6 +105,8 @@ struct SettingsView : View {
 	@AppStorage(__LNPopupBarHideContentView) var hidePopupBarContentView: Bool = false
 	@AppStorage(__LNPopupBarHideShadow) var hidePopupBarShadow: Bool = false
 	@AppStorage(__LNPopupBarEnableLayoutDebug) var layoutDebug: Bool = false
+	@AppStorage(__LNForceRTL) var forceRTL: Bool = false
+	@AppStorage("___WTFBBQ") var forceRTLAtOpen: Bool = false
 	
 	@AppStorage(DemoAppDisableDemoSceneColors) var disableDemoSceneColors: Bool = false
 	@AppStorage(DemoAppEnableFunkyInheritedFont) var enableFunkyInheritedFont: Bool = false
@@ -84,50 +118,60 @@ struct SettingsView : View {
 	
 	var body: some View {
 		Form {
-			Picker(selection: $barStyle) {
-				CellPaddedText("Default").tag(LNPopupBar.Style.default)
-				CellPaddedText("Compact").tag(LNPopupBar.Style.compact)
-				CellPaddedText("Prominent").tag(LNPopupBar.Style.prominent)
-				CellPaddedText("Floating").tag(LNPopupBar.Style.floating)
-			} label: {
-				Text("Bar Style")
+			Section {
+				Picker(selection: $barStyle) {
+					CellPaddedText("Default").tag(LNPopupBar.Style.default)
+					CellPaddedText("Compact").tag(LNPopupBar.Style.compact)
+					CellPaddedText("Prominent").tag(LNPopupBar.Style.prominent)
+					CellPaddedText("Floating").tag(LNPopupBar.Style.floating)
+				}
+			} header: {
+				LNHeaderFooterView("Bar Style")
 			}
 			
-			Picker(selection: $interactionStyle) {
-				CellPaddedText("Default").tag(UIViewController.__PopupInteractionStyle.default)
-				CellPaddedText("Drag").tag(UIViewController.__PopupInteractionStyle.drag)
-				CellPaddedText("Snap").tag(UIViewController.__PopupInteractionStyle.snap)
-				CellPaddedText("Scroll").tag(UIViewController.__PopupInteractionStyle.scroll)
-				CellPaddedText("None").tag(UIViewController.__PopupInteractionStyle.none)
-			} label: {
-				Text("Interaction Style")
+			Section {
+				Picker(selection: $interactionStyle) {
+					CellPaddedText("Default").tag(UIViewController.__PopupInteractionStyle.default)
+					CellPaddedText("Drag").tag(UIViewController.__PopupInteractionStyle.drag)
+					CellPaddedText("Snap").tag(UIViewController.__PopupInteractionStyle.snap)
+					CellPaddedText("Scroll").tag(UIViewController.__PopupInteractionStyle.scroll)
+					CellPaddedText("None").tag(UIViewController.__PopupInteractionStyle.none)
+				}
+			} header: {
+				LNHeaderFooterView("Interaction Style")
 			}
 			
-			Picker(selection: $closeButtonStyle) {
-				CellPaddedText("Default").tag(LNPopupCloseButton.Style.default)
-				CellPaddedText("Round").tag(LNPopupCloseButton.Style.round)
-				CellPaddedText("Chevron").tag(LNPopupCloseButton.Style.chevron)
-				CellPaddedText("Grabber").tag(LNPopupCloseButton.Style.grabber)
-				CellPaddedText("None").tag(LNPopupCloseButton.Style.none)
-			} label: {
-				Text("Close Button Style")
+			Section {
+				Picker(selection: $closeButtonStyle) {
+					CellPaddedText("Default").tag(LNPopupCloseButton.Style.default)
+					CellPaddedText("Round").tag(LNPopupCloseButton.Style.round)
+					CellPaddedText("Chevron").tag(LNPopupCloseButton.Style.chevron)
+					CellPaddedText("Grabber").tag(LNPopupCloseButton.Style.grabber)
+					CellPaddedText("None").tag(LNPopupCloseButton.Style.none)
+				}
+			} header: {
+				LNHeaderFooterView("Close Button Style")
 			}
 			
-			Picker(selection: $progressViewStyle) {
-				CellPaddedText("Default").tag(LNPopupBar.ProgressViewStyle.default)
-				CellPaddedText("Top").tag(LNPopupBar.ProgressViewStyle.top)
-				CellPaddedText("Bottom").tag(LNPopupBar.ProgressViewStyle.bottom)
-				CellPaddedText("None").tag(LNPopupBar.ProgressViewStyle.none)
-			} label: {
-				Text("Progress View Style")
+			Section {
+				Picker(selection: $progressViewStyle) {
+					CellPaddedText("Default").tag(LNPopupBar.ProgressViewStyle.default)
+					CellPaddedText("Top").tag(LNPopupBar.ProgressViewStyle.top)
+					CellPaddedText("Bottom").tag(LNPopupBar.ProgressViewStyle.bottom)
+					CellPaddedText("None").tag(LNPopupBar.ProgressViewStyle.none)
+				}
+			} header: {
+				LNHeaderFooterView("Progress View Style")
 			}
 			
-			Picker(selection: $marqueeStyle) {
-				CellPaddedText("Default").tag(0)
-				CellPaddedText("Disabled").tag(1)
-				CellPaddedText("Enabled").tag(2)
-			} label: {
-				Text("Marquee")
+			Section {
+				Picker(selection: $marqueeStyle) {
+					CellPaddedText("Default").tag(0)
+					CellPaddedText("Disabled").tag(1)
+					CellPaddedText("Enabled").tag(2)
+				}
+			} header: {
+				LNHeaderFooterView("Marquee")
 			}
 			
 			Section {
@@ -135,9 +179,9 @@ struct SettingsView : View {
 					CellPaddedText("Default").tag(UIBlurEffect.Style.default)
 				}
 			} header: {
-				CellPaddedText("Background Blur Style")
+				LNHeaderFooterView("Background Blur Style")
 			} footer: {
-				Text("Uses the default material chosen by the system.")
+				LNHeaderFooterView("Uses the default material chosen by the system.")
 			}
 			
 			Section {
@@ -149,7 +193,7 @@ struct SettingsView : View {
 					CellPaddedText("Chrome Material").tag(UIBlurEffect.Style.systemChromeMaterial)
 				}
 			} footer: {
-				Text("Material styles which automatically adapt to the user interface style. Available in iOS 13 and above.")
+				LNHeaderFooterView("Material styles which automatically adapt to the user interface style. Available in iOS 13 and above.")
 			}
 			
 			Section {
@@ -158,7 +202,7 @@ struct SettingsView : View {
 					CellPaddedText("Prominent").tag(UIBlurEffect.Style.prominent)
 				}
 			} footer: {
-				Text("Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
+				LNHeaderFooterView("Styles which automatically show one of the traditional blur styles, depending on the user interface style. Available in iOS 10 and above.")
 			}
 			
 			Section {
@@ -168,62 +212,64 @@ struct SettingsView : View {
 					CellPaddedText("Dark").tag(UIBlurEffect.Style.dark)
 				}
 			} footer: {
-				Text("Traditional blur styles. Available in iOS 8 and above.")
+				LNHeaderFooterView("Traditional blur styles. Available in iOS 8 and above.")
 			}
 			
 			Section {
 				CellPaddedToggle("Extend Bar Under Safe Area", isOn: $extendBar)
 			} header: {
-				Text("Settings")
+				LNHeaderFooterView("Settings")
 			} footer: {
 				if isLNPopupUIExample {
-					Text("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
+					LNHeaderFooterView("Calls the `popupBarShouldExtendPopupBarUnderSafeArea()` modifier with a value of `true` in standard demo scenes.")
 				} else {
-					Text("Sets the `shouldExtendPopupBarUnderSafeArea` property to `true` in standard demo scenes.")
+					LNHeaderFooterView("Sets the `shouldExtendPopupBarUnderSafeArea` property to `true` in standard demo scenes.")
 				}
 			}
 			
 			if isLNPopupUIExample == false {
 				Section {
-					CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: !isLNPopupUIExample ? $hideBottomBar : Binding.constant(false))
+					CellPaddedToggle("Hides Bottom Bar When Pushed", isOn: $hideBottomBar)
 				} footer: {
-					if isLNPopupUIExample {
-						Text("Not supported in SwiftUI yet.")
-					} else {
-						Text("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
-					}
-				}.disabled(isLNPopupUIExample)
+					LNHeaderFooterView("Sets the `hidesBottomBarWhenPushed` property of pushed controllers in standard demo scenes.")
+				}
+				
+				Section {
+					CellPaddedToggle("Disable Scroll Edge Appearance", isOn: $disableScrollEdgeAppearance)
+				} footer: {
+					LNHeaderFooterView("Disables the scroll edge appearance for system bars in standard demo scenes.")
+				}
 			}
 			
 			Section {
 				CellPaddedToggle("Context Menu Interactions", isOn: $contextMenu)
 			} footer: {
-				Text("Enables popup bar context menu interaction in standard demo scenes.")
+				LNHeaderFooterView("Enables popup bar context menu interaction in standard demo scenes.")
 			}
 			
 			Section {
 				CellPaddedToggle("Customizations", isOn: $enableCustomizations)
 			} footer: {
-				Text("Enables popup bar customizations in standard demo scenes.")
+				LNHeaderFooterView("Enables popup bar customizations in standard demo scenes.")
 			}
 			
 			Section {
 				CellPaddedToggle("Custom Popup Bar", isOn: $customPopupBar)
 			} footer: {
-				Text("Enables a custom popup bar in standard demo scenes.")
+				LNHeaderFooterView("Enables a custom popup bar in standard demo scenes.")
 			}
 			
 			Section {
 				CellPaddedToggle("Disable Demo Scene Colors", isOn: $disableDemoSceneColors)
 			} footer: {
-				Text("Disables random background colors in the demo scenes.")
+				LNHeaderFooterView("Disables random background colors in the demo scenes.")
 			}
 			
 			if isLNPopupUIExample {
 				Section {
 					CellPaddedToggle("Enable Funky Inherited Font", isOn: $enableFunkyInheritedFont)
 				} footer: {
-					Text("Enables an environment font that is inherited by the popup bar.")
+					LNHeaderFooterView("Enables an environment font that is inherited by the popup bar.")
 				}
 			}
 			
@@ -231,28 +277,43 @@ struct SettingsView : View {
 				CellPaddedToggle("Layout Debug", isOn: $layoutDebug)
 				CellPaddedToggle("Hide Content View", isOn: $hidePopupBarContentView)
 				CellPaddedToggle("Hide Floating Shadow", isOn: $hidePopupBarShadow)
+				CellPaddedToggle("Use Right-to-Left Pseudolanguage With Right-to-Left Strings", isOn: $forceRTL).onChange(of: forceRTL) { _ in
+					guard forceRTL != forceRTLAtOpen else {
+						return
+					}
+					
+					SettingsViewController.toggleRTL() { accepted in
+						if accepted {
+							return
+						}
+						
+						forceRTL = forceRTLAtOpen
+					}
+				}
 			} header: {
-				Text("Popup Bar Debug")
+				LNHeaderFooterView("Popup Bar Debug")
 			}
 			
 			Section {
 				CellPaddedToggle("Touch Visualizer", isOn: $touchVisualizer)
 			} header: {
-				Text("Demonstration")
+				LNHeaderFooterView("Demonstration")
 			} footer: {
-				Text("Enables visualization of touches within the app, for demo purposes.")
+				LNHeaderFooterView("Enables visualization of touches within the app, for demo purposes.")
 			}
 			
 			if isLNPopupUIExample {
 				Section {
 					CellPaddedToggle("Enable", isOn: $enableExternalScenes)
 				} header: {
-					Text("External Libraries")
+					LNHeaderFooterView("External Libraries")
 				} footer: {
-					Text("Enables scenes for testing with external libraries.")
+					LNHeaderFooterView("Enables scenes for testing with external libraries.")
 				}
 			}
-		}.pickerStyle(.inline)
+		}.pickerStyle(.inline).onAppear {
+			forceRTLAtOpen = forceRTL
+		}
 	}
 }
 
@@ -271,26 +332,96 @@ class SettingsViewController: UIHostingController<SettingsView> {
 		self.view.tintColor = parent.navigationBar.tintColor
 	}
 	
-	class func reset() {
-		UserDefaults.standard.removeObject(forKey: PopupSettingsEnableCustomizations)
-		UserDefaults.standard.set(true, forKey: PopupSettingsExtendBar)
-		UserDefaults.standard.set(true, forKey: PopupSettingsHidesBottomBarWhenPushed)
-		UserDefaults.standard.removeObject(forKey: PopupSettingsTouchVisualizerEnabled)
-		UserDefaults.standard.removeObject(forKey: PopupSettingsCustomBarEverywhereEnabled)
-		UserDefaults.standard.removeObject(forKey: PopupSettingsContextMenuEnabled)
-		UserDefaults.standard.removeObject(forKey: PopupSettingsVisualEffectViewBlurEffect)
-		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideContentView)
-		UserDefaults.standard.removeObject(forKey: __LNPopupBarHideShadow)
-		UserDefaults.standard.removeObject(forKey: __LNPopupBarEnableLayoutDebug)
-		UserDefaults.standard.removeObject(forKey: DemoAppDisableDemoSceneColors)
-		UserDefaults.standard.removeObject(forKey: DemoAppEnableFunkyInheritedFont)
-		UserDefaults.standard.removeObject(forKey: DemoAppEnableExternalScenes)
+	class func alertRestartNeeded(completion: @escaping (Bool) -> ()) {
+		let alertController = UIAlertController(title: NSLocalizedString("Restart Required", comment: ""), message: NSLocalizedString("Continuing will require exiting and restarting the app.", comment: ""), preferredStyle: .alert)
+		if #available(iOS 16.0, *) {
+			alertController.severity = .critical
+		}
+		alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: { _ in
+			completion(false)
+		}))
+		alertController.addAction(UIAlertAction(title: NSLocalizedString("Exit", comment: ""), style: .destructive, handler: { _ in
+			completion(true)
+			UserDefaults.standard.synchronize()
+			exit(0)
+		}))
 		
-		for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
-			UserDefaults.standard.removeObject(forKey: key)
+		let window = UIWindow.value(forKey: "keyWindow") as! UIWindow
+		var controller = window.rootViewController!
+		while controller.presentedViewController != nil {
+			controller = controller.presentedViewController!
+		}
+		controller.present(alertController, animated: true)
+	}
+	
+	class func setRTL() {
+		UserDefaults.standard.set(true, forKey: "AppleTextDirection")
+		UserDefaults.standard.set(true, forKey: "NSForceRightToLeftWritingDirection")
+		UserDefaults.standard.set(true, forKey: "NSForceRightToLeftLocalizedStrings")
+	}
+	
+	class func resetRTL() {
+		UserDefaults.standard.removeObject(forKey: "AppleTextDirection")
+		UserDefaults.standard.removeObject(forKey: "NSForceRightToLeftWritingDirection")
+		UserDefaults.standard.removeObject(forKey: "NSForceRightToLeftLocalizedStrings")
+	}
+	
+	class func toggleRTL(completion: @escaping (Bool) -> ()) {
+		alertRestartNeeded { accepted in
+			guard accepted else {
+				completion(false)
+				return
+			}
+			
+			completion(true)
+			
+			let wantsRTL = UserDefaults.standard.bool(forKey: __LNForceRTL)
+			if wantsRTL {
+				setRTL()
+			} else {
+				resetRTL()
+			}
+		}
+	}
+	
+	class func reset() {
+		let actualReset: () -> () = {
+			UserDefaults.standard.removeObject(forKey: PopupSettingsEnableCustomizations)
+			UserDefaults.standard.set(true, forKey: PopupSettingsExtendBar)
+			UserDefaults.standard.set(true, forKey: PopupSettingsHidesBottomBarWhenPushed)
+			UserDefaults.standard.removeObject(forKey: PopupSettingsDisableScrollEdgeAppearance)
+			UserDefaults.standard.removeObject(forKey: PopupSettingsTouchVisualizerEnabled)
+			UserDefaults.standard.removeObject(forKey: PopupSettingsCustomBarEverywhereEnabled)
+			UserDefaults.standard.removeObject(forKey: PopupSettingsContextMenuEnabled)
+			UserDefaults.standard.removeObject(forKey: PopupSettingsVisualEffectViewBlurEffect)
+			UserDefaults.standard.removeObject(forKey: __LNPopupBarHideContentView)
+			UserDefaults.standard.removeObject(forKey: __LNPopupBarHideShadow)
+			UserDefaults.standard.removeObject(forKey: __LNPopupBarEnableLayoutDebug)
+			UserDefaults.standard.removeObject(forKey: DemoAppDisableDemoSceneColors)
+			UserDefaults.standard.removeObject(forKey: DemoAppEnableFunkyInheritedFont)
+			UserDefaults.standard.removeObject(forKey: DemoAppEnableExternalScenes)
+			
+			UserDefaults.standard.removeObject(forKey: __LNForceRTL)
+			resetRTL()
+			
+			for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
+				UserDefaults.standard.removeObject(forKey: key)
+			}
+			
+			UserDefaults.standard.setValue(0xffff, forKey: PopupSettingsVisualEffectViewBlurEffect)
 		}
 		
-		UserDefaults.standard.setValue(0xffff, forKey: PopupSettingsVisualEffectViewBlurEffect)
+		if UserDefaults.standard.bool(forKey: __LNForceRTL) {
+			alertRestartNeeded { accepted in
+				guard accepted else {
+					return
+				}
+				
+				actualReset()
+			}
+		} else {
+			actualReset()
+		}
 	}
 	
 	@IBAction func reset() {

@@ -54,15 +54,15 @@
 		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill", NO) style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
 	
-	NSString* title = @"Welcome to LNPopupController!";
+	NSString* title = NSLocalizedString(@"Welcome to LNPopupController!", @"");
 	
 	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
 	[attribTitle addAttributes:@{
-		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont systemFontOfSize:15 weight:UIFontWeightMedium]],
+		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleBody] scaledFontForFont:[UIFont systemFontOfSize:15 weight:UIFontWeightMedium]],
 	} range:NSMakeRange(0, attribTitle.length)];
 	[attribTitle addAttributes: @{
-		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleSubheadline] scaledFontForFont:[UIFont systemFontOfSize:16 weight:UIFontWeightHeavy]],
-	} range:[title rangeOfString:@"LNPopupController"]];
+		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont systemFontOfSize:16 weight:UIFontWeightHeavy]],
+	} range:[title rangeOfString:NSLocalizedString(@"LNPopupController", @"")]];
 	
 	self.popupItem.attributedTitle = attribTitle;
 }

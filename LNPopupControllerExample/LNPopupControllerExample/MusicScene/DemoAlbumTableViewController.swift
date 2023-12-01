@@ -70,8 +70,8 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 		for idx in 1...self.tableView(tableView, numberOfRowsInSection: 0) {
 			images += [UIImage(named: "genre\(idx)")!]
-			titles += [LoremIpsum.title]
-			subtitles += [LoremIpsum.sentence]
+			titles += [LoremIpsum.title.applyingTransform(.latinToHebrew, reverse: false)!.applyingTransform(.stripCombiningMarks, reverse: false)!]
+			subtitles += [LoremIpsum.sentence.applyingTransform(.latinToHebrew, reverse: false)!.applyingTransform(.stripCombiningMarks, reverse: false)!]
 		}
     }
 	

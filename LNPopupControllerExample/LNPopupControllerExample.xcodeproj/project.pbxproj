@@ -13,8 +13,6 @@
 		39114ED926E2BF7A004FC75B /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */; };
 		39114EE026E2BF97004FC75B /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39114EE126E2BF9A004FC75B /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39114EC926E2B0D9004FC75B /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		39140B901DBD69540036A6C5 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 397C560D1B74DA66007A67F0 /* Music.storyboard */; };
-		391F6B8A2AE5C99F00A0B00B /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394005F12AC237B900291421 /* Settings.storyboard */; };
 		391F6B8B2AE5C9A600A0B00B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F818C02ACB5F4500590884 /* SettingsViewController.swift */; };
 		39277A091B58228000293F95 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A081B58228000293F95 /* main.m */; };
 		39277A0C1B58228000293F95 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
@@ -25,11 +23,9 @@
 		3932CDA42741A77500FD81FC /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3932CDA62741A77A00FD81FC /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA52741A77A00FD81FC /* LNTouchVisualizer */; };
 		3932CDA72741A77A00FD81FC /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA52741A77A00FD81FC /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		393F23231E16BF1D000E969D /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 393F23221E16BF1D000E969D /* MapScene.storyboard */; };
 		393F23251E16C04A000E969D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23241E16C04A000E969D /* MapViewController.swift */; };
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
-		394005F22AC237B900291421 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 394005F12AC237B900291421 /* Settings.storyboard */; };
 		394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = 394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */; };
 		394E1AA8276C0D9300C5BE31 /* LNPopupControllerExampleSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */; };
 		394E1AA9276C0DA600C5BE31 /* DemoGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = 39756326254ED9EB0066981E /* DemoGallery.m */; };
@@ -47,9 +43,15 @@
 		39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 39988C752AA1557F00C3BB04 /* SafeSystemImages.m */; };
 		39988C772AA1557F00C3BB04 /* SafeSystemImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 39988C752AA1557F00C3BB04 /* SafeSystemImages.m */; };
 		39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* LNSplitViewController.m */; };
+		39B0DFE62B1819A9008CCF36 /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFE92B1819A9008CCF36 /* MapScene.storyboard */; };
+		39B0DFE72B1819A9008CCF36 /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFE92B1819A9008CCF36 /* MapScene.storyboard */; };
+		39B0DFEA2B1819BC008CCF36 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFED2B1819BC008CCF36 /* Settings.storyboard */; };
+		39B0DFEB2B1819BC008CCF36 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFED2B1819BC008CCF36 /* Settings.storyboard */; };
+		39B0DFEE2B1819C2008CCF36 /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF12B1819C2008CCF36 /* ManualLayoutScene.storyboard */; };
+		39B0DFEF2B1819C2008CCF36 /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF12B1819C2008CCF36 /* ManualLayoutScene.storyboard */; };
+		39B0DFF22B1819EF008CCF36 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF52B1819EF008CCF36 /* Music.storyboard */; };
+		39B0DFF32B1819EF008CCF36 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF52B1819EF008CCF36 /* Music.storyboard */; };
 		39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
-		39BBA86A24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */; };
-		39BBA86B24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */; };
 		39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -74,8 +76,6 @@
 		39FAFC4624E71A6C008BBC2D /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56291B753A45007A67F0 /* MusicCell.swift */; };
 		39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
 		39FAFC4B24E71A6C008BBC2D /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 39FAFC3324E71A6C008BBC2D /* LoremIpsum */; };
-		39FAFC4D24E71A6C008BBC2D /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 397C560D1B74DA66007A67F0 /* Music.storyboard */; };
-		39FAFC4E24E71A6C008BBC2D /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 393F23221E16BF1D000E969D /* MapScene.storyboard */; };
 		39FAFC4F24E71A6C008BBC2D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39277A161B58228000293F95 /* Assets.xcassets */; };
 		39FAFC5024E71A6C008BBC2D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
 /* End PBXBuildFile section */
@@ -139,18 +139,15 @@
 		39277A161B58228000293F95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		39277A1B1B58228000293F95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		393F23221E16BF1D000E969D /* MapScene.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MapScene.storyboard; sourceTree = "<group>"; };
 		393F23241E16C04A000E969D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
-		394005F12AC237B900291421 /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDemoContextMenuInteraction.h; sourceTree = "<group>"; };
 		394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupDemoContextMenuInteraction.m; sourceTree = "<group>"; };
 		39631FAB230DA03D0059D119 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		39631FAC230DA03E0059D119 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		39756325254ED9EB0066981E /* DemoGallery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoGallery.h; sourceTree = "<group>"; };
 		39756326254ED9EB0066981E /* DemoGallery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoGallery.m; sourceTree = "<group>"; };
-		397C560D1B74DA66007A67F0 /* Music.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Music.storyboard; sourceTree = "<group>"; };
 		397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoAlbumTableViewController.swift; sourceTree = "<group>"; };
 		397C56291B753A45007A67F0 /* MusicCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicCell.swift; sourceTree = "<group>"; };
 		39837A1F1B756F1A004D2DA9 /* RandomColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RandomColors.m; sourceTree = "<group>"; };
@@ -167,7 +164,10 @@
 		39A134DA1B73FFC0003AB4C5 /* LNPopupControllerExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupControllerExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		39A3B589230D400B00E10425 /* LNSplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNSplitViewController.h; sourceTree = "<group>"; };
 		39A3B58A230D400B00E10425 /* LNSplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNSplitViewController.m; sourceTree = "<group>"; };
-		39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ManualLayoutScene.storyboard; sourceTree = "<group>"; };
+		39B0DFE82B1819A9008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MapScene.storyboard; sourceTree = "<group>"; };
+		39B0DFEC2B1819BC008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
+		39B0DFF02B1819C2008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ManualLayoutScene.storyboard; sourceTree = "<group>"; };
+		39B0DFF42B1819EF008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Music.storyboard; sourceTree = "<group>"; };
 		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
 		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -207,7 +207,7 @@
 		3908C3491E7C9E8A00451B5D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				394005F12AC237B900291421 /* Settings.storyboard */,
+				39B0DFED2B1819BC008CCF36 /* Settings.storyboard */,
 				3908C34A1E7C9EA200451B5D /* SettingKeys.h */,
 				3908C34B1E7C9EA200451B5D /* SettingKeys.m */,
 				39F818C02ACB5F4500590884 /* SettingsViewController.swift */,
@@ -271,7 +271,7 @@
 		393F23211E16BEF5000E969D /* Demo - Custom Pupup Bar Scene (Swift) */ = {
 			isa = PBXGroup;
 			children = (
-				393F23221E16BF1D000E969D /* MapScene.storyboard */,
+				39B0DFE92B1819A9008CCF36 /* MapScene.storyboard */,
 				393F23241E16C04A000E969D /* MapViewController.swift */,
 				393F23261E16C192000E969D /* CustomMapBarViewController.swift */,
 				393F23281E16CF90000E969D /* LocationsController.swift */,
@@ -314,7 +314,7 @@
 		397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */ = {
 			isa = PBXGroup;
 			children = (
-				397C560D1B74DA66007A67F0 /* Music.storyboard */,
+				39B0DFF52B1819EF008CCF36 /* Music.storyboard */,
 				397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */,
 				39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */,
 				397C56291B753A45007A67F0 /* MusicCell.swift */,
@@ -338,7 +338,7 @@
 		39BBA86324FEC16600D9712A /* Demo - Custom Pupup Bar Scene - Manual Layout (Swift) */ = {
 			isa = PBXGroup;
 			children = (
-				39BBA86524FEC25400D9712A /* ManualLayoutScene.storyboard */,
+				39B0DFF12B1819C2008CCF36 /* ManualLayoutScene.storyboard */,
 				39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */,
 			);
 			name = "Demo - Custom Pupup Bar Scene - Manual Layout (Swift)";
@@ -475,10 +475,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39140B901DBD69540036A6C5 /* Music.storyboard in Resources */,
-				39BBA86A24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */,
-				393F23231E16BF1D000E969D /* MapScene.storyboard in Resources */,
-				394005F22AC237B900291421 /* Settings.storyboard in Resources */,
+				39B0DFF22B1819EF008CCF36 /* Music.storyboard in Resources */,
+				39B0DFEE2B1819C2008CCF36 /* ManualLayoutScene.storyboard in Resources */,
+				39B0DFE62B1819A9008CCF36 /* MapScene.storyboard in Resources */,
+				39B0DFEA2B1819BC008CCF36 /* Settings.storyboard in Resources */,
 				392E2AC52AD5CAB600944CB2 /* LaunchScreen.storyboard in Resources */,
 				39277A171B58228000293F95 /* Assets.xcassets in Resources */,
 				39277A151B58228000293F95 /* Main.storyboard in Resources */,
@@ -489,10 +489,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39FAFC4D24E71A6C008BBC2D /* Music.storyboard in Resources */,
-				39BBA86B24FEC3E500D9712A /* ManualLayoutScene.storyboard in Resources */,
-				39FAFC4E24E71A6C008BBC2D /* MapScene.storyboard in Resources */,
-				391F6B8A2AE5C99F00A0B00B /* Settings.storyboard in Resources */,
+				39B0DFF32B1819EF008CCF36 /* Music.storyboard in Resources */,
+				39B0DFEF2B1819C2008CCF36 /* ManualLayoutScene.storyboard in Resources */,
+				39B0DFE72B1819A9008CCF36 /* MapScene.storyboard in Resources */,
+				39B0DFEB2B1819BC008CCF36 /* Settings.storyboard in Resources */,
 				39FAFC4F24E71A6C008BBC2D /* Assets.xcassets in Resources */,
 				39FAFC5024E71A6C008BBC2D /* Main.storyboard in Resources */,
 			);
@@ -589,6 +589,38 @@
 			);
 			name = Main.storyboard;
 			path = TestingScene;
+			sourceTree = "<group>";
+		};
+		39B0DFE92B1819A9008CCF36 /* MapScene.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				39B0DFE82B1819A9008CCF36 /* Base */,
+			);
+			name = MapScene.storyboard;
+			sourceTree = "<group>";
+		};
+		39B0DFED2B1819BC008CCF36 /* Settings.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				39B0DFEC2B1819BC008CCF36 /* Base */,
+			);
+			name = Settings.storyboard;
+			sourceTree = "<group>";
+		};
+		39B0DFF12B1819C2008CCF36 /* ManualLayoutScene.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				39B0DFF02B1819C2008CCF36 /* Base */,
+			);
+			name = ManualLayoutScene.storyboard;
+			sourceTree = "<group>";
+		};
+		39B0DFF52B1819EF008CCF36 /* Music.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				39B0DFF42B1819EF008CCF36 /* Base */,
+			);
+			name = Music.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

@@ -156,15 +156,13 @@
 		return;
 	}
 	
+	self.popupItem.title = [LoremIpsum title];
+	self.popupItem.subtitle = [LoremIpsum wordsWithNumber:arc4random_uniform(12) + 4];
+	
 	if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
 	{
-		self.popupItem.title = @"עברית";
-		self.popupItem.subtitle = @"עברית";
-	}
-	else
-	{
-		self.popupItem.title = [LoremIpsum sentence];
-		self.popupItem.subtitle = [LoremIpsum sentence];
+		self.popupItem.title = [self.popupItem.title stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
+		self.popupItem.subtitle = [self.popupItem.subtitle stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
 	}
 	
 	if([NSUserDefaults.standardUserDefaults boolForKey:DemoAppDisableDemoSceneColors] == NO)

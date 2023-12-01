@@ -174,10 +174,21 @@
 
 - (void)updateBottomDockingViewEffectForBarPresentation
 {
+	UINavigationBarAppearance* nba = nil;
+	
+	BOOL disableScrollEdgeAppearance = [[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsDisableScrollEdgeAppearance];
+	if(disableScrollEdgeAppearance)
+	{
+		nba = [UINavigationBarAppearance new];
+		[nba configureWithDefaultBackground];
+	}
+	
 #if LNPOPUP
 	LNPopupBarStyle popupBarStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
 	if(popupBarStyle == LNPopupBarStyleFloating || (popupBarStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 	{
+		nba.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
+		
 #endif
 		UITabBarAppearance* tba = [UITabBarAppearance new];
 		[tba configureWithDefaultBackground];
@@ -191,6 +202,26 @@
 #if LNPOPUP
 	}
 #endif
+	
+	self.navigationController.navigationBar.scrollEdgeAppearance = nba;
+	self.navigationController.navigationBar.compactScrollEdgeAppearance = nba;
+	
+	UITabBarAppearance* tba = nil;
+	
+	if(disableScrollEdgeAppearance)
+	{
+		tba = [[UITabBarAppearance alloc] initWithBarAppearance:nba];
+	}
+	self.tabBarController.tabBar.scrollEdgeAppearance = tba;
+	
+	UIToolbarAppearance* ta = nil;
+	
+	if(disableScrollEdgeAppearance)
+	{
+		ta = [[UIToolbarAppearance alloc] initWithBarAppearance:nba];
+	}
+	self.navigationController.toolbar.scrollEdgeAppearance = ta;
+	self.navigationController.toolbar.compactScrollEdgeAppearance = ta;
 }
 
 - (UIViewController*)_targetVCForPopup
