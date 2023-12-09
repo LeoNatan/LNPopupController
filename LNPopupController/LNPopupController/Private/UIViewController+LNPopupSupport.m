@@ -307,6 +307,16 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 	return self.view;
 }
 
+- (BOOL)allowPopupHapticFeedbackGeneration
+{
+	return self._ln_popupController.wantsFeedbackGeneration;
+}
+
+- (void)setAllowPopupHapticFeedbackGeneration:(BOOL)allowPopupHapticFeedbackGeneration
+{
+	self._ln_popupController.wantsFeedbackGeneration = allowPopupHapticFeedbackGeneration;
+}
+
 @end
 
 @implementation UIViewController (LNCustomContainerPopupSupport)

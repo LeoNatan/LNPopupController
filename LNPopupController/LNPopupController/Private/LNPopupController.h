@@ -39,6 +39,8 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
 @property (nonatomic, weak) UIViewController* effectiveStatusBarUpdateController;
 
+@property (assign) BOOL wantsFeedbackGeneration;
+
 - (CGFloat)_percentFromPopupBar;
 
 - (void)_setContentToState:(LNPopupPresentationState)state;

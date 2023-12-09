@@ -95,6 +95,9 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 	CGFloat _bottomBarOffset;
 	
 	CADisplayLink* _displayLinkFor120Hz;
+	
+	UIImpactFeedbackGenerator* _softFeedbackGenerator;
+	UIImpactFeedbackGenerator* _rigidFeedbackGenerator;
 }
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
@@ -110,6 +113,10 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+		
+		_wantsFeedbackGeneration = YES;
+		_softFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleSoft];
+		_rigidFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleRigid];
 	}
 	
 	return self;
@@ -248,7 +255,29 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[currentContentController viewDidMoveToPopupContainerContentView:nil];
 }
 
-- (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha completion:(void(^)(void))completion transitionOriginatedByUser:(BOOL)transitionOriginatedByUser
+- (void)_generateSoftFeedbackWithIntensity:(CGFloat)intensity
+{
+	if(_wantsFeedbackGeneration == NO)
+	{
+		return;
+	}
+	
+	[_softFeedbackGenerator prepare];
+	[_softFeedbackGenerator impactOccurredWithIntensity:intensity];
+}
+
+- (void)_generateRigidFeedbackWithIntensity:(CGFloat)intensity
+{
+	if(_wantsFeedbackGeneration == NO)
+	{
+		return;
+	}
+	
+	[_rigidFeedbackGenerator prepare];
+	[_rigidFeedbackGenerator impactOccurredWithIntensity:intensity];
+}
+
+- (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha transitionOriginatedByUser:(BOOL)transitionOriginatedByUser allowFeedbackGeneration:(BOOL)allowFeedbackGeneration completion:(void(^)(void))completion
 {
 	if(transitionOriginatedByUser == YES && _popupControllerInternalState == _LNPopupPresentationStateTransitioning)
 	{
@@ -334,6 +363,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		if(shouldNotifyDelegateWillOpen == YES)
 		{
+			if(allowFeedbackGeneration == YES)
+			{
+				[self _generateSoftFeedbackWithIntensity:0.7];
+			}
+			
 			if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willOpenPopupWithContentController:animated:), animated) == NO)
 			{
 				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillOpenPopup:animated:), animated);
@@ -342,6 +376,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(shouldNotifyDelegateWillClose == YES)
 		{
+			if(allowFeedbackGeneration == YES)
+			{
+				[self _generateRigidFeedbackWithIntensity:0.7];
+			}
+			
 			if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willClosePopupWithContentController:animated:), animated) == NO)
 			{
 				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillClosePopup:animated:), animated);
@@ -490,7 +529,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		{
 			[_containerController.view setNeedsLayout];
 			[_containerController.view layoutIfNeeded];
-			[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+			[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES transitionOriginatedByUser:NO allowFeedbackGeneration:YES completion:nil];
 		}	break;
 		default:
 			break;
@@ -542,7 +581,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			_popupControllerTargetState = LNPopupPresentationStateOpen;
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				[self _transitionToState:_popupControllerTargetState notifyDelegate:YES animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateBarPresented ? YES : NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+				[self _transitionToState:_popupControllerTargetState notifyDelegate:YES animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateBarPresented ? YES : NO allowPopupBarAlphaModification:YES transitionOriginatedByUser:NO allowFeedbackGeneration:YES completion:nil];
 			});
 		}
 		else if((_popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y > 0))
@@ -629,6 +668,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_dismissGestureStarted == NO && (resolvedStyle == LNPopupInteractionStyleDrag || resolvedStyle == LNPopupInteractionStyleScroll || _popupControllerInternalState > LNPopupPresentationStateBarPresented))
 	{
+		if(resolvedStyle != LNPopupInteractionStyleSnap)
+		{
+			[self _generateSoftFeedbackWithIntensity:0.6];
+		}
+		
 		_lastSeenMovement = CACurrentMediaTime();
 		BOOL prevState = self.popupBar.barHighlightGestureRecognizer.enabled;
 		self.popupBar.barHighlightGestureRecognizer.enabled = NO;
@@ -639,7 +683,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		_stateBeforeDismissStarted = _popupControllerInternalState;
 		
-		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES transitionOriginatedByUser:NO allowFeedbackGeneration:NO completion:nil];
 		
 		_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 		_cachedInsets = [_containerController insetsForBottomDockingView];
@@ -689,9 +733,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			pgr.enabled = YES;
 			
 			_popupControllerTargetState = LNPopupPresentationStateBarPresented;
-			[self _transitionToState:_popupControllerTargetState notifyDelegate:YES animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateBarPresented ? YES : NO allowPopupBarAlphaModification:YES completion:^ {
+			[self _transitionToState:_popupControllerTargetState notifyDelegate:YES animated:YES useSpringAnimation:_popupControllerTargetState == LNPopupPresentationStateBarPresented ? YES : NO allowPopupBarAlphaModification:YES transitionOriginatedByUser:NO allowFeedbackGeneration:YES completion:^ {
 				[_popupContentView.popupCloseButton _setButtonContainerStationary];
-			} transitionOriginatedByUser:NO];
+			}];
 		}
 		
 		CGFloat statusBarHeightThreshold = [LNPopupController _statusBarHeightForView:_containerController.view] / 2.0;
@@ -737,7 +781,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 		
 		[_popupContentView.popupCloseButton _setButtonContainerStationary];
-		[self _transitionToState:targetState notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:nil transitionOriginatedByUser:NO];
+		[self _transitionToState:targetState notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES transitionOriginatedByUser:NO allowFeedbackGeneration:resolvedStyle == LNPopupInteractionStyleSnap completion:nil];
 	}
 	
 	_dismissGestureStarted = NO;
@@ -1190,6 +1234,8 @@ extern float UIAnimationDragCoefficient(void);
 			
 			if(open)
 			{
+				[self _generateSoftFeedbackWithIntensity:0.7];
+				
 				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willOpenPopupWithContentController:animated:), animated) == NO)
 				{
 					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillOpenPopup:animated:), animated);
@@ -1269,7 +1315,7 @@ extern float UIAnimationDragCoefficient(void);
 	{
 		[_containerController.view setNeedsLayout];
 		[_containerController.view layoutIfNeeded];
-		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:NO];
+		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES transitionOriginatedByUser:NO allowFeedbackGeneration:YES completion:completionBlock];
 	}
 	else if(completionBlock != nil)
 	{
@@ -1283,7 +1329,7 @@ extern float UIAnimationDragCoefficient(void);
 	{
 		LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 		
-		[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES completion:completionBlock transitionOriginatedByUser:YES];
+		[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES transitionOriginatedByUser:YES allowFeedbackGeneration:YES completion:completionBlock];
 	}
 	else if(completionBlock != nil)
 	{
@@ -1384,7 +1430,7 @@ extern float UIAnimationDragCoefficient(void);
 			
 			LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 			
-			[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap allowPopupBarAlphaModification:YES completion:dismissalAnimationCompletionBlock transitionOriginatedByUser:NO];
+			[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap allowPopupBarAlphaModification:YES transitionOriginatedByUser:NO allowFeedbackGeneration:YES completion:dismissalAnimationCompletionBlock];
 		}
 		else
 		{

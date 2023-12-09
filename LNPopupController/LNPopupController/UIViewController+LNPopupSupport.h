@@ -215,7 +215,6 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 @property (nonatomic, readonly) LNPopupPresentationState popupPresentationState;
 
 /// The delegate that handles popup presentation-related messages.
-///
 @property (nonatomic, weak) id<LNPopupPresentationDelegate> popupPresentationDelegate;
 
 /// The content view controller of the receiver. If there is no popover presentation, the property will be @c nil. (read-only)
@@ -223,6 +222,11 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 
 /// The popup presentation container view controller of the receiver. If the receiver is not part of a popover presentation, the property will be @c nil. (read-only)
 @property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
+
+/// Controls whether interaction with the popup generates haptic feedback to the user.
+///
+/// Defaults to @c true.
+@property (nonatomic, assign) BOOL allowPopupHapticFeedbackGeneration;
 
 @end
 
@@ -233,7 +237,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 ///
 /// A default implementation is provided for @c UIViewController, @c UINavigationController and @c UITabBarController.
 ///
-/// The default implmentation for @c UIViewController returns an invisible @c UIView instance, docked to the bottom. For @c UINavigationController, the toolbar is returned. For @c UITabBarController, the tab bar is returned.
+/// The default implementation for @c UIViewController returns an invisible @c UIView instance, docked to the bottom. For @c UINavigationController, the toolbar is returned. For @c UITabBarController, the tab bar is returned.
 @property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopupBar;
 
 /// Controls whether the popup bar should fade out during its dismissal animation.

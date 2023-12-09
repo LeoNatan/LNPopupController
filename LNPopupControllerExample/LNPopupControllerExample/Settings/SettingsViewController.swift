@@ -92,6 +92,7 @@ struct SettingsView : View {
 	@AppStorage(PopupSettingsCloseButtonStyle) var closeButtonStyle: LNPopupCloseButton.Style = .default
 	@AppStorage(PopupSettingsProgressViewStyle) var progressViewStyle: LNPopupBar.ProgressViewStyle = .default
 	@AppStorage(PopupSettingsMarqueeStyle) var marqueeStyle: Int = 0
+	@AppStorage(PopupSettingsHapticFeedbackStyle) var hapticFeedback: Int = 0
 	@AppStorage(PopupSettingsVisualEffectViewBlurEffect) var blurEffectStyle: UIBlurEffect.Style = .default
 	
 	@AppStorage(PopupSettingsExtendBar) var extendBar: Bool = true
@@ -173,6 +174,16 @@ struct SettingsView : View {
 				}
 			} header: {
 				LNHeaderFooterView("Marquee")
+			}
+			
+			Section {
+				Picker(selection: $hapticFeedback) {
+					CellPaddedText("Default").tag(0)
+					CellPaddedText("Disabled").tag(1)
+					CellPaddedText("Enabled").tag(2)
+				}
+			} header: {
+				LNHeaderFooterView("Haptic Feedback")
 			}
 			
 			Section {
@@ -442,7 +453,7 @@ class SettingsViewController: UIHostingController<SettingsView> {
 			resetRTL()
 			UserDefaults.standard.removeObject(forKey: __LNDebugScaling)
 			
-			for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle] {
+			for key in [PopupSettingsBarStyle, PopupSettingsInteractionStyle, PopupSettingsCloseButtonStyle, PopupSettingsProgressViewStyle, PopupSettingsMarqueeStyle, PopupSettingsHapticFeedbackStyle] {
 				UserDefaults.standard.removeObject(forKey: key)
 			}
 			

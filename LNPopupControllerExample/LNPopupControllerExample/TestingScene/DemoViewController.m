@@ -323,6 +323,14 @@
 		targetVC.popupBar.standardAppearance.marqueeScrollEnabled = marqueeEnabledCalculated.boolValue;
 	}
 	
+	NSNumber* hapticFeedbackEnabledSetting = [[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsHapticFeedbackStyle];
+	NSNumber* hapticFeedbackEnabledCalculated = nil;
+	if(hapticFeedbackEnabledSetting && [hapticFeedbackEnabledSetting isEqualToNumber:@0] == NO)
+	{
+		hapticFeedbackEnabledCalculated = @((BOOL)([hapticFeedbackEnabledSetting unsignedIntegerValue] - 1));
+		targetVC.allowPopupHapticFeedbackGeneration = hapticFeedbackEnabledCalculated.boolValue;
+	}
+	
 	NSNumber* effectOverride = [NSUserDefaults.standardUserDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
 	if(effectOverride != nil && effectOverride.unsignedIntValue != 0xffff)
 	{

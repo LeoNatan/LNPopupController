@@ -14,6 +14,7 @@ NSString* const PopupSettingsInteractionStyle = @"PopupSettingsInteractionStyle"
 NSString* const PopupSettingsProgressViewStyle = @"PopupSettingsProgressViewStyle";
 NSString* const PopupSettingsCloseButtonStyle = @"PopupSettingsCloseButtonStyle";
 NSString* const PopupSettingsMarqueeStyle = @"PopupSettingsMarqueeStyle";
+NSString* const PopupSettingsHapticFeedbackStyle = @"PopupSettingsHapticFeedbackStyle";
 NSString* const PopupSettingsEnableCustomizations = @"PopupSettingsEnableCustomizations";
 NSString* const PopupSettingsExtendBar = @"PopupSettingsExtendBar";
 NSString* const PopupSettingsHidesBottomBarWhenPushed = @"PopupSettingsHidesBottomBarWhenPushed";

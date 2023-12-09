@@ -15,6 +15,7 @@ extern NSString* const PopupSettingsInteractionStyle;
 extern NSString* const PopupSettingsProgressViewStyle;
 extern NSString* const PopupSettingsCloseButtonStyle;
 extern NSString* const PopupSettingsMarqueeStyle;
+extern NSString* const PopupSettingsHapticFeedbackStyle;
 extern NSString* const PopupSettingsEnableCustomizations;
 extern NSString* const PopupSettingsExtendBar;
 extern NSString* const PopupSettingsHidesBottomBarWhenPushed;
