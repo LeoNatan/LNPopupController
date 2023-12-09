@@ -1339,8 +1339,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)_ln_pTB
 {
 	CGRect oldBarFrame = self.tabBar.frame;
-	
-	[self _ln_pTB];
+
+	if(self._ignoringLayoutDuringTransition == NO)
+	{
+		[self _ln_pTB];
+	}
 	
 	if(self._isPrepareTabBarIgnored == YES)
 	{

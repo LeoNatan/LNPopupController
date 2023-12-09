@@ -156,8 +156,8 @@
 		return;
 	}
 	
-	self.popupItem.title = [LoremIpsum title];
-	self.popupItem.subtitle = [LoremIpsum wordsWithNumber:arc4random_uniform(12) + 4];
+	self.popupItem.title = [[LoremIpsum wordsWithNumber:arc4random_uniform(3) + 2] capitalizedString];
+	self.popupItem.subtitle = [[LoremIpsum wordsWithNumber:arc4random_uniform(12) + 4] valueForKey:@"li_stringByCapitalizingFirstLetter"];
 	
 	if([NSUserDefaults.standardUserDefaults boolForKey:@"NSForceRightToLeftWritingDirection"])
 	{

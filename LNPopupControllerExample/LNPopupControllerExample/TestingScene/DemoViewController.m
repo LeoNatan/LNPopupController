@@ -186,7 +186,9 @@
 #if LNPOPUP
 	LNPopupBarStyle popupBarStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
 	if(popupBarStyle == LNPopupBarStyleFloating || (popupBarStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
+#endif
 	{
+#if LNPOPUP
 		nba.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
 		
 #endif
@@ -199,9 +201,7 @@
 		[ta configureWithDefaultBackground];
 		ta.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
 		self.navigationController.toolbar.standardAppearance = ta;
-#if LNPOPUP
 	}
-#endif
 	
 	self.navigationController.navigationBar.scrollEdgeAppearance = nba;
 	self.navigationController.navigationBar.compactScrollEdgeAppearance = nba;

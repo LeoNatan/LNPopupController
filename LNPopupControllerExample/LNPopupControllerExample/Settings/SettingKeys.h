@@ -28,6 +28,7 @@ extern NSString* const __LNPopupBarHideContentView;
 extern NSString* const __LNPopupBarHideShadow;
 extern NSString* const __LNPopupBarEnableLayoutDebug;
 extern NSString* const __LNForceRTL;
+extern NSString* const __LNDebugScaling;
 
 extern NSString* const DemoAppDisableDemoSceneColors;
 extern NSString* const DemoAppEnableFunkyInheritedFont;
