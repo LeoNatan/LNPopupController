@@ -365,7 +365,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		{
 			if(allowFeedbackGeneration == YES)
 			{
-				[self _generateSoftFeedbackWithIntensity:0.7];
+				[self _generateSoftFeedbackWithIntensity:0.9];
 			}
 			
 			if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willOpenPopupWithContentController:animated:), animated) == NO)
@@ -378,7 +378,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		{
 			if(allowFeedbackGeneration == YES)
 			{
-				[self _generateRigidFeedbackWithIntensity:0.7];
+				[self _generateRigidFeedbackWithIntensity:0.9];
 			}
 			
 			if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willClosePopupWithContentController:animated:), animated) == NO)
@@ -670,7 +670,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		if(resolvedStyle != LNPopupInteractionStyleSnap)
 		{
-			[self _generateSoftFeedbackWithIntensity:0.6];
+			[self _generateSoftFeedbackWithIntensity:0.8];
 		}
 		
 		_lastSeenMovement = CACurrentMediaTime();
@@ -1234,7 +1234,7 @@ extern float UIAnimationDragCoefficient(void);
 			
 			if(open)
 			{
-				[self _generateSoftFeedbackWithIntensity:0.7];
+				[self _generateSoftFeedbackWithIntensity:0.9];
 				
 				if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willOpenPopupWithContentController:animated:), animated) == NO)
 				{
