@@ -50,7 +50,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		
 #if LNPOPUP
-		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.standard.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
+		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
 		tabBarController?.popupBar.barStyle = barStyle
 	
 		if tabBarController?.popupBar.effectiveBarStyle == .floating {
@@ -70,8 +70,17 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 		for idx in 1...self.tableView(tableView, numberOfRowsInSection: 0) {
 			images += [UIImage(named: "genre\(idx)")!]
-			titles += [LoremIpsum.title.applyingTransform(.latinToHebrew, reverse: false)!.applyingTransform(.stripCombiningMarks, reverse: false)!]
-			subtitles += [LoremIpsum.sentence.applyingTransform(.latinToHebrew, reverse: false)!.applyingTransform(.stripCombiningMarks, reverse: false)!]
+			
+			var title = LoremIpsum.title
+			var sentence = LoremIpsum.sentence
+			
+			if UserDefaults.standard.bool(forKey: __LNForceRTL) {
+				title = title.applyingTransform(.latinToHebrew, reverse: false)!
+				sentence = sentence.applyingTransform(.latinToHebrew, reverse: false)!
+			}
+			
+			titles.append(title)
+			subtitles.append(sentence)
 		}
     }
 	

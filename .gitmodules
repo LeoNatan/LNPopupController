@@ -1,0 +1,3 @@
+[submodule "LNPopupSettings"]
+	path = LNPopupSettings
+	url = https://github.com/LeoNatan/LNPopupSettings.git

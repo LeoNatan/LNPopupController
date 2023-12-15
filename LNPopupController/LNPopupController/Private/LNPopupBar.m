@@ -14,9 +14,29 @@
 #import "_LNPopupBarShadowedImageView.h"
 
 #ifdef DEBUG
+static NSUserDefaults* __LNDebugUserDefaults(void)
+{
+	static NSUserDefaults* rv = nil;
+	
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		SEL sel = NSSelectorFromString(@"settingDefaults");
+		if([NSUserDefaults respondsToSelector:sel])
+		{
+			rv = [NSUserDefaults valueForKey:@"settingDefaults"];
+		}
+		else
+		{
+			rv = NSUserDefaults.standardUserDefaults;
+		}
+	});
+	
+	return rv;
+}
+
 static BOOL _LNEnableBarLayoutDebug(void)
 {
-	return [NSUserDefaults.standardUserDefaults boolForKey:@"__LNPopupBarEnableLayoutDebug"];
+	return [__LNDebugUserDefaults() boolForKey:@"__LNPopupBarEnableLayoutDebug"];
 }
 #endif
 
@@ -553,7 +573,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_floatingBackgroundShadowView.cornerRadius = 14;
 		
 #if DEBUG
-		_floatingBackgroundShadowView.hidden = [NSUserDefaults.standardUserDefaults boolForKey:@"__LNPopupBarHideShadow"];
+		_floatingBackgroundShadowView.hidden = [__LNDebugUserDefaults() boolForKey:@"__LNPopupBarHideShadow"];
 #endif
 	}
 	else
@@ -587,7 +607,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	_contentView.frame = contentFrame;
 #if DEBUG
-	_contentView.hidden = [NSUserDefaults.standardUserDefaults boolForKey:@"__LNPopupBarHideContentView"];
+	_contentView.hidden = [__LNDebugUserDefaults() boolForKey:@"__LNPopupBarHideContentView"];
 #endif
 	
 	_contentView.preservesSuperviewLayoutMargins = !isFloating && !isCustom;

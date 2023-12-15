@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "9999"
-   version = "1.3">
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
+      <PreActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Init Submodules if Needed"
+               scriptText = "cd &quot;${SRCROOT}&quot;&#10;&#10;if git submodule status | grep --quiet &apos;^-&apos;; then&#10;    git submodule init&#10;    git submodule update&#10;fi&#10;"
+               shellToInvoke = "/bin/zsh">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "39277A031B58228000293F95"
+                     BuildableName = "LNPopupControllerExample.app"
+                     BlueprintName = "LNPopupControllerExample"
+                     ReferencedContainer = "container:LNPopupControllerExample.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PreActions>
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"

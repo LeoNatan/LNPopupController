@@ -97,7 +97,7 @@
 		self.colorSeedCount = 0;
 	}
 	
-	if([NSUserDefaults.standardUserDefaults boolForKey:DemoAppDisableDemoSceneColors] == NO)
+	if([NSUserDefaults.settingDefaults boolForKey:DemoAppDisableDemoSceneColors] == NO)
 	{
 		NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
 		self.view.backgroundColor = LNSeedAdaptiveColor(seed);
@@ -176,7 +176,7 @@
 {
 	UINavigationBarAppearance* nba = nil;
 	
-	BOOL disableScrollEdgeAppearance = [[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsDisableScrollEdgeAppearance];
+	BOOL disableScrollEdgeAppearance = [NSUserDefaults.settingDefaults boolForKey:PopupSettingsDisableScrollEdgeAppearance];
 	if(disableScrollEdgeAppearance)
 	{
 		nba = [UINavigationBarAppearance new];
@@ -184,7 +184,7 @@
 	}
 	
 #if LNPOPUP
-	LNPopupBarStyle popupBarStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
+	LNPopupBarStyle popupBarStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
 	if(popupBarStyle == LNPopupBarStyleFloating || (popupBarStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 #endif
 	{
@@ -304,18 +304,18 @@
 //	UIViewController* demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
 	UIViewController* demoVC = [DemoPopupContentViewController new];
 	
-	LNPopupCloseButtonStyle closeButtonStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsCloseButtonStyle] unsignedIntegerValue];
+	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingsCloseButtonStyle] unsignedIntegerValue];
 	
 	targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
-	targetVC.popupBar.progressViewStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsProgressViewStyle] unsignedIntegerValue];
-	targetVC.popupBar.barStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
+	targetVC.popupBar.progressViewStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingsProgressViewStyle] unsignedIntegerValue];
+	targetVC.popupBar.barStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingsBarStyle] unsignedIntegerValue];
 	
-	targetVC.popupInteractionStyle = [[[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsInteractionStyle] unsignedIntegerValue];
+	targetVC.popupInteractionStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingsInteractionStyle] unsignedIntegerValue];
 	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
 	
-	NSNumber* marqueeEnabledSetting = [[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsMarqueeStyle];
+	NSNumber* marqueeEnabledSetting = [NSUserDefaults.settingDefaults objectForKey:PopupSettingsMarqueeStyle];
 	NSNumber* marqueeEnabledCalculated = nil;
 	if(marqueeEnabledSetting && [marqueeEnabledSetting isEqualToNumber:@0] == NO)
 	{
@@ -323,7 +323,7 @@
 		targetVC.popupBar.standardAppearance.marqueeScrollEnabled = marqueeEnabledCalculated.boolValue;
 	}
 	
-	NSNumber* hapticFeedbackEnabledSetting = [[NSUserDefaults standardUserDefaults] objectForKey:PopupSettingsHapticFeedbackStyle];
+	NSNumber* hapticFeedbackEnabledSetting = [NSUserDefaults.settingDefaults objectForKey:PopupSettingsHapticFeedbackStyle];
 	NSNumber* hapticFeedbackEnabledCalculated = nil;
 	if(hapticFeedbackEnabledSetting && [hapticFeedbackEnabledSetting isEqualToNumber:@0] == NO)
 	{
@@ -331,7 +331,7 @@
 		targetVC.allowPopupHapticFeedbackGeneration = hapticFeedbackEnabledCalculated.boolValue;
 	}
 	
-	NSNumber* effectOverride = [NSUserDefaults.standardUserDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
+	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingsVisualEffectViewBlurEffect];
 	if(effectOverride != nil && effectOverride.unsignedIntValue != 0xffff)
 	{
 		if(targetVC.popupBar.effectiveBarStyle == LNPopupBarStyleFloating)
@@ -345,7 +345,7 @@
 		}
 	}
 	
-	if([[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsEnableCustomizations])
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingsEnableCustomizations])
 	{
 		LNPopupBarAppearance* appearance = [LNPopupBarAppearance new];
 		appearance.marqueeScrollEnabled = marqueeEnabledCalculated.boolValue;
@@ -375,14 +375,14 @@
 		targetVC.popupBar.standardAppearance = appearance;
 	}
 	
-	targetVC.shouldExtendPopupBarUnderSafeArea = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsExtendBar];
+	targetVC.shouldExtendPopupBarUnderSafeArea = [NSUserDefaults.settingDefaults boolForKey:PopupSettingsExtendBar];
 	
-	if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsContextMenuEnabled])
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingsContextMenuEnabled])
 	{
 		[targetVC.popupBar addInteraction:[[LNPopupDemoContextMenuInteraction alloc] initWithTitle:YES]];
 	}
 	
-	if([[NSUserDefaults standardUserDefaults] boolForKey:PopupSettingsCustomBarEverywhereEnabled])
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingsCustomBarEverywhereEnabled])
 	{
 		targetVC.shouldExtendPopupBarUnderSafeArea = NO;
 		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
@@ -405,7 +405,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	segue.destinationViewController.hidesBottomBarWhenPushed = [NSUserDefaults.standardUserDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed];
+	segue.destinationViewController.hidesBottomBarWhenPushed = [NSUserDefaults.settingDefaults boolForKey:PopupSettingsHidesBottomBarWhenPushed];
 	if([segue.destinationViewController isKindOfClass:DemoViewController.class])
 	{
 		[(DemoViewController*)segue.destinationViewController setColorSeedString:self.colorSeedString];

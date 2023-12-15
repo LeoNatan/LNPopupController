@@ -8,21 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		3901289526CFC1D60002612D /* LNPopupControllerExampleSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */; };
-		3908C34C1E7C9EA200451B5D /* SettingKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 3908C34B1E7C9EA200451B5D /* SettingKeys.m */; };
-		39114ECA26E2B0D9004FC75B /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39114EC926E2B0D9004FC75B /* LNTouchVisualizer */; };
-		39114ED926E2BF7A004FC75B /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */; };
-		39114EE026E2BF97004FC75B /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		39114EE126E2BF9A004FC75B /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39114EC926E2B0D9004FC75B /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		391F6B8B2AE5C9A600A0B00B /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F818C02ACB5F4500590884 /* SettingsViewController.swift */; };
 		39277A091B58228000293F95 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A081B58228000293F95 /* main.m */; };
 		39277A0C1B58228000293F95 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
 		39277A151B58228000293F95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
 		39277A171B58228000293F95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39277A161B58228000293F95 /* Assets.xcassets */; };
 		392E2AC52AD5CAB600944CB2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */; };
-		3932CDA32741A77500FD81FC /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */; };
-		3932CDA42741A77500FD81FC /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		3932CDA62741A77A00FD81FC /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA52741A77A00FD81FC /* LNTouchVisualizer */; };
-		3932CDA72741A77A00FD81FC /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 3932CDA52741A77A00FD81FC /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		393F23251E16C04A000E969D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23241E16C04A000E969D /* MapViewController.swift */; };
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
@@ -53,13 +43,19 @@
 		39B0DFF32B1819EF008CCF36 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF52B1819EF008CCF36 /* Music.storyboard */; };
 		39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
 		39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
+		39D6C8B32B2D01E600F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; };
+		39D6C8B42B2D01F600F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39D6C8B62B2D020000F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */; };
+		39D6C8B72B2D020000F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39D6C8BB2B2D02B500F53E70 /* SettingKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D6C8B92B2D02B500F53E70 /* SettingKeys.m */; };
+		39D6C8BC2B2D02B500F53E70 /* SettingKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D6C8B92B2D02B500F53E70 /* SettingKeys.m */; };
+		39D6C8BD2B2D02B500F53E70 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D6C8BA2B2D02B500F53E70 /* SettingsViewController.swift */; };
+		39D6C8BE2B2D02B500F53E70 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D6C8BA2B2D02B500F53E70 /* SettingsViewController.swift */; };
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
 		39E9746E250193B8009F24DF /* ColorfulButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E9746D250193B8009F24DF /* ColorfulButton.swift */; };
 		39E9746F250193B8009F24DF /* ColorfulButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E9746D250193B8009F24DF /* ColorfulButton.swift */; };
-		39F818C12ACB5F4500590884 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F818C02ACB5F4500590884 /* SettingsViewController.swift */; };
-		39FAFC3624E71A6C008BBC2D /* SettingKeys.m in Sources */ = {isa = PBXBuildFile; fileRef = 3908C34B1E7C9EA200451B5D /* SettingKeys.m */; };
 		39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
 		39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
 		39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
@@ -104,9 +100,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				39D6C8B42B2D01F600F53E70 /* LNTouchVisualizer in Embed Frameworks */,
 				39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */,
-				39114EE126E2BF9A004FC75B /* LNTouchVisualizer in Embed Frameworks */,
-				39114EE026E2BF97004FC75B /* LNPreviewToContextMenu in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,8 +112,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3932CDA72741A77A00FD81FC /* LNTouchVisualizer in Embed Frameworks */,
-				3932CDA42741A77500FD81FC /* LNPreviewToContextMenu in Embed Frameworks */,
+				39D6C8B72B2D020000F53E70 /* LNTouchVisualizer in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,8 +122,6 @@
 /* Begin PBXFileReference section */
 		3901289326CFC1D60002612D /* LNPopupControllerExampleSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupControllerExampleSupport.h; sourceTree = "<group>"; };
 		3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupControllerExampleSupport.m; sourceTree = "<group>"; };
-		3908C34A1E7C9EA200451B5D /* SettingKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingKeys.h; sourceTree = "<group>"; };
-		3908C34B1E7C9EA200451B5D /* SettingKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingKeys.m; sourceTree = "<group>"; };
 		39277A041B58228000293F95 /* LNPopupControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39277A081B58228000293F95 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		39277A0A1B58228000293F95 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -169,10 +161,13 @@
 		39B0DFF02B1819C2008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ManualLayoutScene.storyboard; sourceTree = "<group>"; };
 		39B0DFF42B1819EF008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Music.storyboard; sourceTree = "<group>"; };
 		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
+		39D6C8992B2CC3A100F53E70 /* LNPopupControllerExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupControllerExample.entitlements; sourceTree = "<group>"; };
+		39D6C8B82B2D02B500F53E70 /* SettingKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingKeys.h; path = ../../../LNPopupSettings/SettingKeys.h; sourceTree = "<group>"; };
+		39D6C8B92B2D02B500F53E70 /* SettingKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingKeys.m; path = ../../../LNPopupSettings/SettingKeys.m; sourceTree = "<group>"; };
+		39D6C8BA2B2D02B500F53E70 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = ../../../LNPopupSettings/SettingsViewController.swift; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
 		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39E9746D250193B8009F24DF /* ColorfulButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorfulButton.swift; sourceTree = "<group>"; };
-		39F818C02ACB5F4500590884 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExampleNoPopup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LNPopupControllerExampleNoPopup-Info.plist"; path = "../LNPopupControllerExampleNoPopup-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -182,11 +177,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39114ED926E2BF7A004FC75B /* LNPreviewToContextMenu in Frameworks */,
 				3980E7FC26DEBCAF00AC0728 /* LoremIpsum in Frameworks */,
 				39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */,
 				39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */,
-				39114ECA26E2B0D9004FC75B /* LNTouchVisualizer in Frameworks */,
+				39D6C8B32B2D01E600F53E70 /* LNTouchVisualizer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,9 +188,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3932CDA62741A77A00FD81FC /* LNTouchVisualizer in Frameworks */,
+				39D6C8B62B2D020000F53E70 /* LNTouchVisualizer in Frameworks */,
 				39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */,
-				3932CDA32741A77500FD81FC /* LNPreviewToContextMenu in Frameworks */,
 				39FAFC4B24E71A6C008BBC2D /* LoremIpsum in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -208,9 +201,9 @@
 			isa = PBXGroup;
 			children = (
 				39B0DFED2B1819BC008CCF36 /* Settings.storyboard */,
-				3908C34A1E7C9EA200451B5D /* SettingKeys.h */,
-				3908C34B1E7C9EA200451B5D /* SettingKeys.m */,
-				39F818C02ACB5F4500590884 /* SettingsViewController.swift */,
+				39D6C8B82B2D02B500F53E70 /* SettingKeys.h */,
+				39D6C8B92B2D02B500F53E70 /* SettingKeys.m */,
+				39D6C8BA2B2D02B500F53E70 /* SettingsViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -238,6 +231,7 @@
 		39277A061B58228000293F95 /* LNPopupControllerExample */ = {
 			isa = PBXGroup;
 			children = (
+				39D6C8992B2CC3A100F53E70 /* LNPopupControllerExample.entitlements */,
 				39277A131B58228000293F95 /* Main.storyboard */,
 				397C560B1B74D47D007A67F0 /* Demo - Testing Scene (Objective-C) */,
 				397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */,
@@ -384,8 +378,7 @@
 			name = LNPopupControllerExample;
 			packageProductDependencies = (
 				3980E7FB26DEBCAF00AC0728 /* LoremIpsum */,
-				39114EC926E2B0D9004FC75B /* LNTouchVisualizer */,
-				39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */,
+				39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */,
 			);
 			productName = LNPopupControllerExample;
 			productReference = 39277A041B58228000293F95 /* LNPopupControllerExample.app */;
@@ -407,8 +400,7 @@
 			name = LNPopupControllerExampleNoPopup;
 			packageProductDependencies = (
 				39FAFC3324E71A6C008BBC2D /* LoremIpsum */,
-				3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */,
-				3932CDA52741A77A00FD81FC /* LNTouchVisualizer */,
+				39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */,
 			);
 			productName = LNPopupControllerExample;
 			productReference = 39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */;
@@ -441,8 +433,8 @@
 			mainGroup = 392779FB1B58228000293F95;
 			packageReferences = (
 				3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */,
-				39114EC826E2B0D9004FC75B /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */,
 				39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */,
+				39D6C8B12B2D01E600F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */,
 			);
 			productRefGroup = 39277A051B58228000293F95 /* Products */;
 			projectDirPath = "";
@@ -505,7 +497,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3908C34C1E7C9EA200451B5D /* SettingKeys.m in Sources */,
 				39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */,
 				39756327254ED9EB0066981E /* DemoGallery.m in Sources */,
 				397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */,
@@ -516,10 +507,12 @@
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
 				394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */,
 				39277A091B58228000293F95 /* main.m in Sources */,
+				39D6C8BB2B2D02B500F53E70 /* SettingKeys.m in Sources */,
 				39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */,
 				393F23291E16CF90000E969D /* LocationsController.swift in Sources */,
 				3985DE602549539B00CD76EE /* IntroWebViewController.m in Sources */,
 				393F23251E16C04A000E969D /* MapViewController.swift in Sources */,
+				39D6C8BD2B2D02B500F53E70 /* SettingsViewController.swift in Sources */,
 				3901289526CFC1D60002612D /* LNPopupControllerExampleSupport.m in Sources */,
 				399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */,
 				3988E3581B59C3000039C09B /* DemoViewController.m in Sources */,
@@ -527,7 +520,6 @@
 				39E9746E250193B8009F24DF /* ColorfulButton.swift in Sources */,
 				39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */,
 				397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */,
-				39F818C12ACB5F4500590884 /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,9 +527,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39FAFC3624E71A6C008BBC2D /* SettingKeys.m in Sources */,
 				394E1AA8276C0D9300C5BE31 /* LNPopupControllerExampleSupport.m in Sources */,
 				394E1AA9276C0DA600C5BE31 /* DemoGallery.m in Sources */,
+				39D6C8BE2B2D02B500F53E70 /* SettingsViewController.swift in Sources */,
 				39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */,
 				39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */,
 				39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */,
@@ -547,10 +539,10 @@
 				39FAFC3E24E71A6C008BBC2D /* main.m in Sources */,
 				39FAFC3F24E71A6C008BBC2D /* RandomColors.m in Sources */,
 				39FAFC4024E71A6C008BBC2D /* LocationsController.swift in Sources */,
-				391F6B8B2AE5C9A600A0B00B /* SettingsViewController.swift in Sources */,
 				39FAFC4124E71A6C008BBC2D /* MapViewController.swift in Sources */,
 				39FAFC4224E71A6C008BBC2D /* DemoPopupContentViewController.m in Sources */,
 				39FAFC4324E71A6C008BBC2D /* DemoViewController.m in Sources */,
+				39D6C8BC2B2D02B500F53E70 /* SettingKeys.m in Sources */,
 				39FAFC4424E71A6C008BBC2D /* PortraitTabBarController.swift in Sources */,
 				39E9746F250193B8009F24DF /* ColorfulButton.swift in Sources */,
 				39988C772AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
@@ -742,6 +734,7 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
@@ -783,6 +776,7 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = LNPopupControllerExample/LNPopupControllerExample.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
@@ -937,6 +931,14 @@
 				kind = branch;
 			};
 		};
+		39D6C8B12B2D01E600F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeoNatan/LNTouchVisualizer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
 		39FAFC3424E71A6C008BBC2D /* XCRemoteSwiftPackageReference "LoremIpsum" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukaskubanek/LoremIpsum";
@@ -948,16 +950,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		39114EC926E2B0D9004FC75B /* LNTouchVisualizer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 39114EC826E2B0D9004FC75B /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
-			productName = LNTouchVisualizer;
-		};
-		39114ED826E2BF7A004FC75B /* LNPreviewToContextMenu */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
-			productName = LNPreviewToContextMenu;
-		};
 		39114EDA26E2BF8B004FC75B /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
@@ -973,20 +965,20 @@
 			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
 			productName = LNPreviewToContextMenu;
 		};
-		3932CDA22741A77500FD81FC /* LNPreviewToContextMenu */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
-			productName = LNPreviewToContextMenu;
-		};
-		3932CDA52741A77A00FD81FC /* LNTouchVisualizer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 39114EC826E2B0D9004FC75B /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
-			productName = LNTouchVisualizer;
-		};
 		3980E7FB26DEBCAF00AC0728 /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
 			productName = LoremIpsum;
+		};
+		39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39D6C8B12B2D01E600F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
+			productName = LNTouchVisualizer;
+		};
+		39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39D6C8B12B2D01E600F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */;
+			productName = LNTouchVisualizer;
 		};
 		39FAFC3324E71A6C008BBC2D /* LoremIpsum */ = {
 			isa = XCSwiftPackageProductDependency;
