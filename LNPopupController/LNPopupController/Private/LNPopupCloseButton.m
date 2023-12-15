@@ -128,6 +128,12 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	
 	[self setImage:nil forState:UIControlStateNormal];
 	self.tintColor = nil;
+	
+	self.layer.shadowColor = nil;
+	self.layer.shadowOpacity = 0;
+	self.layer.shadowRadius = 0;
+	self.layer.shadowOffset = CGSizeMake(0, 0);
+	self.layer.masksToBounds = YES;
 }
 
 - (void)_setupForChevronButton
