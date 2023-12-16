@@ -217,7 +217,7 @@ static NSArray* __notifiedProperties = nil;
 
 + (UIColor*)_defaultProminentShadowColor
 {
-	return [UIColor.blackColor colorWithAlphaComponent:0.15];
+	return [UIColor.blackColor colorWithAlphaComponent:0.22];
 }
 
 + (UIColor*)_defaultSecondaryShadowColor
@@ -238,21 +238,21 @@ static NSArray* __notifiedProperties = nil;
 {
 	_imageShadow = [self _defaultImageShadow];
 
-	if(@available(iOS 17.0, *))
-	{
-		_imageShadow.shadowColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-			UIColor* rv = [traitCollection objectForTrait:_LNPopupDominantColorTrait.class];
-			if(rv == nil)
-			{
-				rv = LNPopupBarAppearance._defaultSecondaryShadowColor;
-			}
-			else
-			{
-				rv = [rv colorWithAlphaComponent:0.15];
-			}
-			return rv;
-		}];
-	}
+//	if(@available(iOS 17.0, *))
+//	{
+//		_imageShadow.shadowColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+//			UIColor* rv = [traitCollection objectForTrait:_LNPopupDominantColorTrait.class];
+//			if(rv == nil)
+//			{
+//				rv = LNPopupBarAppearance._defaultSecondaryShadowColor;
+//			}
+//			else
+//			{
+//				rv = [rv colorWithAlphaComponent:0.15];
+//			}
+//			return rv;
+//		}];
+//	}
 }
 
 - (void)configureWithStaticImageShadow
@@ -279,7 +279,12 @@ static NSArray* __notifiedProperties = nil;
 	UIBarAppearance* temp = [UIBarAppearance new];
 	[temp configureWithDefaultBackground];
 	
-	self.floatingBackgroundColor = temp.backgroundColor;
+	self.floatingBackgroundColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+		if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
+			return [UIColor.whiteColor colorWithAlphaComponent:0.045];
+		}
+		return UIColor.clearColor;
+	}];;
 	self.floatingBackgroundImage = temp.backgroundImage;
 	self.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
 	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;

@@ -18,6 +18,7 @@
 #import "LNPopupControllerExample-Swift.h"
 #endif
 #import "LNPopupDemoContextMenuInteraction.h"
+#import "LNPopupControllerExample-Bridging-Header.h"
 @import UIKit;
 
 @interface DemoView : UIView @end
@@ -106,11 +107,24 @@
 	{
 		self.view.backgroundColor = UIColor.systemBackgroundColor;
 	}
+	
+//	UIViewController* settings = [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateViewControllerWithIdentifier:@"SettingsView"];
+//	[self addChildViewController:settings];
+//	[self.view insertSubview:settings.view atIndex:0];
+//	settings.view.frame = self.view.bounds;
+//	[settings didMoveToParentViewController:self];
 }
 
 - (void)viewSafeAreaInsetsDidChange
 {
 	[super viewSafeAreaInsetsDidChange];
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+	[super traitCollectionDidChange:previousTraitCollection];
+	
+	[self updateBottomDockingViewEffectForBarPresentation];
 }
 
 - (void)viewIsAppearing:(BOOL)animated
@@ -188,18 +202,28 @@
 	if(popupBarStyle == LNPopupBarStyleFloating || (popupBarStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 #endif
 	{
+		UIBlurEffect* effect;
+		if(self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+		{
+			effect = [UIBlurEffect effectWithBlurRadius:30];
+		}
+		else
+		{
+			effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
+		}
+		
 #if LNPOPUP
-		nba.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
+		nba.backgroundEffect = effect;
 		
 #endif
 		UITabBarAppearance* tba = [UITabBarAppearance new];
 		[tba configureWithDefaultBackground];
-		tba.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
+		tba.backgroundEffect = effect;
 		self.tabBarController.tabBar.standardAppearance = tba;
 		
 		UIToolbarAppearance* ta = [UIToolbarAppearance new];
 		[ta configureWithDefaultBackground];
-		ta.backgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
+		ta.backgroundEffect = effect;
 		self.navigationController.toolbar.standardAppearance = ta;
 	}
 	
@@ -301,7 +325,6 @@
 		return;
 	}
 	
-//	UIViewController* demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTableViewController"];
 	UIViewController* demoVC = [DemoPopupContentViewController new];
 	
 	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonStyle] unsignedIntegerValue];
@@ -315,8 +338,6 @@
 	targetVC.popupInteractionStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingInteractionStyle] unsignedIntegerValue];
 	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
 	
-	targetVC.popupBar.standardAppearance.marqueeScrollEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled];
-	targetVC.popupBar.standardAppearance.coordinateMarqueeScroll = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeCoordinationEnabled];
 	targetVC.allowPopupHapticFeedbackGeneration = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHapticFeedbackEnabled];
 	
 	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingVisualEffectViewBlurEffect];
@@ -336,8 +357,6 @@
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableCustomizations])
 	{
 		LNPopupBarAppearance* appearance = [LNPopupBarAppearance new];
-		appearance.marqueeScrollEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled];
-		appearance.coordinateMarqueeScroll = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeCoordinationEnabled];
 		
 		NSMutableParagraphStyle* paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 		paragraphStyle.alignment = NSTextAlignmentRight;
@@ -363,6 +382,9 @@
 		targetVC.popupBar.tintColor = UIColor.yellowColor;
 		targetVC.popupBar.standardAppearance = appearance;
 	}
+	
+	targetVC.popupBar.standardAppearance.marqueeScrollEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled];
+	targetVC.popupBar.standardAppearance.coordinateMarqueeScroll = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeCoordinationEnabled];
 	
 	targetVC.shouldExtendPopupBarUnderSafeArea = [NSUserDefaults.settingDefaults boolForKey:PopupSettingExtendBar];
 	

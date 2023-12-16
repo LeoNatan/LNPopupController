@@ -10,7 +10,7 @@
         <!--Settings-->
         <scene sceneID="i41-nV-z2g">
             <objects>
-                <hostingController id="27B-rg-hpf" customClass="SettingsViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                <hostingController storyboardIdentifier="SettingsView" id="27B-rg-hpf" customClass="SettingsViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="Settings" leftItemsSupplementBackButton="YES" largeTitleDisplayMode="never" id="KGL-NH-gfY">
                         <barButtonItem key="leftBarButtonItem" title="Reset" id="03g-f5-rco">
                             <connections>
