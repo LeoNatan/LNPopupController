@@ -57,7 +57,7 @@
 	{
 		_lastStyle = self.view.traitCollection.userInterfaceStyle;
 		
-		if([NSUserDefaults.settingDefaults boolForKey:DemoAppDisableDemoSceneColors] == NO)
+		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
 		{
 			self.view.backgroundColor = LNSeedAdaptiveInvertedColor(@"Popup");
 		}
@@ -77,7 +77,7 @@
 
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection animated:(BOOL)animated
 {
-	BOOL useCompact = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingsBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact;
+	BOOL useCompact = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact;
 	
 	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"play.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
 	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
@@ -159,13 +159,13 @@
 	self.popupItem.title = [[LoremIpsum wordsWithNumber:arc4random_uniform(3) + 2] capitalizedString];
 	self.popupItem.subtitle = [[LoremIpsum wordsWithNumber:arc4random_uniform(12) + 4] valueForKey:@"li_stringByCapitalizingFirstLetter"];
 	
-	if([NSUserDefaults.standardUserDefaults boolForKey:__LNForceRTL])
+	if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingForceRTL])
 	{
 		self.popupItem.title = [self.popupItem.title stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
 		self.popupItem.subtitle = [self.popupItem.subtitle stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
 	}
 	
-	if([NSUserDefaults.settingDefaults boolForKey:DemoAppDisableDemoSceneColors] == NO)
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
 	{
 		self.popupItem.image = [UIImage imageNamed:@"genre7"];
 	}

@@ -13,7 +13,6 @@ import LNPopupController
 import LoremIpsum
 
 class DemoAlbumTableViewController: UITableViewController {
-
 	@IBOutlet var demoAlbumImageView: UIImageView!
 	
 	var images: [UIImage]
@@ -50,7 +49,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		
 #if LNPOPUP
-		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSettingsBarStyle)  as? Int ?? 0)!
+		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSetting.barStyle)  as? Int ?? 0)!
 		tabBarController?.popupBar.barStyle = barStyle
 	
 		if tabBarController?.popupBar.effectiveBarStyle == .floating {
@@ -74,7 +73,7 @@ class DemoAlbumTableViewController: UITableViewController {
 			var title = LoremIpsum.title
 			var sentence = LoremIpsum.sentence
 			
-			if UserDefaults.standard.bool(forKey: __LNForceRTL) {
+			if UserDefaults.standard.bool(forKey: PopupSetting.forceRTL) {
 				title = title.applyingTransform(.latinToHebrew, reverse: false)!
 				sentence = sentence.applyingTransform(.latinToHebrew, reverse: false)!
 			}

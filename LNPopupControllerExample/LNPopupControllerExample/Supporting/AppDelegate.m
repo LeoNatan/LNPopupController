@@ -46,7 +46,7 @@
 {
 	@autoreleasepool 
 	{
-		if([NSUserDefaults.standardUserDefaults boolForKey:__LNForceRTL] == NO)
+		if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingForceRTL] == NO)
 		{
 			return;
 		}
