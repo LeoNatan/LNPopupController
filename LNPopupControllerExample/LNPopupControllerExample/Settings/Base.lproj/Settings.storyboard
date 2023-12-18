@@ -7,25 +7,13 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Settings-->
+        <!--Settings View Controller-->
         <scene sceneID="i41-nV-z2g">
             <objects>
                 <hostingController storyboardIdentifier="SettingsView" id="27B-rg-hpf" customClass="SettingsViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" title="Settings" leftItemsSupplementBackButton="YES" largeTitleDisplayMode="never" id="KGL-NH-gfY">
-                        <barButtonItem key="leftBarButtonItem" title="Reset" id="03g-f5-rco">
-                            <connections>
-                                <action selector="reset" destination="27B-rg-hpf" id="Kkz-0f-p6h"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="ejA-s1-wOp">
-                            <connections>
-                                <segue destination="tiC-cj-WCz" kind="unwind" unwindAction="unwindToGallery:" id="K3t-nG-jua"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" largeTitleDisplayMode="never" id="KGL-NH-gfY"/>
                 </hostingController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HqC-rD-hqG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="tiC-cj-WCz" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1740" y="-2439"/>
         </scene>
