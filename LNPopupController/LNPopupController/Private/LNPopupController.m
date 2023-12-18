@@ -998,6 +998,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	static NSString* vPTIS = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
+		//visualProvider.toolbarIsSmall
 		vPTIS = _LNPopupDecodeBase64String(_vPTIS);
 	});
 	

@@ -73,10 +73,12 @@ class DemoAlbumTableViewController: UITableViewController {
 			var title = LoremIpsum.title
 			var sentence = LoremIpsum.sentence
 			
+#if LNPOPUP
 			if UserDefaults.standard.bool(forKey: PopupSetting.forceRTL) {
 				title = title.applyingTransform(.latinToHebrew, reverse: false)!
 				sentence = sentence.applyingTransform(.latinToHebrew, reverse: false)!
 			}
+#endif
 			
 			titles.append(title)
 			subtitles.append(sentence)

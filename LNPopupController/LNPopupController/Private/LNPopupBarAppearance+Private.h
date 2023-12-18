@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<_LNPopupBarAppearanceDelegate> delegate;
 
+- (UIBlurEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection;
+
 @end
 
 NS_ASSUME_NONNULL_END

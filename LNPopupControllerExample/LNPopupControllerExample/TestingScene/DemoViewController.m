@@ -202,15 +202,7 @@
 	if(popupBarStyle == LNPopupBarStyleFloating || (popupBarStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 #endif
 	{
-		UIBlurEffect* effect;
-		if(self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
-		{
-			effect = [UIBlurEffect effectWithBlurRadius:30];
-		}
-		else
-		{
-			effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial];
-		}
+		UIBlurEffect* effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemThinMaterial];
 		
 #if LNPOPUP
 		nba.backgroundEffect = effect;
@@ -416,7 +408,12 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	segue.destinationViewController.hidesBottomBarWhenPushed = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHidesBottomBarWhenPushed];
+	segue.destinationViewController.hidesBottomBarWhenPushed =
+#if LNPOPUP
+	[NSUserDefaults.settingDefaults boolForKey:PopupSettingHidesBottomBarWhenPushed];
+#else
+	YES;
+#endif
 	if([segue.destinationViewController isKindOfClass:DemoViewController.class])
 	{
 		[(DemoViewController*)segue.destinationViewController setColorSeedString:self.colorSeedString];

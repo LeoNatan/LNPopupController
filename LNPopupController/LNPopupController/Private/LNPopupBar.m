@@ -472,6 +472,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self layoutIfNeeded];
 	
 	[self._barDelegate _traitCollectionForPopupBarDidChange:self];
+	if(previousTraitCollection.userInterfaceStyle != self.traitCollection.userInterfaceStyle)
+	{
+		[self _appearanceDidChange];
+	}
+	
 	if(UIContentSizeCategoryCompareToCategory(previousTraitCollection.preferredContentSizeCategory, self.traitCollection.preferredContentSizeCategory) != NSOrderedSame)
 	{
 		[self._barDelegate _popupBarMetricsDidChange:self];
@@ -852,6 +857,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)setStandardAppearance:(LNPopupBarAppearance *)standardAppearance
 {
+	if([_standardAppearance isEqual:standardAppearance] == YES)
+	{
+		return;
+	}
+	
 	_standardAppearance = [standardAppearance copy];
 	if(_standardAppearance == nil)
 	{
@@ -912,7 +922,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	if(isFloating)
 	{
-		_contentView.effect = self.activeAppearance.floatingBackgroundEffect;
+		id effect = [self.activeAppearance floatingBackgroundEffectForTraitCollection:self.traitCollection];
+		_contentView.effect = effect;
 		
 		__auto_type floatingBackgroundColor = self.activeAppearance.floatingBackgroundColor;
 		__auto_type floatingBackgroundImage = self.activeAppearance.floatingBackgroundImage;
@@ -1705,9 +1716,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
-		[_titleLabel restartLabel];
-		[_subtitleLabel restartLabel];
-		
 		[self _recalculateCoordinatedMarqueeScrollIfNeeded];
 	}
 }

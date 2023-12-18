@@ -27,6 +27,17 @@
 	return self;
 }
 
+- (void)performObjectReturn:(NSInvocation*)anInvocation
+{
+	[_chain enumerateObjectsUsingBlock:^(UIBarAppearance * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		if([obj respondsToSelector:anInvocation.selector])
+		{
+			[anInvocation invokeWithTarget:obj];
+			*stop = YES;
+		}
+	}];
+}
+
 - (id)objectForKey:(NSString*)key
 {
 	__block id rv = nil;
@@ -84,35 +95,47 @@
 	
 	NSString* key = NSStringFromSelector(anInvocation.selector);
 	
-	if(strncmp(anInvocation.methodSignature.methodReturnType, @encode(id), 1) == 0)
+	if(strncmp(anInvocation.methodSignature.methodReturnType, @encode(id), 1) == 0 && [NSStringFromSelector(anInvocation.selector) hasSuffix:@":"])
+	{
+		[anInvocation retainArguments];
+		[self performObjectReturn:anInvocation];
+		return;
+	}
+	else if(strncmp(anInvocation.methodSignature.methodReturnType, @encode(id), 1) == 0)
 	{
 		//id
+		[anInvocation retainArguments];
 		id rv = [self objectForKey:key];
 		[anInvocation setReturnValue:&rv];
+		return;
 	}
 	else if(strncmp(anInvocation.methodSignature.methodReturnType, @encode(NSInteger), 1) == 0 || strncmp(anInvocation.methodSignature.methodReturnType, @encode(NSUInteger), 1) == 0)
 	{
 		//Integers
 		NSUInteger rv = [self unsignedIntegerForKey:key];
 		[anInvocation setReturnValue:&rv];
+		return;
 	}
 	else if(strncmp(anInvocation.methodSignature.methodReturnType, @encode(BOOL), 1) == 0)
 	{
 		//Boolean
 		BOOL rv = [self boolForKey:key];
 		[anInvocation setReturnValue:&rv];
+		return;
 	}
 	else if(strncmp(anInvocation.methodSignature.methodReturnType, @encode(double), 1) == 0)
 	{
 		//Double
 		double rv = [self doubleForKey:key];
 		[anInvocation setReturnValue:&rv];
+		return;
 	}
 	else if(strncmp(anInvocation.methodSignature.methodReturnType, @encode(float), 1) == 0)
 	{
 		//Float
 		float rv = [self doubleForKey:key];
 		[anInvocation setReturnValue:&rv];
+		return;
 	}
 	else
 	{

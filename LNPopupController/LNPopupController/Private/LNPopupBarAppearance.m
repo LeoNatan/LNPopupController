@@ -17,6 +17,11 @@ static NSString* const aCC = @"YXBwZWFyYW5jZTpjYXRlZ29yaWVzQ2hhbmdlZDo=";
 static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 
 @implementation LNPopupBarAppearance
+{
+	BOOL _wantsDynamicFloatingBackgroundEffect;
+}
+
+@synthesize floatingBackgroundEffect=_floatingBackgroundEffect;
 
 static NSArray* __notifiedProperties = nil;
 
@@ -182,6 +187,30 @@ static NSArray* __notifiedProperties = nil;
 	return rv;
 }
 
+- (UIBlurEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection
+{
+	if(_wantsDynamicFloatingBackgroundEffect == NO)
+	{
+		return _floatingBackgroundEffect;
+	}
+	
+	if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+	{
+		return [UIBlurEffect effectWithStyle:UIBlurEffectStyleProminent];
+	}
+	
+	
+	return [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
+}
+
+- (void)setFloatingBackgroundEffect:(UIBlurEffect *)floatingBackgroundEffect
+{
+	_wantsDynamicFloatingBackgroundEffect = NO;
+	[self willChangeValueForKey:@"floatingBackgroundEffect"];
+	_floatingBackgroundEffect = floatingBackgroundEffect;
+	[self didChangeValueForKey:@"floatingBackgroundEffect"];
+}
+
 - (void)configureWithDefaultHighlightColor
 {
 	_highlightColor = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
@@ -276,18 +305,11 @@ static NSArray* __notifiedProperties = nil;
 
 - (void)configureWithDefaultFloatingBackground
 {
-	UIBarAppearance* temp = [UIBarAppearance new];
-	[temp configureWithDefaultBackground];
-	
-	self.floatingBackgroundColor = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-		if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark) {
-			return [UIColor.whiteColor colorWithAlphaComponent:0.045];
-		}
-		return UIColor.clearColor;
-	}];;
-	self.floatingBackgroundImage = temp.backgroundImage;
+	self.floatingBackgroundColor = nil;
+	self.floatingBackgroundImage = nil;
 	self.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
-	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
+	_wantsDynamicFloatingBackgroundEffect = YES;
+	self.floatingBackgroundImageContentMode = UIViewContentModeScaleToFill;
 	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;
 	
 	[self _notify];
@@ -301,6 +323,7 @@ static NSArray* __notifiedProperties = nil;
 	self.floatingBackgroundColor = temp.backgroundColor;
 	self.floatingBackgroundImage = temp.backgroundImage;
 	self.floatingBackgroundEffect = temp.backgroundEffect;
+	_wantsDynamicFloatingBackgroundEffect = NO;
 	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
 	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;
 	
@@ -315,6 +338,7 @@ static NSArray* __notifiedProperties = nil;
 	self.floatingBackgroundColor = temp.backgroundColor;
 	self.floatingBackgroundImage = temp.backgroundImage;
 	self.floatingBackgroundEffect = temp.backgroundEffect;
+	_wantsDynamicFloatingBackgroundEffect = NO;
 	self.floatingBackgroundImageContentMode = temp.backgroundImageContentMode;
 	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;
 	

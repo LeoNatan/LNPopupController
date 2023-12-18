@@ -132,8 +132,9 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 - (void)setWantsCutout:(BOOL)wantsCutout animated:(BOOL)animated
 {
 	_wantsCutout = wantsCutout;
+//	_wantsCutout = NO;
 	
-	_targetAlpha = wantsCutout ? 0.0 : 1.0;
+	_targetAlpha = _wantsCutout ? 0.0 : 1.0;
 	if(animated == NO || self.superview.alpha == 0.0 || self.superview.isHidden)
 	{
 		[_displayLink invalidate];
@@ -183,11 +184,6 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 	
 	[[UIColor.blackColor colorWithAlphaComponent:_currentAlpha] setFill];
 	[[UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.floatingFrame, 1, 1) cornerRadius:self.floatingCornerRadius] fill];
-	
-	if(self.wantsCutout)
-	{
-		
-	}
 	
 	UIGraphicsPopContext();
 }

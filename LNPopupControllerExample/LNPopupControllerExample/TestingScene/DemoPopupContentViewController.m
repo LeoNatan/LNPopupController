@@ -156,8 +156,19 @@
 		return;
 	}
 	
-	self.popupItem.title = [[LoremIpsum wordsWithNumber:arc4random_uniform(3) + 2] capitalizedString];
-	self.popupItem.subtitle = [[LoremIpsum wordsWithNumber:arc4random_uniform(12) + 4] valueForKey:@"li_stringByCapitalizingFirstLetter"];
+	uint32_t titleLowerLimit = 2;
+	uint32_t titleUpperLimit = 5;
+	
+	uint32_t subtitleLowerLimit = 4;
+	uint32_t subtitleUpperLimit = 16;
+	
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled] == YES)
+	{
+		subtitleLowerLimit = 10;
+	}
+	
+	self.popupItem.title = [[LoremIpsum wordsWithNumber:arc4random_uniform(titleUpperLimit - titleLowerLimit) + titleLowerLimit] capitalizedString];
+	self.popupItem.subtitle = [[LoremIpsum wordsWithNumber:arc4random_uniform(subtitleUpperLimit - subtitleLowerLimit) + subtitleLowerLimit] valueForKey:@"li_stringByCapitalizingFirstLetter"];
 	
 	if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingForceRTL])
 	{
