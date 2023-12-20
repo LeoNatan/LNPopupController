@@ -8,6 +8,7 @@
 
 #import "LNPopupBarAppearanceChainProxy.h"
 
+__attribute__((objc_direct_members))
 @implementation LNPopupBarAppearanceChainProxy
 
 - (NSString *)description

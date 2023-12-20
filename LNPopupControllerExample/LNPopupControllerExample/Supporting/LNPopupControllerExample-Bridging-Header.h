@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIBlurEffect ()
 
++ (instancetype)_effectWithStyle:(UIBlurEffectStyle)arg1 tintColor:(UIColor*)arg2 invertAutomaticStyle:(BOOL)arg3;
++ (instancetype)_effectWithTintColor:(UIColor*)arg1;
 + (instancetype)effectWithBlurRadius:(CGFloat)arg1;
 + (instancetype)effectWithVariableBlurRadius:(CGFloat)arg1 imageMask:(UIImage*)arg2 API_AVAILABLE(ios(17.0));
 

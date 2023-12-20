@@ -216,7 +216,7 @@ static NSArray* __notifiedProperties = nil;
 	_highlightColor = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
 		if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
 		{
-			return [UIColor.whiteColor colorWithAlphaComponent:0.15];
+			return [UIColor.whiteColor colorWithAlphaComponent:0.1];
 		}
 		else
 		{
@@ -305,7 +305,16 @@ static NSArray* __notifiedProperties = nil;
 
 - (void)configureWithDefaultFloatingBackground
 {
-	self.floatingBackgroundColor = nil;
+	self.floatingBackgroundColor = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+		if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+		{
+			return [UIColor.whiteColor colorWithAlphaComponent:0.1];
+		}
+		else
+		{
+			return UIColor.clearColor;
+		}
+	}];;
 	self.floatingBackgroundImage = nil;
 	self.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
 	_wantsDynamicFloatingBackgroundEffect = YES;

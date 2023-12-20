@@ -72,8 +72,19 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 
 #pragma mark Popup Controller
 
-@interface LNPopupController () <_LNPopupItemDelegate, _LNPopupBarDelegate> @end
+@interface LNPopupController () <_LNPopupItemDelegate, _LNPopupBarDelegate>
 
+- (void)_applicationDidEnterBackground;
+- (void)_applicationWillEnterForeground;
+- (void)_popupBarTapGestureRecognized:(UITapGestureRecognizer*)tgr;
+- (void)_popupBarLongPressGestureRecognized:(UILongPressGestureRecognizer*)lpgr;
+- (void)_closePopupContent;
+- (void)_popupBarPresentationByUserPanGestureHandler:(UIPanGestureRecognizer*)pgr;
+- (void)_120HzTick;
+
+@end
+
+__attribute__((objc_direct_members))
 @implementation LNPopupController
 {
 	__weak LNPopupItem* _currentPopupItem;
@@ -821,54 +832,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[self closePopupAnimated:YES completion:nil];
 }
 
-- (void)_popupItem_update_title
-{
-	self.popupBarStorage.attributedTitle = _currentPopupItem.attributedTitle;
-}
-
-- (void)_popupItem_update_subtitle
-{
-	self.popupBarStorage.attributedSubtitle = _currentPopupItem.attributedSubtitle;
-}
-
-- (void)_popupItem_update_progress
-{
-	[UIView performWithoutAnimation:^{
-		[self.popupBarStorage.progressView setProgress:_currentPopupItem.progress animated:NO];
-	}];
-}
-
-- (void)_popupItem_update_accessibilityLabel
-{
-	self.popupBarStorage.accessibilityCenterLabel = _currentPopupItem.accessibilityLabel;
-}
-
-- (void)_popupItem_update_accessibilityHint
-{
-	self.popupBarStorage.accessibilityCenterHint = _currentPopupItem.accessibilityHint;
-}
-
 - (void)_reconfigureBarItems
 {
 	[self.popupBarStorage _delayBarButtonLayout];
 	[self.popupBarStorage setLeadingBarButtonItems:_currentPopupItem.leadingBarButtonItems];
 	[self.popupBarStorage setTrailingBarButtonItems:_currentPopupItem.trailingBarButtonItems];
 	[self.popupBarStorage _layoutBarButtonItems];
-}
-
-- (void)_popupItem_update_leadingBarButtonItems
-{
-	[self _reconfigureBarItems];
-}
-
-- (void)_popupItem_update_trailingBarButtonItems
-{
-	[self _reconfigureBarItems];
-}
-
-- (void)_popupItem_update_standardAppearance
-{
-	[self.popupBarStorage _recalcActiveAppearanceChain];
 }
 
 - (void)_popupItem:(LNPopupItem*)popupItem didChangeToValue:(id)value forKey:(NSString*)key
@@ -1569,5 +1538,52 @@ extern float UIAnimationDragCoefficient(void);
 }
 
 - (void)_120HzTick {}
+
+@end
+
+@interface LNPopupController (PopupItemUpdateSupport) @end
+@implementation LNPopupController (PopupItemUpdateSupport)
+
+- (void)_popupItem_update_title
+{
+	self.popupBarStorage.attributedTitle = _currentPopupItem.attributedTitle;
+}
+
+- (void)_popupItem_update_subtitle
+{
+	self.popupBarStorage.attributedSubtitle = _currentPopupItem.attributedSubtitle;
+}
+
+- (void)_popupItem_update_progress
+{
+	[UIView performWithoutAnimation:^{
+		[self.popupBarStorage.progressView setProgress:_currentPopupItem.progress animated:NO];
+	}];
+}
+
+- (void)_popupItem_update_accessibilityLabel
+{
+	self.popupBarStorage.accessibilityCenterLabel = _currentPopupItem.accessibilityLabel;
+}
+
+- (void)_popupItem_update_accessibilityHint
+{
+	self.popupBarStorage.accessibilityCenterHint = _currentPopupItem.accessibilityHint;
+}
+
+- (void)_popupItem_update_leadingBarButtonItems
+{
+	[self _reconfigureBarItems];
+}
+
+- (void)_popupItem_update_trailingBarButtonItems
+{
+	[self _reconfigureBarItems];
+}
+
+- (void)_popupItem_update_standardAppearance
+{
+	[self.popupBarStorage _recalcActiveAppearanceChain];
+}
 
 @end

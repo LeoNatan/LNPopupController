@@ -208,8 +208,16 @@ static BOOL __animatesItemSetter = NO;
 
 @interface LNPopupBar () <_LNPopupToolbarLayoutDelegate>
 
+- (void)_windowWillRotate:(NSNotification*)note;
+- (void)_windowDidRotate:(NSNotification*)note;
+- (UIFont*)_titleFont;
+- (UIColor*)_titleColor;
+- (UIFont*)_subtitleFont;
+- (UIColor*)_subtitleColor;
+
 @end
 
+__attribute__((objc_direct_members))
 @implementation LNPopupBar
 {
 	BOOL _delaysBarButtonItemLayout;
@@ -1991,12 +1999,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		return;
 	}
 	
-	[animator addAnimations:^{
-		if(_customBarViewController == nil || _customBarViewController.wantsDefaultHighlightGestureRecognizer == YES)
-		{
+	if(_customBarViewController == nil || _customBarViewController.wantsDefaultHighlightGestureRecognizer == YES)
+	{
+		[animator addAnimations:^{
 			[self setHighlighted:YES animated:YES];
-		}
-	}];
+		}];
+	}
 }
 
 - (void)pointerInteraction:(UIPointerInteraction *)interaction willExitRegion:(UIPointerRegion *)region animator:(id<UIPointerInteractionAnimating>)animator  API_AVAILABLE(ios(13.4))
@@ -2008,12 +2016,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		return;
 	}
 	
-	[animator addAnimations:^{
-		if(_customBarViewController == nil || _customBarViewController.wantsDefaultHighlightGestureRecognizer == YES)
-		{
+	if(_customBarViewController == nil || _customBarViewController.wantsDefaultHighlightGestureRecognizer == YES)
+	{
+		[animator addAnimations:^{
 			[self setHighlighted:NO animated:YES];
-		}
-	}];
+		}];
+	}
 }
 
 #pragma mark _LNPopupToolbarLayoutDelegate
