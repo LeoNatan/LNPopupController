@@ -156,7 +156,7 @@ The defaults are:
 
   * Snap interaction style
 
-  * Chevron close button style
+  * Grabber close button style
 
   * No progress view style
 
