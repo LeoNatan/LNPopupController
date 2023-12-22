@@ -267,7 +267,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 /// Call this method to update the popup bar appearance (style, tint color, etc.) according to its docking view. You should call this after updating the docking view.
 ///
 /// If the popup bar's @c inheritsAppearanceFromDockingView property is set to @c false, or a custom popup bar view controller is used, this method has no effect. See @c LNPopupBar.inheritsAppearanceFromDockingView and @c LNPopupBar.customBarViewController for more information.
-- (void)updatePopupBarAppearance LN_DEPRECATED_API("Use setNeedsPopupBarAppearanceUpdate instead.");
+- (void)updatePopupBarAppearance LN_UNAVAILABLE_API("Use setNeedsPopupBarAppearanceUpdate instead.");
 
 @end
 

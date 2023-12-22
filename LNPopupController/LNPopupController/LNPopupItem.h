@@ -94,9 +94,9 @@ NS_SWIFT_UI_ACTOR
 
 @interface LNPopupItem (Deprecated)
 
-@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems LN_DEPRECATED_API("Use leadingBarButtonItems instead.");
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems LN_UNAVAILABLE_API("Use leadingBarButtonItems instead.");
 
-@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems LN_DEPRECATED_API("Use barButtonItems or trailingBarButtonItems instead.");
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems LN_UNAVAILABLE_API("Use barButtonItems or trailingBarButtonItems instead.");
 
 @end
 

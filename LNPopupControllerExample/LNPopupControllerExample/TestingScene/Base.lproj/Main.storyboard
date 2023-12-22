@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -389,17 +390,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bottom" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N4q-gh-14d">
-                                <rect key="frame" x="185.66666666666666" y="824.66666666666663" width="58.666666666666657" height="20.333333333333371"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Bottom" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N4q-gh-14d">
+                                <rect key="frame" x="185.66666666666666" y="828.66666666666663" width="58.666666666666657" height="20.333333333333371"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DxD-7y-6Na">
-                                <rect key="frame" x="361" y="449.66666666666669" width="49" height="33"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <state key="normal" title="Next ▸">
-                                    <color key="titleColor" systemColor="labelColor"/>
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DxD-7y-6Na">
+                                <rect key="frame" x="349.33333333333331" y="449" width="74.666666666666686" height="34.333333333333314"/>
+                                <color key="tintColor" systemColor="labelColor"/>
+                                <state key="normal" title="Next">
+                                    <imageReference key="image" image="arrowtriangle.forward.fill" catalog="system" symbolScale="small"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="8" scale="small"/>
                                 </state>
+                                <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Next" imagePadding="5">
+                                    <imageReference key="image" image="arrowtriangle.forward.fill" catalog="system" symbolScale="default"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" configurationType="pointSize" pointSize="8" scale="small"/>
+                                    <fontDescription key="titleFontDescription" style="UICTFontTextStyleHeadline"/>
+                                </buttonConfiguration>
                                 <connections>
                                     <segue destination="l54-z5-xcG" kind="show" id="48J-eM-45Z"/>
                                 </connections>
@@ -414,8 +421,8 @@
                                     <segue destination="Kpt-cx-19r" kind="unwind" identifier="UnwindSegue" unwindAction="unwindToGallery:" id="zaT-k5-N20"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Top" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dF7-sj-hbZ">
-                                <rect key="frame" x="200.33333333333334" y="107" width="29.333333333333343" height="20.333333333333329"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Top" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dF7-sj-hbZ">
+                                <rect key="frame" x="200.33333333333334" y="103" width="29.333333333333343" height="20.333333333333329"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -444,18 +451,18 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="KIX-8f-BFw" firstAttribute="centerX" secondItem="N4q-gh-14d" secondAttribute="centerX" id="0fv-yD-Bxc"/>
-                            <constraint firstItem="KIX-8f-BFw" firstAttribute="bottom" secondItem="N4q-gh-14d" secondAttribute="bottom" constant="4" id="7gK-sx-KzT"/>
+                            <constraint firstItem="KIX-8f-BFw" firstAttribute="bottom" secondItem="N4q-gh-14d" secondAttribute="bottom" id="7gK-sx-KzT"/>
                             <constraint firstItem="sXy-Ye-lrV" firstAttribute="centerX" secondItem="KIX-8f-BFw" secondAttribute="centerX" id="Iq1-5t-K4P"/>
                             <constraint firstAttribute="trailingMargin" secondItem="PfZ-Ec-LGF" secondAttribute="trailing" id="L3U-iD-b4L"/>
                             <constraint firstItem="dF7-sj-hbZ" firstAttribute="centerX" secondItem="KIX-8f-BFw" secondAttribute="centerX" id="NwX-Ih-e92"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="DxD-7y-6Na" secondAttribute="trailing" id="QKL-fS-2j5"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="DxD-7y-6Na" secondAttribute="trailing" constant="-14" id="QKL-fS-2j5"/>
                             <constraint firstItem="DxD-7y-6Na" firstAttribute="centerY" secondItem="1ke-mH-VCb" secondAttribute="centerY" priority="999" id="Rzj-f0-6l2"/>
                             <constraint firstItem="PfZ-Ec-LGF" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" id="fhX-Yz-XdE"/>
                             <constraint firstItem="DxD-7y-6Na" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ke-mH-VCb" secondAttribute="leadingMargin" id="jRx-Ij-5IR"/>
                             <constraint firstItem="PfZ-Ec-LGF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ke-mH-VCb" secondAttribute="leadingMargin" id="nWt-wC-3nt"/>
-                            <constraint firstItem="sXy-Ye-lrV" firstAttribute="centerY" secondItem="DxD-7y-6Na" secondAttribute="centerY" id="rhO-bh-rQb"/>
-                            <constraint firstItem="KIX-8f-BFw" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="DxD-7y-6Na" secondAttribute="bottom" constant="20" id="rkC-wh-cOe"/>
-                            <constraint firstItem="dF7-sj-hbZ" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" constant="4" id="wc3-WW-zft"/>
+                            <constraint firstItem="sXy-Ye-lrV" firstAttribute="centerY" secondItem="DxD-7y-6Na" secondAttribute="centerY" priority="999" id="rhO-bh-rQb"/>
+                            <constraint firstItem="N4q-gh-14d" firstAttribute="top" relation="greaterThanOrEqual" secondItem="DxD-7y-6Na" secondAttribute="bottom" constant="8" id="rkC-wh-cOe"/>
+                            <constraint firstItem="dF7-sj-hbZ" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" id="wc3-WW-zft"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Tab" image="1.square.fill" catalog="system" id="wDA-8g-o9a"/>
@@ -626,6 +633,7 @@
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
         <image name="1.square.fill" catalog="system" width="128" height="114"/>
+        <image name="arrowtriangle.forward.fill" catalog="system" width="128" height="113"/>
         <image name="dock.arrow.down.rectangle" catalog="system" width="128" height="93"/>
         <image name="dock.arrow.up.rectangle" catalog="system" width="128" height="93"/>
         <image name="gears" width="25" height="25"/>

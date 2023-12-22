@@ -251,22 +251,6 @@ navigationController?.popupBar.tintColor = .yellow
 
 <p align="center"><img src="./Supplements/floating_custom.png" width="360"/> <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/></p>
 
-#### Custom Popup Bars
-
-The framework supports implementing custom popup bars.
-
-<p align="center"><img src="./Supplements/custom_bar.png" width="360"/></p>
-
-To implement a custom popup bar, you subclass `LNPopupCustomBarViewController`.
-
-In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's `preferredContentSize` property with the preferred popup bar height. Override any of the `wantsDefaultTapGestureRecognizer`, `wantsDefaultPanGestureRecognizer` and/or `wantsDefaultHighlightGestureRecognizer` properties to disable the default gesture recognizers functionality in your custom popup bar.
-
-In your subclass, implement the `popupItemDidUpdate()` method to be notified of updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
-
-Finally, set the `customBarViewController` property of the popup bar object to an instance of your `LNPopupCustomBarViewController` subclass. This will automatically change the bar style to `LNPopupBar.Style.custom`.
-
-The included demo project includes two example custom popup bar scenes.
-
 #### System Interactions
 
 The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set to `true`, the popup bar will transition to the bottom of the pushed controller's view. Setting  `isToolbarHidden = true` and calling `setToolbarHidden(_:animated:)` are also supported.
@@ -290,6 +274,24 @@ For custom popup bar controllers, the `LNPopupCustomBarViewController` class imp
 Starting with iOS 15, scroll edge appearance is automatically disabled for toolbars and tab bars when a popup bar is presented, regardless of the scroll position of the content. Once the popup bar is dismissed, the scroll edge appearance is restored.
 
 <p align="center"><img src="./Supplements/scroll_edge_appearance.gif" width="360"/></p>
+
+#### Custom Popup Bars
+
+The framework supports implementing custom popup bars.
+
+<p align="center"><img src="./Supplements/custom_bar.png" width="360"/></p>
+
+To implement a custom popup bar, you subclass `LNPopupCustomBarViewController`.
+
+In your `LNPopupCustomBarViewController` subclass, build your popup bar's view hierarchy and set the controller's `preferredContentSize` property with the preferred popup bar height. Override any of the `wantsDefaultTapGestureRecognizer`, `wantsDefaultPanGestureRecognizer` and/or `wantsDefaultHighlightGestureRecognizer` properties to disable the default gesture recognizers functionality in your custom popup bar.
+
+In your subclass, implement the `popupItemDidUpdate()` method to be notified of updates to the popup content view controller's item, or when a new popup content view controller is presented (with a new popup item). You must call the `super` implementation of this method.
+
+Finally, set the `customBarViewController` property of the popup bar object to an instance of your `LNPopupCustomBarViewController` subclass. This will automatically change the bar style to `LNPopupBar.Style.custom`.
+
+The included demo project includes two example custom popup bar scenes.
+
+**Note:** Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the UIKit system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the many customization APIs to tweak the standard bar styles to fit your app’s design.
 
 #### ProMotion Support
 
@@ -353,9 +355,9 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 
 ## Notes
 
-* Legacy non-translucent tab bar and toolbars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars, and supporting those is not a priority for `LNPopupController`
-  * The correct way to achieve an opaque bar is to use the `UIBarAppearance.configureWithOpaqueBackground()` API, which is supported by `LNPopupController`
-* Manually setting bottom bar properties, such as setting a tab bar’s or a toolbar’s `isHidden = true` **is explicitly discouraged by Apple and not supported by the framework**; it will lead to undefined behavior by the framework
+* Legacy non-translucent tab bar and toolbars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars, and supporting those is not a priority for `LNPopupController`.
+  * The correct way to achieve an opaque bar is to use the `UIBarAppearance.configureWithOpaqueBackground()` API, which is supported by `LNPopupController`.
+* Manually setting bottom bar properties, such as setting a tab bar’s or a toolbar’s `isHidden = true` **is explicitly discouraged by Apple and not supported by the framework**; it will lead to undefined behavior by the framework.
 
 ## Acknowledgements
 

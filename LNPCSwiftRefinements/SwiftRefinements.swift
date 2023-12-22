@@ -128,10 +128,3 @@ public extension LNPopupBarAppearance {
 		}
 	}
 }
-
-public extension UIBlurEffect.Style {
-	@available(*, deprecated, message: "Use LNPopupBarAppearance instead.")
-	static var popupBarBackgroundInheritEffectStyle: Self {
-		return __LNBackgroundStyleInherit
-	}
-}

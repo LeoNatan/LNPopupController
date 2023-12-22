@@ -229,32 +229,3 @@ NSArray* __LNPopupItemObservedKeys;
 }
 
 @end
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
-@implementation LNPopupItem (Deprecated)
-
-- (NSArray<UIBarButtonItem *> *)leftBarButtonItems
-{
-	return self.leadingBarButtonItems;
-}
-
-- (void)setLeftBarButtonItems:(NSArray<UIBarButtonItem *> *)leftBarButtonItems
-{
-	self.leadingBarButtonItems = leftBarButtonItems;
-}
-
-- (NSArray<UIBarButtonItem *> *)rightBarButtonItems
-{
-	return self.trailingBarButtonItems;
-}
-
-- (void)setRightBarButtonItems:(NSArray<UIBarButtonItem *> *)rightBarButtonItems
-{
-	self.trailingBarButtonItems = rightBarButtonItems;
-}
-
-@end
-
-#pragma clang diagnostic pop
