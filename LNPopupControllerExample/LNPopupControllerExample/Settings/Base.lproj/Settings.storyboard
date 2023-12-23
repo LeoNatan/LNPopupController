@@ -11,7 +11,7 @@
         <scene sceneID="i41-nV-z2g">
             <objects>
                 <hostingController storyboardIdentifier="SettingsView" id="27B-rg-hpf" customClass="SettingsViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" largeTitleDisplayMode="never" id="KGL-NH-gfY"/>
+                    <navigationItem key="navigationItem" leftItemsSupplementBackButton="YES" id="KGL-NH-gfY"/>
                 </hostingController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HqC-rD-hqG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -21,8 +21,8 @@
         <scene sceneID="Y6z-Jl-kP6">
             <objects>
                 <navigationController storyboardIdentifier="Settings" id="KD9-4L-yPt" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ism-MM-egy">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="ism-MM-egy">
+                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Gxc-XC-Tbd">
@@ -40,7 +40,7 @@
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
