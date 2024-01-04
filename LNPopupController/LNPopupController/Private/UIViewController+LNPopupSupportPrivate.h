@@ -45,7 +45,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 @property (nonatomic, strong, readonly, getter=_ln_popupController) LNPopupController* ln_popupController;
 - (LNPopupController*)_ln_popupController_nocreate;
 @property (nullable, nonatomic, weak, readwrite) UIViewController* popupPresentationContainerViewController;
-@property (nullable, nonatomic, strong, readonly) UIViewController* popupContentViewController;
+@property (nullable, nonatomic, strong, readwrite) UIViewController* popupContentViewController;
 
 @property (nonnull, nonatomic, strong, readonly, getter=_ln_bottomBarSupport) _LNPopupBottomBarSupport* bottomBarSupport;
 - (nullable _LNPopupBottomBarSupport *)_ln_bottomBarSupport_nocreate;

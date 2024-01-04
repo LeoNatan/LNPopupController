@@ -88,9 +88,7 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 		[NSException raise:NSInternalInconsistencyException format:@"Content view controller cannot be the same as the presenting controller."];
 	}
 	
-	self.popupContentViewController = controller;
-	
-	[self._ln_popupController presentPopupBarAnimated:animated openPopup:openPopup completion:completionBlock];
+	[self._ln_popupController presentPopupBarWithContentViewController:controller openPopup:openPopup animated:animated completion:completionBlock];
 }
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(void(^)(void))completionBlock

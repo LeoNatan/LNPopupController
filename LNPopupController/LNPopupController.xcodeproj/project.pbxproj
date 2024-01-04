@@ -550,7 +550,10 @@
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				WARNING_CFLAGS = "-Wno-arc-performSelector-leaks";
+				WARNING_CFLAGS = (
+					"-Wno-arc-performSelector-leaks",
+					"-Wno-arc-retain-cycles",
+				);
 			};
 			name = Debug;
 		};
@@ -583,7 +586,10 @@
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				WARNING_CFLAGS = "-Wno-arc-performSelector-leaks";
+				WARNING_CFLAGS = (
+					"-Wno-arc-performSelector-leaks",
+					"-Wno-arc-retain-cycles",
+				);
 			};
 			name = Release;
 		};

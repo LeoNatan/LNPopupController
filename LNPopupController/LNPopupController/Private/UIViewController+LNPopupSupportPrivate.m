@@ -1112,8 +1112,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	[self _setTabBarHiddenDuringTransition:YES];
 	
 	CGRect frame = self.tabBar.frame;
-	frame.origin.x = (isRTL ? -1 : 1) * self.view.bounds.size.width;
+	if(t != 0)
+	{
+		frame.origin.x = (isRTL ? -1 : 1) * self.view.bounds.size.width;
+	}
 	self._ln_bottomBarExtension.frame = frame;
+	self._ln_bottomBarExtension_nocreate.hidden = NO;
+	self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 	[self hBWT:t iE:e d:duration];
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;

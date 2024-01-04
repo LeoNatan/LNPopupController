@@ -57,7 +57,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="separatorColor" systemColor="systemPinkColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="ZYs-3T-f9s">
-                            <rect key="frame" x="0.0" y="0.0" width="430" height="420"/>
+                            <rect key="frame" x="0.0" y="0.0" width="430" height="398"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="Zg4-Ff-lwN">
@@ -80,29 +80,34 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Kk1-4I-1s9">
-                                    <rect key="frame" x="28" y="352.33333333333331" width="374" height="46"/>
+                                    <rect key="frame" x="20" y="352.33333333333331" width="390" height="46"/>
                                     <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hgZ-aY-qR2" customClass="ColorfulButton" customModule="LNPopupControllerExample" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="177" height="46"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hgZ-aY-qR2">
+                                            <rect key="frame" x="0.0" y="0.0" width="185" height="46"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="46" id="ebN-RR-gOq"/>
-                                                <constraint firstAttribute="width" constant="177" id="hqr-Qb-BKs"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <inset key="imageEdgeInsets" minX="-14" minY="0.0" maxX="0.0" maxY="0.0"/>
                                             <state key="normal" title="Play" image="play.fill" catalog="system">
-                                                <color key="titleColor" systemColor="systemPinkColor"/>
                                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="medium"/>
                                             </state>
+                                            <buttonConfiguration key="configuration" style="filled" image="play.fill" catalog="system" imagePlacement="leading" title="Play" imagePadding="8">
+                                                <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" scale="medium"/>
+                                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleHeadline"/>
+                                            </buttonConfiguration>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="skU-rX-JTU" customClass="ColorfulButton" customModule="LNPopupControllerExample" customModuleProvider="target">
-                                            <rect key="frame" x="197" y="0.0" width="177" height="46"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="skU-rX-JTU">
+                                            <rect key="frame" x="205" y="0.0" width="185" height="46"/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                             <inset key="imageEdgeInsets" minX="-12" minY="0.0" maxX="0.0" maxY="0.0"/>
                                             <state key="normal" title="Shuffle" image="shuffle" catalog="system">
                                                 <color key="titleColor" systemColor="systemPinkColor"/>
                                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="medium"/>
                                             </state>
+                                            <buttonConfiguration key="configuration" style="filled" image="shuffle" catalog="system" title="Shuffle" imagePadding="8">
+                                                <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" scale="medium"/>
+                                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleHeadline"/>
+                                            </buttonConfiguration>
                                         </button>
                                     </subviews>
                                     <constraints>
@@ -116,15 +121,17 @@
                                 <constraint firstItem="Zg4-Ff-lwN" firstAttribute="centerX" secondItem="ZYs-3T-f9s" secondAttribute="centerX" id="8ZM-Ee-qyY"/>
                                 <constraint firstItem="Kk1-4I-1s9" firstAttribute="top" secondItem="yzf-ha-aWg" secondAttribute="bottom" constant="16" id="I6H-fM-gCz"/>
                                 <constraint firstItem="yzf-ha-aWg" firstAttribute="top" secondItem="QtT-k6-dvX" secondAttribute="bottom" constant="4" id="WGc-PT-pLb"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="skU-rX-JTU" secondAttribute="trailing" id="XDW-aU-lDG"/>
                                 <constraint firstItem="QtT-k6-dvX" firstAttribute="centerX" secondItem="Zg4-Ff-lwN" secondAttribute="centerX" id="XW6-3r-w0a"/>
                                 <constraint firstItem="yzf-ha-aWg" firstAttribute="centerX" secondItem="QtT-k6-dvX" secondAttribute="centerX" id="a1u-C5-dco"/>
                                 <constraint firstItem="Zg4-Ff-lwN" firstAttribute="top" secondItem="ZYs-3T-f9s" secondAttribute="top" constant="8" id="ebO-RZ-2ZR"/>
                                 <constraint firstItem="Kk1-4I-1s9" firstAttribute="centerX" secondItem="Zg4-Ff-lwN" secondAttribute="centerX" id="j2G-Zl-DOx"/>
+                                <constraint firstItem="hgZ-aY-qR2" firstAttribute="leading" secondItem="ZYs-3T-f9s" secondAttribute="leadingMargin" id="y4W-GW-wfj"/>
                             </constraints>
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MusicCell" textLabel="tKl-KM-lNG" detailTextLabel="RSt-Vz-4n5" imageView="HTm-AH-96L" style="IBUITableViewCellStyleSubtitle" id="McV-oN-Mrx" customClass="MusicCell" customModule="LNPopupControllerExample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="470" width="430" height="55"/>
+                                <rect key="frame" x="0.0" y="448" width="430" height="55"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="McV-oN-Mrx" id="Efo-NR-jhI">
                                     <rect key="frame" x="0.0" y="0.0" width="430" height="55"/>
@@ -185,7 +192,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rH2-NO-Hdh" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="qqn-xz-Mhv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1244.9275362318842" y="622.76785714285711"/>
+            <point key="canvasLocation" x="1244.6511627906978" y="622.53218884120179"/>
         </scene>
         <!--Artists-->
         <scene sceneID="2du-v5-87H">
@@ -240,14 +247,6 @@
             <point key="canvasLocation" x="415" y="2083"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="hgZ-aY-qR2">
-            <size key="intrinsicContentSize" width="49" height="21"/>
-        </designable>
-        <designable name="skU-rX-JTU">
-            <size key="intrinsicContentSize" width="81.333333333333329" height="21"/>
-        </designable>
-    </designables>
     <inferredMetricsTieBreakers>
         <segue reference="8Zm-ca-Hsg"/>
     </inferredMetricsTieBreakers>
