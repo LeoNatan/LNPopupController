@@ -18,6 +18,7 @@ static const void* _LNPopupItemKey = &_LNPopupItemKey;
 static const void* _LNPopupControllerKey = &_LNPopupControllerKey;
 const void* _LNPopupPresentationContainerViewControllerKey = &_LNPopupPresentationContainerViewControllerKey;
 const void* _LNPopupContentViewControllerKey = &_LNPopupContentViewControllerKey;
+static const void* _LNPopupPresentationStyleKey = &_LNPopupPresentationStyleKey;
 static const void* _LNPopupInteractionStyleKey = &_LNPopupInteractionStyleKey;
 static const void* _LNPopupInteractionSnapPercentKey = &_LNPopupInteractionSnapPercentKey;
 static const void* _LNPopupBottomBarSupportKey = &_LNPopupBottomBarSupportKey;
@@ -263,9 +264,21 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 	return self._ln_popupController.popupContentView;
 }
 
+- (LNPopupPresentationStyle)popupPresentationStyle
+{
+	NSNumber* rv = objc_getAssociatedObject(self, _LNPopupPresentationStyleKey);
+	
+	return rv ? rv.unsignedIntegerValue : LNPopupPresentationStyleSheet;
+}
+
+- (void)setPopupPresentationStyle:(LNPopupPresentationStyle)popupPresentationStyle
+{
+	objc_setAssociatedObject(self, _LNPopupPresentationStyleKey, @(popupPresentationStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (LNPopupInteractionStyle)popupInteractionStyle
 {
-	return (LNPopupInteractionStyle)[objc_getAssociatedObject(self, _LNPopupInteractionStyleKey) unsignedIntegerValue];
+	return (LNPopupInteractionStyle)[objc_getAssociatedObject(self, _LNPopupInteractionStyleKey) integerValue];
 }
 
 - (void)setPopupInteractionStyle:(LNPopupInteractionStyle)popupInteractionStyle

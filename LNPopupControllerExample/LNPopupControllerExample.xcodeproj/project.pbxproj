@@ -45,6 +45,7 @@
 		39B0DFF32B1819EF008CCF36 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF52B1819EF008CCF36 /* Music.storyboard */; };
 		39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
 		39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
+		39C4C5602B49EC80009E4E09 /* DemoPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39C4C55F2B49EC80009E4E09 /* DemoPresentationController.m */; };
 		39D6C8B32B2D01E600F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; };
 		39D6C8B42B2D01F600F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39D6C8B62B2D020000F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */; };
@@ -163,6 +164,8 @@
 		39B0DFF02B1819C2008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ManualLayoutScene.storyboard; sourceTree = "<group>"; };
 		39B0DFF42B1819EF008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Music.storyboard; sourceTree = "<group>"; };
 		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
+		39C4C55E2B49EC80009E4E09 /* DemoPresentationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoPresentationController.h; sourceTree = "<group>"; };
+		39C4C55F2B49EC80009E4E09 /* DemoPresentationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DemoPresentationController.m; sourceTree = "<group>"; };
 		39D6C8992B2CC3A100F53E70 /* LNPopupControllerExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupControllerExample.entitlements; sourceTree = "<group>"; };
 		39D6C8B82B2D02B500F53E70 /* SettingKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingKeys.h; path = ../../../LNPopupSettings/SettingKeys.h; sourceTree = "<group>"; };
 		39D6C8B92B2D02B500F53E70 /* SettingKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingKeys.m; path = ../../../LNPopupSettings/SettingKeys.m; sourceTree = "<group>"; };
@@ -302,6 +305,8 @@
 				394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */,
 				3930AD1A2B38AC930036AAE9 /* LNEventQueueDemoSceneController.h */,
 				3930AD1B2B38AC930036AAE9 /* LNEventQueueDemoSceneController.m */,
+				39C4C55E2B49EC80009E4E09 /* DemoPresentationController.h */,
+				39C4C55F2B49EC80009E4E09 /* DemoPresentationController.m */,
 			);
 			name = "Demo - Testing Scene (Objective-C)";
 			path = TestingScene;
@@ -503,6 +508,7 @@
 				39756327254ED9EB0066981E /* DemoGallery.m in Sources */,
 				397C56281B7538A5007A67F0 /* DemoAlbumTableViewController.swift in Sources */,
 				39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */,
+				39C4C5602B49EC80009E4E09 /* DemoPresentationController.m in Sources */,
 				39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
 				39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */,

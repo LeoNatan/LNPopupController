@@ -342,14 +342,13 @@
         <!--Navigation Controller-->
         <scene sceneID="Wh6-v8-fQK">
             <objects>
-                <navigationController modalPresentationStyle="fullScreen" toolbarHidden="NO" id="GHH-ob-Ng8" sceneMemberID="viewController">
+                <navigationController toolbarHidden="NO" id="GHH-ob-Ng8" sceneMemberID="viewController">
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="2ug-wj-yax">
                         <rect key="frame" x="0.0" y="59" width="430" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="eEz-t1-9Ax" customClass="DemoToolbar">
-                        <rect key="frame" x="0.0" y="800" width="430" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
@@ -364,7 +363,7 @@
         <!--Split View Controller Secondary Popup-->
         <scene sceneID="KO7-t9-gOw">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" preferredDisplayMode="beside" id="syE-JZ-XA1" customClass="LNSplitViewControllerSecondaryPopup" sceneMemberID="viewController">
+                <splitViewController preferredDisplayMode="beside" id="syE-JZ-XA1" customClass="LNSplitViewControllerSecondaryPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="GHH-ob-Ng8" kind="relationship" relationship="masterViewController" id="T58-y9-xu1"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="3nI-aH-Ed7"/>
@@ -378,7 +377,7 @@
         <!--Split View Controller Global Popup-->
         <scene sceneID="iRx-bt-bfy">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" preferredDisplayMode="twoDisplace" behavior="displace" id="F0W-R7-jVc" customClass="LNSplitViewControllerGlobalPopup" sceneMemberID="viewController">
+                <splitViewController preferredDisplayMode="twoDisplace" behavior="displace" id="F0W-R7-jVc" customClass="LNSplitViewControllerGlobalPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="kZv-eg-X5o"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="masterViewController" id="Qc4-nZ-cyX"/>
@@ -392,7 +391,7 @@
         <!--Split View Controller Primary Popup-->
         <scene sceneID="0aA-gd-S0Z">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="beside" id="NWj-M1-Csm" customClass="LNSplitViewControllerPrimaryPopup" sceneMemberID="viewController">
+                <splitViewController allowDoubleColumnStyle="YES" preferredDisplayMode="beside" id="NWj-M1-Csm" customClass="LNSplitViewControllerPrimaryPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="GHH-ob-Ng8" kind="relationship" relationship="masterViewController" id="IDA-Po-Fia"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="04d-1K-Lzo"/>
@@ -413,7 +412,7 @@
         <!--FirstViewController-->
         <scene sceneID="43s-6c-3hg">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="l54-z5-xcG" userLabel="FirstViewController" customClass="DemoViewController" sceneMemberID="viewController">
+                <viewController id="l54-z5-xcG" userLabel="FirstViewController" customClass="DemoViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1ke-mH-VCb" customClass="DemoView">
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -604,7 +603,7 @@
         <!--Demo Tab Bar Controller-->
         <scene sceneID="08l-cu-6cc">
             <objects>
-                <tabBarController modalPresentationStyle="fullScreen" id="bBi-xD-gOl" customClass="DemoTabBarController" sceneMemberID="viewController">
+                <tabBarController id="bBi-xD-gOl" customClass="DemoTabBarController" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="vB8-aC-ZlJ" customClass="DemoTabBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -643,7 +642,7 @@
         <!--Demo Tab Bar Controller-->
         <scene sceneID="kbq-hr-FKV">
             <objects>
-                <tabBarController modalPresentationStyle="fullScreen" id="FNS-iY-Dsd" customClass="DemoTabBarController" sceneMemberID="viewController">
+                <tabBarController id="FNS-iY-Dsd" customClass="DemoTabBarController" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Ttb-b6-jET" customClass="DemoTabBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -664,7 +663,7 @@
         <!--Split View Controller-->
         <scene sceneID="rIr-hO-Lo7">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" preferredDisplayMode="beside" behavior="displace" id="OMG-ri-qb5" customClass="LNSplitViewController" sceneMemberID="viewController">
+                <splitViewController preferredDisplayMode="beside" behavior="displace" id="OMG-ri-qb5" customClass="LNSplitViewController" sceneMemberID="viewController">
                     <connections>
                         <segue destination="GHH-ob-Ng8" kind="relationship" relationship="masterViewController" id="Yls-eT-pdu"/>
                         <segue destination="FNS-iY-Dsd" kind="relationship" relationship="detailViewController" id="gRd-L2-CDS"/>
@@ -678,18 +677,18 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="ie4-if-ZuB"/>
-        <segue reference="QzR-Fj-x6F"/>
-        <segue reference="vYe-8f-bz7"/>
+        <segue reference="gRd-L2-CDS"/>
+        <segue reference="LFb-4R-xoq"/>
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
         <segue reference="hQ1-Jl-oBP"/>
-        <segue reference="7qJ-pK-ibQ"/>
+        <segue reference="Jqg-bQ-l0b"/>
         <segue reference="1U6-NV-9t4"/>
         <segue reference="iD8-2E-cMh"/>
         <segue reference="SDh-r0-h83"/>
         <segue reference="19O-Tx-Ntx"/>
-        <segue reference="UEc-Fk-ILA"/>
+        <segue reference="Yls-eT-pdu"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>

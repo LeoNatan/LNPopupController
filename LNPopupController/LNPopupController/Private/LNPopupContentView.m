@@ -67,6 +67,11 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	[super layoutSubviews];
 	
 	_effectView.frame = self.bounds;
+	
+	if(_managingPopupController.currentContentControllerPresentationStyle != LNPopupPresentationStyleLegacyFullscreen)
+	{
+		_currentPopupContentViewController.view.frame = self.contentView.bounds;
+	}
 }
 
 - (UIView *)contentView
@@ -187,7 +192,16 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		return;
 	}
 	
-	CGRect layoutFrame = [self convertRect:_currentPopupContentViewController.view.layoutMarginsGuide.layoutFrame fromView:_currentPopupContentViewController.view];
+	CGRect layoutFrame;
+	
+	if(_managingPopupController.currentContentControllerPresentationStyle == LNPopupPresentationStyleLegacyFullscreen)
+	{
+		layoutFrame = [self convertRect:_currentPopupContentViewController.view.layoutMarginsGuide.layoutFrame fromView:_currentPopupContentViewController.view];
+	}
+	else
+	{
+		layoutFrame = self.safeAreaLayoutGuide.layoutFrame;
+	}
 	
 	CGFloat topConstant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 0 : 1.0;
 	topConstant += layoutFrame.origin.y;
@@ -226,6 +240,8 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 - (void)safeAreaInsetsDidChange
 {
 	[super safeAreaInsetsDidChange];
+	
+	[self _repositionPopupCloseButtonAnimated:NO];
 }
 
 - (UIUserInterfaceStyle)overrideUserInterfaceStyle

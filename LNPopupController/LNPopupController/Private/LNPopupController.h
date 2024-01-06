@@ -11,6 +11,7 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import <LNPopupController/LNPopupCloseButton.h>
 #import "LNPopupContentView+Private.h"
+#import "LNPopupContentViewController.h"
 
 extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
@@ -23,6 +24,7 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 @property (nonatomic, strong) LNPopupBar* popupBar;
 @property (nonatomic, strong, readonly) LNPopupBar* popupBarStorage;
 @property (nonatomic, strong) LNPopupContentView* popupContentView;
+@property (nonatomic, strong) LNPopupContentViewController* popupContentViewController;
 @property (nonatomic, strong) UIScrollView* popupContentContainerView;
 
 @property (nonatomic) LNPopupPresentationState popupControllerPublicState;
@@ -32,6 +34,7 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 @property (nonatomic, weak) id<LNPopupPresentationDelegate> userPopupPresentationDelegate;
 
 @property (nonatomic, strong) __kindof UIViewController* currentContentController;
+@property (nonatomic, assign) LNPopupPresentationStyle currentContentControllerPresentationStyle;
 @property (nonatomic, weak) __kindof UIViewController* containerController;
 
 @property (nonatomic) CGPoint lastPopupBarLocation;
@@ -52,6 +55,8 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
+
+- (void)_uikitClosedControllerBasedPopup;
 
 - (void)_configurePopupBarFromBottomBar;
 - (void)_configurePopupBarFromBottomBarModifyingGroupingIdentifier:(BOOL)modifyingGroupingIdentifier;

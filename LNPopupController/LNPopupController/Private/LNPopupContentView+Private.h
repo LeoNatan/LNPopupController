@@ -8,6 +8,8 @@
 
 #import <LNPopupController/LNPopupContentView.h>
 
+@class LNPopupController;
+
 @interface LNPopupContentView ()
 
 - (instancetype)initWithFrame:(CGRect)frame;
@@ -18,6 +20,7 @@
 @property (nonatomic, strong, readonly) UIView* contentView;
 
 @property (nonatomic, weak) UIViewController* currentPopupContentViewController;
+@property (nonatomic, weak) LNPopupController* managingPopupController;
 
 - (void)setControllerOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle;
 

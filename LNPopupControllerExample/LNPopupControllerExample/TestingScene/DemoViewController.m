@@ -20,6 +20,7 @@
 #import "LNPopupDemoContextMenuInteraction.h"
 #import "LNPopupControllerExample-Bridging-Header.h"
 @import UIKit;
+#import "DemoPresentationController.h"
 
 @interface DemoView : UIView @end
 
@@ -35,12 +36,18 @@
 	[super didMoveToWindow];
 }
 
+- (UIColor *)backgroundColor
+{
+	return [super backgroundColor];
+}
+
 @end
 
-@interface DemoViewController ()
+@interface DemoViewController () <UIViewControllerTransitioningDelegate
 #if LNPOPUP
-< LNPopupPresentationDelegate >
+, LNPopupPresentationDelegate
 #endif
+>
 
 @property (nonatomic, strong) NSString* colorSeedString;
 @property (nonatomic) NSInteger colorSeedCount;
@@ -54,6 +61,25 @@
 	
 	__weak IBOutlet UIBarButtonItem *_barStyleButton;
 	BOOL _alreadyPresentedAutomatically;
+}
+
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	self.modalPresentationStyle = UIModalPresentationCustom;
+	self.transitioningDelegate = self;
+}
+
+- (void)setModalPresentationStyle:(UIModalPresentationStyle)modalPresentationStyle
+{
+	super.modalPresentationStyle = UIModalPresentationCustom;
+	self.transitioningDelegate = self;
+}
+
+- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(nullable UIViewController *)presenting sourceViewController:(UIViewController *)source
+{
+	return [[DemoPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
 }
 
 - (UITabBarItem *)tabBarItem
@@ -461,16 +487,6 @@
 - (void)popupPresentationController:(UIViewController *)popupPresentationController didClosePopupWithContentController:(UIViewController *)popupContentController animated:(BOOL)animated
 {
 	
-}
-
-@end
-
-@interface PassthroughNavigationController : UINavigationController @end
-@implementation PassthroughNavigationController
-
-- (UITabBarItem *)tabBarItem
-{
-	return self.viewControllers.firstObject.tabBarItem;
 }
 
 @end

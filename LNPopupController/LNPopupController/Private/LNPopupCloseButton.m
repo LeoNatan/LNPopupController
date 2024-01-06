@@ -12,6 +12,18 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "LNPopupContentView+Private.h"
 
+@interface LNPopupCloseButton ()
+
+- (id)_aPVFGR;
+- (void)_didTouchDown;
+- (void)_didTouchDragExit;
+- (void)_didTouchDragEnter;
+- (void)_didTouchUp;
+- (void)_didTouchCancel;
+
+@end
+
+__attribute__((objc_direct_members))
 @implementation LNPopupCloseButton
 {
 	__weak LNPopupContentView* _contentView;
@@ -20,6 +32,8 @@
 	UIView* _highlightView;
 	
 	LNChevronView* _chevronView;
+	
+	UIVisualEffectView* _grabberView;
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
@@ -77,7 +91,7 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 		}
 		
 		_style = LNPopupCloseButtonStyleGrabber;
-		[self _setupForChevronButton];
+		[self _setupForGrabberButton];
 	}
 	
 	return self;
@@ -104,9 +118,13 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	{
 		[self _setupForCircularButton];
 	}
-	else if(_style == LNPopupCloseButtonStyleChevron || _style == LNPopupCloseButtonStyleGrabber)
+	else if(_style == LNPopupCloseButtonStyleChevron)
 	{
 		[self _setupForChevronButton];
+	}
+	else if(_style == LNPopupCloseButtonStyleGrabber)
+	{
+		[self _setupForGrabberButton];
 	}
 }
 
@@ -126,6 +144,9 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	[_highlightView removeFromSuperview];
 	_highlightView = nil;
 	
+	[_grabberView removeFromSuperview];
+	_grabberView = nil;
+	
 	[self setImage:nil forState:UIControlStateNormal];
 	self.tintColor = nil;
 	
@@ -134,6 +155,16 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	self.layer.shadowRadius = 0;
 	self.layer.shadowOffset = CGSizeMake(0, 0);
 	self.layer.masksToBounds = YES;
+}
+
+- (void)_setupForGrabberButton
+{
+	_grabberView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterial]];
+	_grabberView.frame = CGRectMake(0, 3, 36, 5);
+	_grabberView.layer.masksToBounds = YES;
+	_grabberView.layer.cornerRadius = 2.5;
+	_grabberView.userInteractionEnabled = NO;
+	[self addSubview:_grabberView];
 }
 
 - (void)_setupForChevronButton
@@ -262,9 +293,13 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	{
 		return CGSizeMake(24, 24);
 	}
-	else
+	else if(_style == LNPopupCloseButtonStyleRound)
 	{
 		return CGSizeMake(42, 25);
+	}
+	else
+	{
+		return CGSizeMake(36, 10);
 	}
 }
 

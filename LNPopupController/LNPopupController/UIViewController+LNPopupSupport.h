@@ -20,6 +20,13 @@ NS_REFINED_FOR_SWIFT
 /// The default popup snap percent. See `UIViewController.popupSnapPercent` for more information.
 extern const double LNSnapPercentDefault;
 
+typedef NS_ENUM(NSUInteger, LNPopupPresentationStyle) {
+	LNPopupPresentationStyleSheet,
+	
+	
+	LNPopupPresentationStyleLegacyFullscreen = 0xFFFF
+};
+
 NS_REFINED_FOR_SWIFT
 /// Available interaction styles with the popup bar and popup content view.
 typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
@@ -179,6 +186,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 ///   - completion: The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
 
+@property (nonatomic, assign) LNPopupPresentationStyle popupPresentationStyle;
 
 /// The popup bar interaction style.
 @property (nonatomic, assign) LNPopupInteractionStyle popupInteractionStyle NS_REFINED_FOR_SWIFT;

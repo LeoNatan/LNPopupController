@@ -222,6 +222,10 @@ static void __accessibilityBundleLoadHandler(void)
 							@selector(_ln_childViewControllerForStatusBarHidden));
 			
 			LNSwizzleMethod(self,
+							@selector(dismissViewControllerAnimated:completion:),
+							@selector(_ln_dismissViewControllerAnimated:completion:));
+			
+			LNSwizzleMethod(self,
 							@selector(viewWillTransitionToSize:withTransitionCoordinator:),
 							@selector(_ln_viewWillTransitionToSize:withTransitionCoordinator:));
 			
@@ -406,6 +410,21 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 }
 
+- (void)_ln_dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
+{
+	[self _ln_dismissViewControllerAnimated:animated completion:completion];
+	
+	if([self.presentedViewController isKindOfClass:LNPopupContentViewController.class])
+	{
+		[self.transitionCoordinator animateAlongsideTransition:^(id c) {} completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+			if(context.isCancelled == NO)
+			{
+				[self._ln_popupController_nocreate _uikitClosedControllerBasedPopup];
+			}
+		}];
+	}
+}
+
 - (void)_ln_viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
 	if(self._ln_popupController_nocreate)
@@ -586,7 +605,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	
 	[self _uCOIFPIN];
 	
-	if(self.popupPresentationContainerViewController != nil)
+	if(self.popupPresentationContainerViewController != nil && self.popupPresentationContainerViewController.ln_popupController.currentContentControllerPresentationStyle == LNPopupPresentationStyleLegacyFullscreen)
 	{
 		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
 		
@@ -601,7 +620,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 	
 #if ! TARGET_OS_MACCATALYST
-	if(self.popupContentViewController)
+	if(self.popupContentViewController && self._ln_popupController.currentContentControllerPresentationStyle == LNPopupPresentationStyleLegacyFullscreen)
 	{
 		[self.popupContentViewController _uLFSBAIO];
 		[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];
@@ -641,7 +660,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 {
 	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
 	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self._ln_popupController_nocreate.popupBar];
-	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	if(self._ln_popupController_nocreate.currentContentControllerPresentationStyle == LNPopupPresentationStyleLegacyFullscreen)
+	{
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	}
 }
 
 - (void)_layoutPopupBarOrderForUse
@@ -656,7 +678,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
 	}
 	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self._ln_popupController_nocreate.popupBar];
-	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	if(self._ln_popupController_nocreate.currentContentControllerPresentationStyle == LNPopupPresentationStyleLegacyFullscreen)
+	{
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	}
 }
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate

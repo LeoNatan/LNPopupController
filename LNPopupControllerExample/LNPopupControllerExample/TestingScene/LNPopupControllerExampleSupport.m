@@ -7,6 +7,7 @@
 //
 
 #import "LNPopupControllerExampleSupport.h"
+#import "DemoPresentationController.h"
 
 @interface DemoGalleryControllerTableView : UITableView @end
 @implementation DemoGalleryControllerTableView
@@ -18,7 +19,7 @@
 
 @end
 
-@interface DemoTabBarController : UITabBarController @end
+@interface DemoTabBarController : UITabBarController <UIViewControllerTransitioningDelegate> @end
 
 @implementation DemoTabBarController
 
@@ -40,6 +41,25 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
+}
+
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	self.modalPresentationStyle = UIModalPresentationCustom;
+	self.transitioningDelegate = self;
+}
+
+- (void)setModalPresentationStyle:(UIModalPresentationStyle)modalPresentationStyle
+{
+	super.modalPresentationStyle = UIModalPresentationCustom;
+	self.transitioningDelegate = self;
+}
+
+- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(nullable UIViewController *)presenting sourceViewController:(UIViewController *)source
+{
+	return [[DemoPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
 }
 
 @end
@@ -64,6 +84,40 @@
 	//	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
 	
 	[super setFrame:frame];
+}
+
+@end
+
+@interface PassthroughNavigationController : UINavigationController <UIViewControllerTransitioningDelegate> @end
+@implementation PassthroughNavigationController
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+	return self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
+}
+
+- (UITabBarItem *)tabBarItem
+{
+	return self.viewControllers.firstObject.tabBarItem;
+}
+
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	self.modalPresentationStyle = UIModalPresentationCustom;
+	self.transitioningDelegate = self;
+}
+
+- (void)setModalPresentationStyle:(UIModalPresentationStyle)modalPresentationStyle
+{
+	super.modalPresentationStyle = UIModalPresentationCustom;
+	self.transitioningDelegate = self;
+}
+
+- (nullable UIPresentationController *)presentationControllerForPresentedViewController:(UIViewController *)presented presentingViewController:(nullable UIViewController *)presenting sourceViewController:(UIViewController *)source
+{
+	return [[DemoPresentationController alloc] initWithPresentedViewController:presented presentingViewController:presenting];
 }
 
 @end
