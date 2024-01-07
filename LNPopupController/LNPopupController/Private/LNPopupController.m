@@ -84,6 +84,48 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 
 @end
 
+@interface _LNPopupControllerEvent: NSObject
+
+@property (nonatomic) BOOL isRunning;
+@property (nonatomic, strong, readonly) NSString* name;
+@property (nonatomic, strong, readonly) NSSet<NSString*>* coalescedOperations;
+@property (nonatomic, strong, readonly) dispatch_block_t operation;
+
+@end
+
+@implementation _LNPopupControllerEvent
+
++ (instancetype)_eventWithName:(NSString*)name coalescedOperations:(NSArray<NSString*>*)coalescedOperations operation:(dispatch_block_t)operation
+{
+	_LNPopupControllerEvent* rv = [_LNPopupControllerEvent new];
+	rv->_name = name;
+	rv->_operation = operation;
+	rv->_coalescedOperations = [NSSet setWithArray:coalescedOperations];
+	return rv;
+}
+
++ (instancetype)presentEventWithOperation:(dispatch_block_t)operation
+{
+	return [self _eventWithName:@"present" coalescedOperations:@[@"present", @"dismiss"] operation:operation];
+}
+
++ (instancetype)dismissEventWithOperation:(dispatch_block_t)operation
+{
+	return [self _eventWithName:@"dismiss" coalescedOperations:@[@"present", @"open", @"close", @"dismiss"] operation:operation];
+}
+
++ (instancetype)openEventWithOperation:(dispatch_block_t)operation
+{
+	return [self _eventWithName:@"open" coalescedOperations:@[@"open", @"close"] operation:operation];
+}
+
++ (instancetype)closeEventWithOperation:(dispatch_block_t)operation
+{
+	return [self _eventWithName:@"close" coalescedOperations:@[@"close", @"open"] operation:operation];
+}
+
+@end
+
 __attribute__((objc_direct_members))
 @implementation LNPopupController
 {
@@ -110,7 +152,7 @@ __attribute__((objc_direct_members))
 	UIImpactFeedbackGenerator* _softFeedbackGenerator;
 	UIImpactFeedbackGenerator* _rigidFeedbackGenerator;
 	
-	NSMutableArray<dispatch_block_t>* _enqueuedEvents;
+	NSArray<_LNPopupControllerEvent*>* _eventQueue;
 	
 	UIViewPropertyAnimator* _runningBarAnimation;
 	UIViewPropertyAnimator* _runningBarSidecarAnimation;
@@ -124,8 +166,6 @@ __attribute__((objc_direct_members))
 	
 	if(self)
 	{
-		_enqueuedEvents = [NSMutableArray new];
-		
 		_containerController = containerController;
 		
 		_popupControllerInternalState = LNPopupPresentationStateBarHidden;
@@ -516,6 +556,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:resolvedStyle == LNPopupInteractionStyleSnap ? 0.4 : 0.5 dampingRatio:spring ? 0.85 : 1.0 animations:animationBlock];
+	_runningPopupAnimation.userInteractionEnabled = NO;
 	[_runningPopupAnimation addCompletion:completionBlock];
 	[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
 		_runningPopupAnimation = nil;
@@ -1169,20 +1210,24 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		return;
 	}
 	
-	if(_enqueuedEvents.count == 0)
+	if(_eventQueue.count == 0)
 	{
 		return;
 	}
 	
-	dispatch_block_t event = _enqueuedEvents[0];
-	[_enqueuedEvents removeObjectAtIndex:0];
+	_LNPopupControllerEvent* event = _eventQueue[0];
+	_eventQueue = [_eventQueue subarrayWithRange:NSMakeRange(1, _eventQueue.count - 1)];
 	
-	event();
+	event.isRunning = YES;
+	event.operation();
 }
 
-- (void)_enqueueEvent:(dispatch_block_t)block
+- (void)_enqueueEvent:(_LNPopupControllerEvent*)event
 {
-	[_enqueuedEvents addObject:block];
+	_eventQueue = [[_eventQueue ?: @[] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(_LNPopupControllerEvent* evaluatedObject, id bindings) {
+		return evaluatedObject.isRunning == YES || [event.coalescedOperations containsObject:evaluatedObject.name] == NO;
+	}]] arrayByAddingObject:event];
+	
 	[self _resumeEventQueue];
 }
 
@@ -1222,9 +1267,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)contentViewController openPopup:(BOOL)open animated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self _enqueueEvent:^{
+	[self _enqueueEvent:[_LNPopupControllerEvent presentEventWithOperation:^{
 		[self _presentPopupBarWithContentViewController:contentViewController openPopup:open animated:animated completion:completionBlock];
-	}];
+	}]];
 }
 
 - (void)_presentPopupBarWithContentViewController:(UIViewController*)contentViewController openPopup:(BOOL)open animated:(BOOL)animated completion:(void(^)(void))completionBlock
@@ -1389,9 +1434,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self _enqueueEvent:^{
+	[self _enqueueEvent:[_LNPopupControllerEvent openEventWithOperation:^{
 		[self _openPopupAnimated:animated completion:completionBlock];
-	}];
+	}]];
 }
 
 - (void)_openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
@@ -1412,9 +1457,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self _enqueueEvent:^{
+	[self _enqueueEvent:[_LNPopupControllerEvent closeEventWithOperation:^{
 		[self _closePopupAnimated:animated completion:completionBlock];
-	}];
+	}]];
 }
 
 - (void)_closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
@@ -1433,9 +1478,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self _enqueueEvent:^{
+	[self _enqueueEvent:[_LNPopupControllerEvent dismissEventWithOperation:^{
 		[self _dismissPopupBarAnimated:animated completion:completionBlock];
-	}];
+	}]];
 }
 
 - (void)_dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
