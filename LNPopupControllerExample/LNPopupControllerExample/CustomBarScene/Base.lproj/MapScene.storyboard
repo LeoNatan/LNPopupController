@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,11 +19,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsTraffic="YES" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0EZ-UY-PPz">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0EZ-UY-PPz">
                                 <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
+                                <standardMapConfiguration key="preferredConfiguration" elevationStyle="realistic" showsTraffic="YES"/>
                             </mapView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5u8-d1-mBI">
-                                <rect key="frame" x="20" y="79" width="130" height="40"/>
+                                <rect key="frame" x="20" y="67" width="130" height="40"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="3Gn-n8-hKm">
                                     <rect key="frame" x="0.0" y="0.0" width="130" height="40"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -87,7 +89,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="z3u-Zt-das" secondAttribute="trailing" id="5g0-iP-rZr"/>
-                            <constraint firstItem="5u8-d1-mBI" firstAttribute="top" secondItem="ttR-e1-b3Y" secondAttribute="top" constant="20" id="8AO-7m-vxX"/>
+                            <constraint firstItem="5u8-d1-mBI" firstAttribute="top" secondItem="ttR-e1-b3Y" secondAttribute="top" constant="8" id="8AO-7m-vxX"/>
                             <constraint firstAttribute="bottom" secondItem="0EZ-UY-PPz" secondAttribute="bottom" id="N7c-ke-EAK"/>
                             <constraint firstItem="z3u-Zt-das" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="OyN-F7-yvr"/>
                             <constraint firstItem="0EZ-UY-PPz" firstAttribute="leading" secondItem="Mjn-jY-G6a" secondAttribute="leading" id="Wu3-sg-B75"/>

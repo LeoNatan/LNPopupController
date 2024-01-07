@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -183,11 +184,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsTraffic="YES" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ltm-4F-d9g">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ltm-4F-d9g">
                                 <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
+                                <standardMapConfiguration key="preferredConfiguration" elevationStyle="realistic" showsTraffic="YES"/>
                             </mapView>
                             <visualEffectView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s8E-iT-Yfw">
-                                <rect key="frame" x="20" y="79" width="130" height="40"/>
+                                <rect key="frame" x="20" y="67" width="130" height="40"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="qJi-Sd-qGA">
                                     <rect key="frame" x="0.0" y="0.0" width="130" height="40"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -256,7 +258,7 @@
                             <constraint firstItem="7Rq-MG-8T1" firstAttribute="top" secondItem="RQr-8G-VYd" secondAttribute="top" id="7n0-zN-2Yk"/>
                             <constraint firstItem="ltm-4F-d9g" firstAttribute="leading" secondItem="RQr-8G-VYd" secondAttribute="leading" id="UOW-lv-OiA"/>
                             <constraint firstAttribute="trailing" secondItem="ltm-4F-d9g" secondAttribute="trailing" id="Vs9-2G-FMS"/>
-                            <constraint firstItem="s8E-iT-Yfw" firstAttribute="top" secondItem="eJr-AM-JCd" secondAttribute="top" constant="20" id="a3j-DZ-GqG"/>
+                            <constraint firstItem="s8E-iT-Yfw" firstAttribute="top" secondItem="eJr-AM-JCd" secondAttribute="top" constant="8" id="a3j-DZ-GqG"/>
                             <constraint firstAttribute="bottom" secondItem="ltm-4F-d9g" secondAttribute="bottom" id="bFz-tm-4jz"/>
                             <constraint firstItem="eJr-AM-JCd" firstAttribute="top" secondItem="7Rq-MG-8T1" secondAttribute="bottom" id="hb1-FG-Qf8"/>
                             <constraint firstItem="ltm-4F-d9g" firstAttribute="top" secondItem="RQr-8G-VYd" secondAttribute="top" id="pVl-Nm-ZHl"/>
