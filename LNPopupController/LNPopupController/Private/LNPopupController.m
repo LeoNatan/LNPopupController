@@ -655,9 +655,19 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 		else if((_popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y > 0))
 		{
+			[self _end120HzHack];
+			
 			pgr.enabled = NO;
 			pgr.enabled = YES;
 		}
+	}
+	
+	if(resolvedStyle == LNPopupInteractionStyleDrag && _popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y > 0)
+	{
+		[self _end120HzHack];
+		
+		pgr.enabled = NO;
+		pgr.enabled = YES;
 	}
 }
 
