@@ -13,8 +13,6 @@
 		39277A151B58228000293F95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
 		39277A171B58228000293F95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39277A161B58228000293F95 /* Assets.xcassets */; };
 		392E2AC52AD5CAB600944CB2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */; };
-		3930AD1C2B38AC930036AAE9 /* LNEventQueueDemoSceneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3930AD1B2B38AC930036AAE9 /* LNEventQueueDemoSceneController.m */; };
-		3930AD1D2B38AC980036AAE9 /* LNEventQueueDemoSceneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3930AD1B2B38AC930036AAE9 /* LNEventQueueDemoSceneController.m */; };
 		393F23251E16C04A000E969D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23241E16C04A000E969D /* MapViewController.swift */; };
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
@@ -131,8 +129,6 @@
 		39277A161B58228000293F95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		39277A1B1B58228000293F95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		3930AD1A2B38AC930036AAE9 /* LNEventQueueDemoSceneController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNEventQueueDemoSceneController.h; sourceTree = "<group>"; };
-		3930AD1B2B38AC930036AAE9 /* LNEventQueueDemoSceneController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNEventQueueDemoSceneController.m; sourceTree = "<group>"; };
 		393F23241E16C04A000E969D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
@@ -300,8 +296,6 @@
 				3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */,
 				394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */,
 				394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */,
-				3930AD1A2B38AC930036AAE9 /* LNEventQueueDemoSceneController.h */,
-				3930AD1B2B38AC930036AAE9 /* LNEventQueueDemoSceneController.m */,
 			);
 			name = "Demo - Testing Scene (Objective-C)";
 			path = TestingScene;
@@ -515,7 +509,6 @@
 				3985DE602549539B00CD76EE /* IntroWebViewController.m in Sources */,
 				393F23251E16C04A000E969D /* MapViewController.swift in Sources */,
 				39D6C8BD2B2D02B500F53E70 /* SettingsViewController.swift in Sources */,
-				3930AD1C2B38AC930036AAE9 /* LNEventQueueDemoSceneController.m in Sources */,
 				3901289526CFC1D60002612D /* LNPopupControllerExampleSupport.m in Sources */,
 				399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */,
 				3988E3581B59C3000039C09B /* DemoViewController.m in Sources */,
@@ -542,7 +535,6 @@
 				39FAFC3F24E71A6C008BBC2D /* RandomColors.m in Sources */,
 				39FAFC4024E71A6C008BBC2D /* LocationsController.swift in Sources */,
 				39FAFC4124E71A6C008BBC2D /* MapViewController.swift in Sources */,
-				3930AD1D2B38AC980036AAE9 /* LNEventQueueDemoSceneController.m in Sources */,
 				39FAFC4224E71A6C008BBC2D /* DemoPopupContentViewController.m in Sources */,
 				39FAFC4324E71A6C008BBC2D /* DemoViewController.m in Sources */,
 				39D6C8BC2B2D02B500F53E70 /* SettingKeys.m in Sources */,

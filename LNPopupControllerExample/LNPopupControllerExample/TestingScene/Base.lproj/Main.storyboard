@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Image references" minToolsVersion="12.0"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -284,33 +283,6 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="State Management" footerTitle="Presents a scene that tests the event aggregation and execution of various animations and transitions of the framework." id="2Ip-Mv-UqH">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="interruptibility" textLabel="MVS-21-jtI" style="IBUITableViewCellStyleDefault" id="vZn-pD-fZe">
-                                        <rect key="frame" x="20" y="761.66667366027832" width="390" height="43.666667938232422"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vZn-pD-fZe" id="RsY-Bl-Z2Q">
-                                            <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Event Queue Stress Test" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="MVS-21-jtI">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="43.666667938232422"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="Icb-KP-Zsf" kind="presentation" id="hQ1-Jl-oBP">
-                                                <segue key="commit" inheritsFrom="parent" id="SvR-wA-sId"/>
-                                                <segue key="preview" inheritsFrom="commit" id="GTu-k6-6h6"/>
-                                            </segue>
-                                        </connections>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="Aqm-1n-Gaw" id="tgW-KD-v7I"/>
@@ -533,38 +505,6 @@
             </objects>
             <point key="canvasLocation" x="-730.37383177570086" y="453.56371490280782"/>
         </scene>
-        <!--Event Queue Demo Scene Controller-->
-        <scene sceneID="vBy-iT-ce1">
-            <objects>
-                <viewController modalPresentationStyle="fullScreen" id="Icb-KP-Zsf" customClass="LNEventQueueDemoSceneController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Oi2-TH-0xs">
-                        <rect key="frame" x="0.0" y="0.0" width="430" height="932"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yx7-ol-skC">
-                                <rect key="frame" x="353" y="0.0" width="57" height="33"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <state key="normal" title="Gallery"/>
-                                <connections>
-                                    <segue destination="zPj-Q0-mf8" kind="unwind" unwindAction="unwindToGallery:" id="ESm-3g-VnJ"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="8Qr-YY-i9x"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <color key="tintColor" name="AccentColor"/>
-                        <constraints>
-                            <constraint firstItem="yx7-ol-skC" firstAttribute="top" secondItem="Oi2-TH-0xs" secondAttribute="topMargin" id="6kj-7I-Fvb"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="yx7-ol-skC" secondAttribute="trailing" id="Mhf-yq-pGq"/>
-                            <constraint firstItem="yx7-ol-skC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8Qr-YY-i9x" secondAttribute="leading" symbolic="YES" id="bBU-8T-94D"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vG0-7o-sNg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="zPj-Q0-mf8" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="-4169" y="-1680"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="fHL-ZM-8LF">
             <objects>
@@ -683,7 +623,6 @@
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
-        <segue reference="hQ1-Jl-oBP"/>
         <segue reference="7qJ-pK-ibQ"/>
         <segue reference="1U6-NV-9t4"/>
         <segue reference="iD8-2E-cMh"/>
@@ -698,9 +637,6 @@
         <image name="dock.arrow.down.rectangle" catalog="system" width="128" height="93"/>
         <image name="dock.arrow.up.rectangle" catalog="system" width="128" height="93"/>
         <image name="gears" width="25" height="25"/>
-        <namedColor name="AccentColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
