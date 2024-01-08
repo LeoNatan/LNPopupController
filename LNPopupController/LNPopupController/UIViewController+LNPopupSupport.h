@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 	
 	LNPopupPresentationStateHidden LN_DEPRECATED_API("Use LNPopupPresentationStateBarHidden instead.") = LNPopupPresentationStateBarHidden,
 	LNPopupPresentationStateClosed LN_DEPRECATED_API("Use LNPopupPresentationStateBarPresented instead.") = LNPopupPresentationStateBarPresented,
-	LNPopupPresentationStateTransitioning LN_DEPRECATED_API("Should no longer be used.") = 2,
+	LNPopupPresentationStateTransitioning LN_UNAVAILABLE_API("Should no longer be used.") = 2,
 } NS_SWIFT_NAME(UIViewController.PopupPresentationState);
 
 /// Popup content support for ``UIViewController`` subclasses.
