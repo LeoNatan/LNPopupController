@@ -59,7 +59,7 @@ NS_SWIFT_UI_ACTOR
 /// Called by the framework to notify the popup bar content view controller that the active appearance has changed.
 ///
 /// - Parameter activeAppearance: A merged appearance from the popup item, the system appearance and popup bar appearance, as appropriate.
-- (void)activeAppearanceDidChange:(LNPopupBarAppearance*)activeAppearance;
+- (void)activeAppearanceDidChange:(LNPopupBarAppearance*)activeAppearance API_AVAILABLE(ios(13.0));
 
 @end
 

@@ -173,13 +173,16 @@ static void __accessibilityBundleLoadHandler(void)
 		dispatch_once(&onceToken, ^{
 			__LNPopupBuggyAdditionalSafeAreaClasses = [NSSet setWithObjects:UINavigationController.class, UITabBarController.class, nil];
 			
-			LNSwizzleMethod(self,
-							@selector(isModalInPresentation),
-							@selector(_ln_isModalInPresentation));
-			
-			LNSwizzleMethod(self,
-							@selector(setOverrideUserInterfaceStyle:),
-							@selector(_ln_popup_setOverrideUserInterfaceStyle:));
+			if(@available(iOS 13.0, *))
+			{
+				LNSwizzleMethod(self,
+								@selector(isModalInPresentation),
+								@selector(_ln_isModalInPresentation));
+				
+				LNSwizzleMethod(self,
+								@selector(setOverrideUserInterfaceStyle:),
+								@selector(_ln_popup_setOverrideUserInterfaceStyle:));
+			}
 			
 			LNSwizzleMethod(self,
 							@selector(viewWillAppear:),
@@ -285,7 +288,7 @@ static void __accessibilityBundleLoadHandler(void)
 	return [self _ln_isModalInPresentation];
 }
 
-- (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
+- (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle API_AVAILABLE(ios(13.0))
 {
 	[self _ln_popup_setOverrideUserInterfaceStyle:overrideUserInterfaceStyle];
 	
@@ -677,7 +680,15 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	_LNPopupBarBackgroundView* rv = objc_getAssociatedObject(self, LNPopupBarExtensionView);
 	if(rv == nil)
 	{
-		rv = [[_LNPopupBarExtensionView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial]];
+		UIBlurEffectStyle effectStyle;
+		
+		if (@available(iOS 13.0, *)) {
+			effectStyle = UIBlurEffectStyleSystemChromeMaterial;
+		} else {
+			effectStyle = UIBlurEffectStyleLight;
+		}
+		
+		rv = [[_LNPopupBarExtensionView alloc] initWithEffect:[UIBlurEffect effectWithStyle:effectStyle]];
 		rv.alpha = 0.0;
 		objc_setAssociatedObject(self, LNPopupBarExtensionView, rv, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 		[self._ln_popupController _updateBarExtensionStyleFromPopupBar];
@@ -1722,6 +1733,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
 			
 			self._ln_popupController_nocreate.popupBar.backgroundView.frame = backgroundViewFrame;
+			
+			[self _layoutPopupBarOrderForUse];
 			
 			[self _setIgnoringLayoutDuringTransition:NO];
 		};

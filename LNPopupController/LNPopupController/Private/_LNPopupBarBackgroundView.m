@@ -173,10 +173,13 @@
 	_cornerRadius = cornerRadius;
 	
 	self.layer.cornerRadius = cornerRadius;
-	self.layer.cornerCurve = kCACornerCurveContinuous;
-	
 	_effectView.layer.cornerRadius = cornerRadius;
-	_effectView.layer.cornerCurve = kCACornerCurveContinuous;
+	
+	if (@available(iOS 13.0, *))
+	{
+		self.layer.cornerCurve = kCACornerCurveContinuous;
+		_effectView.layer.cornerCurve = kCACornerCurveContinuous;
+	}
 }
 
 @end

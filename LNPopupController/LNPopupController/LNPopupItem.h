@@ -75,7 +75,7 @@ NS_SWIFT_UI_ACTOR
 /// When set and this item is displayed, overrides the hosting popup bar's `standardAppearance` as well as any appearance inherited from the system.
 ///
 /// See `LNPopupBarAppearance.standardAppearance` for further details.
-@property (nonatomic, readwrite, copy, nullable) LNPopupBarAppearance* standardAppearance;
+@property (nonatomic, readwrite, copy, nullable) LNPopupBarAppearance* standardAppearance API_AVAILABLE(ios(13.0));
 
 @end
 

@@ -12,6 +12,18 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "LNPopupContentView+Private.h"
 
+@interface LNPopupCloseButton ()
+
+- (id)_aPVFGR;
+- (void)_didTouchDown;
+- (void)_didTouchDragExit;
+- (void)_didTouchDragEnter;
+- (void)_didTouchUp;
+- (void)_didTouchCancel;
+
+@end
+
+__attribute__((objc_direct_members))
 @implementation LNPopupCloseButton
 {
 	__weak LNPopupContentView* _contentView;
@@ -138,7 +150,17 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 
 - (void)_setupForChevronButton
 {
-	_chevronView = [[LNChevronView alloc] initWithFrame:CGRectMake(0, 0, 40, 15)];
+	CGRect frame;
+	if(_style == LNPopupCloseButtonStyleGrabber)
+	{
+		frame = CGRectMake(0, 0, 36, 15);
+	}
+	else
+	{
+		frame = CGRectMake(0, 0, 40, 20);
+	}
+	
+	_chevronView = [[LNChevronView alloc] initWithFrame:frame];
 	_chevronView.width = 5.0;
 	[_chevronView setState:_style == LNPopupCloseButtonStyleGrabber ? LNChevronViewStateFlat : LNChevronViewStateUp animated:NO];
 	
@@ -148,7 +170,14 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 
 - (void)_setupForCircularButton
 {
-	UIBlurEffectStyle blurStyle = UIBlurEffectStyleSystemChromeMaterial;
+	UIBlurEffectStyle blurStyle;
+	
+	if (@available(iOS 13.0, *)) 
+	{
+		blurStyle = UIBlurEffectStyleSystemChromeMaterial;
+	} else {
+		blurStyle = UIBlurEffectStyleExtraLight;
+	}
 	
 	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
 	_effectView.userInteractionEnabled = NO;
@@ -177,12 +206,16 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	self.layer.shadowOffset = CGSizeMake(0, 0);
 	self.layer.masksToBounds = NO;
 	
-	self.tintColor = [UIColor labelColor];
+	if (@available(iOS 13.0, *)) {
+		self.tintColor = [UIColor labelColor];
+		
+		UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
+		UIImage* image = [[UIImage systemImageNamed:@"chevron.down" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		[self setImage:image forState:UIControlStateNormal];
+	} else {
+		self.tintColor = [UIColor darkTextColor];
+	}
 	[self setTitleColor:self.tintColor forState:UIControlStateNormal];
-	
-	UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
-	UIImage* image = [[UIImage systemImageNamed:@"chevron.down" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-	[self setImage:image forState:UIControlStateNormal];
 }
 
 - (void)_didTouchDown
@@ -262,9 +295,13 @@ static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2dua
 	{
 		return CGSizeMake(24, 24);
 	}
-	else
+	else if(_style == LNPopupCloseButtonStyleChevron)
 	{
 		return CGSizeMake(42, 25);
+	}
+	else
+	{
+		return CGSizeMake(36, 25);
 	}
 }
 

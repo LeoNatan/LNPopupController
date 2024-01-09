@@ -101,6 +101,7 @@ public extension LNPopupItem {
 	}
 }
 
+@available(iOS 13.0, *)
 public extension LNPopupBarAppearance {
 	/// Display attributes for the popup bar’s title text.
 	///

@@ -149,8 +149,8 @@ __attribute__((objc_direct_members))
 	
 	CADisplayLink* _displayLinkFor120Hz;
 	
-	UIImpactFeedbackGenerator* _softFeedbackGenerator;
-	UIImpactFeedbackGenerator* _rigidFeedbackGenerator;
+	UIImpactFeedbackGenerator* _softFeedbackGenerator API_AVAILABLE(ios(13.0));
+	UIImpactFeedbackGenerator* _rigidFeedbackGenerator API_AVAILABLE(ios(13.0));
 	
 	NSArray<_LNPopupControllerEvent*>* _eventQueue;
 	
@@ -175,8 +175,12 @@ __attribute__((objc_direct_members))
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 		
 		_wantsFeedbackGeneration = YES;
-		_softFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleSoft];
-		_rigidFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleRigid];
+		if (@available(iOS 13.0, *)) {
+			_softFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleSoft];
+			_rigidFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleRigid];
+		} else {
+			// Fallback on earlier versions
+		}
 	}
 	
 	return self;
@@ -293,7 +297,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	[currentContentController viewWillMoveToPopupContainerContentView:self.popupContentView];
-	[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
+	if (@available(iOS 13.0, *)) 
+	{
+		[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
+	}
 	currentContentController.view.translatesAutoresizingMaskIntoConstraints = YES;
 	currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 	currentContentController.view.frame = self.popupContentView.contentView.bounds;
@@ -322,8 +329,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	[_softFeedbackGenerator prepare];
-	[_softFeedbackGenerator impactOccurredWithIntensity:intensity];
+	
+	if (@available(iOS 13.0, *)) 
+	{
+		[_softFeedbackGenerator prepare];
+		[_softFeedbackGenerator impactOccurredWithIntensity:intensity];
+	}
 }
 
 - (void)_generateRigidFeedbackWithIntensity:(CGFloat)intensity
@@ -333,8 +344,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	[_rigidFeedbackGenerator prepare];
-	[_rigidFeedbackGenerator impactOccurredWithIntensity:intensity];
+	if (@available(iOS 13.0, *))
+	{
+		[_rigidFeedbackGenerator prepare];
+		[_rigidFeedbackGenerator impactOccurredWithIntensity:intensity];
+	}
 }
 
 - (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha allowFeedbackGeneration:(BOOL)allowFeedbackGeneration completion:(void(^)(void))completion
@@ -364,7 +378,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self.popupContentView.contentView layoutIfNeeded];
 			if(notifyDelegate == YES && state == _LNPopupPresentationStateTransitioning)
 			{
-				[_currentContentController _userFacing_viewIsAppearing:NO];
+				if(@available(iOS 13.0, *))
+				{
+					[_currentContentController _userFacing_viewIsAppearing:NO];
+				}
 				[_currentContentController _userFacing_viewDidAppear:NO];
 			}
 		}];
@@ -464,7 +481,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(state == LNPopupPresentationStateOpen && stateAtStart == LNPopupPresentationStateBarPresented)
 		{
-			[_currentContentController _userFacing_viewIsAppearing:animated];
+			if(@available(iOS 13.0, *))
+			{
+				[_currentContentController _userFacing_viewIsAppearing:animated];
+			}
 		}
 	};
 	
@@ -713,12 +733,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		UIScrollView* possibleScrollView = (id)pgr.view;
 		if([possibleScrollView isKindOfClass:[UIScrollView class]])
 		{
-			//If the scroll view has horizontal scroll, ignore the scroll view's pan gesture recognizer.
-			if(possibleScrollView.contentSize.width > possibleScrollView.bounds.size.width)
-			{
-				return;
-			}
-			
 			id<UIGestureRecognizerDelegate> delegate = _popupContentView.popupInteractionGestureRecognizer.delegate;
 			
 			if(([delegate respondsToSelector:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:)] && [delegate gestureRecognizer:_popupContentView.popupInteractionGestureRecognizer shouldRequireFailureOfGestureRecognizer:pgr] == YES) ||
@@ -981,7 +995,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
 	{
-		[newContentController _userFacing_viewIsAppearing:NO];
+		if(@available(iOS 13.0, *))
+		{
+			[newContentController _userFacing_viewIsAppearing:NO];
+		}
 		[newContentController _userFacing_viewDidAppear:NO];
 		[newContentController endAppearanceTransition];
 		[oldContentController _userFacing_viewDidDisappear:NO];
@@ -1034,36 +1051,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	UIBarAppearance* appearanceToUse = nil;
-	
-#ifndef LNPopupControllerEnforceStrictClean
-	static NSString* vPTIS = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		//visualProvider.toolbarIsSmall
-		vPTIS = _LNPopupDecodeBase64String(_vPTIS);
-	});
-	
-	//visualProvider.toolbarIsSmall
-	if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:vPTIS] boolValue] == YES)
-	{
-		UIToolbar* toolbar = (UIToolbar*)_bottomBar;
-		appearanceToUse = toolbar.compactAppearance;
-	}
-	
-	if(appearanceToUse == nil && [_bottomBar isKindOfClass:UITabBar.class])
-	{
-		UITabBar* tabBar = (UITabBar*)_bottomBar;
-		appearanceToUse = tabBar.selectedItem.standardAppearance ?: tabBar.standardAppearance;
-	}
-	
-#endif
-	
-	if(appearanceToUse == nil && [_bottomBar respondsToSelector:@selector(standardAppearance)])
-	{
-		appearanceToUse = [(id<_LNPopupBarSupport>)_bottomBar standardAppearance];
-	}
-	
 	UIColor* bottomBarTintColor = _bottomBar.tintColor;
 	if(_bottomBar.window != nil || [_bottomBar.superview.tintColor isEqual:bottomBarTintColor] == NO)
 	{
@@ -1074,7 +1061,44 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		self.popupBar.systemTintColor = nil;
 	}
 	
-	self.popupBar.systemAppearance = appearanceToUse;
+	if (@available(iOS 13.0, *))
+	{
+		UIBarAppearance* appearanceToUse = nil;
+		
+#ifndef LNPopupControllerEnforceStrictClean
+		static NSString* vPTIS = nil;
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			//visualProvider.toolbarIsSmall
+			vPTIS = _LNPopupDecodeBase64String(_vPTIS);
+		});
+		
+		//visualProvider.toolbarIsSmall
+		if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:vPTIS] boolValue] == YES)
+		{
+			UIToolbar* toolbar = (UIToolbar*)_bottomBar;
+			appearanceToUse = toolbar.compactAppearance;
+		}
+		
+		if(appearanceToUse == nil && [_bottomBar isKindOfClass:UITabBar.class])
+		{
+			UITabBar* tabBar = (UITabBar*)_bottomBar;
+			appearanceToUse = tabBar.selectedItem.standardAppearance ?: tabBar.standardAppearance;
+		}
+		
+#endif
+		
+		if(appearanceToUse == nil && [_bottomBar respondsToSelector:@selector(standardAppearance)])
+		{
+			appearanceToUse = [(id<_LNPopupBarSupport>)_bottomBar standardAppearance];
+		}
+		
+		self.popupBar.systemAppearance = appearanceToUse;
+	}
+	else
+	{
+		[self.popupBar _appearanceDidChange];
+	}
 }
 
 - (void)_updateBarExtensionStyleFromPopupBar
@@ -1347,7 +1371,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			[self.popupBar setNeedsLayout];
 			[self.popupBar layoutIfNeeded];
 			
-			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
+			if(@available(iOS 13.0, *))
+			{
+				[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
+			}
 			
 			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height, 0));
 			
@@ -1740,7 +1767,11 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	if(view.window.safeAreaInsets.top == 0)
 	{
 		//Probably 🤷‍♂️ an old iPhone
-		return view.window.windowScene.statusBarManager.statusBarHidden ? 0 : 20;
+		if (@available(iOS 13.0, *)) {
+			return view.window.windowScene.statusBarManager.statusBarHidden ? 0 : 20;
+		} else {
+			return UIApplication.sharedApplication.statusBarFrame.size.height;
+		}
 	}
 	
 	return view.window.safeAreaInsets.top;
@@ -1793,7 +1824,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)_popupItem_update_standardAppearance
 {
-	[self.popupBarStorage _recalcActiveAppearanceChain];
+	if (@available(iOS 13.0, *)) 
+	{
+		[self.popupBarStorage _recalcActiveAppearanceChain];
+	}
 }
 
 @end

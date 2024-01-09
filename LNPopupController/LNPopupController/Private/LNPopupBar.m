@@ -12,6 +12,7 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSAttributedString+LNPopupSupport.h"
 #import "_LNPopupBarShadowedImageView.h"
+#import "_LNPopupBarAppearanceLegacySupport.h"
 
 #ifdef DEBUG
 static NSUserDefaults* __LNDebugUserDefaults(void)
@@ -134,6 +135,8 @@ static void __setupFunction(void)
 	
 	//On iOS 11 and above reset the semantic content attribute to make sure it propagades to all subviews.
 	[self setSemanticContentAttribute:self.semanticContentAttribute];
+	
+	[self.subviews.firstObject setAlpha:0.0];
 	
 	[self._layoutDelegate _toolbarDidLayoutSubviews];
 }
@@ -273,7 +276,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[super setHidden:hidden];
 }
 
-- (void)_fixupSwiftUIControllersWithBarStyle
+- (void)_fixupSwiftUIControllersWithBarStyle API_AVAILABLE(ios(13.0))
 {
 	if(self.swiftuiHiddenLeadingController != nil)
 	{
@@ -301,7 +304,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[self _layoutBarButtonItems];
 		_needsLabelsLayout = YES;
 		
-		[self _fixupSwiftUIControllersWithBarStyle];
+		if (@available(iOS 13.0, *)) 
+		{
+			[self _fixupSwiftUIControllersWithBarStyle];
+		}
 		
 		[_barContainingController.bottomDockingViewForPopup_nocreateOrDeveloper setNeedsLayout];
 		[_barContainingController.view setNeedsLayout];
@@ -348,7 +354,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		
 		_inheritsAppearanceFromDockingView = YES;
-		_standardAppearance = [LNPopupBarAppearance new];
+		if (@available(iOS 13.0, *)) 
+		{
+			_standardAppearance = [LNPopupBarAppearance new];
+		}
 		
 		_backgroundView = [[_LNPopupBarBackgroundView alloc] initWithEffect:nil];
 		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -383,17 +392,37 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:CGRectMake(0, 0, 400, 44)];
 		_toolbar._layoutDelegate = self;
-		[_toolbar.standardAppearance configureWithTransparentBackground];
+		if (@available(iOS 13.0, *)) 
+		{
+			[_toolbar.standardAppearance configureWithTransparentBackground];
+		}
+		else
+		{
+			_toolbar.translucent = NO;
+			_toolbar.backgroundColor = UIColor.clearColor;
+			
+			// Fallback on earlier versions
+		}
 		
 #if DEBUG
 		if(_LNEnableBarLayoutDebug())
 		{
-			_toolbar.standardAppearance.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
+			if (@available(iOS 13.0, *))
+			{
+				_toolbar.standardAppearance.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
+			} 
+			else
+			{
+				_toolbar.barTintColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
+			}
 			_toolbar.layer.borderColor = UIColor.blackColor.CGColor;
 			_toolbar.layer.borderWidth = 1.0;
 		}
 #endif
-		_toolbar.compactAppearance = _toolbar.standardAppearance;
+		if (@available(iOS 13.0, *)) 
+		{
+			_toolbar.compactAppearance = _toolbar.standardAppearance;
+		}
 		if(@available(iOS 15.0, *))
 		{
 			_toolbar.scrollEdgeAppearance = nil;
@@ -437,7 +466,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
 		_imageView.isAccessibilityElement = YES;
-		_imageView.layer.cornerCurve = kCACornerCurveContinuous;
+		if (@available(iOS 13.0, *)) 
+		{
+			_imageView.layer.cornerCurve = kCACornerCurveContinuous;
+		}
 		_imageView.layer.masksToBounds = YES;
 		_imageView.cornerRadius = 6;
 		
@@ -464,7 +496,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_wantsBackgroundCutout = YES;
 		
-		[self _recalcActiveAppearanceChain];
+		if(@available(iOS 13.0, *))
+		{
+			[self _recalcActiveAppearanceChain];
+		}
 	}
 	
 	return self;
@@ -483,7 +518,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[self _appearanceDidChange];
 	}
 	
-	if(UIContentSizeCategoryCompareToCategory(previousTraitCollection.preferredContentSizeCategory, self.traitCollection.preferredContentSizeCategory) != NSOrderedSame)
+	if(previousTraitCollection.preferredContentSizeCategory == nil || UIContentSizeCategoryCompareToCategory(previousTraitCollection.preferredContentSizeCategory, self.traitCollection.preferredContentSizeCategory) != NSOrderedSame)
 	{
 		[self._barDelegate _popupBarMetricsDidChange:self];
 	}
@@ -730,6 +765,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	_titlesView.spacing = titleSpacing;
 	
+	[UIView performWithoutAnimation:^{
+		[self.contentView layoutIfNeeded];
+		[self.contentView updateConstraintsIfNeeded];
+		[_titlesView layoutIfNeeded];
+		[self.contentView layoutIfNeeded];
+	}];
+	
 	_inLayout = NO;
 }
 
@@ -912,31 +954,41 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 {
 	_popupItem = popupItem;
 	
-	[self _recalcActiveAppearanceChain];
+	if (@available(iOS 13.0, *)) 
+	{
+		[self _recalcActiveAppearanceChain];
+	}
 }
 
-- (void)popupBarAppearanceDidChange:(LNPopupBarAppearance*)popupBarAppearance
+- (void)popupBarAppearanceDidChange:(LNPopupBarAppearance*)popupBarAppearance API_AVAILABLE(ios(13.0))
 {
 	[self _appearanceDidChange];
 }
 
 - (void)_appearanceDidChange
 {
-	_highlightView.backgroundColor = self.activeAppearance.highlightColor;
+	_LNPopupBarAppearanceLegacySupport* legacySupport;
+	if (@available(iOS 13.0, *)) {
+		legacySupport = (id)self.activeAppearance;
+	} else {
+		legacySupport = [_LNPopupBarAppearanceLegacySupport new];
+	}
+	
+	_highlightView.backgroundColor = legacySupport.highlightColor;
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
 	
 	if(isFloating)
 	{
-		id effect = [self.activeAppearance floatingBackgroundEffectForTraitCollection:self.traitCollection];
+		id effect = [legacySupport floatingBackgroundEffectForTraitCollection:self.traitCollection];
 		_contentView.effect = effect;
 		
-		__auto_type floatingBackgroundColor = self.activeAppearance.floatingBackgroundColor;
-		__auto_type floatingBackgroundImage = self.activeAppearance.floatingBackgroundImage;
+		__auto_type floatingBackgroundColor = legacySupport.floatingBackgroundColor;
+		__auto_type floatingBackgroundImage = legacySupport.floatingBackgroundImage;
 		
 		_contentView.foregroundColor = floatingBackgroundColor;
 		_contentView.foregroundImage = floatingBackgroundImage;
-		_contentView.foregroundImageContentMode = self.activeAppearance.floatingBackgroundImageContentMode;
+		_contentView.foregroundImageContentMode = legacySupport.floatingBackgroundImageContentMode;
 		[_contentView hideOrShowImageViewIfNecessary];
 	}
 	else
@@ -948,22 +1000,48 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[_contentView hideOrShowImageViewIfNecessary];
 	}
 	
-	__auto_type backgroundColor = self.activeAppearance.backgroundColor;
-	__auto_type backgroundImage = self.activeAppearance.backgroundImage;
+	__auto_type backgroundColor = legacySupport.backgroundColor;
+	__auto_type backgroundImage = legacySupport.backgroundImage;
 	
-	_backgroundView.effect = self.activeAppearance.backgroundEffect;
+	
+	if(@available(iOS 13.0, *))
+	{
+		_backgroundView.effect = legacySupport.backgroundEffect;
+	}
+	else
+	{
+		if([_barContainingController isKindOfClass:UINavigationController.class])
+		{
+			UIToolbar* toolbar = [_barContainingController toolbar];
+			if(toolbar.barStyle == UIBarStyleBlack)
+			{
+				_backgroundView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+			}
+			else
+			{
+				_backgroundView.effect = legacySupport.backgroundEffect;
+			}
+		}
+		else
+		{
+			_backgroundView.effect = legacySupport.backgroundEffect;
+		}
+	}
 	_backgroundView.foregroundColor = backgroundColor;
 	_backgroundView.foregroundImage = backgroundImage;
-	_backgroundView.foregroundImageContentMode = self.activeAppearance.backgroundImageContentMode;
+	_backgroundView.foregroundImageContentMode = legacySupport.backgroundImageContentMode;
 	[_backgroundView hideOrShowImageViewIfNecessary];
 	
-	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
-	_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.doneButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
+	if (@available(iOS 13.0, *)) 
+	{
+		_toolbar.standardAppearance.buttonAppearance = legacySupport.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
+		_toolbar.standardAppearance.doneButtonAppearance = legacySupport.doneButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
+	}
 	
-	_shadowView.image = self.activeAppearance.shadowImage;
-	_shadowView.backgroundColor = self.activeAppearance.shadowColor;
-	_bottomShadowView.image = self.activeAppearance.shadowImage;
-	_bottomShadowView.backgroundColor = self.activeAppearance.shadowColor;
+	_shadowView.image = legacySupport.shadowImage;
+	_shadowView.backgroundColor = legacySupport.shadowColor;
+	_bottomShadowView.image = legacySupport.shadowImage;
+	_bottomShadowView.backgroundColor = legacySupport.shadowColor;
 	
 	_shadowView.hidden = _resolvedStyle == LNPopupBarStyleFloating ? YES : NO;
 	if(_resolvedStyle == LNPopupBarStyleFloating)
@@ -971,11 +1049,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_bottomShadowView.hidden = YES;
 	}
 	
-	_floatingBackgroundShadowView.shadow = self.activeAppearance.floatingBarBackgroundShadow;
+	_floatingBackgroundShadowView.shadow = legacySupport.floatingBarBackgroundShadow;
 	
-	_imageView.shadow = self.activeAppearance.imageShadow;
+	_imageView.shadow = legacySupport.imageShadow;
 
-	[self.customBarViewController _activeAppearanceDidChange:self.activeAppearance];
+	if (@available(iOS 13.0, *)) 
+	{
+		[self.customBarViewController _activeAppearanceDidChange:(id)legacySupport];
+	}
 	
 	//Recalculate labels
 	[self _setNeedsTitleLayoutRemovingLabels:YES];
@@ -1210,10 +1291,17 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
-		MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:CGRectZero rate:self.activeAppearance.marqueeScrollRate andFadeLength:10];
+		_LNPopupBarAppearanceLegacySupport* legacySupport;
+		if (@available(iOS 13.0, *)) {
+			legacySupport = (id)self.activeAppearance;
+		} else {
+			legacySupport = [_LNPopupBarAppearanceLegacySupport new];
+		}
+		
+		MarqueeLabel* rv = [[MarqueeLabel alloc] initWithFrame:CGRectZero rate:legacySupport.marqueeScrollRate andFadeLength:10];
 		rv.leadingBuffer = 0.0;
 		rv.trailingBuffer = 20.0;
-		rv.animationDelay = self.activeAppearance.marqueeScrollDelay;
+		rv.animationDelay = legacySupport.marqueeScrollDelay;
 		rv.marqueeType = MLContinuous;
 		rv.holdScrolling = YES;
 		_rv = rv;
@@ -1439,7 +1527,26 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 //DO NOT CHANGE NAME! Used by LNPopupUI
 - (UIColor*)_titleColor
 {
-	return UIColor.labelColor;
+	if (@available(iOS 13.0, *)) {
+		return UIColor.labelColor;
+	} else {
+		if([_barContainingController isKindOfClass:UINavigationController.class])
+		{
+			UIToolbar* toolbar = [_barContainingController toolbar];
+			if(toolbar.barStyle == UIBarStyleBlack)
+			{
+				return UIColor.whiteColor;
+			}
+			else
+			{
+				return UIColor.darkTextColor;
+			}
+		}
+		else
+		{
+			return UIColor.darkTextColor;
+		}
+	}
 }
 
 //DO NOT CHANGE NAME! Used by LNPopupUI
@@ -1481,11 +1588,22 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 //DO NOT CHANGE NAME! Used by LNPopupUI
 - (UIColor*)_subtitleColor
 {
-	return UIColor.secondaryLabelColor;
+	if (@available(iOS 13.0, *)) {
+		return UIColor.secondaryLabelColor;
+	} else {
+		return UIColor.systemGrayColor;
+	}
 }
 
 - (void)_layoutTitles
 {
+	_LNPopupBarAppearanceLegacySupport* legacySupport;
+	if (@available(iOS 13.0, *)) {
+		legacySupport = (id)self.activeAppearance;
+	} else {
+		legacySupport = [_LNPopupBarAppearanceLegacySupport new];
+	}
+	
 	UIEdgeInsets titleInsets = UIEdgeInsetsZero;
 	
 	if(_resolvedStyle == LNPopupBarStyleCompact)
@@ -1532,7 +1650,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		{
 			if(_titleLabel == nil)
 			{
-				_titleLabel = [self _labelWithMarqueeEnabled:self.activeAppearance.marqueeScrollEnabled];
+				_titleLabel = [self _labelWithMarqueeEnabled:legacySupport.marqueeScrollEnabled];
 #if DEBUG
 				if(_LNEnableBarLayoutDebug())
 				{
@@ -1549,7 +1667,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 				[_titlesView addArrangedSubview:_titleLabel];
 			}
 			
-			NSAttributedString* attr = _attributedTitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedTitle defaultAttributes:self.activeAppearance.titleTextAttributes] : nil;
+			NSAttributedString* attr = _attributedTitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedTitle defaultAttributes:legacySupport.titleTextAttributes] : nil;
 			if(attr != nil && [_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
 			{
 				_titleLabel.attributedText = attr;
@@ -1558,7 +1676,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			
 			if(_subtitleLabel == nil)
 			{
-				_subtitleLabel = [self _labelWithMarqueeEnabled:self.activeAppearance.marqueeScrollEnabled];
+				_subtitleLabel = [self _labelWithMarqueeEnabled:legacySupport.marqueeScrollEnabled];
 #if DEBUG
 				if(_LNEnableBarLayoutDebug())
 				{
@@ -1575,7 +1693,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 				[_titlesView addArrangedSubview:_subtitleLabel];
 			}
 			
-			attr = _attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedSubtitle defaultAttributes:self.activeAppearance.subtitleTextAttributes] : nil;
+			attr = _attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedSubtitle defaultAttributes:legacySupport.subtitleTextAttributes] : nil;
 			if(attr != nil && [_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
 			{
 				_subtitleLabel.attributedText = attr;
@@ -1616,6 +1734,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self _updateAccessibility];
 	
 	[self _recalculateCoordinatedMarqueeScrollIfNeeded];
+	
+	[UIView performWithoutAnimation:^{
+		[_titleLabel layoutIfNeeded];
+		[_subtitleLabel layoutIfNeeded];
+		[_titlesView layoutIfNeeded];
+		[_contentView layoutIfNeeded];
+	}];
 	
 	_needsLabelsLayout = NO;
 }
@@ -1819,7 +1944,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[self._barDelegate _popupBar:self updateCustomBarController:_customBarViewController cleanup:NO];
 		[_customBarViewController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
 		
-		[_customBarViewController _activeAppearanceDidChange:self.activeAppearance];
+		if (@available(iOS 13.0, *)) 
+		{
+			[_customBarViewController _activeAppearanceDidChange:self.activeAppearance];
+		}
 		
 		[self.contentView addSubview:_customBarViewController.view];
 		
@@ -1861,7 +1989,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)_recalculateCoordinatedMarqueeScrollIfNeeded
 {
-	if(self.activeAppearance.marqueeScrollEnabled == NO)
+	_LNPopupBarAppearanceLegacySupport* legacySupport;
+	if (@available(iOS 13.0, *)) {
+		legacySupport = (id)self.activeAppearance;
+	} else {
+		legacySupport = [_LNPopupBarAppearanceLegacySupport new];
+	}
+	
+	if(legacySupport.marqueeScrollEnabled == NO)
 	{
 		return;
 	}
@@ -1874,10 +2009,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	MarqueeLabel* titleLabel = (id)_titleLabel;
 	MarqueeLabel* subtitleLabel = (id)_subtitleLabel;
 	
-	titleLabel.animationDelay = self.activeAppearance.marqueeScrollDelay;
-	subtitleLabel.animationDelay = self.activeAppearance.marqueeScrollDelay;
+	titleLabel.animationDelay = legacySupport.marqueeScrollDelay;
+	subtitleLabel.animationDelay = legacySupport.marqueeScrollDelay;
 	
-	if(self.activeAppearance.coordinateMarqueeScroll == YES && _attributedTitle.length > 0 && _attributedSubtitle.length > 0)
+	if(legacySupport.coordinateMarqueeScroll == YES && _attributedTitle.length > 0 && _attributedSubtitle.length > 0)
 	{
 		titleLabel.holdScrolling = YES;
 		subtitleLabel.holdScrolling = YES;

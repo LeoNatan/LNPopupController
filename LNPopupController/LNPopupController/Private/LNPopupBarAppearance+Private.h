@@ -10,8 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+API_AVAILABLE(ios(13.0))
 @interface _LNPopupDominantColorTrait : NSObject <UIObjectTraitDefinition> @end
 
+API_AVAILABLE(ios(13.0))
 @protocol _LNPopupBarAppearanceDelegate <NSObject>
 
 - (void)popupBarAppearanceDidChange:(LNPopupBarAppearance*)popupBarAppearance;

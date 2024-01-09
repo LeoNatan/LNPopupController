@@ -15,6 +15,7 @@ NS_SWIFT_UI_ACTOR
 /// An object for customizing the appearance of popup bars.
 ///
 /// After creating a `LNPopupBarAppearance` object, use the methods and properties of this class to specify the appearance of items in the popup bar. Use the inherited properties from `UIBarAppearance` to configure the background and shadow attributes of the popup bar itself.
+API_AVAILABLE(ios(13.0))
 @interface LNPopupBarAppearance : UIBarAppearance
 
 /// Display attributes for the popup bar’s title text.

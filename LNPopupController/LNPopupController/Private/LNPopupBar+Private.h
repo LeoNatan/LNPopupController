@@ -48,7 +48,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @protocol _LNPopupBarSupport <NSObject>
 
 @property (nonatomic, strong) UIColor *barTintColor;
-@property (nonatomic, strong) UIBarAppearance* standardAppearance;
+@property (nonatomic, strong) UIBarAppearance* standardAppearance API_AVAILABLE(ios(13.0));
 
 @end
 
@@ -60,11 +60,11 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, strong) UIColor* systemTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
-@property (nonatomic, strong) UIBarAppearance* systemAppearance;
-@property (nonatomic, readonly, strong) LNPopupBarAppearance* activeAppearance;
-@property (nonatomic, readonly, strong) LNPopupBarAppearanceChainProxy* activeAppearanceChain;
+@property (nonatomic, strong) UIBarAppearance* systemAppearance API_AVAILABLE(ios(13.0));
+@property (nonatomic, readonly, strong) LNPopupBarAppearance* activeAppearance API_AVAILABLE(ios(13.0));
+@property (nonatomic, readonly, strong) LNPopupBarAppearanceChainProxy* activeAppearanceChain API_AVAILABLE(ios(13.0));
 
-- (void)_recalcActiveAppearanceChain;
+- (void)_recalcActiveAppearanceChain API_AVAILABLE(ios(13.0));
 
 @property (nonatomic, strong) UIImageView* shadowView;
 @property (nonatomic, strong) UIImageView* bottomShadowView;
@@ -119,9 +119,9 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, strong) UIView* swiftuiTitleContentView;
 
-@property (nonatomic, strong) UIViewController* swiftuiImageController;
-@property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController;
-@property (nonatomic, strong) UIViewController* swiftuiHiddenTrailingController;
+@property (nonatomic, strong) UIViewController* swiftuiImageController API_AVAILABLE(ios(13.0));
+@property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController API_AVAILABLE(ios(13.0));
+@property (nonatomic, strong) UIViewController* swiftuiHiddenTrailingController API_AVAILABLE(ios(13.0));
 
 - (void)_delayBarButtonLayout;
 - (void)_layoutBarButtonItems;
@@ -132,5 +132,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 - (void)_transitionCustomBarViewControllerWithPopupContainerTraitCollection:(UITraitCollection *)newCollection withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
 
 - (void)_cancelAnyUserInteraction;
+
+- (void)_appearanceDidChange;
 
 @end

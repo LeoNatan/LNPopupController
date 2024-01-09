@@ -84,7 +84,7 @@ NS_SWIFT_UI_ACTOR
 @property (nonatomic, assign, readonly) LNPopupBarStyle effectiveBarStyle;
 
 /// Describes the appearance attributes for the popup bar to use.
-@property (nonatomic, copy, null_resettable) LNPopupBarAppearance* standardAppearance UI_APPEARANCE_SELECTOR;
+@property (nonatomic, copy, null_resettable) LNPopupBarAppearance* standardAppearance UI_APPEARANCE_SELECTOR API_AVAILABLE(ios(13.0));
 
 /// The popup bar's progress view style.
 @property (nonatomic, assign) LNPopupBarProgressViewStyle progressViewStyle UI_APPEARANCE_SELECTOR;

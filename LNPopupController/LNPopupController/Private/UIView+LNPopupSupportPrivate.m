@@ -100,50 +100,101 @@ static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 #if ! LNPopupControllerEnforceStrictClean
-		//updateBackgroundGroupName
-		SEL updateBackgroundGroupNameSEL = NSSelectorFromString(_LNPopupDecodeBase64String(_uBGN));
-		
-		id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){
-			return ^ (id _self) {
-				orig(_self, updateBackgroundGroupNameSEL);
-				
-				static NSString* key = nil;
-				static dispatch_once_t onceToken;
-				dispatch_once(&onceToken, ^{
-					//backdropGroupName
-					key = _LNPopupDecodeBase64String(_bGN);
-				});
-				
-				NSString* groupName = [_self valueForKey:key];
-				if([groupName hasSuffix:@"🤡"] == NO)
-				{
-					[_self setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:key];
-				}
+		if(@available(iOS 13.0, *))
+		{
+			//updateBackgroundGroupName
+			SEL updateBackgroundGroupNameSEL = NSSelectorFromString(_LNPopupDecodeBase64String(_uBGN));
+			
+			id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){
+				return ^ (id _self) {
+					orig(_self, updateBackgroundGroupNameSEL);
+					
+					static NSString* key = nil;
+					static dispatch_once_t onceToken;
+					dispatch_once(&onceToken, ^{
+						//backdropGroupName
+						key = _LNPopupDecodeBase64String(_bGN);
+					});
+					
+					NSString* groupName = [_self valueForKey:key];
+					if([groupName hasSuffix:@"🤡"] == NO)
+					{
+						[_self setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:key];
+					}
+				};
 			};
-		};
-		
-		{
-			//_UINavigationBarVisualProvider
-			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVP));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
-			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			
+			{
+				//_UINavigationBarVisualProvider
+				Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVP));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				//_UINavigationBarVisualProviderLegacyIOS
+				Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPLI));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				//_UINavigationBarVisualProviderModernIOS
+				Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPMI));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
 		}
-		
+		else
 		{
-			//_UINavigationBarVisualProviderLegacyIOS
-			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPLI));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
-			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
-		}
-		
-		{
-			//_UINavigationBarVisualProviderModernIOS
-			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPMI));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
-			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			//updateBackgroundGroupName
+			SEL updateBackgroundsSEL = NSSelectorFromString(@"_updateBackgrounds");
+			
+			id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){
+				return ^ (id _self) {
+					orig(_self, updateBackgroundsSEL);
+					
+					static NSString* key = nil;
+					static dispatch_once_t onceToken;
+					dispatch_once(&onceToken, ^{
+						//groupName
+						key = @"backgroundView.groupName";
+					});
+					
+					NSString* groupName = [_self valueForKeyPath:key];
+					if([groupName hasSuffix:@"🤡"] == NO)
+					{
+						[_self setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKeyPath:key];
+					}
+				};
+			};
+			
+			{
+				//_UINavigationBarVisualProvider
+				Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVP));
+				Method m = class_getInstanceMethod(cls, updateBackgroundsSEL);
+				void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				//_UINavigationBarVisualProviderLegacyIOS
+				Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPLI));
+				Method m = class_getInstanceMethod(cls, updateBackgroundsSEL);
+				void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				//_UINavigationBarVisualProviderModernIOS
+				Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPMI));
+				Method m = class_getInstanceMethod(cls, updateBackgroundsSEL);
+				void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
 		}
 		
 		NSString* sel = _LNPopupDecodeBase64String(_dMFWtW);
@@ -352,7 +403,7 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardA
 #pragma clang diagnostic pop
 }
 
-static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPopupBar* popupBar)
+static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPopupBar* popupBar) API_AVAILABLE(ios(13.0))
 {
 	//backgroundTransitionProgress
 	static NSString* bTP = nil;
@@ -408,23 +459,23 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	}
 }
 
-- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar
+- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar API_AVAILABLE(ios(13.0))
 {
 	return __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(self, popupBar);
 }
 
-- (UIToolbarAppearance *)_lnpopup_scrollEdgeAppearance
+- (UIToolbarAppearance *)_lnpopup_scrollEdgeAppearance API_AVAILABLE(ios(13.0))
 {
 	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 }
 
-- (UIToolbarAppearance *)_lnpopup_compactScrollEdgeAppearance
+- (UIToolbarAppearance *)_lnpopup_compactScrollEdgeAppearance API_AVAILABLE(ios(13.0))
 {
 	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
 }
 
 #if ! LNPopupControllerEnforceStrictClean
-- (UIToolbarAppearance*)_lnpopup_standardAppearance
+- (UIToolbarAppearance*)_lnpopup_standardAppearance API_AVAILABLE(ios(13.0))
 {
 	__weak __typeof(self) weakSelf = self;
 	
@@ -441,7 +492,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	}];
 }
 
-- (UIToolbarAppearance*)_lnpopup_compactAppearance
+- (UIToolbarAppearance*)_lnpopup_compactAppearance API_AVAILABLE(ios(13.0))
 {
 	__weak __typeof(self) weakSelf = self;
 	
@@ -459,14 +510,14 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 }
 #endif
 
-- (void)_lnpopup_setStandardAppearance:(UIToolbarAppearance *)standardAppearance
+- (void)_lnpopup_setStandardAppearance:(UIToolbarAppearance *)standardAppearance API_AVAILABLE(ios(13.0))
 {
 	[self _lnpopup_setStandardAppearance:standardAppearance];
 	
 	[self _ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:YES];
 }
 
-- (void)_lnpopup_setCompactAppearance:(UIToolbarAppearance *)compactAppearance
+- (void)_lnpopup_setCompactAppearance:(UIToolbarAppearance *)compactAppearance API_AVAILABLE(ios(13.0))
 {
 	[self _lnpopup_setCompactAppearance:compactAppearance];
 	
@@ -501,18 +552,18 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	}
 }
 
-- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar
+- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar API_AVAILABLE(ios(13.0))
 {
 	return __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(self, popupBar);
 }
 
-- (UITabBarAppearance *)_lnpopup_scrollEdgeAppearance
+- (UITabBarAppearance *)_lnpopup_scrollEdgeAppearance API_AVAILABLE(ios(13.0))
 {
 	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 }
 
 #if ! LNPopupControllerEnforceStrictClean
-- (UITabBarAppearance *)_lnpopup_standardAppearance
+- (UITabBarAppearance *)_lnpopup_standardAppearance API_AVAILABLE(ios(13.0))
 {
 	__weak __typeof(self) weakSelf = self;
 	
@@ -530,7 +581,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 }
 #endif
 
-- (void)_lnpopup_setStandardAppearance:(UITabBarAppearance *)standardAppearance
+- (void)_lnpopup_setStandardAppearance:(UITabBarAppearance *)standardAppearance API_AVAILABLE(ios(13.0))
 {
 	[self _lnpopup_setStandardAppearance:standardAppearance];
 	
@@ -635,18 +686,18 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	}
 }
 
-- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar
+- (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar API_AVAILABLE(ios(13.0))
 {
 	return __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(self, popupBar);
 }
 
-- (UITabBarAppearance *)_lnpopup_scrollEdgeAppearance
+- (UITabBarAppearance *)_lnpopup_scrollEdgeAppearance API_AVAILABLE(ios(13.0))
 {
 	return _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(self, @selector(standardAppearance), @selector(_lnpopup_scrollEdgeAppearance));
 }
 
 #if ! LNPopupControllerEnforceStrictClean
-- (UITabBarAppearance *)_lnpopup_standardAppearance
+- (UITabBarAppearance *)_lnpopup_standardAppearance API_AVAILABLE(ios(13.0))
 {
 	__weak __typeof(self) weakSelf = self;
 	
@@ -664,7 +715,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 }
 #endif
 
-- (void)_lnpopup_setStandardAppearance:(UITabBarAppearance *)standardAppearance
+- (void)_lnpopup_setStandardAppearance:(UITabBarAppearance *)standardAppearance API_AVAILABLE(ios(13.0))
 {
 	[self _lnpopup_setStandardAppearance:standardAppearance];
 	
