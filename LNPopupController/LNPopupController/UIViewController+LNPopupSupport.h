@@ -16,11 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class UIViewController;
 
-NS_REFINED_FOR_SWIFT
 /// The default popup snap percent. See `UIViewController.popupSnapPercent` for more information.
-extern const double LNSnapPercentDefault;
+extern const double LNSnapPercentDefault NS_REFINED_FOR_SWIFT;
 
-NS_REFINED_FOR_SWIFT
 /// Available interaction styles with the popup bar and popup content view.
 typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	/// The default interaction style for the current environment.
@@ -37,7 +35,7 @@ typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	
 	/// No interaction
 	LNPopupInteractionStyleNone = 0xFFFF
-} NS_SWIFT_NAME(UIViewController.__PopupInteractionStyle);
+} NS_REFINED_FOR_SWIFT NS_SWIFT_NAME(UIViewController.__PopupInteractionStyle);
 
 /// The state of the popup presentation.
 typedef NS_ENUM(NSInteger, LNPopupPresentationState){

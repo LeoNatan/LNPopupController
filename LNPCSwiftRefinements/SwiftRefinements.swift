@@ -41,20 +41,24 @@ public extension UIViewController {
 	var popupInteractionStyle: PopupInteractionStyle {
 		get {
 			switch __popupInteractionStyle {
-			case .none:
-				return .none
+			case .default:
+				return .default
 			case .drag:
 				return .drag
 			case .snap:
 				return __popupSnapPercent == .defaultPopupSnapPercent ? .snap : .customizedSnap(percent: __popupSnapPercent)
-			default:
-				return .default
+			case .scroll:
+				return .scroll
+			case .none:
+				return .none
+			@unknown default:
+				fatalError("Please open an issue here: https://github.com/LeoNatan/LNPopupController/issues/new/choose")
 			}
 		}
 		set {
 			switch newValue {
-			case .none:
-				__popupInteractionStyle = .none
+			case .default:
+				__popupInteractionStyle = .default
 				return
 			case .drag:
 				__popupInteractionStyle = .drag
@@ -67,8 +71,11 @@ public extension UIViewController {
 				__popupInteractionStyle = .snap
 				__popupSnapPercent = percent
 				return
-			default:
-				__popupInteractionStyle = .default
+			case .scroll:
+				__popupInteractionStyle = .scroll
+				return
+			case .none:
+				__popupInteractionStyle = .none
 				return
 			}
 		}
