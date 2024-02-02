@@ -8,17 +8,24 @@
 
 #import "IntroWebViewController.h"
 #import "SafeSystemImages.h"
+#import "LNPopupControllerExample-Bridging-Header.h"
 @import WebKit;
 @import LNPopupController;
 
 @interface IntroWebViewController ()
 {
 	WKWebView* _webView;
+	UIVisualEffectView* _effectView;
 }
 
 @end
 
 @implementation IntroWebViewController
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+	return UIStatusBarStyleLightContent;
+}
 
 - (void)viewDidLoad
 {
@@ -33,9 +40,9 @@
 	[self.view addSubview:_webView];
 	
 	UIBlurEffectStyle style = UIBlurEffectStyleSystemThinMaterial;
-	UIVisualEffectView* effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
-	effectView.translatesAutoresizingMaskIntoConstraints = NO;
-	[self.view addSubview:effectView];
+	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
+	_effectView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self.view addSubview:_effectView];
 	
 	[NSLayoutConstraint activateConstraints:@[
 		[self.view.topAnchor constraintEqualToAnchor:_webView.topAnchor],
@@ -43,10 +50,10 @@
 		[self.view.leadingAnchor constraintEqualToAnchor:_webView.leadingAnchor],
 		[self.view.trailingAnchor constraintEqualToAnchor:_webView.trailingAnchor],
 		
-		[self.view.topAnchor constraintEqualToAnchor:effectView.topAnchor],
-		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:effectView.bottomAnchor],
-		[self.view.leadingAnchor constraintEqualToAnchor:effectView.leadingAnchor],
-		[self.view.trailingAnchor constraintEqualToAnchor:effectView.trailingAnchor],
+		[self.view.topAnchor constraintEqualToAnchor:_effectView.topAnchor],
+		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_effectView.bottomAnchor],
+		[self.view.leadingAnchor constraintEqualToAnchor:_effectView.leadingAnchor],
+		[self.view.trailingAnchor constraintEqualToAnchor:_effectView.trailingAnchor],
 	]];
 	
 	self.popupItem.image = [UIImage imageNamed:@"AppIcon60x60"];
@@ -65,6 +72,15 @@
 	} range:[title rangeOfString:NSLocalizedString(@"LNPopupController", @"")]];
 	
 	self.popupItem.attributedTitle = attribTitle;
+	
+	[_webView addObserver:self forKeyPath:@"themeColor" options:NSKeyValueObservingOptionNew context:NULL];
+	[_webView addObserver:self forKeyPath:@"underPageBackgroundColor" options:NSKeyValueObservingOptionNew context:NULL];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+	_effectView.effect = nil;
+	_effectView.backgroundColor = _webView.themeColor;
 }
 
 - (IBAction)_navigate:(id)sender

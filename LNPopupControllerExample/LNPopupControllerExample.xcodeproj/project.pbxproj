@@ -43,6 +43,10 @@
 		39B0DFF32B1819EF008CCF36 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF52B1819EF008CCF36 /* Music.storyboard */; };
 		39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
 		39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
+		39BF83D32B554AE800917649 /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 39BF83D22B554AE800917649 /* LNPreviewToContextMenu */; };
+		39BF83D42B554AE800917649 /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39BF83D22B554AE800917649 /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39BF83D62B554AF400917649 /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 39BF83D52B554AF400917649 /* LNPreviewToContextMenu */; };
+		39BF83D72B554AF400917649 /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39BF83D52B554AF400917649 /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39D6C8B32B2D01E600F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; };
 		39D6C8B42B2D01F600F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39D6C8B62B2D020000F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */; };
@@ -99,6 +103,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				39D6C8B42B2D01F600F53E70 /* LNTouchVisualizer in Embed Frameworks */,
+				39BF83D42B554AE800917649 /* LNPreviewToContextMenu in Embed Frameworks */,
 				39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -111,6 +116,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				39D6C8B72B2D020000F53E70 /* LNTouchVisualizer in Embed Frameworks */,
+				39BF83D72B554AF400917649 /* LNPreviewToContextMenu in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -174,6 +180,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39BF83D32B554AE800917649 /* LNPreviewToContextMenu in Frameworks */,
 				3980E7FC26DEBCAF00AC0728 /* LoremIpsum in Frameworks */,
 				39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */,
 				39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */,
@@ -188,6 +195,7 @@
 				39D6C8B62B2D020000F53E70 /* LNTouchVisualizer in Frameworks */,
 				39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */,
 				39FAFC4B24E71A6C008BBC2D /* LoremIpsum in Frameworks */,
+				39BF83D62B554AF400917649 /* LNPreviewToContextMenu in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +383,7 @@
 			packageProductDependencies = (
 				3980E7FB26DEBCAF00AC0728 /* LoremIpsum */,
 				39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */,
+				39BF83D22B554AE800917649 /* LNPreviewToContextMenu */,
 			);
 			productName = LNPopupControllerExample;
 			productReference = 39277A041B58228000293F95 /* LNPopupControllerExample.app */;
@@ -397,6 +406,7 @@
 			packageProductDependencies = (
 				39FAFC3324E71A6C008BBC2D /* LoremIpsum */,
 				39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */,
+				39BF83D52B554AF400917649 /* LNPreviewToContextMenu */,
 			);
 			productName = LNPopupControllerExample;
 			productReference = 39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */;
@@ -959,6 +969,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
 			productName = LoremIpsum;
+		};
+		39BF83D22B554AE800917649 /* LNPreviewToContextMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
+			productName = LNPreviewToContextMenu;
+		};
+		39BF83D52B554AF400917649 /* LNPreviewToContextMenu */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */;
+			productName = LNPreviewToContextMenu;
 		};
 		39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -47,7 +47,8 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 		
 		bg.clipsToBounds = true
 		bg.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-		bg.layer.cornerRadius = 10
+		bg.layer.cornerRadius = 20
+		bg.layer.cornerCurve = .continuous
 		
 	}
 	
