@@ -55,6 +55,8 @@ static NSString* _UBB = @"X1VJQmFyQmFja2dyb3VuZA==";
 static NSString* _tBVA = @"dHJhbnNpdGlvbkJhY2tncm91bmRWaWV3c0FuaW1hdGVkOg==";
 //_backgroundView
 static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
+//_registeredScrollToTopViews
+static NSString* _rSTTV = @"X3JlZ2lzdGVyZWRTY3JvbGxUb1RvcFZpZXdz";
 
 #endif
 
@@ -97,8 +99,8 @@ static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 
 + (void)load
 {
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
+	@autoreleasepool 
+	{
 #if ! LNPopupControllerEnforceStrictClean
 		//updateBackgroundGroupName
 		SEL updateBackgroundGroupNameSEL = NSSelectorFromString(_LNPopupDecodeBase64String(_uBGN));
@@ -155,7 +157,7 @@ static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 						@selector(didMoveToWindow),
 						@selector(_ln_didMoveToWindow));
 #endif
-	});
+	}
 }
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
@@ -276,6 +278,63 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 }
 
 @end
+
+#if ! LNPopupControllerEnforceStrictClean
+@interface UIWindow (ScrollToTopFix) @end
+@implementation UIWindow (ScrollToTopFix)
+
++ (void)load
+{
+	@autoreleasepool
+	{
+		//_registeredScrollToTopViews
+		NSString* selName = _LNPopupDecodeBase64String(_rSTTV);
+		LNSwizzleMethod(self,
+						NSSelectorFromString(selName),
+						@selector(_ln_rSTTV));
+	}
+}
+
+//_registeredScrollToTopViews
+- (NSArray*)_ln_rSTTV
+{
+	NSArray* rv = [self _ln_rSTTV];
+	NSMutableArray* popupRV = [NSMutableArray new];
+	
+	//_viewControllerForAncestor
+	static NSString* vCFA = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		vCFA = _LNPopupDecodeBase64String(_vCFA);
+	});
+	
+	for(UIView* scrollToTopCandidate in rv)
+	{
+		UIViewController* vc = [scrollToTopCandidate valueForKey:vCFA];
+		
+		if(vc == nil)
+		{
+			continue;
+		}
+		
+		BOOL fromPopup = vc._isContainedInOpenPopupController;
+		if(fromPopup)
+		{
+			[popupRV addObject:scrollToTopCandidate];
+		}
+	}
+	
+	if(popupRV.count > 0)
+	{
+		return popupRV;
+	}
+	
+	return rv;
+}
+
+@end
+
+#endif
 
 #if TARGET_OS_MACCATALYST
 	

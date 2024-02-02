@@ -51,6 +51,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (nullable _LNPopupBottomBarSupport *)_ln_bottomBarSupport_nocreate;
 
 - (BOOL)_isContainedInPopupController;
+- (BOOL)_isContainedInOpenPopupController;
 - (BOOL)_isContainedInPopupControllerOrDeallocated;
 
 - (BOOL)_ignoringLayoutDuringTransition;

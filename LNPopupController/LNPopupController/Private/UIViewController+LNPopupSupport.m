@@ -189,6 +189,16 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 	return [self.parentViewController _isContainedInPopupController];
 }
 
+- (BOOL)_isContainedInOpenPopupController
+{
+	if(self.popupPresentationContainerViewController != nil)
+	{
+		return self.popupPresentationContainerViewController._ln_popupController_nocreate.popupControllerPublicState == LNPopupPresentationStateOpen;
+	}
+	
+	return [self.parentViewController _isContainedInOpenPopupController];
+}
+
 - (BOOL)_isContainedInPopupControllerOrDeallocated
 {
 	if(objc_getAssociatedObject(self, _LNPopupPresentationContainerViewControllerKey) != nil)
