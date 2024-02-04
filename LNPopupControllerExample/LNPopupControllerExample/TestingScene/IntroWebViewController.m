@@ -15,7 +15,7 @@
 @interface IntroWebViewController ()
 {
 	WKWebView* _webView;
-	UIVisualEffectView* _effectView;
+	UIView* _topColorView;
 }
 
 @end
@@ -39,10 +39,12 @@
 	_webView.scrollView.automaticallyAdjustsScrollIndicatorInsets = NO;
 	[self.view addSubview:_webView];
 	
-	UIBlurEffectStyle style = UIBlurEffectStyleSystemThinMaterial;
-	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
-	_effectView.translatesAutoresizingMaskIntoConstraints = NO;
-	[self.view addSubview:_effectView];
+//	UIBlurEffectStyle style = UIBlurEffectStyleSystemThinMaterial;
+//	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
+	_topColorView = [UIView new];
+	_topColorView.backgroundColor = [UIColor colorWithRed:0.12 green:0.14 blue:0.15 alpha:1.0];
+	_topColorView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self.view addSubview:_topColorView];
 	
 	[NSLayoutConstraint activateConstraints:@[
 		[self.view.topAnchor constraintEqualToAnchor:_webView.topAnchor],
@@ -50,10 +52,10 @@
 		[self.view.leadingAnchor constraintEqualToAnchor:_webView.leadingAnchor],
 		[self.view.trailingAnchor constraintEqualToAnchor:_webView.trailingAnchor],
 		
-		[self.view.topAnchor constraintEqualToAnchor:_effectView.topAnchor],
-		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_effectView.bottomAnchor],
-		[self.view.leadingAnchor constraintEqualToAnchor:_effectView.leadingAnchor],
-		[self.view.trailingAnchor constraintEqualToAnchor:_effectView.trailingAnchor],
+		[self.view.topAnchor constraintEqualToAnchor:_topColorView.topAnchor],
+		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_topColorView.bottomAnchor],
+		[self.view.leadingAnchor constraintEqualToAnchor:_topColorView.leadingAnchor],
+		[self.view.trailingAnchor constraintEqualToAnchor:_topColorView.trailingAnchor],
 	]];
 	
 	self.popupItem.image = [UIImage imageNamed:@"AppIcon60x60"];
@@ -79,8 +81,8 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-	_effectView.effect = nil;
-	_effectView.backgroundColor = _webView.themeColor;
+//	_effectView.effect = nil;
+	_topColorView.backgroundColor = _webView.themeColor;
 }
 
 - (IBAction)_navigate:(id)sender
