@@ -521,6 +521,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		return;
 	}
 	
+	_customBarViewController.view.autoresizingMask = UIViewAutoresizingNone;
+	
 	CGRect frame = _contentView.bounds;
 	frame.size.height = _customBarViewController.preferredContentSize.height;
 	_customBarViewController.view.frame = frame;
@@ -650,10 +652,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	[_contentView.contentView insertSubview:_imageView aboveSubview:_toolbar];
 	[_contentView.contentView insertSubview:_titlesView aboveSubview:_imageView];
-	if(_customBarViewController != nil)
-	{
-		[_contentView.contentView insertSubview:_customBarViewController.view aboveSubview:_bottomShadowView];
-	}
 	
 	UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
 	CGFloat h = 1 / screen.scale;
@@ -691,7 +689,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	[self _layoutTitles];
 	
-	CGFloat titleSpacing = 1 + (1 / MAX(1, self.window.screen.scale));
+	CGFloat titleSpacing = 1 + (1 / MAX(1, screen.scale));
 	if(_resolvedStyle == LNPopupBarStyleCompact)
 	{
 		titleSpacing = 0;
@@ -1821,7 +1819,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		[_customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 		
-		[self.contentView addSubview:_customBarViewController.view];
+		[_contentView.contentView insertSubview:_customBarViewController.view aboveSubview:_bottomShadowView];
 		
 		if(_customBarViewController.view.translatesAutoresizingMaskIntoConstraints == NO)
 		{
