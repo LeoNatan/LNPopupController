@@ -545,16 +545,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 //	[self _clearRunningPopupAnimators];
 	
-	if(animated == NO)
-	{
-		[UIView performWithoutAnimation:^{
-			animationBlock();
-			completionBlock(UIViewAnimatingPositionEnd);
-			[_currentContentController.view layoutIfNeeded];
-		}];
-		return;
-	}
-	
 	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:resolvedStyle == LNPopupInteractionStyleSnap ? 0.4 : 0.5 dampingRatio:spring ? 0.85 : 1.0 animations:animationBlock];
 	_runningPopupAnimation.userInteractionEnabled = NO;
 	[_runningPopupAnimation addCompletion:completionBlock];
@@ -564,6 +554,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[self _addEventQueueResumptionStep:_runningPopupAnimation];
 	
 	[_runningPopupAnimation startAnimation];
+	
+	if(animated == NO)
+	{
+		[_runningPopupAnimation stopAnimation:NO];
+		[_runningPopupAnimation finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+	}
 }
 
 - (void)_popupBarLongPressGestureRecognized:(UILongPressGestureRecognizer*)lpgr
@@ -1410,10 +1406,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			_runningBarAnimation = nil;
 		}];
 		[self _addEventQueueResumptionStep:_runningBarAnimation];
-		if(animated == NO)
-		{
-			_runningBarAnimation.fractionComplete = 1.0;
-		}
+
 		[_runningBarAnimation startAnimation];
 		
 		_runningBarSidecarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:0.3 dampingRatio:500 animations:middle];
@@ -1423,8 +1416,13 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		[self _addEventQueueResumptionStep:_runningBarSidecarAnimation];
 		if(animated == NO)
 		{
-			_runningBarSidecarAnimation.fractionComplete = 1.0;
 			[_runningBarSidecarAnimation startAnimation];
+			
+			[_runningBarAnimation stopAnimation:NO];
+			[_runningBarAnimation finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+			
+			[_runningBarSidecarAnimation stopAnimation:NO];
+			[_runningBarSidecarAnimation finishAnimationAtPosition:UIViewAnimatingPositionEnd];
 		}
 		else
 		{
@@ -1525,7 +1523,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 //			[self _clearRunningBarAnimators];
 //			[self _clearRunningPopupAnimators];
 			
-			_runningBarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animated ? 0.5 : 0.0 dampingRatio:500 animations:^{
+			_runningBarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:0.5 dampingRatio:500 animations:^{
 				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillDismissPopupBar:animated:), animated);
 				[self.popupBar.customBarViewController _userFacing_viewWillDisappear:animated];
 				
@@ -1598,7 +1596,14 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				_runningBarAnimation = nil;
 			}];
 			[self _addEventQueueResumptionStep:_runningBarAnimation];
+			
 			[_runningBarAnimation startAnimation];
+			
+			if(animated == NO)
+			{
+				[_runningBarAnimation stopAnimation:NO];
+				[_runningBarAnimation finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+			}
 		};
 		
 		_dismissalOverride = YES;
