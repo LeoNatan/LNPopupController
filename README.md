@@ -292,7 +292,6 @@ Finally, set the `customBarViewController` property of the popup bar object to a
 The included demo project includes two example custom popup bar scenes.
 
 > [!TIP]
->
 > Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the UIKit system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the many customization APIs to tweak the standard bar styles to fit your app’s design.
 
 #### ProMotion Support
@@ -310,7 +309,6 @@ When opening the popup, the system queries the `viewForPopupInteractionGestureRe
 You can implement the delegate of the interaction gesture recognizer in order to influence its behavior, such as preventing popup interaction when the user is interacting with other controls or views inside the popup content.
 
 > [!CAUTION]
->
 > If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code. Instead, consider implementing the gesture recognizer's delegate and providing custom logic to disable the interaction.
 
 #### Full Right-to-Left Support

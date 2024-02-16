@@ -39,6 +39,9 @@ typedef void(^MLAnimationCompletionBlock)(BOOL finished);
 @end
 
 @interface MarqueeLabel()
+{
+	MarqueeType _userMarqueeType;
+}
 
 @property (nonatomic, strong) UILabel *subLabel;
 
@@ -279,6 +282,8 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+	
+	[self _updateEffectiveMarqueeType];
     
     [self updateSublabel];
 }
@@ -1467,12 +1472,28 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     }
 }
 
+- (void)_updateEffectiveMarqueeType
+{
+	BOOL isRTL = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
+	
+	if(isRTL)
+	{
+		_marqueeType = _userMarqueeType == MLContinuous ? MLContinuousReverse : MLContinuous;
+	}
+	else
+	{
+		_marqueeType = _userMarqueeType == MLContinuous ? MLContinuous : MLContinuousReverse;
+	}
+}
+
 - (void)setMarqueeType:(MarqueeType)marqueeType {
-    if (marqueeType == _marqueeType) {
+    if (marqueeType == _userMarqueeType) {
         return;
     }
     
-    _marqueeType = marqueeType;
+	_userMarqueeType = marqueeType;
+	
+	[self _updateEffectiveMarqueeType];
     
     [self updateSublabel];
 }
