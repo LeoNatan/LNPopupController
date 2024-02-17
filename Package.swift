@@ -28,8 +28,7 @@ let package = Package(
 			publicHeadersPath: "include",
 			cSettings: [
 				.headerSearchPath("."),
-				.headerSearchPath("Private"),
-				.unsafeFlags(["-w"])
+				.headerSearchPath("Private")
 			]),
 		.target(
 			name: "LNPopupController",
