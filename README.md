@@ -261,6 +261,8 @@ Status bar management of the popup content view controller is respected and appl
 
 <p align="center"><img src="./Supplements/statusbar_style.gif" width="360"/> <img src="./Supplements/statusbar_hidden.gif" width="360"/></p>
 
+Home indicator visibility control is respected and applied when appropriate.
+
 Context menus are supported. Add a `UIContextMenuInteraction` interaction object to the popup bar, and it will behave as expected.
 
 <p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="360"/></p>
