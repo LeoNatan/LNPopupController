@@ -214,12 +214,20 @@ static void __accessibilityBundleLoadHandler(void)
 							@selector(_ln_setNeedsStatusBarAppearanceUpdate));
 			
 			LNSwizzleMethod(self,
+							@selector(setNeedsUpdateOfHomeIndicatorAutoHidden),
+							@selector(_ln_setNeedsUpdateOfHomeIndicatorAutoHidden));
+			
+			LNSwizzleMethod(self,
 							@selector(childViewControllerForStatusBarStyle),
 							@selector(_ln_childViewControllerForStatusBarStyle));
 			
 			LNSwizzleMethod(self,
 							@selector(childViewControllerForStatusBarHidden),
 							@selector(_ln_childViewControllerForStatusBarHidden));
+			
+			LNSwizzleMethod(self,
+							@selector(childViewControllerForHomeIndicatorAutoHidden),
+							@selector(_ln_childViewControllerForHomeIndicatorAutoHidden));
 			
 			LNSwizzleMethod(self,
 							@selector(viewWillTransitionToSize:withTransitionCoordinator:),
@@ -406,6 +414,18 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 }
 
+- (void)_ln_setNeedsUpdateOfHomeIndicatorAutoHidden
+{
+	if(self.popupPresentationContainerViewController)
+	{
+		[self.popupPresentationContainerViewController setNeedsUpdateOfHomeIndicatorAutoHidden];
+	}
+	else
+	{
+		[self _ln_setNeedsUpdateOfHomeIndicatorAutoHidden];
+	}
+}
+
 - (void)_ln_viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
 	if(self._ln_popupController_nocreate)
@@ -509,6 +529,12 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	return vc ?: [self _ln_childViewControllerForStatusBarStyle];
 }
 
+- (nullable UIViewController *)_ln_common_childViewControllerForHomeIndicatorAutoHidden
+{
+	UIViewController* vc = [self _common_childViewControllersForStatusBarLogic];
+	
+	return vc ?: [self _ln_childViewControllerForHomeIndicatorAutoHidden];
+}
 
 - (nullable UIViewController *)_ln_childViewControllerForStatusBarHidden
 {
@@ -518,6 +544,11 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 - (nullable UIViewController *)_ln_childViewControllerForStatusBarStyle
 {
 	return [self _ln_common_childViewControllerForStatusBarStyle];
+}
+
+- (nullable UIViewController *)_ln_childViewControllerForHomeIndicatorAutoHidden
+{
+	return [self _ln_common_childViewControllerForHomeIndicatorAutoHidden];
 }
 
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState
@@ -973,6 +1004,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 						@selector(_ln_childViewControllerForStatusBarHidden));
 		
 		LNSwizzleMethod(self,
+						@selector(childViewControllerForHomeIndicatorAutoHidden),
+						@selector(_ln_childViewControllerForHomeIndicatorAutoHidden));
+		
+		LNSwizzleMethod(self,
 						@selector(viewDidLayoutSubviews),
 						@selector(_ln_popup_viewDidLayoutSubviews_tvc));
 		
@@ -1367,6 +1402,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return [self _ln_common_childViewControllerForStatusBarStyle];
 }
 
+- (nullable UIViewController *)_ln_childViewControllerForHomeIndicatorAutoHidden
+{
+	return [self _ln_common_childViewControllerForHomeIndicatorAutoHidden];
+}
+
 @end
 
 #pragma mark - UINavigationController
@@ -1420,6 +1460,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		LNSwizzleMethod(self,
 						@selector(childViewControllerForStatusBarHidden),
 						@selector(_ln_childViewControllerForStatusBarHidden));
+		
+		LNSwizzleMethod(self,
+						@selector(childViewControllerForHomeIndicatorAutoHidden),
+						@selector(_ln_childViewControllerForHomeIndicatorAutoHidden));
 		
 		LNSwizzleMethod(self,
 						@selector(setNavigationBarHidden:animated:),
@@ -1772,6 +1816,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (nullable UIViewController *)_ln_childViewControllerForStatusBarStyle
 {
 	return [self _ln_common_childViewControllerForStatusBarStyle];
+}
+
+- (nullable UIViewController *)_ln_childViewControllerForHomeIndicatorAutoHidden
+{
+	return [self _ln_common_childViewControllerForHomeIndicatorAutoHidden];
 }
 
 - (void)_ln_setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated

@@ -280,6 +280,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(state != _LNPopupPresentationStateTransitioning)
 	{
 		[_containerController setNeedsStatusBarAppearanceUpdate];
+		[_containerController setNeedsUpdateOfHomeIndicatorAutoHidden];
 	}
 	
 	[self _repositionPopupContentMovingBottomBar:_containerController._ignoringLayoutDuringTransition == NO animated:animated];
@@ -820,6 +821,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			[UIView animateWithDuration:0.3 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:0 animations:^{
 				[_containerController setNeedsStatusBarAppearanceUpdate];
+				[_containerController setNeedsUpdateOfHomeIndicatorAutoHidden];
 			} completion:nil];
 		}
 	}

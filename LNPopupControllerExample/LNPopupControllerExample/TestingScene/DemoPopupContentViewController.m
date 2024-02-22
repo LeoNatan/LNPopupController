@@ -378,6 +378,11 @@
 	return UIStatusBarAnimationFade;//Slide;
 }
 
+- (BOOL)prefersHomeIndicatorAutoHidden
+{
+	return YES;
+}
+
 @end
 
 #endif
