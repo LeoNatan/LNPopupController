@@ -558,8 +558,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(animated == NO)
 	{
-		[_runningPopupAnimation stopAnimation:NO];
-		[_runningPopupAnimation finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+		UIViewPropertyAnimator* retained = _runningPopupAnimation;
+		[retained stopAnimation:NO];
+		[retained finishAnimationAtPosition:UIViewAnimatingPositionEnd];
 	}
 }
 
@@ -1259,15 +1260,17 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 //{
 //	if(_runningBarAnimation != nil)
 //	{
-//		[_runningBarAnimation stopAnimation:NO];
-//		[_runningBarAnimation finishAnimationAtPosition:UIViewAnimatingPositionCurrent];
+//		UIViewPropertyAnimator* retained = _runningBarAnimation;
+//		[retained stopAnimation:NO];
+//		[retained finishAnimationAtPosition:UIViewAnimatingPositionCurrent];
 //		_runningBarAnimation = nil;
 //	}
 //	
 //	if(_runningBarSidecarAnimation != nil)
 //	{
-//		[_runningBarSidecarAnimation stopAnimation:NO];
-//		[_runningBarSidecarAnimation finishAnimationAtPosition:UIViewAnimatingPositionCurrent];
+//		UIViewPropertyAnimator* retained = _runningBarSidecarAnimation;
+//		[retained stopAnimation:NO];
+//		[retained finishAnimationAtPosition:UIViewAnimatingPositionCurrent];
 //		_runningBarSidecarAnimation = nil;
 //	}
 //}
@@ -1276,8 +1279,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 //{
 //	if(_runningPopupAnimation != nil)
 //	{
-//		[_runningPopupAnimation stopAnimation:NO];
-//		[_runningPopupAnimation finishAnimationAtPosition:UIViewAnimatingPositionCurrent];
+//		UIViewPropertyAnimator* retained = _runningPopupAnimation;
+//		[retained stopAnimation:NO];
+//		[retained finishAnimationAtPosition:UIViewAnimatingPositionCurrent];
 //		_runningPopupAnimation = nil;
 //	}
 //}
@@ -1420,11 +1424,14 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		{
 			[_runningBarSidecarAnimation startAnimation];
 			
-			[_runningBarAnimation stopAnimation:NO];
-			[_runningBarAnimation finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+			UIViewPropertyAnimator* retained1 = _runningBarAnimation;
+			UIViewPropertyAnimator* retained2 = _runningBarSidecarAnimation;
 			
-			[_runningBarSidecarAnimation stopAnimation:NO];
-			[_runningBarSidecarAnimation finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+			[retained1 stopAnimation:NO];
+			[retained1 finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+			
+			[retained2 stopAnimation:NO];
+			[retained2 finishAnimationAtPosition:UIViewAnimatingPositionEnd];
 		}
 		else
 		{
@@ -1603,8 +1610,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			if(animated == NO)
 			{
-				[_runningBarAnimation stopAnimation:NO];
-				[_runningBarAnimation finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+				UIViewPropertyAnimator* retained = _runningBarAnimation;
+				[retained stopAnimation:NO];
+				[retained finishAnimationAtPosition:UIViewAnimatingPositionEnd];
 			}
 		};
 		
