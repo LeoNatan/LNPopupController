@@ -148,6 +148,7 @@ static NSString* _rSTTV = @"X3JlZ2lzdGVyZWRTY3JvbGxUb1RvcFZpZXdz";
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
 		
+		//_didMoveFromWindow:toWindow:
 		NSString* sel = _LNPopupDecodeBase64String(_dMFWtW);
 		LNSwizzleMethod(self,
 						NSSelectorFromString(sel),
