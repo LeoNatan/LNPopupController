@@ -1131,9 +1131,18 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_popupController_nocreate.popupBar.frame = frame;
 }
 
+static BOOL _alreadyInHideShowBar = NO;
+
 //_hideBarWithTransition:isExplicit:duration:
 - (void)hBWT:(NSInteger)t iE:(BOOL)e d:(NSTimeInterval)duration
 {
+	if(_alreadyInHideShowBar == YES)
+	{
+		//Ignore nested calls to _hideBarWithTransition:isExplicit:duration:
+		[self hBWT:t iE:e d:duration];
+		return;
+	}
+	
 	BOOL isFloating = self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating;
 	if(!isFloating)
 	{
@@ -1154,7 +1163,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_bottomBarExtension.frame = frame;
 	self._ln_bottomBarExtension_nocreate.hidden = NO;
 	self._ln_bottomBarExtension_nocreate.alpha = 1.0;
+	
+	_alreadyInHideShowBar = YES;
 	[self hBWT:t iE:e d:duration];
+	_alreadyInHideShowBar = NO;
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
 	self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
@@ -1238,6 +1250,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_showBarWithTransition:isExplicit:duration:
 - (void)sBWT:(NSInteger)t iE:(BOOL)e d:(NSTimeInterval)duration
 {
+	if(_alreadyInHideShowBar == YES)
+	{
+		//Ignore nested calls to _showBarWithTransition:isExplicit:duration:
+		[self sBWT:t iE:e d:duration];
+		return;
+	}
+	
 	BOOL isFloating = self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating;
 	
 	BOOL isRTL = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.tabBar.superview.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
@@ -1256,7 +1275,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	BOOL wasHidden = self.tabBar.isHidden;
 	
+	_alreadyInHideShowBar = YES;
 	[self sBWT:t iE:e d:duration];
+	_alreadyInHideShowBar = NO;
 	
 	if(e == NO)
 	{
