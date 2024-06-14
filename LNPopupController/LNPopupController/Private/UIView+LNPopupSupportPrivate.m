@@ -25,8 +25,8 @@ static const void* LNPopupTabBarProgressKey = &LNPopupTabBarProgressKey;
 static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgroundViewForceAnimatedKey;
 
 #if ! LNPopupControllerEnforceStrictClean
-//backdropGroupName
-static NSString* _bGN = @"YmFja2Ryb3BHcm91cE5hbWU=";
+//groupName
+static NSString* _gN = @"Z3JvdXBOYW1l";
 //_UINavigationBarVisualProvider
 static NSString* _UINBVP = @"X1VJTmF2aWdhdGlvbkJhclZpc3VhbFByb3ZpZGVy";
 //_UINavigationBarVisualProviderLegacyIOS
@@ -112,14 +112,16 @@ static NSString* _rSTTV = @"X3JlZ2lzdGVyZWRTY3JvbGxUb1RvcFZpZXdz";
 				static NSString* key = nil;
 				static dispatch_once_t onceToken;
 				dispatch_once(&onceToken, ^{
-					//backdropGroupName
-					key = _LNPopupDecodeBase64String(_bGN);
+					//groupName
+					key = _LNPopupDecodeBase64String(_gN);
 				});
 				
-				NSString* groupName = [_self valueForKey:key];
+				id backgroundView = [_self valueForKey:@"backgroundView"];
+				
+				NSString* groupName = [backgroundView valueForKey:key];
 				if([groupName hasSuffix:@"🤡"] == NO)
 				{
-					[_self setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:key];
+					[backgroundView setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:key];
 				}
 			};
 		};
