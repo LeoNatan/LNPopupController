@@ -950,7 +950,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (BOOL)_isTabBarHiddenDuringTransition
 {
 	NSNumber* isHidden = objc_getAssociatedObject(self, LNToolbarHiddenBeforeTransition);
-	return isHidden.boolValue;
+	return isHidden.boolValue || self.tabBar.superview == nil;
 }
 
 - (void)_setTabBarHiddenDuringTransition:(BOOL)toolbarHidden
