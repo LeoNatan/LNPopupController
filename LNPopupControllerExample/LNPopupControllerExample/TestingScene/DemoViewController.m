@@ -87,10 +87,6 @@
 			NSUInteger tabIdx = [self.tabBarController.viewControllers indexOfObject:self.navigationController ?: self];
 			self.colorSeedString = [NSString stringWithFormat:@"tab_%@", @(tabIdx)];
 		}
-		else if(self.navigationController != nil)
-		{
-			self.colorSeedString = [NSString stringWithFormat:@"tab_109"];
-		}
 		else
 		{
 			self.colorSeedString = @"nil";

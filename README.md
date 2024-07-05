@@ -230,26 +230,43 @@ Supplying long text for the title and/or subtitle will result in a scrolling tex
 
 #### Popup Bar Customization
 
-`LNPopupBar` exposes API to customize the default popup bar's appearance, either through `UIAppearance` API or directly on a specific popup bar object. Use `LNPopupBarAppearance` objects to define the standard appearance of the bar.
+`LNPopupBar` exposes many APIs to customize the default popup bar's appearance. Use `LNPopupBarAppearance` objects to define the standard appearance of the bar.
 
-Remember to set the `inheritsAppearanceFromDockingView` property to `false`, or your customization is likely to be overridden by the bottom bar’s appearance.
+Remember to set the `inheritsAppearanceFromDockingView` property to `false`, or some of your customizations might be overridden by the bottom bar’s appearance.
 
 ```swift
 let appearance = LNPopupBarAppearance()
 appearance.titleTextAttributes = AttributeContainer()
-				.font(UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!))
-				.foregroundColor(UIColor.yellow)
+	.font(UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!))
+	.foregroundColor(UIColor.yellow)
 appearance.subtitleTextAttributes = AttributeContainer()
-				.font(UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!))
-				.foregroundColor(UIColor.green)
-appearance.backgroundEffect = UIBlurEffect(style: .systemChromeMaterialDark)
+	.font(UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!))
+	.foregroundColor(UIColor.green)
 
-navigationController?.popupBar.inheritsAppearanceFromDockingView = false
+let floatingBarBackgroundShadow = NSShadow()
+floatingBarBackgroundShadow.shadowColor = UIColor.red
+floatingBarBackgroundShadow.shadowOffset = .zero
+floatingBarBackgroundShadow.shadowBlurRadius = 8.0
+appearance.floatingBarBackgroundShadow = floatingBarBackgroundShadow
+
+let imageShadow = NSShadow()
+imageShadow.shadowColor = UIColor.yellow
+imageShadow.shadowOffset = .zero
+imageShadow.shadowBlurRadius = 3.0
+appearance.imageShadow = imageShadow
+
+if navigationController?.popupBar.barStyle == .floating {
+	appearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
+} else {
+	appearance.backgroundEffect = UIBlurEffect(style: .dark)
+	navigationController?.popupBar.inheritsAppearanceFromDockingView = false
+}
+
 navigationController?.popupBar.standardAppearance = appearance
 navigationController?.popupBar.tintColor = .yellow
 ```
 
-<p align="center"><img src="./Supplements/floating_custom.png" width="360"/> <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/custom1.png" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_custom.png" width="360"/> <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/compact_custom.png" width="360"/></p>
 
 #### System Interactions
 
@@ -294,7 +311,7 @@ Finally, set the `customBarViewController` property of the popup bar object to a
 The included demo project includes two example custom popup bar scenes.
 
 > [!TIP]
-> Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the UIKit system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the many customization APIs to tweak the standard bar styles to fit your app’s design.
+> Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the UIKit system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the [many customization APIs](#popup-bar-customization) to tweak the standard bar styles to fit your app’s design.
 
 #### ProMotion Support
 
