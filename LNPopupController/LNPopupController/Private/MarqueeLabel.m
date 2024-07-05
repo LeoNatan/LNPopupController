@@ -361,10 +361,6 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         return;
     }
     
-    // Label DOES need to scroll
-    
-    [self.subLabel setLineBreakMode:NSLineBreakByClipping];
-    
     // Spacing between primary and second sublabel must be at least equal to leadingBuffer, and at least equal to the fadeLength
     CGFloat minTrailing = MAX(MAX(self.leadingBuffer, self.trailingBuffer), self.fadeLength);
     
