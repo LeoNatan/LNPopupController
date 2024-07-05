@@ -96,7 +96,7 @@ demoVC.view.backgroundColor = .red
 demoVC.popupItem.title = "Hello World"
 demoVC.popupItem.subtitle = "And a subtitle!"
 demoVC.popupItem.progress = 0.34
-	
+    
 tabBarController?.presentPopupBar(withContentViewController: demoVC, animated: true, completion: nil)
 ```
 
@@ -237,11 +237,11 @@ Remember to set the `inheritsAppearanceFromDockingView` property to `false`, or 
 ```swift
 let appearance = LNPopupBarAppearance()
 appearance.titleTextAttributes = AttributeContainer()
-	.font(UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!))
-	.foregroundColor(UIColor.yellow)
+    .font(UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!))
+    .foregroundColor(UIColor.yellow)
 appearance.subtitleTextAttributes = AttributeContainer()
-	.font(UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!))
-	.foregroundColor(UIColor.green)
+    .font(UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!))
+    .foregroundColor(UIColor.green)
 
 let floatingBarBackgroundShadow = NSShadow()
 floatingBarBackgroundShadow.shadowColor = UIColor.red
@@ -256,10 +256,10 @@ imageShadow.shadowBlurRadius = 3.0
 appearance.imageShadow = imageShadow
 
 if navigationController?.popupBar.barStyle == .floating {
-	appearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
+    appearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
 } else {
-	appearance.backgroundEffect = UIBlurEffect(style: .dark)
-	navigationController?.popupBar.inheritsAppearanceFromDockingView = false
+    appearance.backgroundEffect = UIBlurEffect(style: .dark)
+    navigationController?.popupBar.inheritsAppearanceFromDockingView = false
 }
 
 navigationController?.popupBar.standardAppearance = appearance
