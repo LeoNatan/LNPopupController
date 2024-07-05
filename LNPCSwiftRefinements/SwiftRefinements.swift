@@ -11,7 +11,7 @@ import UIKit
 @_exported import LNPopupController_ObjC
 #endif
 
-extension Double {
+public extension Double {
 	/// The default popup snap percent. See `LNPopupInteractionStyle.customizedSnap(percent:)` for more information.
 	static var defaultPopupSnapPercent: Double {
 		return __LNSnapPercentDefault
