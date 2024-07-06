@@ -444,6 +444,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	{
 		if(@available(iOS 15.0, *))
 		{
+			LNSwizzleMethod(self, @selector(layoutSubviews), @selector(_ln_layoutSubviews));
 #if ! LNPopupControllerEnforceStrictClean
 			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
 			LNSwizzleMethod(self, @selector(compactAppearance), @selector(_lnpopup_compactAppearance));
@@ -454,6 +455,13 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 			LNSwizzleMethod(self, @selector(compactScrollEdgeAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
 		}
 	}
+}
+
+- (void)_ln_layoutSubviews
+{
+	[self _ln_layoutSubviews];
+	
+	[self._ln_attachedPopupController _configurePopupBarFromBottomBarModifyingGroupingIdentifier:NO];
 }
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
