@@ -162,6 +162,8 @@ static void __accessibilityBundleLoadHandler(void)
 
 #pragma mark - UIViewController
 
+extern void __fixUIHostingViewHitTest(void);
+
 @interface UIViewController (LNPopupLayout) @end
 @implementation UIViewController (LNPopupLayout)
 
@@ -171,6 +173,8 @@ static void __accessibilityBundleLoadHandler(void)
 	{
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
+			__fixUIHostingViewHitTest();
+			
 			__LNPopupBuggyAdditionalSafeAreaClasses = [NSSet setWithObjects:UINavigationController.class, UITabBarController.class, nil];
 			
 			LNSwizzleMethod(self,

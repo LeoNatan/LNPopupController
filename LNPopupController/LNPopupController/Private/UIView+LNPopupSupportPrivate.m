@@ -57,8 +57,32 @@ static NSString* _tBVA = @"dHJhbnNpdGlvbkJhY2tncm91bmRWaWV3c0FuaW1hdGVkOg==";
 static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
 //_registeredScrollToTopViews
 static NSString* _rSTTV = @"X3JlZ2lzdGVyZWRTY3JvbGxUb1RvcFZpZXdz";
+//_safeAreaInsetsFrozen
+static NSString* _sAIF = @"X3NhZmVBcmVhSW5zZXRzRnJvemVu";
 
 #endif
+
+@interface __LNPopupUIViewFrozenInsets : NSObject @end
+@implementation __LNPopupUIViewFrozenInsets
+
++ (void)load
+{
+	@autoreleasepool 
+	{
+		const char* encoding = method_getTypeEncoding(class_getInstanceMethod(UIView.class, @selector(needsUpdateConstraints)));
+		//_safeAreaInsetsFrozen
+		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(_sAIF)), imp_implementationWithBlock(^ (id self, SEL _cmd) {
+			return YES;
+		}), encoding);
+	}
+}
+
+//- (BOOL)_safeAreaInsetsFrozen
+//{
+//	return YES;
+//}
+
+@end
 
 @interface UIViewController ()
 
@@ -278,6 +302,11 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 #if ! LNPopupControllerEnforceStrictClean
 	}
 #endif
+}
+
+- (void)_ln_freezeInsets
+{
+	LNDynamicallySubclass(self, __LNPopupUIViewFrozenInsets.class);
 }
 
 @end

@@ -11,6 +11,41 @@ import UIKit
 @_exported import LNPopupController_ObjC
 #endif
 
+#if canImport(SwiftUI)
+import SwiftUI
+
+@_cdecl("__fixUIHostingViewHitTest")
+internal
+func fixUIHostingViewHitTest() {
+	DispatchQueue.main.async {
+		let cls = type(of: UIHostingController(rootView: EmptyView()).view!)
+		let sel = #selector(UIView.hitTest(_:with:))
+		let method = class_getInstanceMethod(cls, sel)!
+		
+		let _orig: @convention(c) (_ self: UIView, _ sel: Selector, _ point: CGPoint, _ event: UIEvent?) -> UIView?
+		_orig = unsafeBitCast(method_getImplementation(method), to: type(of: _orig))
+		
+		let orig: (UIView, CGPoint, UIEvent?) -> UIView? = { _self, point, event in
+			_orig(_self, sel, point, event)
+		}
+		
+		let impl: @convention(block) (UIView, CGPoint, UIEvent?) -> UIView? = { _self, point, event in
+			if let popupContentView = _self.subviews.filter({ $0 is LNPopupContentView }).first, popupContentView.point(inside: popupContentView.convert(point, from: _self), with: event), let popupContentViewHitTest = popupContentView.hitTest(popupContentView.convert(point, from: _self), with: event) {
+				return popupContentViewHitTest
+			}
+			
+			if let popupBar = _self.subviews.filter({ $0 is LNPopupBar }).first, popupBar.point(inside: popupBar.convert(point, from: _self), with: event), let popupBarHitTest = popupBar.hitTest(popupBar.convert(point, from: _self), with: event) {
+				return popupBarHitTest
+			}
+			
+			return orig(_self, point, event)
+		}
+		
+		method_setImplementation(method, imp_implementationWithBlock(impl))
+	}
+}
+#endif
+
 public extension Double {
 	/// The default popup snap percent. See `LNPopupInteractionStyle.customizedSnap(percent:)` for more information.
 	static var defaultPopupSnapPercent: Double {

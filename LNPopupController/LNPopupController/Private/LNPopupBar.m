@@ -12,6 +12,7 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "NSAttributedString+LNPopupSupport.h"
 #import "_LNPopupBarShadowedImageView.h"
+#import "UIView+LNPopupSupportPrivate.h"
 
 #ifdef DEBUG
 static NSUserDefaults* __LNDebugUserDefaults(void)
@@ -1067,8 +1068,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	_swiftuiTitleContentView = swiftuiTitleContentView;
-	_swiftuiTitleContentView.backgroundColor = UIColor.clearColor;
-	_swiftuiTitleContentView.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	if(_swiftuiTitleContentView != nil)
+	{
+		[_swiftuiTitleContentView _ln_freezeInsets];
+		_swiftuiTitleContentView.backgroundColor = UIColor.clearColor;
+		_swiftuiTitleContentView.translatesAutoresizingMaskIntoConstraints = NO;
+	}
 	
 	[self _setNeedsTitleLayoutRemovingLabels:YES];
 }
@@ -1105,11 +1111,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_swiftHacksWindow1.hidden = YES;
 		_swiftHacksWindow1 = nil;
 	}
-	_swiftHacksWindow1 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
-	_swiftHacksWindow1.frame = CGRectMake(-4000, 0, 400, 400);
-	_swiftHacksWindow1.rootViewController = _swiftuiHiddenLeadingController;
-	_swiftHacksWindow1.hidden = NO;
-	_swiftHacksWindow1.alpha = 0.0;
+	
+	if(_swiftuiHiddenLeadingController != nil)
+	{
+		[UIView performWithoutAnimation:^{
+			_swiftHacksWindow1 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
+			_swiftHacksWindow1.frame = CGRectMake(-4000, 0, 400, 400);
+			_swiftHacksWindow1.rootViewController = _swiftuiHiddenLeadingController;
+			_swiftHacksWindow1.hidden = NO;
+			_swiftHacksWindow1.alpha = 0.0;
+			[_swiftHacksWindow1 layoutSubviews];
+		}];
+	}
 	
 	[self _fixupSwiftUIControllersWithBarStyle];
 }
@@ -1134,11 +1147,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_swiftHacksWindow2.hidden = YES;
 		_swiftHacksWindow2 = nil;
 	}
-	_swiftHacksWindow2 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
-	_swiftHacksWindow2.frame = CGRectMake(-4000, 0, 400, 400);
-	_swiftHacksWindow2.rootViewController = _swiftuiHiddenTrailingController;
-	_swiftHacksWindow2.hidden = NO;
-	_swiftHacksWindow2.alpha = 0.0;
+	
+	if(_swiftuiHiddenTrailingController != nil)
+	{
+		[UIView performWithoutAnimation:^{
+			_swiftHacksWindow2 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
+			_swiftHacksWindow2.frame = CGRectMake(-4000, 0, 400, 400);
+			_swiftHacksWindow2.rootViewController = _swiftuiHiddenTrailingController;
+			_swiftHacksWindow2.hidden = NO;
+			_swiftHacksWindow2.alpha = 0.0;
+			[_swiftHacksWindow2 layoutSubviews];
+		}];
+	}
 	
 	[self _fixupSwiftUIControllersWithBarStyle];
 }
@@ -1521,10 +1541,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		{
 			[_titlesView addArrangedSubview:_swiftuiTitleContentView];
 			[_titlesView layoutIfNeeded];
-			UIView* textView = _swiftuiTitleContentView.subviews.firstObject;
-			[NSLayoutConstraint activateConstraints:@[
-				[_swiftuiTitleContentView.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
-			]];
+			if(unavailable(iOS 17.0, *)) {
+				UIView* textView = _swiftuiTitleContentView.subviews.firstObject;
+				[NSLayoutConstraint activateConstraints:@[
+					[_swiftuiTitleContentView.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
+				]];
+			}
 		}
 		else
 		{

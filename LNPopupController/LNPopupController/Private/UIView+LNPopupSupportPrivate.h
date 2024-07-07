@@ -30,6 +30,8 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 - (void)_ln_forgetAboutIt;
 - (nullable NSString*)_ln_effectGroupingIdentifierIfAvailable;
 
+- (void)_ln_freezeInsets;
+
 @end
 
 @interface UIView ()
