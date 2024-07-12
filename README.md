@@ -88,7 +88,7 @@ A popup item should always reflect the popup information about the view controll
 
 ### Managing the Popup Bar
 
-To present the popup bar, create a content controller, update its popup item and present the popup bar.
+To present the popup bar, create a content controller, update its popup item and present the popup bar using `presentPopupBar(with:animated:completion:)`.
 
 ```swift
 let demoVC = DemoPopupContentViewController()
@@ -97,7 +97,7 @@ demoVC.popupItem.title = "Hello World"
 demoVC.popupItem.subtitle = "And a subtitle!"
 demoVC.popupItem.progress = 0.34
     
-tabBarController?.presentPopupBar(withContentViewController: demoVC, animated: true, completion: nil)
+tabBarController?.presentPopupBar(with: demoVC, animated: true, completion: nil)
 ```
 
 You can present a new content controller while the popup bar is presented and when the popup itself is open.
@@ -108,13 +108,13 @@ To open and close the popup programatically, use `openPopup(animated:completion:
 tabBarController?.openPopup(animated: true, completion: nil)
 ```
 
-Alternatively, you can present the popup bar and open the popup in one animation, using `presentPopupBar(withContentViewController:openPopup:animated:completion:)`.
+Alternatively, you can present the popup bar and open the popup in one animation, using `presentPopupBar(with:openPopup:animated:completion:)`.
 
 ```swift
-tabBarController?.presentPopupBar(withContentViewController: demoVC, openPopup:true, animated: true, completion: nil)
+tabBarController?.presentPopupBar(with: demoVC, openPopup:true, animated: true, completion: nil)
 ```
 
-To dismiss the popup bar, use `dismissPopupBarAnimated:completion:`.
+To dismiss the popup bar, use `dismissPopupBar(animated:completion:)`.
 
 ```swift
 tabBarController?.dismissPopupBar(animated: true, completion: nil)

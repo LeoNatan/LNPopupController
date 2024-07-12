@@ -1244,10 +1244,21 @@ static BOOL _alreadyInHideShowBar = NO;
 	}
 	else
 	{
-		[UIView performWithoutAnimation:^{
-			animations(nil);
-			completion(nil);
-		}];
+		if(duration > 0)
+		{
+			[UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:1.0 options:0 animations:^{
+				animations(nil);
+			} completion:^(BOOL finished) {
+				completion(nil);
+			}];
+		}
+		else
+		{
+			[UIView performWithoutAnimation:^{
+				animations(nil);
+				completion(nil);
+			}];
+		}
 	}
 }
 
@@ -1391,12 +1402,24 @@ static BOOL _alreadyInHideShowBar = NO;
 	}
 	else
 	{
-		[UIView performWithoutAnimation:^{
-			__LNFakeContext* ctx = [__LNFakeContext new];
-			ctx.cancelled = NO;
-			animations((id)ctx);
-			completion((id)ctx);
-		}];
+		__LNFakeContext* ctx = [__LNFakeContext new];
+		ctx.cancelled = NO;
+		if(duration > 0)
+		{
+			[UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:1.0 options:0 animations:^{
+				animations((id)ctx);
+			} completion:^(BOOL finished) {
+				completion((id)ctx);
+			}];
+		}
+		else
+		{
+			[UIView performWithoutAnimation:^{
+				
+				animations((id)ctx);
+				completion((id)ctx);
+			}];
+		}
 	}
 }
 

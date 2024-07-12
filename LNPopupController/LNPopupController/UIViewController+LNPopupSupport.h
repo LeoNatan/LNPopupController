@@ -87,6 +87,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 
 @end
 
+NS_SWIFT_UI_ACTOR
 /// A set of methods, used to respond to popup presentation changes.
 @protocol LNPopupPresentationDelegate <NSObject>
 
@@ -144,7 +145,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 ///   - controller: The controller for popup presentation.
 ///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
 ///   - completion: The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 
 /// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view.
@@ -157,26 +158,25 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 ///   - openPopup: Pass `true` to open the popup in the same animation; otherwise, pass `false`.
 ///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
 ///   - completion: The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 /// Opens the popup, displaying the content view controller's view.
 /// - Parameters:
 ///   - animated: Pass `true` to animate; otherwise, pass `false`.
 ///   - completion: The block to execute after the popup is opened. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)openPopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
+- (void)openPopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 /// Closes the popup, hiding the content view controller's view.
 /// - Parameters:
 ///   - animated: Pass `true` to animate; otherwise, pass `false`.
 ///   - completion: The block to execute after the popup is closed. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)closePopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
+- (void)closePopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 /// Dismisses the popup presentation, closing the popup if open and dismissing the popup bar.
 /// - Parameters:
 ///   - animated: Pass `true` to animate; otherwise, pass `false`.
 ///   - completion: The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
-
+- (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 /// The popup bar interaction style.
 @property (nonatomic, assign) LNPopupInteractionStyle popupInteractionStyle NS_REFINED_FOR_SWIFT;
