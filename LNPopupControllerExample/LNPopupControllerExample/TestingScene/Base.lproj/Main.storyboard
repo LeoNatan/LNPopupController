@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23086.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina6_72" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23076"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -485,7 +485,12 @@
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="never" id="ZqR-0M-W4y">
+                    <navigationItem key="navigationItem" title="LNPopupController" leftItemsSupplementBackButton="YES" largeTitleDisplayMode="never" id="ZqR-0M-W4y">
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="dock.rectangle" catalog="system" id="V13-KE-dTv">
+                            <connections>
+                                <action selector="_hideBottomBar:" destination="l54-z5-xcG" id="HIC-Da-xta"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Gallery" style="done" id="J60-GM-dOF">
                             <connections>
                                 <segue destination="Kpt-cx-19r" kind="unwind" unwindAction="unwindToGallery:" id="dI4-2y-ODx"/>
@@ -497,6 +502,7 @@
                     <connections>
                         <outlet property="_barStyleButton" destination="Mqv-hY-tWM" id="FZH-Ef-T8y"/>
                         <outlet property="_galleryButton" destination="PfZ-Ec-LGF" id="THI-bP-GnE"/>
+                        <outlet property="_hideTabBarButton" destination="V13-KE-dTv" id="NDX-P9-gwv"/>
                         <outlet property="_nextButton" destination="DxD-7y-6Na" id="zDA-Ko-tDF"/>
                     </connections>
                 </viewController>
@@ -636,6 +642,7 @@
         <image name="arrowtriangle.forward.fill" catalog="system" width="128" height="113"/>
         <image name="dock.arrow.down.rectangle" catalog="system" width="128" height="93"/>
         <image name="dock.arrow.up.rectangle" catalog="system" width="128" height="93"/>
+        <image name="dock.rectangle" catalog="system" width="128" height="93"/>
         <image name="gears" width="25" height="25"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

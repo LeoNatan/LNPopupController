@@ -111,7 +111,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)
 		popupContentVC.tableView.backgroundColor = .clear
 		
-		presentPopupBar(withContentViewController: self.popupContentVC, animated: animated, completion: nil)
+		presentPopupBar(with: self.popupContentVC, animated: animated, completion: nil)
 #endif
 	}
 	

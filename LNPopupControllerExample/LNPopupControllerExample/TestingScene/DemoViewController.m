@@ -53,6 +53,8 @@
 	__weak IBOutlet UIButton *_nextButton;
 	
 	__weak IBOutlet UIBarButtonItem *_barStyleButton;
+	__weak IBOutlet UIBarButtonItem *_hideTabBarButton;
+	
 	BOOL _alreadyPresentedAutomatically;
 }
 
@@ -102,6 +104,22 @@
 	else
 	{
 		self.view.backgroundColor = UIColor.systemBackgroundColor;
+	}
+	
+	if(@available(iOS 18.0, *))
+	{
+		_hideTabBarButton.hidden = self.tabBarController == nil && self.navigationController == nil;
+	}
+	else
+	{
+		if (@available(iOS 16.0, *))
+		{
+			_hideTabBarButton.hidden = self.navigationController == nil || self.tabBarController != nil;
+		}
+		else
+		{
+			_hideTabBarButton.enabled = self.navigationController == nil || self.tabBarController != nil;
+		}
 	}
 	
 //	UIViewController* settings = [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateViewControllerWithIdentifier:@"SettingsView"];
@@ -414,6 +432,23 @@
 	{
 		[(DemoViewController*)segue.destinationViewController setColorSeedString:self.colorSeedString];
 		[(DemoViewController*)segue.destinationViewController setColorSeedCount:self.colorSeedCount + 1];
+	}
+}
+
+- (IBAction)_hideBottomBar:(id)sender
+{
+	if(self.tabBarController != nil)
+	{
+		if(@available(iOS 18.0, *))
+		{
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 180000
+			[self.tabBarController setTabBarHidden:!self.tabBarController.isTabBarHidden animated:YES];
+#endif
+		}
+	}
+	else if(self.navigationController != nil)
+	{
+		[self.navigationController setToolbarHidden:!self.navigationController.isToolbarHidden animated:YES];
 	}
 }
 
