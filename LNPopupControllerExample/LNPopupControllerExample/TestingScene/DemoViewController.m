@@ -8,6 +8,7 @@
 
 #if LNPOPUP
 @import LNPopupController;
+#import <LNPopupController/LNPopupController-Swift.h>
 #endif
 #import "DemoViewController.h"
 #import "DemoPopupContentViewController.h"

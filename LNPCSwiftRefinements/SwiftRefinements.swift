@@ -14,11 +14,15 @@ import UIKit
 #if canImport(SwiftUI)
 import SwiftUI
 
-@_cdecl("__fixUIHostingViewHitTest")
-internal
-func fixUIHostingViewHitTest() {
+@_cdecl("__ln_doNotCall__fixUIHostingViewHitTest")
+@_spi(LNPopupControllerInternal)
+public func __ln_doNotCall__fixUIHostingViewHitTest() {
 	DispatchQueue.main.async {
-		let cls = type(of: UIHostingController(rootView: EmptyView()).view!)
+		guard let view = UIHostingController(rootView: EmptyView()).view else {
+			return
+		}
+		
+		let cls = type(of: view)
 		let sel = #selector(UIView.hitTest(_:with:))
 		let method = class_getInstanceMethod(cls, sel)!
 		

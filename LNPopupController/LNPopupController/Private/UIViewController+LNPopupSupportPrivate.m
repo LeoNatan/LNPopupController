@@ -164,7 +164,7 @@ static void __accessibilityBundleLoadHandler(void)
 
 #if __has_include(<SwiftUI/SwiftUI.h>)
 #define HAS_SWIFT_UI 1
-extern void __fixUIHostingViewHitTest(void);
+extern void __ln_doNotCall__fixUIHostingViewHitTest(void);
 #endif
 
 @interface UIViewController (LNPopupLayout) @end
@@ -177,7 +177,7 @@ extern void __fixUIHostingViewHitTest(void);
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
 #if HAS_SWIFT_UI
-			__fixUIHostingViewHitTest();
+			__ln_doNotCall__fixUIHostingViewHitTest();
 #endif
 			
 			__LNPopupBuggyAdditionalSafeAreaClasses = [NSSet setWithObjects:UINavigationController.class, UITabBarController.class, nil];
