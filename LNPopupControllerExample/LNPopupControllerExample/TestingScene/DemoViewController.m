@@ -443,13 +443,13 @@
 		if(@available(iOS 18.0, *))
 		{
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 180000
-			[self.tabBarController setTabBarHidden:!self.tabBarController.isTabBarHidden animated:YES];
+			[self.tabBarController setTabBarHidden:!self.tabBarController.isTabBarHidden animated:NO];
 #endif
 		}
 	}
 	else if(self.navigationController != nil)
 	{
-		[self.navigationController setToolbarHidden:!self.navigationController.isToolbarHidden animated:YES];
+		[self.navigationController setToolbarHidden:!self.navigationController.isToolbarHidden animated:NO];
 	}
 }
 

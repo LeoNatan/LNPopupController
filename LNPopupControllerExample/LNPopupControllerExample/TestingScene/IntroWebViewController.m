@@ -58,7 +58,7 @@
 		[self.view.trailingAnchor constraintEqualToAnchor:_topColorView.trailingAnchor],
 	]];
 	
-	self.popupItem.image = [UIImage imageNamed:@"AppIcon60x60"];
+	self.popupItem.image = [UIImage imageNamed:@"AppIconPopupBar"];
 	self.popupItem.barButtonItems = @[
 		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill", NO) style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
