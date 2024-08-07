@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -420,7 +420,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 9999;
-				ORGANIZATIONNAME = "Leo Natan";
+				ORGANIZATIONNAME = "Léo Natan";
 				TargetAttributes = {
 					39277A031B58228000293F95 = {
 						CreatedOnToolsVersion = 7.0;
@@ -429,7 +429,7 @@
 				};
 			};
 			buildConfigurationList = 392779FF1B58228000293F95 /* Build configuration list for PBXProject "LNPopupControllerExample" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (

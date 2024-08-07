@@ -2,8 +2,8 @@
 //  LNForwardingDelegate.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 15/07/2017.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2017-07-15.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

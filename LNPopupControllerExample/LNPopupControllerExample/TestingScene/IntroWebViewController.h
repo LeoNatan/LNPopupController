@@ -2,8 +2,8 @@
 //  IntroWebViewController.h
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan on 10/28/20.
-//  Copyright © 2020 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2020-10-28.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

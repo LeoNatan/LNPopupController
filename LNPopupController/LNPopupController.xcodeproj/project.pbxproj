@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -328,7 +328,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 9999;
-				ORGANIZATIONNAME = "Leo Natan";
+				ORGANIZATIONNAME = "Léo Natan";
 				TargetAttributes = {
 					39DB52E41B5823330061C589 = {
 						CreatedOnToolsVersion = 7.0;
@@ -337,7 +337,7 @@
 				};
 			};
 			buildConfigurationList = 39DB52DF1B5823330061C589 /* Build configuration list for PBXProject "LNPopupController" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -534,7 +534,11 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupController;
 				PRODUCT_NAME = LNPopupController;
 				SKIP_INSTALL = YES;
@@ -567,7 +571,11 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.LeoNatan.LNPopupController;
 				PRODUCT_NAME = LNPopupController;
 				SKIP_INSTALL = YES;

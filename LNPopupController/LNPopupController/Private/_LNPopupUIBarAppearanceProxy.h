@@ -2,8 +2,8 @@
 //  _LNPopupUIBarAppearanceProxy.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 30/08/2023.
-//  Copyright © 2023 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2023-08-30.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

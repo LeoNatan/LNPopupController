@@ -2,8 +2,8 @@
 //  LocationsController.swift
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan on 30/12/2016.
-//  Copyright © 2016 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2016-12-30.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 import UIKit

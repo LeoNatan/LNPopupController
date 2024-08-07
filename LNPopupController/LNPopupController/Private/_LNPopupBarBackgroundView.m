@@ -2,8 +2,8 @@
 //  _LNPopupBarBackgroundView.m
 //  LNPopupController
 //
-//  Created by Leo Natan on 6/26/21.
-//  Copyright © 2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2021-06-20.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import "_LNPopupBarBackgroundView.h"

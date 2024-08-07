@@ -2,8 +2,8 @@
 //  DemoPopupContentViewController.h
 //  LNPopupControllerExample
 //
-//  Created by Leo Natan on 6/8/16.
-//  Copyright © 2016 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2016-08-06.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
