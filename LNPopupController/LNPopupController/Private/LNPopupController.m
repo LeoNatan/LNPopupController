@@ -706,14 +706,28 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
+	CGPoint translation = [pgr translationInView:pgr.view];
+	BOOL isVerticalPan = fabs(translation.y) > fabs(translation.x);
+	
 	if(pgr != _popupContentView.popupInteractionGestureRecognizer)
 	{
 		UIScrollView* possibleScrollView = (id)pgr.view;
 		if([possibleScrollView isKindOfClass:[UIScrollView class]])
 		{
 			//If the scroll view has horizontal scroll, ignore the scroll view's pan gesture recognizer.
-			if(possibleScrollView.contentSize.width > possibleScrollView.bounds.size.width)
+			if(possibleScrollView._ln_hasHorizontalContent == YES)
 			{
+				if(isVerticalPan == false)
+				{
+					_popupContentView.popupInteractionGestureRecognizer.enabled = NO;
+					_popupContentView.popupInteractionGestureRecognizer.enabled = YES;
+				}
+				else if(_dismissGestureStarted == true)
+				{
+					pgr.enabled = NO;
+					pgr.enabled = YES;
+				}
+				
 				return;
 			}
 			
@@ -830,6 +844,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarPresentationByUserPanGestureHandler_endedOrCancelled:(UIPanGestureRecognizer*)pgr
 {
+	if(_dismissGestureStarted == true && pgr != _popupContentView.popupInteractionGestureRecognizer)
+	{
+		return;
+	}
+	
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 	
 	if(_dismissGestureStarted == YES)

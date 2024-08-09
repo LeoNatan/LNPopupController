@@ -7,6 +7,7 @@
 //
 
 #import "LNForwardingDelegate.h"
+#import "LNAddressInfo.h"
 
 @implementation LNForwardingDelegate
 
@@ -35,6 +36,14 @@
 	}
 	
 	return [self.forwardedDelegate methodSignatureForSelector:aSelector];
+}
+
++ (BOOL)isCallerUIKit:(NSArray *)callStackReturnAddresses
+{
+	NSUInteger addr = [callStackReturnAddresses[1] unsignedIntegerValue];
+	LNAddressInfo* addrInfo = [[LNAddressInfo alloc] initWithAddress:addr];
+	
+	return [addrInfo.image hasPrefix:@"UIKit"];
 }
 
 @end

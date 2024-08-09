@@ -10,6 +10,7 @@
 #import "LNForwardingDelegate.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupController.h"
+#import "UIView+LNPopupSupportPrivate.h"
 
 extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style);
 
@@ -64,6 +65,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	return rv;
 }
 
+//- (BOOL)_panGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer shouldTryToBeginHorizontallyWithEvent:(UIEvent*)event
+//{
+//	return NO;
+//}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
 	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"DropShadow"])
@@ -78,6 +84,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	}
 	
 	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"SwiftUI"])
+	{
+		return YES;
+	}
+	
+	if([otherGestureRecognizer.view isKindOfClass:UIScrollView.class] && [(UIScrollView*)otherGestureRecognizer.view _ln_hasVerticalContent] == NO)
 	{
 		return YES;
 	}
@@ -111,7 +122,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		}
 		else
 		{
-			return YES;
+			return [(UIScrollView*)otherGestureRecognizer.view _ln_hasVerticalContent] == YES;
 		}
 	}
 	
@@ -136,6 +147,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	}
 	
 	if([otherGestureRecognizer.name hasPrefix:@"undointeraction"])
+	{
+		return NO;
+	}
+	
+	if([otherGestureRecognizer.view isKindOfClass:UIScrollView.class] && [(UIScrollView*)otherGestureRecognizer.view _ln_hasVerticalContent] == NO)
 	{
 		return NO;
 	}
@@ -170,6 +186,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (id<UIGestureRecognizerDelegate>)delegate
 {
+	if([LNForwardingDelegate isCallerUIKit:NSThread.callStackReturnAddresses])
+	{
+		return _actualDelegate;
+	}
+	
 	return _actualDelegate.forwardedDelegate;
 }
 

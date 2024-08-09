@@ -771,3 +771,37 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 }
 
 @end
+
+@implementation UIScrollView (LNPopupSupportPrivate)
+
+- (CGSize)_ln_adjustedContentSize
+{
+	CGRect rect = (CGRect){0, 0, self.contentSize};
+	if([NSStringFromClass(self.class) containsString:@"Queu"] == NO)
+	{
+		rect = UIEdgeInsetsInsetRect(rect, self.adjustedContentInset);
+	}
+	return rect.size;
+}
+
+- (BOOL)_ln_hasHorizontalContent
+{
+	CGSize contentSize = self._ln_adjustedContentSize;
+	BOOL rv = contentSize.width > self.bounds.size.width;
+	
+//	NSLog(@"_ln_hasHorizontalContent: %@ contentSize: %@", @(rv), @(contentSize));
+	
+	return rv;
+}
+
+- (BOOL)_ln_hasVerticalContent
+{
+	CGSize contentSize = self._ln_adjustedContentSize;
+	BOOL rv = contentSize.height > self.bounds.size.height;
+	
+//	NSLog(@"_ln_hasVerticalContent: %@", @(rv));
+	
+	return rv;
+}
+
+@end

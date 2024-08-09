@@ -12,4 +12,6 @@
 
 @property (nonatomic, weak) id forwardedDelegate;
 
++ (BOOL)isCallerUIKit:(NSArray*)callStackReturnAddresses;
+
 @end

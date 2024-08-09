@@ -51,3 +51,10 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 #endif
 
 NS_ASSUME_NONNULL_END
+
+@interface UIScrollView (LNPopupSupportPrivate)
+
+- (BOOL)_ln_hasHorizontalContent;
+- (BOOL)_ln_hasVerticalContent;
+
+@end
