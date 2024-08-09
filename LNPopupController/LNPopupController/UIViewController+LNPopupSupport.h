@@ -68,6 +68,9 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 /// The default implementation returns the controller's view. @see `UIViewController.popupContentView`
 @property (nonatomic, strong, readonly) __kindof UIView* viewForPopupInteractionGestureRecognizer;
 
+/// The popup presentation container view controller of the receiver. If the receiver is not part of a popup presentation, the property will be @c nil. (read-only)
+@property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
+
 /// Gives the popup content controller the opportunity to place the popup close button within its own view hierarchy, instead of the system-defined placement.
 ///
 /// The default implementation of this method does nothing and returns `false`.
@@ -215,11 +218,8 @@ NS_SWIFT_UI_ACTOR
 /// The delegate that handles popup presentation-related messages.
 @property (nonatomic, weak) id<LNPopupPresentationDelegate> popupPresentationDelegate;
 
-/// The content view controller of the receiver. If there is no popover presentation, the property will be @c nil. (read-only)
+/// The content view controller of the receiver. If there is no popup presentation, the property will be @c nil. (read-only)
 @property (nullable, nonatomic, strong, readonly) __kindof UIViewController* popupContentViewController;
-
-/// The popup presentation container view controller of the receiver. If the receiver is not part of a popover presentation, the property will be @c nil. (read-only)
-@property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
 
 /// Controls whether interaction with the popup generates haptic feedback to the user.
 ///
