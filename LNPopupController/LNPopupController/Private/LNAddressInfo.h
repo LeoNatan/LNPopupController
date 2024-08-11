@@ -19,8 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString* symbol;
 @property (nonatomic, readonly) NSUInteger offset;
 
-- (NSString*)formattedDescriptionForIndex:(NSUInteger)index;
-
 @end
 
 NS_ASSUME_NONNULL_END
