@@ -59,8 +59,12 @@ BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 #ifndef LNPopupControllerEnforceStrictClean
 //_hideBarWithTransition:isExplicit:duration:
 static NSString* const hBWTiEDBase64 = @"X2hpZGVCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0OmR1cmF0aW9uOg==";
+//_hideBarWithTransition:isExplicit:duration:reason:
+static NSString* const hBWTiEDRBase64 = @"X2hpZGVCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0OmR1cmF0aW9uOnJlYXNvbjo=";
 //_showBarWithTransition:isExplicit:duration:
 static NSString* const sBWTiEDBase64 = @"X3Nob3dCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0OmR1cmF0aW9uOg==";
+//_showBarWithTransition:isExplicit:duration:reason:
+static NSString* const sBWTiEDRBase64 = @"X3Nob3dCYXJXaXRoVHJhbnNpdGlvbjppc0V4cGxpY2l0OmR1cmF0aW9uOnJlYXNvbjo=";
 //_setToolbarHidden:edge:duration:
 static NSString* const sTHedBase64 = @"X3NldFRvb2xiYXJIaWRkZW46ZWRnZTpkdXJhdGlvbjo=";
 //_viewControllerUnderlapsStatusBar
@@ -1031,17 +1035,40 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 #ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
 		
-		//_hideBarWithTransition:isExplicit:duration:
-		selName = _LNPopupDecodeBase64String(hBWTiEDBase64);
-		LNSwizzleMethod(self,
-						NSSelectorFromString(selName),
-						@selector(hBWT:iE:d:));
+		//_hideBarWithTransition:isExplicit:duration:reason:
+		selName = _LNPopupDecodeBase64String(hBWTiEDRBase64);
+		if([self instancesRespondToSelector:NSSelectorFromString(selName)])
+		{
+			LNSwizzleMethod(self,
+							NSSelectorFromString(selName),
+							@selector(hBWT:iE:d:r:));
+		}
+		else
+		{
+			//_hideBarWithTransition:isExplicit:duration:
+			selName = _LNPopupDecodeBase64String(hBWTiEDBase64);
+			LNSwizzleMethod(self,
+							NSSelectorFromString(selName),
+							@selector(hBWT:iE:d:));
+		}
 		
-		//_showBarWithTransition:isExplicit:duration:
-		selName = _LNPopupDecodeBase64String(sBWTiEDBase64);
-		LNSwizzleMethod(self,
-						NSSelectorFromString(selName),
-						@selector(sBWT:iE:d:));
+		//_showBarWithTransition:isExplicit:duration:reason:
+		selName = _LNPopupDecodeBase64String(sBWTiEDRBase64);
+		if([self instancesRespondToSelector:NSSelectorFromString(selName)])
+		{
+			//_showBarWithTransition:isExplicit:duration:reason:
+			LNSwizzleMethod(self,
+							NSSelectorFromString(selName),
+							@selector(sBWT:iE:d:r:));
+		}
+		else
+		{
+			//_showBarWithTransition:isExplicit:duration:
+			selName = _LNPopupDecodeBase64String(sBWTiEDBase64);
+			LNSwizzleMethod(self,
+							NSSelectorFromString(selName),
+							@selector(sBWT:iE:d:));
+		}
 		
 		//_updateLayoutForStatusBarAndInterfaceOrientation
 		selName = _LNPopupDecodeBase64String(uLFSBAIO);
@@ -1145,10 +1172,16 @@ static BOOL _alreadyInHideShowBar = NO;
 //_hideBarWithTransition:isExplicit:duration:
 - (void)hBWT:(NSInteger)t iE:(BOOL)e d:(NSTimeInterval)duration
 {
+	[self hBWT:t iE:e d:duration r:NSUIntegerMax];
+}
+
+//_hideBarWithTransition:isExplicit:duration:reason:
+- (void)hBWT:(NSInteger)t iE:(BOOL)e d:(NSTimeInterval)duration r:(NSUInteger)reason
+{
 	if(_alreadyInHideShowBar == YES)
 	{
-		//Ignore nested calls to _hideBarWithTransition:isExplicit:duration:
-		[self hBWT:t iE:e d:duration];
+		//Ignore nested calls to _hideBarWithTransition:isExplicit:duration:reason:
+		[self hBWT:t iE:e d:duration r:reason];
 		return;
 	}
 	
@@ -1174,7 +1207,7 @@ static BOOL _alreadyInHideShowBar = NO;
 	self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 	
 	_alreadyInHideShowBar = YES;
-	[self hBWT:t iE:e d:duration];
+	[self hBWT:t iE:e d:duration r:reason];
 	_alreadyInHideShowBar = NO;
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
@@ -1270,10 +1303,16 @@ static BOOL _alreadyInHideShowBar = NO;
 //_showBarWithTransition:isExplicit:duration:
 - (void)sBWT:(NSInteger)t iE:(BOOL)e d:(NSTimeInterval)duration
 {
+	[self sBWT:t iE:e d:duration r:NSUIntegerMax];
+}
+
+//_showBarWithTransition:isExplicit:duration:reason:
+- (void)sBWT:(NSInteger)t iE:(BOOL)e d:(NSTimeInterval)duration r:(NSUInteger)reason
+{
 	if(_alreadyInHideShowBar == YES)
 	{
 		//Ignore nested calls to _showBarWithTransition:isExplicit:duration:
-		[self sBWT:t iE:e d:duration];
+		[self sBWT:t iE:e d:duration r:reason];
 		return;
 	}
 	
@@ -1296,7 +1335,7 @@ static BOOL _alreadyInHideShowBar = NO;
 	BOOL wasHidden = self.tabBar.isHidden;
 	
 	_alreadyInHideShowBar = YES;
-	[self sBWT:t iE:e d:duration];
+	[self sBWT:t iE:e d:duration r:reason];
 	_alreadyInHideShowBar = NO;
 	
 	if(e == NO)
