@@ -68,8 +68,15 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 	
 	if(self.view.window == nil)
 	{
+		__weak __typeof(self) weakSelf = self;
 		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
-			[self presentPopupBarWithContentViewController:controller openPopup:openPopup animated:NO completion:^{
+			__strong __typeof(weakSelf) strongSelf = weakSelf;
+			if(strongSelf == nil)
+			{
+				return;
+			}
+			
+			[strongSelf presentPopupBarWithContentViewController:controller openPopup:openPopup animated:NO completion:^{
 				if(completionBlock) { completionBlock(); }
 				completionBlockInWindow();
 			}];
@@ -100,8 +107,15 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 {
 	if(self.view.window == nil)
 	{
+		__weak __typeof(self) weakSelf = self;
 		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
-			[self openPopupAnimated:NO completion:^{
+			__strong __typeof(weakSelf) strongSelf = weakSelf;
+			if(strongSelf == nil)
+			{
+				return;
+			}
+			
+			[strongSelf openPopupAnimated:NO completion:^{
 				if(completionBlock) { completionBlock(); }
 				completionBlockInWindow();
 			}];
@@ -117,8 +131,15 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 {
 	if(self.view.window == nil)
 	{
+		__weak __typeof(self) weakSelf = self;
 		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
-			[self closePopupAnimated:NO completion:^{
+			__strong __typeof(weakSelf) strongSelf = weakSelf;
+			if(strongSelf == nil)
+			{
+				return;
+			}
+			
+			[strongSelf closePopupAnimated:NO completion:^{
 				if(completionBlock) { completionBlock(); }
 				completionBlockInWindow();
 			}];
@@ -134,8 +155,15 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 {
 	if(self.view.window == nil)
 	{
+		__weak __typeof(self) weakSelf = self;
 		[self.view _ln_letMeKnowWhenViewInWindowHierarchy:^(dispatch_block_t completionBlockInWindow) {
-			[self dismissPopupBarAnimated:NO completion:^{
+			__strong __typeof(weakSelf) strongSelf = weakSelf;
+			if(strongSelf == nil)
+			{
+				return;
+			}
+			
+			[strongSelf dismissPopupBarAnimated:NO completion:^{
 				if(completionBlock) { completionBlock(); }
 				completionBlockInWindow();
 			}];
