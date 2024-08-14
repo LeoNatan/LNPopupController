@@ -109,7 +109,7 @@
 	
 	if(@available(iOS 18.0, *))
 	{
-		_hideTabBarButton.hidden = self.tabBarController == nil && self.navigationController == nil;
+		_hideTabBarButton.hidden = (self.tabBarController == nil && self.navigationController == nil) || self.navigationController.viewControllers.count > 1;
 	}
 	else
 	{
@@ -443,13 +443,13 @@
 		if(@available(iOS 18.0, *))
 		{
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 180000
-			[self.tabBarController setTabBarHidden:!self.tabBarController.isTabBarHidden animated:NO];
+			[self.tabBarController setTabBarHidden:!self.tabBarController.isTabBarHidden animated:YES];
 #endif
 		}
 	}
 	else if(self.navigationController != nil)
 	{
-		[self.navigationController setToolbarHidden:!self.navigationController.isToolbarHidden animated:NO];
+		[self.navigationController setToolbarHidden:!self.navigationController.isToolbarHidden animated:YES];
 	}
 }
 

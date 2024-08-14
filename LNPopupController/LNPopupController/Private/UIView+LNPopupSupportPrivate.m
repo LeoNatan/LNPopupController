@@ -638,13 +638,26 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 
 @end
 
+static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayoutDuringTransition;
+
 @interface UITabBar (ScrollEdgeSupport) @end
 @implementation UITabBar (ScrollEdgeSupport)
+
+- (BOOL)_ignoringLayoutDuringTransition
+{
+	return [objc_getAssociatedObject(self, LNPopupIgnoringLayoutDuringTransition) boolValue];
+}
+
+- (void)_setIgnoringLayoutDuringTransition:(BOOL)ignoringLayoutDuringTransition
+{
+	objc_setAssociatedObject(self, LNPopupIgnoringLayoutDuringTransition, @(ignoringLayoutDuringTransition), OBJC_ASSOCIATION_RETAIN);
+}
 
 + (void)load
 {
 	@autoreleasepool
 	{
+		LNSwizzleMethod(self, @selector(setFrame:), @selector(_ln_setFrame:));
 		LNSwizzleMethod(self, @selector(layoutSubviews), @selector(_ln_layoutSubviews));
 		LNSwizzleMethod(self, @selector(setSelectedItem:), @selector(_ln_setSelectedItem:));
 		
@@ -674,6 +687,14 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 			}));
 		}
 #endif
+	}
+}
+
+- (void)_ln_setFrame:(CGRect)frame
+{
+	if(self._ignoringLayoutDuringTransition == NO)
+	{
+		[self _ln_setFrame:frame];
 	}
 }
 

@@ -49,7 +49,7 @@
 
 - (void)setFrame:(CGRect)frame
 {
-	//	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
+//	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
 	
 	[super setFrame:frame];
 }
@@ -61,7 +61,7 @@
 
 - (void)setFrame:(CGRect)frame
 {
-	//	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
+//	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
 	
 	[super setFrame:frame];
 }

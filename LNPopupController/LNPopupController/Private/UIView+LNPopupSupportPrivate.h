@@ -40,6 +40,12 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 
 @end
 
+@interface UITabBar ()
+
+@property (nonatomic, getter=_ignoringLayoutDuringTransition, setter=_setIgnoringLayoutDuringTransition:) BOOL ignoringLayoutDuringTransition;
+
+@end
+
 #if TARGET_OS_MACCATALYST
 
 @interface UIWindow (MacCatalystSupport)
