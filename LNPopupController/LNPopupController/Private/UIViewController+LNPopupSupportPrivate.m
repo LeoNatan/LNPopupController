@@ -1203,14 +1203,29 @@ static BOOL _alreadyInHideShowBar = NO;
 	if(self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden)
 	{
 		[self _setTabBarHiddenDuringTransition:YES];
-		[self hBWT:transition iE:explicit d:duration r:reason];
+		
+		if(@available(iOS 18.0, *))
+		{
+			[self hBWT:transition iE:explicit d:duration r:reason];
+		}
+		else
+		{
+			[self hBWT:transition iE:explicit d:duration];
+		}
 		return;
 	}
 	
 	if(_alreadyInHideShowBar == YES)
 	{
 		//Ignore nested calls to _hideBarWithTransition:isExplicit:duration:reason:
-		[self hBWT:transition iE:explicit d:duration r:reason];
+		if(@available(iOS 18.0, *))
+		{
+			[self hBWT:transition iE:explicit d:duration r:reason];
+		}
+		else
+		{
+			[self hBWT:transition iE:explicit d:duration];
+		}
 		return;
 	}
 	
@@ -1236,7 +1251,14 @@ static BOOL _alreadyInHideShowBar = NO;
 	self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 	
 	_alreadyInHideShowBar = YES;
-	[self hBWT:transition iE:explicit d:duration r:reason];
+	if(@available(iOS 18.0, *))
+	{
+		[self hBWT:transition iE:explicit d:duration r:reason];
+	}
+	else
+	{
+		[self hBWT:transition iE:explicit d:duration];
+	}
 	_alreadyInHideShowBar = NO;
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
@@ -1355,7 +1377,14 @@ static BOOL _alreadyInHideShowBar = NO;
 	if(_alreadyInHideShowBar == YES)
 	{
 		//Ignore nested calls to _showBarWithTransition:isExplicit:duration:
-		[self sBWT:transition iE:explicit d:duration r:reason];
+		if(@available(iOS 18.0, *))
+		{
+			[self sBWT:transition iE:explicit d:duration r:reason];
+		}
+		else
+		{
+			[self sBWT:transition iE:explicit d:duration];
+		}
 		return;
 	}
 	
@@ -1378,7 +1407,14 @@ static BOOL _alreadyInHideShowBar = NO;
 	BOOL wasHidden = self.tabBar.isHidden;
 	
 	_alreadyInHideShowBar = YES;
-	[self sBWT:transition iE:explicit d:duration r:reason];
+	if(@available(iOS 18.0, *))
+	{
+		[self sBWT:transition iE:explicit d:duration r:reason];
+	}
+	else
+	{
+		[self sBWT:transition iE:explicit d:duration];
+	}
 	_alreadyInHideShowBar = NO;
 	
 	if(explicit == NO)
