@@ -314,7 +314,7 @@ static NSArray* __notifiedProperties = nil;
 		{
 			return UIColor.clearColor;
 		}
-	}];;
+	}];
 	self.floatingBackgroundImage = nil;
 	self.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
 	_wantsDynamicFloatingBackgroundEffect = YES;

@@ -99,6 +99,9 @@ static NSString* const cM = @"X2NvbnRlbnRNYXJnaW4=";
 //_setContentMargin:
 static NSString* const sCM = @"X3NldENvbnRlbnRNYXJnaW46";
 
+//_updateContentOverlayInsetsForSelfAndChildren
+static NSString* const uCOIFSAC = @"X3VwZGF0ZUNvbnRlbnRPdmVybGF5SW5zZXRzRm9yU2VsZkFuZENoaWxkcmVu";
+
 //_accessibilitySpeakThisViewController
 static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
@@ -186,6 +189,9 @@ static void __accessibilityBundleLoadHandler(void)
 #endif
 
 #pragma mark - UIViewController
+
+BOOL __ln_alreadyInHideShowBar = NO;
+UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 
 #if __has_include(<SwiftUI/SwiftUI.h>)
 #define HAS_SWIFT_UI 1
@@ -315,6 +321,24 @@ extern void __ln_doNotCall__fixUIHostingViewHitTest(void);
 #endif
 		});
 	}
+}
+
+- (void)_ln_updateSafeAreaInsets
+{
+	static SEL sel = nil;
+	//_updateContentOverlayInsetsForSelfAndChildren
+	static void(*objc_msgSend_uCOIFSAC)(id, SEL);
+	
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		//_updateContentOverlayInsetsForSelfAndChildren
+		NSString* selName = _LNPopupDecodeBase64String(uCOIFSAC);
+		sel = NSSelectorFromString(selName);
+		
+		objc_msgSend_uCOIFSAC = (void*)objc_msgSend;
+	});
+	
+	objc_msgSend_uCOIFSAC(self, sel);
 }
 
 - (BOOL)_ln_isModalInPresentation
@@ -650,6 +674,11 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 	
 	[self _uCOIFPIN];
+	
+	if(__ln_alreadyInHideShowBar && __ln_hideBarEdge == UIRectEdgeBottom)
+	{
+		[self.view layoutIfNeeded];
+	}
 	
 	if(self.popupPresentationContainerViewController != nil)
 	{
@@ -987,9 +1016,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return isHidden.boolValue || self.tabBar.superview == nil;
 }
 
-- (void)_setTabBarHiddenDuringTransition:(BOOL)toolbarHidden
+- (void)_setTabBarHiddenDuringTransition:(BOOL)tabBarHidden
 {
-	objc_setAssociatedObject(self, LNToolbarHiddenBeforeTransition, @(toolbarHidden), OBJC_ASSOCIATION_RETAIN);
+	objc_setAssociatedObject(self, LNToolbarHiddenBeforeTransition, @(tabBarHidden), OBJC_ASSOCIATION_RETAIN);
 }
 
 - (BOOL)_isPrepareTabBarIgnored
@@ -1189,7 +1218,59 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_popupController_nocreate.popupBar.frame = frame;
 }
 
-static BOOL _alreadyInHideShowBar = NO;
+- (void)_ln_animateAlongsideTransition:(NSUInteger)transition withDuration:(NSTimeInterval)duration animations:(void (^ __nullable)(id <UIViewControllerTransitionCoordinatorContext>context))animations completion:(void (^ __nullable)(id <UIViewControllerTransitionCoordinatorContext>context))completion
+{
+	id<UIViewControllerTransitionCoordinator> transitionCoordinator = self.selectedViewController.transitionCoordinator;
+	
+	__weak __typeof(self) weakSelf = self;
+	
+	if(transitionCoordinator != nil)
+	{
+		[transitionCoordinator animateAlongsideTransition:animations completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+			if(completion != nil)
+			{
+				completion(context);
+			}
+		}];
+	}
+	else
+	{
+		__LNFakeContext* ctx = [__LNFakeContext new];
+		ctx.cancelled = NO;
+		if(duration != 0)
+		{
+			if(duration == -1)
+			{
+				duration = __ln_durationForTransition(self, transition);
+			}
+			
+			[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionLayoutSubviews animations:^{
+				if(animations != nil)
+				{
+					animations((id)ctx);
+				}
+			} completion:^(BOOL finished) {
+				if(completion != nil)
+				{
+					completion((id)ctx);
+				}
+			}];
+		}
+		else
+		{
+			[UIView performWithoutAnimation:^{
+				if(animations != nil)
+				{
+					animations((id)ctx);
+				}
+				if(completion != nil)
+				{
+					completion((id)ctx);
+				}
+			}];
+		}
+	}
+}
 
 //_hideBarWithTransition:isExplicit:duration:
 - (void)hBWT:(NSInteger)t iE:(BOOL)e d:(NSTimeInterval)duration
@@ -1212,10 +1293,19 @@ static BOOL _alreadyInHideShowBar = NO;
 		{
 			[self hBWT:transition iE:explicit d:duration];
 		}
+		
+		[self _ln_animateAlongsideTransition:transition withDuration:duration animations:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+			if(transition != 1)
+			{
+				[self _ln_updateSafeAreaInsets];
+				[self.view layoutIfNeeded];
+			}
+		} completion:nil];
+		
 		return;
 	}
 	
-	if(_alreadyInHideShowBar == YES)
+	if(__ln_alreadyInHideShowBar == YES)
 	{
 		//Ignore nested calls to _hideBarWithTransition:isExplicit:duration:reason:
 		if(@available(iOS 18.0, *))
@@ -1250,7 +1340,7 @@ static BOOL _alreadyInHideShowBar = NO;
 	self._ln_bottomBarExtension_nocreate.hidden = NO;
 	self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 	
-	_alreadyInHideShowBar = YES;
+	__ln_alreadyInHideShowBar = YES;
 	if(@available(iOS 18.0, *))
 	{
 		[self hBWT:transition iE:explicit d:duration r:reason];
@@ -1259,7 +1349,7 @@ static BOOL _alreadyInHideShowBar = NO;
 	{
 		[self hBWT:transition iE:explicit d:duration];
 	}
-	_alreadyInHideShowBar = NO;
+	__ln_alreadyInHideShowBar = NO;
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
 	self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
@@ -1283,9 +1373,15 @@ static BOOL _alreadyInHideShowBar = NO;
 	self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 	
 	void (^animations)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		if(transition != 1)
+		{
+			[self _ln_updateSafeAreaInsets];
+			[self.view layoutIfNeeded];
+		}
+		
 		self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
-	
+		
 		[self __repositionPopupBarToClosed_hack];
 		
 		if(isFloating)
@@ -1334,35 +1430,7 @@ static BOOL _alreadyInHideShowBar = NO;
 		[self _layoutPopupBarOrderForUse];
 	};
 	
-	id<UIViewControllerTransitionCoordinator> transitionCoordinator = self.selectedViewController.transitionCoordinator;
-	
-	if(transitionCoordinator != nil)
-	{
-		[transitionCoordinator animateAlongsideTransition:animations completion:completion];
-	}
-	else
-	{
-		if(duration != 0)
-		{
-			if(duration == -1)
-			{
-				duration = __ln_durationForTransition(self, transition);
-			}
-			
-			[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-				animations(nil);
-			} completion:^(BOOL finished) {
-				completion(nil);
-			}];
-		}
-		else
-		{
-			[UIView performWithoutAnimation:^{
-				animations(nil);
-				completion(nil);
-			}];
-		}
-	}
+	[self _ln_animateAlongsideTransition:transition withDuration:duration animations:animations completion:completion];
 }
 
 //_showBarWithTransition:isExplicit:duration:
@@ -1374,7 +1442,7 @@ static BOOL _alreadyInHideShowBar = NO;
 //_showBarWithTransition:isExplicit:duration:reason:
 - (void)sBWT:(NSInteger)transition iE:(BOOL)explicit d:(NSTimeInterval)duration r:(NSUInteger)reason
 {
-	if(_alreadyInHideShowBar == YES)
+	if(__ln_alreadyInHideShowBar == YES)
 	{
 		//Ignore nested calls to _showBarWithTransition:isExplicit:duration:
 		if(@available(iOS 18.0, *))
@@ -1404,9 +1472,9 @@ static BOOL _alreadyInHideShowBar = NO;
 	
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
-	BOOL wasHidden = self.tabBar.isHidden;
+	BOOL wasHidden = self.tabBar.isHidden || self._isTabBarHiddenDuringTransition;
 	
-	_alreadyInHideShowBar = YES;
+	__ln_alreadyInHideShowBar = YES;
 	if(@available(iOS 18.0, *))
 	{
 		[self sBWT:transition iE:explicit d:duration r:reason];
@@ -1415,7 +1483,7 @@ static BOOL _alreadyInHideShowBar = NO;
 	{
 		[self sBWT:transition iE:explicit d:duration];
 	}
-	_alreadyInHideShowBar = NO;
+	__ln_alreadyInHideShowBar = NO;
 	
 	if(explicit == NO)
 	{
@@ -1459,6 +1527,12 @@ static BOOL _alreadyInHideShowBar = NO;
 	self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
 	
 	void (^animations)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		if(transition != 2)
+		{
+			[self _ln_updateSafeAreaInsets];
+			[self.view layoutIfNeeded];
+		}
+		
 		[UIView performWithoutAnimation:^{
 			self.tabBar.frame = frame;
 		}];
@@ -1526,38 +1600,7 @@ static BOOL _alreadyInHideShowBar = NO;
 		}
 	};
 	
-	id<UIViewControllerTransitionCoordinator> transitionCoordinator = self.selectedViewController.transitionCoordinator;
-	
-	if(transitionCoordinator != nil)
-	{
-		[transitionCoordinator animateAlongsideTransition:animations completion:completion];
-	}
-	else
-	{
-		__LNFakeContext* ctx = [__LNFakeContext new];
-		ctx.cancelled = NO;
-		if(duration != 0)
-		{
-			if(duration == -1)
-			{
-				duration = __ln_durationForTransition(self, transition);
-			}
-			
-			[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-				animations((id)ctx);
-			} completion:^(BOOL finished) {
-				completion((id)ctx);
-			}];
-		}
-		else
-		{
-			[UIView performWithoutAnimation:^{
-				
-				animations((id)ctx);
-				completion((id)ctx);
-			}];
-		}
-	}
+	[self _ln_animateAlongsideTransition:transition withDuration:duration animations:animations completion:completion];
 }
 
 //_prepareTabBar
@@ -1837,8 +1880,17 @@ static BOOL _alreadyInHideShowBar = NO;
 	
 	BOOL wasToolbarHidden = self.isToolbarHidden;
 	
+	if(edge == UIRectEdgeBottom)
+	{
+		[self _setIgnoringLayoutDuringTransition:YES];
+	}
+	
+	__ln_hideBarEdge = edge;
+	__ln_alreadyInHideShowBar = YES;
 	//Trigger the toolbar hide or show transition.
 	[self _sTH:hidden e:edge d:duration];
+	__ln_alreadyInHideShowBar = NO;
+	__ln_hideBarEdge = UIRectEdgeNone;
 	
 	if(wasToolbarHidden != hidden)
 	{
@@ -1966,7 +2018,10 @@ static BOOL _alreadyInHideShowBar = NO;
 			[self _setIgnoringLayoutDuringTransition:NO];
 		};
 		
-		[self _setIgnoringLayoutDuringTransition:YES];
+		if(edge != UIRectEdgeBottom)
+		{
+			[self _setIgnoringLayoutDuringTransition:YES];
+		}
 		
 		if(duration == 0)
 		{

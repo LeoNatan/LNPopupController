@@ -33,6 +33,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 @interface UIViewController (LNPopupSupportPrivate)
 
+- (void)_ln_updateSafeAreaInsets;
+
 - (BOOL)_ln_shouldDisplayBottomShadowViewDuringTransition;
 
 - (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea;
