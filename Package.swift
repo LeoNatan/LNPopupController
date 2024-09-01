@@ -35,5 +35,5 @@ let package = Package(
 			dependencies: ["LNPopupController-ObjC"],
 			path: "LNPCSwiftRefinements")
 	],
-	cxxLanguageStandard: CXXLanguageStandard(rawValue: "gnu++17")
+	cxxLanguageStandard: .gnucxx20
 )

@@ -6,7 +6,7 @@
 //  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
-@import UIKit;
+#import <UIKit/UIKit.h>
 #import "LNPopupBarAppearance+Private.h"
 
 NS_ASSUME_NONNULL_BEGIN

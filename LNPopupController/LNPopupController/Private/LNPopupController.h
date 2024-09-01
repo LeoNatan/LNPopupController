@@ -12,7 +12,9 @@
 #import <LNPopupController/LNPopupCloseButton.h>
 #import "LNPopupContentView+Private.h"
 
-extern const NSUInteger _LNPopupPresentationStateTransitioning;
+CF_EXTERN_C_BEGIN
+
+#define _LNPopupPresentationStateTransitioning ((LNPopupPresentationState)2)
 
 @interface LNPopupController : NSObject
 
@@ -60,3 +62,5 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 + (CGFloat)_statusBarHeightForView:(UIView*)view;
 
 @end
+
+CF_EXTERN_C_END

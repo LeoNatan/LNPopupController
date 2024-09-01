@@ -11,8 +11,9 @@
 #import "_LNWeakRef.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "_LNPopupBase64Utils.hh"
 #import "LNMath.h"
-@import ObjectiveC;
+#import <objc/runtime.h>
 
 static const void* _LNPopupItemKey = &_LNPopupItemKey;
 static const void* _LNPopupControllerKey = &_LNPopupControllerKey;
@@ -34,11 +35,6 @@ const double LNSnapPercentDefault = 0.32;
 @end
 #pragma clang diagnostic pop
 
-#if ! LNPopupControllerEnforceStrictClean
-//_existingPresentationControllerImmediate:effective:
-static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlckltbWVkaWF0ZTplZmZlY3RpdmU6";
-#endif
-
 @implementation UIViewController (LNPopupSupport)
 
 - (UIPresentationController*)nonMemoryLeakingPresentationController
@@ -48,7 +44,7 @@ static NSString* const ePCIEBase64 = @"X2V4aXN0aW5nUHJlc2VudGF0aW9uQ29udHJvbGxlc
 	static id (*nonLeakingPresentationController)(id, SEL, BOOL, BOOL) = (id(*)(id, SEL, BOOL, BOOL))objc_msgSend;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		sel = _LNPopupDecodeBase64String(ePCIEBase64);
+		sel = LNPopupHiddenString("_existingPresentationControllerImmediate:effective:");
 	});
 
 	return nonLeakingPresentationController(self, NSSelectorFromString(sel), NO, NO);

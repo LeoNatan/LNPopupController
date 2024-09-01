@@ -13,21 +13,22 @@
 #import "LNPopupLongPressGestureRecognizer.h"
 #import "LNPopupInteractionPanGestureRecognizer.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "_LNPopupBase64Utils.hh"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "LNPopupCustomBarViewController+Private.h"
-@import ObjectiveC;
-@import os.log;
-
-#ifndef LNPopupControllerEnforceStrictClean
-//visualProvider.toolbarIsSmall
-static NSString* const _vPTIS = @"dmlzdWFsUHJvdmlkZXIudG9vbGJhcklzU21hbGw=";
-#endif
+#import <objc/runtime.h>
+#import <os/log.h>
 
 #if TARGET_OS_MACCATALYST
 @import AppKit;
 #endif
 
-const NSUInteger _LNPopupPresentationStateTransitioning = 2;
+CF_EXTERN_C_BEGIN
+
+#ifndef LNPopupControllerEnforceStrictClean
+//visualProvider.toolbarIsSmall
+static NSString* const _vPTIS = @"dmlzdWFsUHJvdmlkZXIudG9vbGJhcklzU21hbGw=";
+#endif
 
 static const CGFloat LNPopupBarGestureHeightPercentThreshold = 0.2;
 static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
@@ -51,7 +52,7 @@ static BOOL _LNCallDelegateObjectObjectBool(UIViewController* controller, UIView
 {
 	if([controller.popupPresentationDelegate respondsToSelector:selector])
 	{
-		void (*msgSendObjectObjectBool)(id, SEL, id, id, BOOL) = (void*)objc_msgSend;
+		void (*msgSendObjectObjectBool)(id, SEL, id, id, BOOL) = reinterpret_cast<decltype(msgSendObjectObjectBool)>(objc_msgSend);
 		msgSendObjectObjectBool(controller.popupPresentationDelegate, selector, controller, content, animated);
 		return YES;
 	}
@@ -63,7 +64,7 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 {
 	if([controller.popupPresentationDelegate respondsToSelector:selector])
 	{
-		void (*msgSendObjectBool)(id, SEL, id, BOOL) = (void*)objc_msgSend;
+		void (*msgSendObjectBool)(id, SEL, id, BOOL) = reinterpret_cast<decltype(msgSendObjectBool)>(objc_msgSend);
 		msgSendObjectBool(controller.popupPresentationDelegate, selector, controller, animated);
 		return YES;
 	}
@@ -1058,8 +1059,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	static NSString* vPTIS = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		//visualProvider.toolbarIsSmall
-		vPTIS = _LNPopupDecodeBase64String(_vPTIS);
+		vPTIS = LNPopupHiddenString("visualProvider.toolbarIsSmall");
 	});
 	
 	//visualProvider.toolbarIsSmall
@@ -1551,7 +1551,15 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 //			[self _clearRunningBarAnimators];
 //			[self _clearRunningPopupAnimators];
 			
+			__weak decltype(self) weakSelf = self;
+			
 			_runningBarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:0.5 dampingRatio:500 animations:^{
+				__strong decltype(weakSelf) self = weakSelf;
+				if(self == nil)
+				{
+					return;
+				}
+				
 				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillDismissPopupBar:animated:), animated);
 				[self.popupBar.customBarViewController _userFacing_viewWillDisappear:animated];
 				
@@ -1578,7 +1586,13 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				}];
 			}];
 			
-			[_runningBarAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {		
+			[_runningBarAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
+				__strong decltype(weakSelf) self = weakSelf;
+				if(self == nil)
+				{
+					return;
+				}
+				
 				if(finalPosition != UIViewAnimatingPositionEnd)
 				{
 					return;
@@ -1831,3 +1845,5 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 }
 
 @end
+
+CF_EXTERN_C_END

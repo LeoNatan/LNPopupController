@@ -13,6 +13,8 @@
 #import "_LNPopupBackgroundShadowView.h"
 #import "_LNPopupBarBackgroundMaskView.h"
 
+CF_EXTERN_C_BEGIN
+
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
 extern const CGFloat LNPopupBarHeightFloating;
@@ -134,3 +136,5 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 - (void)_cancelAnyUserInteraction;
 
 @end
+
+CF_EXTERN_C_END

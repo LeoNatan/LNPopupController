@@ -7,9 +7,9 @@
 //
 
 #import "LNPopupCloseButton+Private.h"
-@import ObjectiveC;
+#import <objc/runtime.h>
 #import "LNChevronView.h"
-#import "_LNPopupSwizzlingUtils.h"
+#import "_LNPopupBase64Utils.hh"
 #import "LNPopupContentView+Private.h"
 
 @interface LNPopupCloseButton ()
@@ -36,15 +36,12 @@ __attribute__((objc_direct_members))
 
 #ifndef LNPopupControllerEnforceStrictClean
 
-//_actingParentViewForGestureRecognizers
-static NSString* const _aPVFGR = @"X2FjdGluZ1BhcmVudFZpZXdGb3JHZXN0dXJlUmVjb2duaXplcnM=";
-
 + (void)load
 {
 	@autoreleasepool
 	{
 		Method m = class_getInstanceMethod(self, @selector(_aPVFGR));
-		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(_aPVFGR)), method_getImplementation(m), method_getTypeEncoding(m));
+		class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("_actingParentViewForGestureRecognizers")), method_getImplementation(m), method_getTypeEncoding(m));
 	}
 }
 

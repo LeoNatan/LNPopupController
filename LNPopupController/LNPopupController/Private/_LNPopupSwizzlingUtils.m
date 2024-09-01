@@ -9,11 +9,6 @@
 #import "_LNPopupSwizzlingUtils.h"
 @import ObjectiveC;
 
-NSString* _LNPopupDecodeBase64String(NSString* base64String)
-{
-	return [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:base64String options:0] encoding:NSUTF8StringEncoding];
-}
-
 NSArray<NSString*>* _LNPopupGetPropertyNames(Class cls, NSArray<NSString*>* excludedProperties)
 {
 	unsigned int propertyCount = 0;

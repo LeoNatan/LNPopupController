@@ -8,13 +8,9 @@
 
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "_LNPopupBase64Utils.hh"
 
 static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
-
-//appearance:categoriesChanged:
-static NSString* const aCC = @"YXBwZWFyYW5jZTpjYXRlZ29yaWVzQ2hhbmdlZDo=";
-//changeObserver
-static NSString* const cO = @"Y2hhbmdlT2JzZXJ2ZXI=";
 
 @implementation LNPopupBarAppearance
 {
@@ -32,13 +28,12 @@ static NSArray* __notifiedProperties = nil;
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
 			__notifiedProperties = _LNPopupGetPropertyNames(self, nil);
-		});
-		
+			
 #ifndef LNPopupControllerEnforceStrictClean
-		//appearance:categoriesChanged:
-		Method m1 = class_getInstanceMethod(self, @selector(a:cC:));
-		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(aCC)), method_getImplementation(m1), method_getTypeEncoding(m1));
+			Method m1 = class_getInstanceMethod(self, @selector(a:cC:));
+			class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("appearance:categoriesChanged:")), method_getImplementation(m1), method_getTypeEncoding(m1));
 #endif
+		});
 	}
 }
 
@@ -58,8 +53,7 @@ static NSArray* __notifiedProperties = nil;
 - (void)_commonInit
 {
 #ifndef LNPopupControllerEnforceStrictClean
-	//changeObserver
-	[self setValue:self forKey:_LNPopupDecodeBase64String(cO)];
+	[self setValue:self forKey:LNPopupHiddenString("changeObserver")];
 #endif
 	
 	for(NSString* key in __notifiedProperties)
@@ -70,10 +64,10 @@ static NSArray* __notifiedProperties = nil;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-	id old = change[NSKeyValueChangeOldKey];
-	id new = change[NSKeyValueChangeNewKey];
+	id oldValue = change[NSKeyValueChangeOldKey];
+	id newValue = change[NSKeyValueChangeNewKey];
 	
-	if([old isEqual:new])
+	if([oldValue isEqual:newValue])
 	{
 		return;
 	}

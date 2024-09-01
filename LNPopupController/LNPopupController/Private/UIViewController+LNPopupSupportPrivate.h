@@ -9,6 +9,8 @@
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import "_LNPopupBarBackgroundView.h"
 
+CF_EXTERN_C_BEGIN
+
 @class LNPopupController;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -78,3 +80,5 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 @interface _LN_UIViewController_AppearanceControl : UIViewController @end
 
 NS_ASSUME_NONNULL_END
+
+CF_EXTERN_C_END

@@ -10,22 +10,16 @@
 
 #import "_LNPopupUIBarAppearanceProxy.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "_LNPopupBase64Utils.hh"
 
-@import UIKit;
-@import ObjectiveC;
-
-//_backgroundData
-static NSString* const _bD = @"X2JhY2tncm91bmREYXRh";
-//shadowViewBackgroundColor
-static NSString* const _sVBC = @"c2hhZG93Vmlld0JhY2tncm91bmRDb2xvcg==";
-//shadowViewTintColor
-static NSString* const _sVTC = @"c2hhZG93Vmlld1RpbnRDb2xvcg==";
+#import <UIKit/UIKit.h>
+#import <objc/runtime.h>
 
 static const void* _LNPopupBarBackgroundDataSubclassShadowHandlerKey = &_LNPopupBarBackgroundDataSubclassShadowHandlerKey;
 
-#define LN_ADD_PROPERTY_GETTER(cls, base64Name, impBlock) SEL sel##base64Name = NSSelectorFromString(_LNPopupDecodeBase64String(base64Name)); \
-class_addMethod(cls, sel##base64Name, imp_implementationWithBlock(^id(id _self){ \
-return ((id(^)(id, SEL))impBlock)(_self, sel##base64Name); \
+#define LN_ADD_PROPERTY_GETTER(cls, hiddenString, impBlock) \
+class_addMethod(cls, NSSelectorFromString(LNPopupHiddenString(hiddenString)), imp_implementationWithBlock(^id(id _self){ \
+return ((id(^)(id, SEL))impBlock)(_self, NSSelectorFromString(LNPopupHiddenString(hiddenString))); \
 }), method_getTypeEncoding(class_getInstanceMethod(NSObject.class, @selector(description))));
 
 #define LN_SHADOW_CLEAR_COLOR_OR_SUPER if(self._ln_shouldHideShadow) { \
@@ -33,7 +27,7 @@ return UIColor.clearColor; \
 } else { \
 Class superclass = LNDynamicSubclassSuper(self, _LNPopupBarBackgroundDataSubclass.class); \
 struct objc_super super = {.receiver = self, .super_class = superclass}; \
-id (*super_class)(struct objc_super*, SEL) = (void*)objc_msgSendSuper; \
+id (*super_class)(struct objc_super*, SEL) = reinterpret_cast<decltype(super_class)>(objc_msgSendSuper); \
 return super_class(&super, _cmd); \
 }
 
@@ -42,7 +36,7 @@ return nil; \
 } else { \
 Class superclass = LNDynamicSubclassSuper(self, _LNPopupBarBackgroundDataSubclass.class); \
 struct objc_super super = {.receiver = self, .super_class = superclass}; \
-id (*super_class)(struct objc_super*, SEL) = (void*)objc_msgSendSuper; \
+id (*super_class)(struct objc_super*, SEL) = reinterpret_cast<decltype(super_class)>(objc_msgSendSuper); \
 return super_class(&super, _cmd); \
 }
 
@@ -72,9 +66,9 @@ return super_class(&super, _cmd); \
 		};
 		
 		//shadowViewBackgroundColor
-		LN_ADD_PROPERTY_GETTER(self, _sVBC, imp);
+		LN_ADD_PROPERTY_GETTER(self, "shadowViewBackgroundColor", imp);
 		//shadowViewTintColor
-		LN_ADD_PROPERTY_GETTER(self, _sVTC, imp);
+		LN_ADD_PROPERTY_GETTER(self, "shadowViewTintColor", imp);
 	}
 }
 
@@ -137,7 +131,7 @@ return super_class(&super, _cmd); \
 			
 			return rv;
 		};
-		LN_ADD_PROPERTY_GETTER(_LNPopupUIBarAppearanceProxy.class, _bD, block);
+		LN_ADD_PROPERTY_GETTER(_LNPopupUIBarAppearanceProxy.class, "_backgroundData", block);
 #pragma clang diagnostic pop
 	}
 }

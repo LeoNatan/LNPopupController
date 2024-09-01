@@ -10,12 +10,13 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupController.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "_LNPopupBase64Utils.hh"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupUIBarAppearanceProxy.h"
 #import "_LNWeakRef.h"
-@import ObjectiveC;
+#import <objc/runtime.h>
 #if TARGET_OS_MACCATALYST
-@import AppKit;
+#import <AppKit/AppKit.h>
 #endif
 
 static const void* LNPopupAttachedPopupController = &LNPopupAttachedPopupController;
@@ -23,44 +24,6 @@ static const void* LNPopupAwaitingViewInWindowHierarchyKey = &LNPopupAwaitingVie
 static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
 static const void* LNPopupTabBarProgressKey = &LNPopupTabBarProgressKey;
 static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgroundViewForceAnimatedKey;
-
-#if ! LNPopupControllerEnforceStrictClean
-//groupName
-static NSString* _gN = @"Z3JvdXBOYW1l";
-//_UINavigationBarVisualProvider
-static NSString* _UINBVP = @"X1VJTmF2aWdhdGlvbkJhclZpc3VhbFByb3ZpZGVy";
-//_UINavigationBarVisualProviderLegacyIOS
-static NSString* _UINBVPLI = @"X1VJTmF2aWdhdGlvbkJhclZpc3VhbFByb3ZpZGVyTGVnYWN5SU9T";
-//_UINavigationBarVisualProviderModernIOS
-static NSString* _UINBVPMI = @"X1VJTmF2aWdhdGlvbkJhclZpc3VhbFByb3ZpZGVyTW9kZXJuSU9T";
-//updateBackgroundGroupName
-static NSString* _uBGN = @"dXBkYXRlQmFja2dyb3VuZEdyb3VwTmFtZQ==";
-//_viewControllerForAncestor
-static NSString* _vCFA = @"X3ZpZXdDb250cm9sbGVyRm9yQW5jZXN0b3I=";
-//_didMoveFromWindow:toWindow:
-static NSString* _dMFWtW = @"X2RpZE1vdmVGcm9tV2luZG93OnRvV2luZG93Og==";
-//_backdropViewLayerGroupName
-static NSString* _bVLGN = @"X2JhY2tkcm9wVmlld0xheWVyR3JvdXBOYW1l";
-//hostWindow
-static NSString* _hW = @"aG9zdFdpbmRvdw==";
-//attachedWindow
-static NSString* _aW = @"YXR0YWNoZWRXaW5kb3c=";
-//currentEvent
-static NSString* _cE = @"Y3VycmVudEV2ZW50";
-//backgroundTransitionProgress
-static NSString* _bTP = @"YmFja2dyb3VuZFRyYW5zaXRpb25Qcm9ncmVzcw==";
-//_UIBarBackground
-static NSString* _UBB = @"X1VJQmFyQmFja2dyb3VuZA==";
-//transitionBackgroundViewsAnimated:
-static NSString* _tBVA = @"dHJhbnNpdGlvbkJhY2tncm91bmRWaWV3c0FuaW1hdGVkOg==";
-//_backgroundView
-static NSString* _bV = @"X2JhY2tncm91bmRWaWV3";
-//_registeredScrollToTopViews
-static NSString* _rSTTV = @"X3JlZ2lzdGVyZWRTY3JvbGxUb1RvcFZpZXdz";
-//_safeAreaInsetsFrozen
-static NSString* _sAIF = @"X3NhZmVBcmVhSW5zZXRzRnJvemVu";
-
-#endif
 
 @interface __LNPopupUIViewFrozenInsets : NSObject @end
 @implementation __LNPopupUIViewFrozenInsets
@@ -70,17 +33,16 @@ static NSString* _sAIF = @"X3NhZmVBcmVhSW5zZXRzRnJvemVu";
 	@autoreleasepool 
 	{
 		const char* encoding = method_getTypeEncoding(class_getInstanceMethod(UIView.class, @selector(needsUpdateConstraints)));
-		//_safeAreaInsetsFrozen
-		class_addMethod(self, NSSelectorFromString(_LNPopupDecodeBase64String(_sAIF)), imp_implementationWithBlock(^ (id self, SEL _cmd) {
+		class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("_safeAreaInsetsFrozen")), imp_implementationWithBlock(^ (id self, SEL _cmd) {
 			return YES;
 		}), encoding);
 	}
 }
 
-//- (BOOL)_safeAreaInsetsFrozen
-//{
-//	return YES;
-//}
+- (BOOL)_safeAreaInsetsFrozen
+{
+	return YES;
+}
 
 @end
 
@@ -127,7 +89,7 @@ static NSString* _sAIF = @"X3NhZmVBcmVhSW5zZXRzRnJvemVu";
 	{
 #if ! LNPopupControllerEnforceStrictClean
 		//updateBackgroundGroupName
-		SEL updateBackgroundGroupNameSEL = NSSelectorFromString(_LNPopupDecodeBase64String(_uBGN));
+		SEL updateBackgroundGroupNameSEL = NSSelectorFromString(LNPopupHiddenString("updateBackgroundGroupName"));
 		
 		id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){
 			return ^ (id _self) {
@@ -137,7 +99,7 @@ static NSString* _sAIF = @"X3NhZmVBcmVhSW5zZXRzRnJvemVu";
 				static dispatch_once_t onceToken;
 				dispatch_once(&onceToken, ^{
 					//groupName
-					key = _LNPopupDecodeBase64String(_gN);
+					key = LNPopupHiddenString("groupName");
 				});
 				
 				id backgroundView = [_self valueForKey:@"backgroundView"];
@@ -151,31 +113,27 @@ static NSString* _sAIF = @"X3NhZmVBcmVhSW5zZXRzRnJvemVu";
 		};
 		
 		{
-			//_UINavigationBarVisualProvider
-			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVP));
+			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProvider"));
 			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
 		
 		{
-			//_UINavigationBarVisualProviderLegacyIOS
-			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPLI));
+			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderLegacyIOS"));
 			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
 		
 		{
-			//_UINavigationBarVisualProviderModernIOS
-			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UINBVPMI));
+			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderModernIOS"));
 			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = (void*)method_getImplementation(m);
+			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
 		
-		//_didMoveFromWindow:toWindow:
-		NSString* sel = _LNPopupDecodeBase64String(_dMFWtW);
+		NSString* sel = LNPopupHiddenString("_didMoveFromWindow:toWindow:");
 		LNSwizzleMethod(self,
 						NSSelectorFromString(sel),
 						@selector(_ln__dMFW:tW:));
@@ -220,7 +178,7 @@ static NSString* _sAIF = @"X3NhZmVBcmVhSW5zZXRzRnJvemVu";
 #endif
 
 LNAlwaysInline
-static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
+void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 {
 	if(waiting.count == 0)
 	{
@@ -288,7 +246,7 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	static NSString* key = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		key = _LNPopupDecodeBase64String(_bVLGN);
+		key = LNPopupHiddenString("_backdropViewLayerGroupName");
 	});
 	
 	if([self respondsToSelector:NSSelectorFromString(key)])
@@ -319,8 +277,7 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 {
 	@autoreleasepool
 	{
-		//_registeredScrollToTopViews
-		NSString* selName = _LNPopupDecodeBase64String(_rSTTV);
+		NSString* selName = LNPopupHiddenString("_registeredScrollToTopViews");
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_ln_rSTTV));
@@ -337,7 +294,7 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	static NSString* vCFA = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		vCFA = _LNPopupDecodeBase64String(_vCFA);
+		vCFA = LNPopupHiddenString("_viewControllerForAncestor");
 	});
 	
 	for(UIView* scrollToTopCandidate in rv)
@@ -386,9 +343,9 @@ static void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		hW = _LNPopupDecodeBase64String(_hW);
-		aW = _LNPopupDecodeBase64String(_aW);
-		cE = _LNPopupDecodeBase64String(_cE);
+		hW = LNPopupHiddenString("hostWindow");
+		aW = LNPopupHiddenString("attachedWindow");
+		cE = LNPopupHiddenString("currentEvent");
 	});
 	
 	//Obtain the actual NSWindow object
@@ -449,7 +406,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	static NSString* bTP = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		bTP = _LNPopupDecodeBase64String(_bTP);
+		bTP = LNPopupHiddenString("backgroundTransitionProgress");
 	});
 	
 	BOOL isAtScrollEdge = [[bottomBar valueForKey:bTP] doubleValue] > 0;
@@ -673,10 +630,10 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 #if ! LNPopupControllerEnforceStrictClean
 		if(@available(iOS 17.0, *))
 		{
-			Class cls = NSClassFromString(_LNPopupDecodeBase64String(_UBB));
-			SEL sel = NSSelectorFromString(_LNPopupDecodeBase64String(_tBVA));
+			Class cls = NSClassFromString(LNPopupHiddenString("_UIBarBackground"));
+			SEL sel = NSSelectorFromString(LNPopupHiddenString("transitionBackgroundViewsAnimated:"));
 			Method m = class_getInstanceMethod(cls, sel);
-			void (*orig)(id, SEL, BOOL) = (void*)method_getImplementation(m);
+			void (*orig)(id, SEL, BOOL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(^(id _self, BOOL animated) {
 				if([objc_getAssociatedObject(_self, LNPopupBarBackgroundViewForceAnimatedKey) boolValue] == YES)
 				{
@@ -725,7 +682,13 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 	if(@available(iOS 15.0, *))
 	{
 #if ! LNPopupControllerEnforceStrictClean
-		backgroundView = [self valueForKey:_LNPopupDecodeBase64String(_bV)];
+		static NSString* backgroundViewKey = nil;
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			backgroundViewKey = LNPopupHiddenString("_backgroundView");
+		});
+		
+		backgroundView = [self valueForKey:backgroundViewKey];
 		if(backgroundView != nil)
 		{
 			objc_setAssociatedObject(backgroundView, LNPopupBarBackgroundViewForceAnimatedKey, @(YES), OBJC_ASSOCIATION_RETAIN_NONATOMIC);

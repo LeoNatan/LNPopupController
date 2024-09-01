@@ -10,14 +10,9 @@
 #import "UIContextMenuInteraction+LNPopupSupportPrivate.h"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "_LNPopupBase64Utils.hh"
 
 #ifndef LNPopupControllerEnforceStrictClean
-//_delegate_previewForHighlightingForConfiguration:
-static NSString* const dPFHFCBase64 = @"X2RlbGVnYXRlX3ByZXZpZXdGb3JIaWdobGlnaHRpbmdGb3JDb25maWd1cmF0aW9uOg==";
-//_delegate_contextMenuInteractionWillEndForConfiguration:presentation:
-static NSString* const dCMIWEFCpBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3Rpb25XaWxsRW5kRm9yQ29uZmlndXJhdGlvbjpwcmVzZW50YXRpb246";
-//_delegate_contextMenuInteractionWillDisplayForConfiguration:
-static NSString* const dCMIWDFCBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3Rpb25XaWxsRGlzcGxheUZvckNvbmZpZ3VyYXRpb246";
 
 @implementation UIContextMenuInteraction (LNPopupSupportPrivate)
 
@@ -25,20 +20,17 @@ static NSString* const dCMIWDFCBase64 = @"X2RlbGVnYXRlX2NvbnRleHRNZW51SW50ZXJhY3
 {
 	@autoreleasepool
 	{
-		//_delegate_previewForHighlightingForConfiguration:
-		NSString* selName = _LNPopupDecodeBase64String(dPFHFCBase64);
+		NSString* selName = LNPopupHiddenString("_delegate_previewForHighlightingForConfiguration:");
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_ln_d_pFHFC:));
 		
-		//_delegate_contextMenuInteractionWillEndForConfiguration:presentation:
-		selName = _LNPopupDecodeBase64String(dCMIWEFCpBase64);
+		selName = LNPopupHiddenString("_delegate_contextMenuInteractionWillEndForConfiguration:presentation:");
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_ln_d_cMIWEFC:p:));
 		
-		//_delegate_contextMenuInteractionWillDisplayForConfiguration:
-		selName = _LNPopupDecodeBase64String(dCMIWDFCBase64);
+		selName = LNPopupHiddenString("_delegate_contextMenuInteractionWillDisplayForConfiguration:");
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_ln_d_cMIWDFC:));

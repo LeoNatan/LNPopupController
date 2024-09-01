@@ -10,6 +10,7 @@
 #import "LNPopupCustomBarViewController+Private.h"
 #import "MarqueeLabel.h"
 #import "_LNPopupSwizzlingUtils.h"
+#import "_LNPopupBase64Utils.hh"
 #import "NSAttributedString+LNPopupSupport.h"
 #import "_LNPopupBarShadowedImageView.h"
 #import "UIView+LNPopupSupportPrivate.h"
@@ -78,17 +79,15 @@ CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar)
 }
 
 #ifndef LNPopupControllerEnforceStrictClean
-//_effectWithStyle:tintColor:invertAutomaticStyle:
-static NSString* const _eWSti = @"X2VmZmVjdFdpdGhTdHlsZTp0aW50Q29sb3I6aW52ZXJ0QXV0b21hdGljU3R5bGU6";
 static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
 static id(*_effectWithStyle_tintColor_invertAutomaticStyle)(id, SEL, NSUInteger, UIColor*, BOOL);
 
 __attribute__((constructor))
 static void __setupFunction(void)
 {
-	_effectWithStyle_tintColor_invertAutomaticStyle_SEL = NSSelectorFromString(_LNPopupDecodeBase64String(_eWSti));
+	_effectWithStyle_tintColor_invertAutomaticStyle_SEL = NSSelectorFromString(LNPopupHiddenString("_effectWithStyle:tintColor:invertAutomaticStyle:"));
 	Method m = class_getClassMethod(UIBlurEffect.class, _effectWithStyle_tintColor_invertAutomaticStyle_SEL);
-	_effectWithStyle_tintColor_invertAutomaticStyle = (void*)method_getImplementation(m);
+	_effectWithStyle_tintColor_invertAutomaticStyle = reinterpret_cast<decltype(_effectWithStyle_tintColor_invertAutomaticStyle)>(method_getImplementation(m));
 }
 #endif
 
@@ -221,7 +220,7 @@ __attribute__((objc_direct_members))
 {
 	BOOL _delaysBarButtonItemLayout;
 	
-	_LNPopupBarShadowedImageView* _imageView;
+	UIImageView* _imageView;
 	
 	_LNPopupBarTitlesView* _titlesView;
 	NSLayoutConstraint* _titlesViewLeadingConstraint;
@@ -440,7 +439,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_imageView.isAccessibilityElement = YES;
 		_imageView.layer.cornerCurve = kCACornerCurveContinuous;
 		_imageView.layer.masksToBounds = YES;
-		_imageView.cornerRadius = 6;
+		static_cast<_LNPopupBarShadowedImageView*>(_imageView).cornerRadius = 6;
 		
 		// support smart invert and therefore do not invert image view colors
 		_imageView.accessibilityIgnoresInvertColors = YES;
@@ -738,10 +737,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	static NSString* didRotate = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		//UIWindowWillRotateNotification
-		willRotate = _LNPopupDecodeBase64String(@"VUlXaW5kb3dXaWxsUm90YXRlTm90aWZpY2F0aW9u");
-		//UIWindowDidRotateNotification
-		didRotate = _LNPopupDecodeBase64String(@"VUlXaW5kb3dEaWRSb3RhdGVOb3RpZmljYXRpb24=");
+		willRotate = LNPopupHiddenString("UIWindowWillRotateNotification");
+		didRotate = LNPopupHiddenString("UIWindowDidRotateNotification");
 	});
 	
 	if(self.window)
@@ -781,11 +778,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (NSString*)_effectGroupingIdentifierKey
 {
-	static NSString* gN = @"Z3JvdXBOYW1l";
 	static NSString* rv = nil;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		rv = _LNPopupDecodeBase64String(gN);
+		rv = LNPopupHiddenString("groupName");
 	});
 	return rv;
 }
@@ -943,7 +939,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_contentView.effect = nil;
 		_contentView.foregroundColor = nil;
 		_contentView.foregroundImage = nil;
-		_contentView.foregroundImageContentMode = 0;
+		_contentView.foregroundImageContentMode = (UIViewContentMode)0;
 		[_contentView hideOrShowImageViewIfNecessary];
 	}
 	
@@ -972,7 +968,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	_floatingBackgroundShadowView.shadow = self.activeAppearance.floatingBarBackgroundShadow;
 	
-	_imageView.shadow = self.activeAppearance.imageShadow;
+	static_cast<_LNPopupBarShadowedImageView*>(_imageView).shadow = self.activeAppearance.imageShadow;
 
 	[self.customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 	
@@ -1247,8 +1243,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 - (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem
 {
 	UIView* itemView = [barButtonItem valueForKey:@"view"];
-	//_UITAMICAdaptorView
-	if([itemView.superview isKindOfClass:NSClassFromString(_LNPopupDecodeBase64String(@"X1VJVEFNSUNBZGFwdG9yVmlldw=="))])
+	
+	static NSString* adaptorView = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		adaptorView = LNPopupHiddenString("_UITAMICAdaptorView");
+	});
+	
+	if([itemView.superview isKindOfClass:NSClassFromString(adaptorView)])
 	{
 		itemView = itemView.superview;
 	}
