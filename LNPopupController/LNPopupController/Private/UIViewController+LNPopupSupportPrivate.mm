@@ -1288,6 +1288,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_bottomBarExtension_nocreate.hidden = NO;
 	self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 	
+	[self._ln_bottomBarExtension layoutIfNeeded];
+	
 	__ln_alreadyInHideShowBar = YES;
 	if(@available(iOS 18.0, *))
 	{
@@ -1299,8 +1301,20 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	__ln_alreadyInHideShowBar = NO;
 	
+	if(transition != 1 && isExplicit == NO)
+	{
+		return;
+	}
+	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
-	self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+	if(transition == 1)
+	{
+		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+	}
+	else
+	{
+		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
+	}
 	
 	self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
 	if(transition == 1 && isFloating)
@@ -1328,7 +1342,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		}
 		
 		self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, self._ln_bottomBarExtension_nocreate.frame.size.height);
-		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
+		
+		if(transition == 1)
+		{
+			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
+		}
 		
 		[self __repositionPopupBarToClosed_hack];
 		
@@ -1336,6 +1354,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		{
 			[self._ln_popupController_nocreate.popupBar layoutIfNeeded];
 			self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;
+			
 			if(transition == 1)
 			{
 				self._ln_popupController_nocreate.popupBar.backgroundView.frame = CGRectOffset(backgroundViewFrame, (isRTL ? 1 : -1) * CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(frame) + bottomSafeArea);
@@ -1445,12 +1464,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 	
-	if(wasHidden == YES)
-	{
-		self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
-	}
+	self._ln_popupController_nocreate.popupBar.wantsBackgroundCutout = NO;
 	
-	CGRect backgroundViewFrame = self._ln_popupController_nocreate.popupBar.backgroundView.frame;
+	__block CGRect frame = self.tabBar.frame;
+	
+	__block CGRect backgroundViewFrame = self._ln_popupController_nocreate.popupBar.backgroundView.frame;
 	CGFloat bottomSafeArea = self.view.superview.safeAreaInsets.bottom;
 	if(transition == 2 && isFloating)
 	{
@@ -1458,21 +1476,22 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		self._ln_popupController_nocreate.popupBar.backgroundView.transitionShadingView.alpha = 1.0;
 		self._ln_popupController_nocreate.popupBar.backgroundView.transitionShadingView.hidden = NO;
 		
-		if(wasHidden == YES)
-		{
-			self._ln_popupController_nocreate.popupBar.backgroundView.frame = CGRectOffset(backgroundViewFrame, (isRTL ? 1 : -1) * CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(self.tabBar.frame) + bottomSafeArea);
-		}
-	} else if(isFloating)
+		CGRect initial = CGRectOffset(backgroundViewFrame, (isRTL ? 1 : -1) * CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(frame) + bottomSafeArea);
+		
+		self._ln_popupController_nocreate.popupBar.backgroundView.frame = initial;
+	}
+	else if(isFloating)
 	{
 		self._ln_popupController_nocreate.popupBar.backgroundView.frame = CGRectOffset(backgroundViewFrame, 0, bottomSafeArea);
 	}
 	
-	__block CGRect frame = self.tabBar.frame;
-	
 	[self _setIgnoringLayoutDuringTransition:YES];
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
-	self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+	if(transition == 2)
+	{
+		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+	}
 	
 	void (^animations)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		if(transition != 2)
@@ -1491,8 +1510,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		}
 		self._ln_bottomBarExtension.frame = frame;
 		
-		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
-		if(isFloating && wasHidden == YES)
+		if(transition == 2)
+		{
+			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
+		}
+		if(isFloating)
 		{
 			self._ln_popupController_nocreate.popupBar.backgroundView.frame = backgroundViewFrame;
 			self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;
@@ -1510,10 +1532,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	void (^completion)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self _setPrepareTabBarIgnored:NO];
 		
-		if(wasHidden == YES)
-		{
-			[self._ln_popupController_nocreate.popupBar setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
-		}
+		[self._ln_popupController_nocreate.popupBar setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
 		
 		if(transition == 2 && isFloating)
 		{
