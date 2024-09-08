@@ -10,11 +10,8 @@
 #include <cstdlib>
 #include <array>
 
-CF_EXTERN_C_BEGIN
-
 namespace lnpopup {
 
-extern "C++"
 template <size_t N>
 struct base64_string : std::array<char, N> {
 	consteval base64_string(const char (&input)[N]) : base64_string(input, std::make_index_sequence<N>{}) {}
@@ -22,10 +19,9 @@ struct base64_string : std::array<char, N> {
 	consteval base64_string(const char (&input)[N], std::index_sequence<Is...>) : std::array<char, N>{ input[Is]... } {}
 };
 
-extern "C++"
 template <size_t N>
-consteval const base64_string<4 * (((N - 1) + 2) / 3) + 1> base64Encode(const char(&input)[N]) {
-	constexpr char kEncodingTable[] =
+consteval const auto base64_encode(const char(&input)[N]) {
+	constexpr char encoding_table[] =
 	{
 		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
 		'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -34,48 +30,46 @@ consteval const base64_string<4 * (((N - 1) + 2) / 3) + 1> base64Encode(const ch
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
 	};
 	
+	constexpr size_t out_len = 4 * (((N - 1) + 2) / 3) + 1;
+	
 	size_t in_len = N - 1;
-	char output[4 * (((N - 1) + 2) / 3) + 1] {0};
+	char output[out_len] {0};
 	size_t i = 0;
 	char *p = const_cast<char *>(output);
 	
 	for(i = 0; in_len > 2 && i < in_len - 2; i += 3)
 	{
-		*p++ = kEncodingTable[(input[i] >> 2) & 0x3F];
-		*p++ = kEncodingTable[((input[i] & 0x3) << 4) | ((int)(input[i + 1] & 0xF0) >> 4)];
-		*p++ = kEncodingTable[((input[i + 1] & 0xF) << 2) | ((int)(input[i + 2] & 0xC0) >> 6)];
-		*p++ = kEncodingTable[input[i + 2] & 0x3F];
+		*p++ = encoding_table[(input[i] >> 2) & 0x3F];
+		*p++ = encoding_table[((input[i] & 0x3) << 4) | ((int)(input[i + 1] & 0xF0) >> 4)];
+		*p++ = encoding_table[((input[i + 1] & 0xF) << 2) | ((int)(input[i + 2] & 0xC0) >> 6)];
+		*p++ = encoding_table[input[i + 2] & 0x3F];
 	}
 	
 	if(i < in_len)
 	{
-		*p++ = kEncodingTable[(input[i] >> 2) & 0x3F];
+		*p++ = encoding_table[(input[i] >> 2) & 0x3F];
 		if(i == (in_len - 1))
 		{
-			*p++ = kEncodingTable[((input[i] & 0x3) << 4)];
+			*p++ = encoding_table[((input[i] & 0x3) << 4)];
 			*p++ = '=';
 		}
 		else
 		{
-			*p++ = kEncodingTable[((input[i] & 0x3) << 4) | ((int)(input[i + 1] & 0xF0) >> 4)];
-			*p++ = kEncodingTable[((input[i + 1] & 0xF) << 2)];
+			*p++ = encoding_table[((input[i] & 0x3) << 4) | ((int)(input[i + 1] & 0xF0) >> 4)];
+			*p++ = encoding_table[((input[i + 1] & 0xF) << 2)];
 		}
 		*p++ = '=';
 	}
 	
-	return base64_string<4 * (((N - 1) + 2) / 3) + 1>(output);
+	return base64_string<out_len>(output);
 }
 
-extern "C++"
-template <typename T>
 CF_INLINE
-NSString* decodeHiddenString(T encoded)
+auto decode_hidden_string(auto encoded)
 {
 	return [[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:@(encoded.data()) options:0] encoding:NSUTF8StringEncoding];
 }
 
 } //namespace lnpopup
 
-#define LNPopupHiddenString(input) lnpopup::decodeHiddenString(lnpopup::base64Encode("" input ""))
-
-CF_EXTERN_C_END
+#define LNPopupHiddenString(input) (lnpopup::decode_hidden_string(lnpopup::base64_encode("" input "")))
