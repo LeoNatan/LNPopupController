@@ -390,3 +390,6 @@ Additionally, the demo project uses:
 
 * [LoremIpsum](https://github.com/lukaskubanek/LoremIpsum) Copyright (c) 2013 Lukas Kubanek
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=LeoNatan/LNPopupController&type=Date)](https://star-history.com/#LeoNatan/LNPopupController&Date)
