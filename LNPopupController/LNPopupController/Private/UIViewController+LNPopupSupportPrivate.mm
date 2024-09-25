@@ -1844,7 +1844,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	BOOL wasToolbarHidden = self.isToolbarHidden;
 	
-	if(edge == UIRectEdgeBottom)
+	if(edge == UIRectEdgeBottom && wasToolbarHidden != hidden)
 	{
 		[self _setIgnoringLayoutDuringTransition:YES];
 	}
