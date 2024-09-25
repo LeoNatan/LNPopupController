@@ -88,7 +88,6 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 	@autoreleasepool 
 	{
 #if ! LNPopupControllerEnforceStrictClean
-		//updateBackgroundGroupName
 		SEL updateBackgroundGroupNameSEL = NSSelectorFromString(LNPopupHiddenString("updateBackgroundGroupName"));
 		
 		id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){
@@ -98,7 +97,6 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 				static NSString* key = nil;
 				static dispatch_once_t onceToken;
 				dispatch_once(&onceToken, ^{
-					//groupName
 					key = LNPopupHiddenString("groupName");
 				});
 				

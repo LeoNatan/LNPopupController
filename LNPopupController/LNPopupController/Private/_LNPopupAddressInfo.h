@@ -1,5 +1,5 @@
 //
-//  LNAddressInfo.h
+//  _LNPopupAddressInfo.h
 //  LNPopupController
 //
 //  Created by Léo Natan on 9/8/24.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LNAddressInfo : NSObject
+@interface _LNPopupAddressInfo : NSObject
 
 - (instancetype)initWithAddress:(NSUInteger)address;
 

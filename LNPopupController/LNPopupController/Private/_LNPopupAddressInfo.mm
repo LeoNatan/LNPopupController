@@ -1,16 +1,16 @@
 //
-//  LNAddressInfo.mm
+//  _LNPopupAddressInfo.mm
 //  LNPopupController
 //
 //  Created by Léo Natan on 9/8/24.
 //  Copyright © 2024 Léo Natan. All rights reserved.
 //
 
-#import "LNAddressInfo.h"
+#import "_LNPopupAddressInfo.h"
 #include <dlfcn.h>
 #include <cxxabi.h>
 
-@implementation LNAddressInfo
+@implementation _LNPopupAddressInfo
 {
 	Dl_info _info;
 }

@@ -7,7 +7,7 @@
 //
 
 #import "LNForwardingDelegate.h"
-#import "LNAddressInfo.h"
+#import "_LNPopupAddressInfo.h"
 
 @implementation LNForwardingDelegate
 
@@ -41,7 +41,7 @@
 + (BOOL)isCallerUIKit:(NSArray *)callStackReturnAddresses
 {
 	NSUInteger addr = [callStackReturnAddresses[1] unsignedIntegerValue];
-	LNAddressInfo* addrInfo = [[LNAddressInfo alloc] initWithAddress:addr];
+	_LNPopupAddressInfo* addrInfo = [[_LNPopupAddressInfo alloc] initWithAddress:addr];
 	
 	return [addrInfo.image hasPrefix:@"UIKit"];
 }
