@@ -9,6 +9,7 @@
 #import "RandomColors.h"
 #import "SafeSystemImages.h"
 #import "SettingKeys.h"
+#import "DemoPopupContentViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

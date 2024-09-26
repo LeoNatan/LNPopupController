@@ -175,11 +175,11 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 			self?.updateBarItems()
 		}
 		
-		let play = UIBarButtonItem(image: LNSystemImage(named: "play.fill", useCompactConfig: false), primaryAction: playPauseAction)
+		let play = UIBarButtonItem(image: LNSystemImage("play.fill", useCompactConfig: false), primaryAction: playPauseAction)
 		play.accessibilityLabel = NSLocalizedString("Play", comment: "")
-		let pause = UIBarButtonItem(image: LNSystemImage(named: "pause.fill", useCompactConfig: false), primaryAction: playPauseAction)
+		let pause = UIBarButtonItem(image: LNSystemImage("pause.fill", useCompactConfig: false), primaryAction: playPauseAction)
 		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-		let next = UIBarButtonItem(image: LNSystemImage(named: "forward.fill", useCompactConfig: false), style: .plain, target: nil, action: nil)
+		let next = UIBarButtonItem(image: LNSystemImage("forward.fill", useCompactConfig: false), style: .plain, target: nil, action: nil)
 		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
 		
 		let playPause = playerView.playbackSettings.isPlaying ? pause : play

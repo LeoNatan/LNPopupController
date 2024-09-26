@@ -123,7 +123,7 @@
 		}
 	}
 	
-//	UIViewController* settings = [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateViewControllerWithIdentifier:@"SettingsView"];
+//	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings"];
 //	[self addChildViewController:settings];
 //	[self.view insertSubview:settings.view atIndex:0];
 //	settings.view.frame = self.view.bounds;
@@ -332,7 +332,16 @@
 		return;
 	}
 	
-	UIViewController* demoVC = [DemoPopupContentViewController new];
+	UIViewController* demoVC;
+	
+	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent] == 0)
+	{
+		demoVC = [DemoPopupContentViewController new];
+	}
+	else
+	{
+		demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingColors"];
+	}
 	
 	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonStyle] unsignedIntegerValue];
 	

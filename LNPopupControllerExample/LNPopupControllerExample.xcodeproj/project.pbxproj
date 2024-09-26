@@ -47,6 +47,7 @@
 		39BF83D42B554AE800917649 /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39BF83D22B554AE800917649 /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39BF83D62B554AF400917649 /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 39BF83D52B554AF400917649 /* LNPreviewToContextMenu */; };
 		39BF83D72B554AF400917649 /* LNPreviewToContextMenu in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39BF83D52B554AF400917649 /* LNPreviewToContextMenu */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		39C4026E2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C4026D2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift */; };
 		39D6C8B32B2D01E600F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; };
 		39D6C8B42B2D01F600F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39D6C8B62B2D020000F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */; };
@@ -165,6 +166,7 @@
 		39B0DFF02B1819C2008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ManualLayoutScene.storyboard; sourceTree = "<group>"; };
 		39B0DFF42B1819EF008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Music.storyboard; sourceTree = "<group>"; };
 		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
+		39C4026D2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingColorsViewController.swift; sourceTree = "<group>"; };
 		39D6C8992B2CC3A100F53E70 /* LNPopupControllerExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupControllerExample.entitlements; sourceTree = "<group>"; };
 		39D6C8B82B2D02B500F53E70 /* SettingKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingKeys.h; path = ../../../LNPopupSettings/SettingKeys.h; sourceTree = "<group>"; };
 		39D6C8B92B2D02B500F53E70 /* SettingKeys.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingKeys.m; path = ../../../LNPopupSettings/SettingKeys.m; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */,
 				394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */,
 				394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */,
+				39C4026D2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift */,
 			);
 			name = "Demo - Testing Scene (Objective-C)";
 			path = TestingScene;
@@ -522,6 +525,7 @@
 				3901289526CFC1D60002612D /* LNPopupControllerExampleSupport.m in Sources */,
 				399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */,
 				3988E3581B59C3000039C09B /* DemoViewController.m in Sources */,
+				39C4026E2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift in Sources */,
 				39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */,
 				39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */,
 				397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */,

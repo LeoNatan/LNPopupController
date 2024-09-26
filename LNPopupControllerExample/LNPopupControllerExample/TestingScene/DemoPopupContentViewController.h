@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+extern void LNApplyTitleWithSettings(UIViewController* vc) NS_SWIFT_NAME(LNApplyTitleWithSettings(to:));
+
 @interface DemoPopupContentViewController : UIViewController
 
 @end

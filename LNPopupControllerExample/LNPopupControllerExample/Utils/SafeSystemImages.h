@@ -8,4 +8,8 @@
 
 @import UIKit;
 
-extern UIImage* LNSystemImage(NSString* named, BOOL useCompactConfig) NS_SWIFT_NAME(LNSystemImage(named:useCompactConfig:));
+NS_ASSUME_NONNULL_BEGIN
+
+extern UIImage* LNSystemImage(NSString* named, BOOL useCompactConfig) NS_SWIFT_NAME(LNSystemImage(_:useCompactConfig:));
+
+NS_ASSUME_NONNULL_END

@@ -15,6 +15,40 @@
 
 @import LNPopupController;
 
+void LNApplyTitleWithSettings(UIViewController* self)
+{
+	uint32_t titleLowerLimit = 2;
+	uint32_t titleUpperLimit = 5;
+	
+	uint32_t subtitleLowerLimit = 4;
+	uint32_t subtitleUpperLimit = 16;
+	
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled] == YES)
+	{
+		subtitleLowerLimit = 10;
+	}
+	
+	self.popupItem.title = [[LoremIpsum wordsWithNumber:arc4random_uniform(titleUpperLimit - titleLowerLimit) + titleLowerLimit] capitalizedString];
+	self.popupItem.subtitle = [[LoremIpsum wordsWithNumber:arc4random_uniform(subtitleUpperLimit - subtitleLowerLimit) + subtitleLowerLimit] valueForKey:@"li_stringByCapitalizingFirstLetter"];
+	
+	if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingForceRTL])
+	{
+		self.popupItem.title = [self.popupItem.title stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
+		self.popupItem.subtitle = [self.popupItem.subtitle stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
+	}
+	
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
+	{
+		self.popupItem.image = [UIImage imageNamed:@"genre7"];
+	}
+	else
+	{
+		self.popupItem.image = [UIImage imageNamed:@"genre_white"];
+	}
+	//	self.popupItem.progress = (float) arc4random() / UINT32_MAX;
+	self.popupItem.progress = 1.0;
+}
+
 @interface DemoPopupContentView : UIView @end
 @implementation DemoPopupContentView
 
@@ -156,36 +190,7 @@
 		return;
 	}
 	
-	uint32_t titleLowerLimit = 2;
-	uint32_t titleUpperLimit = 5;
-	
-	uint32_t subtitleLowerLimit = 4;
-	uint32_t subtitleUpperLimit = 16;
-	
-	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled] == YES)
-	{
-		subtitleLowerLimit = 10;
-	}
-	
-	self.popupItem.title = [[LoremIpsum wordsWithNumber:arc4random_uniform(titleUpperLimit - titleLowerLimit) + titleLowerLimit] capitalizedString];
-	self.popupItem.subtitle = [[LoremIpsum wordsWithNumber:arc4random_uniform(subtitleUpperLimit - subtitleLowerLimit) + subtitleLowerLimit] valueForKey:@"li_stringByCapitalizingFirstLetter"];
-	
-	if([NSUserDefaults.standardUserDefaults boolForKey:PopupSettingForceRTL])
-	{
-		self.popupItem.title = [self.popupItem.title stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
-		self.popupItem.subtitle = [self.popupItem.subtitle stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
-	}
-	
-	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
-	{
-		self.popupItem.image = [UIImage imageNamed:@"genre7"];
-	}
-	else
-	{
-		self.popupItem.image = [UIImage imageNamed:@"genre_white"];
-	}
-//	self.popupItem.progress = (float) arc4random() / UINT32_MAX;
-	self.popupItem.progress = 1.0;
+	LNApplyTitleWithSettings(self);
 	
 	UILabel* topLabel = [UILabel new];
 	topLabel.text = NSLocalizedString(@"Top", @"");
