@@ -758,7 +758,14 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 
 - (CGRect)_ln_adjustedBounds
 {
-	return UIEdgeInsetsInsetRect(self.bounds, self.adjustedContentInset);
+	if([NSStringFromClass(self.class) containsString:LNPopupHiddenString("Queu")])
+	{
+		return self.bounds;
+	}
+	else
+	{
+		return UIEdgeInsetsInsetRect(self.bounds, self.adjustedContentInset);
+	}
 }
 
 - (BOOL)_ln_hasHorizontalContent
@@ -774,7 +781,7 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 {
 	BOOL rv = self.contentSize.height > self._ln_adjustedBounds.size.height;
 	
-//	NSLog(@"_ln_hasVerticalContent: %@ contentSize: %@ adjustedBounds: %@", @(rv), @(self.contentSize), @(self._ln_adjustedBounds));
+//	NSLog(@"_ln_hasVerticalContent: %@ contentSize: %@ adjustedBounds: %@ ajustedInsets: %@", @(rv), @(self.contentSize), @(self._ln_adjustedBounds), @(self.adjustedContentInset));
 	
 	return rv;
 }
@@ -782,6 +789,38 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 - (BOOL)_ln_scrollingOnlyVertically
 {
 	return self._ln_hasHorizontalContent == NO || [self.panGestureRecognizer translationInView:self].x == 0;
+}
+
+- (BOOL)_ln_isAtTop
+{
+	if([NSStringFromClass(self.class) containsString:LNPopupHiddenString("Queu")])
+	{
+		if(self._ln_hasVerticalContent)
+		{
+			static SEL viewBeforeViewSEL;
+			static id (*viewBeforeView)(id, SEL, id);
+			static SEL visibleViewSEL;
+			static id (*visibleView)(id, SEL);
+			
+			static dispatch_once_t onceToken;
+			dispatch_once(&onceToken, ^{
+				viewBeforeViewSEL = NSSelectorFromString(LNPopupHiddenString("_viewBeforeView:"));
+				viewBeforeView = reinterpret_cast<decltype(viewBeforeView)>(method_getImplementation(class_getInstanceMethod(self.class, viewBeforeViewSEL)));
+				
+				visibleViewSEL = NSSelectorFromString(LNPopupHiddenString("visibleView"));
+				visibleView = reinterpret_cast<decltype(visibleView)>(method_getImplementation(class_getInstanceMethod(self.class, visibleViewSEL)));
+			});
+			
+			id visible = visibleView(self, visibleViewSEL);
+			return visible == nil || viewBeforeView(self, viewBeforeViewSEL, visible) == nil;
+		}
+		else
+		{
+			return YES;
+		}
+	}
+	
+	return self.contentOffset.y <= - (self.adjustedContentInset.top);
 }
 
 @end

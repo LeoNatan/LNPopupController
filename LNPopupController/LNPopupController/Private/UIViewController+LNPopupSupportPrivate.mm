@@ -648,6 +648,18 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		self.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
 	}
 	
+	if([self.parentViewController isKindOfClass:UIPageViewController.class] && self.parentViewController.popupPresentationContainerViewController != nil)
+	{
+		//Work around Apple bugs
+		
+		CGFloat contentMargin = contentMarginFunc(self.parentViewController.popupPresentationContainerViewController, contentMarginSEL);
+		
+		UIEdgeInsets insets = __LNEdgeInsetsSum(self.parentViewController.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.parentViewController.popupPresentationContainerViewController).bottom, 0));
+		
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
+		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
+	}
+	
 #if ! TARGET_OS_MACCATALYST
 	if(self.popupContentViewController)
 	{

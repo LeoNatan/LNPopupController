@@ -31,7 +31,6 @@ static NSString* const _vPTIS = @"dmlzdWFsUHJvdmlkZXIudG9vbGJhcklzU21hbGw=";
 #endif
 
 static const CGFloat LNPopupBarGestureHeightPercentThreshold = 0.2;
-static const CGFloat LNPopupBarDeveloperPanGestureThreshold = 0;
 
 LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style)
 {
@@ -355,7 +354,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 				_popupContentView.hidden = NO;
 				[_currentContentController _userFacing_viewWillAppear:NO];
 			}
-//			_currentContentController.view.frame = _containerController.view.bounds;
 			
 			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController barEffect:(id)self.popupBar.backgroundView.effect];
 			
@@ -748,7 +746,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			if(([delegate respondsToSelector:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:)] && [delegate gestureRecognizer:_popupContentView.popupInteractionGestureRecognizer shouldRequireFailureOfGestureRecognizer:pgr] == YES) ||
 			   ([delegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)] && [delegate gestureRecognizer:_popupContentView.popupInteractionGestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:pgr] == NO) ||
-			   (_dismissGestureStarted == NO && possibleScrollView.contentOffset.y > - (possibleScrollView.adjustedContentInset.top + LNPopupBarDeveloperPanGestureThreshold)))
+			   (_dismissGestureStarted == NO && possibleScrollView._ln_isAtTop == NO))
 			{
 				return;
 			}

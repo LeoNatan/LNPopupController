@@ -41,6 +41,12 @@
 		39B0DFEF2B1819C2008CCF36 /* ManualLayoutScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF12B1819C2008CCF36 /* ManualLayoutScene.storyboard */; };
 		39B0DFF22B1819EF008CCF36 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF52B1819EF008CCF36 /* Music.storyboard */; };
 		39B0DFF32B1819EF008CCF36 /* Music.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFF52B1819EF008CCF36 /* Music.storyboard */; };
+		39B645EA2CA5A97B00AB038B /* ScrollingColorsPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B645E92CA5A97B00AB038B /* ScrollingColorsPageViewController.swift */; };
+		39B645EB2CA5A97B00AB038B /* ScrollingColorsPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B645E92CA5A97B00AB038B /* ScrollingColorsPageViewController.swift */; };
+		39B645ED2CA5AA1300AB038B /* PageCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B645EC2CA5AA1300AB038B /* PageCardViewController.swift */; };
+		39B645EE2CA5AA1300AB038B /* PageCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B645EC2CA5AA1300AB038B /* PageCardViewController.swift */; };
+		39B645F02CA61B0200AB038B /* ScrollingMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B645EF2CA61B0200AB038B /* ScrollingMapViewController.swift */; };
+		39B645F12CA61B0200AB038B /* ScrollingMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B645EF2CA61B0200AB038B /* ScrollingMapViewController.swift */; };
 		39BBA86924FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
 		39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */; };
 		39BF83D32B554AE800917649 /* LNPreviewToContextMenu in Frameworks */ = {isa = PBXBuildFile; productRef = 39BF83D22B554AE800917649 /* LNPreviewToContextMenu */; };
@@ -165,6 +171,9 @@
 		39B0DFEC2B1819BC008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
 		39B0DFF02B1819C2008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ManualLayoutScene.storyboard; sourceTree = "<group>"; };
 		39B0DFF42B1819EF008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Music.storyboard; sourceTree = "<group>"; };
+		39B645E92CA5A97B00AB038B /* ScrollingColorsPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingColorsPageViewController.swift; sourceTree = "<group>"; };
+		39B645EC2CA5AA1300AB038B /* PageCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCardViewController.swift; sourceTree = "<group>"; };
+		39B645EF2CA61B0200AB038B /* ScrollingMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingMapViewController.swift; sourceTree = "<group>"; };
 		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
 		39C4026D2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingColorsViewController.swift; sourceTree = "<group>"; };
 		39D6C8992B2CC3A100F53E70 /* LNPopupControllerExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupControllerExample.entitlements; sourceTree = "<group>"; };
@@ -307,6 +316,9 @@
 				394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */,
 				394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */,
 				39C4026D2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift */,
+				39B645EC2CA5AA1300AB038B /* PageCardViewController.swift */,
+				39B645E92CA5A97B00AB038B /* ScrollingColorsPageViewController.swift */,
+				39B645EF2CA61B0200AB038B /* ScrollingMapViewController.swift */,
 			);
 			name = "Demo - Testing Scene (Objective-C)";
 			path = TestingScene;
@@ -514,11 +526,14 @@
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
 				39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
+				39B645F02CA61B0200AB038B /* ScrollingMapViewController.swift in Sources */,
 				394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */,
 				39277A091B58228000293F95 /* main.m in Sources */,
 				39D6C8BB2B2D02B500F53E70 /* SettingKeys.m in Sources */,
 				39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */,
 				393F23291E16CF90000E969D /* LocationsController.swift in Sources */,
+				39B645EB2CA5A97B00AB038B /* ScrollingColorsPageViewController.swift in Sources */,
+				39B645ED2CA5AA1300AB038B /* PageCardViewController.swift in Sources */,
 				3985DE602549539B00CD76EE /* IntroWebViewController.m in Sources */,
 				393F23251E16C04A000E969D /* MapViewController.swift in Sources */,
 				39D6C8BD2B2D02B500F53E70 /* SettingsViewController.swift in Sources */,
@@ -537,6 +552,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				394E1AA8276C0D9300C5BE31 /* LNPopupControllerExampleSupport.m in Sources */,
+				39B645EA2CA5A97B00AB038B /* ScrollingColorsPageViewController.swift in Sources */,
 				394E1AA9276C0DA600C5BE31 /* DemoGallery.m in Sources */,
 				39D6C8BE2B2D02B500F53E70 /* SettingsViewController.swift in Sources */,
 				39BBA86C24FEC3E800D9712A /* ManualLayoutCustomBarViewController.swift in Sources */,
@@ -552,7 +568,9 @@
 				39FAFC4224E71A6C008BBC2D /* DemoPopupContentViewController.m in Sources */,
 				39FAFC4324E71A6C008BBC2D /* DemoViewController.m in Sources */,
 				39D6C8BC2B2D02B500F53E70 /* SettingKeys.m in Sources */,
+				39B645EE2CA5AA1300AB038B /* PageCardViewController.swift in Sources */,
 				39FAFC4424E71A6C008BBC2D /* PortraitTabBarController.swift in Sources */,
+				39B645F12CA61B0200AB038B /* ScrollingMapViewController.swift in Sources */,
 				39988C772AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */,
 				39FAFC4624E71A6C008BBC2D /* MusicCell.swift in Sources */,

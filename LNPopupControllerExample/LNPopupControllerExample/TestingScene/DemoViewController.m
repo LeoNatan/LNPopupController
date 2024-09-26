@@ -334,13 +334,24 @@
 	
 	UIViewController* demoVC;
 	
-	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent] == 0)
+	switch([NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent])
 	{
-		demoVC = [DemoPopupContentViewController new];
-	}
-	else
-	{
-		demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingColors"];
+		case 1:
+		case 2:
+			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingColors"];
+			break;
+		case 3:
+			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VerticalPagedScrollingColors"];
+			break;
+		case 4:
+			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HorizontalPagedScrollingColors"];
+			break;
+		case 5:
+			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingMap"];
+			break;
+		default:
+			demoVC = [DemoPopupContentViewController new];
+			break;
 	}
 	
 	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonStyle] unsignedIntegerValue];
