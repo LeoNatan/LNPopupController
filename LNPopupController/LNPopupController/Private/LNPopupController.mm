@@ -339,7 +339,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[_rigidFeedbackGenerator impactOccurredWithIntensity:intensity];
 }
 
-- (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha allowFeedbackGeneration:(BOOL)allowFeedbackGeneration completion:(void(^)(void))completion
+- (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completion
 {
 	if(state == _popupControllerInternalState)
 	{
@@ -420,7 +420,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		if(shouldNotifyDelegateWillOpen == YES)
 		{
-			if(allowFeedbackGeneration == YES)
+			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart || resolvedStyle == LNPopupInteractionStyleSnap))
 			{
 				[self _generateSoftFeedbackWithIntensity:0.9];
 			}
@@ -433,7 +433,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(shouldNotifyDelegateWillClose == YES)
 		{
-			if(allowFeedbackGeneration == YES)
+			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart || resolvedStyle == LNPopupInteractionStyleSnap))
 			{
 				[self _generateRigidFeedbackWithIntensity:0.9];
 			}
@@ -497,6 +497,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			_popupContentView.accessibilityViewIsModal = NO;
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
+			
+			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart == false && resolvedStyle != LNPopupInteractionStyleSnap))
+			{
+				[self _generateSoftFeedbackWithIntensity:0.8];
+			}
 		}
 		
 		_popupControllerInternalState = state;
@@ -529,6 +534,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			_popupContentView.accessibilityViewIsModal = YES;
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _popupContentView.popupCloseButton);
+			
+			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart == false && resolvedStyle != LNPopupInteractionStyleSnap))
+			{
+				[self _generateSoftFeedbackWithIntensity:0.8];
+			}
 			
 			if(_popupControllerPublicState == LNPopupPresentationStateOpen && publicStateAtStart != _popupControllerPublicState)
 			{
@@ -644,6 +654,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	{
 		if((_popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y < 0))
 		{
+			[self _end120HzHack];
+			
 			pgr.enabled = NO;
 			pgr.enabled = YES;
 			
@@ -718,12 +730,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			//If the scroll view has horizontal scroll, ignore the scroll view's pan gesture recognizer.
 			if(possibleScrollView._ln_hasHorizontalContent == YES)
 			{
-				if(isVerticalPan == false)
+				if(isVerticalPan == NO)
 				{
 					_popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 					_popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 				}
-				else if(_dismissGestureStarted == true)
+				else if(_dismissGestureStarted == YES)
 				{
 					pgr.enabled = NO;
 					pgr.enabled = YES;
@@ -759,7 +771,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_dismissGestureStarted == NO && (resolvedStyle == LNPopupInteractionStyleDrag || resolvedStyle == LNPopupInteractionStyleScroll || _popupControllerInternalState > LNPopupPresentationStateBarPresented))
 	{
-		if(resolvedStyle != LNPopupInteractionStyleSnap)
+		BOOL allowFeedback = (_popupControllerInternalState == LNPopupPresentationStateOpen && translation.y > 0) || (_popupControllerInternalState == LNPopupPresentationStateBarPresented && translation.y < 0);
+		
+		if(resolvedStyle != LNPopupInteractionStyleSnap && allowFeedback)
 		{
 			[self _generateSoftFeedbackWithIntensity:0.8];
 		}
@@ -774,7 +788,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		_stateBeforeDismissStarted = _popupControllerInternalState;
 		
-		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:NO completion:nil];
+		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:NO forceFeedbackGenerationAtStart:NO completion:nil];
 		
 		_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 		_cachedInsets = [_containerController insetsForBottomDockingView];
@@ -843,7 +857,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
-- (BOOL)_shouldStopEndOrCancelledOnUnknownGestureRecognizerOrHorizontalScroll:(UIPanGestureRecognizer*)pgr
+- (BOOL)_shouldStopEndOrCancelledOnUnknown:(UIPanGestureRecognizer*)pgr
 {
 	if(pgr == _popupContentView.popupInteractionGestureRecognizer)
 	{
@@ -863,7 +877,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 	
-	if(_dismissGestureStarted == true && [self _shouldStopEndOrCancelledOnUnknownGestureRecognizerOrHorizontalScroll:pgr])
+	if(_dismissGestureStarted == YES && [self _shouldStopEndOrCancelledOnUnknown:pgr])
 	{
 		_dismissGestureStarted = NO;
 		
@@ -897,11 +911,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_popupContentView.popupCloseButton _setButtonContainerStationary];
 		if(targetState == LNPopupPresentationStateOpen)
 		{
-			[self openPopupAnimated:YES completion:nil];
+			[self openPopupAnimated:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap completion:nil];
 		}
 		else
 		{
-			[self closePopupAnimated:YES completion:nil];
+			[self closePopupAnimated:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap completion:nil];
 		}
 	}
 	
@@ -1399,7 +1413,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 					_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillOpenPopup:animated:), animated);
 				}
 				
-				[self _openPopupAnimated:animated completion:completionBlock];
+				[self _openPopupAnimated:animated allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:completionBlock];
 			}
 		};
 		
@@ -1497,12 +1511,17 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	[self openPopupAnimated:animated allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:completionBlock];
+}
+
+- (void)openPopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
+{
 	[self _enqueueEvent:[_LNPopupControllerEvent openEventWithOperation:^{
-		[self _openPopupAnimated:animated completion:completionBlock];
+		[self _openPopupAnimated:animated allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
 	}]];
 }
 
-- (void)_openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
+- (void)_openPopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
 {
 	[self _start120HzHack];
 	
@@ -1510,7 +1529,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	{
 		[_containerController.view setNeedsLayout];
 		[_containerController.view layoutIfNeeded];
-		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:YES completion:completionBlock];
+		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
 	}
 	else if(completionBlock != nil)
 	{
@@ -1520,18 +1539,23 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	[self closePopupAnimated:animated allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:completionBlock];
+}
+
+- (void)closePopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
+{
 	[self _enqueueEvent:[_LNPopupControllerEvent closeEventWithOperation:^{
-		[self _closePopupAnimated:animated completion:completionBlock];
+		[self _closePopupAnimated:animated allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
 	}]];
 }
 
-- (void)_closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
+- (void)_closePopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
 {
 	if(_popupControllerTargetState != LNPopupPresentationStateBarPresented)
 	{
 		LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 		
-		[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:YES completion:completionBlock];
+		[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
 	}
 	else if(completionBlock != nil)
 	{
@@ -1676,7 +1700,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 			
-			[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap allowPopupBarAlphaModification:YES allowFeedbackGeneration:YES completion:dismissalAnimationCompletionBlock];
+			[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap allowPopupBarAlphaModification:YES allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:dismissalAnimationCompletionBlock];
 		}
 		else
 		{
