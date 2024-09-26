@@ -2,8 +2,8 @@
 //  ScrollingColorsPageViewController.swift
 //  LNPopupControllerExample
 //
-//  Created by Léo Natan on 26/9/24.
-//  Copyright © 2024 Léo Natan. All rights reserved.
+//  Created by Léo Natan on 2024-09-27.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 import UIKit

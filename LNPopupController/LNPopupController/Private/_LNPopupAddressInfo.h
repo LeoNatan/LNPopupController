@@ -2,8 +2,8 @@
 //  _LNPopupAddressInfo.h
 //  LNPopupController
 //
-//  Created by Léo Natan on 9/8/24.
-//  Copyright © 2024 Léo Natan. All rights reserved.
+//  Created by Léo Natan on 2024-08-09.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

@@ -2,8 +2,8 @@
 //  _LNPopupBase64Utils.hh
 //  LNPopupController
 //
-//  Created by Léo Natan on 1/9/24.
-//  Copyright © 2024 Léo Natan. All rights reserved.
+//  Created by Léo Natan on 2024-09-01.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
