@@ -88,7 +88,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return YES;
 	}
 	
-	if([otherGestureRecognizer.view isKindOfClass:UIScrollView.class] && [(UIScrollView*)otherGestureRecognizer.view _ln_hasVerticalContent] == NO)
+	if([otherGestureRecognizer.view isKindOfClass:UIScrollView.class] && [(UIScrollView*)otherGestureRecognizer.view _ln_hasVerticalContent] == NO && [(UIScrollView*)otherGestureRecognizer.view _ln_hasHorizontalContent] == NO)
 	{
 		return YES;
 	}

@@ -843,14 +843,32 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
-- (void)_popupBarPresentationByUserPanGestureHandler_endedOrCancelled:(UIPanGestureRecognizer*)pgr
+- (BOOL)_shouldStopEndOrCancelledOnUnknownGestureRecognizerOrHorizontalScroll:(UIPanGestureRecognizer*)pgr
 {
-	if(_dismissGestureStarted == true && pgr != _popupContentView.popupInteractionGestureRecognizer)
+	if(pgr == _popupContentView.popupInteractionGestureRecognizer)
 	{
-		return;
+		return NO;
 	}
 	
+	UIScrollView* possibleScrollView = (id)pgr.view;
+	if([possibleScrollView isKindOfClass:UIScrollView.class] == NO)
+	{
+		return YES;
+	}
+	
+	return possibleScrollView._ln_hasHorizontalContent;
+}
+
+- (void)_popupBarPresentationByUserPanGestureHandler_endedOrCancelled:(UIPanGestureRecognizer*)pgr
+{
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	
+	if(_dismissGestureStarted == true && [self _shouldStopEndOrCancelledOnUnknownGestureRecognizerOrHorizontalScroll:pgr])
+	{
+		_dismissGestureStarted = NO;
+		
+		return;
+	}
 	
 	if(_dismissGestureStarted == YES)
 	{
