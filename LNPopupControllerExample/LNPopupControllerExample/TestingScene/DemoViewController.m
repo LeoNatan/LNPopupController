@@ -336,17 +336,25 @@
 	
 	switch([NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent])
 	{
-		case 1:
-		case 2:
+		case 10:
+		case 11:
 			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingColors"];
 			break;
-		case 3:
+		
+		case 20:
 			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VerticalPagedScrollingColors"];
 			break;
-		case 4:
+		case 21:
 			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HorizontalPagedScrollingColors"];
 			break;
-		case 5:
+		case 22:
+			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VerticalGroupedPagedScrollingColors"];
+			break;
+		case 23:
+			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"HorizontalGroupedPagedScrollingColors"];
+			break;
+			
+		case 100:
 			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingMap"];
 			break;
 		default:

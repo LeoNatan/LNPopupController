@@ -9,16 +9,14 @@
 import UIKit
 import LNPopupController
 
-class ScrollingColorsPageViewController: UIPageViewController, UIPageViewControllerDataSource {
-	var colors: [UIColor] = []
-	
+protocol Indexable {
+	var index: Int { get set }
+}
+
+class _ScrollingColorsPageViewController<T: UIViewController & Indexable>: UIPageViewController, UIPageViewControllerDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		for _ in 0..<30 {
-			colors.append(LNRandomSystemColor())
-		}
-
 		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
 		
 		let gridBarButtonItem = UIBarButtonItem()
@@ -36,16 +34,16 @@ class ScrollingColorsPageViewController: UIPageViewController, UIPageViewControl
 		self.navigationOrientation == .vertical
 	}
 	
-	func viewController(at index: Int) -> PageCardViewController {
-		let rv = self.storyboard?.instantiateViewController(withIdentifier: "PagedCard") as! PageCardViewController
-		rv.index = index
-		rv.loadViewIfNeeded()
-		rv.cardView.backgroundColor = colors[index]
-		return rv
+	dynamic func viewController(at index: Int) -> T {
+		fatalError()
+	}
+	
+	dynamic var totalCount: Int {
+		fatalError()
 	}
 	
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-		let viewController = viewController as! PageCardViewController
+		let viewController = viewController as! T
 		
 		if viewController.index == 0 {
 			return nil
@@ -55,9 +53,9 @@ class ScrollingColorsPageViewController: UIPageViewController, UIPageViewControl
 	}
 	
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-		let viewController = viewController as! PageCardViewController
+		let viewController = viewController as! T
 		
-		if viewController.index == colors.count - 1 {
+		if viewController.index == totalCount - 1 {
 			return nil
 		}
 		
@@ -66,5 +64,58 @@ class ScrollingColorsPageViewController: UIPageViewController, UIPageViewControl
 	
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
+	}
+}
+
+extension PageCardViewController: Indexable {}
+
+class ScrollingColorsPageViewController: _ScrollingColorsPageViewController<PageCardViewController>, Indexable {
+	var colors: [UIColor] = []
+	var index: Int = -1
+	var prefix: String? = nil {
+		didSet {
+			(viewControllers as! [PageCardViewController]).forEach { $0.prefix = prefix }
+		}
+	}
+	
+	override var totalCount: Int {
+		colors.count
+	}
+	
+	override func viewDidLoad() {
+		for _ in 0..<30 {
+			colors.append(LNRandomSystemColor())
+		}
+		
+		super.viewDidLoad()
+	}
+	
+	override func viewController(at index: Int) -> PageCardViewController {
+		let rv = self.storyboard!.instantiateViewController(withIdentifier: "PagedCard") as! PageCardViewController
+		rv.index = index
+		rv.prefix = prefix
+		rv.loadViewIfNeeded()
+		rv.cardView.backgroundColor = colors[index]
+		return rv
+	}
+}
+
+class ScrollingGroupedColorsPageViewController: _ScrollingColorsPageViewController<ScrollingColorsPageViewController> {
+	override var totalCount: Int {
+		return 10
+	}
+	
+	override func viewController(at index: Int) -> ScrollingColorsPageViewController {
+		let identifier: String
+		if isVertical {
+			identifier = "HorizontalPagedScrollingColors"
+		} else {
+			identifier = "VerticalPagedScrollingColors"
+		}
+		
+		let rv = self.storyboard!.instantiateViewController(withIdentifier: identifier) as! ScrollingColorsPageViewController
+		rv.index = index
+		rv.prefix = "\(index)_"
+		return rv
 	}
 }

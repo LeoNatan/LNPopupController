@@ -1216,26 +1216,38 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	}];
 }
 
+- (void)_fixupGestureRecognizer:(UIGestureRecognizer*)obj
+{
+	if([obj isKindOfClass:[UIPanGestureRecognizer class]] && [obj.view isDescendantOfView:_currentContentController.viewForPopupInteractionGestureRecognizer] && obj != _popupContentView.popupInteractionGestureRecognizer)
+	{
+		[obj addTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
+	}
+}
+
 - (void)_fixupGestureRecognizersForController:(UIViewController*)vc
 {
 	__LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(vc.viewForPopupInteractionGestureRecognizer, ^(UIView *view) {
 		[view.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-			if([obj isKindOfClass:[UIPanGestureRecognizer class]] && obj != _popupContentView.popupInteractionGestureRecognizer)
-			{
-				[obj addTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
-			}
+			[self _fixupGestureRecognizer:obj];
 		}];
 	});
 }
 
+- (void)_unfixupGestureRecognizer:(UIGestureRecognizer*)obj
+{
+	if([obj isKindOfClass:[UIPanGestureRecognizer class]] && [obj.view isDescendantOfView:_currentContentController.viewForPopupInteractionGestureRecognizer] && obj != _popupContentView.popupInteractionGestureRecognizer)
+	{
+		[obj removeTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
+	}
+}
+
 - (void)_cleanupGestureRecognizersForController:(UIViewController*)vc
 {
-	[vc.viewForPopupInteractionGestureRecognizer.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		if([obj isKindOfClass:[UIPanGestureRecognizer class]] && obj != _popupContentView.popupInteractionGestureRecognizer)
-		{
-			[obj removeTarget:self action:@selector(_popupBarPresentationByUserPanGestureHandler:)];
-		}
-	}];
+	__LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(vc.viewForPopupInteractionGestureRecognizer, ^(UIView *view) {
+		[view.gestureRecognizers enumerateObjectsUsingBlock:^(__kindof UIGestureRecognizer * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+			[self _unfixupGestureRecognizer:obj];
+		}];
+	});
 }
 
 - (BOOL)_hasRunningAnimators

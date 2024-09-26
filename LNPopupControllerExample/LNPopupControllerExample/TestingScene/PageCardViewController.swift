@@ -11,10 +11,17 @@ import UIKit
 class PageCardViewController: UIViewController {
 	@IBOutlet var cardView: UIView!
 	@IBOutlet var indexLabel: UILabel!
+	public var prefix: String? = nil {
+		didSet {
+			if isViewLoaded {
+				indexLabel.text = "\(prefix == nil ? "" : prefix!)\(index)"
+			}
+		}
+	}
 	public var index: Int = -1 {
 		didSet {
 			if isViewLoaded {
-				indexLabel.text = "\(index)"
+				indexLabel.text = "\(prefix == nil ? "" : prefix!)\(index)"
 			}
 		}
 	}
@@ -25,7 +32,7 @@ class PageCardViewController: UIViewController {
 		cardView.layer.cornerCurve = .continuous
 		cardView.layer.cornerRadius = 40
 		
-		indexLabel.text = "\(index)"
+		indexLabel.text = "\(prefix == nil ? "" : prefix!)\(index)"
     }
 	
 	override func viewSafeAreaInsetsDidChange() {

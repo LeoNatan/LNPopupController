@@ -88,6 +88,9 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 		return YES;
 	}
 	
+	//View hierarchy might add more and more views with gesture recognizers. Let's try to "import" them for our system.
+	[_popupController _fixupGestureRecognizer:otherGestureRecognizer];
+	
 	if([otherGestureRecognizer.view isKindOfClass:UIScrollView.class] && [(UIScrollView*)otherGestureRecognizer.view _ln_hasVerticalContent] == NO && [(UIScrollView*)otherGestureRecognizer.view _ln_hasHorizontalContent] == NO)
 	{
 		return YES;

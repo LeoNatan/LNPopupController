@@ -311,7 +311,7 @@
                 <pageViewController storyboardIdentifier="HorizontalPagedScrollingColors" autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="cvh-NL-3NZ" customClass="ScrollingColorsPageViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwU-mb-hqW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2425" y="-2802"/>
+            <point key="canvasLocation" x="-2494" y="-3527"/>
         </scene>
         <!--Page Card View Controller-->
         <scene sceneID="cPF-0D-tGt">
@@ -742,7 +742,23 @@
                 <pageViewController storyboardIdentifier="VerticalPagedScrollingColors" autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="vertical" spineLocation="none" id="Siq-2j-gz4" customClass="ScrollingColorsPageViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tg0-n1-610" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1599" y="-2802"/>
+            <point key="canvasLocation" x="-1856" y="-3527"/>
+        </scene>
+        <!--Scrolling Grouped Colors Page View Controller-->
+        <scene sceneID="hz1-dL-D7c">
+            <objects>
+                <pageViewController storyboardIdentifier="HorizontalGroupedPagedScrollingColors" autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="MZu-Ul-jrA" customClass="ScrollingGroupedColorsPageViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CPu-Z3-i9y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2495" y="-2804"/>
+        </scene>
+        <!--Scrolling Grouped Colors Page View Controller-->
+        <scene sceneID="f6a-ev-mk0">
+            <objects>
+                <pageViewController storyboardIdentifier="VerticalGroupedPagedScrollingColors" autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="vertical" spineLocation="none" id="5T6-pc-7hX" customClass="ScrollingGroupedColorsPageViewController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PAt-2Y-Gaw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1856" y="-2804"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

@@ -61,6 +61,8 @@ CF_EXTERN_C_BEGIN
 
 + (CGFloat)_statusBarHeightForView:(UIView*)view;
 
+- (void)_fixupGestureRecognizer:(UIGestureRecognizer*)obj;
+
 @end
 
 CF_EXTERN_C_END
