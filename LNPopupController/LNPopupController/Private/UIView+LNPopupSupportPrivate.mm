@@ -756,34 +756,32 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 
 @implementation UIScrollView (LNPopupSupportPrivate)
 
-- (CGSize)_ln_adjustedContentSize
+- (CGRect)_ln_adjustedBounds
 {
-	CGRect rect = (CGRect){0, 0, self.contentSize};
-	if([NSStringFromClass(self.class) containsString:@"Queu"] == NO)
-	{
-		rect = UIEdgeInsetsInsetRect(rect, self.adjustedContentInset);
-	}
-	return rect.size;
+	return UIEdgeInsetsInsetRect(self.bounds, self.adjustedContentInset);
 }
 
 - (BOOL)_ln_hasHorizontalContent
 {
-	CGSize contentSize = self._ln_adjustedContentSize;
-	BOOL rv = contentSize.width > self.bounds.size.width;
+	BOOL rv = self.contentSize.width > self._ln_adjustedBounds.size.width;
 	
-//	NSLog(@"_ln_hasHorizontalContent: %@ contentSize: %@", @(rv), @(contentSize));
+//	NSLog(@"_ln_hasHorizontalContent: %@ contentSize: %@ adjustedBounds: %@", @(rv), @(self.contentSize), @(self._ln_adjustedBounds));
 	
 	return rv;
 }
 
 - (BOOL)_ln_hasVerticalContent
 {
-	CGSize contentSize = self._ln_adjustedContentSize;
-	BOOL rv = contentSize.height > self.bounds.size.height;
+	BOOL rv = self.contentSize.height > self._ln_adjustedBounds.size.height;
 	
-//	NSLog(@"_ln_hasVerticalContent: %@", @(rv));
+//	NSLog(@"_ln_hasVerticalContent: %@ contentSize: %@ adjustedBounds: %@", @(rv), @(self.contentSize), @(self._ln_adjustedBounds));
 	
 	return rv;
+}
+
+- (BOOL)_ln_scrollingOnlyVertically
+{
+	return self._ln_hasHorizontalContent == NO || [self.panGestureRecognizer translationInView:self].x == 0;
 }
 
 @end

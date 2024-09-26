@@ -62,5 +62,6 @@ NS_ASSUME_NONNULL_END
 
 - (BOOL)_ln_hasHorizontalContent;
 - (BOOL)_ln_hasVerticalContent;
+- (BOOL)_ln_scrollingOnlyVertically;
 
 @end

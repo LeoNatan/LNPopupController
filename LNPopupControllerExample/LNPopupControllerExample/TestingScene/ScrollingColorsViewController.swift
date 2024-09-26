@@ -28,6 +28,16 @@ class ScrollingColorsViewController: UICollectionViewController {
 		popupItem.barButtonItems = [gridBarButtonItem]
 		
 		LNApplyTitleWithSettings(to: self)
+		
+//		collectionView.contentInsetAdjustmentBehavior = .always
+//		collectionView.isDirectionalLockEnabled = true
+		collectionView.automaticallyAdjustsScrollIndicatorInsets = false
+	}
+	
+	override func viewSafeAreaInsetsDidChange() {
+		super.viewSafeAreaInsetsDidChange()
+		
+		collectionView.scrollIndicatorInsets = view.safeAreaInsets
 	}
 	
 	var isVertical: Bool {
@@ -70,12 +80,12 @@ class ScrollingColorsViewController: UICollectionViewController {
 			
 			let section = NSCollectionLayoutSection(group: group)
 			section.interGroupSpacing = 16
-//			section.orthogonalScrollingBehavior = .groupPagingCentered
 			return section
 		}
 		
 		let config = UICollectionViewCompositionalLayoutConfiguration()
 		config.scrollDirection = .horizontal
+		config.contentInsetsReference = .none
 		
 		layout.configuration = config
 		

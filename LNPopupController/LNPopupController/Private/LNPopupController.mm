@@ -727,8 +727,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		UIScrollView* possibleScrollView = (id)pgr.view;
 		if([possibleScrollView isKindOfClass:[UIScrollView class]])
 		{
-			//If the scroll view has horizontal scroll, ignore the scroll view's pan gesture recognizer.
-			if(possibleScrollView._ln_hasHorizontalContent == YES)
+			//If not scrolling only vertically, ignore the scroll view's pan gesture recognizer.
+			if(possibleScrollView._ln_scrollingOnlyVertically == NO)
 			{
 				if(isVerticalPan == NO)
 				{
@@ -748,7 +748,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			if(([delegate respondsToSelector:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:)] && [delegate gestureRecognizer:_popupContentView.popupInteractionGestureRecognizer shouldRequireFailureOfGestureRecognizer:pgr] == YES) ||
 			   ([delegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)] && [delegate gestureRecognizer:_popupContentView.popupInteractionGestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:pgr] == NO) ||
-			   (_dismissGestureStarted == NO && possibleScrollView.contentOffset.y > - (possibleScrollView.contentInset.top + LNPopupBarDeveloperPanGestureThreshold)))
+			   (_dismissGestureStarted == NO && possibleScrollView.contentOffset.y > - (possibleScrollView.adjustedContentInset.top + LNPopupBarDeveloperPanGestureThreshold)))
 			{
 				return;
 			}
@@ -857,32 +857,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
-- (BOOL)_shouldStopEndOrCancelledOnUnknown:(UIPanGestureRecognizer*)pgr
-{
-	if(pgr == _popupContentView.popupInteractionGestureRecognizer)
-	{
-		return NO;
-	}
-	
-	UIScrollView* possibleScrollView = (id)pgr.view;
-	if([possibleScrollView isKindOfClass:UIScrollView.class] == NO)
-	{
-		return YES;
-	}
-	
-	return possibleScrollView._ln_hasHorizontalContent;
-}
-
 - (void)_popupBarPresentationByUserPanGestureHandler_endedOrCancelled:(UIPanGestureRecognizer*)pgr
 {
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
-	
-	if(_dismissGestureStarted == YES && [self _shouldStopEndOrCancelledOnUnknown:pgr])
-	{
-		_dismissGestureStarted = NO;
-		
-		return;
-	}
 	
 	if(_dismissGestureStarted == YES)
 	{
