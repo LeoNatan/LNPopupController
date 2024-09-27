@@ -41,7 +41,7 @@ class ScrollingColorsViewController: UICollectionViewController {
 	}
 	
 	var isVertical: Bool {
-		UserDefaults.settings.integer(forKey: .useScrollingPopupContent) == 1
+		UserDefaults.settings.integer(forKey: .useScrollingPopupContent) == 10
 	}
 	
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
