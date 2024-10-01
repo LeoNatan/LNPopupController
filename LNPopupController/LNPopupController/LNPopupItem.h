@@ -2,8 +2,8 @@
 //  LNPopupItem.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -94,9 +94,9 @@ NS_SWIFT_UI_ACTOR
 
 @interface LNPopupItem (Deprecated)
 
-@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems LN_DEPRECATED_API("Use leadingBarButtonItems instead.");
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems LN_UNAVAILABLE_API("Use leadingBarButtonItems instead.");
 
-@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems LN_DEPRECATED_API("Use barButtonItems or trailingBarButtonItems instead.");
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems LN_UNAVAILABLE_API("Use barButtonItems or trailingBarButtonItems instead.");
 
 @end
 

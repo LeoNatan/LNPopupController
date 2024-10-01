@@ -2,8 +2,8 @@
 //  LNPopupItem.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-09-23.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -46,21 +46,21 @@ NS_SWIFT_UI_ACTOR
 
 #pragma mark Deprecations
 
-extern const UIBlurEffectStyle LNBackgroundStyleInherit LN_DEPRECATED_API("Use backgroundEffect instead.");
+extern const UIBlurEffectStyle LNBackgroundStyleInherit LN_UNAVAILABLE_API("Use backgroundEffect instead.");
 
 @interface LNPopupContentView (Deprecated)
 
 /// Attempt to automatically move the popup close button under top bars, such as navigation bars.
 ///
 /// Note: No longer supported. Instead, implement `UIViewController.positionPopupCloseButton()` and position the button in your content controller's view hierarchy.
-@property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars UI_APPEARANCE_SELECTOR LN_DEPRECATED_API("No longer supported. Instead, implement UIViewController.positionPopupCloseButton() and position the button in your content controller's view hierarchy.");
+@property (nonatomic) BOOL popupCloseButtonAutomaticallyUnobstructsTopBars LN_UNAVAILABLE_API("No longer supported. Instead, implement UIViewController.positionPopupCloseButton() and position the button in your content controller's view hierarchy.");
 
 /// The popup content view background style, used when the popup content controller's view has transparency.
 ///
 /// Use `LNBackgroundStyleInherit` value to inherit the popup bar's background style if possible.
 ///
 /// Defaults to `LNBackgroundStyleInherit`.
-@property (nonatomic, assign) UIBlurEffectStyle backgroundStyle UI_APPEARANCE_SELECTOR LN_DEPRECATED_API("Use backgroundEffect instead.");
+@property (nonatomic, assign) UIBlurEffectStyle backgroundStyle LN_UNAVAILABLE_API("Use backgroundEffect instead.");
 
 @end
 

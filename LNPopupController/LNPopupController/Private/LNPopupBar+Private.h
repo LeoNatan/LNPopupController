@@ -2,31 +2,37 @@
 //  LNPopupBar+Private.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <LNPopupController/LNPopupBar.h>
 #import "LNPopupBarAppearanceChainProxy.h"
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupBarBackgroundView.h"
+#import "_LNPopupBackgroundShadowView.h"
+#import "_LNPopupBarBackgroundMaskView.h"
+
+CF_EXTERN_C_BEGIN
 
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
+extern const CGFloat LNPopupBarHeightFloating;
 
-inline __attribute__((always_inline)) CGFloat _LNPopupBarHeightForBarStyle(LNPopupBarStyle style, LNPopupCustomBarViewController* customBarVC)
-{
-	if(customBarVC) { return customBarVC.preferredContentSize.height; }
-	
-	return style == LNPopupBarStyleCompact ? LNPopupBarHeightCompact : LNPopupBarHeightProminent;
-}
+extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
 inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
 {
 	LNPopupBarStyle rv = style;
 	if(rv == LNPopupBarStyleDefault)
 	{
-		rv = LNPopupBarStyleProminent;
+		if(@available(iOS 17, *)) {
+			rv = LNPopupBarStyleFloating;
+		}
+		else
+		{
+			rv = LNPopupBarStyleProminent;
+		}
 	}
 	return rv;
 }
@@ -52,6 +58,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 + (void)setAnimatesItemSetter:(BOOL)animate;
 
+@property (nonatomic, assign, readonly) LNPopupBarStyle resolvedStyle;
+
 @property (nonatomic, strong) UIColor* systemTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
 @property (nonatomic, strong) UIBarAppearance* systemAppearance;
@@ -60,30 +68,34 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 - (void)_recalcActiveAppearanceChain;
 
-@property (nonatomic, strong) UIView* shadowView;
-@property (nonatomic, strong) UIView* bottomShadowView;
+@property (nonatomic, strong) UIImageView* shadowView;
+@property (nonatomic, strong) UIImageView* bottomShadowView;
 
 @property (nonatomic, weak, readwrite) LNPopupItem* popupItem;
 
+@property (nonatomic, weak) __kindof UIViewController* barContainingController;
 @property (nonatomic, weak) id<_LNPopupBarDelegate> _barDelegate;
 
 @property (nonatomic, copy) NSAttributedString* attributedTitle;
 @property (nonatomic, copy) NSAttributedString* attributedSubtitle;
 
-@property (nonatomic, strong) UIViewController* swiftuiTitleController;
-@property (nonatomic, strong) UIViewController* swiftuiSubtitleController;
-
 @property (nonatomic, strong) UIImage* image;
-@property (nonatomic, strong) UIViewController* swiftuiImageController;
 
 @property (nonatomic, strong) UIView* highlightView;
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated;
 
 @property (nonatomic, strong, readwrite) UIProgressView* progressView;
 
-@property (nonatomic, strong) UIView* contentView;
+@property (nonatomic, strong) _LNPopupBarBackgroundView* contentView;
+@property (nonatomic, strong) UIView* contentMaskView;
+
 @property (nonatomic, strong) _LNPopupBarBackgroundView* backgroundView;
-@property (nonatomic, strong) UIVisualEffectView* interactionBackgroundView;
+@property (nonatomic, strong) UIView* backgroundMaskView;
+@property (nonatomic) BOOL wantsBackgroundCutout;
+- (void)setWantsBackgroundCutout:(BOOL)wantsBackgroundCutout allowImplicitAnimations:(BOOL)allowImplicitAnimations;
+@property (nonatomic, strong) _LNPopupBarBackgroundMaskView* backgroundGradientMaskView;
+
+@property (nonatomic, strong) _LNPopupBackgroundShadowView* floatingBackgroundShadowView;
 
 @property (nonatomic, strong) NSString* effectGroupingIdentifier;
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView;
@@ -105,6 +117,11 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic) BOOL _applySwiftUILayoutFixes;
 
+@property (nonatomic, strong) UIFont* swiftuiInheritedFont;
+
+@property (nonatomic, strong) UIView* swiftuiTitleContentView;
+
+@property (nonatomic, strong) UIViewController* swiftuiImageController;
 @property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController;
 @property (nonatomic, strong) UIViewController* swiftuiHiddenTrailingController;
 
@@ -119,3 +136,5 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 - (void)_cancelAnyUserInteraction;
 
 @end
+
+CF_EXTERN_C_END

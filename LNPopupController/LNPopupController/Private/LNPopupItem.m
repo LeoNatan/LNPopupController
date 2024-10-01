@@ -2,12 +2,13 @@
 //  LNPopupItem.m
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupItem+Private.h"
 #import "LNPopupController.h"
+#import "_LNPopupSwizzlingUtils.h"
 
 static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
@@ -23,31 +24,11 @@ NSArray* __LNPopupItemObservedKeys;
 @synthesize attributedTitle = _attributedTitle;
 @synthesize attributedSubtitle = _attributedSubtitle;
 
-+(void)load
++(void)initialize
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		__LNPopupItemObservedKeys = @[
-			NSStringFromSelector(@selector(title)),
-			NSStringFromSelector(@selector(subtitle)),
-			NSStringFromSelector(@selector(attributedTitle)),
-			NSStringFromSelector(@selector(attributedSubtitle)),
-			NSStringFromSelector(@selector(image)),
-			NSStringFromSelector(@selector(progress)),
-			NSStringFromSelector(@selector(leadingBarButtonItems)),
-			NSStringFromSelector(@selector(trailingBarButtonItems)),
-			NSStringFromSelector(@selector(accessibilityLabel)),
-			NSStringFromSelector(@selector(accessibilityHint)),
-			NSStringFromSelector(@selector(accessibilityImageLabel)),
-			NSStringFromSelector(@selector(accessibilityProgressLabel)),
-			NSStringFromSelector(@selector(accessibilityProgressValue)),
-			NSStringFromSelector(@selector(swiftuiImageController)),
-			NSStringFromSelector(@selector(swiftuiTitleController)),
-			NSStringFromSelector(@selector(swiftuiSubtitleController)),
-			NSStringFromSelector(@selector(swiftuiHiddenLeadingController)),
-			NSStringFromSelector(@selector(swiftuiHiddenTrailingController)),
-			NSStringFromSelector(@selector(standardAppearance))
-		];
+		__LNPopupItemObservedKeys = [_LNPopupGetPropertyNames(self, nil) arrayByAddingObjectsFromArray:@[@"accessibilityHint", @"accessibilityLabel"]];
 	});
 }
 
@@ -58,7 +39,7 @@ NSArray* __LNPopupItemObservedKeys;
 	if(self)
 	{
 		[__LNPopupItemObservedKeys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-			[self addObserver:self forKeyPath:obj options:0 context:_LNPopupItemObservationContext];
+			[self addObserver:self forKeyPath:obj options:NSKeyValueObservingOptionNew context:_LNPopupItemObservationContext];
 		}];
 	}
 	
@@ -76,7 +57,12 @@ NSArray* __LNPopupItemObservedKeys;
 {
 	if(context == _LNPopupItemObservationContext)
 	{
-		[self._itemDelegate _popupItem:self didChangeValueForKey:keyPath];
+		id value = change[NSKeyValueChangeNewKey];
+		if([value isKindOfClass:NSNull.class])
+		{
+			value = nil;
+		}
+		[self._itemDelegate _popupItem:self didChangeToValue:value forKey:keyPath];
 	}
 }
 
@@ -99,17 +85,11 @@ NSArray* __LNPopupItemObservedKeys;
 	
 	_attributedTitle = nil;
 	_title = [title copy];
-}
-
-- (void)setSubtitle:(NSString *)subtitle
-{
-	if(_subtitle == subtitle || [_subtitle isEqualToString:subtitle])
-	{
-		return;
-	}
 	
-	_attributedSubtitle = nil;
-	_subtitle = [subtitle copy];
+	if(self.swiftuiTitleContentView != nil)
+	{
+		self.swiftuiTitleContentView = nil;
+	}
 }
 
 - (NSAttributedString *)attributedTitle
@@ -126,6 +106,27 @@ NSArray* __LNPopupItemObservedKeys;
 	
 	_title = nil;
 	_attributedTitle = [attributedTitle copy];
+	
+	if(self.swiftuiTitleContentView != nil)
+	{
+		self.swiftuiTitleContentView = nil;
+	}
+}
+
+- (void)setSubtitle:(NSString *)subtitle
+{
+	if(_subtitle == subtitle || [_subtitle isEqualToString:subtitle])
+	{
+		return;
+	}
+	
+	_attributedSubtitle = nil;
+	_subtitle = [subtitle copy];
+	
+	if(self.swiftuiTitleContentView != nil)
+	{
+		self.swiftuiTitleContentView = nil;
+	}
 }
 
 - (NSAttributedString *)attributedSubtitle
@@ -142,6 +143,45 @@ NSArray* __LNPopupItemObservedKeys;
 	
 	_subtitle = nil;
 	_attributedSubtitle = [attributedSubtitle copy];
+	
+	if(self.swiftuiTitleContentView != nil)
+	{
+		self.swiftuiTitleContentView = nil;
+	}
+}
+
+- (void)setSwiftuiTitleContentView:(UIView *)swiftuiTitleContentView
+{
+	_swiftuiTitleContentView = swiftuiTitleContentView;
+	
+	if(self.title != nil)
+	{
+		self.title = nil;
+	}
+	if(self.attributedTitle != nil)
+	{
+		self.attributedTitle = nil;
+	}
+}
+
+- (void)setImage:(UIImage *)image
+{
+	_image = image;
+	
+	if(self.swiftuiImageController != nil)
+	{
+		self.swiftuiImageController = nil;
+	}
+}
+
+- (void)setSwiftuiImageController:(UIViewController *)swiftuiImageController
+{
+	_swiftuiImageController = swiftuiImageController;
+	
+	if(self.image != nil)
+	{
+		self.image = nil;
+	}
 }
 
 - (void)setProgress:(float)progress
@@ -189,32 +229,3 @@ NSArray* __LNPopupItemObservedKeys;
 }
 
 @end
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
-@implementation LNPopupItem (Deprecated)
-
-- (NSArray<UIBarButtonItem *> *)leftBarButtonItems
-{
-	return self.leadingBarButtonItems;
-}
-
-- (void)setLeftBarButtonItems:(NSArray<UIBarButtonItem *> *)leftBarButtonItems
-{
-	self.leadingBarButtonItems = leftBarButtonItems;
-}
-
-- (NSArray<UIBarButtonItem *> *)rightBarButtonItems
-{
-	return self.trailingBarButtonItems;
-}
-
-- (void)setRightBarButtonItems:(NSArray<UIBarButtonItem *> *)rightBarButtonItems
-{
-	self.trailingBarButtonItems = rightBarButtonItems;
-}
-
-@end
-
-#pragma clang diagnostic pop

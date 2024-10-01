@@ -2,13 +2,15 @@
 //  LNPopupBarAppearance+Private.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 6/9/21.
-//  Copyright © 2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2021-06-20.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <LNPopupController/LNPopupBarAppearance.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface _LNPopupDominantColorTrait : NSObject <UIObjectTraitDefinition> @end
 
 @protocol _LNPopupBarAppearanceDelegate <NSObject>
 
@@ -19,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface LNPopupBarAppearance ()
 
 @property (nonatomic, weak) id<_LNPopupBarAppearanceDelegate> delegate;
+
+- (UIBlurEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection;
 
 @end
 

@@ -2,8 +2,8 @@
 //  LNPopupItem+Private.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <LNPopupController/LNPopupItem.h>
@@ -15,15 +15,16 @@ extern NSArray* __LNPopupItemObservedKeys;
 
 @protocol _LNPopupItemDelegate <NSObject>
 
-- (void)_popupItem:(LNPopupItem*)popupItem didChangeValueForKey:(NSString*)key;
+- (void)_popupItem:(LNPopupItem*)popupItem didChangeToValue:(id)value forKey:(NSString*)key;
 
 @end
 
 @interface LNPopupItem ()
 
 @property (nonatomic, strong) UIViewController* swiftuiImageController;
-@property (nonatomic, strong) UIViewController* swiftuiTitleController;
-@property (nonatomic, strong) UIViewController* swiftuiSubtitleController;
+
+@property (nonatomic, strong) UIView* swiftuiTitleContentView;
+
 @property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController;
 @property (nonatomic, strong) UIViewController* swiftuiHiddenTrailingController;
 

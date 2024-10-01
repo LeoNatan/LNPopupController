@@ -2,12 +2,14 @@
 //  UIViewController+LNPopupSupportPrivate.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import "_LNPopupBarBackgroundView.h"
+
+CF_EXTERN_C_BEGIN
 
 @class LNPopupController;
 
@@ -33,6 +35,12 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 @interface UIViewController (LNPopupSupportPrivate)
 
+- (void)_ln_updateSafeAreaInsets;
+
+- (BOOL)_ln_shouldDisplayBottomShadowViewDuringTransition;
+
+- (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea;
+
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
 
 - (nullable UIViewController*)_ln_common_childViewControllerForStatusBarStyle;
@@ -41,12 +49,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 @property (nonatomic, strong, readonly, getter=_ln_popupController) LNPopupController* ln_popupController;
 - (LNPopupController*)_ln_popupController_nocreate;
 @property (nullable, nonatomic, weak, readwrite) UIViewController* popupPresentationContainerViewController;
-@property (nullable, nonatomic, strong, readonly) UIViewController* popupContentViewController;
+@property (nullable, nonatomic, strong, readwrite) UIViewController* popupContentViewController;
 
 @property (nonnull, nonatomic, strong, readonly, getter=_ln_bottomBarSupport) _LNPopupBottomBarSupport* bottomBarSupport;
 - (nullable _LNPopupBottomBarSupport *)_ln_bottomBarSupport_nocreate;
 
 - (BOOL)_isContainedInPopupController;
+- (BOOL)_isContainedInOpenPopupController;
 - (BOOL)_isContainedInPopupControllerOrDeallocated;
 
 - (BOOL)_ignoringLayoutDuringTransition;
@@ -61,6 +70,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension;
 
 - (void)_userFacing_viewWillAppear:(BOOL)animated;
+- (void)_userFacing_viewIsAppearing:(BOOL)animated;
 - (void)_userFacing_viewDidAppear:(BOOL)animated;
 - (void)_userFacing_viewWillDisappear:(BOOL)animated;
 - (void)_userFacing_viewDidDisappear:(BOOL)animated;
@@ -70,3 +80,5 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 @interface _LN_UIViewController_AppearanceControl : UIViewController @end
 
 NS_ASSUME_NONNULL_END
+
+CF_EXTERN_C_END

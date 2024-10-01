@@ -2,8 +2,8 @@
 //  UIViewController+LNPopupSupport.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/24/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -14,18 +14,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_REFINED_FOR_SWIFT
-/// The default popup snap percent. See `UIViewController.popupSnapPercent` for more information.
-extern const double LNSnapPercentDefault;
+@class UIViewController;
 
-NS_REFINED_FOR_SWIFT
+/// The default popup snap percent. See `UIViewController.popupSnapPercent` for more information.
+extern const double LNSnapPercentDefault NS_REFINED_FOR_SWIFT;
+
 /// Available interaction styles with the popup bar and popup content view.
 typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	/// The default interaction style for the current environment.
-	///
-	/// On iOS, the default interaction style is snap.
-	///
-	/// On macOS, the default interaction style is scroll.
 	LNPopupInteractionStyleDefault,
 	
 	/// Drag interaction style.
@@ -39,7 +35,7 @@ typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	
 	/// No interaction
 	LNPopupInteractionStyleNone = 0xFFFF
-};
+} NS_REFINED_FOR_SWIFT NS_SWIFT_NAME(UIViewController.__PopupInteractionStyle);
 
 /// The state of the popup presentation.
 typedef NS_ENUM(NSInteger, LNPopupPresentationState){
@@ -54,8 +50,8 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 	
 	LNPopupPresentationStateHidden LN_DEPRECATED_API("Use LNPopupPresentationStateBarHidden instead.") = LNPopupPresentationStateBarHidden,
 	LNPopupPresentationStateClosed LN_DEPRECATED_API("Use LNPopupPresentationStateBarPresented instead.") = LNPopupPresentationStateBarPresented,
-	LNPopupPresentationStateTransitioning LN_DEPRECATED_API("Should no longer be used.") = 2,
-};
+	LNPopupPresentationStateTransitioning LN_UNAVAILABLE_API("Should no longer be used.") = 2,
+} NS_SWIFT_NAME(UIViewController.PopupPresentationState);
 
 /// Popup content support for ``UIViewController`` subclasses.
 @interface UIViewController (LNPopupContent)
@@ -71,6 +67,9 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 ///
 /// The default implementation returns the controller's view. @see `UIViewController.popupContentView`
 @property (nonatomic, strong, readonly) __kindof UIView* viewForPopupInteractionGestureRecognizer;
+
+/// The popup presentation container view controller of the receiver. If the receiver is not part of a popup presentation, the property will be @c nil. (read-only)
+@property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
 
 /// Gives the popup content controller the opportunity to place the popup close button within its own view hierarchy, instead of the system-defined placement.
 ///
@@ -91,6 +90,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 
 @end
 
+NS_SWIFT_UI_ACTOR
 /// A set of methods, used to respond to popup presentation changes.
 @protocol LNPopupPresentationDelegate <NSObject>
 
@@ -148,7 +148,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 ///   - controller: The controller for popup presentation.
 ///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
 ///   - completion: The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 
 /// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view.
@@ -161,26 +161,25 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 ///   - openPopup: Pass `true` to open the popup in the same animation; otherwise, pass `false`.
 ///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
 ///   - completion: The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 /// Opens the popup, displaying the content view controller's view.
 /// - Parameters:
 ///   - animated: Pass `true` to animate; otherwise, pass `false`.
 ///   - completion: The block to execute after the popup is opened. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)openPopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
+- (void)openPopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 /// Closes the popup, hiding the content view controller's view.
 /// - Parameters:
 ///   - animated: Pass `true` to animate; otherwise, pass `false`.
 ///   - completion: The block to execute after the popup is closed. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)closePopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
+- (void)closePopupAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 /// Dismisses the popup presentation, closing the popup if open and dismissing the popup bar.
 /// - Parameters:
 ///   - animated: Pass `true` to animate; otherwise, pass `false`.
 ///   - completion: The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-- (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_SWIFT_DISABLE_ASYNC;
-
+- (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 /// The popup bar interaction style.
 @property (nonatomic, assign) LNPopupInteractionStyle popupInteractionStyle NS_REFINED_FOR_SWIFT;
@@ -217,14 +216,15 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 @property (nonatomic, readonly) LNPopupPresentationState popupPresentationState;
 
 /// The delegate that handles popup presentation-related messages.
-///
 @property (nonatomic, weak) id<LNPopupPresentationDelegate> popupPresentationDelegate;
 
-/// The content view controller of the receiver. If there is no popover presentation, the property will be @c nil. (read-only)
+/// The content view controller of the receiver. If there is no popup presentation, the property will be @c nil. (read-only)
 @property (nullable, nonatomic, strong, readonly) __kindof UIViewController* popupContentViewController;
 
-/// The popup presentation container view controller of the receiver. If the receiver is not part of a popover presentation, the property will be @c nil. (read-only)
-@property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
+/// Controls whether interaction with the popup generates haptic feedback to the user.
+///
+/// Defaults to @c true.
+@property (nonatomic, assign) BOOL allowPopupHapticFeedbackGeneration;
 
 @end
 
@@ -235,7 +235,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 ///
 /// A default implementation is provided for @c UIViewController, @c UINavigationController and @c UITabBarController.
 ///
-/// The default implmentation for @c UIViewController returns an invisible @c UIView instance, docked to the bottom. For @c UINavigationController, the toolbar is returned. For @c UITabBarController, the tab bar is returned.
+/// The default implementation for @c UIViewController returns an invisible @c UIView instance, docked to the bottom. For @c UINavigationController, the toolbar is returned. For @c UITabBarController, the tab bar is returned.
 @property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopupBar;
 
 /// Controls whether the popup bar should fade out during its dismissal animation.
@@ -265,7 +265,7 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 /// Call this method to update the popup bar appearance (style, tint color, etc.) according to its docking view. You should call this after updating the docking view.
 ///
 /// If the popup bar's @c inheritsAppearanceFromDockingView property is set to @c false, or a custom popup bar view controller is used, this method has no effect. See @c LNPopupBar.inheritsAppearanceFromDockingView and @c LNPopupBar.customBarViewController for more information.
-- (void)updatePopupBarAppearance LN_DEPRECATED_API("Use setNeedsPopupBarAppearanceUpdate instead.");
+- (void)updatePopupBarAppearance LN_UNAVAILABLE_API("Use setNeedsPopupBarAppearanceUpdate instead.");
 
 @end
 

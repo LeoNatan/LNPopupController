@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Ask a Question
+    url:  https://github.com/LeoNatan/LNPopupController/discussions/new/choose
+    about: Please ask questions in Discussions

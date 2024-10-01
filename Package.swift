@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.9
 
 import PackageDescription
 
@@ -6,17 +6,17 @@ let package = Package(
 	name: "LNPopupController",
 	platforms: [
 		.iOS(.v13),
-		.macOS(.v10_15)
+		.macCatalyst(.v13)
 	],
 	products: [
 		.library(
 			name: "LNPopupController",
 			type: .dynamic,
-			targets: ["LNPopupController"]),
+			targets: ["LNPopupController", "LNPopupController-ObjC"]),
 		.library(
 			name: "LNPopupController-Static",
 			type: .static,
-			targets: ["LNPopupController"]),
+			targets: ["LNPopupController", "LNPopupController-ObjC"]),
 	],
 	dependencies: [],
 	targets: [
@@ -28,12 +28,12 @@ let package = Package(
 			publicHeadersPath: "include",
 			cSettings: [
 				.headerSearchPath("."),
-				.headerSearchPath("Private"),
+				.headerSearchPath("Private")
 			]),
 		.target(
 			name: "LNPopupController",
 			dependencies: ["LNPopupController-ObjC"],
 			path: "LNPCSwiftRefinements")
 	],
-	cxxLanguageStandard: CXXLanguageStandard(rawValue: "gnu++17")
+	cxxLanguageStandard: .gnucxx20
 )

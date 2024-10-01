@@ -2,8 +2,8 @@
 //  LNPopupController.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/24/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -12,7 +12,9 @@
 #import <LNPopupController/LNPopupCloseButton.h>
 #import "LNPopupContentView+Private.h"
 
-extern const NSUInteger _LNPopupPresentationStateTransitioning;
+CF_EXTERN_C_BEGIN
+
+#define _LNPopupPresentationStateTransitioning ((LNPopupPresentationState)2)
 
 @interface LNPopupController : NSObject
 
@@ -39,6 +41,8 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
 @property (nonatomic, weak) UIViewController* effectiveStatusBarUpdateController;
 
+@property (assign) BOOL wantsFeedbackGeneration;
+
 - (CGFloat)_percentFromPopupBar;
 
 - (void)_setContentToState:(LNPopupPresentationState)state;
@@ -46,14 +50,19 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
 - (void)_movePopupBarAndContentToBottomBarSuperview;
 
-- (void)presentPopupBarAnimated:(BOOL)animated openPopup:(BOOL)open completion:(void(^)(void))completionBlock;
+- (void)presentPopupBarWithContentViewController:(UIViewController*)contentViewController openPopup:(BOOL)open animated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 
 - (void)_configurePopupBarFromBottomBar;
+- (void)_configurePopupBarFromBottomBarModifyingGroupingIdentifier:(BOOL)modifyingGroupingIdentifier;
 - (void)_updateBarExtensionStyleFromPopupBar;
 
 + (CGFloat)_statusBarHeightForView:(UIView*)view;
 
+- (void)_fixupGestureRecognizer:(UIGestureRecognizer*)obj;
+
 @end
+
+CF_EXTERN_C_END

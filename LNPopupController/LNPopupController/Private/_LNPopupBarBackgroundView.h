@@ -2,18 +2,30 @@
 //  _LNPopupBarBackgroundView.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 6/26/21.
-//  Copyright © 2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2021-06-20.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface _LNPopupBarBackgroundView : UIVisualEffectView
+@interface _LNPopupBarBackgroundView : UIView
 
-@property (nonatomic, strong, readonly) UIView* colorView;
-@property (nonatomic, strong, readonly) UIImageView* imageView;
+- (instancetype)initWithEffect:(nullable UIVisualEffect *)effect;
+
+@property (nonatomic, strong, readonly) UIVisualEffectView* effectView;
+@property (nonatomic, copy, nullable) UIVisualEffect* effect;
+@property (nonatomic, strong, readonly) UIView* contentView;
+
+@property(nonatomic, copy, nullable) UIColor* foregroundColor;
+@property(nonatomic, strong, nullable) UIImage* foregroundImage;
+@property(nonatomic) UIViewContentMode foregroundImageContentMode;
+- (void)hideOrShowImageViewIfNecessary;
+
+@property (nonatomic, assign) CGFloat cornerRadius;
+
+@property (nonatomic, strong, readonly) UIView* transitionShadingView;
 
 @end
 

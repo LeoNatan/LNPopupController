@@ -2,29 +2,31 @@
 //  _LNPopupSwizzlingUtils.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 1/14/18.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2020-07-31.
+//  Copyright © 2015-2024 Léo Natan. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-@import ObjectiveC;
+#import <objc/message.h>
 #import <objc/runtime.h>
+
+CF_EXTERN_C_BEGIN
 
 #define unavailable(...) @available(__VA_ARGS__)) { } else if(YES
 
 #define LNSwizzleComplain(FORMAT, ...) \
 if(shouldTrapAndPrint) { \
 NSString *errStr = [NSString stringWithFormat:@"%s: " FORMAT,__func__,##__VA_ARGS__]; \
-NSLog(@"%@", errStr); \
+NSLog(@"LNPopupController: %@", errStr); \
 raise(SIGTRAP); \
 }
 
 #ifndef LNAlwaysInline
-#define LNAlwaysInline inline __attribute__((__always_inline__))
+#define LNAlwaysInline CF_INLINE
 #endif /* LNAlwaysInline */
 
 LNAlwaysInline
-static BOOL LNSwizzleMethod(Class cls, SEL orig, SEL alt)
+BOOL LNSwizzleMethod(Class cls, SEL orig, SEL alt)
 {
 	static BOOL shouldTrapAndPrint = NO;
 	static dispatch_once_t onceToken;
@@ -52,13 +54,13 @@ static BOOL LNSwizzleMethod(Class cls, SEL orig, SEL alt)
 }
 
 LNAlwaysInline
-static BOOL LNSwizzleClassMethod(Class cls, SEL orig, SEL alt)
+BOOL LNSwizzleClassMethod(Class cls, SEL orig, SEL alt)
 {
 	return LNSwizzleMethod(object_getClass((id)cls), orig, alt);
 }
 
 LNAlwaysInline
-static void __LNCopyMethods(Class orig, Class target)
+void __LNCopyMethods(Class orig, Class target)
 {
 	//Copy class methods
 	Class targetMetaclass = object_getClass(target);
@@ -91,8 +93,13 @@ static void __LNCopyMethods(Class orig, Class target)
 }
 
 LNAlwaysInline
-static BOOL LNDynamicallySubclass(id obj, Class target)
+BOOL LNDynamicallySubclass(id obj, Class target)
 {
+	if(obj == nil)
+	{
+		return NO;
+	}
+	
 	SEL canarySEL = NSSelectorFromString([NSString stringWithFormat:@"__LN_canaryInTheCoalMine_%@", NSStringFromClass(target)]);
 	if([object_getClass(obj) instancesRespondToSelector:canarySEL])
 	{
@@ -126,7 +133,7 @@ static BOOL LNDynamicallySubclass(id obj, Class target)
 }
 
 LNAlwaysInline
-static Class LNDynamicSubclassSuper(id obj, Class dynamic)
+Class LNDynamicSubclassSuper(id obj, Class dynamic)
 {
 	NSMutableDictionary* superRegistrar = objc_getAssociatedObject(obj, (void*)&objc_setAssociatedObject);
 	Class cls = superRegistrar[NSStringFromClass(dynamic)];
@@ -138,5 +145,6 @@ static Class LNDynamicSubclassSuper(id obj, Class dynamic)
 	return cls;
 }
 
+NSArray<NSString*>* _LNPopupGetPropertyNames(Class cls, NSArray<NSString*>* excludedProperties);
 
-NSString* _LNPopupDecodeBase64String(NSString* base64String);
+CF_EXTERN_C_END

@@ -31,7 +31,7 @@ touch "${RELEASE_NOTES_FILE}"
 open -Wn "${RELEASE_NOTES_FILE}"
 
 if ! [ -s "${RELEASE_NOTES_FILE}" ]; then
-  echo >&2 "\033[1;31mNo release notes provided, aborting.\033[0m"
+  echo -e >&2 "\033[1;31mNo release notes provided, aborting.\033[0m"
   rm -f "${RELEASE_NOTES_FILE}"
   exit -1
 fi
