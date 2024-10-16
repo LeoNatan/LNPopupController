@@ -39,6 +39,8 @@ BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 @interface _LNPopupBarExtensionView : _LNPopupBarBackgroundView @end
 @implementation _LNPopupBarExtensionView
 
+#if DEBUG
+
 - (void)didMoveToSuperview
 {
 	[super didMoveToSuperview];
@@ -48,6 +50,8 @@ BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 {
 	[super setAlpha:alpha];
 }
+
+#endif
 
 @end
 
@@ -705,17 +709,21 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 
 - (void)_layoutPopupBarOrderForUse
 {
-	[self.bottomDockingViewForPopup_internalOrDeveloper.superview bringSubviewToFront:self.bottomDockingViewForPopup_internalOrDeveloper];
-	if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating)
+	UIView* bottomBar = self.bottomDockingViewForPopup_internalOrDeveloper;
+	LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
+	UIView* parentForPopupBar = bottomBar.superview != nil ? bottomBar.superview : popupBar.superview;
+	
+	[bottomBar.superview bringSubviewToFront:bottomBar];
+	if(popupBar.resolvedStyle == LNPopupBarStyleFloating)
 	{
-		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+		[parentForPopupBar insertSubview:popupBar aboveSubview:bottomBar];
 	}
 	else
 	{
-		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
+		[parentForPopupBar insertSubview:popupBar belowSubview:bottomBar];
 	}
-	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self._ln_popupController_nocreate.popupBar];
-	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	[parentForPopupBar insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:popupBar];
+	[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:popupBar];
 }
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate
@@ -1015,6 +1023,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (CGRect)defaultFrameForBottomDockingView
 {
 	CGRect bottomBarFrame = self.tabBar.frame;
+	if(self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad && self._ln_isFloatingTabBar)
+	{
+		//Workaround for incorrect frame, reported by UITabBar while the floating one is on screen.
+		bottomBarFrame.size.height = 70;
+	}
 	bottomBarFrame.origin = CGPointMake(0, self.view.bounds.size.height - (self._isTabBarHiddenDuringTransition ? 0.0 : bottomBarFrame.size.height));
 	return bottomBarFrame;
 }
@@ -1098,7 +1111,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	if(self._ln_popupController_nocreate.popupControllerInternalState != LNPopupPresentationStateBarHidden)
 	{
-		if(self.tabBar.isHidden == NO && self._isTabBarHiddenDuringTransition == NO && self._ignoringLayoutDuringTransition == NO)
+		if(self.tabBar.isHidden == NO && self._isTabBarHiddenDuringTransition == NO && self._ignoringLayoutDuringTransition == NO && self._ln_isFloatingTabBar == NO)
 		{
 			self._ln_bottomBarExtension_nocreate.hidden = YES;
 			[self._ln_bottomBarExtension_nocreate removeFromSuperview];
@@ -1107,10 +1120,16 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			{
 				self._ln_popupController_nocreate.popupBar.backgroundView.alpha = 1.0;
 			}
+			
 		}
 		else
 		{
 			self._ln_bottomBarExtension.hidden = NO;
+			
+			if(self._ln_isFloatingTabBar == YES)
+			{
+				self._ln_bottomBarExtension_nocreate.alpha = 1.0;
+			}
 			
 			if(self._ln_popupController_nocreate.popupBar.resolvedStyle == LNPopupBarStyleFloating && self._ignoringLayoutDuringTransition == NO)
 			{
@@ -1231,6 +1250,21 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 }
 
+- (BOOL)_ln_isFloatingTabBar
+{
+	if(unavailable(iOS 18.0, *))
+	{
+		return NO;
+	}
+	
+	if(self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+	{
+		return YES;
+	}
+	
+	return NO;
+}
+
 //_hideBarWithTransition:isExplicit:duration:
 - (void)hBWT:(NSInteger)t iE:(BOOL)e d:(NSTimeInterval)duration
 {
@@ -1240,7 +1274,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //_hideBarWithTransition:isExplicit:duration:reason:
 - (void)hBWT:(NSInteger)transition iE:(BOOL)isExplicit d:(NSTimeInterval)duration r:(NSUInteger)reason
 {
-	if(self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden)
+	if(self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden || self._ln_isFloatingTabBar == YES)
 	{
 		[self _setTabBarHiddenDuringTransition:YES];
 		
@@ -1438,16 +1472,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	BOOL isRTL = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.tabBar.superview.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
 	
-	if(isExplicit == YES)
-	{
-		if(!isFloating)
-		{
-			self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
-		}
-		
-		[self _setPrepareTabBarIgnored:YES];
-	}
-	
 	[self._ln_popupController_nocreate.popupBar _cancelGestureRecognizers];
 	
 	BOOL wasHidden = self.tabBar.isHidden || self._isTabBarHiddenDuringTransition;
@@ -1472,6 +1496,20 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	{
 		return;
 	}
+	
+	if(self._ln_isFloatingTabBar == YES)
+	{
+		[self _setTabBarHiddenDuringTransition:NO];
+		
+		return;
+	}
+	
+	if(!isFloating)
+	{
+		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = NO;
+	}
+	
+	[self _setPrepareTabBarIgnored:YES];
 	
 	self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 	

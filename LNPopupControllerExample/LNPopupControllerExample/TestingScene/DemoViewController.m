@@ -22,6 +22,12 @@
 #import "LNPopupControllerExample-Bridging-Header.h"
 @import UIKit;
 
+@interface UIImage ()
+
++ (instancetype)_systemImageNamed:(NSString*)arg1;
+
+@end
+
 @interface DemoView : UIView @end
 
 @implementation DemoView
@@ -123,11 +129,32 @@
 		}
 	}
 	
+	[self updateNavigationBarTitlePositionForTraitCollection:self.traitCollection];
+	
 //	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings"];
 //	[self addChildViewController:settings];
 //	[self.view insertSubview:settings.view atIndex:0];
 //	settings.view.frame = self.view.bounds;
 //	[settings didMoveToParentViewController:self];
+}
+
+- (void)updateNavigationBarTitlePositionForTraitCollection:(UITraitCollection*)traitCollection
+{
+	if (@available(iOS 16.0, *))
+	{
+		if(self.tabBarController == nil || traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+		{
+			_hideTabBarButton.image = [UIImage systemImageNamed:@"dock.rectangle"];
+			self.navigationItem.backButtonDisplayMode = UINavigationItemBackButtonDisplayModeGeneric;
+			self.navigationItem.style = UINavigationItemStyleNavigator;
+		}
+		else
+		{
+			_hideTabBarButton.image = [UIImage _systemImageNamed:@"rectangle.line.horizontal.inset.top"];
+			self.navigationItem.backButtonDisplayMode = UINavigationItemBackButtonDisplayModeMinimal;
+			self.navigationItem.style = UINavigationItemStyleBrowser;
+		}
+	}
 }
 
 - (void)viewSafeAreaInsetsDidChange
@@ -180,6 +207,11 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
+}
+
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[self updateNavigationBarTitlePositionForTraitCollection:newCollection];
 }
 
 - (void)dealloc

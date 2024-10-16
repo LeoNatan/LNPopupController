@@ -98,7 +98,23 @@ static void __setupFunction(void)
 @implementation _LNPopupBarTitlesView @end
 
 @interface _LNPopupBarShadowView : UIImageView @end
-@implementation _LNPopupBarShadowView @end
+@implementation _LNPopupBarShadowView
+
+#if DEBUG
+
+- (void)setAlpha:(CGFloat)alpha
+{
+	[super setAlpha:alpha];
+}
+
+- (void)setHidden:(BOOL)hidden
+{
+	[super setHidden:hidden];
+}
+
+#endif
+
+@end
 
 @protocol _LNPopupToolbarLayoutDelegate <NSObject>
 
