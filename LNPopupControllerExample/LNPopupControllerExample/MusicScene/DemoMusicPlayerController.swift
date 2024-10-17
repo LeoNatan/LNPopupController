@@ -158,40 +158,82 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		super.init(rootView: playerView)
 		
 		playerView.playbackSettings.onPlayPause = { [weak self] in
-			self?.updateBarItems()
+			guard let self else {
+				return
+			}
+			
+			self.updateBarItems(with: self.traitCollection)
 		}
 		
 		timer = Timer(timeInterval: 0.01, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 		RunLoop.current.add(timer!, forMode: .common)
 		
 		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
-		
-		updateBarItems()
 	}
 	
-	fileprivate func updateBarItems() {
-		let playPauseAction = UIAction { [weak self] _ in
-			self?.playerView.playbackSettings.isPlaying.toggle()
-			self?.updateBarItems()
+	fileprivate func updateBarItems(with traitCollection: UITraitCollection) {
+		let playPauseActionHandler: UIActionHandler = { [weak self] _ in
+			guard let self else {
+				return
+			}
+			self.playerView.playbackSettings.isPlaying.toggle()
+			self.updateBarItems(with: self.traitCollection)
 		}
 		
-		let play = UIBarButtonItem(image: LNSystemImage("play.fill", useCompactConfig: false), primaryAction: playPauseAction)
-		play.accessibilityLabel = NSLocalizedString("Play", comment: "")
-		let pause = UIBarButtonItem(image: LNSystemImage("pause.fill", useCompactConfig: false), primaryAction: playPauseAction)
-		pause.accessibilityLabel = NSLocalizedString("Pause", comment: "")
-		let next = UIBarButtonItem(image: LNSystemImage("forward.fill", useCompactConfig: false), style: .plain, target: nil, action: nil)
-		next.accessibilityLabel = NSLocalizedString("Next Track", comment: "")
+		let scale: LNSystemImageScale
+		let backForwardScale: LNSystemImageScale
+		if LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: .barStyle) as? Int ?? 0)! == LNPopupBar.Style.compact {
+			scale = .compact
+			backForwardScale = .compact
+		} else if UIDevice.current.userInterfaceIdiom == .pad && traitCollection.horizontalSizeClass == .regular {
+			scale = .larger
+			backForwardScale = .large
+		} else {
+			scale = .normal
+			backForwardScale = .normal
+		}
+		
+		let play = LNSystemBarButtonItem("play.fill", scale: scale != .larger ? .init(rawValue: scale.rawValue + 1)! : scale, primaryAction: UIAction(handler: playPauseActionHandler))
+		play.accessibilityLabel = "Play"
+		play.accessibilityIdentifier = "PlayButton";
+		play.accessibilityTraits = .button
+		
+		let pause = LNSystemBarButtonItem("pause.fill", scale: scale != .larger ? .init(rawValue: scale.rawValue + 1)! : scale, primaryAction: UIAction(handler: playPauseActionHandler))
+		pause.accessibilityLabel = "Pause"
+		pause.accessibilityIdentifier = "PauseButton";
+		pause.accessibilityTraits = .button
 		
 		let playPause = playerView.playbackSettings.isPlaying ? pause : play
 		
-		if LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: .barStyle) as? Int ?? 0)! == LNPopupBar.Style.compact {
-			popupItem.leadingBarButtonItems = [ playPause ]
-			popupItem.trailingBarButtonItems = [ next ]
+		let next = LNSystemBarButtonItem("forward.fill", scale: backForwardScale, target: nil, action: nil)
+		next.accessibilityLabel = "Next Track"
+		next.accessibilityIdentifier = "NextButton";
+		next.accessibilityTraits = .button
+		
+		let prev = LNSystemBarButtonItem("backward.fill", scale: backForwardScale, target: nil, action: nil)
+		prev.accessibilityLabel = "Previous Track"
+		prev.accessibilityIdentifier = "PrevButton";
+		prev.accessibilityTraits = .button
+		
+		let more = LNSystemBarButtonItem("ellipsis", scale: backForwardScale, target: nil, action: nil)
+		more.accessibilityLabel = "More"
+		more.accessibilityIdentifier = "MoreButton";
+		more.accessibilityTraits = .button
+		
+		if scale == .compact {
+			if traitCollection.horizontalSizeClass == .compact {
+				popupItem.leadingBarButtonItems = [playPause]
+				popupItem.trailingBarButtonItems = [more]
+			} else {
+				popupItem.leadingBarButtonItems = [prev, playPause, next]
+				popupItem.trailingBarButtonItems = [more]
+			}
 		} else {
-			pause.width = 60
-			play.width = 60
-			next.width = 60
-			popupItem.barButtonItems = [ playPause, next ]
+			if traitCollection.horizontalSizeClass == .compact {
+				popupItem.barButtonItems = [playPause, next]
+			} else {
+				popupItem.barButtonItems = [prev, playPause, next]
+			}
 		}
 	}
 	
@@ -214,8 +256,15 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		#endif
 	}
 	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		updateBarItems(with: traitCollection)
+	}
+	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
+		
 		if let popupCloseButton = popupCloseButton, popupCloseButton.superview != vibrancyView.contentView {
 			vibrancyView.contentView.addSubview(popupCloseButton)
 			
@@ -226,6 +275,12 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 				popupCloseButton.topAnchor.constraint(equalTo: vibrancyView.contentView.topAnchor, constant: 4),
 			])
 		}
+	}
+	
+	override func willTransition(to newCollection: UITraitCollection, with coordinator: any UIViewControllerTransitionCoordinator) {
+		super.willTransition(to: newCollection, with: coordinator)
+		
+		updateBarItems(with: newCollection)
 	}
 	
 	var songTitle: String = "" {

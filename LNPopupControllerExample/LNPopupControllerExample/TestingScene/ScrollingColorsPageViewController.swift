@@ -20,7 +20,7 @@ class _ScrollingColorsPageViewController<T: UIViewController & Indexable>: UIPag
 		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
 		
 		let gridBarButtonItem = UIBarButtonItem()
-		gridBarButtonItem.image = LNSystemImage("rectangle.portrait.fill", useCompactConfig: useCompact)
+		gridBarButtonItem.image = LNSystemImage("rectangle.portrait.fill", scale: useCompact ? .compact : .normal)
 		popupItem.barButtonItems = [gridBarButtonItem]
 		
 		LNApplyTitleWithSettings(to: self)

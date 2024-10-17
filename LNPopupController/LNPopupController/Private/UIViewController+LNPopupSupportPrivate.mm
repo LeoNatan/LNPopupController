@@ -1257,7 +1257,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return NO;
 	}
 	
-	if(self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+	if(self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 	{
 		return YES;
 	}

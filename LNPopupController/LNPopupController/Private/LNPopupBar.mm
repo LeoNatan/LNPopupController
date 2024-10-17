@@ -67,6 +67,11 @@ CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar)
 	});
 	additionalHeight = [additionalHeightMapping[popupBar.traitCollection.preferredContentSizeCategory] doubleValue];
 	
+	if(popupBar.effectiveBarStyle == LNPopupBarStyleFloating && popupBar.isWidePad)
+	{
+		additionalHeight += 8;
+	}
+	
 	switch(popupBar.resolvedStyle)
 	{
 		case LNPopupBarStyleCompact:
@@ -217,6 +222,7 @@ const CGFloat LNPopupBarHeightProminent = 64.0;
 const CGFloat LNPopupBarHeightFloating = 64.0;
 const CGFloat LNPopupBarProminentImageWidth = 48.0;
 const CGFloat LNPopupBarFloatingImageWidth = 40.0;
+const CGFloat LNPopupBarFloatingPadImageWidth = 44.0;
 
 static BOOL __animatesItemSetter = NO;
 
@@ -356,6 +362,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		self.preservesSuperviewLayoutMargins = YES;
 		self.clipsToBounds = NO;
+		
+		self.limitFloatingContentWidth = YES;
 		
 		if (@available(iOS 13.4, *))
 		{
@@ -503,6 +511,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		[self._barDelegate _popupBarMetricsDidChange:self];
 	}
+	
+	if(_LNPopupBarHeightForPopupBar(self) != self.bounds.size.height)
+	{
+		[self._barDelegate _popupBarMetricsDidChange:self];
+	}
 }
 
 - (void)_updateProgressViewWithStyle:(LNPopupBarProgressViewStyle)style
@@ -581,7 +594,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	if(isFloating)
 	{
 		CGFloat inset = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 30 : 12;
-		contentFrame = CGRectOffset(UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(4, MAX(self.safeAreaInsets.left + 12, inset), 4, MAX(self.safeAreaInsets.right + 12, inset))), 0, -2);
+		contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(4, MAX(self.safeAreaInsets.left + 12, inset), 4, MAX(self.safeAreaInsets.right + 12, inset)));
+		if(self.limitFloatingContentWidth == YES && contentFrame.size.width > 818 && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		{
+			//On iPadOS, constrain floating bar width to 818pt.
+			CGFloat d = (contentFrame.size.width - 818) / 2;
+			contentFrame = UIEdgeInsetsInsetRect(contentFrame, UIEdgeInsetsMake(0, d, 0, d));
+		}
+		contentFrame = CGRectOffset(contentFrame, 0, -2);
 		
 		_contentView.cornerRadius = 14;
 		
@@ -1349,22 +1369,31 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)_updateTitleInsetsForProminentBar:(UIEdgeInsets*)titleInsets
 {
-	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
+	BOOL isRTL = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
 	
 	UIView* leftViewLast;
 	UIView* rightViewFirst;
 	
 	NSArray* allItems = _toolbar.items;
 
-	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	static Class systemBarButtonItemButtonClass;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
+	});
+	BOOL isTrailingSystem;
+	
+	if(isRTL == NO)
 	{
 		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:allItems];
 		leftViewLast = _imageView.hidden ? nil : _imageView;
+		isTrailingSystem = [rightViewFirst isKindOfClass:systemBarButtonItemButtonClass];
 	}
 	else
 	{
 		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:allItems];
 		rightViewFirst = _imageView.hidden ? nil : _imageView;
+		isTrailingSystem = [leftViewLast isKindOfClass:systemBarButtonItemButtonClass];
 	}
 	
 #if DEBUG
@@ -1392,7 +1421,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		else
 		{
-			leftViewLastFrame.size.width -= (__applySwiftUILayoutFixes ? -8 : 8);
+			leftViewLastFrame.size.width -= (__applySwiftUILayoutFixes ? -8 : isTrailingSystem ? 8 : 0);
 		}
 	}
 	else
@@ -1411,7 +1440,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		else
 		{
-			rightViewFirstFrame.origin.x += (__applySwiftUILayoutFixes ? -8 : 8);
+			rightViewFirstFrame.origin.x += (__applySwiftUILayoutFixes ? -8 : isTrailingSystem ? 8 : 0);
 		}
 	}
 	else
@@ -1729,6 +1758,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	CGFloat barHeight = _contentView.bounds.size.height;
 	
 	CGFloat safeLeading = 8;
+	
+	if(_resolvedStyle == LNPopupBarStyleFloating && self.isWidePad == YES)
+	{
+		safeLeading += 2;
+		imageSize = LNPopupBarFloatingPadImageWidth;
+	}
+	
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
 		_imageView.center = CGPointMake(safeLeading + imageSize / 2, barHeight / 2);
@@ -1990,6 +2026,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		gr.enabled = NO;
 		gr.enabled = enabled;
 	}
+}
+
+- (BOOL)isWidePad
+{
+	return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+}
+
+- (void)setLimitFloatingContentWidth:(BOOL)limitFloatingContentWidth
+{
+	_limitFloatingContentWidth = limitFloatingContentWidth;
+	
+	[self setNeedsLayout];
 }
 
 #pragma mark UIPointerInteractionDelegate

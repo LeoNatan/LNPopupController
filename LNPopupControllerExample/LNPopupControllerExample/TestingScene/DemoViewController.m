@@ -75,10 +75,33 @@
 			target = self.navigationController;
 		}
 		
+		//This is safe even with the UITab API, because this will be accessed very early on, when loaded from storyboard.
 		super.tabBarItem.image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%lu.square.fill", [self.tabBarController.viewControllers indexOfObject:target] + 1]];
 	}
 	
 	return super.tabBarItem;
+}
+
+- (UITab *)tab API_AVAILABLE(ios(18.0))
+{
+	if([self.parentViewController isKindOfClass:UINavigationController.class])
+	{
+		return self.parentViewController.tab;
+	}
+	
+	return super.tab;
+}
+
+- (NSUInteger)tabIndexInAncestorTabBarController
+{
+	if(@available(iOS 18, *))
+	{
+		return [self.tabBarController.tabs indexOfObject:self.tab];
+	}
+	else
+	{
+		return [self.tabBarController.viewControllers indexOfObject:self.navigationController ?: self];
+	}
 }
 
 - (void)viewDidLoad
@@ -93,7 +116,7 @@
 		}
 		else if(self.tabBarController != nil)
 		{
-			NSUInteger tabIdx = [self.tabBarController.viewControllers indexOfObject:self.navigationController ?: self];
+			NSUInteger tabIdx = self.tabIndexInAncestorTabBarController;
 			self.colorSeedString = [NSString stringWithFormat:@"tab_%@", @(tabIdx)];
 		}
 		else
@@ -129,8 +152,6 @@
 		}
 	}
 	
-	[self updateNavigationBarTitlePositionForTraitCollection:self.traitCollection];
-	
 //	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings"];
 //	[self addChildViewController:settings];
 //	[self.view insertSubview:settings.view atIndex:0];
@@ -138,11 +159,18 @@
 //	[settings didMoveToParentViewController:self];
 }
 
+- (void)viewDidLayoutSubviews
+{
+	[super viewDidLayoutSubviews];
+	
+	[self updateNavigationBarTitlePositionForTraitCollection:self.traitCollection];
+}
+
 - (void)updateNavigationBarTitlePositionForTraitCollection:(UITraitCollection*)traitCollection
 {
 	if (@available(iOS 16.0, *))
 	{
-		if(self.tabBarController == nil || traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+		if(self.tabBarController == nil || UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad || traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
 			_hideTabBarButton.image = [UIImage systemImageNamed:@"dock.rectangle"];
 			self.navigationItem.backButtonDisplayMode = UINavigationItemBackButtonDisplayModeGeneric;
@@ -406,6 +434,8 @@
 	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
 	
 	targetVC.allowPopupHapticFeedbackGeneration = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHapticFeedbackEnabled];
+	
+	targetVC.popupBar.limitFloatingContentWidth = [NSUserDefaults.settingDefaults boolForKey:PopupSettingLimitFloatingWidth];
 	
 	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingVisualEffectViewBlurEffect];
 	if(effectOverride != nil && effectOverride.unsignedIntValue != 0xffff)

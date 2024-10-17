@@ -111,41 +111,51 @@ void LNApplyTitleWithSettings(UIViewController* self)
 
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection animated:(BOOL)animated
 {
-	BOOL useCompact = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact;
+	LNSystemImageScale scale;
+	LNSystemImageScale backForwardScale;
+	if([[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
+	{
+		scale = LNSystemImageScaleCompact;
+		backForwardScale = LNSystemImageScaleCompact;
+	}
+	else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+	{
+		scale = LNSystemImageScaleLarger;
+		backForwardScale = LNSystemImageScaleLarge;
+	}
+	else
+	{
+		scale = LNSystemImageScaleNormal;
+		backForwardScale = LNSystemImageScaleNormal;
+	}
 	
-	UIBarButtonItem* play = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"play.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
-	play.accessibilityLabel = NSLocalizedString(@"Play", @"");
-	play.accessibilityIdentifier = @"PlayButton";
+	UIBarButtonItem* play = LNSystemBarButtonItem(@"pause.fill", scale != LNSystemImageScaleLarger ? scale + 1 : scale, self, @selector(button:));
+	play.accessibilityLabel = NSLocalizedString(@"Pause", @"");
+	play.accessibilityIdentifier = @"PauseButton";
 	play.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* stop = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"stop.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	UIBarButtonItem* stop = LNSystemBarButtonItem(@"stop.fill", scale, self, @selector(button:));
 	stop.accessibilityLabel = NSLocalizedString(@"Stop", @"");
 	stop.accessibilityIdentifier = @"StopButton";
 	stop.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* next = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"forward.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	UIBarButtonItem* next = LNSystemBarButtonItem(@"forward.fill", backForwardScale, self, @selector(button:));
 	next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
 	next.accessibilityIdentifier = @"NextButton";
 	next.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* prev = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"backward.fill", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	UIBarButtonItem* prev = LNSystemBarButtonItem(@"backward.fill", backForwardScale, self, @selector(button:));
 	prev.accessibilityLabel = NSLocalizedString(@"Previous Track", @"");
 	prev.accessibilityIdentifier = @"PrevButton";
 	prev.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* more = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"ellipsis", useCompact) style:UIBarButtonItemStylePlain target:self action:@selector(button:)];
+	UIBarButtonItem* more = LNSystemBarButtonItem(@"ellipsis", scale, self, @selector(button:));
 	prev.accessibilityLabel = NSLocalizedString(@"More", @"");
 	prev.accessibilityIdentifier = @"MoreButton";
 	prev.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	if(useCompact)
+	if(scale == LNSystemImageScaleCompact)
 	{
-		play.width = 44;
-		prev.width = 44;
-		next.width = 44;
-		stop.width = 44;
-		more.width = 44;
-		
 		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
 			[self.popupItem setLeadingBarButtonItems:@[ play ] animated:animated];
@@ -159,18 +169,12 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	}
 	else
 	{
-		prev.width = 50;
-		play.width = 50;
-		next.width = 50;
 		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
 			[self.popupItem setBarButtonItems:@[ play, next ] animated:NO];
 		}
 		else
-		{
-			prev.image = [prev.image imageWithConfiguration:[UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium]];
-			next.image = [next.image imageWithConfiguration:[UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium]];
-			
+		{		
 			[self.popupItem setBarButtonItems:@[ prev, play, next ] animated:NO];
 		}
 	}

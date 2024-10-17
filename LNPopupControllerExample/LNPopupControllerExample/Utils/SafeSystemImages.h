@@ -10,6 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-extern UIImage* LNSystemImage(NSString* named, BOOL useCompactConfig) NS_SWIFT_NAME(LNSystemImage(_:useCompactConfig:));
+typedef NS_ENUM(NSUInteger, LNSystemImageScale) {
+	LNSystemImageScaleCompact,
+	LNSystemImageScaleNormal,
+	LNSystemImageScaleLarge,
+	LNSystemImageScaleLarger
+};
+
+extern UIImage* LNSystemImage(NSString* named, LNSystemImageScale scale) NS_SWIFT_NAME(LNSystemImage(_:scale:));
+extern UIBarButtonItem* LNSystemBarButtonItem(NSString* named, LNSystemImageScale scale, __nullable id target, __nullable SEL action) NS_SWIFT_NAME(LNSystemBarButtonItem(_:scale:target:action:));
+extern UIBarButtonItem* LNSystemBarButtonItemAction(NSString* named, LNSystemImageScale scale, UIAction* primaryAction) NS_SWIFT_NAME(LNSystemBarButtonItem(_:scale:primaryAction:));
 
 NS_ASSUME_NONNULL_END

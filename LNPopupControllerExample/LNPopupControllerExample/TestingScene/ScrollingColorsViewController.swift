@@ -24,7 +24,7 @@ class ScrollingColorsViewController: UICollectionViewController {
 		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
 		
 		let gridBarButtonItem = UIBarButtonItem()
-		gridBarButtonItem.image = LNSystemImage(isVertical ? "square.grid.3x3.fill" : "rectangle.portrait.fill", useCompactConfig: useCompact)
+		gridBarButtonItem.image = LNSystemImage(isVertical ? "square.grid.3x3.fill" : "rectangle.portrait.fill", scale: useCompact ? .compact : .normal)
 		popupItem.barButtonItems = [gridBarButtonItem]
 		
 		LNApplyTitleWithSettings(to: self)

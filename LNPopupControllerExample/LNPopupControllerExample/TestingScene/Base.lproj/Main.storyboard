@@ -500,7 +500,7 @@
         <!--FirstViewController-->
         <scene sceneID="43s-6c-3hg">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="l54-z5-xcG" userLabel="FirstViewController" customClass="DemoViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="demoVC" modalPresentationStyle="fullScreen" id="l54-z5-xcG" userLabel="FirstViewController" customClass="DemoViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1ke-mH-VCb" customClass="DemoView">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -686,7 +686,7 @@
         <!--Tab-->
         <scene sceneID="ouL-tO-EtQ">
             <objects>
-                <navigationController id="okN-9b-CNT" customClass="PassthroughNavigationController" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navDemoView" id="okN-9b-CNT" customClass="PassthroughNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Tab" image="1.square.fill" catalog="system" id="moV-Wz-fLa"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ezi-fS-9Ny">
@@ -768,7 +768,7 @@
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
-        <segue reference="7qJ-pK-ibQ"/>
+        <segue reference="Jqg-bQ-l0b"/>
         <segue reference="1U6-NV-9t4"/>
         <segue reference="iD8-2E-cMh"/>
         <segue reference="SDh-r0-h83"/>

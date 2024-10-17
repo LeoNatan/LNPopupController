@@ -135,6 +135,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 - (void)_cancelAnyUserInteraction;
 
+- (BOOL)isWidePad;
+
 @end
 
 CF_EXTERN_C_END

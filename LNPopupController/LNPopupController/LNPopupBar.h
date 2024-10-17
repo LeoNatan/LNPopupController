@@ -83,6 +83,11 @@ NS_SWIFT_UI_ACTOR
 /// Use this property's value to determine, at runtime, what the result of `LNPopupBarStyleDefault` is.
 @property (nonatomic, assign, readonly) LNPopupBarStyle effectiveBarStyle;
 
+/// In wide enough environments, such as iPadOS, limit the width of content of floating bars to a system-determined value.
+///
+/// Defaults to `true`.
+@property (nonatomic, assign) BOOL limitFloatingContentWidth;
+
 /// Describes the appearance attributes for the popup bar to use.
 @property (nonatomic, copy, null_resettable) LNPopupBarAppearance* standardAppearance UI_APPEARANCE_SELECTOR;
 

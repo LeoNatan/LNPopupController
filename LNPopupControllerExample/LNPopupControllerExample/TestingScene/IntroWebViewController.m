@@ -60,7 +60,7 @@
 	
 	self.popupItem.image = [UIImage imageNamed:@"AppIconPopupBar"];
 	self.popupItem.barButtonItems = @[
-		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill", NO) style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
+		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill", LNSystemImageScaleNormal) style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
 	
 	NSString* title = NSLocalizedString(@"Welcome to LNPopupController!", @"");
