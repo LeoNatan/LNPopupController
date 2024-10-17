@@ -75,6 +75,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (void)_userFacing_viewWillDisappear:(BOOL)animated;
 - (void)_userFacing_viewDidDisappear:(BOOL)animated;
 
+- (BOOL)_ln_isObjectFromSwiftUI;
+
 @end
 
 @interface _LN_UIViewController_AppearanceControl : UIViewController @end

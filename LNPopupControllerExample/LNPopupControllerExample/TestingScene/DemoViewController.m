@@ -116,6 +116,8 @@
 {
 	[super viewDidLoad];
 	
+	[self updateNavigationBarTitlePositionForTraitCollection:self.traitCollection];
+	
 	if(self.colorSeedString == nil)
 	{
 		if(self.splitViewController != nil)
@@ -167,13 +169,6 @@
 //	[settings didMoveToParentViewController:self];
 }
 
-- (void)viewDidLayoutSubviews
-{
-	[super viewDidLayoutSubviews];
-	
-	[self updateNavigationBarTitlePositionForTraitCollection:self.traitCollection];
-}
-
 - (void)updateNavigationBarTitlePositionForTraitCollection:(UITraitCollection*)traitCollection
 {
 	if (@available(iOS 18.0, *))
@@ -188,7 +183,7 @@
 		{
 			_hideTabBarButton.image = [UIImage _systemImageNamed:@"rectangle.line.horizontal.inset.top"];
 			self.navigationItem.backButtonDisplayMode = UINavigationItemBackButtonDisplayModeMinimal;
-			self.navigationItem.style = UINavigationItemStyleBrowser;
+			self.navigationItem.style = UINavigationItemStyleEditor;
 		}
 	}
 }

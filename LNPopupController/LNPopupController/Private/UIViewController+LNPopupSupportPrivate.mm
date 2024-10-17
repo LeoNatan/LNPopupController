@@ -309,6 +309,16 @@ CF_EXTERN_C_END
 	return [self _ln_isModalInPresentation];
 }
 
+- (BOOL)_ln_isObjectFromSwiftUI
+{
+	static NSString* key;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		key = LNPopupHiddenString("_isFromSwiftUI");
+	});
+	return [self.class respondsToSelector:NSSelectorFromString(key)] && [self.class valueForKey:key];
+}
+
 - (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
 {
 	[self _ln_popup_setOverrideUserInterfaceStyle:overrideUserInterfaceStyle];
@@ -633,11 +643,14 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	
 	[self _uCOIFPIN];
 	
-	if(__ln_alreadyInHideShowBar && __ln_hideBarEdge == UIRectEdgeBottom)
+	if(@available(iOS 17.0, *))
 	{
-		[self.view layoutIfNeeded];
+		if(__ln_alreadyInHideShowBar && __ln_hideBarEdge == UIRectEdgeBottom)
+		{
+			[self.view layoutIfNeeded];
+		}
 	}
-	
+		
 	if(self.popupPresentationContainerViewController != nil)
 	{
 		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
@@ -1023,11 +1036,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (CGRect)defaultFrameForBottomDockingView
 {
 	CGRect bottomBarFrame = self.tabBar.frame;
-	if(self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad && self._ln_isFloatingTabBar)
-	{
-		//Workaround for incorrect frame, reported by UITabBar while the floating one is on screen.
-		bottomBarFrame.size.height = 70;
-	}
 	bottomBarFrame.origin = CGPointMake(0, self.view.bounds.size.height - (self._isTabBarHiddenDuringTransition ? 0.0 : bottomBarFrame.size.height));
 	return bottomBarFrame;
 }
@@ -1499,6 +1507,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	if(self._ln_isFloatingTabBar == YES)
 	{
+		[self.view setNeedsLayout];
 		[self _setTabBarHiddenDuringTransition:NO];
 		
 		return;
@@ -1700,6 +1709,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return UIEdgeInsetsZero;
 	}
 	
+	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && self.view.superview.safeAreaInsets.bottom > 0 && [self _ln_isObjectFromSwiftUI])
+	{
+//		NSLog(@"superview: %@ window: %@", @(self.view.superview.safeAreaInsets.bottom), @(self.view.window.safeAreaInsets.bottom));
+//		
+		//Something in SwiftUI reports safe area insets incorrectly on iPadOS. This is a workaround for this issue.
+		return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom) - 5, 0);
+	}
 	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom), 0);
 }
 
