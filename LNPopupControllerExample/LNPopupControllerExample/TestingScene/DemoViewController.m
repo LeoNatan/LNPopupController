@@ -67,6 +67,14 @@
 
 - (UITabBarItem *)tabBarItem
 {
+	if(@available(iOS 18.0, *))
+	{
+		if(self.tab != nil)
+		{
+			return super.tabBarItem;
+		}
+	}
+	
 	if(self.tabBarController != nil)
 	{
 		UIViewController* target = self;
@@ -168,7 +176,7 @@
 
 - (void)updateNavigationBarTitlePositionForTraitCollection:(UITraitCollection*)traitCollection
 {
-	if (@available(iOS 16.0, *))
+	if (@available(iOS 18.0, *))
 	{
 		if(self.tabBarController == nil || UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad || traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
