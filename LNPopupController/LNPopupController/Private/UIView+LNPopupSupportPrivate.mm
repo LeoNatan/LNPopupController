@@ -94,18 +94,15 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 			return ^ (id _self) {
 				orig(_self, updateBackgroundGroupNameSEL);
 				
-				static NSString* key = nil;
-				static dispatch_once_t onceToken;
-				dispatch_once(&onceToken, ^{
-					key = LNPopupHiddenString("groupName");
-				});
+				static NSString* groupNameKey = LNPopupHiddenString("groupName");
+				static NSString* backgroundViewKey = LNPopupHiddenString("backgroundView");
 				
-				id backgroundView = [_self valueForKey:@"backgroundView"];
+				id backgroundView = [_self valueForKey:backgroundViewKey];
 				
-				NSString* groupName = [backgroundView valueForKey:key];
+				NSString* groupName = [backgroundView valueForKey:groupNameKey];
 				if([groupName hasSuffix:@"🤡"] == NO)
 				{
-					[backgroundView setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:key];
+					[backgroundView setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:groupNameKey];
 				}
 			};
 		};
@@ -241,11 +238,7 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 - (NSString*)_ln_effectGroupingIdentifierIfAvailable
 {
 #if ! LNPopupControllerEnforceStrictClean
-	static NSString* key = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		key = LNPopupHiddenString("_backdropViewLayerGroupName");
-	});
+	static NSString* key = LNPopupHiddenString("_backdropViewLayerGroupName");
 	
 	if([self respondsToSelector:NSSelectorFromString(key)])
 	{
@@ -289,11 +282,7 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	NSMutableArray* popupRV = [NSMutableArray new];
 	
 	//_viewControllerForAncestor
-	static NSString* vCFA = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		vCFA = LNPopupHiddenString("_viewControllerForAncestor");
-	});
+	static NSString* vCFA = LNPopupHiddenString("_viewControllerForAncestor");
 	
 	for(UIView* scrollToTopCandidate in rv)
 	{
@@ -333,18 +322,11 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	return nil;
 #else
 	//hostWindow
-	static NSString* hW;
+	static NSString* hW = LNPopupHiddenString("hostWindow");
 	//attachedWindow
-	static NSString* aW;
+	static NSString* aW = LNPopupHiddenString("attachedWindow");
 	//currentEvent
-	static NSString* cE;
-	
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		hW = LNPopupHiddenString("hostWindow");
-		aW = LNPopupHiddenString("attachedWindow");
-		cE = LNPopupHiddenString("currentEvent");
-	});
+	static NSString* cE = LNPopupHiddenString("currentEvent");
 	
 	//Obtain the actual NSWindow object
 	id hostingWindow = [self valueForKey:hW];
@@ -401,11 +383,7 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardA
 static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPopupBar* popupBar)
 {
 	//backgroundTransitionProgress
-	static NSString* bTP = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		bTP = LNPopupHiddenString("backgroundTransitionProgress");
-	});
+	static NSString* bTP = LNPopupHiddenString("backgroundTransitionProgress");
 	
 	BOOL isAtScrollEdge = [[bottomBar valueForKey:bTP] doubleValue] > 0;
 	
@@ -680,11 +658,7 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 	if(@available(iOS 15.0, *))
 	{
 #if ! LNPopupControllerEnforceStrictClean
-		static NSString* backgroundViewKey = nil;
-		static dispatch_once_t onceToken;
-		dispatch_once(&onceToken, ^{
-			backgroundViewKey = LNPopupHiddenString("_backgroundView");
-		});
+		static NSString* backgroundViewKey = LNPopupHiddenString("_backgroundView");
 		
 		backgroundView = [self valueForKey:backgroundViewKey];
 		if(backgroundView != nil)
@@ -756,9 +730,11 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 
 @implementation UIScrollView (LNPopupSupportPrivate)
 
+static NSString* __ln_queueingScrollViewClassPrefix = LNPopupHiddenString("Queu");
+
 - (CGRect)_ln_adjustedBounds
 {
-	if([NSStringFromClass(self.class) containsString:LNPopupHiddenString("Queu")])
+	if([NSStringFromClass(self.class) containsString:__ln_queueingScrollViewClassPrefix])
 	{
 		return self.bounds;
 	}
@@ -793,23 +769,14 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 
 - (BOOL)_ln_isAtTop
 {
-	if([NSStringFromClass(self.class) containsString:LNPopupHiddenString("Queu")])
+	if([NSStringFromClass(self.class) containsString:__ln_queueingScrollViewClassPrefix])
 	{
 		if(self._ln_hasVerticalContent)
 		{
-			static SEL viewBeforeViewSEL;
-			static id (*viewBeforeView)(id, SEL, id);
-			static SEL visibleViewSEL;
-			static id (*visibleView)(id, SEL);
-			
-			static dispatch_once_t onceToken;
-			dispatch_once(&onceToken, ^{
-				viewBeforeViewSEL = NSSelectorFromString(LNPopupHiddenString("_viewBeforeView:"));
-				viewBeforeView = reinterpret_cast<decltype(viewBeforeView)>(method_getImplementation(class_getInstanceMethod(self.class, viewBeforeViewSEL)));
-				
-				visibleViewSEL = NSSelectorFromString(LNPopupHiddenString("visibleView"));
-				visibleView = reinterpret_cast<decltype(visibleView)>(method_getImplementation(class_getInstanceMethod(self.class, visibleViewSEL)));
-			});
+			static SEL viewBeforeViewSEL = NSSelectorFromString(LNPopupHiddenString("_viewBeforeView:"));
+			static id (*viewBeforeView)(id, SEL, id) = reinterpret_cast<decltype(viewBeforeView)>(method_getImplementation(class_getInstanceMethod(self.class, viewBeforeViewSEL)));
+			static SEL visibleViewSEL = NSSelectorFromString(LNPopupHiddenString("visibleView"));
+			static id (*visibleView)(id, SEL) = reinterpret_cast<decltype(visibleView)>(method_getImplementation(class_getInstanceMethod(self.class, visibleViewSEL)));
 			
 			id visible = visibleView(self, visibleViewSEL);
 			return visible == nil || viewBeforeView(self, viewBeforeViewSEL, visible) == nil;

@@ -74,13 +74,8 @@ static NSTimeInterval __ln_durationForTransition(UIViewController* vc, NSUIntege
 {
 #ifndef LNPopupControllerEnforceStrictClean
 	//durationForTransition:
-	static SEL dFT = nil;
-	static NSTimeInterval (*specialized_objc_msgSend)(id, SEL, NSUInteger) = NULL;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		dFT = NSSelectorFromString(LNPopupHiddenString("durationForTransition:"));
-		specialized_objc_msgSend = reinterpret_cast<decltype(specialized_objc_msgSend)>(objc_msgSend);
-	});
+	static SEL dFT = NSSelectorFromString(LNPopupHiddenString("durationForTransition:"));
+	static NSTimeInterval (*specialized_objc_msgSend)(id, SEL, NSUInteger) = reinterpret_cast<decltype(specialized_objc_msgSend)>(objc_msgSend);
 	
 	return specialized_objc_msgSend(vc, dFT, transition);
 #else
@@ -283,17 +278,8 @@ CF_EXTERN_C_END
 - (void)_ln_updateSafeAreaInsets
 {
 #ifndef LNPopupControllerEnforceStrictClean
-	static SEL sel = nil;
-	//_updateContentOverlayInsetsForSelfAndChildren
-	static void(*objc_msgSend_uCOIFSAC)(id, SEL);
-	
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		NSString* selName = LNPopupHiddenString("_updateContentOverlayInsetsForSelfAndChildren");
-		sel = NSSelectorFromString(selName);
-		
-		objc_msgSend_uCOIFSAC = reinterpret_cast<decltype(objc_msgSend_uCOIFSAC)>(objc_msgSend);
-	});
+	static SEL sel = NSSelectorFromString(LNPopupHiddenString("_updateContentOverlayInsetsForSelfAndChildren"));
+	static void(*objc_msgSend_uCOIFSAC)(id, SEL) = reinterpret_cast<decltype(objc_msgSend_uCOIFSAC)>(objc_msgSend);
 	
 	objc_msgSend_uCOIFSAC(self, sel);
 #endif
@@ -311,11 +297,7 @@ CF_EXTERN_C_END
 
 - (BOOL)_ln_isObjectFromSwiftUI
 {
-	static NSString* key;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		key = LNPopupHiddenString("_isFromSwiftUI");
-	});
+	static NSString* key = LNPopupHiddenString("_isFromSwiftUI");
 	return [self.class respondsToSelector:NSSelectorFromString(key)] && [self.class valueForKey:key];
 }
 
@@ -614,24 +596,13 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 //_updateContentOverlayInsetsFromParentIfNecessary (iOS 15 and above)
 - (void)_uCOIFPIN
 {
-	static SEL contentMarginSEL;
-	static SEL setContentMarginSEL;
-	static SEL _setContentOverlayInsets_andLeftMargin_rightMarginSEL;
+	static SEL contentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_contentMargin"));
+	static SEL setContentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentMargin:"));
+	static SEL _setContentOverlayInsets_andLeftMargin_rightMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentOverlayInsets:andLeftMargin:rightMargin:"));
 	
-	static CGFloat (*contentMarginFunc)(id, SEL);
-	static void (*setContentMarginFunc)(id, SEL, CGFloat);
-	static void (*_setContentOverlayInsets_andLeftMargin_rightMarginFunc)(id, SEL, UIEdgeInsets, CGFloat, CGFloat);
-	
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		contentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_contentMargin"));
-		setContentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentMargin:"));
-		_setContentOverlayInsets_andLeftMargin_rightMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentOverlayInsets:andLeftMargin:rightMargin:"));
-		
-		contentMarginFunc = reinterpret_cast<decltype(contentMarginFunc)>(objc_msgSend);
-		setContentMarginFunc = reinterpret_cast<decltype(setContentMarginFunc)>(objc_msgSend);
-		_setContentOverlayInsets_andLeftMargin_rightMarginFunc = reinterpret_cast<decltype(_setContentOverlayInsets_andLeftMargin_rightMarginFunc)>(objc_msgSend);
-	});
+	static CGFloat (*contentMarginFunc)(id, SEL) = reinterpret_cast<decltype(contentMarginFunc)>(objc_msgSend);
+	static void (*setContentMarginFunc)(id, SEL, CGFloat) = reinterpret_cast<decltype(setContentMarginFunc)>(objc_msgSend);
+	static void (*_setContentOverlayInsets_andLeftMargin_rightMarginFunc)(id, SEL, UIEdgeInsets, CGFloat, CGFloat) = reinterpret_cast<decltype(_setContentOverlayInsets_andLeftMargin_rightMarginFunc)>(objc_msgSend);
 	
 	if([self respondsToSelector:@selector(_ln_popupUIRequiresZeroInsets)] && self._ln_popupUIRequiresZeroInsets == YES)
 	{

@@ -52,8 +52,10 @@ static NSArray* __notifiedProperties = nil;
 
 - (void)_commonInit
 {
+	static NSString* changeObserver = LNPopupHiddenString("changeObserver");
+	
 #ifndef LNPopupControllerEnforceStrictClean
-	[self setValue:self forKey:LNPopupHiddenString("changeObserver")];
+	[self setValue:self forKey:changeObserver];
 #endif
 	
 	for(NSString* key in __notifiedProperties)

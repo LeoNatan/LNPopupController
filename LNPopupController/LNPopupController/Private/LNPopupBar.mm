@@ -769,13 +769,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
-	static NSString* willRotate = nil;
-	static NSString* didRotate = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		willRotate = LNPopupHiddenString("UIWindowWillRotateNotification");
-		didRotate = LNPopupHiddenString("UIWindowDidRotateNotification");
-	});
+	static NSString* willRotate = LNPopupHiddenString("UIWindowWillRotateNotification");
+	static NSString* didRotate = LNPopupHiddenString("UIWindowDidRotateNotification");
 	
 	if(self.window)
 	{
@@ -812,15 +807,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[self setWantsBackgroundCutout:YES allowImplicitAnimations:YES];
 }
 
-- (NSString*)_effectGroupingIdentifierKey
-{
-	static NSString* rv = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		rv = LNPopupHiddenString("groupName");
-	});
-	return rv;
-}
+static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupName");
 
 - (void)_applyGroupingIdentifier:(NSString*)groupingIdentifier toVisualEffectView:(UIVisualEffectView*)visualEffectView
 {
@@ -829,12 +816,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		return;
 	}
 	
-	if([[visualEffectView valueForKey:self._effectGroupingIdentifierKey] isEqualToString:groupingIdentifier])
+	if([[visualEffectView valueForKey:__ln_effectGroupingIdentifierKey] isEqualToString:groupingIdentifier])
 	{
 		return;
 	}
 	
-	[visualEffectView setValue:groupingIdentifier ?: [NSString stringWithFormat:@"<%@:%p> Backdrop Group", self.class, self] forKey:self._effectGroupingIdentifierKey];
+	[visualEffectView setValue:groupingIdentifier ?: [NSString stringWithFormat:@"<%@:%p> Backdrop Group", self.class, self] forKey:__ln_effectGroupingIdentifierKey];
 }
 
 - (void)_applyGroupingIdentifierToVisualEffectView:(UIVisualEffectView*)visualEffectView
@@ -844,7 +831,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (NSString *)effectGroupingIdentifier
 {
-	return [self.backgroundView.effectView valueForKey:self._effectGroupingIdentifierKey];
+	return [self.backgroundView.effectView valueForKey:__ln_effectGroupingIdentifierKey];
 }
 
 - (void)setEffectGroupingIdentifier:(NSString *)groupingIdentifier
@@ -1280,11 +1267,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 {
 	UIView* itemView = [barButtonItem valueForKey:@"view"];
 	
-	static NSString* adaptorView = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		adaptorView = LNPopupHiddenString("_UITAMICAdaptorView");
-	});
+	static NSString* adaptorView = LNPopupHiddenString("_UITAMICAdaptorView");
 	
 	if([itemView.superview isKindOfClass:NSClassFromString(adaptorView)])
 	{
@@ -1376,11 +1359,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	NSArray* allItems = _toolbar.items;
 
-	static Class systemBarButtonItemButtonClass;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
-	});
+	static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
 	BOOL isTrailingSystem;
 	
 	if(isRTL == NO)

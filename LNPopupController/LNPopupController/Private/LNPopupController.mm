@@ -1063,11 +1063,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	UIBarAppearance* appearanceToUse = nil;
 	
 #ifndef LNPopupControllerEnforceStrictClean
-	static NSString* vPTIS = nil;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		vPTIS = LNPopupHiddenString("visualProvider.toolbarIsSmall");
-	});
+	static NSString* vPTIS = LNPopupHiddenString("visualProvider.toolbarIsSmall");
 	
 	//visualProvider.toolbarIsSmall
 	if([_bottomBar isKindOfClass:UIToolbar.class] &&  [[_bottomBar valueForKeyPath:vPTIS] boolValue] == YES)

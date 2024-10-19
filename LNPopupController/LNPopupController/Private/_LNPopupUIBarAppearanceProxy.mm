@@ -18,8 +18,9 @@
 static const void* _LNPopupBarBackgroundDataSubclassShadowHandlerKey = &_LNPopupBarBackgroundDataSubclassShadowHandlerKey;
 
 #define LN_ADD_PROPERTY_GETTER(cls, hiddenString, impBlock) \
-class_addMethod(cls, NSSelectorFromString(LNPopupHiddenString(hiddenString)), imp_implementationWithBlock(^id(id _self){ \
-return ((id(^)(id, SEL))impBlock)(_self, NSSelectorFromString(LNPopupHiddenString(hiddenString))); \
+static SEL OS_CONCAT(sel, hiddenString) = NSSelectorFromString(LNPopupHiddenString(OS_STRINGIFY(hiddenString))); \
+class_addMethod(cls, OS_CONCAT(sel, hiddenString), imp_implementationWithBlock(^id(id _self){ \
+return ((id(^)(id, SEL))impBlock)(_self, OS_CONCAT(sel, hiddenString)); \
 }), method_getTypeEncoding(class_getInstanceMethod(NSObject.class, @selector(description))));
 
 #define LN_SHADOW_CLEAR_COLOR_OR_SUPER if(self._ln_shouldHideShadow) { \
@@ -66,9 +67,9 @@ return super_class(&super, _cmd); \
 		};
 		
 		//shadowViewBackgroundColor
-		LN_ADD_PROPERTY_GETTER(self, "shadowViewBackgroundColor", imp);
+		LN_ADD_PROPERTY_GETTER(self, shadowViewBackgroundColor, imp);
 		//shadowViewTintColor
-		LN_ADD_PROPERTY_GETTER(self, "shadowViewTintColor", imp);
+		LN_ADD_PROPERTY_GETTER(self, shadowViewTintColor, imp);
 	}
 }
 
@@ -131,7 +132,7 @@ return super_class(&super, _cmd); \
 			
 			return rv;
 		};
-		LN_ADD_PROPERTY_GETTER(_LNPopupUIBarAppearanceProxy.class, "_backgroundData", block);
+		LN_ADD_PROPERTY_GETTER(_LNPopupUIBarAppearanceProxy.class, _backgroundData, block);
 #pragma clang diagnostic pop
 	}
 }

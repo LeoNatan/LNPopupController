@@ -40,12 +40,8 @@ const double LNSnapPercentDefault = 0.32;
 - (UIPresentationController*)nonMemoryLeakingPresentationController
 {
 #if ! LNPopupControllerEnforceStrictClean
-	static NSString* sel = nil;
-	static id (*nonLeakingPresentationController)(id, SEL, BOOL, BOOL) = (id(*)(id, SEL, BOOL, BOOL))objc_msgSend;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		sel = LNPopupHiddenString("_existingPresentationControllerImmediate:effective:");
-	});
+	static NSString* sel = LNPopupHiddenString("_existingPresentationControllerImmediate:effective:");;
+	static id (*nonLeakingPresentationController)(id, SEL, BOOL, BOOL) = reinterpret_cast<decltype(nonLeakingPresentationController)>(objc_msgSend);
 
 	return nonLeakingPresentationController(self, NSSelectorFromString(sel), NO, NO);
 #else
