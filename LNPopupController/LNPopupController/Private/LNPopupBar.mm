@@ -220,6 +220,7 @@ const CGFloat LNPopupBarHeightFloating = 64.0;
 const CGFloat LNPopupBarProminentImageWidth = 48.0;
 const CGFloat LNPopupBarFloatingImageWidth = 40.0;
 const CGFloat LNPopupBarFloatingPadImageWidth = 44.0;
+const CGFloat LNPopupBarFloatingPadWidthLimit = 954.0;
 
 static BOOL __animatesItemSetter = NO;
 
@@ -591,12 +592,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	CGRect contentFrame;
 	if(isFloating)
 	{
-		CGFloat inset = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 30 : 12;
+		CGFloat inset = self.limitFloatingContentWidth || self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact ? 12 : 30;
 		contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(4, MAX(self.safeAreaInsets.left + 12, inset), 4, MAX(self.safeAreaInsets.right + 12, inset)));
-		if(self.limitFloatingContentWidth == YES && contentFrame.size.width > 818 && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		if(self.limitFloatingContentWidth == YES && contentFrame.size.width > LNPopupBarFloatingPadWidthLimit && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		{
 			//On iPadOS, constrain floating bar width to 818pt.
-			CGFloat d = (contentFrame.size.width - 818) / 2;
+			CGFloat d = (contentFrame.size.width - LNPopupBarFloatingPadWidthLimit) / 2;
 			contentFrame = UIEdgeInsetsInsetRect(contentFrame, UIEdgeInsetsMake(0, d, 0, d));
 		}
 		contentFrame = CGRectOffset(contentFrame, 0, -2);
