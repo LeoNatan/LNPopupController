@@ -462,6 +462,17 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 	
 	[self _ln_willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+	
+	if(@available(iOS 18.0, *))
+	{
+		if([self isKindOfClass:UITabBarController.class])
+		{
+			[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+				static SEL sel = NSSelectorFromString(LNPopupHiddenString("_forceUpdateScrollViewIfNecessary"));
+				[self performSelector:sel];
+			}];
+		}
+	}
 }
 
 - (UIViewController*)_findAncestorParentPopupContainerController

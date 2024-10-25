@@ -12,6 +12,7 @@ class ScrollingMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+#if LNPOPUP
 		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
 		
 		let gridBarButtonItem = UIBarButtonItem()
@@ -19,5 +20,6 @@ class ScrollingMapViewController: UIViewController {
 		popupItem.barButtonItems = [gridBarButtonItem]
 		
 		LNApplyTitleWithSettings(to: self)
+#endif
     }
 }

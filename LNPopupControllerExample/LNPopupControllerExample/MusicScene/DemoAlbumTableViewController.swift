@@ -117,7 +117,7 @@ class DemoAlbumTableViewController: UITableViewController {
     }
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		#if LNPOPUP
+#if LNPOPUP
 		let popupContentController = DemoMusicPlayerController()
 		popupContentController.songTitle = titles[(indexPath as NSIndexPath).row]
 		popupContentController.albumTitle = subtitles[(indexPath as NSIndexPath).row]
@@ -131,7 +131,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupBar.tintColor = UIColor.label
 		tabBarController?.popupBar.progressViewStyle = .top
 		
-		#endif
+#endif
 		
 		tableView.deselectRow(at: indexPath, animated: true)
 	}

@@ -16,7 +16,7 @@ protocol Indexable {
 class _ScrollingColorsPageViewController<T: UIViewController & Indexable>: UIPageViewController, UIPageViewControllerDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
-		
+#if LNPOPUP
 		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
 		
 		let gridBarButtonItem = UIBarButtonItem()
@@ -24,6 +24,7 @@ class _ScrollingColorsPageViewController<T: UIViewController & Indexable>: UIPag
 		popupItem.barButtonItems = [gridBarButtonItem]
 		
 		LNApplyTitleWithSettings(to: self)
+#endif
 		
 		dataSource = self
 		
