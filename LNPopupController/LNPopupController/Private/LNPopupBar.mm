@@ -138,12 +138,9 @@ static void __setupFunction(void)
 {
 	UIView* rv = [super hitTest:point withEvent:event];
 	
-	if(rv != nil && rv != self)
+	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO)
 	{
-		CGRect frameInBarCoords = [self convertRect:rv.bounds fromView:rv];
-		CGRect instetFrame = CGRectInset(frameInBarCoords, 2, 0);
-
-		return CGRectContainsPoint(instetFrame, point) ? rv : self;
+		rv = nil;
 	}
 	
 	return rv;
@@ -365,12 +362,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		self.limitFloatingContentWidth = YES;
 		
-		if (@available(iOS 13.4, *))
-		{
-			UIPointerInteraction* pointerInteraction = [[UIPointerInteraction alloc] initWithDelegate:self];
-			[self addInteraction:pointerInteraction];
-		}
-		
 		_inheritsAppearanceFromDockingView = YES;
 		_standardAppearance = [LNPopupBarAppearance new];
 		
@@ -387,6 +378,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_contentView = [[_LNPopupBarContentView alloc] initWithEffect:nil];
 		_contentView.clipsToBounds = NO;
 		[self addSubview:_contentView];
+		
+		if (@available(iOS 13.4, *))
+		{
+			UIPointerInteraction* pointerInteraction = [[UIPointerInteraction alloc] initWithDelegate:self];
+			[_contentView addInteraction:pointerInteraction];
+		}
 		
 		_contentMaskView = [UIView new];
 		_contentMaskView.backgroundColor = UIColor.whiteColor;

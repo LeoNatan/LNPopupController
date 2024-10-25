@@ -53,6 +53,32 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		_popupCloseButton = [[LNPopupCloseButton alloc] initWithContainingContentView:self];
 		_popupCloseButton.popupContentView = self;
 		
+		__weak __typeof(self) weakSelf = self;
+		if (@available(iOS 13.4, *))
+		{
+			_popupCloseButton.pointerInteractionEnabled = YES;
+			_popupCloseButton.pointerStyleProvider = ^ UIPointerStyle* (UIButton *button, UIPointerEffect *proposedEffect, UIPointerShape *proposedShape) {
+				LNPopupCloseButtonStyle resolvedStyle = _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(weakSelf.popupCloseButtonStyle);
+				
+				if(resolvedStyle == LNPopupCloseButtonStyleRound)
+				{
+					CGRect frame = CGRectInset(weakSelf.popupCloseButton.frame, 5, 5);
+					
+					return [UIPointerStyle styleWithEffect:proposedEffect shape:[UIPointerShape shapeWithPath:[UIBezierPath bezierPathWithOvalInRect:frame]]];
+				}
+				
+				NSValue* rectValue = [proposedShape valueForKey:@"rect"];
+				if(rectValue == nil)
+				{
+					return [UIPointerStyle styleWithEffect:proposedEffect shape:proposedShape];
+				}
+				
+				CGRect rect = CGRectInset(rectValue.CGRectValue, -5, -5);
+				
+				return [UIPointerStyle styleWithEffect:proposedEffect shape:[UIPointerShape shapeWithRoundedRect:rect]];
+			};
+		}
+		
 		[_popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		[_popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 		[_popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];

@@ -489,7 +489,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self _cleanupGestureRecognizersForController:_currentContentController];
 			
 			[_currentContentController.viewForPopupInteractionGestureRecognizer removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-			[self.popupBar addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+			[self.popupBar.contentView addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 			
 			[self.popupBar _setTitleViewMarqueesPaused:NO];
 			
@@ -1153,14 +1153,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar.barContainingController = _containerController;
 	_popupBar._barDelegate = self;
 	_popupBar.popupOpenGestureRecognizer = [[LNPopupOpenTapGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
-	[_popupBar addGestureRecognizer:_popupBar.popupOpenGestureRecognizer];
+	[_popupBar.contentView addGestureRecognizer:_popupBar.popupOpenGestureRecognizer];
 	
 	_popupBar.barHighlightGestureRecognizer = [[LNPopupLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
 	_popupBar.barHighlightGestureRecognizer.minimumPressDuration = 0;
 	_popupBar.barHighlightGestureRecognizer.cancelsTouchesInView = NO;
 	_popupBar.barHighlightGestureRecognizer.delaysTouchesBegan = NO;
 	_popupBar.barHighlightGestureRecognizer.delaysTouchesEnded = NO;
-	[_popupBar addGestureRecognizer:_popupBar.barHighlightGestureRecognizer];
+	[_popupBar.contentView addGestureRecognizer:_popupBar.barHighlightGestureRecognizer];
 	
 	return _popupBar;
 }
@@ -1358,7 +1358,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		[self _movePopupBarAndContentToBottomBarSuperview];
 		[self _configurePopupBarFromBottomBar];
 		
-		[self.popupBar addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
+		[self.popupBar.contentView addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 		
 		[self _setContentToState:LNPopupPresentationStateBarPresented animated:animated];
 		

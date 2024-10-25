@@ -81,10 +81,6 @@
             argument = "-com.apple.SwiftUI.DisableCollectionViewBackedGroupedLists 1"
             isEnabled = "NO">
          </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-LNUseDemoRandomColors YES"
-            isEnabled = "NO">
-         </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
