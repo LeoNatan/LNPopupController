@@ -486,6 +486,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_wantsBackgroundCutout = YES;
 		
 		[self _recalcActiveAppearanceChain];
+		[self _appearanceDidChange];
 	}
 	
 	return self;
