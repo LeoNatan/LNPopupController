@@ -63,8 +63,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (nullable UIView *)bottomDockingViewForPopup_nocreateOrDeveloper;
 - (nonnull UIView *)bottomDockingViewForPopup_internalOrDeveloper;
 
+- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle;
+
 - (CGRect)defaultFrameForBottomDockingView_internal;
-- (CGRect)defaultFrameForBottomDockingView_internalOrDeveloper;
+- (CGRect)_defaultFrameForBottomDockingViewForPopupBar:(LNPopupBar*)LNPopupBar;
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate;
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension;

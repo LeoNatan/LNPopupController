@@ -114,8 +114,28 @@
                                             </segue>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitm" textLabel="Nfv-xp-DFu" style="IBUITableViewCellStyleDefault" id="1Qc-Ql-xyu" customClass="SizeClassGalleryCell">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitg" textLabel="rpx-bu-B1q" style="IBUITableViewCellStyleDefault" id="TtF-bg-cC5" userLabel="splits" customClass="SizeClassGalleryCell">
                                         <rect key="frame" x="20" y="251" width="353" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TtF-bg-cC5" id="QOS-U4-Cmr">
+                                            <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Split View Controller (Sidebar)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="rpx-bu-B1q">
+                                                    <rect key="frame" x="20" y="0.0" width="313" height="43.666667938232422"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="syE-JZ-XA1" kind="showDetail" identifier="splits" id="19O-Tx-Ntx"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitm" textLabel="Nfv-xp-DFu" style="IBUITableViewCellStyleDefault" id="1Qc-Ql-xyu" customClass="SizeClassGalleryCell">
+                                        <rect key="frame" x="20" y="294.66666793823242" width="353" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1Qc-Ql-xyu" id="F2D-0P-sjk">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
@@ -131,33 +151,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="NWj-M1-Csm" kind="showDetail" identifier="splitm" id="iD8-2E-cMh">
-                                                <segue key="commit" inheritsFrom="parent" id="SwO-q9-mv7"/>
-                                                <segue key="preview" inheritsFrom="commit" id="ubr-x2-eV2"/>
-                                            </segue>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitg" textLabel="rpx-bu-B1q" style="IBUITableViewCellStyleDefault" id="TtF-bg-cC5" userLabel="splits" customClass="SizeClassGalleryCell">
-                                        <rect key="frame" x="20" y="294.66666793823242" width="353" height="43.666667938232422"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TtF-bg-cC5" id="QOS-U4-Cmr">
-                                            <rect key="frame" x="0.0" y="0.0" width="353" height="43.666667938232422"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Split View Controller (Secondary)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="rpx-bu-B1q">
-                                                    <rect key="frame" x="20" y="0.0" width="313" height="43.666667938232422"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="syE-JZ-XA1" kind="showDetail" identifier="splits" id="19O-Tx-Ntx">
-                                                <segue key="commit" inheritsFrom="parent" id="t7R-kM-r3g"/>
-                                                <segue key="preview" inheritsFrom="commit" id="7fn-D0-hm6"/>
-                                            </segue>
+                                            <segue destination="NWj-M1-Csm" kind="showDetail" identifier="splitm" id="iD8-2E-cMh"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitg" textLabel="rjJ-Ax-bGN" style="IBUITableViewCellStyleDefault" id="TjV-b9-KIw" userLabel="splita" customClass="SizeClassGalleryCell">
@@ -177,10 +171,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="OMG-ri-qb5" kind="showDetail" identifier="splita" id="ie4-if-ZuB">
-                                                <segue key="commit" inheritsFrom="parent" id="5pE-ej-gUV"/>
-                                                <segue key="preview" inheritsFrom="commit" id="pb3-Pz-4cU"/>
-                                            </segue>
+                                            <segue destination="OMG-ri-qb5" kind="showDetail" identifier="splita" id="ie4-if-ZuB"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="splitg" textLabel="mRf-7b-D7v" style="IBUITableViewCellStyleDefault" id="Z91-wv-EaJ" customClass="SizeClassGalleryCell">
@@ -200,10 +191,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="F0W-R7-jVc" kind="showDetail" identifier="splitg" id="SDh-r0-h83">
-                                                <segue key="commit" inheritsFrom="parent" id="stp-Qs-DKr"/>
-                                                <segue key="preview" inheritsFrom="commit" id="44r-L6-81t"/>
-                                            </segue>
+                                            <segue destination="F0W-R7-jVc" kind="showDetail" identifier="splitg" id="SDh-r0-h83"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -436,7 +424,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="eEz-t1-9Ax" customClass="DemoToolbar">
-                        <rect key="frame" x="0.0" y="769" width="393" height="49"/>
+                        <rect key="frame" x="0.0" y="720" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" red="0.91372549020000005" green="0.27058823529999998" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
@@ -451,11 +439,10 @@
         <!--Split View Controller Secondary Popup-->
         <scene sceneID="KO7-t9-gOw">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" preferredDisplayMode="beside" id="syE-JZ-XA1" customClass="LNSplitViewControllerSecondaryPopup" sceneMemberID="viewController">
+                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" primaryBackgroundStyle="sidebar" id="syE-JZ-XA1" customClass="LNSplitViewControllerSecondaryPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="GHH-ob-Ng8" kind="relationship" relationship="masterViewController" id="T58-y9-xu1"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="3nI-aH-Ed7"/>
-                        <segue destination="GHH-ob-Ng8" kind="relationship" relationship="supplementaryViewController" id="Sl0-uM-xPB"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4h9-v3-mHk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -479,7 +466,7 @@
         <!--Split View Controller Primary Popup-->
         <scene sceneID="0aA-gd-S0Z">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="beside" id="NWj-M1-Csm" customClass="LNSplitViewControllerPrimaryPopup" sceneMemberID="viewController">
+                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" id="NWj-M1-Csm" customClass="LNSplitViewControllerPrimaryPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="GHH-ob-Ng8" kind="relationship" relationship="masterViewController" id="IDA-Po-Fia"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="04d-1K-Lzo"/>
@@ -506,7 +493,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Bottom" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N4q-gh-14d">
-                                <rect key="frame" x="167.33333333333334" y="797.66666666666663" width="58.666666666666657" height="20.333333333333371"/>
+                                <rect key="frame" x="167.33333333333334" y="748.66666666666663" width="58.666666666666657" height="20.333333333333371"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -617,8 +604,10 @@
                     <connections>
                         <outlet property="_barStyleButton" destination="Mqv-hY-tWM" id="FZH-Ef-T8y"/>
                         <outlet property="_galleryButton" destination="PfZ-Ec-LGF" id="THI-bP-GnE"/>
+                        <outlet property="_hidePopupBarButton" destination="q0Y-mo-S4A" id="lK5-Vi-OpV"/>
                         <outlet property="_hideTabBarButton" destination="V13-KE-dTv" id="NDX-P9-gwv"/>
                         <outlet property="_nextButton" destination="DxD-7y-6Na" id="zDA-Ko-tDF"/>
+                        <outlet property="_showPopupBarButton" destination="cfk-zq-tnF" id="VLT-OR-cxH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q0v-GP-COM" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -762,18 +751,14 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="ie4-if-ZuB"/>
-        <segue reference="gRd-L2-CDS"/>
+        <segue reference="Te4-2y-lMK"/>
         <segue reference="vYe-8f-bz7"/>
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
-        <segue reference="Qc4-nZ-cyX"/>
+        <segue reference="7qJ-pK-ibQ"/>
         <segue reference="1U6-NV-9t4"/>
-        <segue reference="iD8-2E-cMh"/>
-        <segue reference="SDh-r0-h83"/>
-        <segue reference="19O-Tx-Ntx"/>
-        <segue reference="IDA-Po-Fia"/>
+        <segue reference="gSl-m3-ZVG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>

@@ -298,7 +298,7 @@ CF_EXTERN_C_END
 - (BOOL)_ln_isObjectFromSwiftUI
 {
 	static NSString* key = LNPopupHiddenString("_isFromSwiftUI");
-	return [self.class respondsToSelector:NSSelectorFromString(key)] && [self.class valueForKey:key];
+	return [self.class respondsToSelector:NSSelectorFromString(key)] && [[self.class valueForKey:key] boolValue];
 }
 
 - (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
@@ -796,7 +796,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	{
 		if(self.bottomDockingViewForPopup_nocreateOrDeveloper == self._ln_bottomBarSupport_nocreate)
 		{
-			self._ln_bottomBarSupport_nocreate.frame = self.defaultFrameForBottomDockingView_internalOrDeveloper;
+			self._ln_bottomBarSupport_nocreate.frame = [self _defaultFrameForBottomDockingViewForPopupBar:self._ln_popupController_nocreate.popupBar];
 			[self.view bringSubviewToFront:self._ln_bottomBarSupport_nocreate];
 			
 			self._ln_bottomBarExtension.frame = self._ln_bottomBarSupport_nocreate.frame;
@@ -819,6 +819,19 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		if(self._ignoringLayoutDuringTransition == NO)
 		{
 			[self _layoutPopupBarOrderForUse];
+		}
+		
+		if(self._ln_popupController_nocreate.popupControllerInternalState != LNPopupPresentationStateBarHidden)
+		{
+			UIEdgeInsets neededInsets = UIEdgeInsetsMake(0, 0, MAX(0, self.popupBar.frame.size.height - [self _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle]), 0);
+			
+			UIEdgeInsets safe = _LNPopupSafeAreas(self);
+			UIEdgeInsets childAdditive = _LNPopupChildAdditiveSafeAreas(self);
+			
+			if(neededInsets.bottom != MAX(safe.bottom, childAdditive.bottom))
+			{
+				_LNPopupSupportSetPopupInsetsForViewController(self, YES, neededInsets);
+			}
 		}
 	}
 	
@@ -1013,6 +1026,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (UIEdgeInsets)insetsForBottomDockingView
 {
 	return self.tabBar.hidden == NO && self._isTabBarHiddenDuringTransition == NO ? UIEdgeInsetsZero : self.view.superview.safeAreaInsets;
+}
+
+- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle
+{
+	return self._isTabBarHiddenDuringTransition ? [super _ln_popupOffsetForPopupBarStyle:barStyle] : 0;
 }
 
 - (CGRect)defaultFrameForBottomDockingView
@@ -1420,6 +1438,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, bottomSafeArea);
 		
 		[self _setIgnoringLayoutDuringTransition:NO];
+		[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar];
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 		
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
@@ -1593,6 +1612,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
+		[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar];
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 		
 		[self _layoutPopupBarOrderForUse];
@@ -1669,6 +1689,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return self.toolbar;
 }
 
+- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle
+{
+	return self.isToolbarHidden ? [super _ln_popupOffsetForPopupBarStyle:barStyle] : 0;
+}
+
 - (CGRect)defaultFrameForBottomDockingView
 {
 	CGRect toolbarBarFrame = self.toolbar.frame;
@@ -1691,14 +1716,15 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return UIEdgeInsetsZero;
 	}
 	
-	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && self.view.superview.safeAreaInsets.bottom > 0 && [self _ln_isObjectFromSwiftUI])
+	CGFloat offset = 0;
+	
+	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && self.view.superview.safeAreaInsets.bottom > 0 && ([self _ln_isObjectFromSwiftUI] || self.splitViewController != nil))
 	{
-//		NSLog(@"superview: %@ window: %@", @(self.view.superview.safeAreaInsets.bottom), @(self.view.window.safeAreaInsets.bottom));
-//		
 		//Something in SwiftUI reports safe area insets incorrectly on iPadOS. This is a workaround for this issue.
-		return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom) - 5, 0);
+		offset -= 5;
 	}
-	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom), 0);
+	
+	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom) + offset, 0);
 }
 
 + (void)load
@@ -1961,6 +1987,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[self _layoutPopupBarOrderForTransition];
 		
 		void (^animations)(void) = ^ {
+			[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar];
 			//During the transition, animate the popup bar and content together with the toolbar transition.
 			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 			

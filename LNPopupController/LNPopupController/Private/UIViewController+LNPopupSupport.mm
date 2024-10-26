@@ -13,6 +13,7 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
 #import "LNMath.h"
+#import "LNPopupBar+Private.h"
 #import <objc/runtime.h>
 
 static const void* _LNPopupItemKey = &_LNPopupItemKey;
@@ -404,6 +405,24 @@ const double LNSnapPercentDefault = 0.32;
 	return CGRectZero;
 }
 
+- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle
+{
+	if(barStyle != LNPopupBarStyleFloating /*|| UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone*/)
+	{
+		return 0.0;
+	}
+	
+	id dockingView = self.bottomDockingViewForPopupBar;
+	
+	if(dockingView != nil && ([dockingView isKindOfClass:UIToolbar.class] || [dockingView isKindOfClass:UITabBar.class]) == NO)
+	{
+		//User docking view, do not offset.
+		return 0.0;
+	}
+	
+	return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 7.0 : 0.0;
+}
+
 - (CGRect)defaultFrameForBottomDockingView_internal
 {
 	CGFloat safeAreaAddition = self.view.safeAreaInsets.bottom - _LNPopupSafeAreas(self).bottom;
@@ -416,9 +435,13 @@ const double LNSnapPercentDefault = 0.32;
 	return CGRectMake(0, self.view.bounds.size.height - safeAreaAddition, self.view.bounds.size.width, safeAreaAddition);
 }
 
-- (CGRect)defaultFrameForBottomDockingView_internalOrDeveloper
+- (CGRect)_defaultFrameForBottomDockingViewForPopupBar:(LNPopupBar*)popupBar
 {
-	return [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
+	LNPopupBarStyle barStyle = popupBar != nil ? popupBar.resolvedStyle : _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyleDefault);
+	
+	CGRect rv = [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
+	rv.origin.y += [self _ln_popupOffsetForPopupBarStyle:barStyle];
+	return rv;
 }
 
 - (BOOL)shouldExtendPopupBarUnderSafeArea

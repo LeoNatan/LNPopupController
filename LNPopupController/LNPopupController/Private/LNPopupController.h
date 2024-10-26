@@ -11,12 +11,13 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import <LNPopupController/LNPopupCloseButton.h>
 #import "LNPopupContentView+Private.h"
+#import "LNPopupBar+Private.h"
 
 CF_EXTERN_C_BEGIN
 
 #define _LNPopupPresentationStateTransitioning ((LNPopupPresentationState)2)
 
-@interface LNPopupController : NSObject
+@interface LNPopupController : NSObject <_LNPopupBarDelegate>
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController;
 
@@ -24,6 +25,7 @@ CF_EXTERN_C_BEGIN
 
 @property (nonatomic, strong) LNPopupBar* popupBar;
 @property (nonatomic, strong, readonly) LNPopupBar* popupBarStorage;
+@property (nonatomic, strong, readonly) LNPopupBar* popupBarNoCreate;
 @property (nonatomic, strong) LNPopupContentView* popupContentView;
 @property (nonatomic, strong) UIScrollView* popupContentContainerView;
 

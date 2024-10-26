@@ -62,6 +62,9 @@
 	__weak IBOutlet UIBarButtonItem *_barStyleButton;
 	__weak IBOutlet UIBarButtonItem *_hideTabBarButton;
 	
+	__weak IBOutlet UIButton* _showPopupBarButton;
+	__weak IBOutlet UIButton* _hidePopupBarButton;
+	
 	BOOL _alreadyPresentedAutomatically;
 }
 
@@ -122,7 +125,10 @@
 	{
 		if(self.splitViewController != nil)
 		{
-			self.colorSeedString = [NSString stringWithFormat:@"%@", @(arc4random())];
+			UIViewController* indexTarget = self.tabBarController ?: self.navigationController ?: self;
+			NSInteger idx = 1 - [self.splitViewController.viewControllers indexOfObject:indexTarget];
+			
+			self.colorSeedString = [NSString stringWithFormat:@"split_%@_%@%@ccolors", NSStringFromClass(self.splitViewController.class), @(idx), @(idx)];
 		}
 		else if(self.tabBarController != nil)
 		{
@@ -320,8 +326,28 @@
 
 - (UIViewController*)_targetVCForPopup
 {
+	void (^block)(NSString*) = ^ (NSString* title) {
+		self->_hideTabBarButton.enabled = NO;
+		if (@available(iOS 16.0, *))
+		{
+			self->_hideTabBarButton.hidden = YES;
+		}
+		self->_showPopupBarButton.hidden = YES;
+		self->_hidePopupBarButton.hidden = YES;
+		[self.navigationController setToolbarHidden:YES animated:NO];
+		
+		if (@available(iOS 17.0, *))
+		{
+			UIContentUnavailableConfiguration* config = [UIContentUnavailableConfiguration emptyConfiguration];
+			config.text = title;
+			[self setContentUnavailableConfiguration:config];
+		}
+	};
+	
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerPrimaryPopup.class] && self.navigationController != [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary])
 	{
+		self.view.backgroundColor = UIColor.systemBackgroundColor;
+		block(NSLocalizedString(@"Primary", @""));
 		return nil;
 	}
 	
@@ -332,11 +358,9 @@
 	}
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary]])
 	{
-		return nil;
-	}
-	
-	if([self.splitViewController isKindOfClass:LNSplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.splitViewController viewControllerForColumn:UISplitViewControllerColumnSupplementary]])
-	{
+		self.view.backgroundColor = UIColor.clearColor;
+		block(NSLocalizedString(@"Sidebar", @""));
+		
 		return nil;
 	}
 	

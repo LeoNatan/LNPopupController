@@ -72,7 +72,7 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 
 #pragma mark Popup Controller
 
-@interface LNPopupController () <_LNPopupItemDelegate, _LNPopupBarDelegate>
+@interface LNPopupController () <_LNPopupItemDelegate>
 
 - (void)_applicationDidEnterBackground;
 - (void)_applicationWillEnterForeground;
@@ -184,13 +184,12 @@ __attribute__((objc_direct_members))
 
 - (CGRect)_frameForOpenPopupBar
 {
-//	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
 	return CGRectMake(0, - self.popupBar.frame.size.height, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
 }
 
 - (CGRect)_frameForClosedPopupBar
 {
-	CGRect defaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
+	CGRect defaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 	UIEdgeInsets insets = [_containerController insetsForBottomDockingView];
 	return CGRectMake(0, defaultFrame.origin.y - self.popupBar.frame.size.height - insets.bottom, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
 }
@@ -272,7 +271,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		targetFrame.size = closedFrame.size;
 	}
 	
-	_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
+	_cachedDefaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 	_cachedInsets = [_containerController insetsForBottomDockingView];
 	
 	self.popupBar.frame = targetFrame;
@@ -788,7 +787,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:NO forceFeedbackGenerationAtStart:NO completion:nil];
 		
-		_cachedDefaultFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
+		_cachedDefaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 		_cachedInsets = [_containerController insetsForBottomDockingView];
 		_cachedOpenPopupFrame = [self _frameForOpenPopupBar];
 		
@@ -1141,7 +1140,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 }
 
-- (LNPopupBar *)popupBarStorage
+- (LNPopupBar*)popupBarStorage
 {
 	if(_popupBar)
 	{
@@ -1165,7 +1164,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return _popupBar;
 }
 
-- (LNPopupBar *)popupBar
+- (LNPopupBar*)popupBarNoCreate
+{
+	return _popupBar;
+}
+
+- (LNPopupBar*)popupBar
 {
 	if(_popupControllerInternalState == LNPopupPresentationStateBarHidden)
 	{
@@ -1175,7 +1179,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return self.popupBarStorage;
 }
 
-- (LNPopupContentView *)popupContentView
+- (LNPopupContentView*)popupContentView
 {
 	if(_popupContentView)
 	{
@@ -1385,7 +1389,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
 			
-			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height, 0));
+			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height - [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle], 0));
 			
 			if(open)
 			{
@@ -1631,7 +1635,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				
 				[self _removeContentControllerFromContentView:_currentContentController];
 				
-				CGRect bottomBarFrame = [_containerController defaultFrameForBottomDockingView_internalOrDeveloper];
+				CGRect bottomBarFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 				bottomBarFrame.origin.y -= _cachedInsets.bottom;
 				_bottomBar.frame = bottomBarFrame;
 				
@@ -1732,7 +1736,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	barFrame.origin.y -= (barFrame.size.height - currentHeight);
 	self.popupBar.frame = barFrame;
 	
-	_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height, 0));
+	_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height - [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle], 0));
 }
 
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar
