@@ -358,7 +358,7 @@
 	}
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary]])
 	{
-		self.view.backgroundColor = UIColor.clearColor;
+		self.view.backgroundColor = UIColor.secondarySystemBackgroundColor;
 		block(NSLocalizedString(@"Sidebar", @""));
 		
 		return nil;
