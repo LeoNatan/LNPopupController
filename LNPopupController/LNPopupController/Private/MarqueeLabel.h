@@ -6,15 +6,15 @@
 //  Copyright (c) 2011-2015 Charles Powell. All rights reserved.
 //
 
-#define MarqueeLabel __MarqueeLabel
-#define MarqueeType __MarqueeType
-#define MLLeftRight __MLLeftRight
-#define MLRightLeft __MLRightLeft
-#define MLContinuous __MLContinuous
-#define MLContinuousReverse __MLContinuousReverse
-#define MLLeft __MLLeft
-#define MLRight __MLRight
-#define GradientSetupAnimation __GradientSetupAnimation
+#define MarqueeLabel LNMarqueeLabel
+#define MarqueeType LNMarqueeType
+#define MLLeftRight LNMLLeftRight
+#define MLRightLeft LNMLRightLeft
+#define MLContinuous LNMLContinuous
+#define MLContinuousReverse LNMLContinuousReverse
+#define MLLeft LNMLLeft
+#define MLRight LNMLRight
+#define GradientSetupAnimation LNGradientSetupAnimation
 
 #import <UIKit/UIKit.h>
 

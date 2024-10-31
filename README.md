@@ -270,9 +270,25 @@ navigationController?.popupBar.tintColor = .yellow
 
 #### System Interactions
 
+##### Transitions
+
 The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set to `true`, the popup bar will transition to the bottom of the pushed controller's view. Setting  `isToolbarHidden = true` and calling `setToolbarHidden(_:animated:)` are also supported.
 
 <p align="center"><img src="./Supplements/hidesBottomBar_TabBar.gif" width="360"/> <img src="./Supplements/hidesBottomBar_Toolbar.gif" width="360"/></p>
+
+##### Tab Bar Sidebar
+
+Starting with iPadOS 18, the framework supports `UITabBarController` sidebars. When the sidebar displaces the underlying content, the popup bar moves out of the way.
+
+<p align="center"><img src="./Supplements/tab_bar_sidebar_floating.gif" width="600"/><br /><br /><img src="./Supplements/tab_bar_sidebar_prominent.gif" width="600"/></p>
+
+When the sidebar overlays the underlying content, the popup bar dims together with the content:
+
+<p align="center"><img src="./Supplements/tab_bar_sidebar_landscape_floating.png" width="360"/></p>
+
+
+
+##### Status Bar Management
 
 Status bar management of the popup content view controller is respected and applied when appropriate.
 
@@ -280,9 +296,13 @@ Status bar management of the popup content view controller is respected and appl
 
 Home indicator visibility control is respected and applied when appropriate.
 
+##### Context Menu Interactions
+
 Context menus are supported. Add a `UIContextMenuInteraction` interaction object to the popup bar, and it will behave as expected.
 
 <p align="center"><img src="./Supplements/popup_bar_context_menu.png" width="360"/></p>
+
+##### Pointer Interactions
 
 Pointer interactions are supported, and a default implementation is provided for system bar styles.
 
@@ -290,7 +310,9 @@ For custom popup bar controllers, the `LNPopupCustomBarViewController` class imp
 
 <p align="center"><img src="./Supplements/pointer_interaction.gif"/></p>
 
-Starting with iOS 15, scroll edge appearance is automatically disabled for toolbars and tab bars when a popup bar is presented, regardless of the scroll position of the content. Once the popup bar is dismissed, the scroll edge appearance is restored.
+##### Scroll-edge Appearance
+
+Starting with iOS 15, scroll-edge appearance is automatically disabled for toolbars and tab bars when a popup bar is presented, regardless of the scroll position of the content. Once the popup bar is dismissed, the scroll-edge appearance is restored.
 
 <p align="center"><img src="./Supplements/scroll_edge_appearance.gif" width="360"/></p>
 

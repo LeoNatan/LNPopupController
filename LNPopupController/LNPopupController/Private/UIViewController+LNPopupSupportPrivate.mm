@@ -1003,6 +1003,50 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 @interface UITabBarController (LNPopupSupportPrivate) @end
 @implementation UITabBarController (LNPopupSupportPrivate)
 
+- (void)_layoutPopupBarOrderForUse
+{
+	if(@available(iOS 18.0, *))
+	{
+		LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
+		popupBar._hackyMargins = NSDirectionalEdgeInsetsZero;
+		
+		static NSString* outlineViewKey = LNPopupHiddenString("_outlineView");
+		UIView* outlineView = [self.sidebar valueForKey:outlineViewKey];
+		
+		if(self.tabBar.superview != nil || outlineView == nil)
+		{
+			[super _layoutPopupBarOrderForUse];
+			[popupBar layoutIfNeeded];
+			return;
+		}
+		
+		static NSString* tabContainerViewKey = LNPopupHiddenString("visualStyle.tabContainerView");
+		UIView* parentForPopupBar = [self valueForKeyPath:tabContainerViewKey];
+		
+		static NSString* sidebarLayoutKey = LNPopupHiddenString("sidebarLayout");
+		
+		NSUInteger sidebarLayout = [[parentForPopupBar valueForKey:sidebarLayoutKey] unsignedIntegerValue];
+		
+		if(sidebarLayout == 0)
+		{
+			popupBar._hackyMargins = NSDirectionalEdgeInsetsMake(0, self.sidebar.isHidden ? 0 : outlineView.bounds.size.width, 0, 0);
+			[super _layoutPopupBarOrderForUse];
+			[popupBar layoutIfNeeded];
+			return;
+		}
+		
+		[parentForPopupBar insertSubview:popupBar atIndex:0];
+		[parentForPopupBar insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:popupBar];
+		[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView atIndex:parentForPopupBar.subviews.count];
+		
+		[popupBar layoutIfNeeded];
+		
+		return;
+	}
+	
+	[super _layoutPopupBarOrderForUse];
+}
+
 - (BOOL)_isTabBarHiddenDuringTransition
 {
 	NSNumber* isHidden = objc_getAssociatedObject(self, LNToolbarHiddenBeforeTransition);
@@ -1168,7 +1212,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	if(self._ignoringLayoutDuringTransition == NO)
 	{
 		CGFloat bottomSafeArea = self.view.superview.safeAreaInsets.bottom;
-		self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, bottomSafeArea);
+		CGRect frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, bottomSafeArea);
+		UIEdgeInsets hackyInsets = _LNEdgeInsetsFromDirectionalEdgeInsets(self._ln_popupController_nocreate.popupBar, self._ln_popupController_nocreate.popupBar._hackyMargins);
+		self._ln_bottomBarExtension_nocreate.frame = UIEdgeInsetsInsetRect(frame, hackyInsets);
 	}
 }
 
@@ -1450,7 +1496,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		self._ln_bottomBarExtension_nocreate.frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, bottomSafeArea);
 		
 		[self _setIgnoringLayoutDuringTransition:NO];
-		[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar];
+		[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar shouldLayout:NO];
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 		
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
@@ -1624,7 +1670,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
-		[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar];
+		[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar shouldLayout:NO];
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 		
 		[self _layoutPopupBarOrderForUse];

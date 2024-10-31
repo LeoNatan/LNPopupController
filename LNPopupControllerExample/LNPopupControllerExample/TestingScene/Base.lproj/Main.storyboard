@@ -567,7 +567,7 @@
                             <constraint firstItem="dF7-sj-hbZ" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" id="wc3-WW-zft"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Tab" image="1.square.fill" catalog="system" id="wDA-8g-o9a"/>
+                    <tabBarItem key="tabBarItem" title="Tab" image="1.square" catalog="system" id="wDA-8g-o9a"/>
                     <toolbarItems>
                         <barButtonItem title="Present Bar" id="L0d-F2-GTi">
                             <connections>
@@ -676,7 +676,7 @@
         <scene sceneID="ouL-tO-EtQ">
             <objects>
                 <navigationController storyboardIdentifier="navDemoView" id="okN-9b-CNT" customClass="PassthroughNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Tab" image="1.square.fill" catalog="system" id="moV-Wz-fLa"/>
+                    <tabBarItem key="tabBarItem" title="Tab" image="1.square" catalog="system" id="moV-Wz-fLa"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ezi-fS-9Ny">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
@@ -756,13 +756,13 @@
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
-        <segue reference="7qJ-pK-ibQ"/>
+        <segue reference="Jqg-bQ-l0b"/>
         <segue reference="1U6-NV-9t4"/>
         <segue reference="gSl-m3-ZVG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
-        <image name="1.square.fill" catalog="system" width="128" height="114"/>
+        <image name="1.square" catalog="system" width="128" height="114"/>
         <image name="arrowtriangle.forward.fill" catalog="system" width="128" height="113"/>
         <image name="dock.arrow.down.rectangle" catalog="system" width="128" height="93"/>
         <image name="dock.arrow.up.rectangle" catalog="system" width="128" height="93"/>

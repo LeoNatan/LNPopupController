@@ -791,3 +791,15 @@ static NSString* __ln_queueingScrollViewClassPrefix = LNPopupHiddenString("Queu"
 }
 
 @end
+
+UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* view, NSDirectionalEdgeInsets edgeInsets)
+{
+	if(view.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		return UIEdgeInsetsMake(edgeInsets.top, edgeInsets.leading, edgeInsets.bottom, edgeInsets.trailing);
+	}
+	else
+	{
+		return UIEdgeInsetsMake(edgeInsets.top, edgeInsets.trailing, edgeInsets.bottom, edgeInsets.leading);
+	}
+}

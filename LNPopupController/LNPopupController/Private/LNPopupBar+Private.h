@@ -80,6 +80,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, copy) NSAttributedString* attributedTitle;
 @property (nonatomic, copy) NSAttributedString* attributedSubtitle;
 
+@property (nonatomic) NSDirectionalEdgeInsets _hackyMargins;
+
 @property (nonatomic, strong) UIImage* image;
 
 @property (nonatomic, strong) UIView* highlightView;

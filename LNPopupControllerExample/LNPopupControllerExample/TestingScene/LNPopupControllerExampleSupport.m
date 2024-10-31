@@ -7,8 +7,7 @@
 //
 
 #import "LNPopupControllerExampleSupport.h"
-
-#define WANTS_SIDEBAR_TABS 0
+#import "SettingKeys.h"
 
 @interface DemoGalleryControllerTableView : UITableView @end
 @implementation DemoGalleryControllerTableView
@@ -23,14 +22,16 @@
 @interface DemoTabBarController : UITabBarController @end
 
 @implementation DemoTabBarController
-
-- (void)viewDidLoad
 {
-	[super viewDidLoad];
-	
+	NSMutableArray<UITab*>* _tabs API_AVAILABLE(ios(18.0));
+	NSMutableArray<UITab*>* _sidebarTabs API_AVAILABLE(ios(18.0));
+}
+
+- (void)awakeFromNib
+{
 	if(@available(iOS 18.0, *))
 	{
-		NSMutableArray<UITab*>* tabs = [NSMutableArray new];
+		_tabs = [NSMutableArray new];
 		
 		NSUInteger idx = 0;
 		for(UIViewController* vc in self.viewControllers)
@@ -41,51 +42,86 @@
 				title = [NSString stringWithFormat:@"%@ %@", title, @(idx + 1)];
 			}
 			
-			UITab* tab = [[UITab alloc] initWithTitle:title image:vc.tabBarItem.image identifier:[NSString stringWithFormat:@"%@_%@", vc.tabBarItem.title, @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
+			UITab* tab = [[UITab alloc] initWithTitle:title image:[UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square", @(idx + 1)]] identifier:[NSString stringWithFormat:@"%@_%@", vc.tabBarItem.title, @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
 				return vc;
 			}];
-			[tabs addObject:tab];
+			[_tabs addObject:tab];
 			idx++;
 		}
 		
-#if WANTS_SIDEBAR_TABS
-		self.compactTabIdentifiers = [tabs valueForKey:@"identifier"];
-		
-		if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		_sidebarTabs = [NSMutableArray new];
+		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingTabBarHasSidebar])
 		{
-			BOOL wantsNav = [tabs.firstObject.viewController isKindOfClass:UINavigationController.class];
-			
-			for(NSUInteger jdx = 0; jdx < 3; jdx++)
+			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
 			{
-				UIViewController* vc;
-				if(wantsNav)
-				{
-					vc = [self.storyboard instantiateViewControllerWithIdentifier:@"navDemoView"];
-				}
-				else
-				{
-					vc = [self.storyboard instantiateViewControllerWithIdentifier:@"demoVC"];
-				}
+				BOOL wantsNav = [_tabs.firstObject.viewController isKindOfClass:UINavigationController.class];
 				
-				UITab* sidebarOnly = [[UITab alloc] initWithTitle:[NSString stringWithFormat:@"Sidebar Tab %@", @(idx + 1)] image:[UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square.fill", @(idx + 1)]] identifier:[NSString stringWithFormat:@"sidebar_%@", @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
-					return vc;
-				}];
-				sidebarOnly.preferredPlacement = UITabPlacementSidebarOnly;
-				[tabs addObject:sidebarOnly];
-				idx++;
+				for(NSUInteger jdx = 0; jdx <= 3; jdx++)
+				{
+					UIViewController* vc;
+					if(wantsNav)
+					{
+						vc = [self.storyboard instantiateViewControllerWithIdentifier:@"navDemoView"];
+					}
+					else
+					{
+						vc = [self.storyboard instantiateViewControllerWithIdentifier:@"demoVC"];
+					}
+					
+					UITab* sidebarOnly = [[UITab alloc] initWithTitle:[NSString stringWithFormat:@"Sidebar Tab %@", @(idx + 1)] image:[UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square", @(idx + 1)]] identifier:[NSString stringWithFormat:@"sidebar_%@", @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
+						return vc;
+					}];
+					sidebarOnly.preferredPlacement = UITabPlacementSidebarOnly;
+					[_sidebarTabs addObject:sidebarOnly];
+					idx++;
+				}
 			}
 		}
-#endif
 		
-		self.tabs = tabs;
-#if WANTS_SIDEBAR_TABS
+		self.viewControllers = nil;
+	}
+	
+	[super awakeFromNib];
+}
+
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	
+	if(@available(iOS 18.0, *))
+	{
+		[self updateTabsForTraitCollection:self.traitCollection];
+	}
+}
+
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		if (@available(iOS 18.0, *))
+		{
+			[self updateTabsForTraitCollection:newCollection];
+		}
+	} completion:nil];
+}
+
+- (void)updateTabsForTraitCollection:(UITraitCollection*)collection API_AVAILABLE(ios(18.0))
+{
+	if(collection.userInterfaceIdiom == UIUserInterfaceIdiomPad && collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && _sidebarTabs.count > 0)
+	{
+		self.tabs = [_tabs arrayByAddingObjectsFromArray:_sidebarTabs];
+		self.compactTabIdentifiers = [_tabs valueForKey:@"identifier"];
+		
 		self.mode = UITabBarControllerModeTabSidebar;
-		self.sidebar.preferredLayout = UITabBarControllerSidebarLayoutOverlap;
+		self.sidebar.preferredLayout = UITabBarControllerSidebarLayoutAutomatic;
 		self.sidebar.hidden = YES;
 		self.customizableViewControllers = @[];
-#else
+	}
+	else
+	{
+		self.tabs = _tabs;
 		self.mode = UITabBarControllerModeTabBar;
-#endif
 	}
 }
 
@@ -113,6 +149,11 @@
 
 @interface DemoTabBar : UITabBar @end
 @implementation DemoTabBar
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+	[super willMoveToSuperview:newSuperview];
+}
 
 - (void)setFrame:(CGRect)frame
 {

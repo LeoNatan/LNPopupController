@@ -38,8 +38,13 @@
 - (NSString *)_hebrew_localizedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName
 {
 	NSString* stringToTransliterate = value.length > 0 ? value : key;
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"LNPopupController" withString:@"אֶלְאֶנפּוֹפּאָפְּקוֹנְטְרוֹלֶר"];
+	stringToTransliterate = [stringToTransliterate stringByReplacingOccurrencesOfString:@"Controller" withString:@"קוֹנְטְרוֹלֶר"];
+	stringToTransliterate = [[stringToTransliterate stringByReplacingOccurrencesOfString:@"ll" withString:@"l"] stringByReplacingOccurrencesOfString:@"tt" withString:@"t"];
 	
-	return [stringToTransliterate stringByApplyingTransform:@"Latin-Hebrew" reverse:NO];
+	NSString* rv = [stringToTransliterate stringByApplyingTransform:NSStringTransformLatinToHebrew reverse:NO];
+	
+	return rv;
 }
 
 + (void)load

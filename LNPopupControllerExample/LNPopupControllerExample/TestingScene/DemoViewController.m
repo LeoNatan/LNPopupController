@@ -152,21 +152,7 @@
 		self.view.backgroundColor = UIColor.systemBackgroundColor;
 	}
 	
-	if(@available(iOS 18.0, *))
-	{
-		_hideTabBarButton.hidden = (self.tabBarController == nil && self.navigationController == nil) || self.navigationController.viewControllers.count > 1;
-	}
-	else
-	{
-		if (@available(iOS 16.0, *))
-		{
-			_hideTabBarButton.hidden = self.navigationController == nil || self.tabBarController != nil;
-		}
-		else
-		{
-			_hideTabBarButton.enabled = self.navigationController == nil || self.tabBarController != nil;
-		}
-	}
+	[self updateHideTabBarButtonHiddenState];
 	
 //	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings"];
 //	[self addChildViewController:settings];
@@ -244,6 +230,43 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
+}
+
+- (void)updateHideTabBarButtonHiddenState
+{
+	if(@available(iOS 18.0, *))
+	{
+		if(self.tabBarController != nil)
+		{
+			[self.navigationItem setHidesBackButton:self.tabBarController.sidebar.isHidden == NO];
+		}
+		
+		_hideTabBarButton.hidden = (self.tabBarController == nil && self.navigationController == nil) || self.tabBarController.sidebar.isHidden == NO;
+	}
+	else
+	{
+		if (@available(iOS 16.0, *))
+		{
+			_hideTabBarButton.hidden = self.navigationController == nil || self.tabBarController != nil;
+		}
+		else
+		{
+			_hideTabBarButton.enabled = self.navigationController == nil || self.tabBarController != nil;
+		}
+	}
+}
+
+- (void)viewWillLayoutSubviews
+{
+	[super viewWillLayoutSubviews];
+	
+	if(@available(iOS 18.0, *))
+	{
+		if(self.tabBarController != nil)
+		{
+			[self updateHideTabBarButtonHiddenState];
+		}
+	}
 }
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator

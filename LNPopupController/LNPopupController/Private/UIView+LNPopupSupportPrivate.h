@@ -21,6 +21,8 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 
 @end
 
+UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirectionalEdgeInsets edgeInsets);
+
 @interface UIView (LNPopupSupportPrivate)
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout;
