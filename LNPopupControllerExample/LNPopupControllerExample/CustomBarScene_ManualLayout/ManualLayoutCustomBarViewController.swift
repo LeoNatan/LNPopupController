@@ -32,7 +32,22 @@
 		leftButton.sizeToFit()
 		view.addSubview(leftButton)
 		
-		preferredContentSize = CGSize(width: 0, height: 50)
+		self.preferredContentSize = CGSize(width: 0, height: 50)
+		animateSize()
+	}
+	
+	var idx = 0
+	func animateSize() {
+		idx = 1 - idx;
+		UIView.animate(withDuration: 1.0, delay: 0.0, options: [.curveEaseInOut, .allowUserInteraction]) {
+			self.preferredContentSize = CGSize(width: 0, height: 50 + self.idx * 50)
+		} completion: { [weak self] _ in
+			guard let self else {
+				return
+			}
+			
+			self.animateSize()
+		}
 	}
 	
 	public override func viewDidLayoutSubviews() {

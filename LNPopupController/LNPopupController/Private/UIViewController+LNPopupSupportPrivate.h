@@ -28,7 +28,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets __LNEdgeInsetsSum(UIEd
 
 extern BOOL __ln_popup_suppressViewControllerLifecycle;
 
-UIEdgeInsets _LNPopupSafeAreas(id self);
+UIEdgeInsets _LNPopupSafeAreaInsets(id self);
 void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL layout, UIEdgeInsets popupEdgeInsets);
 
 @interface _LNPopupBottomBarSupport : UIView @end

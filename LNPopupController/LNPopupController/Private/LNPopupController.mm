@@ -1724,6 +1724,11 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)_popupBarMetricsDidChange:(LNPopupBar*)bar
 {
+	[self _popupBarMetricsDidChange:bar shouldLayout:YES];
+}
+
+- (void)_popupBarMetricsDidChange:(LNPopupBar*)bar shouldLayout:(BOOL)layout
+{
 	if(self.popupBar.acceptsSizing == NO)
 	{
 		//Ignore frame changes before a bar is fully presented.
@@ -1736,7 +1741,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	barFrame.origin.y -= (barFrame.size.height - currentHeight);
 	self.popupBar.frame = barFrame;
 	
-	_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height - [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle], 0));
+	_LNPopupSupportSetPopupInsetsForViewController(_containerController, layout, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height - [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle], 0));
 }
 
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar

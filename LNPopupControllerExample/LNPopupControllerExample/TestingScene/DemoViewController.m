@@ -248,7 +248,11 @@
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
-	[self updateNavigationBarTitlePositionForTraitCollection:newCollection];
+	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self updateNavigationBarTitlePositionForTraitCollection:newCollection];
+	} completion:nil];
 }
 
 - (void)dealloc

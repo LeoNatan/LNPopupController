@@ -41,6 +41,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 - (void)_traitCollectionForPopupBarDidChange:(LNPopupBar*)bar;
 - (void)_popupBarMetricsDidChange:(LNPopupBar*)bar;
+- (void)_popupBarMetricsDidChange:(LNPopupBar*)bar shouldLayout:(BOOL)layout;
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar;
 - (void)_popupBar:(LNPopupBar*)bar updateCustomBarController:(LNPopupCustomBarViewController*)customController cleanup:(BOOL)cleanup;
 - (void)_removeInteractionGestureForPopupBar:(LNPopupBar*)bar;

@@ -425,7 +425,7 @@ const double LNSnapPercentDefault = 0.32;
 
 - (CGRect)defaultFrameForBottomDockingView_internal
 {
-	CGFloat safeAreaAddition = self.view.safeAreaInsets.bottom - _LNPopupSafeAreas(self).bottom;
+	CGFloat safeAreaAddition = self.view.safeAreaInsets.bottom - _LNPopupSafeAreaInsets(self).bottom;
 	
 	if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
 	{

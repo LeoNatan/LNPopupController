@@ -336,7 +336,7 @@ static inline __attribute__((always_inline)) void _LNSetPopupSafeAreaInsets(id s
 {
 	objc_setAssociatedObject(self, LNPopupAdditionalSafeAreaInsets, [NSValue valueWithUIEdgeInsets:additionalSafeAreaInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
-	UIEdgeInsets user = _LNUserSafeAreas(self);
+	UIEdgeInsets user = _LNUserSafeAreaInsets(self);
 	
 	_LNUpdateUserSafeAreaInsets(self, user, additionalSafeAreaInsets);
 }
@@ -345,7 +345,7 @@ static inline __attribute__((always_inline)) void _LNSetPopupSafeAreaInsets(id s
 {
 	objc_setAssociatedObject(self, LNUserAdditionalSafeAreaInsets, [NSValue valueWithUIEdgeInsets:additionalSafeAreaInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
-	UIEdgeInsets popup = _LNPopupSafeAreas(self);
+	UIEdgeInsets popup = _LNPopupSafeAreaInsets(self);
 	
 	_LNUpdateUserSafeAreaInsets(self, additionalSafeAreaInsets, popup);
 }
@@ -355,12 +355,12 @@ static inline __attribute__((always_inline)) void _LNSetPopupSafeAreaInsets(id s
 	objc_setAssociatedObject(self, LNPopupChildAdditiveSafeAreaInsets, [NSValue valueWithUIEdgeInsets:childAdditiveSafeAreaInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-UIEdgeInsets _LNPopupSafeAreas(id self)
+UIEdgeInsets _LNPopupSafeAreaInsets(id self)
 {
 	return [objc_getAssociatedObject(self, LNPopupAdditionalSafeAreaInsets) UIEdgeInsetsValue];
 }
 
-static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreas(id self)
+static inline __attribute__((always_inline)) UIEdgeInsets _LNUserSafeAreaInsets(id self)
 {
 	return [objc_getAssociatedObject(self, LNUserAdditionalSafeAreaInsets) UIEdgeInsetsValue];
 }
@@ -372,8 +372,8 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 
 - (UIEdgeInsets)_ln_additionalSafeAreaInsets
 {
-	UIEdgeInsets user = _LNPopupSafeAreas(self);
-	UIEdgeInsets popup = _LNUserSafeAreas(self);
+	UIEdgeInsets user = _LNPopupSafeAreaInsets(self);
+	UIEdgeInsets popup = _LNUserSafeAreaInsets(self);
 	
 	return __LNEdgeInsetsSum(user, popup);
 }
@@ -637,7 +637,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	{
 		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
 		
-		UIEdgeInsets insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.popupPresentationContainerViewController).bottom, 0));
+		UIEdgeInsets insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
 		
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
 		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
@@ -673,7 +673,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 {
 	if([self _isContainedInPopupController])
 	{
-		return __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreas(self.popupPresentationContainerViewController).bottom, 0));
+		return __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
 	}
 	
 	UIEdgeInsets insets = [self _vSAIFS];
@@ -825,7 +825,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		{
 			UIEdgeInsets neededInsets = UIEdgeInsetsMake(0, 0, MAX(0, self.popupBar.frame.size.height - [self _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle]), 0);
 			
-			UIEdgeInsets safe = _LNPopupSafeAreas(self);
+			UIEdgeInsets safe = _LNPopupSafeAreaInsets(self);
 			UIEdgeInsets childAdditive = _LNPopupChildAdditiveSafeAreas(self);
 			
 			if(neededInsets.bottom != MAX(safe.bottom, childAdditive.bottom))
@@ -964,21 +964,33 @@ static void __LNPopupUpdateChildInsets(UIViewController* controller)
 	_LNSetPopupSafeAreaInsets(controller, popupSafeAreaInsets);
 }
 
-void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL layout, UIEdgeInsets popupEdgeInsets)
+void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL wantsLayout, UIEdgeInsets popupEdgeInsets)
 {
+	BOOL shouldLayout = NO;
+	
 	//Container classes with bottom bars have bugs if additional safe areas are applied directly to them.
 	//Instead, set a custom property and update their children recursively to take care of the additional safe area.
 	if(__LNPopupIsClassBuggyForAdditionalSafeArea(controller) == YES)
 	{
-		[controller _ln_setChildAdditiveSafeAreaInsets:popupEdgeInsets];
-		__LNPopupUpdateChildInsets(controller);
+		UIEdgeInsets current = _LNPopupChildAdditiveSafeAreas(controller);
+		if(UIEdgeInsetsEqualToEdgeInsets(current, popupEdgeInsets) == NO)
+		{
+			shouldLayout = YES;
+			[controller _ln_setChildAdditiveSafeAreaInsets:popupEdgeInsets];
+			__LNPopupUpdateChildInsets(controller);
+		}
 	}
 	else
 	{
-		_LNSetPopupSafeAreaInsets(controller, popupEdgeInsets);
+		UIEdgeInsets current = _LNPopupSafeAreaInsets(controller);
+		if(UIEdgeInsetsEqualToEdgeInsets(current, popupEdgeInsets) == NO)
+		{
+			shouldLayout = YES;
+			_LNSetPopupSafeAreaInsets(controller, popupEdgeInsets);
+		}
 	}
 	
-	if(layout)
+	if(wantsLayout && shouldLayout)
 	{
 		[controller.view setNeedsUpdateConstraints];
 		[controller.view setNeedsLayout];
@@ -1987,7 +1999,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[self _layoutPopupBarOrderForTransition];
 		
 		void (^animations)(void) = ^ {
-			[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar];
+			[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar shouldLayout:NO];
 			//During the transition, animate the popup bar and content together with the toolbar transition.
 			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 			
