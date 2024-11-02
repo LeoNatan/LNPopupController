@@ -194,7 +194,7 @@ static void __setupFunction(void)
 {
 	UIView* rv = [super hitTest:point withEvent:event];
 	
-	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO)
+	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO && [NSStringFromClass(rv.class) containsString:@"BarItemView"] == NO)
 	{
 		rv = nil;
 	}
