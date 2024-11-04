@@ -152,7 +152,7 @@
 		self.view.backgroundColor = UIColor.systemBackgroundColor;
 	}
 	
-	[self updateHideTabBarButtonHiddenState];
+	[self updateHideTabBarButtonHiddenStateForTraitCollection:self.traitCollection];
 	
 //	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings"];
 //	[self addChildViewController:settings];
@@ -232,16 +232,27 @@
 	[super viewDidDisappear:animated];
 }
 
-- (void)updateHideTabBarButtonHiddenState
+- (void)updateHideTabBarButtonHiddenStateForTraitCollection:(UITraitCollection*)traitCollection;
 {
 	if(@available(iOS 18.0, *))
 	{
+		if(traitCollection == nil)
+		{
+			traitCollection = self.traitCollection;
+		}
+		
 		if(self.tabBarController != nil)
 		{
 			[self.navigationItem setHidesBackButton:self.tabBarController.sidebar.isHidden == NO];
 		}
 		
-		_hideTabBarButton.hidden = (self.tabBarController == nil && self.navigationController == nil) || self.tabBarController.sidebar.isHidden == NO;
+		BOOL isFirst = [self.navigationController.viewControllers indexOfObject:self] == 0;
+		BOOL isTNil = self.tabBarController == nil;
+		BOOL isNNil = self.navigationController == nil;
+		BOOL canHaveSidebar = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		BOOL isSidebarHidden = self.tabBarController.sidebar.isHidden;
+		
+		_hideTabBarButton.hidden = isFirst == NO || (isTNil && isNNil) || (canHaveSidebar && isSidebarHidden == NO);
 	}
 	else
 	{
@@ -264,7 +275,7 @@
 	{
 		if(self.tabBarController != nil)
 		{
-			[self updateHideTabBarButtonHiddenState];
+			[self updateHideTabBarButtonHiddenStateForTraitCollection:self.traitCollection];
 		}
 	}
 }

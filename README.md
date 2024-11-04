@@ -1,6 +1,6 @@
 # LNPopupController
 
-`LNPopupController` is a framework for presenting view controllers as popups of other view controllers, much like the Apple Music and Podcasts apps.
+LNPopupController is a framework for presenting view controllers as popups of other view controllers, similar to the Apple Music and Podcasts mini-players.
 
 For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
 
