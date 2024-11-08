@@ -108,7 +108,7 @@
 
 - (void)updateTabsForTraitCollection:(UITraitCollection*)collection API_AVAILABLE(ios(18.0))
 {
-	if(collection.userInterfaceIdiom == UIUserInterfaceIdiomPad && collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && _sidebarTabs.count > 0)
+	if(collection.userInterfaceIdiom == UIUserInterfaceIdiomPad && collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && _sidebarTabs.count > 0 && self.splitViewController == nil)
 	{
 		self.tabs = [_tabs arrayByAddingObjectsFromArray:_sidebarTabs];
 		self.compactTabIdentifiers = [_tabs valueForKey:@"identifier"];

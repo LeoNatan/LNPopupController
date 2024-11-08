@@ -385,7 +385,7 @@
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerPrimaryPopup.class] && self.navigationController != [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary])
 	{
 		self.view.backgroundColor = UIColor.systemBackgroundColor;
-		block(NSLocalizedString(@"Primary", @""));
+		block(NSLocalizedString(@"Secondary", @""));
 		return nil;
 	}
 	

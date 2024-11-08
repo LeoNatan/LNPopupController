@@ -1756,12 +1756,15 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	CGRect toolbarBarFrame = self.toolbar.frame;
 	
-	CGFloat bottomSafeAreaHeight = self.view.safeAreaInsets.bottom;
-	if([NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"] == NO)
+	CGFloat bottomSafeAreaHeight = 0.0;
+	if(unavailable(iOS 18.0, *))
 	{
-		bottomSafeAreaHeight -= self.view.window.safeAreaInsets.bottom;
+		bottomSafeAreaHeight = self.view.safeAreaInsets.bottom;
+		if([NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"] == NO)
+		{
+			bottomSafeAreaHeight -= self.view.window.safeAreaInsets.bottom;
+		}
 	}
-	
 	toolbarBarFrame.origin = CGPointMake(toolbarBarFrame.origin.x, self.view.bounds.size.height - (self.isToolbarHidden ? 0.0 : toolbarBarFrame.size.height) - bottomSafeAreaHeight);
 	
 	return toolbarBarFrame;
@@ -1769,20 +1772,31 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (UIEdgeInsets)insetsForBottomDockingView
 {
-	if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
+	if(@available(iOS 18.0, *))
 	{
-		return UIEdgeInsetsZero;
+		CGFloat offset = 0;
+		
+		if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		{
+			static auto key = LNPopupHiddenString("_backgroundView.bounds");
+			if([[self.toolbar valueForKeyPath:key] CGRectValue].size.height < (self.toolbar.bounds.size.height + self.view.safeAreaInsets.bottom))
+			{
+				//Something in UIKit reports safe area insets incorrectly on iPadOS. This is a workaround for this issue.
+				offset -= 5;
+			}
+		}
+		
+		return UIEdgeInsetsMake(0, 0, self.view.safeAreaInsets.bottom + offset, 0);
 	}
-	
-	CGFloat offset = 0;
-	
-	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && self.view.superview.safeAreaInsets.bottom > 0 && ([self _ln_isObjectFromSwiftUI] || self.splitViewController != nil))
+	else
 	{
-		//Something in SwiftUI reports safe area insets incorrectly on iPadOS. This is a workaround for this issue.
-		offset -= 5;
+		if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
+		{
+			return UIEdgeInsetsZero;
+		}
+		
+		return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom), 0);
 	}
-	
-	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom) + offset, 0);
 }
 
 + (void)load
