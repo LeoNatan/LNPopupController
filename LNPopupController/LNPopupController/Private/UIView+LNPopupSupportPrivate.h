@@ -68,3 +68,5 @@ NS_ASSUME_NONNULL_END
 - (BOOL)_ln_isAtTop;
 
 @end
+
+@interface _LNPopupBarBackgroundGroupNameOverride: NSObject <UIObjectTraitDefinition> @end

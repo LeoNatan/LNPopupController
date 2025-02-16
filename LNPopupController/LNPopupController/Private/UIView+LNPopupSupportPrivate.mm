@@ -19,6 +19,15 @@
 #import <AppKit/AppKit.h>
 #endif
 
+@implementation _LNPopupBarBackgroundGroupNameOverride
+
++ (__kindof id<NSObject>)defaultValue
+{
+	return nil;
+}
+
+@end
+
 static const void* LNPopupAttachedPopupController = &LNPopupAttachedPopupController;
 static const void* LNPopupAwaitingViewInWindowHierarchyKey = &LNPopupAwaitingViewInWindowHierarchyKey;
 static const void* LNPopupNotifyingKey = &LNPopupNotifyingKey;
@@ -37,11 +46,6 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 			return YES;
 		}), encoding);
 	}
-}
-
-- (BOOL)_safeAreaInsetsFrozen
-{
-	return YES;
 }
 
 @end
@@ -123,6 +127,13 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 		
 		{
 			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderModernIOS"));
+			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+		}
+		
+		{
+			Class cls = NSClassFromString(LNPopupHiddenString("_UITabBarVisualProviderLegacyIOS"));
 			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
 			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
@@ -803,3 +814,39 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* view, NSDirectionalE
 		return UIEdgeInsetsMake(edgeInsets.top, edgeInsets.trailing, edgeInsets.bottom, edgeInsets.leading);
 	}
 }
+
+#if ! LNPopupControllerEnforceStrictClean
+
+@interface UIVisualEffectView (LNPopupSupportPrivate) @end
+@implementation UIVisualEffectView (LNPopupSupportPrivate)
+
++ (void)load
+{
+	@autoreleasepool
+	{
+		if(@available(iOS 17.0, *))
+		{
+			NSString* selName = LNPopupHiddenString("_setGroupName:");
+			LNSwizzleMethod(self,
+							NSSelectorFromString(selName),
+							@selector(_ln_sGN:));
+		}
+	}
+}
+
+//_setGroupName:
+- (void)_ln_sGN:(NSString*)name API_AVAILABLE(ios(17.0))
+{
+	NSString* override = [self.traitCollection objectForTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+	if(override != nil)
+	{
+		[self _ln_sGN:override];
+		return;
+	}
+	
+	[self _ln_sGN:name];
+}
+
+@end
+
+#endif

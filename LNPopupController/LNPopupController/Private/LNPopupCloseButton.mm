@@ -23,6 +23,8 @@
 
 @end
 
+@interface LNPopupCloseButton () <UIPointerInteractionDelegate> @end
+
 __attribute__((objc_direct_members))
 @implementation LNPopupCloseButton
 {
@@ -71,6 +73,17 @@ __attribute__((objc_direct_members))
 		
 		_style = LNPopupCloseButtonStyleGrabber;
 		[self _setupForChevronButton];
+		
+		if (@available(iOS 13.4, *))
+		{
+			self.pointerInteractionEnabled = YES;
+			self.pointerStyleProvider = ^UIPointerStyle * _Nullable(UIButton * _Nonnull button, UIPointerEffect * _Nonnull proposedEffect, UIPointerShape * _Nonnull proposedShape) {
+				UIPointerLiftEffect* effect = [UIPointerLiftEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:self]];
+				UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
+				
+				return [UIPointerStyle styleWithEffect:effect shape:shape];
+			};
+		}
 	}
 	
 	return self;

@@ -1418,9 +1418,23 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
+	NSString* traitOverride = nil;
+	
+	if(@available(iOS 17.0, *))
+	{
+		traitOverride = [self._ln_popupController_nocreate.bottomBar.traitCollection objectForTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+	}
+	
 	if(transition == 1)
 	{
-		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+		if(@available(iOS 17.0, *))
+		{
+			[self._ln_popupController_nocreate.bottomBar.traitOverrides setObject:nil forTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+		}
+		else
+		{
+			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+		}
 	}
 	else
 	{
@@ -1502,7 +1516,14 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.hidden = YES;
 		self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 1.0;
 		
-		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
+		if(@available(iOS 17.0, *))
+		{
+			[self._ln_popupController_nocreate.bottomBar.traitOverrides setObject:traitOverride forTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+		}
+		else
+		{
+			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
+		}
 		
 		self._ln_popupController_nocreate.popupBar.backgroundView.frame = backgroundViewFrame;
 		
@@ -1605,9 +1626,23 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	[self _setIgnoringLayoutDuringTransition:YES];
 	
 	NSString* effectGroupingIdentifier = self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier;
+	NSString* traitOverride = nil;
+	
+	if(@available(iOS 17.0, *))
+	{
+		traitOverride = [self._ln_popupController_nocreate.bottomBar.traitCollection objectForTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+	}
+	
 	if(transition == 2)
 	{
-		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+		if(@available(iOS 17.0, *))
+		{
+			[self._ln_popupController_nocreate.bottomBar.traitOverrides setObject:nil forTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+		}
+		else
+		{
+			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = nil;
+		}
 	}
 	
 	void (^animations)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
@@ -1677,7 +1712,14 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		
 		[self _setIgnoringLayoutDuringTransition:NO];
 		
-		self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
+		if(@available(iOS 17.0, *))
+		{
+			[self._ln_popupController_nocreate.bottomBar.traitOverrides setObject:traitOverride forTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+		}
+		else
+		{
+			self._ln_popupController_nocreate.popupBar.effectGroupingIdentifier = effectGroupingIdentifier;
+		}
 		
 		if(context.isCancelled == NO)
 		{

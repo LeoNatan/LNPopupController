@@ -182,6 +182,19 @@ __attribute__((objc_direct_members))
 	return self;
 }
 
+- (void)setBottomBar:(UIView *)bottomBar
+{
+	if (@available(iOS 17.0, *)) {
+		[_bottomBar.traitOverrides setObject:nil forTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+	}
+	
+	_bottomBar = bottomBar;
+	
+	if (@available(iOS 17.0, *)) {
+		[_bottomBar.traitOverrides setObject:self.popupBar.effectGroupingIdentifier forTrait:_LNPopupBarBackgroundGroupNameOverride.class];
+	}
+}
+
 - (CGRect)_frameForOpenPopupBar
 {
 	return CGRectMake(0, - self.popupBar.frame.size.height, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
@@ -1045,13 +1058,16 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_configurePopupBarFromBottomBarModifyingGroupingIdentifier:(BOOL)modifyingGroupingIdentifier
 {
-	if(modifyingGroupingIdentifier == YES)
+	if(unavailable(iOS 17.0, *))
 	{
-		self.popupBar.effectGroupingIdentifier = _bottomBar._ln_effectGroupingIdentifierIfAvailable;
-		//Schedule one more effect identifier refresh, in case it's not yet ready at this point.
-		dispatch_async(dispatch_get_main_queue(), ^{
+		if(modifyingGroupingIdentifier == YES)
+		{
 			self.popupBar.effectGroupingIdentifier = _bottomBar._ln_effectGroupingIdentifierIfAvailable;
-		});
+			//Schedule one more effect identifier refresh, in case it's not yet ready at this point.
+			dispatch_async(dispatch_get_main_queue(), ^{
+				self.popupBar.effectGroupingIdentifier = _bottomBar._ln_effectGroupingIdentifierIfAvailable;
+			});
+		}
 	}
 	
 	if(self.popupBar.inheritsAppearanceFromDockingView == NO)
@@ -1354,7 +1370,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		}
 		_popupControllerTargetState = LNPopupPresentationStateBarPresented;
 		
-		_bottomBar = _containerController.bottomDockingViewForPopup_internalOrDeveloper;
+		self.bottomBar = _containerController.bottomDockingViewForPopup_internalOrDeveloper;
 		_bottomBar.attachedPopupController = self;
 		
 		self.popupBarStorage.hidden = NO;
@@ -1657,7 +1673,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerDidDismissPopupBar:animated:), animated);
 				
 				_bottomBar.attachedPopupController = nil;
-				_bottomBar = nil;
+				self.bottomBar = nil;
 				
 				[self _end120HzHack];
 				
