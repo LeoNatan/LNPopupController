@@ -1788,9 +1788,41 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	[self setNeedsLayout];
 }
 
+static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize size)
+{
+	CGFloat outerAspectRatio = size.width / size.height;
+	CGFloat fAspectRatio = aspectRatio.width / aspectRatio.height;
+	
+	if(fAspectRatio < outerAspectRatio)
+	{
+		return CGSizeMake(size.height * fAspectRatio, size.height);
+	}
+	else if(fAspectRatio > outerAspectRatio)
+	{
+		return CGSizeMake(size.width, size.width / fAspectRatio);
+	}
+	else
+	{
+		return size;
+	}
+}
+
+- (CGSize)_imageViewSizeWithMaxWidth:(CGFloat)width maxHeight:(CGFloat)height
+{
+	if(_imageView.image == nil && _swiftuiImageController == nil)
+	{
+		return CGSizeMake(width, height);
+	}
+	
+	CGSize sizeToUse = _swiftuiImageController ? _swiftuiImageController.preferredContentSize : _imageView.image.size;
+	
+	return LNMakeSizeWithAspectRatioInsideSize(sizeToUse, CGSizeMake(width, height));
+}
+
 - (void)_layoutImageView
 {
 	BOOL previouslyHidden = _imageView.hidden;
+	CGSize previousSize = _imageView.bounds.size;
 	
 	if(_resolvedStyle == LNPopupBarStyleCompact)
 	{
@@ -1805,7 +1837,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
-	CGFloat imageSize = isFloating ? LNPopupBarFloatingImageWidth : LNPopupBarProminentImageWidth;
+	CGFloat maxImageDimention = isFloating ? LNPopupBarFloatingImageWidth : LNPopupBarProminentImageWidth;
 	CGFloat barHeight = _contentView.bounds.size.height;
 	
 	CGFloat safeLeading = 8;
@@ -1813,21 +1845,23 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	if(_resolvedStyle == LNPopupBarStyleFloating && self.isWidePad == YES)
 	{
 		safeLeading += 2;
-		imageSize = LNPopupBarFloatingPadImageWidth;
+		maxImageDimention = LNPopupBarFloatingPadImageWidth;
 	}
+	
+	CGSize imageViewSize = [self _imageViewSizeWithMaxWidth:maxImageDimention maxHeight:maxImageDimention];
 	
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
-		_imageView.center = CGPointMake(safeLeading + imageSize / 2, barHeight / 2);
+		_imageView.center = CGPointMake(safeLeading + imageViewSize.width / 2, barHeight / 2);
 	}
 	else
 	{
-		_imageView.center = CGPointMake(_contentView.bounds.size.width - safeLeading - imageSize / 2, barHeight / 2);
+		_imageView.center = CGPointMake(_contentView.bounds.size.width - safeLeading - imageViewSize.width / 2, barHeight / 2);
 	}
 	
-	_imageView.bounds = CGRectMake(0, 0, imageSize, imageSize);
+	_imageView.bounds = (CGRect){0, 0, imageViewSize};
 	
-	if(previouslyHidden != _imageView.hidden)
+	if(previouslyHidden != _imageView.hidden || CGSizeEqualToSize(previousSize, imageViewSize) == NO)
 	{
 		[self _setNeedsTitleLayoutRemovingLabels:NO];
 	}
