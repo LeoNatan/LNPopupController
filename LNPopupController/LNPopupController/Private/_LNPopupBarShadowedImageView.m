@@ -12,14 +12,17 @@
 @implementation _LNPopupBarShadowedImageView
 {
 	_LNPopupBackgroundShadowView* _shadowView;
+	__weak LNPopupBar* _containingBar;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (instancetype)initWithContainingPopupBar:(LNPopupBar *)popupBar
 {
-	self = [super initWithFrame:frame];
+	self = [super initWithFrame:CGRectZero];
 	
 	if(self)
 	{
+		super.contentMode = UIViewContentModeScaleAspectFit;
+		_containingBar = popupBar;
 		_shadowView = [_LNPopupBackgroundShadowView new];
 	}
 	
@@ -81,6 +84,26 @@
 	[super setHidden:hidden];
 	
 	_shadowView.hidden = hidden;
+}
+
+- (void)setContentMode:(UIViewContentMode)contentMode
+{
+	if(self.contentMode != contentMode)
+	{
+		[super setContentMode:contentMode];
+		
+		[_containingBar setNeedsLayout];
+	}
+}
+
+- (void)setImage:(UIImage *)image
+{
+	if([self.image isEqual:image] == NO)
+	{
+		[super setImage:image];
+		
+		[_containingBar setNeedsLayout];
+	}
 }
 
 @end

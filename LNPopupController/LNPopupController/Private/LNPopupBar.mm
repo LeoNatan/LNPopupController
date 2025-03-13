@@ -518,7 +518,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_needsLabelsLayout = YES;
 		
-		_imageView = [_LNPopupBarShadowedImageView new];
+		_imageView = [[_LNPopupBarShadowedImageView alloc] initWithContainingPopupBar:self];;
 		_imageView.autoresizingMask = UIViewAutoresizingNone;
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
@@ -1814,9 +1814,17 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		return CGSizeMake(width, height);
 	}
 	
-	CGSize sizeToUse = _swiftuiImageController ? _swiftuiImageController.preferredContentSize : _imageView.image.size;
+	if(_swiftuiImageController != nil)
+	{
+		return _swiftuiImageController.preferredContentSize;
+	}
 	
-	return LNMakeSizeWithAspectRatioInsideSize(sizeToUse, CGSizeMake(width, height));
+	if(_imageView.contentMode != UIViewContentModeScaleAspectFit)
+	{
+		return CGSizeMake(width, height);
+	}
+	
+	return LNMakeSizeWithAspectRatioInsideSize(_imageView.image.size, CGSizeMake(width, height));
 }
 
 - (void)_layoutImageView
