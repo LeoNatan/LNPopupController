@@ -1121,11 +1121,14 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	if(_swiftuiImageController != nil)
 	{
 		[_swiftuiImageController.view removeFromSuperview];
+		[_swiftuiImageController removeObserver:self forKeyPath:@"preferredContentSize"];
 	}
 	
 	_swiftuiImageController = swiftuiImageController;
 	if(_swiftuiImageController != nil)
 	{
+		[_swiftuiImageController addObserver:self forKeyPath:@"preferredContentSize" options:NSKeyValueObservingOptionNew context:NULL];
+		
 		_swiftuiImageController.view.backgroundColor = UIColor.clearColor;
 		
 		_swiftuiImageController.view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -1816,7 +1819,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	
 	if(_swiftuiImageController != nil)
 	{
-		return _swiftuiImageController.preferredContentSize;
+		return LNMakeSizeWithAspectRatioInsideSize(_swiftuiImageController.preferredContentSize, CGSizeMake(width, height));
 	}
 	
 	if(_imageView.contentMode != UIViewContentModeScaleAspectFit)
@@ -1950,6 +1953,12 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	if([keyPath isEqualToString:@"preferredContentSize"] == YES && object == _customBarViewController)
 	{
 		[self._barDelegate _popupBarMetricsDidChange:self];
+	}
+	
+	if([keyPath isEqualToString:@"preferredContentSize"] == YES && object == _swiftuiImageController)
+	{
+		[self _layoutImageView];
+		[self _setNeedsTitleLayoutRemovingLabels:NO];
 	}
 }
 
