@@ -98,7 +98,7 @@
 
 - (void)setImage:(UIImage *)image
 {
-	if([self.image isEqual:image] == NO)
+	if(self.image != image && [self.image isEqual:image] == NO)
 	{
 		[super setImage:image];
 		

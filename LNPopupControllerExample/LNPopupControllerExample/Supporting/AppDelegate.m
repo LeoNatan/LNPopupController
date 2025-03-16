@@ -12,7 +12,6 @@
 
 @interface NSBundle ()
 
-- (NSString *) localizedStringForKey:(NSString *)arg1 value:(NSString *)arg2 table:(NSString *)arg3 localizations:(id)arg4;
 - (NSAttributedString *)localizedAttributedStringForKey:(NSString *)key value:(NSString *)value table:(NSString *)tableName localization:(id)arg4;
 @end
 
