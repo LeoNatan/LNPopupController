@@ -274,6 +274,11 @@ const double LNSnapPercentDefault = 0.32;
 	return NO;
 }
 
+- (nullable UIView*)viewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState
+{
+	return nil;
+}
+
 - (void)viewWillMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
 {
 	
@@ -481,6 +486,11 @@ const double LNSnapPercentDefault = 0.32;
 	return [self.topViewController positionPopupCloseButton:popupCloseButton];
 }
 
+- (nullable UIView*)viewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState
+{
+	return [self.topViewController viewForPopupTransitionFromPresentationState:fromState toPresentationState:toState];
+}
+
 @end
 
 @implementation UITabBarController (LNPopupSupport)
@@ -488,6 +498,11 @@ const double LNSnapPercentDefault = 0.32;
 - (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton
 {
 	return [self.selectedViewController positionPopupCloseButton:popupCloseButton];
+}
+
+- (nullable UIView*)viewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState
+{
+	return [self.selectedViewController viewForPopupTransitionFromPresentationState:fromState toPresentationState:toState];
 }
 
 @end

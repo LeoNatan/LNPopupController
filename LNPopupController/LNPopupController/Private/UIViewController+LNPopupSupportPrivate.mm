@@ -301,6 +301,15 @@ CF_EXTERN_C_END
 	return [self.class respondsToSelector:NSSelectorFromString(key)] && [[self.class valueForKey:key] boolValue];
 }
 
+- (BOOL)_ln_shouldPopupContentViewFadeForTransition
+{
+	BOOL bottomBarExtensionIsVisible = self._ln_bottomBarExtension_nocreate != nil && self._ln_bottomBarExtension_nocreate.isHidden == NO && self._ln_bottomBarExtension_nocreate.alpha > 0 && self._ln_bottomBarExtension_nocreate.frame.size.height > 0;
+	
+	BOOL bottomBarIsVisible = [self.bottomDockingViewForPopup_internalOrDeveloper isKindOfClass:_LNPopupBottomBarSupport.class] == NO && self.ln_popupController.bottomBar.hidden == NO;
+	
+	return bottomBarExtensionIsVisible == NO && bottomBarIsVisible == NO;
+}
+
 - (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
 {
 	[self _ln_popup_setOverrideUserInterfaceStyle:overrideUserInterfaceStyle];

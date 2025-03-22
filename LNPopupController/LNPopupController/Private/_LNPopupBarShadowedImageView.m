@@ -9,10 +9,30 @@
 #import "_LNPopupBarShadowedImageView.h"
 #import "_LNPopupBackgroundShadowView.h"
 
+@interface _LNPopupBarShadowedImageViewLayer : CALayer @end
+@implementation _LNPopupBarShadowedImageViewLayer
+
+- (void)setCornerRadius:(CGFloat)cornerRadius
+{
+	[(_LNPopupBarShadowedImageView*)self.delegate setCornerRadius:cornerRadius];
+}
+
+- (void)setSuperCornerRadius:(CGFloat)cornerRadius
+{
+	[super setCornerRadius:cornerRadius];
+}
+
+@end
+
 @implementation _LNPopupBarShadowedImageView
 {
 	_LNPopupBackgroundShadowView* _shadowView;
 	__weak LNPopupBar* _containingBar;
+}
+
++ (Class)layerClass
+{
+	return [_LNPopupBarShadowedImageViewLayer class];
 }
 
 - (instancetype)initWithContainingPopupBar:(LNPopupBar *)popupBar
@@ -75,7 +95,7 @@
 - (void)setCornerRadius:(CGFloat)cornerRadius
 {
 	_cornerRadius = cornerRadius;
-	self.layer.cornerRadius = cornerRadius;
+	[(_LNPopupBarShadowedImageViewLayer*)self.layer setSuperCornerRadius:cornerRadius];
 	_shadowView.cornerRadius = cornerRadius;
 }
 
@@ -84,6 +104,13 @@
 	[super setHidden:hidden];
 	
 	_shadowView.hidden = hidden;
+}
+
+- (void)setAlpha:(CGFloat)alpha
+{
+	[super setAlpha:alpha];
+	
+	_shadowView.alpha = alpha;
 }
 
 - (void)setContentMode:(UIViewContentMode)contentMode

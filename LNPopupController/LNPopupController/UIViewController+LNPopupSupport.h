@@ -53,43 +53,6 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 	LNPopupPresentationStateTransitioning LN_UNAVAILABLE_API("Should no longer be used.") = 2,
 } NS_SWIFT_NAME(UIViewController.PopupPresentationState);
 
-/// Popup content support for ``UIViewController`` subclasses.
-@interface UIViewController (LNPopupContent)
-
-/// The popup item used to represent the view controller in a popup presentation. (read-only)
-///
-/// This is a unique instance of ``LNPopupItem``, created to represent the view controller when it is presented in a popup. The ``LNPopupItem`` object is created the first time the property is accessed. Therefore, you should not access this property if you are not using popup presentation to display the view controller. To ensure the popup item is configured, you can either override this property and add code to create the bar button items when first accessed or create the items in your view controller's initialization code.
-///
-/// The default behavior is to create a popup item that displays the view controller's title.
-@property (nonatomic, retain, readonly) LNPopupItem* popupItem;
-
-/// Return the view to which the popup interaction gesture recognizer should be added to.
-///
-/// The default implementation returns the controller's view. @see `UIViewController.popupContentView`
-@property (nonatomic, strong, readonly) __kindof UIView* viewForPopupInteractionGestureRecognizer;
-
-/// The popup presentation container view controller of the receiver. If the receiver is not part of a popup presentation, the property will be @c nil. (read-only)
-@property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
-
-/// Gives the popup content controller the opportunity to place the popup close button within its own view hierarchy, instead of the system-defined placement.
-///
-/// The default implementation of this method does nothing and returns `false`.
-///
-/// - Returns: Return `true` if the popup close button has been positioned in the controller's view hierarchy, or `false` to allow the system to handle positioning of the button.
-- (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton;
-
-/// Called to notify the view controller that its view is about to be added to the container controller's popup content view.
-///
-/// - Parameter popupContentView: The popup content view, or `nil`.
-- (void)viewWillMoveToPopupContainerContentView:(nullable LNPopupContentView*)popupContentView NS_REQUIRES_SUPER;
-
-/// Called to notify the view controller that its view has just been added to the container controller's popup content view.
-///
-/// - Parameter popupContentView: The popup content view, or `nil`.
-- (void)viewDidMoveToPopupContainerContentView:(nullable LNPopupContentView*)popupContentView NS_REQUIRES_SUPER;
-
-@end
-
 NS_SWIFT_UI_ACTOR
 /// A set of methods, used to respond to popup presentation changes.
 @protocol LNPopupPresentationDelegate <NSObject>
@@ -254,6 +217,56 @@ NS_SWIFT_UI_ACTOR
 ///
 /// @warning This API is experimental and will probably change in the future. Use with care.
 @property (nonatomic, readonly) UIEdgeInsets insetsForBottomDockingView;
+
+@end
+
+/// Popup content support for ``UIViewController`` subclasses.
+@interface UIViewController (LNPopupContent)
+
+/// The popup item used to represent the view controller in a popup presentation. (read-only)
+///
+/// This is a unique instance of ``LNPopupItem``, created to represent the view controller when it is presented in a popup. The ``LNPopupItem`` object is created the first time the property is accessed. Therefore, you should not access this property if you are not using popup presentation to display the view controller. To ensure the popup item is configured, you can either override this property and add code to create the bar button items when first accessed or create the items in your view controller's initialization code.
+///
+/// The default behavior is to create a popup item that displays the view controller's title.
+@property (nonatomic, retain, readonly) LNPopupItem* popupItem;
+
+/// Return the view to which the popup interaction gesture recognizer should be added to.
+///
+/// The default implementation returns the controller's view. @see `UIViewController.popupContentView`
+@property (nonatomic, strong, readonly) __kindof UIView* viewForPopupInteractionGestureRecognizer;
+
+/// The popup presentation container view controller of the receiver. If the receiver is not part of a popup presentation, the property will be @c nil. (read-only)
+@property (nullable, nonatomic, weak, readonly) __kindof UIViewController* popupPresentationContainerViewController;
+
+/// Gives the popup content controller the opportunity to place the popup close button within its own view hierarchy, instead of the system-defined placement.
+///
+/// The default implementation of this method does nothing and returns `false`.
+///
+/// - Returns: Return `true` if the popup close button has been positioned in the controller's view hierarchy, or `false` to allow the system to handle positioning of the button.
+- (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton;
+
+/// Asks the popup content controller to provide a view for transitioning from `fromState` to `toState`. For no transition, return `nil`. If a valid view is provided, the system will transition between the view and popup bar image view.
+///
+/// For best results, return a view that is either an image view or a view that draws an image similar to that shown in the popup bar image view. The system will attempt to match the attributes of the provided view and the popup bar image view as closly as possible to smoothly transition between them.
+///
+/// The returned view must be in the view hierarchy of the popup content controller or it will be ignored and no transition will take place.
+///
+/// The default implementation of this method returns `nil` and no transition is performed.
+///
+/// - Note: Transitions are only available for prominent and floating popup bar styles drag interaction style. Any other combination will result with no transition and this method will not be called by the system.
+///
+/// - Returns: Return `nil` for no transition or a valid view to transition to or from.
+- (nullable UIView*)viewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState NS_SWIFT_NAME(viewForPopupTransition(from:to:));
+
+/// Called to notify the view controller that its view is about to be added to the container controller's popup content view.
+///
+/// - Parameter popupContentView: The popup content view, or `nil`.
+- (void)viewWillMoveToPopupContainerContentView:(nullable LNPopupContentView*)popupContentView NS_REQUIRES_SUPER;
+
+/// Called to notify the view controller that its view has just been added to the container controller's popup content view.
+///
+/// - Parameter popupContentView: The popup content view, or `nil`.
+- (void)viewDidMoveToPopupContainerContentView:(nullable LNPopupContentView*)popupContentView NS_REQUIRES_SUPER;
 
 @end
 

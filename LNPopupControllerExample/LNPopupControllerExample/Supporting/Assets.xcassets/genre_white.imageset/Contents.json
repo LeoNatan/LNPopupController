@@ -3,6 +3,16 @@
     {
       "filename" : "genre_white.png",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "genre_black.png",
+      "idiom" : "universal"
     }
   ],
   "info" : {

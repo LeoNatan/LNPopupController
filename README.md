@@ -8,7 +8,7 @@ For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPop
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/graphs/contributors) [![Swift Package Manager compatible](https://img.shields.io/badge/swift%20package%20manager-compatible-green)](https://swift.org/package-manager/) [![Carthage compatible](https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-<p align="center"><img src="./Supplements/open_floating_popup.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/open_floating_popup.gif"/></p>
 
 Once a popup bar is presented with a content view controller, the user can swipe or tap the popup bar at any point to present the popup. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
 

@@ -79,6 +79,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (BOOL)_ln_isObjectFromSwiftUI;
 
+- (BOOL)_ln_shouldPopupContentViewFadeForTransition;
+
 @end
 
 @interface _LN_UIViewController_AppearanceControl : UIViewController @end
