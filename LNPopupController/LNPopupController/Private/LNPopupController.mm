@@ -373,40 +373,48 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransitionViewKey;
 
-- (void)animateOpenTransitionIfNeededWithUserTransitionView:(UIView*)userView
+- (void)animateOpenTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
 	if(userView == nil)
 	{
 		return;
 	}
 	
-	__block CGRect targetFrame;
+	__block CGRect sourceFrame;
 	__block _LNPopupTransitionView* transitionView;
 	__block NSShadow* targetShadow;
 	[UIView performWithoutAnimation:^{
 		[self.popupContentView layoutIfNeeded];
 		self.popupBar.imageView.alpha = 0.0;
 		
-		targetFrame = [self.popupContentView convertRect:userView.bounds fromView:userView];
-		CGRect sourceFrame = [self.popupBar.imageView.window convertRect:self.popupBar.imageView.bounds fromView:self.popupBar.imageView];
+		sourceFrame = [self.popupBar.imageView.window convertRect:self.popupBar.imageView.bounds fromView:self.popupBar.imageView];
 		
 		transitionView = [[_LNPopupTransitionView alloc] initWithFrame:sourceFrame sourceView:userView];
-		CGFloat ratioX = sourceFrame.size.width / targetFrame.size.width;
-		CGFloat ratioY = sourceFrame.size.height / targetFrame.size.height;
-		transitionView.sourceViewTransform = CGAffineTransformMakeScale(ratioX, ratioY);
 		transitionView.shadow = [((_LNPopupBarShadowedImageView*)self.popupBar.imageView).shadow copy];
 		
 		targetShadow = [transitionView.shadow copy];
 		targetShadow.shadowColor = [targetShadow.shadowColor colorWithAlphaComponent:0.0];
 		
 		objc_setAssociatedObject(userView, _LNPopupOpenCloseTransitionViewKey, transitionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-		
-		[self.popupContentView.window addSubview:transitionView];
 	}];
 	
-	transitionView.frame = targetFrame;
-	transitionView.sourceViewTransform = CGAffineTransformIdentity;
-	transitionView.shadow = targetShadow;
+	[animator addAnimations:otherAnimations];
+	
+	[animator addAnimations:^{
+		__block CGRect targetFrame;
+		[UIView performWithoutAnimation:^{
+			targetFrame = [self.popupContentView.window convertRect:userView.bounds fromView:userView];
+			CGFloat ratioX = sourceFrame.size.width / targetFrame.size.width;
+			CGFloat ratioY = sourceFrame.size.height / targetFrame.size.height;
+			transitionView.sourceViewTransform = CGAffineTransformMakeScale(ratioX, ratioY);
+			
+			[self.popupContentView.window addSubview:transitionView];
+		}];
+		
+		transitionView.frame = targetFrame;
+		transitionView.sourceViewTransform = CGAffineTransformIdentity;
+		transitionView.shadow = targetShadow;
+	}];
 }
 
 - (void)completeOpenTransitionIfNeededWithUserTransitionView:(UIView*)userView
@@ -419,7 +427,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	}];
 }
 
-- (void)animateCloseTransitionIfNeededWithUserTransitionView:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
+- (void)animateCloseTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
 	if(userView == nil)
 	{
@@ -438,7 +446,6 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		transitionView = [[_LNPopupTransitionView alloc] initWithFrame:sourceFrame sourceView:userView];
 		
 		_LNPopupBarShadowedImageView* imageView = (id)self.popupBar.imageView;
-		transitionView.cornerRadius = imageView.cornerRadius;
 		
 		targetShadow = [imageView.shadow copy];
 		
@@ -451,21 +458,30 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		[self.popupContentView.window addSubview:transitionView];
 	}];
 	
-	otherAnimations();
+	[animator addAnimations:^{
+		otherAnimations();
+		
+		CGRect targetFrame = [self.popupBar.imageView.window convertRect:self.popupBar.imageView.bounds fromView:self.popupBar.imageView];
+		[transitionView setTargetFrameUpdatingTransform:targetFrame];
+		
+		transitionView.shadow = targetShadow;
+		
+		if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
+		{
+			self.popupContentView.alpha = 0.0;
+		}
+		else
+		{
+			self.currentContentController.view.alpha = 0.0;
+		}
+	}];
 	
-	CGRect targetFrame = [self.popupBar.imageView.window convertRect:self.popupBar.imageView.bounds fromView:self.popupBar.imageView];
-	[transitionView setTargetFrameUpdatingTransform:targetFrame];
-	
-	transitionView.shadow = targetShadow;
-	
-	if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
-	{
-		self.popupContentView.alpha = 0.0;
-	}
-	else
-	{
-		self.currentContentController.view.alpha = 0.0;
-	}
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((animator.duration * 0.38) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		[animator addAnimations:^{
+			_LNPopupBarShadowedImageView* imageView = (id)self.popupBar.imageView;
+			transitionView.cornerRadius = imageView.cornerRadius;
+		}];
+	});
 }
 
 - (void)completeCloseTransitionIfNeededWithUserTransitionView:(UIView*)userView
@@ -717,20 +733,15 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	
 	if(stateAtStart == LNPopupPresentationStateBarPresented && userView != nil)
 	{
-		[_runningPopupAnimation addAnimations:^{
-			[self animateOpenTransitionIfNeededWithUserTransitionView:userView];
-		}];
+		[self animateOpenTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:userView otherAnimations:animationBlock];
 		
 		[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
 			[self completeOpenTransitionIfNeededWithUserTransitionView:userView];
 		}];
 	}
-	
-	if(state == LNPopupPresentationStateBarPresented && userView != nil)
+	else if(state == LNPopupPresentationStateBarPresented && userView != nil)
 	{
-		[_runningPopupAnimation addAnimations:^{
-			[self animateCloseTransitionIfNeededWithUserTransitionView:userView otherAnimations:animationBlock];
-		}];
+		[self animateCloseTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:userView otherAnimations:animationBlock];
 		
 		[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
 			[self completeCloseTransitionIfNeededWithUserTransitionView:userView];

@@ -64,7 +64,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 @implementation DemoPopupContentViewController
 {
 	NSInteger _lastStyle;
-	UIImageView* _transitionImageView;
+	UIView* _transitionView;
 }
 
 - (void)loadView
@@ -76,6 +76,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 {
 	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self _setPopupItemButtonsWithTraitCollection:newCollection animated:context.animated];
+		[self updateTransitionViewShadowColor];
 	} completion:nil];
 	
 	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
@@ -186,6 +187,28 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	return self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassCompact;
 }
 
+- (void)updateTransitionViewShadowColor
+{
+	_transitionView.layer.shadowOffset = CGSizeZero;
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableCustomizations])
+	{
+		_transitionView.layer.shadowColor = UIColor.yellowColor.CGColor;
+		_transitionView.layer.shadowOpacity = 1.0;
+	}
+	else
+	{
+		_transitionView.layer.shadowColor = UIColor.blackColor.CGColor;
+		if(_transitionView.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+		{
+			_transitionView.layer.shadowOpacity = 0.333333;
+		}
+		else
+		{
+			_transitionView.layer.shadowOpacity = 0.666667;
+		}
+	}
+}
+
 - (void)viewDidMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
 {
 	[super viewDidMoveToPopupContainerContentView:popupContentView];
@@ -223,29 +246,42 @@ void LNApplyTitleWithSettings(UIViewController* self)
 //			[self.view.layoutMarginsGuide.bottomAnchor constraintEqualToAnchor:layoutMarginsMask.bottomAnchor],
 //		]];
 		
-		_transitionImageView = [UIImageView new];
-		_transitionImageView.layer.cornerRadius = 30.0;
-		_transitionImageView.layer.cornerCurve = kCACornerCurveContinuous;
-		_transitionImageView.layer.masksToBounds = YES;
-		_transitionImageView.backgroundColor = UIColor.greenColor;
-		_transitionImageView.translatesAutoresizingMaskIntoConstraints = NO;
+		UIImageView* transitionImageView = [UIImageView new];
+		transitionImageView.layer.cornerRadius = 30.0;
+		transitionImageView.layer.cornerCurve = kCACornerCurveContinuous;
+		transitionImageView.layer.masksToBounds = YES;
+		transitionImageView.translatesAutoresizingMaskIntoConstraints = NO;
 		
-		NSLayoutConstraint* leading = [_transitionImageView.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.view.layoutMarginsGuide.leadingAnchor];
+		_transitionView = [UIView new];
+		_transitionView.layer.shadowRadius = 15.0;
+		_transitionView.translatesAutoresizingMaskIntoConstraints = NO;
+		[self updateTransitionViewShadowColor];
+		
+		[_transitionView addSubview:transitionImageView];
+		[NSLayoutConstraint activateConstraints:@[
+			[_transitionView.leadingAnchor constraintEqualToAnchor:transitionImageView.leadingAnchor],
+			[_transitionView.trailingAnchor constraintEqualToAnchor:transitionImageView.trailingAnchor],
+			[_transitionView.topAnchor constraintEqualToAnchor:transitionImageView.topAnchor],
+			[_transitionView.bottomAnchor constraintEqualToAnchor:transitionImageView.bottomAnchor],
+		]];
+		
+		
+		NSLayoutConstraint* leading = [_transitionView.leadingAnchor constraintGreaterThanOrEqualToAnchor:self.view.layoutMarginsGuide.leadingAnchor];
 		leading.priority = UILayoutPriorityDefaultHigh;
-		NSLayoutConstraint* trailing = [_transitionImageView.trailingAnchor constraintGreaterThanOrEqualToAnchor:self.view.layoutMarginsGuide.trailingAnchor];
+		NSLayoutConstraint* trailing = [_transitionView.trailingAnchor constraintGreaterThanOrEqualToAnchor:self.view.layoutMarginsGuide.trailingAnchor];
 		trailing.priority = UILayoutPriorityDefaultHigh;
 		
-		[self.view addSubview:_transitionImageView];
+		[self.view addSubview:_transitionView];
 		[NSLayoutConstraint activateConstraints:@[
 			leading,
 			trailing,
-			[_transitionImageView.widthAnchor constraintLessThanOrEqualToConstant:400],
-			[_transitionImageView.centerXAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.centerXAnchor],
-			[_transitionImageView.topAnchor constraintGreaterThanOrEqualToAnchor:popupContentView.popupCloseButton.bottomAnchor constant:20],
-			[_transitionImageView.widthAnchor constraintEqualToAnchor:_transitionImageView.heightAnchor],
+			[_transitionView.widthAnchor constraintLessThanOrEqualToConstant:400],
+			[_transitionView.centerXAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.centerXAnchor],
+			[_transitionView.topAnchor constraintGreaterThanOrEqualToAnchor:popupContentView.popupCloseButton.bottomAnchor constant:20],
+			[_transitionView.widthAnchor constraintEqualToAnchor:_transitionView.heightAnchor],
 		]];
 		
-		_transitionImageView.image = self.popupItem.image;
+		transitionImageView.image = self.popupItem.image;
 	}
 	else
 	{
@@ -370,7 +406,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		return nil;
 	}
 	
-	return _transitionImageView;
+	return _transitionView;
 }
 
 - (void)_closePopup

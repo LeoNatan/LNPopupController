@@ -195,7 +195,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 			self.updateBarItems(with: self.traitCollection)
 		}
 		
-		timer = Timer(timeInterval: 0.01, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
+		timer = Timer(timeInterval: 0.02, target: self, selector: #selector(DemoMusicPlayerController._timerTicked(_:)), userInfo: nil, repeats: true)
 		RunLoop.current.add(timer!, forMode: .common)
 		
 		accessibilityDateComponentsFormatter.unitsStyle = .spellOut
