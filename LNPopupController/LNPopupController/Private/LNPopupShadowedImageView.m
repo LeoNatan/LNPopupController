@@ -2,8 +2,8 @@
 //  LNPopupShadowedImageView.m
 //  LNPopupController
 //
-//  Created by Léo Natan on 2023-10-16.
-//  Copyright © 2015-2024 Léo Natan. All rights reserved.
+//  Created by Léo Natan on 2025-03-24.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupShadowedImageView+Private.h"
