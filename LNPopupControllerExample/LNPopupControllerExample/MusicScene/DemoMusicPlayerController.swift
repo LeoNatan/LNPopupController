@@ -23,32 +23,25 @@ fileprivate struct BackgroundView: UIViewRepresentable {
 
 fileprivate struct PopupTransitionImage: UIViewRepresentable {
 	let uiImage: UIImage
-	let imageView = UIImageView()
 	
-	func makeUIView(context: Context) -> UIView {
-		imageView.image = uiImage
-		imageView.layer.cornerRadius = 8.0
-		imageView.layer.cornerCurve = .continuous
-		imageView.layer.masksToBounds = true
+	func makeUIView(context: Context) -> LNPopupShadowedImageView {
+		let rv = LNPopupShadowedImageView()
+		rv.image = uiImage
+		rv.cornerRadius = 8.0
 		
-		let rv = UIView()
-		imageView.frame = rv.bounds
-		imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		rv.addSubview(imageView)
-
-		rv.layer.shadowColor = UIColor.black.cgColor
-		rv.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-		rv.layer.shadowOpacity = 0.5
-		rv.layer.shadowRadius = 10.0
-		rv.layer.masksToBounds = false
-
+		let shadow = NSShadow()
+		shadow.shadowOffset = .zero
+		shadow.shadowColor = UIColor.black.withAlphaComponent(0.5)
+		shadow.shadowBlurRadius = 10.0
+		
+		rv.shadow = shadow
 		rv.tag = 111
 
 		return rv
 	}
 	
-	func updateUIView(_ uiView: UIView, context: Context) {
-		imageView.image = uiImage
+	func updateUIView(_ uiView: LNPopupShadowedImageView, context: Context) {
+		uiView.image = uiImage
 	}
 }
 

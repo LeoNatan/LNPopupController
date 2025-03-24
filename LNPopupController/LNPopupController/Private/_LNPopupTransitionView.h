@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "_LNPopupBackgroundShadowView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -11,7 +11,6 @@
 @implementation _LNPopupBackgroundShadowView
 {
 	CAShapeLayer* _maskLayer;
-	UIColor* _color;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame

@@ -11,6 +11,7 @@
 #import <LNPopupController/LNPopupItem.h>
 #import <LNPopupController/LNPopupCustomBarViewController.h>
 #import <LNPopupController/LNPopupBarAppearance.h>
+#import <LNPopupController/LNPopupShadowedImageView.h>
 
 #define LN_UNAVAILABLE_PREVIEWING_MSG "Add context menu interaction or register for previewing directly on the popup bar view."
 
@@ -73,7 +74,7 @@ NS_SWIFT_UI_ACTOR
 @property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
 
 /// An image view displayed when the bar style is prominent. (read-only)
-@property (nonatomic, strong, readonly) UIImageView* imageView;
+@property (nonatomic, strong, readonly) LNPopupShadowedImageView* imageView;
 
 /// The popup bar style.
 @property (nonatomic, assign) LNPopupBarStyle barStyle UI_APPEARANCE_SELECTOR;

@@ -12,7 +12,7 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
 #import "NSAttributedString+LNPopupSupport.h"
-#import "_LNPopupBarShadowedImageView.h"
+#import "LNPopupShadowedImageView+Private.h"
 #import "UIView+LNPopupSupportPrivate.h"
 
 #ifdef DEBUG
@@ -296,7 +296,7 @@ __attribute__((objc_direct_members))
 {
 	BOOL _delaysBarButtonItemLayout;
 	
-	UIImageView* _imageView;
+	LNPopupShadowedImageView* _imageView;
 	
 	_LNPopupBarTitlesView* _titlesView;
 	NSLayoutConstraint* _titlesViewLeadingConstraint;
@@ -518,14 +518,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_needsLabelsLayout = YES;
 		
-		_imageView = [[_LNPopupBarShadowedImageView alloc] initWithContainingPopupBar:self];;
+		_imageView = [[LNPopupShadowedImageView alloc] initWithContainingPopupBar:self];;
 		_imageView.autoresizingMask = UIViewAutoresizingNone;
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
 		_imageView.isAccessibilityElement = YES;
 		_imageView.layer.cornerCurve = kCACornerCurveContinuous;
-		_imageView.layer.masksToBounds = YES;
-		static_cast<_LNPopupBarShadowedImageView*>(_imageView).cornerRadius = 6;
+		_imageView.cornerRadius = 6;
 		
 		// support smart invert and therefore do not invert image view colors
 		_imageView.accessibilityIgnoresInvertColors = YES;
@@ -1054,7 +1053,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	_floatingBackgroundShadowView.shadow = self.activeAppearance.floatingBarBackgroundShadow;
 	
-	static_cast<_LNPopupBarShadowedImageView*>(_imageView).shadow = self.activeAppearance.imageShadow;
+	_imageView.shadow = self.activeAppearance.imageShadow;
 
 	[self.customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 	

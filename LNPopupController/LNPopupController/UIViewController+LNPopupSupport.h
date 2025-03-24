@@ -247,15 +247,17 @@ NS_SWIFT_UI_ACTOR
 
 /// Asks the popup content controller to provide a view for transitioning from `fromState` to `toState`. For no transition, return `nil`. If a valid view is provided, the system will transition between the view and popup bar image view.
 ///
-/// For best results, return a view that is either an image view or a view that draws an image similar to that shown in the popup bar image view. The system will attempt to match the attributes of the provided view and the popup bar image view as closly as possible to smoothly transition between them.
+/// For optimal results, return a `LNPopupShadowedImageView` instance that displays the same image displayed in the popup bar. The system will smoothly transition between the popup bar image view and the `LNPopupShadowedImageView` instance, taking into account the corner radii and shadows of the views.
 ///
-/// The returned view must be in the view hierarchy of the popup content controller or it will be ignored and no transition will take place.
+/// You can also return any other view in the popup content hierarchy. The system will attempt to match the attributes of the provided view and the popup bar image view as closely as possible to smoothly transition between them.
+///
+/// **The returned view must be in the view hierarchy of the popup content controller** or it will be ignored and no transition will take place.
 ///
 /// The default implementation of this method returns `nil` and no transition is performed.
 ///
-/// - Note: Transitions are only available for prominent and floating popup bar styles drag interaction style. Any other combination will result with no transition and this method will not be called by the system.
+/// - Note: Transitions are only available for prominent and floating popup bar styles and drag interaction style. Any other combination will result with no transition and this method will not be called by the system.
 ///
-/// - Returns: Return `nil` for no transition or a valid view to transition to or from.
+/// - Returns: Return `nil` for no transition or a valid view to transition to and/or from.
 - (nullable UIView*)viewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState NS_SWIFT_NAME(viewForPopupTransition(from:to:));
 
 /// Called to notify the view controller that its view is about to be added to the container controller's popup content view.
