@@ -12,7 +12,7 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
 #import "NSAttributedString+LNPopupSupport.h"
-#import "LNPopupShadowedImageView+Private.h"
+#import "LNPopupImageView+Private.h"
 #import "UIView+LNPopupSupportPrivate.h"
 
 #ifdef DEBUG
@@ -296,7 +296,7 @@ __attribute__((objc_direct_members))
 {
 	BOOL _delaysBarButtonItemLayout;
 	
-	LNPopupShadowedImageView* _imageView;
+	LNPopupImageView* _imageView;
 	
 	_LNPopupBarTitlesView* _titlesView;
 	NSLayoutConstraint* _titlesViewLeadingConstraint;
@@ -518,7 +518,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_needsLabelsLayout = YES;
 		
-		_imageView = [[LNPopupShadowedImageView alloc] initWithContainingPopupBar:self];;
+		_imageView = [[LNPopupImageView alloc] initWithContainingPopupBar:self];;
 		_imageView.autoresizingMask = UIViewAutoresizingNone;
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;

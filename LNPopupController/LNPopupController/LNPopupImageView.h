@@ -1,5 +1,5 @@
 //
-//  LNPopupShadowedImageView.h
+//  LNPopupImageView.h
 //  LNPopupController
 //
 //  Created by Léo Natan on 2025-03-24.
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// When used inside a popup content view, instances of this class are especially suited as image transition targets.
 ///
 /// See `UIViewController.viewForPopupTransition(from:to:)`.
-@interface LNPopupShadowedImageView : UIImageView
+@interface LNPopupImageView : UIImageView
 
 /// The corner radius of the image view.
 @property (nonatomic, assign) CGFloat cornerRadius;

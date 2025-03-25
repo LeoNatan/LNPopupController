@@ -7,12 +7,14 @@
 //
 
 #if LNPOPUP
-@objc public class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
+@objc public
+class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 	let centeredButton = UIButton(type: .system)
 	let leftButton = UIButton(type: .system)
 	let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
 	
-	public override func viewDidLoad() {
+	public
+override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		view.autoresizingMask = []
@@ -50,7 +52,8 @@
 		}
 	}
 	
-	public override func viewDidLayoutSubviews() {
+	public
+override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
 		let insetLeft = CGFloat.maximum(view.safeAreaInsets.left, 20)
@@ -65,15 +68,18 @@
 		}
 	}
 	
-	public override var wantsDefaultTapGestureRecognizer: Bool {
+	public
+override var wantsDefaultTapGestureRecognizer: Bool {
 		return false
 	}
 	
-	public override var wantsDefaultPanGestureRecognizer: Bool {
+	public
+override var wantsDefaultPanGestureRecognizer: Bool {
 		return false
 	}
 	
-	public override var wantsDefaultHighlightGestureRecognizer: Bool {
+	public
+override var wantsDefaultHighlightGestureRecognizer: Bool {
 		return false
 	}
 }

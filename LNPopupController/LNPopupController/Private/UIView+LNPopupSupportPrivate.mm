@@ -292,7 +292,6 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	NSArray* rv = [self _ln_rSTTV];
 	NSMutableArray* popupRV = [NSMutableArray new];
 	
-	//_viewControllerForAncestor
 	static NSString* vCFA = LNPopupHiddenString("_viewControllerForAncestor");
 	
 	for(UIView* scrollToTopCandidate in rv)

@@ -1,12 +1,15 @@
 //
-//  LNPopupShadowedImageView.m
+//  LNPopupImageView.mm
 //  LNPopupController
 //
 //  Created by Léo Natan on 2025-03-24.
 //  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
-#import "LNPopupShadowedImageView+Private.h"
+#import "LNPopupImageView+Private.h"
+#import "_LNPopupBase64Utils.hh"
+#import "UIViewController+LNPopupSupportPrivate.h"
+#import <LNPopupController/UIViewController+LNPopupSupport.h>
 
 @interface _LNPopupBarImageContentLayer: CALayer @end
 @implementation _LNPopupBarImageContentLayer
@@ -36,10 +39,18 @@
 		_imageContentsLayer = [_LNPopupBarImageContentLayer layer];
 		_imageContentsLayer.masksToBounds = YES;
 		_imageContentsLayer.cornerCurve = kCACornerCurveContinuous;
-		[self addSublayer:_imageContentsLayer];
+		[super addSublayer:_imageContentsLayer];
 	}
 	
 	return self;
+}
+
+- (void)addSublayer:(CALayer *)layer
+{
+	layer.masksToBounds = YES;
+	layer.cornerCurve = kCACornerCurveContinuous;
+	layer.cornerRadius = _imageContentsLayer.cornerRadius;
+	[super addSublayer:layer];
 }
 
 - (void)layoutSublayers
@@ -50,13 +61,19 @@
 
 - (void)setCornerRadius:(CGFloat)cornerRadius
 {
-	[(LNPopupShadowedImageView*)self.delegate setCornerRadius:cornerRadius];
+	[(LNPopupImageView*)self.delegate setCornerRadius:cornerRadius];
 }
 
 - (void)setSuperCornerRadius:(CGFloat)cornerRadius
 {
-//	super.cornerRadius = cornerRadius;
 	_imageContentsLayer.cornerRadius = cornerRadius;
+	for(CALayer* sublayer in self.sublayers)
+	{
+		if(sublayer != _imageContentsLayer)
+		{
+			sublayer.cornerRadius = cornerRadius;
+		}
+	}
 }
 
 - (void)setContents:(id)contents
@@ -64,14 +81,9 @@
 	[_imageContentsLayer setContents:contents];
 }
 
-//- (void)setMasksToBounds:(BOOL)masksToBounds
-//{
-//	NSLog(@"Fuck off!");
-//}
-
 @end
 
-@implementation LNPopupShadowedImageView
+@implementation LNPopupImageView
 {
 	__weak LNPopupBar* _containingBar;
 }
@@ -200,4 +212,24 @@
 	}
 }
 
+- (void)didMoveToWindow
+{
+	if(self.window == nil || _containingBar != nil)
+	{
+		return;
+	}
+	
+	static NSString* vCFA = LNPopupHiddenString("_viewControllerForAncestor");
+	
+	UIViewController* candidate = [self valueForKey:vCFA];
+	candidate.ln_discoveredTransitionView = self;
+}
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%@ cornerRadius: %@ shadow: %@", super.description, @(self.cornerRadius), self.shadow];
+}
+
 @end
+
+@implementation LNPopupImageView (TransitionSupport) @end

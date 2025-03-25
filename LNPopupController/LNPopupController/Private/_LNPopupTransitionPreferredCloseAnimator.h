@@ -7,12 +7,13 @@
 //
 
 #import "_LNPopupTransitionCloseAnimator.h"
+#import <LNPopupController/UIViewController+LNPopupSupport.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupTransitionPreferredCloseAnimator : _LNPopupTransitionCloseAnimator
 
-@property (nonatomic, strong, readonly) LNPopupShadowedImageView* view;
+@property (nonatomic, strong, readonly) UIView<LNPopupTransitionView>* view;
 
 @end
 

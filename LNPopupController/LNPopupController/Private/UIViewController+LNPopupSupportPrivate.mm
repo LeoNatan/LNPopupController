@@ -484,21 +484,6 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 }
 
-- (UIViewController*)_findAncestorParentPopupContainerController
-{
-	if(self._ln_popupController_nocreate)
-	{
-		return self;
-	}
-	
-	if(self.parentViewController == nil)
-	{
-		return nil;
-	}
-	
-	return [self.parentViewController _findAncestorParentPopupContainerController];
-}
-
 - (UIViewController*)_findChildInPopupPresentation
 {
 	if(self._ln_popupController_nocreate)

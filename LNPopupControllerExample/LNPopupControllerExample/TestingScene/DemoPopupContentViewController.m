@@ -64,7 +64,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 @implementation DemoPopupContentViewController
 {
 	NSInteger _lastStyle;
-	LNPopupShadowedImageView* _preferredTransitionView;
+	LNPopupImageView* _preferredTransitionView;
 	UIView* _genericTransitionView;
 }
 
@@ -244,7 +244,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		NSShadow* shadow = [NSShadow new];
 		shadow.shadowBlurRadius = 15.0;
 		
-		_preferredTransitionView = [[LNPopupShadowedImageView alloc] initWithImage:self.popupItem.image];
+		_preferredTransitionView = [[LNPopupImageView alloc] initWithImage:self.popupItem.image];
 		_preferredTransitionView.shadow = shadow;
 		_preferredTransitionView.cornerRadius = 30.0;
 		_preferredTransitionView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -425,7 +425,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	switch([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType])
 	{
 		case 0:
-			return _preferredTransitionView;
+			return [super viewForPopupTransitionFromPresentationState:fromState toPresentationState:toState];
 		case 1:
 			return _genericTransitionView;
 		default:

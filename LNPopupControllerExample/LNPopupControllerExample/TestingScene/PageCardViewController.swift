@@ -11,14 +11,16 @@ import UIKit
 class PageCardViewController: UIViewController {
 	@IBOutlet var cardView: UIView!
 	@IBOutlet var indexLabel: UILabel!
-	public var prefix: String? = nil {
+	public
+var prefix: String? = nil {
 		didSet {
 			if isViewLoaded {
 				indexLabel.text = "\(prefix == nil ? "" : prefix!)\(index)"
 			}
 		}
 	}
-	public var index: Int = -1 {
+	public
+var index: Int = -1 {
 		didSet {
 			if isViewLoaded {
 				indexLabel.text = "\(prefix == nil ? "" : prefix!)\(index)"

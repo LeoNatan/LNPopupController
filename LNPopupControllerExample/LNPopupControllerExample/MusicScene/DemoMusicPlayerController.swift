@@ -24,8 +24,8 @@ fileprivate struct BackgroundView: UIViewRepresentable {
 fileprivate struct PopupTransitionImage: UIViewRepresentable {
 	let uiImage: UIImage
 	
-	func makeUIView(context: Context) -> LNPopupShadowedImageView {
-		let rv = LNPopupShadowedImageView()
+	func makeUIView(context: Context) -> LNPopupImageView {
+		let rv = LNPopupImageView()
 		rv.image = uiImage
 		rv.cornerRadius = 8.0
 		
@@ -33,14 +33,12 @@ fileprivate struct PopupTransitionImage: UIViewRepresentable {
 		shadow.shadowOffset = .zero
 		shadow.shadowColor = UIColor.black.withAlphaComponent(0.5)
 		shadow.shadowBlurRadius = 10.0
-		
 		rv.shadow = shadow
-		rv.tag = 111
 
 		return rv
 	}
 	
-	func updateUIView(_ uiView: LNPopupShadowedImageView, context: Context) {
+	func updateUIView(_ uiView: LNPopupImageView, context: Context) {
 		uiView.image = uiImage
 	}
 }
@@ -277,10 +275,6 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		self.view.setNeedsLayout()
 		return true
 		#endif
-	}
-	
-	override func viewForPopupTransition(from fromState: UIViewController.PopupPresentationState, to toState: UIViewController.PopupPresentationState) -> UIView? {
-		view.viewWithTag(111)
 	}
 	
 	override func viewDidLoad() {

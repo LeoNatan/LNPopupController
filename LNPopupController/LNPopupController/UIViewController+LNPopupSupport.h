@@ -220,6 +220,17 @@ NS_SWIFT_UI_ACTOR
 
 @end
 
+@protocol LNPopupTransitionView <NSObject>
+
+/// The corner radius of the image view.
+@property (nonatomic, assign) CGFloat cornerRadius;
+/// The shadow displayed underneath the image view.
+@property (nonatomic, copy) NSShadow* shadow;
+
+@end
+
+@interface LNPopupImageView (TransitionSupport) <LNPopupTransitionView> @end
+
 /// Popup content support for ``UIViewController`` subclasses.
 @interface UIViewController (LNPopupContent)
 
@@ -247,7 +258,7 @@ NS_SWIFT_UI_ACTOR
 
 /// Asks the popup content controller to provide a view for transitioning from `fromState` to `toState`. For no transition, return `nil`. If a valid view is provided, the system will transition between the view and popup bar image view.
 ///
-/// For optimal results, return a `LNPopupShadowedImageView` instance that displays the same image displayed in the popup bar. The system will smoothly transition between the popup bar image view and the `LNPopupShadowedImageView` instance, taking into account the corner radii and shadows of the views.
+/// For optimal results, return a `LNPopupImageView` instance that displays the same image displayed in the popup bar. The system will smoothly transition between the popup bar image view and the `LNPopupImageView` instance, taking into account the corner radii and shadows of the views.
 ///
 /// You can also return any other view in the popup content hierarchy. The system will attempt to match the attributes of the provided view and the popup bar image view as closely as possible to smoothly transition between them.
 ///

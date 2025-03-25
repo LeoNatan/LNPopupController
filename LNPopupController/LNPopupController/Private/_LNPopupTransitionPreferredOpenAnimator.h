@@ -7,13 +7,13 @@
 //
 
 #import "_LNPopupTransitionOpenAnimator.h"
-#import <LNPopupController/LNPopupShadowedImageView.h>
+#import <LNPopupController/UIViewController+LNPopupSupport.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupTransitionPreferredOpenAnimator : _LNPopupTransitionOpenAnimator
 
-@property (nonatomic, strong, readonly) LNPopupShadowedImageView* view;
+@property (nonatomic, strong, readonly) UIView<LNPopupTransitionView>* view;
 
 @end
 

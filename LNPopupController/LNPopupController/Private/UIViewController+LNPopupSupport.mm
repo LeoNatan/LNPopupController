@@ -31,7 +31,7 @@ const double LNSnapPercentDefault = 0.32;
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation UIViewController (LNPopupSupportPrivate)
 
-@dynamic ln_popupController, popupPresentationContainerViewController, popupContentViewController, bottomBarSupport;
+@dynamic ln_popupController, popupPresentationContainerViewController, popupContentViewController, bottomBarSupport, ln_discoveredTransitionView;
 
 @end
 #pragma clang diagnostic pop
@@ -276,7 +276,7 @@ const double LNSnapPercentDefault = 0.32;
 
 - (nullable UIView*)viewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState
 {
-	return nil;
+	return self._ln_discoveredTransitionView;
 }
 
 - (void)viewWillMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
@@ -344,6 +344,28 @@ const double LNSnapPercentDefault = 0.32;
 - (void)setAllowPopupHapticFeedbackGeneration:(BOOL)allowPopupHapticFeedbackGeneration
 {
 	self._ln_popupController.wantsFeedbackGeneration = allowPopupHapticFeedbackGeneration;
+}
+
+static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopupContentControllerDiscoveredTransitionView;
+
+- (void)_ln_setDiscoveredTransitionView:(LNPopupImageView *)ln_discoveredShadowedImageView
+{
+	id objToSet = nil;
+	if(ln_discoveredShadowedImageView != nil)
+	{
+		objToSet = [_LNWeakRef refWithObject:ln_discoveredShadowedImageView];
+	}
+	objc_setAssociatedObject(self, _LNPopupContentControllerDiscoveredTransitionView, objToSet, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (LNPopupImageView *)_ln_discoveredTransitionView
+{
+	_LNWeakRef* rv = objc_getAssociatedObject(self, _LNPopupContentControllerDiscoveredTransitionView);
+	if(rv != nil && rv.object == nil)
+	{
+		[self _ln_setDiscoveredTransitionView:nil];
+	}
+	return rv.object;
 }
 
 @end

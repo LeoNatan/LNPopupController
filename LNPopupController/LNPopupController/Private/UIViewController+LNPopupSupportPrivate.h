@@ -80,6 +80,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (BOOL)_ln_isObjectFromSwiftUI;
 
 - (BOOL)_ln_shouldPopupContentViewFadeForTransition;
+@property (nullable, nonatomic, weak, setter=_ln_setDiscoveredTransitionView:, getter=_ln_discoveredTransitionView) LNPopupImageView* ln_discoveredTransitionView;
 
 @end
 

@@ -383,9 +383,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	_LNPopupTransitionOpenAnimator* handler;
-	if([userView isKindOfClass:LNPopupShadowedImageView.class])
+	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
 	{
-		handler = [[_LNPopupTransitionPreferredOpenAnimator alloc] initWithUserView:(LNPopupShadowedImageView*)userView popupBar:self.popupBar popupContentView:self.popupContentView];
+		handler = [[_LNPopupTransitionPreferredOpenAnimator alloc] initWithUserView:(LNPopupImageView*)userView popupBar:self.popupBar popupContentView:self.popupContentView];
 	}
 	else
 	{
@@ -404,7 +404,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	_LNPopupTransitionCloseAnimator* handler;
 	
-	if([userView isKindOfClass:LNPopupShadowedImageView.class])
+	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
 	{
 		handler = [[_LNPopupTransitionPreferredCloseAnimator alloc] initWithUserView:userView popupBar:self.popupBar popupContentView:self.popupContentView currentContentController:self.currentContentController containerController:self.containerController];
 	}
