@@ -358,16 +358,43 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[_rigidFeedbackGenerator impactOccurredWithIntensity:intensity];
 }
 
-- (UIView*)_supportedUserTransitionViewFromState:(LNPopupPresentationState)fromState toState:(LNPopupPresentationState)state
+- (BOOL)_validateViewForTransition:(UIView*)viewToValidate
 {
-	UIView* userView = [self.currentContentController viewForPopupTransitionFromPresentationState:fromState toPresentationState:state];
+	if(viewToValidate == nil)
+	{
+		return NO;
+	}
 	
-	if(userView == nil)
+	if([viewToValidate isDescendantOfView:self.popupContentView] == NO)
+	{
+		return NO;
+	}
+	
+	return YES;
+}
+
+- (_LNPopupTransitionView*)_userTransitionViewForTransitionFromState:(LNPopupPresentationState)fromState toState:(LNPopupPresentationState)state userView:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)userView
+{
+	_LNPopupTransitionView* userTransitionView = (id)[self.currentContentController _ln_transitionViewForPopupTransitionFromPresentationState:fromState toPresentationState:state view:userView];
+	
+	if(userTransitionView == nil || [userTransitionView isKindOfClass:_LNPopupTransitionView.class] == NO)
 	{
 		return nil;
 	}
 	
-	if([userView isDescendantOfView:self.popupContentView] == NO)
+	if([self _validateViewForTransition:userTransitionView.sourceView] == NO)
+	{
+		return nil;
+	}
+	
+	return userTransitionView;
+}
+
+- (UIView*)_supportedUserViewForTransitionFromState:(LNPopupPresentationState)fromState toState:(LNPopupPresentationState)state
+{
+	UIView* userView = [self.currentContentController viewForPopupTransitionFromPresentationState:fromState toPresentationState:state];
+	
+	if([self _validateViewForTransition:userView] == NO)
 	{
 		return nil;
 	}
@@ -375,7 +402,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return userView;
 }
 
-- (void)animateOpenTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
+- (void)animateOpenTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(_LNPopupTransitionView*)userTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
 	if(userView == nil)
 	{
@@ -385,17 +412,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_LNPopupTransitionOpenAnimator* handler;
 	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
 	{
-		handler = [[_LNPopupTransitionPreferredOpenAnimator alloc] initWithUserView:(LNPopupImageView*)userView popupBar:self.popupBar popupContentView:self.popupContentView];
+		handler = [[_LNPopupTransitionPreferredOpenAnimator alloc] initWithTransitionView:userTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView];
 	}
 	else
 	{
-		handler = [[_LNPopupTransitionGenericOpenAnimator alloc] initWithUserView:userView popupBar:self.popupBar popupContentView:self.popupContentView];
+		handler = [[_LNPopupTransitionGenericOpenAnimator alloc] initWithTransitionView:userTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView];
 	}
 	
 	[handler animateWithAnimator:animator otherAnimations:otherAnimations];
 }
 
-- (void)animateCloseTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
+- (void)animateCloseTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(_LNPopupTransitionView*)userTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
 	if(userView == nil)
 	{
@@ -406,11 +433,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
 	{
-		handler = [[_LNPopupTransitionPreferredCloseAnimator alloc] initWithUserView:userView popupBar:self.popupBar popupContentView:self.popupContentView currentContentController:self.currentContentController containerController:self.containerController];
+		handler = [[_LNPopupTransitionPreferredCloseAnimator alloc] initWithTransitionView:userTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView currentContentController:self.currentContentController containerController:self.containerController];
 	}
 	else
 	{
-		handler = [[_LNPopupTransitionGenericCloseAnimator alloc] initWithUserView:userView popupBar:self.popupBar popupContentView:self.popupContentView currentContentController:self.currentContentController containerController:self.containerController];
+		handler = [[_LNPopupTransitionGenericCloseAnimator alloc] initWithTransitionView:userTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView currentContentController:self.currentContentController containerController:self.containerController];
 	}
 	
 	[handler animateWithAnimator:animator otherAnimations:otherAnimations];
@@ -633,20 +660,26 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 //	[self _clearRunningPopupAnimators];
 	
-	UIView* userView;
+	_LNPopupTransitionView* transitionView;
+	UIView<LNPopupTransitionView>* userView;
 	if((self.popupBar.resolvedStyle == LNPopupBarStyleProminent || self.popupBar.resolvedStyle == LNPopupBarStyleFloating) &&
 	   resolvedStyle == LNPopupInteractionStyleSnap &&
 	   ((stateAtStart == LNPopupPresentationStateBarPresented && state == LNPopupPresentationStateOpen) ||
 		(state == LNPopupPresentationStateBarPresented)))
 	{
-		userView = [self _supportedUserTransitionViewFromState:publicStateAtStart toState:state];
+		transitionView = [self _userTransitionViewForTransitionFromState:publicStateAtStart toState:state userView:&userView];
+		
+		if(transitionView == nil)
+		{
+			userView = (id)[self _supportedUserViewForTransitionFromState:publicStateAtStart toState:state];
+		}
 	}
 	
 	CGFloat animationDuration = resolvedStyle == LNPopupInteractionStyleSnap ? 0.4 : 0.5;
 	if(userView != nil)
 	{
 		animationDuration *= 1.25;
-//		animationDuration = 4;
+//		animationDuration = 4.0;
 	}
 	
 	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring && userView == nil ? 0.85 : 1.0 animations:nil];
@@ -655,11 +688,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(stateAtStart == LNPopupPresentationStateBarPresented && userView != nil)
 	{
-		[self animateOpenTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:userView otherAnimations:animationBlock];
+		[self animateOpenTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
 	}
 	else if(state == LNPopupPresentationStateBarPresented && userView != nil)
 	{
-		[self animateCloseTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:userView otherAnimations:animationBlock];
+		[self animateCloseTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
 	}
 	else
 	{

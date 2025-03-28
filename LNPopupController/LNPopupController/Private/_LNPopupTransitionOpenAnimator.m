@@ -18,7 +18,7 @@
 
 - (CGRect)targetFrame
 {
-	return [self.popupContentView.window convertRect:self.view.bounds fromView:self.view];;
+	return [self.popupContentView.window convertRect:self.transitionView.sourceView.bounds fromView:self.transitionView.sourceView];;
 }
 
 - (CGAffineTransform)transform
@@ -40,9 +40,13 @@
 	return scaled;
 }
 
+- (LNPopupPresentationState)targetState
+{
+	return LNPopupPresentationStateOpen;
+}
+
 - (void)beforeAnyAnimation
 {
-	
 }
 
 - (void)performBeforeAdditionalAnimations

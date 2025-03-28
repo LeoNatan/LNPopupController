@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupTransitionCloseAnimator : _LNPopupTransitionAnimator
 
-- (instancetype)initWithUserView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView currentContentController:(UIViewController*)currentContentController containerController:(UIViewController*)containerController;
+- (instancetype)initWithTransitionView:(nullable _LNPopupTransitionView*)transitionView userView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView currentContentController:(UIViewController*)currentContentController containerController:(UIViewController*)containerController;
 
 @property (nonatomic, strong) UIViewController* currentContentController;
 @property (nonatomic, strong) UIViewController* containerController;

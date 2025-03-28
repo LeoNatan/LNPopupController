@@ -15,26 +15,35 @@
 	UIView* _radiusContainerView;
 }
 
-- (instancetype)initWithFrame:(CGRect)frame sourceView:(UIView*)sourceView
++ (instancetype)transitionViewWithSourceView:(UIView*)sourceView
 {
-	self = [super initWithFrame:frame];
+	return [[self alloc] initWithSourceView:sourceView];
+}
+
+- (instancetype)initWithSourceView:(UIView*)sourceView
+{
+	self = [super initWithFrame:CGRectZero];
 	
 	if(self)
 	{
-		_portalView = [[NSClassFromString(LNPopupHiddenString("_UIPortalView")) alloc] initWithFrame:(CGRect){0, 0, frame.size}];
+		_sourceView = sourceView;
+		
+		_portalView = [[NSClassFromString(LNPopupHiddenString("_UIPortalView")) alloc] initWithFrame:CGRectZero];
 		_portalView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[_portalView setValue:sourceView forKey:LNPopupHiddenString("sourceView")];
 		[_portalView setValue:@YES forKey:LNPopupHiddenString("hidesSourceView")];
 		[_portalView setValue:@YES forKey:LNPopupHiddenString("matchesTransform")];
 		_portalView.layer.contentsGravity = kCAGravityCenter;
 		
-		_radiusContainerView = [[UIView alloc] initWithFrame:(CGRect){0, 0, frame.size}];
+		_radiusContainerView = [[UIView alloc] initWithFrame:CGRectZero];
 		_radiusContainerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_radiusContainerView.layer.cornerCurve = kCACornerCurveContinuous;
 		self.cornerRadius = 0.0;
 		
 		[_radiusContainerView addSubview:_portalView];
 		[self addSubview:_radiusContainerView];
+		
+		_layerAlwaysMasksToBounds = NO;
 		
 		self.layer.masksToBounds = NO;
 	}
@@ -50,7 +59,13 @@
 - (void)setCornerRadius:(CGFloat)cornerRadius
 {
 	_radiusContainerView.layer.cornerRadius = cornerRadius;
-	_radiusContainerView.layer.masksToBounds = cornerRadius != 0.0;
+	_radiusContainerView.layer.masksToBounds = _layerAlwaysMasksToBounds || cornerRadius != 0.0;
+}
+
+- (void)setLayerAlwaysMasksToBounds:(BOOL)layerAlwaysMasksToBounds
+{
+	_layerAlwaysMasksToBounds = layerAlwaysMasksToBounds;
+	self.cornerRadius = self.cornerRadius;
 }
 
 - (void)setTargetFrameUpdatingTransform:(CGRect)targetFrame

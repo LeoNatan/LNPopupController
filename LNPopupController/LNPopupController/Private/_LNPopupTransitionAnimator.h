@@ -9,13 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <LNPopupController/LNPopupBar.h>
 #import <LNPopupController/LNPopupContentView.h>
+#import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import "_LNPopupTransitionView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupTransitionAnimator : NSObject
 
-- (instancetype)initWithUserView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView;
+- (instancetype)initWithTransitionView:(nullable _LNPopupTransitionView*)transitionView userView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView;
 
 @property (nonatomic, strong, readonly) UIView* view;
 @property (nonatomic, strong, readonly) LNPopupBar* popupBar;
@@ -33,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)performBeforeAdditionalAnimations;
 - (void)performAdditionalAnimations;
 - (void)performAdditionalCompletion;
+
+@property (nonatomic, readonly) LNPopupPresentationState targetState;
 
 @end
 

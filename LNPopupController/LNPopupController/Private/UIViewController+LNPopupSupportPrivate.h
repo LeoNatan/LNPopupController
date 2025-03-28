@@ -82,6 +82,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (BOOL)_ln_shouldPopupContentViewFadeForTransition;
 @property (nullable, nonatomic, weak, setter=_ln_setDiscoveredTransitionView:, getter=_ln_discoveredTransitionView) LNPopupImageView* ln_discoveredTransitionView;
 
+- (nullable UIView*)_ln_transitionViewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState view:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)outView;
+
 @end
 
 @interface _LN_UIViewController_AppearanceControl : UIViewController @end

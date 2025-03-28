@@ -15,9 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithContainingPopupBar:(LNPopupBar*)popupBar;
 
-@property (nonatomic, strong, nullable) NSNumber* transitionCornerRadius;
-@property (nonatomic, copy, nullable) NSShadow* transitionShadow;
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -27,7 +27,7 @@ fileprivate struct PopupTransitionImage: UIViewRepresentable {
 	func makeUIView(context: Context) -> LNPopupImageView {
 		let rv = LNPopupImageView()
 		rv.image = uiImage
-		rv.cornerRadius = 8.0
+		rv.cornerRadius = 30.0
 		
 		let shadow = NSShadow()
 		shadow.shadowOffset = .zero

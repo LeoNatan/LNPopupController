@@ -12,12 +12,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupTransitionView : UIView
 
-- (instancetype)initWithFrame:(CGRect)frame sourceView:(UIView*)sourceView;
++ (instancetype)transitionViewWithSourceView:(UIView*)sourceView;
+
+- (instancetype)initWithSourceView:(UIView*)sourceView;
 
 - (void)setTargetFrameUpdatingTransform:(CGRect)targetFrame;
 
+@property (nonatomic, strong, readonly) UIView* sourceView;
+
 @property (nonatomic, strong) NSShadow* shadow;
 @property (nonatomic, assign) CGFloat cornerRadius;
+@property (nonatomic, assign) BOOL layerAlwaysMasksToBounds;
 
 @property (nonatomic, assign) CGAffineTransform sourceViewTransform;
 

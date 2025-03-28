@@ -11,9 +11,9 @@
 
 @implementation _LNPopupTransitionCloseAnimator
 
-- (instancetype)initWithUserView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView currentContentController:(UIViewController*)currentContentController containerController:(UIViewController*)containerController
+- (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView currentContentController:(UIViewController *)currentContentController containerController:(UIViewController *)containerController
 {
-	self = [super initWithUserView:view popupBar:popupBar popupContentView:popupContentView];
+	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView];
 	
 	if(self)
 	{
@@ -26,7 +26,7 @@
 
 - (CGRect)sourceFrame
 {
-	return [self.popupContentView.window convertRect:self.view.bounds fromView:self.view];
+	return [self.popupContentView.window convertRect:self.transitionView.sourceView.bounds fromView:self.transitionView.sourceView];
 }
 
 - (CGRect)targetFrame
@@ -44,6 +44,15 @@
 	NSShadow* scaled = self.popupBar.imageView.shadow.copy;
 	scaled.shadowBlurRadius = scaled.shadowBlurRadius * self.sourceFrame.size.width / self.popupBar.imageView.bounds.size.width;
 	return scaled;
+}
+
+- (LNPopupPresentationState)targetState
+{
+	return LNPopupPresentationStateBarPresented;
+}
+
+- (void)beforeAnyAnimation
+{
 }
 
 - (void)performAdditionalAnimations

@@ -66,11 +66,11 @@
 		39AC479226C69ACA001D53C2 /* LNMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 39AC479026C69AC9001D53C2 /* LNMath.m */; };
 		39B3EB0D24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 39B3EB0B24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		39B3EB0E24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B3EB0C24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.mm */; };
-		39B5500D2D92D29000B474EC /* _LNPopupTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B550002D92D29000B474EC /* _LNPopupTransitionAnimator.m */; };
+		39B5500D2D92D29000B474EC /* _LNPopupTransitionAnimator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B550002D92D29000B474EC /* _LNPopupTransitionAnimator.mm */; };
 		39B5500E2D92D29000B474EC /* _LNPopupTransitionCloseAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B550022D92D29000B474EC /* _LNPopupTransitionCloseAnimator.m */; };
 		39B5500F2D92D29000B474EC /* _LNPopupTransitionOpenAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B550082D92D29000B474EC /* _LNPopupTransitionOpenAnimator.m */; };
-		39B550102D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B5500C2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.m */; };
-		39B550112D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B5500A2D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.m */; };
+		39B550102D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B5500C2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.mm */; };
+		39B550112D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39B5500A2D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.mm */; };
 		39B550122D92D29000B474EC /* _LNPopupTransitionGenericOpenAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B550062D92D29000B474EC /* _LNPopupTransitionGenericOpenAnimator.m */; };
 		39B550132D92D29000B474EC /* _LNPopupTransitionGenericCloseAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B550042D92D29000B474EC /* _LNPopupTransitionGenericCloseAnimator.m */; };
 		39B550142D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 39B5500B2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.h */; };
@@ -154,7 +154,7 @@
 		39B3EB0B24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+LNPopupSupportPrivate.h"; sourceTree = "<group>"; };
 		39B3EB0C24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIView+LNPopupSupportPrivate.mm"; sourceTree = "<group>"; };
 		39B54FFF2D92D29000B474EC /* _LNPopupTransitionAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupTransitionAnimator.h; sourceTree = "<group>"; };
-		39B550002D92D29000B474EC /* _LNPopupTransitionAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupTransitionAnimator.m; sourceTree = "<group>"; };
+		39B550002D92D29000B474EC /* _LNPopupTransitionAnimator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupTransitionAnimator.mm; sourceTree = "<group>"; };
 		39B550012D92D29000B474EC /* _LNPopupTransitionCloseAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupTransitionCloseAnimator.h; sourceTree = "<group>"; };
 		39B550022D92D29000B474EC /* _LNPopupTransitionCloseAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupTransitionCloseAnimator.m; sourceTree = "<group>"; };
 		39B550032D92D29000B474EC /* _LNPopupTransitionGenericCloseAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupTransitionGenericCloseAnimator.h; sourceTree = "<group>"; };
@@ -164,9 +164,9 @@
 		39B550072D92D29000B474EC /* _LNPopupTransitionOpenAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupTransitionOpenAnimator.h; sourceTree = "<group>"; };
 		39B550082D92D29000B474EC /* _LNPopupTransitionOpenAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupTransitionOpenAnimator.m; sourceTree = "<group>"; };
 		39B550092D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupTransitionPreferredCloseAnimator.h; sourceTree = "<group>"; };
-		39B5500A2D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupTransitionPreferredCloseAnimator.m; sourceTree = "<group>"; };
+		39B5500A2D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupTransitionPreferredCloseAnimator.mm; sourceTree = "<group>"; };
 		39B5500B2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupTransitionPreferredOpenAnimator.h; sourceTree = "<group>"; };
-		39B5500C2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupTransitionPreferredOpenAnimator.m; sourceTree = "<group>"; };
+		39B5500C2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupTransitionPreferredOpenAnimator.mm; sourceTree = "<group>"; };
 		39C553DD2D8F2B3200F8D8B2 /* _LNPopupTransitionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupTransitionView.h; sourceTree = "<group>"; };
 		39C553DE2D8F2B3200F8D8B2 /* _LNPopupTransitionView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupTransitionView.mm; sourceTree = "<group>"; };
 		39C553E22D91924900F8D8B2 /* LNPopupImageView+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupImageView+Private.h"; sourceTree = "<group>"; };
@@ -269,19 +269,19 @@
 			isa = PBXGroup;
 			children = (
 				39B54FFF2D92D29000B474EC /* _LNPopupTransitionAnimator.h */,
-				39B550002D92D29000B474EC /* _LNPopupTransitionAnimator.m */,
+				39B550002D92D29000B474EC /* _LNPopupTransitionAnimator.mm */,
 				39B550012D92D29000B474EC /* _LNPopupTransitionCloseAnimator.h */,
 				39B550022D92D29000B474EC /* _LNPopupTransitionCloseAnimator.m */,
 				39B550032D92D29000B474EC /* _LNPopupTransitionGenericCloseAnimator.h */,
 				39B550042D92D29000B474EC /* _LNPopupTransitionGenericCloseAnimator.m */,
 				39B550092D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.h */,
-				39B5500A2D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.m */,
+				39B5500A2D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.mm */,
 				39B550072D92D29000B474EC /* _LNPopupTransitionOpenAnimator.h */,
 				39B550082D92D29000B474EC /* _LNPopupTransitionOpenAnimator.m */,
 				39B550052D92D29000B474EC /* _LNPopupTransitionGenericOpenAnimator.h */,
 				39B550062D92D29000B474EC /* _LNPopupTransitionGenericOpenAnimator.m */,
 				39B5500B2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.h */,
-				39B5500C2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.m */,
+				39B5500C2D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.mm */,
 			);
 			name = TransitionAnimators;
 			sourceTree = "<group>";
@@ -475,11 +475,11 @@
 				394A85C91B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.mm in Sources */,
 				397AFC061F1A229400E7D95C /* LNPopupInteractionPanGestureRecognizer.m in Sources */,
 				393E4EA72670F12500929E47 /* LNPopupBarAppearance.mm in Sources */,
-				39B5500D2D92D29000B474EC /* _LNPopupTransitionAnimator.m in Sources */,
+				39B5500D2D92D29000B474EC /* _LNPopupTransitionAnimator.mm in Sources */,
 				39B5500E2D92D29000B474EC /* _LNPopupTransitionCloseAnimator.m in Sources */,
 				39B5500F2D92D29000B474EC /* _LNPopupTransitionOpenAnimator.m in Sources */,
-				39B550102D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.m in Sources */,
-				39B550112D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.m in Sources */,
+				39B550102D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.mm in Sources */,
+				39B550112D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.mm in Sources */,
 				39B550122D92D29000B474EC /* _LNPopupTransitionGenericOpenAnimator.m in Sources */,
 				39B550132D92D29000B474EC /* _LNPopupTransitionGenericCloseAnimator.m in Sources */,
 				396D62732610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.mm in Sources */,

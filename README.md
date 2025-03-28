@@ -228,6 +228,26 @@ Supplying long text for the title and/or subtitle will result in a scrolling tex
 
 <p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
 
+#### Popup Transitions
+
+The framework supports popup image transitions:
+
+<p align="center"><img src="./Supplements/popup_transitions.gif"/></p>
+
+Transitions are opt-in and require you either use an `LNPopupImageView` image view in your popup content, which is discovered automatically by the system, or provide a view that will serve as the transition target/source by implementing `viewForPopupTransition(from:to:)` in popup content controller.
+
+For optimal results, always use `LNPopupImageView` instances that displays the same image displayed in the popup bar's image view. By default, the system discovers the `LNPopupImageView` image view in your content controller's view hierarchy automatically, and will use that as the transition target/source. The system will smoothly transition between the popup bar's image view and the `LNPopupImageView` instance, taking into account the corner radii and shadows of the views.
+
+> [!TIP]
+> When using automatic discovery, there must be only a single `LNPopupImageView` instance in your content controller's view hierarchy, or results will be undefined. For more advanced scenarios where automatic discovery fails, implement `viewForPopupTransition(from:to:)` in your content controller to return the correct instance.
+
+You can any custom view in `viewForPopupTransition(from:to:)` to serve as the transition target/source. The system will attempt to match the attributes of the provided view and the popup bar's image view as closely as possible to transition smoothly between them. Implement the `LNPopupTransitionView` protocol in your custom view to allow the system to smoothly transition between your custom view and the popup bar image view.
+
+> [!CAUTION]
+> Views returned from `viewForPopupTransition(from:to:)` must be part of the content controller's view hierarchy, or they will be ignored by the system and no transition will take place.
+
+Transitions are only available for prominent and floating popup bar styles with drag interaction style. Any other combination will result in no transition and this method will not be called by the system.
+
 #### Popup Bar Customization
 
 `LNPopupBar` exposes many APIs to customize the default popup bar's appearance. Use `LNPopupBarAppearance` objects to define the standard appearance of the bar.
@@ -270,7 +290,7 @@ navigationController?.popupBar.tintColor = .yellow
 
 #### System Interactions
 
-##### Transitions
+##### Bar Transitions
 
 The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar controllers. When set to `true`, the popup bar will transition to the bottom of the pushed controller's view. Setting  `isToolbarHidden = true` and calling `setToolbarHidden(_:animated:)` are also supported.
 
@@ -318,7 +338,7 @@ Starting with iOS 15, scroll-edge appearance is automatically disabled for toolb
 
 #### Custom Popup Bars
 
-The framework supports implementing custom popup bars.
+The framework supports implementing custom popup bars:
 
 <p align="center"><img src="./Supplements/custom_bar.png" width="360"/></p>
 

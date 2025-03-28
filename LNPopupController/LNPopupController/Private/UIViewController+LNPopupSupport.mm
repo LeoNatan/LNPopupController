@@ -279,6 +279,11 @@ const double LNSnapPercentDefault = 0.32;
 	return self._ln_discoveredTransitionView;
 }
 
+- (nullable UIView*)_ln_transitionViewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState view:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)outView
+{
+	return nil;
+}
+
 - (void)viewWillMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
 {
 	
@@ -513,6 +518,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	return [self.topViewController viewForPopupTransitionFromPresentationState:fromState toPresentationState:toState];
 }
 
+- (nullable UIView*)_ln_transitionViewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState view:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)outView
+{
+	return [self.topViewController _ln_transitionViewForPopupTransitionFromPresentationState:fromState toPresentationState:toState view:outView];
+}
+
 @end
 
 @implementation UITabBarController (LNPopupSupport)
@@ -525,6 +535,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 - (nullable UIView*)viewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState
 {
 	return [self.selectedViewController viewForPopupTransitionFromPresentationState:fromState toPresentationState:toState];
+}
+
+- (nullable UIView*)_ln_transitionViewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState view:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)outView
+{
+	return [self.selectedViewController _ln_transitionViewForPopupTransitionFromPresentationState:fromState toPresentationState:toState view:outView];
 }
 
 @end
