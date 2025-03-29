@@ -226,7 +226,7 @@ To hide the popup close button, set the `popupCloseButtonStyle` property to `LNP
 
 Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee is enabled. Otherwise, the text will be truncated.
 
-<p align="center"><img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
 
 #### Popup Transitions
 
@@ -393,9 +393,9 @@ To customize this behavior, modify the popup bar's ```semanticContentAttribute``
 
 #### Accessibility
 
-The framework supports accessibility and will honor accessibility labels, hints and values. By default, the accessibility label of the popup bar is the title and subtitle provided by the popup item.
+The framework supports accessibility and will honor accessibility labels, traits, hints and values. By default, the accessibility label of the popup bar is the title and subtitle provided by the popup item.
 
-<p align="center"><img src="./Supplements/default_bar_accessibility_label.png"/></p>
+<p align="center"><img src="./Supplements/default_bar_accessibility_label.png" width="360"/></p>
 
 To modify the accessibility label and hint of the popup bar, set the `accessibilityLabel` and `accessibilityHint` properties of the `LNPopupItem` object of the popup content view controller.
 

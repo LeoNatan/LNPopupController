@@ -45,8 +45,8 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	{
 		self.popupItem.image = [UIImage imageNamed:@"genre_white"];
 	}
-	//	self.popupItem.progress = (float) arc4random() / UINT32_MAX;
-	self.popupItem.progress = 1.0;
+	self.popupItem.progress = (float) arc4random() / UINT32_MAX;
+//	self.popupItem.progress = 1.0;
 }
 
 @interface DemoPopupContentView : UIView @end
