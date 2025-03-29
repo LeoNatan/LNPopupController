@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)beforeAnyAnimation;
 - (void)performBeforeAdditionalAnimations;
 - (void)performAdditionalAnimations;
+- (void)performAdditionalDelayed015Animations;
 - (void)performAdditionalCompletion;
 
 @property (nonatomic, readonly) LNPopupPresentationState targetState;

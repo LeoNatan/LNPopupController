@@ -675,10 +675,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	CGFloat animationDuration = resolvedStyle == LNPopupInteractionStyleSnap ? 0.4 : 0.5;
+	CGFloat animationDuration = resolvedStyle == LNPopupInteractionStyleSnap ? 0.55 : 0.5;
 	if(userView != nil)
 	{
-		animationDuration *= 1.25;
+//		animationDuration *= 1.25;
 //		animationDuration = 4.0;
 	}
 	
@@ -697,6 +697,25 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	else
 	{
 		[_runningPopupAnimation addAnimations:animationBlock];
+		
+		if(state == LNPopupPresentationStateBarPresented)
+		{
+			[_runningPopupAnimation addAnimations:^{
+				if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
+				{
+					self.popupContentView.alpha = 0.0;
+				}
+//				else
+//				{
+//					self.currentContentController.view.alpha = 0.0;
+//				}
+			} delayFactor:0.15];
+			
+			[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
+				self.popupContentView.alpha = 1.0;
+//				self.currentContentController.view.alpha = 1.0;
+			}];
+		}
 	}
 	
 	[_runningPopupAnimation addCompletion:completionBlock];

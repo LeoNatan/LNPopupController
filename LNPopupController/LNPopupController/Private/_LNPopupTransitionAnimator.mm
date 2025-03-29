@@ -70,6 +70,10 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		}
 	}];
 	
+	[animator addAnimations:^{
+		[self performAdditionalDelayed015Animations];
+	} delayFactor:0.15];
+	
 	[animator addCompletion:^(UIViewAnimatingPosition finalPosition) {
 		if([self.view respondsToSelector:transitionDidEnd])
 		{
@@ -113,6 +117,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 - (void)beforeAnyAnimation {}
 - (void)performBeforeAdditionalAnimations {}
 - (void)performAdditionalAnimations {}
+- (void)performAdditionalDelayed015Animations {}
 - (void)performAdditionalCompletion {}
 
 - (void)completeTransition

@@ -59,6 +59,11 @@
 {
 	[self.transitionView setTargetFrameUpdatingTransform:self.targetFrame];
 	
+	[super performAdditionalAnimations];
+}
+
+- (void)performAdditionalDelayed015Animations
+{
 	if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
 	{
 		self.popupContentView.alpha = 0.0;

@@ -305,7 +305,7 @@ CF_EXTERN_C_END
 {
 	BOOL bottomBarExtensionIsVisible = self._ln_bottomBarExtension_nocreate != nil && self._ln_bottomBarExtension_nocreate.isHidden == NO && self._ln_bottomBarExtension_nocreate.alpha > 0 && self._ln_bottomBarExtension_nocreate.frame.size.height > 0;
 	
-	BOOL bottomBarIsVisible = [self.bottomDockingViewForPopup_internalOrDeveloper isKindOfClass:_LNPopupBottomBarSupport.class] == NO && self.ln_popupController.bottomBar.hidden == NO;
+	BOOL bottomBarIsVisible = [self.bottomDockingViewForPopup_internalOrDeveloper isKindOfClass:_LNPopupBottomBarSupport.class] == NO && self.ln_popupController.bottomBar.hidden == NO && self.ln_popupController.bottomBar.window != nil;
 	
 	return bottomBarExtensionIsVisible == NO && bottomBarIsVisible == NO;
 }
