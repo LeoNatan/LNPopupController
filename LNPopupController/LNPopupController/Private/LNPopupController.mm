@@ -601,10 +601,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			_popupContentView.accessibilityViewIsModal = NO;
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
 			
-			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart == false && resolvedStyle != LNPopupInteractionStyleSnap))
-			{
-				[self _generateSoftFeedbackWithIntensity:0.8];
-			}
+//			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart == false && resolvedStyle != LNPopupInteractionStyleSnap))
+//			{
+//				[self _generateSoftFeedbackWithIntensity:0.8];
+//			}
 		}
 		
 		_popupControllerInternalState = state;
@@ -638,10 +638,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			_popupContentView.accessibilityViewIsModal = YES;
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, _popupContentView.popupCloseButton);
 			
-			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart == false && resolvedStyle != LNPopupInteractionStyleSnap))
-			{
-				[self _generateSoftFeedbackWithIntensity:0.8];
-			}
+//			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart == false && resolvedStyle != LNPopupInteractionStyleSnap))
+//			{
+//				[self _generateSoftFeedbackWithIntensity:0.8];
+//			}
 			
 			if(_popupControllerPublicState == LNPopupPresentationStateOpen && publicStateAtStart != _popupControllerPublicState)
 			{
