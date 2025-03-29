@@ -712,7 +712,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		[parentForPopupBar insertSubview:popupBar belowSubview:bottomBar];
 	}
 	[parentForPopupBar insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:popupBar];
-	[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:popupBar];
+	[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:popupBar];
 }
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate

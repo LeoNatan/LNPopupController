@@ -177,7 +177,9 @@ static NSArray* __notifiedProperties = nil;
 	
 	for(NSString* key in __notifiedProperties) 
 	{
-		rv = rv && [[self valueForKey:key] isEqual:[other valueForKey:key]];
+		id myVal = [self valueForKey:key];
+		id otherVal = [other valueForKey:key];
+		rv = rv && (myVal == otherVal || [myVal isEqual:otherVal]);
 	}
 	
 	return rv;
