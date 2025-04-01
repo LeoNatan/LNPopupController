@@ -26,7 +26,7 @@
 #import <os/log.h>
 
 #if TARGET_OS_MACCATALYST
-@import AppKit;
+#import <AppKit/AppKit.h>
 #endif
 
 CF_EXTERN_C_BEGIN
