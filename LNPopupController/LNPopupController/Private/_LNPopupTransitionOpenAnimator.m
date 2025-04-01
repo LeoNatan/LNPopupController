@@ -47,17 +47,33 @@
 
 - (void)beforeAnyAnimation
 {
+	[super beforeAnyAnimation];
+	
+	self.crossfadeImageView.alpha = 1.0;
+	self.crossfadeImageView.layer.cornerRadius = self.popupBar.imageView.cornerRadius;
 }
 
 - (void)performBeforeAdditionalAnimations
 {
+	[super performBeforeAdditionalAnimations];
+	
 	self.transitionView.sourceViewTransform = self.transform;
 }
 
 - (void)performAdditionalAnimations
 {
+	[super performAdditionalAnimations];
+	
 	self.transitionView.frame = self.targetFrame;
 	self.transitionView.sourceViewTransform = CGAffineTransformIdentity;
+}
+
+- (void)performAdditional01Animations
+{
+	[super performAdditional01Animations];
+	
+	self.crossfadeImageView.alpha = 0.0;
+	self.crossfadeImageView.layer.cornerRadius = self.transitionView.cornerRadius;
 }
 
 @end

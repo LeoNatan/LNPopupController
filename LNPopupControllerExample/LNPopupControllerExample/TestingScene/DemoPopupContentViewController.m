@@ -39,7 +39,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
 	{
-		self.popupItem.image = [UIImage imageNamed:@"genre7"];
+		self.popupItem.image = [UIImage imageNamed:@"genre17"];
 	}
 	else
 	{
@@ -90,6 +90,11 @@ void LNApplyTitleWithSettings(UIViewController* self)
 
 - (void)_updateBackgroundColor
 {
+	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 2)
+	{
+		return;
+	}
+	
 	if(self.view.traitCollection.userInterfaceStyle != _lastStyle)
 	{
 		_lastStyle = self.view.traitCollection.userInterfaceStyle;
@@ -200,7 +205,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		}
 		else
 		{
-			shadow.shadowColor = [UIColor.blackColor colorWithAlphaComponent:(_preferredTransitionView.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark ? 0.333333 : 0.666667)];
+			shadow.shadowColor = [UIColor.blackColor colorWithAlphaComponent:0.333333];
 		}
 		
 		_preferredTransitionView.shadow = shadow;
@@ -215,15 +220,8 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		}
 		else
 		{
-			_genericTransitionView.layer.shadowColor = UIColor.blackColor.CGColor;
-			if(_genericTransitionView.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
-			{
-				_genericTransitionView.layer.shadowOpacity = 0.333333;
-			}
-			else
-			{
-				_genericTransitionView.layer.shadowOpacity = 0.666667;
-			}
+			_genericTransitionView.layer.shadowColor = [UIColor.blackColor colorWithAlphaComponent:0.333333].CGColor;
+			_genericTransitionView.layer.shadowOpacity = 1.0;
 		}
 	}
 }
@@ -303,6 +301,27 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		]];
 		
 		transitionImageView.image = self.popupItem.image;
+	}
+	else if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 2)
+	{
+		UIImageView* backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"genre17-expanded"]];
+		backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+		backgroundView.contentMode = UIViewContentModeScaleAspectFill;
+		backgroundView.clipsToBounds = YES;
+		
+		[self.view addSubview:backgroundView];
+		[NSLayoutConstraint activateConstraints:@[
+			[backgroundView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+			[backgroundView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+			[backgroundView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+			[backgroundView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+		]];
+		
+		_genericTransitionView = backgroundView;
+		
+		self.view.backgroundColor = UIColor.blackColor;
+		
+		self.popupPresentationContainerViewController.popupBar.imageView.contentMode = UIViewContentModeScaleToFill;
 	}
 	else
 	{
@@ -425,8 +444,10 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	switch([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType])
 	{
 		case 0:
+			//Automatic discovery will find the LNPopupImageView in our content view.
 			return [super viewForPopupTransitionFromPresentationState:fromState toPresentationState:toState];
 		case 1:
+		case 2:
 			return _genericTransitionView;
 		default:
 			return nil;
@@ -502,6 +523,11 @@ void LNApplyTitleWithSettings(UIViewController* self)
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
+	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 2)
+	{
+		return UIStatusBarStyleLightContent;
+	}
+	
 	return self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
 }
 

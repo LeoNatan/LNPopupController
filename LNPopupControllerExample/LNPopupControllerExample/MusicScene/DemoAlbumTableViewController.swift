@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 #if LNPOPUP
 import LNPopupController
 #endif
@@ -32,19 +33,28 @@ class DemoAlbumTableViewController: UITableViewController {
 		
         super.viewDidLoad()
 		
-		let backgroundImageView = UIImageView(image: UIImage(named: "demoAlbum"))
-		backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		backgroundImageView.contentMode = .scaleAspectFill
-		let backgroundEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-		backgroundEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		let container = UIView(frame: tableView.bounds)
-		container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		backgroundImageView.frame = container.bounds
-		backgroundEffectView.frame = container.bounds
-		container.addSubview(backgroundImageView)
-		container.addSubview(backgroundEffectView)
+//		let backgroundImageView = UIImageView(image: UIImage(named: "demoAlbum"))
+//		backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//		backgroundImageView.contentMode = .scaleAspectFill
+//		let backgroundEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+//		backgroundEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//		let container = UIView(frame: tableView.bounds)
+//		container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//		backgroundImageView.frame = container.bounds
+//		backgroundEffectView.frame = container.bounds
+//		container.addSubview(backgroundImageView)
+//		container.addSubview(backgroundEffectView)
+//
+//		tableView.backgroundView = container
 		
-		tableView.backgroundView = container
+		let view = ZStack {
+			Image("demoAlbum")
+				.resizable()
+			Color(uiColor: .secondarySystemBackground)
+				.opacity(0.35)
+		}.compositingGroup().blur(radius: 80, opaque: true)
+		
+		tableView.backgroundView = UIHostingController(rootView: view).view
 		
 		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		

@@ -365,7 +365,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return NO;
 	}
 	
-	if([viewToValidate isDescendantOfView:self.popupContentView] == NO)
+	if(viewToValidate == self.popupContentView || [viewToValidate isDescendantOfView:self.popupContentView] == NO)
 	{
 		return NO;
 	}
@@ -675,12 +675,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	CGFloat animationDuration = resolvedStyle == LNPopupInteractionStyleSnap ? 0.55 : 0.5;
-	if(userView != nil)
-	{
+	CGFloat animationDuration = resolvedStyle == LNPopupInteractionStyleSnap ? 0.5 : 0.5;
+//	if(userView != nil)
+//	{
 //		animationDuration *= 1.25;
 //		animationDuration = 4.0;
-	}
+//	}
 	
 	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring && userView == nil ? 0.85 : 1.0 animations:nil];
 //	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration curve:UIViewAnimationCurveLinear animations:nil];

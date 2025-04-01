@@ -39,10 +39,14 @@
 	{
 		_originalShadow = nil;
 	}
+	
+	self.crossfadeImageView.layer.cornerRadius = self.view.cornerRadius;
 }
 
 - (void)performAdditionalAnimations
 {
+	[super performAdditionalAnimations];
+	
 	self.view.cornerRadius = self.scaledBarImageViewCornerRadius;
 	if(_supportsShadow)
 	{
@@ -52,8 +56,6 @@
 	{
 		self.transitionView.shadow = self.popupBar.imageView.shadow.copy;
 	}
-	
-	[super performAdditionalAnimations];
 }
 
 - (void)performAdditionalCompletion

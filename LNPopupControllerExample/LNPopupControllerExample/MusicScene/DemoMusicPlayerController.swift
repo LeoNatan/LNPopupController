@@ -142,10 +142,9 @@ struct PlayerView: View {
 					ZStack {
 						Image(uiImage: playbackSettings.albumArt)
 							.resizable()
-							.aspectRatio(contentMode: .fill)
 						Color(uiColor: .systemBackground)
-							.opacity(0.55)
-					}.compositingGroup().blur(radius: 90)
+							.opacity(0.4)
+					}.compositingGroup().blur(radius: 90, opaque: true)
 					BackgroundView()
 				}.edgesIgnoringSafeArea(.all)
 			}

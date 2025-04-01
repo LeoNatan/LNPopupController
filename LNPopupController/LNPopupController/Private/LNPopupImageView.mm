@@ -11,38 +11,11 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 
-@interface _LNPopupBarImageContentLayer: CALayer @end
-@implementation _LNPopupBarImageContentLayer
-
-- (id<CAAction>)actionForKey:(NSString *)event
-{
-	id rv = [self.superlayer.delegate actionForLayer:self forKey:event];
-	
-	return rv;
-}
-
-@end
-
 @interface _LNPopupBarShadowedImageViewLayer : CALayer @end
 @implementation _LNPopupBarShadowedImageViewLayer
 {
 	@public
-	CALayer* _imageContentsLayer;
-}
-
-- (instancetype)init
-{
-	self = [super init];
-	
-	if(self)
-	{
-		_imageContentsLayer = [_LNPopupBarImageContentLayer layer];
-		_imageContentsLayer.masksToBounds = YES;
-		_imageContentsLayer.cornerCurve = kCACornerCurveContinuous;
-		[super addSublayer:_imageContentsLayer];
-	}
-	
-	return self;
+	__weak CALayer* _imageContentsLayer;
 }
 
 - (void)addSublayer:(CALayer *)layer
@@ -79,6 +52,11 @@
 - (void)setContents:(id)contents
 {
 	[_imageContentsLayer setContents:contents];
+}
+
+- (void)setImageContentsLayer:(CALayer*)layer
+{
+	_imageContentsLayer = layer;
 }
 
 @end
@@ -145,6 +123,11 @@
 {
 	super.contentMode = UIViewContentModeScaleAspectFit;
 	self.clipsToBounds = NO;
+	
+	UIView* imageContentsLayerView = [[UIView alloc] initWithFrame:self.bounds];
+	imageContentsLayerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[self addSubview:imageContentsLayerView];
+	[(_LNPopupBarShadowedImageViewLayer*)self.layer setImageContentsLayer:imageContentsLayerView.layer];
 }
 
 - (void)setShadow:(NSShadow *)shadow
@@ -160,8 +143,15 @@
 
 - (void)_updateShadowColor
 {
-	self.layer.shadowColor = [(UIColor*)_shadow.shadowColor colorWithAlphaComponent:1.0].CGColor;
-	self.layer.shadowOpacity = CGColorGetAlpha([_shadow.shadowColor CGColor]);
+	if([_shadow.shadowColor isKindOfClass:UIColor.class])
+	{
+		self.layer.shadowColor = [_shadow.shadowColor CGColor];
+	}
+	else
+	{
+		self.layer.shadowColor = (__bridge CGColorRef)_shadow.shadowColor;
+	}
+	self.layer.shadowOpacity = _shadow != nil ? 1.0 : 0.0;
 }
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection

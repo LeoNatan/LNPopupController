@@ -14,6 +14,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface UIViewPropertyAnimator ()
+
+- (void)addAnimations:(void (^)(void))animation delayFactor:(CGFloat)delayFactor durationFactor:(CGFloat)durationFactor;
+
+@end
+
 @interface _LNPopupTransitionAnimator : NSObject
 
 - (instancetype)initWithTransitionView:(nullable _LNPopupTransitionView*)transitionView userView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView;
@@ -23,18 +29,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) LNPopupContentView* popupContentView;
 
 @property (nonatomic, strong, readonly, nullable) _LNPopupTransitionView* transitionView;
+@property (nonatomic, strong, readonly, nullable) UIImageView* crossfadeImageView;
 @property (nonatomic, readonly) CGRect sourceFrame;
 @property (nonatomic, readonly) CGRect targetFrame;
 @property (nonatomic, readonly) CGAffineTransform transform;
+
 @property (nonatomic, readonly) CGFloat scaledBarImageViewCornerRadius;
 @property (nonatomic, strong, readonly) NSShadow* scaledBarImageViewShadow;
 
-- (void)animateWithAnimator:(UIViewPropertyAnimator*)animator otherAnimations:(void(^)(void))otherAnimations;
-- (void)beforeAnyAnimation;
-- (void)performBeforeAdditionalAnimations;
-- (void)performAdditionalAnimations;
-- (void)performAdditionalDelayed015Animations;
-- (void)performAdditionalCompletion;
+- (void)animateWithAnimator:(UIViewPropertyAnimator*)animator otherAnimations:(void(^)(void))otherAnimations NS_REQUIRES_SUPER;
+- (void)beforeAnyAnimation NS_REQUIRES_SUPER;
+- (void)performBeforeAdditionalAnimations NS_REQUIRES_SUPER;
+- (void)performAdditionalAnimations NS_REQUIRES_SUPER;
+- (void)performAdditionalDelayed015Animations NS_REQUIRES_SUPER;
+- (void)performAdditionalDelayed05Animations NS_REQUIRES_SUPER;
+- (void)performAdditional01Animations NS_REQUIRES_SUPER;
+- (void)performAdditional075Animations NS_REQUIRES_SUPER;
+- (void)performAdditional075Delayed015Animations NS_REQUIRES_SUPER;
+- (void)performAdditionalCompletion NS_REQUIRES_SUPER;
 
 @property (nonatomic, readonly) LNPopupPresentationState targetState;
 

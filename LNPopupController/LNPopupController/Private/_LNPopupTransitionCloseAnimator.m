@@ -53,17 +53,25 @@
 
 - (void)beforeAnyAnimation
 {
+	[super beforeAnyAnimation];
+	
+	self.crossfadeImageView.alpha = 0.0;
+	self.crossfadeImageView.layer.cornerRadius = self.transitionView.cornerRadius;
 }
 
 - (void)performAdditionalAnimations
 {
 	[self.transitionView setTargetFrameUpdatingTransform:self.targetFrame];
 	
+	self.crossfadeImageView.layer.cornerRadius = self.popupBar.imageView.cornerRadius;
+	
 	[super performAdditionalAnimations];
 }
 
 - (void)performAdditionalDelayed015Animations
 {
+	[super performAdditionalDelayed015Animations];
+	
 	if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
 	{
 		self.popupContentView.alpha = 0.0;
@@ -72,10 +80,14 @@
 	{
 		self.currentContentController.view.alpha = 0.0;
 	}
+	
+	self.crossfadeImageView.alpha = 1.0;
 }
 
 - (void)performAdditionalCompletion
 {
+	[super performAdditionalCompletion];
+	
 	self.popupContentView.alpha = 1.0;
 	self.currentContentController.view.alpha = 1.0;
 }

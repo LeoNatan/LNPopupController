@@ -43,8 +43,17 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			_transitionView = [[_LNPopupTransitionView alloc] initWithSourceView:self.view];
 		}
 		
-		self.transitionView.frame = self.sourceFrame;
+		_crossfadeImageView = [[UIImageView alloc] initWithImage:self.popupBar.imageView.image];
+		_crossfadeImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_crossfadeImageView.contentMode = self.popupBar.imageView.contentMode;
+		_crossfadeImageView.frame = _transitionView.bounds;
+		_crossfadeImageView.layer.masksToBounds = YES;
+		[_transitionView addSubview:_crossfadeImageView];
+		
+		_transitionView.frame = self.sourceFrame;
 		[self beforeAnyAnimation];
+		
+		_crossfadeImageView.layer.cornerCurve = kCACornerCurveContinuous;
 		
 		objc_setAssociatedObject(self.transitionView.sourceView, _LNPopupOpenCloseTransitionViewKey, _transitionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	}];
@@ -73,6 +82,34 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	[animator addAnimations:^{
 		[self performAdditionalDelayed015Animations];
 	} delayFactor:0.15];
+	
+	[animator addAnimations:^{
+		[self performAdditionalDelayed05Animations];
+	} delayFactor:0.5];
+	
+	[animator addAnimations:^{
+		[UIView animateKeyframesWithDuration:0.0 delay:0.0 options:0 animations:^{
+			[UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.75 animations:^{
+				[self performAdditional075Animations];
+			}];
+		} completion:nil];
+	} delayFactor:0.0];
+	
+	[animator addAnimations:^{
+		[UIView animateKeyframesWithDuration:0.0 delay:0.0 options:0 animations:^{
+			[UIView addKeyframeWithRelativeStartTime:0.0 relativeDuration:0.1 animations:^{
+				[self performAdditional01Animations];
+			}];
+		} completion:nil];
+	} delayFactor:0.0];
+	
+	[animator addAnimations:^{
+		[UIView animateKeyframesWithDuration:0.0 delay:0.0 options:0 animations:^{
+			[UIView addKeyframeWithRelativeStartTime:0.15 relativeDuration:0.75 animations:^{
+				[self performAdditional075Delayed015Animations];
+			}];
+		} completion:nil];
+	} delayFactor:0.0];
 	
 	[animator addCompletion:^(UIViewAnimatingPosition finalPosition) {
 		if([self.view respondsToSelector:transitionDidEnd])
@@ -118,6 +155,10 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 - (void)performBeforeAdditionalAnimations {}
 - (void)performAdditionalAnimations {}
 - (void)performAdditionalDelayed015Animations {}
+- (void)performAdditionalDelayed05Animations {}
+- (void)performAdditional01Animations {}
+- (void)performAdditional075Animations {}
+- (void)performAdditional075Delayed015Animations {}
 - (void)performAdditionalCompletion {}
 
 - (void)completeTransition

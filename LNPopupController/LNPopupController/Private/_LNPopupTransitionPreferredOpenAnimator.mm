@@ -53,6 +53,8 @@
 
 - (void)performAdditionalAnimations
 {
+	[super performAdditionalAnimations];
+	
 	self.view.cornerRadius = _originalCornerRadius;
 	self.view.shadow = _originalShadow;
 	
@@ -65,7 +67,7 @@
 		self.transitionView.shadow = _originalShadow;
 	}
 	
-	[super performAdditionalAnimations];
+	self.crossfadeImageView.layer.cornerRadius = self.view.cornerRadius;
 }
 
 @end
