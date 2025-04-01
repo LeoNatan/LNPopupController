@@ -16,11 +16,14 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	LNPopupCloseButtonStyle rv = style;
 	if(rv == LNPopupCloseButtonStyleDefault)
 	{
-#if TARGET_OS_MACCATALYST
-		rv = LNPopupCloseButtonStyleRound;
-#else
-		rv = LNPopupCloseButtonStyleGrabber;
-#endif
+		if([LNPopupBar isCatalystApp])
+		{
+			rv =  LNPopupCloseButtonStyleRound;
+		}
+		else
+		{
+			rv = LNPopupCloseButtonStyleGrabber;
+		}
 	}
 	return rv;
 }
@@ -54,7 +57,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		_popupCloseButton.popupContentView = self;
 		
 		__weak __typeof(self) weakSelf = self;
-		if (@available(iOS 13.4, *))
+		if(@available(iOS 13.4, *))
 		{
 			_popupCloseButton.pointerInteractionEnabled = YES;
 			_popupCloseButton.pointerStyleProvider = ^ UIPointerStyle* (UIButton *button, UIPointerEffect *proposedEffect, UIPointerShape *proposedShape) {
@@ -218,6 +221,10 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	CGFloat topConstant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 0 : 1.0;
 	topConstant += layoutFrame.origin.y;
 	topConstant = MAX(self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
+	
+#if TARGET_OS_MACCATALYST
+	topConstant += 20;
+#endif
 	
 	CGFloat leadingConstant = layoutFrame.origin.x;
 	

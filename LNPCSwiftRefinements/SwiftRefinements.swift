@@ -122,6 +122,23 @@ extension UIViewController {
 			}
 		}
 	}
+	
+	var effectivePopupInteractionStyle: PopupInteractionStyle {
+		switch __effectivePopupInteractionStyle {
+		case .drag:
+			return .drag
+		case .snap:
+			return __popupSnapPercent == .defaultPopupSnapPercent ? .snap : .customizedSnap(percent: __popupSnapPercent)
+		case .scroll:
+			return .scroll
+		case .none:
+			return .none
+		case .default:
+			fallthrough
+		@unknown default:
+			fatalError("Please open an issue here: https://github.com/LeoNatan/LNPopupController/issues/new/choose")
+		}
+	}
 }
 
 public

@@ -138,6 +138,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 - (void)_cancelAnyUserInteraction;
 
++ (BOOL)isCatalystApp;
 - (BOOL)isWidePad;
 
 @end

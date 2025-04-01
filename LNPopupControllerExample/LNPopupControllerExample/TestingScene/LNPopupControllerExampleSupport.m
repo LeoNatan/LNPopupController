@@ -99,7 +99,7 @@
 	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		if (@available(iOS 18.0, *))
+		if(@available(iOS 18.0, *))
 		{
 			[self updateTabsForTraitCollection:newCollection];
 		}

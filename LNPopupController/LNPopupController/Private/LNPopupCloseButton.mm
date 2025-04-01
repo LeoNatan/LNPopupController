@@ -74,7 +74,7 @@ __attribute__((objc_direct_members))
 		_style = LNPopupCloseButtonStyleGrabber;
 		[self _setupForChevronButton];
 		
-		if (@available(iOS 13.4, *))
+		if(@available(iOS 13.4, *))
 		{
 			self.pointerInteractionEnabled = YES;
 			self.pointerStyleProvider = ^UIPointerStyle * _Nullable(UIButton * _Nonnull button, UIPointerEffect * _Nonnull proposedEffect, UIPointerShape * _Nonnull proposedShape) {
@@ -87,6 +87,11 @@ __attribute__((objc_direct_members))
 	}
 	
 	return self;
+}
+
+- (LNPopupCloseButtonStyle)effectiveStyle
+{
+	return self.popupContentView.effectivePopupCloseButtonStyle;
 }
 
 - (void)setStyle:(LNPopupCloseButtonStyle)style

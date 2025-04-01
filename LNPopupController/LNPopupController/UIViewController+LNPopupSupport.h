@@ -145,8 +145,13 @@ NS_SWIFT_UI_ACTOR
 ///   - completion: The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
 - (void)dismissPopupBarAnimated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
-/// The popup bar interaction style.
+/// The popup interaction style.
 @property (nonatomic, assign) LNPopupInteractionStyle popupInteractionStyle NS_REFINED_FOR_SWIFT;
+
+/// The effective popup interaction style. (read-only)
+///
+/// Use this property's value to determine, at runtime, what the result of `LNPopupInteractionStyleDefault` is.
+@property (nonatomic, assign, readonly) LNPopupInteractionStyle effectivePopupInteractionStyle NS_REFINED_FOR_SWIFT;
 
 
 /// The percent of the container controller's view height to drag before closing the popup.

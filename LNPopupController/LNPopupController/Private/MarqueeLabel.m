@@ -969,7 +969,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     // Create new animation
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:property];
 	
-	if (@available(iOS 15.0, *))
+	if(@available(iOS 15.0, *))
 	{
 		CGFloat max = UIScreen.mainScreen.maximumFramesPerSecond;
 		animation.preferredFrameRateRange = CAFrameRateRangeMake(max, max, max);

@@ -48,15 +48,11 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 
 @end
 
-#if TARGET_OS_MACCATALYST
-
 @interface UIWindow (MacCatalystSupport)
 
 @property (nonatomic, strong, readonly) UIEvent* _ln_currentEvent;
 
 @end
-
-#endif
 
 NS_ASSUME_NONNULL_END
 

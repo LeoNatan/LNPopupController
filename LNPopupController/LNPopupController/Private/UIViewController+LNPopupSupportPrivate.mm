@@ -301,6 +301,13 @@ CF_EXTERN_C_END
 	return [self.class respondsToSelector:NSSelectorFromString(key)] && [[self.class valueForKey:key] boolValue];
 }
 
+- (BOOL)_ln_shouldPopupContentAnyFadeForTransition
+{
+	BOOL bottomBarIsVisible = [self.bottomDockingViewForPopup_internalOrDeveloper isKindOfClass:_LNPopupBottomBarSupport.class] == NO && self.ln_popupController.bottomBar.hidden == NO && self.ln_popupController.bottomBar.window != nil;
+	
+	return self.popupBar.window.safeAreaInsets.bottom != 0 || bottomBarIsVisible;
+}
+
 - (BOOL)_ln_shouldPopupContentViewFadeForTransition
 {
 	BOOL bottomBarExtensionIsVisible = self._ln_bottomBarExtension_nocreate != nil && self._ln_bottomBarExtension_nocreate.isHidden == NO && self._ln_bottomBarExtension_nocreate.alpha > 0 && self._ln_bottomBarExtension_nocreate.frame.size.height > 0;
@@ -652,13 +659,11 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
 	}
 	
-#if ! TARGET_OS_MACCATALYST
-	if(self.popupContentViewController)
+	if(LNPopupBar.isCatalystApp && self.popupContentViewController)
 	{
 		[self.popupContentViewController _uLFSBAIO];
 		[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];
 	}
-#endif
 }
 
 
@@ -817,7 +822,17 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		
 		if(self._ln_popupController_nocreate.popupControllerInternalState != LNPopupPresentationStateBarHidden)
 		{
-			UIEdgeInsets neededInsets = UIEdgeInsetsMake(0, 0, MAX(0, self.popupBar.frame.size.height - [self _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle]), 0);
+			CGFloat barHeightToUse;
+			if(self._ln_popupController_nocreate.popupControllerPublicState == LNPopupPresentationStateOpen)
+			{
+				barHeightToUse = _LNPopupBarHeightForPopupBar(self.popupBar);
+			}
+			else
+			{
+				barHeightToUse = self.popupBar.frame.size.height;
+			}
+			
+			UIEdgeInsets neededInsets = UIEdgeInsetsMake(0, 0, MAX(0, barHeightToUse - [self _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle]), 0);
 			
 			UIEdgeInsets safe = _LNPopupSafeAreaInsets(self);
 			UIEdgeInsets childAdditive = _LNPopupChildAdditiveSafeAreas(self);
@@ -2030,6 +2045,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[self _setIgnoringLayoutDuringTransition:YES];
 	}
 	
+	CGFloat earlyBarOffset = [self _ln_popupOffsetForPopupBarStyle:self._ln_popupController_nocreate.popupBar.resolvedStyle];
+	
 	__ln_hideBarEdge = edge;
 	__ln_alreadyInHideShowBar = YES;
 	//Trigger the toolbar hide or show transition.
@@ -2058,27 +2075,29 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		CGRect initialBackgroundViewFrame;
 		CGRect targetBackgroundViewFrame;
 		
+		CGFloat laterBarOffset = [self _ln_popupOffsetForPopupBarStyle:self._ln_popupController_nocreate.popupBar.resolvedStyle];
+		
 		if(edge == UIRectEdgeBottom)
 		{
 			if(hidden == YES)
 			{
 				initialBackgroundViewFrame = backgroundViewFrame;
-				targetBackgroundViewFrame = CGRectOffset(backgroundViewFrame, 0, bottomSafeArea);
+				targetBackgroundViewFrame = CGRectOffset(backgroundViewFrame, 0, bottomSafeArea - laterBarOffset);
 			}
 			else
 			{
-				initialBackgroundViewFrame = CGRectOffset(backgroundViewFrame, 0, bottomSafeArea);
+				initialBackgroundViewFrame = CGRectOffset(backgroundViewFrame, 0, bottomSafeArea - earlyBarOffset);
 				targetBackgroundViewFrame = backgroundViewFrame;
 			}
 		}
 		else if(hidden == YES)
 		{
 			initialBackgroundViewFrame = backgroundViewFrame;
-			targetBackgroundViewFrame = CGRectOffset(backgroundViewFrame, (edge == UIRectEdgeRight ? 1 : -1) * CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(frame) + bottomSafeArea);
+			targetBackgroundViewFrame = CGRectOffset(backgroundViewFrame, (edge == UIRectEdgeRight ? 1 : -1) * CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(frame) + bottomSafeArea - laterBarOffset);
 		}
 		else
 		{
-			initialBackgroundViewFrame = CGRectOffset(backgroundViewFrame, (edge == UIRectEdgeRight ? 1 : -1) * CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(frame) + bottomSafeArea);
+			initialBackgroundViewFrame = CGRectOffset(backgroundViewFrame, (edge == UIRectEdgeRight ? 1 : -1) * CGRectGetWidth(backgroundViewFrame), -CGRectGetHeight(frame) + bottomSafeArea - earlyBarOffset);
 			targetBackgroundViewFrame = backgroundViewFrame;
 		}
 		

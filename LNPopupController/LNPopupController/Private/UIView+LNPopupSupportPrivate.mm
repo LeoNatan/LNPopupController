@@ -15,9 +15,6 @@
 #import "_LNPopupUIBarAppearanceProxy.h"
 #import "_LNWeakRef.h"
 #import <objc/runtime.h>
-#if TARGET_OS_MACCATALYST
-#import <AppKit/AppKit.h>
-#endif
 
 @implementation _LNPopupBarBackgroundGroupNameOverride
 
@@ -321,8 +318,6 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 @end
 
 #endif
-
-#if TARGET_OS_MACCATALYST
 	
 @implementation UIWindow (MacCatalystSupport)
 
@@ -351,9 +346,6 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 }
 
 @end
-
-
-#endif
 
 LNAlwaysInline
 BOOL _LNBottomBarIsInPopupPresentation(NSObject* self)

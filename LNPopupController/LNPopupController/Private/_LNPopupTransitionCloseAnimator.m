@@ -72,13 +72,16 @@
 {
 	[super performAdditionalDelayed015Animations];
 	
-	if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
+	if(self.containerController._ln_shouldPopupContentAnyFadeForTransition)
 	{
-		self.popupContentView.alpha = 0.0;
-	}
-	else
-	{
-		self.currentContentController.view.alpha = 0.0;
+		if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
+		{
+			self.popupContentView.alpha = 0.0;
+		}
+		else
+		{
+			self.currentContentController.view.alpha = 0.0;
+		}
 	}
 	
 	self.crossfadeImageView.alpha = 1.0;

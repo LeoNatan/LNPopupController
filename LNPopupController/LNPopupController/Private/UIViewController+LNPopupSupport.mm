@@ -27,6 +27,10 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 
 const double LNSnapPercentDefault = 0.32;
 
+extern "C" {
+extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style);
+}
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation UIViewController (LNPopupSupportPrivate)
@@ -309,6 +313,11 @@ const double LNSnapPercentDefault = 0.32;
 	return (LNPopupInteractionStyle)[objc_getAssociatedObject(self, _LNPopupInteractionStyleKey) unsignedIntegerValue];
 }
 
+- (LNPopupInteractionStyle)effectivePopupInteractionStyle
+{
+	return _LNPopupResolveInteractionStyleFromInteractionStyle((LNPopupInteractionStyle)[objc_getAssociatedObject(self, _LNPopupInteractionStyleKey) unsignedIntegerValue]);
+}
+
 - (void)setPopupInteractionStyle:(LNPopupInteractionStyle)popupInteractionStyle
 {
 	objc_setAssociatedObject(self, _LNPopupInteractionStyleKey, @(popupInteractionStyle), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -450,6 +459,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	{
 		//User docking view, do not offset.
 		return 0.0;
+	}
+	
+	if(LNPopupBar.isCatalystApp)
+	{
+		return -7.0;
 	}
 	
 	return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 7.0 : 0.0;

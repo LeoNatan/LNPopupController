@@ -31,6 +31,8 @@
 
 CF_EXTERN_C_BEGIN
 
+#define LN_POPUP_DEBUG_SLOW_TRANSITIONS 0
+
 #ifndef LNPopupControllerEnforceStrictClean
 //visualProvider.toolbarIsSmall
 static NSString* const _vPTIS = @"dmlzdWFsUHJvdmlkZXIudG9vbGJhcklzU21hbGw=";
@@ -43,11 +45,14 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	LNPopupInteractionStyle rv = style;
 	if(rv == LNPopupInteractionStyleDefault)
 	{
-#if TARGET_OS_MACCATALYST
-		rv = LNPopupInteractionStyleScroll;
-#else
-		rv = LNPopupInteractionStyleSnap;
-#endif
+		if([LNPopupBar isCatalystApp])
+		{
+			rv = LNPopupInteractionStyleScroll;
+		}
+		else
+		{
+			rv = LNPopupInteractionStyleSnap;
+		}
 	}
 	return rv;
 }
@@ -190,13 +195,20 @@ __attribute__((objc_direct_members))
 
 - (void)setBottomBar:(UIView *)bottomBar
 {
-	if (@available(iOS 17.0, *)) {
+	if(@available(iOS 17.0, *))
+	{
 		[_bottomBar.traitOverrides setObject:nil forTrait:_LNPopupBarBackgroundGroupNameOverride.class];
 	}
 	
 	_bottomBar = bottomBar;
 	
-	if (@available(iOS 17.0, *)) {
+	if(LNPopupBar.isCatalystApp == YES)
+	{
+		return;
+	}
+	
+	if(@available(iOS 17.0, *))
+	{
 		[_bottomBar.traitOverrides setObject:self.popupBar.effectGroupingIdentifier forTrait:_LNPopupBarBackgroundGroupNameOverride.class];
 	}
 }
@@ -237,6 +249,13 @@ __attribute__((objc_direct_members))
 	
 	CGFloat fractionalHeight = MAX(heightForContent - (self.popupBar.frame.origin.y + self.popupBar.frame.size.height), 0);
 	contentFrame.size.height = ceil(fractionalHeight);
+	
+	if(self.popupControllerTargetState <= LNPopupPresentationStateBarPresented)
+	{
+		CGFloat offset = [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.effectiveBarStyle];
+		contentFrame.size.height = 0;
+		contentFrame.origin.y -= offset;
+	}
 	
 	self.popupContentView.frame = contentFrame;
 	
@@ -676,14 +695,19 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	CGFloat animationDuration = resolvedStyle == LNPopupInteractionStyleSnap ? 0.5 : 0.5;
-//	if(userView != nil)
-//	{
+#if LN_POPUP_DEBUG_SLOW_TRANSITIONS
+	if(userView != nil)
+	{
 //		animationDuration *= 1.25;
-//		animationDuration = 4.0;
-//	}
+		animationDuration = 4.0;
+	}
+#endif
 	
+#if !LN_POPUP_DEBUG_SLOW_TRANSITIONS
 	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring && userView == nil ? 0.85 : 1.0 animations:nil];
-//	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration curve:UIViewAnimationCurveLinear animations:nil];
+#else
+	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration curve:UIViewAnimationCurveLinear animations:nil];
+#endif
 	_runningPopupAnimation.userInteractionEnabled = NO;
 	
 	if(stateAtStart == LNPopupPresentationStateBarPresented && userView != nil)
@@ -701,14 +725,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		if(state == LNPopupPresentationStateBarPresented)
 		{
 			[_runningPopupAnimation addAnimations:^{
-				if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
+				if(self.containerController._ln_shouldPopupContentAnyFadeForTransition && self.containerController._ln_shouldPopupContentViewFadeForTransition)
 				{
 					self.popupContentView.alpha = 0.0;
 				}
-//				else
-//				{
-//					self.currentContentController.view.alpha = 0.0;
-//				}
 			} delayFactor:0.15];
 			
 			[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
@@ -775,18 +795,19 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarPresentationByUserPanGestureHandler_began:(UIPanGestureRecognizer*)pgr
 {
-#if TARGET_OS_MACCATALYST
-	UIEvent* event = self.popupBar.window._ln_currentEvent;
-	if(event.type == 22 /*NSEventTypeScrollWheel*/)
+	if(LNPopupBar.isCatalystApp)
 	{
-		return;
+		UIEvent* event = self.popupBar.window._ln_currentEvent;
+		if(event.type == 22 /*NSEventTypeScrollWheel*/)
+		{
+			return;
+		}
+		
+		if(event != nil && event.type == 22)
+		{
+			return;
+		}
 	}
-	
-	if(event != nil && event.type == 22)
-	{
-		return;
-	}
-#endif
 	
 	[self _start120HzHack];
 	
@@ -857,12 +878,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarPresentationByUserPanGestureHandler_changed:(UIPanGestureRecognizer*)pgr
 {
-#if TARGET_OS_MACCATALYST
-	if(self.popupBar.window._ln_currentEvent.type == 22 /*NSEventTypeScrollWheel*/)
+	if(LNPopupBar.isCatalystApp && self.popupBar.window._ln_currentEvent.type == 22 /*NSEventTypeScrollWheel*/)
 	{
 		return;
 	}
-#endif
 	
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 	
@@ -1912,7 +1931,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar
 {
 	[self _updateBarExtensionStyleFromPopupBar];
-	[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:self.popupContentView.effectView];
+	if(LNPopupBar.isCatalystApp == NO)
+	{
+		[_containerController.popupBar _applyGroupingIdentifierToVisualEffectView:self.popupContentView.effectView];
+	}
 }
 
 - (void)_popupBar:(LNPopupBar *)bar updateCustomBarController:(LNPopupCustomBarViewController *)customController cleanup:(BOOL)cleanup
@@ -1933,7 +1955,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		if (@available(iOS 15.0, *))
+		if(@available(iOS 15.0, *))
 		{
 			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && UIScreen.mainScreen.maximumFramesPerSecond > 60 && [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CADisableMinimumFrameDurationOnPhone"] boolValue] == NO)
 			{
@@ -1976,9 +1998,11 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 + (CGFloat)_statusBarHeightForView:(UIView*)view
 {
-#if TARGET_OS_MACCATALYST
-	return 0;
-#else
+	if(LNPopupBar.isCatalystApp)
+	{
+		return 0;
+	}
+
 	if(view == nil || view.window == nil)
 	{
 		return 0;
@@ -1991,7 +2015,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	}
 	
 	return view.window.safeAreaInsets.top;
-#endif
 }
 
 - (void)_120HzTick {}

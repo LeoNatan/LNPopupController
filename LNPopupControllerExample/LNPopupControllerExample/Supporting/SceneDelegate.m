@@ -12,11 +12,7 @@
 	
 #if TARGET_OS_MACCATALYST
 	scene.sizeRestrictions.maximumSize = CGSizeMake(DBL_MAX, DBL_MAX);
-	
-	NSToolbar* toolbar = [NSToolbar new];
-	toolbar.displayMode = NSToolbarDisplayModeIconOnly;
-	
-	scene.titlebar.toolbar = toolbar;
+	scene.titlebar.toolbar = nil;
 	
 	if([self.window.rootViewController isKindOfClass:UISplitViewController.class])
 	{

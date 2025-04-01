@@ -444,7 +444,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_contentView.clipsToBounds = NO;
 		[self addSubview:_contentView];
 		
-		if (@available(iOS 13.4, *))
+		if(@available(iOS 13.4, *))
 		{
 			UIPointerInteraction* pointerInteraction = [[UIPointerInteraction alloc] initWithDelegate:self];
 			[_contentView addInteraction:pointerInteraction];
@@ -2129,8 +2129,24 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}
 }
 
++ (BOOL)isCatalystApp
+{
+	BOOL isCatalystApp = NSProcessInfo.processInfo.isMacCatalystApp;
+	if(@available(iOS 14.0, *))
+	{
+		isCatalystApp = isCatalystApp || NSProcessInfo.processInfo.iOSAppOnMac;
+	}
+	
+	return isCatalystApp;
+}
+
 - (BOOL)isWidePad
 {
+	if(LNPopupBar.isCatalystApp)
+	{
+		return YES;
+	}
+	
 	return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad;
 }
 
