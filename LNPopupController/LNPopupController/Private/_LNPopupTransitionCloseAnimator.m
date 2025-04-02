@@ -36,7 +36,14 @@
 
 - (CGFloat)scaledBarImageViewCornerRadius
 {
-	return self.popupBar.imageView.cornerRadius * self.sourceFrame.size.width / self.popupBar.imageView.bounds.size.width;
+	if(self.sourceFrame.size.width > self.sourceFrame.size.height)
+	{
+		return self.popupBar.imageView.cornerRadius * self.sourceFrame.size.width / self.popupBar.imageView.bounds.size.width;
+	}
+	else
+	{
+		return self.popupBar.imageView.cornerRadius * self.sourceFrame.size.height / self.popupBar.imageView.bounds.size.height;
+	}
 }
 
 - (NSShadow *)scaledBarImageViewShadow
@@ -55,15 +62,15 @@
 {
 	[super beforeAnyAnimation];
 	
-	self.crossfadeImageView.alpha = 0.0;
-	self.crossfadeImageView.layer.cornerRadius = self.transitionView.cornerRadius;
+	self.crossfadeView.alpha = 0.0;
+	self.crossfadeView.cornerRadius = self.transitionView.cornerRadius;
 }
 
 - (void)performAdditionalAnimations
 {
 	[self.transitionView setTargetFrameUpdatingTransform:self.targetFrame];
 	
-	self.crossfadeImageView.layer.cornerRadius = self.popupBar.imageView.cornerRadius;
+	self.crossfadeView.cornerRadius = self.popupBar.imageView.cornerRadius;
 	
 	[super performAdditionalAnimations];
 }
@@ -84,7 +91,7 @@
 		}
 	}
 	
-	self.crossfadeImageView.alpha = 1.0;
+	self.crossfadeView.alpha = 1.0;
 }
 
 - (void)performAdditionalCompletion

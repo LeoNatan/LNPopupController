@@ -67,7 +67,7 @@
 		self.transitionView.shadow = _originalShadow;
 	}
 	
-	self.crossfadeImageView.layer.cornerRadius = self.view.cornerRadius;
+	self.crossfadeView.cornerRadius = self.view.cornerRadius;
 }
 
 @end

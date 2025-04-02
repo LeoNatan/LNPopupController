@@ -18,6 +18,7 @@
 	[super beforeAnyAnimation];
 	
 	self.transitionView.shadow = self.popupBar.imageView.shadow.copy;
+	self.transitionView.cornerRadius = self.scaledBarImageViewCornerRadius;
 	
 	_targetShadow = [self.transitionView.shadow copy];
 	_targetShadow.shadowColor = [_targetShadow.shadowColor colorWithAlphaComponent:0.0];
@@ -25,9 +26,10 @@
 
 - (void)performAdditionalAnimations
 {
-	self.transitionView.shadow = _targetShadow;
-	
 	[super performAdditionalAnimations];
+	
+	self.transitionView.shadow = _targetShadow;
+	self.transitionView.cornerRadius = 0.000001;
 }
 
 @end

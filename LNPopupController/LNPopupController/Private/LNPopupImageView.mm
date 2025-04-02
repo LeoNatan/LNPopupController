@@ -54,6 +54,37 @@
 	[_imageContentsLayer setContents:contents];
 }
 
+- (void)setContentsRect:(CGRect)contentsRect
+{
+	[_imageContentsLayer setContentsRect:contentsRect];
+}
+
+- (void)setContentsScale:(CGFloat)contentsScale
+{
+	[_imageContentsLayer setContentsScale:contentsScale];
+}
+
+- (void)setContentsCenter:(CGRect)contentsCenter
+{
+	[_imageContentsLayer setContentsCenter:contentsCenter];
+}
+
+- (void)setContentsFormat:(CALayerContentsFormat)contentsFormat
+{
+	[_imageContentsLayer setContentsFormat:contentsFormat];
+}
+
+- (void)setContentsGravity:(CALayerContentsGravity)contentsGravity
+{
+	[_imageContentsLayer setContentsGravity:contentsGravity];
+}
+
+- (void)setWantsExtendedDynamicRangeContent:(BOOL)wantsExtendedDynamicRangeContent
+{
+	[super setWantsExtendedDynamicRangeContent:wantsExtendedDynamicRangeContent];
+	[_imageContentsLayer setWantsExtendedDynamicRangeContent:wantsExtendedDynamicRangeContent];
+}
+
 - (void)setImageContentsLayer:(CALayer*)layer
 {
 	_imageContentsLayer = layer;

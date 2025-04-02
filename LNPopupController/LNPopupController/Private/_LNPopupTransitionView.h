@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/UIViewController+LNPopupSupport.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface _LNPopupTransitionView : UIView
+@interface _LNPopupTransitionView : UIView <LNPopupTransitionView>
 
 + (instancetype)transitionViewWithSourceView:(UIView*)sourceView;
 
@@ -20,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) UIView* sourceView;
 
-@property (nonatomic, strong) NSShadow* shadow;
+@property (nonatomic, copy) NSShadow* shadow;
 @property (nonatomic, assign) CGFloat cornerRadius;
 @property (nonatomic, assign) BOOL layerAlwaysMasksToBounds;
 

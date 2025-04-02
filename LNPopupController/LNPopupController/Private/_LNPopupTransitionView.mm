@@ -33,7 +33,7 @@
 		[_portalView setValue:sourceView forKey:LNPopupHiddenString("sourceView")];
 		[_portalView setValue:@YES forKey:LNPopupHiddenString("hidesSourceView")];
 		[_portalView setValue:@YES forKey:LNPopupHiddenString("matchesTransform")];
-		_portalView.layer.contentsGravity = kCAGravityCenter;
+		_portalView.layer.contentsGravity = kCAGravityResize;
 		
 		_radiusContainerView = [[UIView alloc] initWithFrame:CGRectZero];
 		_radiusContainerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

@@ -7,6 +7,7 @@
 //
 
 #import "_LNPopupTransitionAnimator.h"
+#import "LNPopupBar+Private.h"
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import <objc/runtime.h>
 
@@ -43,17 +44,34 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			_transitionView = [[_LNPopupTransitionView alloc] initWithSourceView:self.view];
 		}
 		
-		_crossfadeImageView = [[UIImageView alloc] initWithImage:self.popupBar.imageView.image];
-		_crossfadeImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_crossfadeImageView.contentMode = self.popupBar.imageView.contentMode;
-		_crossfadeImageView.frame = _transitionView.bounds;
-		_crossfadeImageView.layer.masksToBounds = YES;
-		[_transitionView addSubview:_crossfadeImageView];
+		UIImage* image;
+		if(self.popupBar.swiftuiImageController != nil)
+		{
+			id contents = self.popupBar.swiftuiImageController.view.subviews.firstObject.layer.contents;
+			if(contents != nil && CFGetTypeID((__bridge CFTypeRef)contents) == CGImageGetTypeID())
+			{
+				image = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)contents];
+			}
+			else
+			{
+				image = [[[UIGraphicsImageRenderer alloc] initWithSize:self.popupBar.imageView.bounds.size] imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+					[self.popupBar.imageView drawViewHierarchyInRect:self.popupBar.imageView.bounds afterScreenUpdates:NO];
+				}];
+			}
+		}
+		else
+		{
+			image = self.popupBar.imageView.image;
+		}
+		
+		_crossfadeView = [[LNPopupImageView alloc] initWithImage:image];
+		_crossfadeView.contentMode = self.popupBar.imageView.contentMode;
+		_crossfadeView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_crossfadeView.frame = _transitionView.bounds;
+		[_transitionView addSubview:_crossfadeView];
 		
 		_transitionView.frame = self.sourceFrame;
 		[self beforeAnyAnimation];
-		
-		_crossfadeImageView.layer.cornerCurve = kCACornerCurveContinuous;
 		
 		objc_setAssociatedObject(self.transitionView.sourceView, _LNPopupOpenCloseTransitionViewKey, _transitionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	}];
