@@ -29,9 +29,16 @@
 #import <AppKit/AppKit.h>
 #endif
 
-CF_EXTERN_C_BEGIN
+#ifdef DEBUG
+#import "LNPopupDebug.h"
 
-#define LN_POPUP_DEBUG_SLOW_TRANSITIONS 0
+static BOOL _LNEnableSlowTransitionsDebug(void)
+{
+	return [__LNDebugUserDefaults() boolForKey:@"__LNPopupEnableSlowTransitionsDebug"];
+}
+#endif
+
+CF_EXTERN_C_BEGIN
 
 #ifndef LNPopupControllerEnforceStrictClean
 //visualProvider.toolbarIsSmall
@@ -695,19 +702,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	CGFloat animationDuration = resolvedStyle == LNPopupInteractionStyleSnap ? 0.5 : 0.5;
-#if LN_POPUP_DEBUG_SLOW_TRANSITIONS
-	if(userView != nil)
+#if DEBUG
+	if(_LNEnableSlowTransitionsDebug())
 	{
-//		animationDuration *= 1.25;
 		animationDuration = 4.0;
 	}
 #endif
-	
-#if !LN_POPUP_DEBUG_SLOW_TRANSITIONS
+
 	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring && userView == nil ? 0.85 : 1.0 animations:nil];
-#else
-	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration curve:UIViewAnimationCurveLinear animations:nil];
-#endif
 	_runningPopupAnimation.userInteractionEnabled = NO;
 	
 	if(stateAtStart == LNPopupPresentationStateBarPresented && userView != nil)

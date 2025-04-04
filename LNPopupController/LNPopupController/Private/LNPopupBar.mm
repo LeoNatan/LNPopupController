@@ -16,25 +16,7 @@
 #import "UIView+LNPopupSupportPrivate.h"
 
 #ifdef DEBUG
-static NSUserDefaults* __LNDebugUserDefaults(void)
-{
-	static NSUserDefaults* rv = nil;
-	
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		SEL sel = NSSelectorFromString(@"settingDefaults");
-		if([NSUserDefaults respondsToSelector:sel])
-		{
-			rv = [NSUserDefaults valueForKey:@"settingDefaults"];
-		}
-		else
-		{
-			rv = NSUserDefaults.standardUserDefaults;
-		}
-	});
-	
-	return rv;
-}
+#import "LNPopupDebug.h"
 
 static BOOL _LNEnableBarLayoutDebug(void)
 {

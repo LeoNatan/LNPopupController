@@ -89,6 +89,8 @@
 		39E9FE11275B984B00A47D61 /* LNPopupDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39F8228826B80B6F0070DDBA /* SwiftRefinements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */; };
 		39F9DECA2C84A211005CA5FB /* _LNPopupBase64Utils.hh in Headers */ = {isa = PBXBuildFile; fileRef = 39F9DEC92C84A207005CA5FB /* _LNPopupBase64Utils.hh */; };
+		39FA8FD12D9F84000068FD0D /* LNPopupDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FA8FCF2D9F84000068FD0D /* LNPopupDebug.h */; };
+		39FA8FD22D9F84000068FD0D /* LNPopupDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 39FA8FD02D9F84000068FD0D /* LNPopupDebug.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -176,6 +178,8 @@
 		39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDefinitions.h; sourceTree = "<group>"; };
 		39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftRefinements.swift; path = ../../LNPCSwiftRefinements/SwiftRefinements.swift; sourceTree = "<group>"; };
 		39F9DEC92C84A207005CA5FB /* _LNPopupBase64Utils.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = _LNPopupBase64Utils.hh; sourceTree = "<group>"; };
+		39FA8FCF2D9F84000068FD0D /* LNPopupDebug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDebug.h; sourceTree = "<group>"; };
+		39FA8FD02D9F84000068FD0D /* LNPopupDebug.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupDebug.m; sourceTree = "<group>"; };
 		46ECC2AE1BF31025005CE96C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -224,6 +228,8 @@
 				39B54FFE2D92D26300B474EC /* TransitionAnimators */,
 				3947E1B01B61CE4A0001178B /* LNPopupController.h */,
 				3947E1B11B61CE4A0001178B /* LNPopupController.mm */,
+				39FA8FCF2D9F84000068FD0D /* LNPopupDebug.h */,
+				39FA8FD02D9F84000068FD0D /* LNPopupDebug.m */,
 				39599BAC1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h */,
 				39599BA91E02CD65008EE386 /* LNPopupCustomBarViewController.m */,
 				394A85BB1B6306AE004FFC61 /* LNPopupItem+Private.h */,
@@ -336,6 +342,7 @@
 				398C2903260CCDA6000690FB /* LNPopupContentView+Private.h in Headers */,
 				39F9DECA2C84A211005CA5FB /* _LNPopupBase64Utils.hh in Headers */,
 				39599BAA1E02CD65008EE386 /* LNPopupCustomBarViewController.h in Headers */,
+				39FA8FD12D9F84000068FD0D /* LNPopupDebug.h in Headers */,
 				399BA1D42A9E975E00CA5167 /* _LNPopupUIBarAppearanceProxy.h in Headers */,
 				39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */,
 				39A0DDB326F7894700E5D751 /* NSAttributedString+LNPopupSupport.h in Headers */,
@@ -483,6 +490,7 @@
 				39B550122D92D29000B474EC /* _LNPopupTransitionGenericOpenAnimator.m in Sources */,
 				39B550132D92D29000B474EC /* _LNPopupTransitionGenericCloseAnimator.m in Sources */,
 				396D62732610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.mm in Sources */,
+				39FA8FD22D9F84000068FD0D /* LNPopupDebug.m in Sources */,
 				3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.mm in Sources */,
 				39599BAB1E02CD65008EE386 /* LNPopupCustomBarViewController.m in Sources */,
 				39AC479226C69ACA001D53C2 /* LNMath.m in Sources */,

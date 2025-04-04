@@ -8,6 +8,7 @@
 
 #import "_LNPopupTransitionCloseAnimator.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
+#import "LNPopupBar+Private.h"
 
 @implementation _LNPopupTransitionCloseAnimator
 
@@ -36,14 +37,7 @@
 
 - (CGFloat)scaledBarImageViewCornerRadius
 {
-	if(self.sourceFrame.size.width > self.sourceFrame.size.height)
-	{
-		return self.popupBar.imageView.cornerRadius * self.sourceFrame.size.width / self.popupBar.imageView.bounds.size.width;
-	}
-	else
-	{
-		return self.popupBar.imageView.cornerRadius * self.sourceFrame.size.height / self.popupBar.imageView.bounds.size.height;
-	}
+	return MAX(self.popupBar.imageView.cornerRadius * self.sourceFrame.size.width / self.popupBar.imageView.bounds.size.width, self.popupBar.imageView.cornerRadius * self.sourceFrame.size.height / self.popupBar.imageView.bounds.size.height);
 }
 
 - (NSShadow *)scaledBarImageViewShadow
@@ -68,11 +62,11 @@
 
 - (void)performAdditionalAnimations
 {
+	[super performAdditionalAnimations];
+	
 	[self.transitionView setTargetFrameUpdatingTransform:self.targetFrame];
 	
 	self.crossfadeView.cornerRadius = self.popupBar.imageView.cornerRadius;
-	
-	[super performAdditionalAnimations];
 }
 
 - (void)performAdditionalDelayed015Animations
@@ -90,6 +84,11 @@
 			self.currentContentController.view.alpha = 0.0;
 		}
 	}
+}
+
+- (void)performAdditional04Delayed015Animations
+{
+	[super performAdditional04Delayed015Animations];
 	
 	self.crossfadeView.alpha = 1.0;
 }

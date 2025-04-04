@@ -232,7 +232,7 @@ Supplying long text for the title and/or subtitle will result in a scrolling tex
 
 The framework supports popup image transitions:
 
-<p align="center"><img src="./Supplements/popup_transitions.gif"/></p>
+<p align="center"><img src="./Supplements/popup_transitions.gif" width="360"/></p>
 
 Transitions are opt-in and require you either use an `LNPopupImageView` image view in your popup content, which is discovered automatically by the system, or provide a view that will serve as the transition target/source by implementing `viewForPopupTransition(from:to:)` in popup content controller.
 

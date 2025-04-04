@@ -98,8 +98,20 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	}];
 	
 	[animator addAnimations:^{
-		[self performAdditionalDelayed015Animations];
-	} delayFactor:0.15];
+		[UIView animateKeyframesWithDuration:0.0 delay:0.0 options:0 animations:^{
+			[UIView addKeyframeWithRelativeStartTime:0.15 relativeDuration:0.85 animations:^{
+				[self performAdditionalDelayed015Animations];
+			}];
+		} completion:nil];
+	}];
+	
+	[animator addAnimations:^{
+		[UIView animateKeyframesWithDuration:0.0 delay:0.0 options:0 animations:^{
+			[UIView addKeyframeWithRelativeStartTime:0.15 relativeDuration:0.4 animations:^{
+				[self performAdditional04Delayed015Animations];
+			}];
+		} completion:nil];
+	}];
 	
 	[animator addAnimations:^{
 		[self performAdditionalDelayed05Animations];
@@ -176,6 +188,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 - (void)performAdditionalDelayed05Animations {}
 - (void)performAdditional01Animations {}
 - (void)performAdditional075Animations {}
+- (void)performAdditional04Delayed015Animations {}
 - (void)performAdditional075Delayed015Animations {}
 - (void)performAdditionalCompletion {}
 

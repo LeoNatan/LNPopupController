@@ -29,7 +29,7 @@
 	[super performAdditionalAnimations];
 	
 	self.transitionView.shadow = _targetShadow;
-	self.transitionView.cornerRadius = 0.000001;
+	self.transitionView.cornerRadius = 0.0;
 }
 
 @end

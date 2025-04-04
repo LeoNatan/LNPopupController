@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)performAdditionalDelayed05Animations NS_REQUIRES_SUPER;
 - (void)performAdditional01Animations NS_REQUIRES_SUPER;
 - (void)performAdditional075Animations NS_REQUIRES_SUPER;
+- (void)performAdditional04Delayed015Animations NS_REQUIRES_SUPER;
 - (void)performAdditional075Delayed015Animations NS_REQUIRES_SUPER;
 - (void)performAdditionalCompletion NS_REQUIRES_SUPER;
 

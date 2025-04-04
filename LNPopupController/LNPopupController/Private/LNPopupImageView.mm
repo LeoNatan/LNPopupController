@@ -18,6 +18,11 @@
 	__weak CALayer* _imageContentsLayer;
 }
 
+- (void)setMasksToBounds:(BOOL)masksToBounds
+{
+	[super setMasksToBounds:NO];
+}
+
 - (void)addSublayer:(CALayer *)layer
 {
 	layer.masksToBounds = YES;
@@ -196,15 +201,6 @@
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
-	
-//	CGFloat dx = _shadow.shadowOffset.width;
-//	CGFloat dy = _shadow.shadowOffset.height;
-//	
-//	UIBezierPath* maskPath = [UIBezierPath bezierPathWithRect:self.bounds];
-//	[maskPath appendPath:[UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.bounds, dx, dy) cornerRadius:_cornerRadius]];
-//	maskPath.usesEvenOddFillRule = YES;
-//	
-//	self.layer.shadowPath = maskPath.CGPath;
 }
 
 - (void)setCornerRadius:(CGFloat)cornerRadius

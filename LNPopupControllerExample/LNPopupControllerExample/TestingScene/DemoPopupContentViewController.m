@@ -201,7 +201,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		
 		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableCustomizations])
 		{
-			shadow.shadowColor = UIColor.yellowColor;
+			shadow.shadowColor = UIColor.cyanColor;
 		}
 		else
 		{
@@ -304,7 +304,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	}
 	else if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 2)
 	{
-		UIImageView* backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"genre17-expanded"]];
+		UIImageView* backgroundView = [[LNPopupImageView alloc] initWithImage:[UIImage imageNamed:@"genre17-expanded"]];
 		backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
 		backgroundView.contentMode = UIViewContentModeScaleAspectFill;
 		backgroundView.clipsToBounds = YES;
