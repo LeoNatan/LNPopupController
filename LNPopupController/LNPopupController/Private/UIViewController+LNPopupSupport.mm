@@ -466,6 +466,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 		return -7.0;
 	}
 	
+	if(self.view.window.safeAreaInsets.bottom == 0)
+	{
+		return -4.0;
+	}
+	
 	return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 7.0 : 0.0;
 }
 

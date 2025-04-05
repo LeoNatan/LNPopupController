@@ -229,7 +229,8 @@ __attribute__((objc_direct_members))
 {
 	CGRect defaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 	UIEdgeInsets insets = [_containerController insetsForBottomDockingView];
-	return CGRectMake(0, defaultFrame.origin.y - self.popupBar.frame.size.height - insets.bottom, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
+	CGFloat offset = [_containerController _ln_popupOffsetForPopupBarStyle:_popupBar.resolvedStyle];
+	return CGRectMake(0, defaultFrame.origin.y - self.popupBar.frame.size.height - insets.bottom - offset, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
 }
 
 - (void)_repositionPopupContentMovingBottomBar:(BOOL)bottomBar animated:(BOOL)animated
