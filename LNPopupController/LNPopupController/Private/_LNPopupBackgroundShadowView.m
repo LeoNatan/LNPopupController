@@ -2,8 +2,8 @@
 //  _LNPopupBackgroundShadowView.m
 //  LNPopupController
 //
-//  Created by Leo Natan on 24/09/2023.
-//  Copyright © 2023 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2023-09-25.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "_LNPopupBackgroundShadowView.h"
@@ -11,7 +11,6 @@
 @implementation _LNPopupBackgroundShadowView
 {
 	CAShapeLayer* _maskLayer;
-	UIColor* _color;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame

@@ -2,8 +2,8 @@
 //  LNPopupBar+Private.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/25/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import <LNPopupController/LNPopupBar.h>
@@ -12,6 +12,8 @@
 #import "_LNPopupBarBackgroundView.h"
 #import "_LNPopupBackgroundShadowView.h"
 #import "_LNPopupBarBackgroundMaskView.h"
+
+CF_EXTERN_C_BEGIN
 
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
@@ -39,6 +41,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 - (void)_traitCollectionForPopupBarDidChange:(LNPopupBar*)bar;
 - (void)_popupBarMetricsDidChange:(LNPopupBar*)bar;
+- (void)_popupBarMetricsDidChange:(LNPopupBar*)bar shouldLayout:(BOOL)layout;
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar;
 - (void)_popupBar:(LNPopupBar*)bar updateCustomBarController:(LNPopupCustomBarViewController*)customController cleanup:(BOOL)cleanup;
 - (void)_removeInteractionGestureForPopupBar:(LNPopupBar*)bar;
@@ -64,7 +67,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, readonly, strong) LNPopupBarAppearance* activeAppearance API_AVAILABLE(ios(13.0));
 @property (nonatomic, readonly, strong) LNPopupBarAppearanceChainProxy* activeAppearanceChain API_AVAILABLE(ios(13.0));
 
-- (void)_recalcActiveAppearanceChain API_AVAILABLE(ios(13.0));
+- (void)_recalcActiveAppearanceChain;
 
 @property (nonatomic, strong) UIImageView* shadowView;
 @property (nonatomic, strong) UIImageView* bottomShadowView;
@@ -76,6 +79,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, copy) NSAttributedString* attributedTitle;
 @property (nonatomic, copy) NSAttributedString* attributedSubtitle;
+
+@property (nonatomic) NSDirectionalEdgeInsets _hackyMargins;
 
 @property (nonatomic, strong) UIImage* image;
 
@@ -113,11 +118,11 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic) BOOL acceptsSizing;
 
-@property (nonatomic) BOOL _applySwiftUILayoutFixes;
+@property (nonatomic) BOOL _applySwiftUILayoutFixes API_AVAILABLE(ios(13.0));
 
-@property (nonatomic, strong) UIFont* swiftuiInheritedFont;
+@property (nonatomic, strong) UIFont* swiftuiInheritedFont API_AVAILABLE(ios(13.0));
 
-@property (nonatomic, strong) UIView* swiftuiTitleContentView;
+@property (nonatomic, strong) UIView* swiftuiTitleContentView API_AVAILABLE(ios(13.0));
 
 @property (nonatomic, strong) UIViewController* swiftuiImageController API_AVAILABLE(ios(13.0));
 @property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController API_AVAILABLE(ios(13.0));
@@ -135,4 +140,9 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 - (void)_appearanceDidChange;
 
++ (BOOL)isCatalystApp;
+- (BOOL)isWidePad;
+
 @end
+
+CF_EXTERN_C_END

@@ -2,8 +2,8 @@
 //  LNPopupContentView.m
 //  LNPopupController
 //
-//  Created by Leo Natan on 8/4/20.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2020-08-04.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupController.h"
@@ -16,11 +16,14 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	LNPopupCloseButtonStyle rv = style;
 	if(rv == LNPopupCloseButtonStyleDefault)
 	{
-#if TARGET_OS_MACCATALYST
-		rv = LNPopupCloseButtonStyleRound;
-#else
-		rv = LNPopupCloseButtonStyleGrabber;
-#endif
+		if([LNPopupBar isCatalystApp])
+		{
+			rv =  LNPopupCloseButtonStyleRound;
+		}
+		else
+		{
+			rv = LNPopupCloseButtonStyleGrabber;
+		}
 	}
 	return rv;
 }
@@ -52,6 +55,32 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		
 		_popupCloseButton = [[LNPopupCloseButton alloc] initWithContainingContentView:self];
 		_popupCloseButton.popupContentView = self;
+		
+		__weak __typeof(self) weakSelf = self;
+		if(@available(iOS 13.4, *))
+		{
+			_popupCloseButton.pointerInteractionEnabled = YES;
+			_popupCloseButton.pointerStyleProvider = ^ UIPointerStyle* (UIButton *button, UIPointerEffect *proposedEffect, UIPointerShape *proposedShape) {
+				LNPopupCloseButtonStyle resolvedStyle = _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(weakSelf.popupCloseButtonStyle);
+				
+				if(resolvedStyle == LNPopupCloseButtonStyleRound)
+				{
+					CGRect frame = CGRectInset(weakSelf.popupCloseButton.frame, 5, 5);
+					
+					return [UIPointerStyle styleWithEffect:proposedEffect shape:[UIPointerShape shapeWithPath:[UIBezierPath bezierPathWithOvalInRect:frame]]];
+				}
+				
+				NSValue* rectValue = [proposedShape valueForKey:@"rect"];
+				if(rectValue == nil)
+				{
+					return [UIPointerStyle styleWithEffect:proposedEffect shape:proposedShape];
+				}
+				
+				CGRect rect = CGRectInset(rectValue.CGRectValue, -5, -5);
+				
+				return [UIPointerStyle styleWithEffect:proposedEffect shape:[UIPointerShape shapeWithRoundedRect:rect]];
+			};
+		}
 		
 		[_popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		[_popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -192,6 +221,10 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	CGFloat topConstant = self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 0 : 1.0;
 	topConstant += layoutFrame.origin.y;
 	topConstant = MAX(self.popupCloseButton.style == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
+	
+#if TARGET_OS_MACCATALYST
+	topConstant += 20;
+#endif
 	
 	CGFloat leadingConstant = layoutFrame.origin.x;
 	

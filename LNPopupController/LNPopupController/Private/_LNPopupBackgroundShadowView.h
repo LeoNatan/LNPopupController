@@ -2,8 +2,8 @@
 //  _LNPopupBackgroundShadowView.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 24/09/2023.
-//  Copyright © 2023 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2023-09-25.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

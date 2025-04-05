@@ -2,8 +2,8 @@
 //  LNPopupLongPressGestureRecognizer.m
 //  LNPopupController
 //
-//  Created by Leo Natan on 15/07/2017.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2017-07-15.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupLongPressGestureRecognizer.h"
@@ -17,7 +17,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
 #if ! TARGET_OS_MACCATALYST
-	if (@available(iOS 13.4, *))
+	if(@available(iOS 13.4, *))
 	{
 		if(touch.type == UITouchTypeIndirectPointer)
 		{

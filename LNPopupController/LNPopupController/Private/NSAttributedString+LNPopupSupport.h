@@ -2,8 +2,8 @@
 //  NSAttributedString+LNPopupSupport.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 9/19/21.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2021-09-19.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

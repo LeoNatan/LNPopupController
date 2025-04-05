@@ -2,8 +2,8 @@
 //  LNPopupController.h
 //  LNPopupController
 //
-//  Created by Leo Natan on 7/24/15.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2015-08-23.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -11,10 +11,13 @@
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import <LNPopupController/LNPopupCloseButton.h>
 #import "LNPopupContentView+Private.h"
+#import "LNPopupBar+Private.h"
 
-extern const NSUInteger _LNPopupPresentationStateTransitioning;
+CF_EXTERN_C_BEGIN
 
-@interface LNPopupController : NSObject
+#define _LNPopupPresentationStateTransitioning ((LNPopupPresentationState)2)
+
+@interface LNPopupController : NSObject <_LNPopupBarDelegate>
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController;
 
@@ -22,6 +25,7 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
 @property (nonatomic, strong) LNPopupBar* popupBar;
 @property (nonatomic, strong, readonly) LNPopupBar* popupBarStorage;
+@property (nonatomic, strong, readonly) LNPopupBar* popupBarNoCreate;
 @property (nonatomic, strong) LNPopupContentView* popupContentView;
 @property (nonatomic, strong) UIScrollView* popupContentContainerView;
 
@@ -59,4 +63,8 @@ extern const NSUInteger _LNPopupPresentationStateTransitioning;
 
 + (CGFloat)_statusBarHeightForView:(UIView*)view;
 
+- (void)_fixupGestureRecognizer:(UIGestureRecognizer*)obj;
+
 @end
+
+CF_EXTERN_C_END

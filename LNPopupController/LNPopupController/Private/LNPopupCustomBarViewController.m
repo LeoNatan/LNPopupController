@@ -2,8 +2,8 @@
 //  LNPopupBarContentViewController.m
 //  LNPopupController
 //
-//  Created by Leo Natan on 15/12/2016.
-//  Copyright © 2015-2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2016-12-30.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupCustomBarViewController+Private.h"
@@ -126,7 +126,7 @@
 	__ln_popup_suppressViewControllerLifecycle = NO;
 }
 
-- (void)_userFacing_viewIsAppearing:(BOOL)animated
+- (void)_userFacing_viewIsAppearing:(BOOL)animated API_AVAILABLE(ios(13.0))
 {
 	__ln_popup_suppressViewControllerLifecycle = YES;
 	

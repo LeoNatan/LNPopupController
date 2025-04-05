@@ -2,8 +2,8 @@
 //  _LNPopupBarBackgroundMaskView.m
 //  LNPopupController
 //
-//  Created by Leo Natan on 27/09/2023.
-//  Copyright © 2023 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2023-09-27.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "_LNPopupBarBackgroundMaskView.h"
@@ -132,7 +132,6 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 - (void)setWantsCutout:(BOOL)wantsCutout animated:(BOOL)animated
 {
 	_wantsCutout = wantsCutout;
-//	_wantsCutout = NO;
 	
 	_targetAlpha = _wantsCutout ? 0.0 : 1.0;
 	if(animated == NO || self.superview.alpha == 0.0 || self.superview.isHidden)
@@ -183,7 +182,7 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 	CGContextSetBlendMode(ctx, kCGBlendModeDestinationIn);
 	
 	[[UIColor.blackColor colorWithAlphaComponent:_currentAlpha] setFill];
-	[[UIBezierPath bezierPathWithRoundedRect:CGRectInset(self.floatingFrame, 1, 1) cornerRadius:self.floatingCornerRadius] fill];
+	[[UIBezierPath bezierPathWithRoundedRect:self.floatingFrame cornerRadius:self.floatingCornerRadius] fill];
 	
 	UIGraphicsPopContext();
 }

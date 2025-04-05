@@ -2,11 +2,11 @@
 //  LNPopupBarAppearanceChainProxy.h
 //  LNPopupBarAppearanceChainProxy
 //
-//  Created by Leo Natan on 8/7/21.
-//  Copyright © 2021 Leo Natan. All rights reserved.
+//  Created by Léo Natan on 2021-08-07.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
-@import UIKit;
+#import <UIKit/UIKit.h>
 #import "LNPopupBarAppearance+Private.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -14,9 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 API_AVAILABLE(ios(13.0))
 @interface LNPopupBarAppearanceChainProxy : NSObject
 
-@property (nonatomic, strong) NSArray<UIBarAppearance*>* chain;
+@property (nonatomic, strong) NSArray<UIBarAppearance*>* chain API_AVAILABLE(ios(13.0));
 
-- (instancetype)initWithAppearanceChain:(NSArray<UIBarAppearance*>*)chain;
+- (instancetype)initWithAppearanceChain:(NSArray<UIBarAppearance*>*)chain API_AVAILABLE(ios(13.0));
 - (id)objectForKey:(NSString*)key;
 - (BOOL)boolForKey:(NSString*)key;
 - (NSUInteger)unsignedIntegerForKey:(NSString*)key;

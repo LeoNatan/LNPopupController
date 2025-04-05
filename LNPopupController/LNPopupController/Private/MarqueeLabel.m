@@ -39,6 +39,9 @@ typedef void(^MLAnimationCompletionBlock)(BOOL finished);
 @end
 
 @interface MarqueeLabel()
+{
+	MarqueeType _userMarqueeType;
+}
 
 @property (nonatomic, strong) UILabel *subLabel;
 
@@ -279,6 +282,8 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+	
+	[self _updateEffectiveMarqueeType];
     
     [self updateSublabel];
 }
@@ -355,10 +360,6 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
         
         return;
     }
-    
-    // Label DOES need to scroll
-    
-    [self.subLabel setLineBreakMode:NSLineBreakByClipping];
     
     // Spacing between primary and second sublabel must be at least equal to leadingBuffer, and at least equal to the fadeLength
     CGFloat minTrailing = MAX(MAX(self.leadingBuffer, self.trailingBuffer), self.fadeLength);
@@ -968,7 +969,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     // Create new animation
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:property];
 	
-	if (@available(iOS 15.0, *))
+	if(@available(iOS 15.0, *))
 	{
 		CGFloat max = UIScreen.mainScreen.maximumFramesPerSecond;
 		animation.preferredFrameRateRange = CAFrameRateRangeMake(max, max, max);
@@ -1467,12 +1468,28 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     }
 }
 
+- (void)_updateEffectiveMarqueeType
+{
+	BOOL isRTL = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
+	
+	if(isRTL)
+	{
+		_marqueeType = _userMarqueeType == MLContinuous ? MLContinuousReverse : MLContinuous;
+	}
+	else
+	{
+		_marqueeType = _userMarqueeType == MLContinuous ? MLContinuous : MLContinuousReverse;
+	}
+}
+
 - (void)setMarqueeType:(MarqueeType)marqueeType {
-    if (marqueeType == _marqueeType) {
+    if (marqueeType == _userMarqueeType) {
         return;
     }
     
-    _marqueeType = marqueeType;
+	_userMarqueeType = marqueeType;
+	
+	[self _updateEffectiveMarqueeType];
     
     [self updateSublabel];
 }
