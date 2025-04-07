@@ -198,10 +198,14 @@
 	[self _updateShadowColor];
 }
 
+#if DEBUG
+
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
 }
+
+#endif
 
 - (void)setCornerRadius:(CGFloat)cornerRadius
 {

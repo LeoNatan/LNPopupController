@@ -16,6 +16,8 @@
 #import "LNPopupBar+Private.h"
 #import <objc/runtime.h>
 
+#define DEBUG_POPUP_BAR_OFFSET 0
+
 static const void* _LNPopupItemKey = &_LNPopupItemKey;
 static const void* _LNPopupControllerKey = &_LNPopupControllerKey;
 const void* _LNPopupPresentationContainerViewControllerKey = &_LNPopupPresentationContainerViewControllerKey;
@@ -453,6 +455,9 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 		return 0.0;
 	}
 	
+#if DEBUG_POPUP_BAR_OFFSET
+	return -80;
+#else
 	id dockingView = self.bottomDockingViewForPopupBar;
 	
 	if(dockingView != nil && ([dockingView isKindOfClass:UIToolbar.class] || [dockingView isKindOfClass:UITabBar.class]) == NO)
@@ -466,7 +471,13 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 		return -7.0;
 	}
 	
+	if(self.view.window.safeAreaInsets.bottom == 0)
+	{
+		return -4.0;
+	}
+	
 	return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 7.0 : 0.0;
+#endif
 }
 
 - (CGRect)defaultFrameForBottomDockingView_internal
@@ -485,9 +496,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 {
 	LNPopupBarStyle barStyle = popupBar != nil ? popupBar.resolvedStyle : _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyleDefault);
 	
-	CGRect rv = [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
-	rv.origin.y += [self _ln_popupOffsetForPopupBarStyle:barStyle];
-	return rv;
+	return [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
 }
 
 - (BOOL)shouldExtendPopupBarUnderSafeArea

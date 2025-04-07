@@ -256,10 +256,14 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	}
 }
 
+#if DEBUG
+
 - (void)safeAreaInsetsDidChange
 {
 	[super safeAreaInsetsDidChange];
 }
+
+#endif
 
 - (UIUserInterfaceStyle)overrideUserInterfaceStyle
 {

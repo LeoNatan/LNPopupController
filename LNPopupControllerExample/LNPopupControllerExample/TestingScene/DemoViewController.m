@@ -338,8 +338,8 @@
 		
 #if LNPOPUP
 		nba.backgroundEffect = effect;
-		
 #endif
+		
 		UITabBarAppearance* tba = [UITabBarAppearance new];
 		[tba configureWithDefaultBackground];
 		tba.backgroundEffect = effect;
@@ -355,7 +355,6 @@
 	self.navigationController.navigationBar.compactScrollEdgeAppearance = nba;
 	
 	UITabBarAppearance* tba = nil;
-	
 	if(disableScrollEdgeAppearance)
 	{
 		tba = [[UITabBarAppearance alloc] initWithBarAppearance:nba];
@@ -363,7 +362,6 @@
 	self.tabBarController.tabBar.scrollEdgeAppearance = tba;
 	
 	UIToolbarAppearance* ta = nil;
-	
 	if(disableScrollEdgeAppearance)
 	{
 		ta = [[UIToolbarAppearance alloc] initWithBarAppearance:nba];

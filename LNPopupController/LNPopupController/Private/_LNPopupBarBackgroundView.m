@@ -40,6 +40,8 @@
 	return self;
 }
 
+#if DEBUG
+
 - (void)setFrame:(CGRect)frame
 {
 	[super setFrame:frame];
@@ -49,6 +51,8 @@
 {
 	[super setAlpha:alpha];
 }
+
+#endif
 
 - (UIVisualEffect *)effect
 {
