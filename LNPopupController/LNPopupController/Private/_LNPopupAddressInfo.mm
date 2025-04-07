@@ -24,7 +24,10 @@
 	if(self)
 	{
 		address = _address;
-		dladdr((void*)address, &_info);
+		if(dladdr((void*)address, &_info) <= 0)
+		{
+			return nil;
+		}
 	}
 	
 	return self;
