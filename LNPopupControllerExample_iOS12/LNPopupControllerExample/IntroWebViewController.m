@@ -7,6 +7,7 @@
 //
 
 #import "IntroWebViewController.h"
+#import "LNPopupControllerExample-Bridging-Header.h"
 @import WebKit;
 @import LNPopupController;
 
@@ -14,36 +15,40 @@ extern UIImage* LNSystemImage(NSString* named);
 
 @interface IntroWebViewController ()
 {
-	UIWebView* _webView;
+	WKWebView* _webView;
+	UIView* _topColorView;
 }
 
 @end
 
 @implementation IntroWebViewController
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+	return UIStatusBarStyleLightContent;
+}
+
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+	[super viewDidLoad];
 	
-	_webView = [UIWebView new];
+	_webView = [WKWebView new];
 	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]]];
 	_webView.translatesAutoresizingMaskIntoConstraints = NO;
-//	_webView.allowsBackForwardNavigationGestures = YES;
+	_webView.allowsBackForwardNavigationGestures = YES;
 	//	_webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-	if (@available(iOS 13.0, *)) {
+	if(@available(iOS 13.0, *))
+	{
 		_webView.scrollView.automaticallyAdjustsScrollIndicatorInsets = NO;
 	}
 	[self.view addSubview:_webView];
 	
-	UIBlurEffectStyle style;
-	if (@available(iOS 13.0, *)) {
-		style = UIBlurEffectStyleSystemThinMaterial;
-	} else {
-		style = UIBlurEffectStyleExtraLight;
-	}
-	UIVisualEffectView* effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
-	effectView.translatesAutoresizingMaskIntoConstraints = NO;
-	[self.view addSubview:effectView];
+	//	UIBlurEffectStyle style = UIBlurEffectStyleSystemThinMaterial;
+	//	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
+	_topColorView = [UIView new];
+	_topColorView.backgroundColor = [UIColor colorWithRed:0.12 green:0.14 blue:0.15 alpha:1.0];
+	_topColorView.translatesAutoresizingMaskIntoConstraints = NO;
+	[self.view addSubview:_topColorView];
 	
 	[NSLayoutConstraint activateConstraints:@[
 		[self.view.topAnchor constraintEqualToAnchor:_webView.topAnchor],
@@ -51,10 +56,10 @@ extern UIImage* LNSystemImage(NSString* named);
 		[self.view.leadingAnchor constraintEqualToAnchor:_webView.leadingAnchor],
 		[self.view.trailingAnchor constraintEqualToAnchor:_webView.trailingAnchor],
 		
-		[self.view.topAnchor constraintEqualToAnchor:effectView.topAnchor],
-		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:effectView.bottomAnchor],
-		[self.view.leadingAnchor constraintEqualToAnchor:effectView.leadingAnchor],
-		[self.view.trailingAnchor constraintEqualToAnchor:effectView.trailingAnchor],
+		[self.view.topAnchor constraintEqualToAnchor:_topColorView.topAnchor],
+		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_topColorView.bottomAnchor],
+		[self.view.leadingAnchor constraintEqualToAnchor:_topColorView.leadingAnchor],
+		[self.view.trailingAnchor constraintEqualToAnchor:_topColorView.trailingAnchor],
 	]];
 	
 	self.popupItem.image = [UIImage imageNamed:@"AppIcon60x60"];
@@ -73,6 +78,18 @@ extern UIImage* LNSystemImage(NSString* named);
 	} range:[title rangeOfString:NSLocalizedString(@"LNPopupController", @"")]];
 	
 	self.popupItem.attributedTitle = attribTitle;
+	
+	if(@available(iOS 15.0, *))
+	{
+		[_webView addObserver:self forKeyPath:@"themeColor" options:NSKeyValueObservingOptionNew context:NULL];
+		[_webView addObserver:self forKeyPath:@"underPageBackgroundColor" options:NSKeyValueObservingOptionNew context:NULL];
+	}
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context API_AVAILABLE(ios(15.0))
+{
+	//	_effectView.effect = nil;
+	_topColorView.backgroundColor = _webView.themeColor;
 }
 
 - (IBAction)_navigate:(id)sender

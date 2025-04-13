@@ -16,6 +16,14 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupBarAppearanceLegacySupport.h"
 
+const CGFloat LNPopupBarHeightCompact = 40.0;
+const CGFloat LNPopupBarHeightProminent = 64.0;
+const CGFloat LNPopupBarHeightFloating = 64.0;
+const CGFloat LNPopupBarProminentImageWidth = 48.0;
+const CGFloat LNPopupBarFloatingImageWidth = 40.0;
+const CGFloat LNPopupBarFloatingPadImageWidth = 44.0;
+const CGFloat LNPopupBarFloatingPadWidthLimit = 954.0;
+
 #ifdef DEBUG
 #import "LNPopupDebug.h"
 
@@ -66,214 +74,6 @@ CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar)
 	}
 }
 
-#ifndef LNPopupControllerEnforceStrictClean
-static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
-static id(*_effectWithStyle_tintColor_invertAutomaticStyle)(id, SEL, NSUInteger, UIColor*, BOOL);
-
-__attribute__((constructor))
-static void __setupFunction(void)
-{
-	_effectWithStyle_tintColor_invertAutomaticStyle_SEL = NSSelectorFromString(LNPopupHiddenString("_effectWithStyle:tintColor:invertAutomaticStyle:"));
-	Method m = class_getClassMethod(UIBlurEffect.class, _effectWithStyle_tintColor_invertAutomaticStyle_SEL);
-	_effectWithStyle_tintColor_invertAutomaticStyle = reinterpret_cast<decltype(_effectWithStyle_tintColor_invertAutomaticStyle)>(method_getImplementation(m));
-}
-#endif
-
-@interface _LNPopupBarContentView : _LNPopupBarBackgroundView @end
-@implementation _LNPopupBarContentView @end
-
-@interface _LNPopupBarTitlesView : UIStackView @end
-@implementation _LNPopupBarTitlesView @end
-
-@interface _LNPopupTitleLabelWrapper: UIView
-
-@property (nonatomic, strong) UILabel* wrapped;
-@property (nonatomic, strong) NSLayoutConstraint* wrappedWidthConstraint;
-
-@end
-
-@implementation _LNPopupTitleLabelWrapper
-
-+ (instancetype)wrapperForLabel:(UILabel*)wrapped
-{
-	_LNPopupTitleLabelWrapper* rv = [[_LNPopupTitleLabelWrapper alloc] initWithFrame:wrapped.frame];
-	rv.wrapped = wrapped;
-	
-	rv.translatesAutoresizingMaskIntoConstraints = wrapped.translatesAutoresizingMaskIntoConstraints;
-	[rv addSubview:wrapped];
-	
-	rv.wrappedWidthConstraint = [wrapped.widthAnchor constraintEqualToConstant:rv.bounds.size.width];
-	
-	[NSLayoutConstraint activateConstraints:@[
-		[rv.leadingAnchor constraintEqualToAnchor:wrapped.leadingAnchor],
-		[rv.heightAnchor constraintEqualToAnchor:wrapped.heightAnchor],
-		rv->_wrappedWidthConstraint
-	]];
-	
-	return rv;
-}
-
-- (void)setBounds:(CGRect)bounds
-{
-	[super setBounds:bounds];
-	
-	if(_wrappedWidthConstraint.constant == bounds.size.width)
-	{
-		return;
-	}
-	
-	if(UIView.inheritedAnimationDuration == 0.0)
-	{
-		_wrappedWidthConstraint.constant = bounds.size.width;
-		[_wrapped layoutSubviews];
-	}
-	else
-	{
-		[UIView transitionWithView:_wrapped
-						  duration:UIView.inheritedAnimationDuration / 2.0
-						   options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionCurveEaseOut
-						animations:^{
-			_wrappedWidthConstraint.constant = bounds.size.width;
-			[_wrapped layoutSubviews];
-		} completion:nil];
-	}
-}
-
-@end
-
-@interface _LNPopupBarShadowView : UIImageView @end
-@implementation _LNPopupBarShadowView
-
-#if DEBUG
-
-- (void)setAlpha:(CGFloat)alpha
-{
-	[super setAlpha:alpha];
-}
-
-- (void)setHidden:(BOOL)hidden
-{
-	[super setHidden:hidden];
-}
-
-#endif
-
-@end
-
-@protocol _LNPopupToolbarLayoutDelegate <NSObject>
-
-- (void)_toolbarDidLayoutSubviews;
-
-@end
-
-@interface _LNPopupToolbar : UIToolbar
-
-@property (nonatomic, weak) id<_LNPopupToolbarLayoutDelegate> _layoutDelegate;
-
-@end
-@implementation _LNPopupToolbar
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
-{
-	UIView* rv = [super hitTest:point withEvent:event];
-	
-	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO && [NSStringFromClass(rv.class) containsString:@"BarItemView"] == NO)
-	{
-		rv = nil;
-	}
-	
-	return rv;
-}
-
-- (void)layoutSubviews
-{
-	[super layoutSubviews];
-	
-	//On iOS 11 and above reset the semantic content attribute to make sure it propagades to all subviews.
-	[self setSemanticContentAttribute:self.semanticContentAttribute];
-	
-	[self._layoutDelegate _toolbarDidLayoutSubviews];
-}
-
-- (void)_deepSetSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute toView:(UIView*)view startingFromView:(UIView*)staringView;
-{
-	if(view == staringView)
-	{
-		[super setSemanticContentAttribute:semanticContentAttribute];
-	}
-	else
-	{
-		[view setSemanticContentAttribute:semanticContentAttribute];
-	}
-	
-	[view.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		[self _deepSetSemanticContentAttribute:semanticContentAttribute toView:obj startingFromView:staringView];
-	}];
-}
-
-- (void)setSemanticContentAttribute:(UISemanticContentAttribute)semanticContentAttribute
-{
-	//On iOS 11, due to a bug in UIKit, the semantic content attribute must be propagaded recursively to all subviews, so that the system behaves correctly.
-	[self _deepSetSemanticContentAttribute:semanticContentAttribute toView:self startingFromView:self];
-}
-
-@end
-
-@protocol LNMarqueeLabel <NSObject>
-
-- (void)resetLabel;
-- (void)unpauseLabel;
-- (void)pauseLabel;
-- (void)restartLabel;
-- (BOOL)isPaused;
-- (void)shutdownLabel;
-
-@property (nonatomic, assign) CGFloat rate;
-@property (nonatomic, assign) CGFloat animationDelay;
-@property (nonatomic, weak) MarqueeLabel* synchronizedLabel;
-@property (nonatomic, readonly) NSTimeInterval animationDuration;
-@property (nonatomic, assign) BOOL holdScrolling;
-
-@end
-
-@interface LNNonMarqueeLabel : UILabel <LNMarqueeLabel> @end
-@implementation LNNonMarqueeLabel
-
-- (void)resetLabel {}
-- (void)unpauseLabel {}
-- (void)pauseLabel {}
-- (void)restartLabel {}
-- (void)shutdownLabel {}
-- (BOOL)isPaused { return YES; }
-- (NSTimeInterval)animationDuration { return 0.0; }
-
-@synthesize rate=_rate, animationDelay=_animationDelay, synchronizedLabel=_synchronizedLabel, holdScrolling=_holdScrolling;
-
-@end
-
-@interface MarqueeLabel () <LNMarqueeLabel> @end
-
-const CGFloat LNPopupBarHeightCompact = 40.0;
-const CGFloat LNPopupBarHeightProminent = 64.0;
-const CGFloat LNPopupBarHeightFloating = 64.0;
-const CGFloat LNPopupBarProminentImageWidth = 48.0;
-const CGFloat LNPopupBarFloatingImageWidth = 40.0;
-const CGFloat LNPopupBarFloatingPadImageWidth = 44.0;
-const CGFloat LNPopupBarFloatingPadWidthLimit = 954.0;
-
-static BOOL __animatesItemSetter = NO;
-
-@interface LNPopupBar () <_LNPopupToolbarLayoutDelegate>
-
-- (void)_windowWillRotate:(NSNotification*)note;
-- (void)_windowDidRotate:(NSNotification*)note;
-- (UIFont*)_titleFont;
-- (UIColor*)_titleColor;
-- (UIFont*)_subtitleFont;
-- (UIColor*)_subtitleColor;
-
-@end
-
 __attribute__((objc_direct_members))
 @implementation LNPopupBar
 {
@@ -301,6 +101,7 @@ __attribute__((objc_direct_members))
 	UIWindow* _swiftHacksWindow2;
 }
 
+static BOOL __animatesItemSetter = NO;
 + (void)setAnimatesItemSetter:(BOOL)animate
 {
 	__animatesItemSetter = animate;
@@ -556,6 +357,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	return self;
 }
+
+#if DEBUG
+
+- (void)setFrame:(CGRect)frame
+{
+	[super setFrame:frame];
+}
+
+#endif
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {

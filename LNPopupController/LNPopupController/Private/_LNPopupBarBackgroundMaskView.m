@@ -131,6 +131,11 @@ static CGGradientRef _LNGradientCreateWithEaseFunction(EASE_FUNC func, UIColor* 
 
 - (void)setWantsCutout:(BOOL)wantsCutout animated:(BOOL)animated
 {
+	if(_wantsCutout == wantsCutout)
+	{
+		return;
+	}
+	
 	_wantsCutout = wantsCutout;
 	
 	_targetAlpha = _wantsCutout ? 0.0 : 1.0;
