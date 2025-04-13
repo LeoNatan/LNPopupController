@@ -177,6 +177,8 @@ __attribute__((objc_direct_members))
 	UIViewPropertyAnimator* _runningBarSidecarAnimation;
 	
 	UIViewPropertyAnimator* _runningPopupAnimation;
+	
+	UIWindow* _lockedRotationWindow;
 }
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
@@ -201,6 +203,11 @@ __attribute__((objc_direct_members))
 	}
 	
 	return self;
+}
+
+- (void)setContainerController:(__kindof UIViewController *)containerController
+{
+	_containerController = containerController;
 }
 
 - (void)setBottomBar:(UIView *)bottomBar
@@ -747,8 +754,17 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[_runningPopupAnimation addCompletion:completionBlock];
 	[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
 		_runningPopupAnimation = nil;
+		if(animated)
+		{
+			[self _endTransitioningLock];
+		}
 	}];
 	[self _addEventQueueResumptionStep:_runningPopupAnimation];
+	
+	if(animated)
+	{
+		[self _beginTransitionLockWithUserInteractionEnabled:NO];
+	}
 	
 	[_runningPopupAnimation startAnimation];
 	
@@ -777,6 +793,22 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			break;
 		default:
 			break;
+	}
+}
+
+- (void)_beginTransitionLockWithUserInteractionEnabled:(BOOL)userInteractionEnabled
+{
+	[UIViewController _ln_beginTransitioningLockWithWindow:_containerController.view.window userInteractionsEnabled:userInteractionEnabled allowedViews:@[self.popupBar, self.popupContentView] lockRotation:_lockedRotationWindow == nil];
+	_lockedRotationWindow = _containerController.view.window;
+}
+
+- (void)_endTransitioningLock
+{
+//	NSLog(@"_endTransitioningLock %@", _lockedRotationWindow);
+	if(_lockedRotationWindow)
+	{
+		[UIViewController _ln_endTransitioningLockWithWindow:_lockedRotationWindow unlockingRotation:YES];
+		_lockedRotationWindow = nil;
 	}
 }
 
@@ -815,8 +847,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	[self _start120HzHack];
-	
 	if(self.popupBar.customBarViewController != nil && self.popupBar.customBarViewController.wantsDefaultPanGestureRecognizer == NO)
 	{
 		return;
@@ -836,6 +866,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
+	[self _start120HzHack];
+	[self _beginTransitionLockWithUserInteractionEnabled:YES];
+	
 	if(resolvedStyle == LNPopupInteractionStyleSnap)
 	{
 		if((_popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y < 0))
@@ -852,6 +885,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		else if((_popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y > 0))
 		{
 			[self _end120HzHack];
+			[self _endTransitioningLock];
 			
 			pgr.enabled = NO;
 			pgr.enabled = YES;
@@ -861,6 +895,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(resolvedStyle == LNPopupInteractionStyleDrag && _popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y > 0)
 	{
 		[self _end120HzHack];
+		[self _endTransitioningLock];
 		
 		pgr.enabled = NO;
 		pgr.enabled = YES;
@@ -972,7 +1007,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		_stateBeforeDismissStarted = _popupControllerInternalState;
 		
-		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:YES useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:NO forceFeedbackGenerationAtStart:NO completion:nil];
+		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:NO forceFeedbackGenerationAtStart:NO completion:nil];
 		
 		_cachedDefaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 		_cachedInsets = [_containerController insetsForBottomDockingView];
@@ -1394,6 +1429,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(_popupBar)
 	{
 		[_popupBar removeFromSuperview];
+	}
+	
+	if(_lockedRotationWindow)
+	{
+		[UIViewController _ln_endTransitioningLockWithWindow:_lockedRotationWindow unlockingRotation:YES];
 	}
 }
 

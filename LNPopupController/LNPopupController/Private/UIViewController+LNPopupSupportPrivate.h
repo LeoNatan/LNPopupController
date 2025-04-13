@@ -33,7 +33,45 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 @interface _LNPopupBottomBarSupport : UIView @end
 
-@interface UIViewController (LNPopupSupportPrivate)
+@interface UIViewController (LNPopupSupport)
+
+@property (nullable, nonatomic, weak, readwrite) UIViewController* popupPresentationContainerViewController;
+@property (nullable, nonatomic, strong, readwrite) UIViewController* popupContentViewController;
+
+- (BOOL)_isContainedInPopupController;
+- (BOOL)_isContainedInOpenPopupController;
+- (BOOL)_isContainedInPopupControllerOrDeallocated;
+
+- (nullable UIPresentationController*)nonMemoryLeakingPresentationController;
+
+@property (nullable, nonatomic, weak, setter=_ln_setDiscoveredTransitionView:, getter=_ln_discoveredTransitionView) LNPopupImageView* ln_discoveredTransitionView;
+
+- (nullable UIView*)_ln_transitionViewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState view:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)outView;
+
+@end
+
+@interface UIViewController (LNCustomContainerPopupSupport)
+
+@property (nonatomic, strong, readonly, getter=_ln_popupController) LNPopupController* ln_popupController;
+- (LNPopupController*)_ln_popupController_nocreate;
+
+@property (nonnull, nonatomic, strong, readonly, getter=_ln_bottomBarSupport) _LNPopupBottomBarSupport* bottomBarSupport;
+- (nullable _LNPopupBottomBarSupport *)_ln_bottomBarSupport_nocreate;
+
+- (CGRect)defaultFrameForBottomDockingView_internal;
+- (CGRect)_defaultFrameForBottomDockingViewForPopupBar:(LNPopupBar*)LNPopupBar;
+
+- (nullable UIView *)bottomDockingViewForPopup_nocreateOrDeveloper;
+- (nonnull UIView *)bottomDockingViewForPopup_internalOrDeveloper;
+
+- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle;
+
++ (void)_ln_beginTransitioningLockWithWindow:(UIWindow*)window userInteractionsEnabled:(BOOL)userInteractionEnabled allowedViews:(NSArray* __nullable)allowedViews lockRotation:(BOOL)lockRotation;
++ (void)_ln_endTransitioningLockWithWindow:(UIWindow*)window unlockingRotation:(BOOL)unlockRotation;
+
+@end
+
+@interface UIViewController (LNPopupLayout)
 
 - (void)_ln_updateSafeAreaInsets;
 
@@ -43,29 +81,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
 
-- (nullable UIPresentationController*)nonMemoryLeakingPresentationController;
-
-@property (nonatomic, strong, readonly, getter=_ln_popupController) LNPopupController* ln_popupController;
-- (LNPopupController*)_ln_popupController_nocreate;
-@property (nullable, nonatomic, weak, readwrite) UIViewController* popupPresentationContainerViewController;
-@property (nullable, nonatomic, strong, readwrite) UIViewController* popupContentViewController;
-
-@property (nonnull, nonatomic, strong, readonly, getter=_ln_bottomBarSupport) _LNPopupBottomBarSupport* bottomBarSupport;
-- (nullable _LNPopupBottomBarSupport *)_ln_bottomBarSupport_nocreate;
-
-- (BOOL)_isContainedInPopupController;
-- (BOOL)_isContainedInOpenPopupController;
-- (BOOL)_isContainedInPopupControllerOrDeallocated;
-
 - (BOOL)_ignoringLayoutDuringTransition;
-
-- (nullable UIView *)bottomDockingViewForPopup_nocreateOrDeveloper;
-- (nonnull UIView *)bottomDockingViewForPopup_internalOrDeveloper;
-
-- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle;
-
-- (CGRect)defaultFrameForBottomDockingView_internal;
-- (CGRect)_defaultFrameForBottomDockingViewForPopupBar:(LNPopupBar*)LNPopupBar;
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate;
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension;
@@ -80,13 +96,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (BOOL)_ln_shouldPopupContentAnyFadeForTransition;
 - (BOOL)_ln_shouldPopupContentViewFadeForTransition;
-@property (nullable, nonatomic, weak, setter=_ln_setDiscoveredTransitionView:, getter=_ln_discoveredTransitionView) LNPopupImageView* ln_discoveredTransitionView;
-
-- (nullable UIView*)_ln_transitionViewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState view:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)outView;
-
-@end
-
-@interface UIViewController (LNPopupLayout)
 
 - (nullable UIViewController*)_ln_childViewControllerForStatusBarLogic __attribute__((objc_direct));
 
