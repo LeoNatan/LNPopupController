@@ -263,7 +263,7 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 
 - (void)_ln_freezeInsets
 {
-	LNDynamicallySubclass(self, __LNPopupUIViewFrozenInsets.class);
+	LNDynamicSubclass(self, __LNPopupUIViewFrozenInsets.class);
 }
 
 @end

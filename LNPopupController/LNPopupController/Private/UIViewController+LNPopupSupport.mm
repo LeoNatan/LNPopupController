@@ -63,7 +63,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completionBlock;
 {
-	LNDynamicallySubclass(controller, _LN_UIViewController_AppearanceControl.class);
+	LNDynamicSubclass(controller, _LN_UIViewController_AppearanceControl.class);
 	
 	if(self.view.window == nil)
 	{

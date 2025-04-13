@@ -21,6 +21,7 @@
 #import "_LNPopupTransitionGenericOpenAnimator.h"
 #import "_LNPopupTransitionGenericCloseAnimator.h"
 #import "_LNPopupTransitionPreferredCloseAnimator.h"
+#import "LNPopupPresentationContainerSupport.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -185,6 +186,8 @@ __attribute__((objc_direct_members))
 	if(self)
 	{
 		_containerController = containerController;
+		
+		LNDynamicSubclass(_containerController, LNPopupPresentationContainerSupport.class);
 		
 		_popupControllerInternalState = LNPopupPresentationStateBarHidden;
 		_popupControllerTargetState = LNPopupPresentationStateBarHidden;

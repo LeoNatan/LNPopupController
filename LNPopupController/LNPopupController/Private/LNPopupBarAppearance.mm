@@ -27,7 +27,7 @@ static NSArray* __notifiedProperties = nil;
 	{
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
-			__notifiedProperties = _LNPopupGetPropertyNames(self, nil);
+			__notifiedProperties = LNPopupGetPropertyNames(self, nil);
 			
 #ifndef LNPopupControllerEnforceStrictClean
 			Method m1 = class_getInstanceMethod(self, @selector(a:cC:));

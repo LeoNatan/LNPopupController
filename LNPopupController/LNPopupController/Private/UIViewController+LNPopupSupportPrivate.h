@@ -43,7 +43,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
 
-- (nullable UIViewController*)_ln_common_childViewControllerForStatusBarStyle;
 - (nullable UIPresentationController*)nonMemoryLeakingPresentationController;
 
 @property (nonatomic, strong, readonly, getter=_ln_popupController) LNPopupController* ln_popupController;
@@ -84,6 +83,12 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 @property (nullable, nonatomic, weak, setter=_ln_setDiscoveredTransitionView:, getter=_ln_discoveredTransitionView) LNPopupImageView* ln_discoveredTransitionView;
 
 - (nullable UIView*)_ln_transitionViewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState view:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)outView;
+
+@end
+
+@interface UIViewController (LNPopupLayout)
+
+- (nullable UIViewController*)_ln_childViewControllerForStatusBarLogic __attribute__((objc_direct));
 
 @end
 
