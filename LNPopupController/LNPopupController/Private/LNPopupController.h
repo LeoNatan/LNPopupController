@@ -36,7 +36,7 @@ CF_EXTERN_C_BEGIN
 @property (nonatomic, weak) id<LNPopupPresentationDelegate> userPopupPresentationDelegate;
 
 @property (nonatomic, strong) __kindof UIViewController* currentContentController;
-@property (nonatomic, weak) __kindof UIViewController* containerController;
+@property (nonatomic, weak, readonly) __kindof UIViewController* containerController;
 
 @property (nonatomic) CGPoint lastPopupBarLocation;
 @property (nonatomic) CFTimeInterval lastSeenMovement;

@@ -1,14 +1,39 @@
 #import "SceneDelegate.h"
 
-@interface SceneDelegate ()
+@interface DemoWindow : UIWindow @end
+@implementation DemoWindow
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+	id rv = [super hitTest:point withEvent:event];
+	
+//	NSLog(@"DemoWindow hitTest %@", rv);
+	
+	return rv;
+}
 
 @end
 
 @implementation SceneDelegate
 
+-(instancetype)init
+{
+	self = [super init];
+	
+	if(self)
+	{
+		self.window = [DemoWindow new];
+	}
+	
+	return self;
+}
+
 - (void)scene:(UIWindowScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions 
 {
+	self.window.windowScene = scene;
 	self.windowScene = scene;
+	
+	[self.window makeKeyAndVisible];
 	
 #if TARGET_OS_MACCATALYST
 	scene.sizeRestrictions.maximumSize = CGSizeMake(DBL_MAX, DBL_MAX);

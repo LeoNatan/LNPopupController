@@ -33,14 +33,9 @@ extern "C" {
 extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style);
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wincomplete-implementation"
 @implementation UIViewController (LNPopupSupportPrivate)
 
-@dynamic ln_popupController, popupPresentationContainerViewController, popupContentViewController, bottomBarSupport, ln_discoveredTransitionView;
-
 @end
-#pragma clang diagnostic pop
 
 @implementation UIViewController (LNPopupSupport)
 
@@ -342,11 +337,6 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	objc_setAssociatedObject(self, _LNPopupInteractionSnapPercentKey, @(_ln_clamp(popupDragPercent, 0.1, 0.9)), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (LNPopupController*)_ln_popupController_nocreate
-{
-	return objc_getAssociatedObject(self, _LNPopupControllerKey);
-}
-
 - (__kindof UIView *)viewForPopupInteractionGestureRecognizer
 {
 	return self.view;
@@ -387,6 +377,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 @end
 
 @implementation UIViewController (LNCustomContainerPopupSupport)
+
+- (LNPopupController*)_ln_popupController_nocreate
+{
+	return objc_getAssociatedObject(self, _LNPopupControllerKey);
+}
 
 - (LNPopupController *)_ln_popupController
 {
@@ -525,6 +520,74 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	}
 	
 	return backgroundVisible && (bottomBarExtensionIsVisible || scrollEdgeAppearanceRequiresFade);
+}
+
++ (void)_ln_beginTransitioningLockWithWindow:(UIWindow*)window userInteractionsEnabled:(BOOL)userInteractionEnabled allowedViews:(NSArray*)allowedViews lockRotation:(BOOL)lockRotation
+{
+//	NSLog(@"_ln_beginTransitioningLockWithWindow: %@ userInteractionsEnabled: %@ allowedViews: %@ lockRotation: %@", window, @(userInteractionEnabled), allowedViews, @(lockRotation));
+	
+	if(userInteractionEnabled)
+	{
+		[window _ln_setPopupInteractionOnly:allowedViews];
+	}
+	else
+	{
+		window.userInteractionEnabled = NO;
+	}
+	
+#if ! LNPopupControllerEnforceStrictClean
+	static void (^disableRotation)(id);
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		SEL sel = NSSelectorFromString(LNPopupHiddenString("beginDisablingInterfaceAutorotation"));
+		Method m = class_getInstanceMethod(UIWindow.class, sel);
+		if(m == NULL)
+		{
+			disableRotation = nil;
+			return;
+		}
+		void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+		disableRotation = ^ (id self) {
+			orig(self, sel);
+		};
+	});
+	
+	if(lockRotation && disableRotation)
+	{
+		disableRotation(window);
+	}
+#endif
+}
+
++ (void)_ln_endTransitioningLockWithWindow:(UIWindow*)window unlockingRotation:(BOOL)unlockRotation
+{
+//	NSLog(@"_ln_endTransitioningLockWithWindow: %@ unlockingRotation %@", window, @(unlockRotation));
+	
+	[window _ln_setPopupInteractionOnly:nil];
+	window.userInteractionEnabled = YES;
+	
+#if ! LNPopupControllerEnforceStrictClean
+	static void (^enableRotation)(id);
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		SEL sel = NSSelectorFromString(LNPopupHiddenString("endDisablingInterfaceAutorotationAnimated:"));
+		Method m = class_getInstanceMethod(UIWindow.class, sel);
+		if(m == NULL)
+		{
+			enableRotation = nil;
+			return;
+		}
+		void (*orig)(id, SEL, BOOL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+		enableRotation = ^ (id self) {
+			orig(self, sel, YES);
+		};
+	});
+	
+	if(unlockRotation && enableRotation)
+	{
+		enableRotation(window);
+	}
+#endif
 }
 
 @end
