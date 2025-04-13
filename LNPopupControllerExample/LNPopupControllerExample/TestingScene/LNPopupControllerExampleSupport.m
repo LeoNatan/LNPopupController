@@ -19,12 +19,52 @@
 
 @end
 
+@interface DemoNavigationController : UINavigationController @end
+@implementation DemoNavigationController
+
+- (UITabBarItem *)tabBarItem
+{
+	return self.viewControllers.firstObject.tabBarItem;
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle
+{
+	return self.topViewController;
+}
+
+- (UIViewController *)childViewControllerForStatusBarHidden
+{
+	return self.topViewController;
+}
+
+- (UIViewController *)childViewControllerForHomeIndicatorAutoHidden
+{
+	return self.topViewController;
+}
+
+@end
+
 @interface DemoTabBarController : UITabBarController @end
 
 @implementation DemoTabBarController
 {
 	NSMutableArray<UITab*>* _tabs API_AVAILABLE(ios(18.0));
 	NSMutableArray<UITab*>* _sidebarTabs API_AVAILABLE(ios(18.0));
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle
+{
+	return self.selectedViewController;
+}
+
+- (UIViewController *)childViewControllerForStatusBarHidden
+{
+	return self.selectedViewController;
+}
+
+- (UIViewController *)childViewControllerForHomeIndicatorAutoHidden
+{
+	return self.selectedViewController;
 }
 
 - (void)awakeFromNib

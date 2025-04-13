@@ -2,8 +2,8 @@
 //  LNPopupPresentationContainerSupport.m
 //  LNPopupController
 //
-//  Created by Léo Natan on 13/4/25.
-//  Copyright © 2025 Léo Natan. All rights reserved.
+//  Created by Léo Natan on 2025-04-13.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupPresentationContainerSupport.h"

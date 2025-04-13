@@ -622,6 +622,11 @@
 	}
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+	return self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIStatusBarStyleDarkContent : UIStatusBarStyleLightContent;
+}
+
 #pragma mark LNPopupPresentationDelegate
 
 - (void)popupPresentationControllerWillPresentPopupBar:(UIViewController*)popupPresentationController animated:(BOOL)animated
@@ -662,16 +667,6 @@
 - (void)popupPresentationController:(UIViewController *)popupPresentationController didClosePopupWithContentController:(UIViewController *)popupContentController animated:(BOOL)animated
 {
 	
-}
-
-@end
-
-@interface PassthroughNavigationController : UINavigationController @end
-@implementation PassthroughNavigationController
-
-- (UITabBarItem *)tabBarItem
-{
-	return self.viewControllers.firstObject.tabBarItem;
 }
 
 @end

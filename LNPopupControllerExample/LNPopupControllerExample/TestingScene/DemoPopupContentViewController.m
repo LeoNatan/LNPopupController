@@ -12,6 +12,7 @@
 #import "RandomColors.h"
 #import "LoremIpsum.h"
 #import "SafeSystemImages.h"
+#import "LNPopupControllerExample-Swift.h"
 
 @import LNPopupController;
 
@@ -63,7 +64,6 @@ void LNApplyTitleWithSettings(UIViewController* self)
 @interface DemoPopupContentViewController () @end
 @implementation DemoPopupContentViewController
 {
-	NSInteger _lastStyle;
 	LNPopupImageView* _preferredTransitionView;
 	UIView* _genericTransitionView;
 }
@@ -71,11 +71,28 @@ void LNApplyTitleWithSettings(UIViewController* self)
 - (void)loadView
 {
 	self.view = [DemoPopupContentView new];
+	LNApplyTitleWithSettings(self);
+	[self _updateBackground];
+	
+	[self updateUserInterfaceStyleOverrideFromCollection:self.traitCollection];
+}
+
+- (void)updateUserInterfaceStyleOverrideFromCollection:(UITraitCollection *)collection
+{
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
+	{
+		self.view.overrideUserInterfaceStyle = collection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+	}
+	else
+	{
+		self.view.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
+	}
 }
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
 	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self updateUserInterfaceStyleOverrideFromCollection:newCollection];
 		[self _setPopupItemButtonsWithTraitCollection:newCollection animated:context.animated];
 		[self updateTransitionViewShadowColor];
 	} completion:nil];
@@ -88,28 +105,21 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
-- (void)_updateBackgroundColor
+- (void)_updateBackground
 {
 	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 2)
 	{
 		return;
 	}
 	
-	if(self.view.traitCollection.userInterfaceStyle != _lastStyle)
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
 	{
-		_lastStyle = self.view.traitCollection.userInterfaceStyle;
-		
-		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
-		{
-			self.view.backgroundColor = LNSeedAdaptiveInvertedColor(@"Popup");
-		}
-		else
-		{
-			self.view.backgroundColor = UIColor.labelColor;
-		}
+		self.view.backgroundColor = LNSeedAdaptiveColor(@"Popup");
 	}
-	
-	[self setNeedsStatusBarAppearanceUpdate];
+	else
+	{
+		self.view.backgroundColor = UIColor.tertiarySystemBackgroundColor;
+	}
 }
 
 - (void)button:(UIBarButtonItem*)button
@@ -234,8 +244,6 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	{
 		return;
 	}
-	
-	LNApplyTitleWithSettings(self);
 	
 	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 0)
 	{
@@ -424,8 +432,6 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		
 	}
 		
-	[self _updateBackgroundColor];
-		
 //	UIButton* customCloseButton = [UIButton buttonWithType:UIButtonTypeSystem];
 //	[customCloseButton setTitle:NSLocalizedString(@"Custom Close Button", @"") forState:UIControlStateNormal];
 //	customCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -523,12 +529,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 2)
-	{
-		return UIStatusBarStyleLightContent;
-	}
-	
-	return self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIStatusBarStyleLightContent : UIStatusBarStyleDarkContent;
+	return self.view.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIStatusBarStyleDarkContent : UIStatusBarStyleLightContent;
 }
 
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
