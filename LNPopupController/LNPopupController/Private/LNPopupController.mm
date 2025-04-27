@@ -525,7 +525,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			[self.popupContentView.contentView layoutIfNeeded];
 			if(notifyDelegate == YES && state == _LNPopupPresentationStateTransitioning)
 			{
-				[_currentContentController _userFacing_viewIsAppearing:NO];
+				if (@available(iOS 13.0, *))
+				{
+					[_currentContentController _userFacing_viewIsAppearing:NO];
+				}
 				[_currentContentController _userFacing_viewDidAppear:NO];
 			}
 		}];
@@ -625,7 +628,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(state == LNPopupPresentationStateOpen && stateAtStart == LNPopupPresentationStateBarPresented)
 		{
-			[_currentContentController _userFacing_viewIsAppearing:animated];
+			if (@available(iOS 13.0, *))
+			{
+				[_currentContentController _userFacing_viewIsAppearing:animated];
+			}
 		}
 	};
 	
@@ -1247,7 +1253,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(_popupControllerInternalState > LNPopupPresentationStateBarPresented)
 	{
-		[newContentController _userFacing_viewIsAppearing:NO];
+		if (@available(iOS 13.0, *))
+		{
+			[newContentController _userFacing_viewIsAppearing:NO];
+		}
 		[newContentController _userFacing_viewDidAppear:NO];
 		[newContentController endAppearanceTransition];
 		[oldContentController _userFacing_viewDidDisappear:NO];
@@ -1646,7 +1655,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			[self.popupBar setNeedsLayout];
 			[self.popupBar layoutIfNeeded];
 			
-			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
+			if (@available(iOS 13.0, *))
+			{
+				[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
+			}
 			
 			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height - [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle], 0));
 			
@@ -2146,9 +2158,12 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	[self _reconfigureBarItems];
 }
 
-- (void)_popupItem_update_standardAppearance
+- (void)_popupItem_update_standardAppearance API_AVAILABLE(ios(13.0))
 {
-	[self.popupBarStorage _recalcActiveAppearanceChain];
+	if(@available(iOS 13.0, *))
+	{
+		[self.popupBarStorage _recalcActiveAppearanceChain];
+	}
 }
 
 @end

@@ -110,7 +110,13 @@ static void __setupFunction(void)
 
 - (void)layoutSubviews
 {
-	[super layoutSubviews];
+	if(unavailable(iOS 13.0, *))
+	{
+		[UIView performWithoutAnimation:^{
+			[super layoutSubviews];
+			[(UIView*)[self valueForKey:LNPopupHiddenString("backgroundView")] setBackgroundColor:UIColor.clearColor];
+		}];
+	}
 	
 	//On iOS 11 and above reset the semantic content attribute to make sure it propagades to all subviews.
 	[self setSemanticContentAttribute:self.semanticContentAttribute];

@@ -89,51 +89,98 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 	@autoreleasepool 
 	{
 #if ! LNPopupControllerEnforceStrictClean
-		SEL updateBackgroundGroupNameSEL = NSSelectorFromString(LNPopupHiddenString("updateBackgroundGroupName"));
-		
-		id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){
-			return ^ (id _self) {
-				orig(_self, updateBackgroundGroupNameSEL);
-				
-				static NSString* groupNameKey = LNPopupHiddenString("groupName");
-				static NSString* backgroundViewKey = LNPopupHiddenString("backgroundView");
-				
-				id backgroundView = [_self valueForKey:backgroundViewKey];
-				
-				NSString* groupName = [backgroundView valueForKey:groupNameKey];
-				if([groupName hasSuffix:@"🤡"] == NO)
-				{
-					[backgroundView setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:groupNameKey];
-				}
+		if(@available(iOS 13.0, *))
+		{
+			SEL updateBackgroundGroupNameSEL = NSSelectorFromString(LNPopupHiddenString("updateBackgroundGroupName"));
+			
+			id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){
+				return ^ (id _self) {
+					orig(_self, updateBackgroundGroupNameSEL);
+					
+					static NSString* groupNameKey = LNPopupHiddenString("groupName");
+					static NSString* backgroundViewKey = LNPopupHiddenString("backgroundView");
+					
+					id backgroundView = [_self valueForKey:backgroundViewKey];
+					
+					NSString* groupName = [backgroundView valueForKey:groupNameKey];
+					if([groupName hasSuffix:@"🤡"] == NO)
+					{
+						[backgroundView setValue:[NSString stringWithFormat:@"%@🤡", groupName] forKey:groupNameKey];
+					}
+				};
 			};
-		};
-		
-		{
-			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProvider"));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
-			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			
+			{
+				Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProvider"));
+				NSLog(@"%@", [cls valueForKey:@"_shortMethodDescription"]);
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				NSLog(@"%p", m);
+				void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderLegacyIOS"));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderModernIOS"));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				Class cls = NSClassFromString(LNPopupHiddenString("_UITabBarVisualProviderLegacyIOS"));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
 		}
-		
+		else
 		{
-			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderLegacyIOS"));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
-			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
-		}
-		
-		{
-			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderModernIOS"));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
-			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
-		}
-		
-		{
-			Class cls = NSClassFromString(LNPopupHiddenString("_UITabBarVisualProviderLegacyIOS"));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
-			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
-			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			SEL updateBackgroundGroupNameSEL = NSSelectorFromString(LNPopupHiddenString("_shim_setBackdropGroupName:"));
+			
+			id (^trampoline)(void (*)(id, SEL, NSString*)) = ^ id (void (*orig)(id, SEL, NSString*)){
+				return ^ (id _self, NSString* name) {
+					if([name hasSuffix:@"🤡"] == NO)
+					{
+						name = [NSString stringWithFormat:@"%@🤡", name];
+					}
+					orig(_self, updateBackgroundGroupNameSEL, name);
+				};
+			};
+			
+			{
+				Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProvider"));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL, NSString*) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderLegacyIOS"));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL, NSString*) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderModernIOS"));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL, NSString*) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
+			
+			{
+				Class cls = NSClassFromString(LNPopupHiddenString("_UITabBarVisualProviderLegacyIOS"));
+				Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+				void (*orig)(id, SEL, NSString*) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
+			}
 		}
 		
 		NSString* sel = LNPopupHiddenString("_didMoveFromWindow:toWindow:");

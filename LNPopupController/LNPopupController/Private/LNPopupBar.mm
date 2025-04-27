@@ -351,7 +351,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_wantsBackgroundCutout = YES;
 		
-		[self _recalcActiveAppearanceChain];
+		if(@available(iOS 13.0, *))
+		{
+			[self _recalcActiveAppearanceChain];
+		}
 		[self _appearanceDidChange];
 	}
 	
@@ -380,9 +383,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		[self _appearanceDidChange];
 	}
 	
-	if(UIContentSizeCategoryCompareToCategory(previousTraitCollection.preferredContentSizeCategory, self.traitCollection.preferredContentSizeCategory) != NSOrderedSame)
+	if(@available(iOS 13.0, *))
 	{
-		[self._barDelegate _popupBarMetricsDidChange:self];
+		if(UIContentSizeCategoryCompareToCategory(previousTraitCollection.preferredContentSizeCategory, self.traitCollection.preferredContentSizeCategory) != NSOrderedSame)
+		{
+			[self._barDelegate _popupBarMetricsDidChange:self];
+		}
 	}
 	
 	if(_LNPopupBarHeightForPopupBar(self) != self.bounds.size.height)
@@ -803,7 +809,10 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 {
 	_popupItem = popupItem;
 	
-	[self _recalcActiveAppearanceChain];
+	if(@available(iOS 13.0, *))
+	{
+		[self _recalcActiveAppearanceChain];
+	}
 }
 
 - (void)popupBarAppearanceDidChange:(LNPopupBarAppearance*)popupBarAppearance API_AVAILABLE(ios(13.0))
