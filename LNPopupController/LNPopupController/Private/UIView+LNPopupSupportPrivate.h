@@ -48,9 +48,11 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 
 @end
 
-@interface UIWindow (MacCatalystSupport)
+@interface UIWindow (LNPopupSupport)
 
 @property (nonatomic, strong, readonly) UIEvent* _ln_currentEvent;
+
+@property (nonatomic, assign, nullable, getter=_ln_popupInteractionOnly, setter=_ln_setPopupInteractionOnly:) NSArray* popupInteractionOnly;
 
 @end
 

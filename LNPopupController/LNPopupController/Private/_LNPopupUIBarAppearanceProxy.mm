@@ -127,7 +127,7 @@ return super_class(&super, _cmd); \
 			}
 			
 			rv = [rv replicate];
-			LNDynamicallySubclass(rv, _LNPopupBarBackgroundDataSubclass.class);
+			LNDynamicSubclass(rv, _LNPopupBarBackgroundDataSubclass.class);
 			[rv setValue:_self->_shadowColorHandler forKey:@"_ln_shadowColorHandler"];
 			
 			return rv;

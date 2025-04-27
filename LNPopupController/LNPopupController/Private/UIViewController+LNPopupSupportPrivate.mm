@@ -155,7 +155,6 @@ extern void __ln_doNotCall__fixUIHostingViewHitTest(void);
 CF_EXTERN_C_END
 #endif
 
-@interface UIViewController (LNPopupLayout) @end
 @implementation UIViewController (LNPopupLayout)
 
 + (void)load
@@ -219,18 +218,6 @@ CF_EXTERN_C_END
 			LNSwizzleMethod(self,
 							@selector(setNeedsUpdateOfHomeIndicatorAutoHidden),
 							@selector(_ln_setNeedsUpdateOfHomeIndicatorAutoHidden));
-			
-			LNSwizzleMethod(self,
-							@selector(childViewControllerForStatusBarStyle),
-							@selector(_ln_childViewControllerForStatusBarStyle));
-			
-			LNSwizzleMethod(self,
-							@selector(childViewControllerForStatusBarHidden),
-							@selector(_ln_childViewControllerForStatusBarHidden));
-			
-			LNSwizzleMethod(self,
-							@selector(childViewControllerForHomeIndicatorAutoHidden),
-							@selector(_ln_childViewControllerForHomeIndicatorAutoHidden));
 			
 			LNSwizzleMethod(self,
 							@selector(viewWillTransitionToSize:withTransitionCoordinator:),
@@ -520,7 +507,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	return vc;
 }
 
-- (nullable UIViewController *)_common_childViewControllersForStatusBarLogic
+- (nullable UIViewController *)_ln_childViewControllerForStatusBarLogic
 {
 	UIViewController* vcToCheckForPopupPresentation = self;
 	if([self isKindOfClass:[UISplitViewController class]])
@@ -542,42 +529,6 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 	
 	return nil;
-}
-
-- (nullable UIViewController *)_ln_common_childViewControllerForStatusBarHidden
-{
-	UIViewController* vc = [self _common_childViewControllersForStatusBarLogic];
-	
-	return vc ?: [self _ln_childViewControllerForStatusBarHidden];
-}
-
-- (nullable UIViewController *)_ln_common_childViewControllerForStatusBarStyle
-{
-	UIViewController* vc = [self _common_childViewControllersForStatusBarLogic];
-	
-	return vc ?: [self _ln_childViewControllerForStatusBarStyle];
-}
-
-- (nullable UIViewController *)_ln_common_childViewControllerForHomeIndicatorAutoHidden
-{
-	UIViewController* vc = [self _common_childViewControllersForStatusBarLogic];
-	
-	return vc ?: [self _ln_childViewControllerForHomeIndicatorAutoHidden];
-}
-
-- (nullable UIViewController *)_ln_childViewControllerForStatusBarHidden
-{
-	return [self _ln_common_childViewControllerForStatusBarHidden];
-}
-
-- (nullable UIViewController *)_ln_childViewControllerForStatusBarStyle
-{
-	return [self _ln_common_childViewControllerForStatusBarStyle];
-}
-
-- (nullable UIViewController *)_ln_childViewControllerForHomeIndicatorAutoHidden
-{
-	return [self _ln_common_childViewControllerForHomeIndicatorAutoHidden];
 }
 
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState
@@ -1141,18 +1092,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		LNSwizzleMethod(self,
-						@selector(childViewControllerForStatusBarStyle),
-						@selector(_ln_childViewControllerForStatusBarStyle));
-		
-		LNSwizzleMethod(self,
-						@selector(childViewControllerForStatusBarHidden),
-						@selector(_ln_childViewControllerForStatusBarHidden));
-		
-		LNSwizzleMethod(self,
-						@selector(childViewControllerForHomeIndicatorAutoHidden),
-						@selector(_ln_childViewControllerForHomeIndicatorAutoHidden));
-		
 		LNSwizzleMethod(self,
 						@selector(viewDidLayoutSubviews),
 						@selector(_ln_popup_viewDidLayoutSubviews_tvc));
@@ -1811,21 +1750,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 #endif
 
-- (nullable UIViewController *)_ln_childViewControllerForStatusBarHidden
-{
-	return [self _ln_common_childViewControllerForStatusBarHidden];
-}
-
-- (nullable UIViewController *)_ln_childViewControllerForStatusBarStyle
-{
-	return [self _ln_common_childViewControllerForStatusBarStyle];
-}
-
-- (nullable UIViewController *)_ln_childViewControllerForHomeIndicatorAutoHidden
-{
-	return [self _ln_common_childViewControllerForHomeIndicatorAutoHidden];
-}
-
 @end
 
 #pragma mark - UINavigationController
@@ -1897,18 +1821,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		LNSwizzleMethod(self,
-						@selector(childViewControllerForStatusBarStyle),
-						@selector(_ln_childViewControllerForStatusBarStyle));
-		
-		LNSwizzleMethod(self,
-						@selector(childViewControllerForStatusBarHidden),
-						@selector(_ln_childViewControllerForStatusBarHidden));
-		
-		LNSwizzleMethod(self,
-						@selector(childViewControllerForHomeIndicatorAutoHidden),
-						@selector(_ln_childViewControllerForHomeIndicatorAutoHidden));
-		
 		LNSwizzleMethod(self,
 						@selector(setNavigationBarHidden:animated:),
 						@selector(_ln_setNavigationBarHidden:animated:));
@@ -2266,21 +2178,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 }
 
 #endif
-
-- (nullable UIViewController *)_ln_childViewControllerForStatusBarHidden
-{
-	return [self _ln_common_childViewControllerForStatusBarHidden];
-}
-
-- (nullable UIViewController *)_ln_childViewControllerForStatusBarStyle
-{
-	return [self _ln_common_childViewControllerForStatusBarStyle];
-}
-
-- (nullable UIViewController *)_ln_childViewControllerForHomeIndicatorAutoHidden
-{
-	return [self _ln_common_childViewControllerForHomeIndicatorAutoHidden];
-}
 
 - (void)_ln_setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
 {

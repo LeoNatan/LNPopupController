@@ -263,7 +263,7 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 
 - (void)_ln_freezeInsets
 {
-	LNDynamicallySubclass(self, __LNPopupUIViewFrozenInsets.class);
+	LNDynamicSubclass(self, __LNPopupUIViewFrozenInsets.class);
 }
 
 @end
@@ -319,7 +319,7 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 
 #endif
 	
-@implementation UIWindow (MacCatalystSupport)
+@implementation UIWindow (LNPopupSupport)
 
 - (UIEvent*)_ln_currentEvent
 {
@@ -343,6 +343,51 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	//Obtain the current NSEvent
 	return [hostingWindow valueForKey:cE];
 #endif
+}
+
++ (void)load
+{
+	@autoreleasepool
+	{
+		LNSwizzleMethod(self,
+						@selector(hitTest:withEvent:),
+						@selector(_ln_hitTest:withEvent:));
+	}
+}
+
+static const void* LNPopupInteractionOnlyKey = &LNPopupInteractionOnlyKey;
+
+- (NSArray*)_ln_popupInteractionOnly
+{
+	return objc_getAssociatedObject(self, LNPopupInteractionOnlyKey);
+}
+
+- (void)_ln_setPopupInteractionOnly:(NSArray*)popupInteractionOnly
+{
+	objc_setAssociatedObject(self, LNPopupInteractionOnlyKey, popupInteractionOnly, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (UIView *)_ln_hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+	id tested = [self _ln_hitTest:point withEvent:event];
+	
+	NSArray<UIView*>* allowedViews = self._ln_popupInteractionOnly;
+	if(allowedViews && tested)
+	{
+		BOOL isAllowed = NO;
+		
+		for(UIView* allowedView in allowedViews)
+		{
+			if([tested isDescendantOfView:allowedView])
+			{
+				isAllowed = YES;
+			}
+		}
+		
+		return isAllowed ? tested : nil;
+	}
+	
+	return tested;
 }
 
 @end

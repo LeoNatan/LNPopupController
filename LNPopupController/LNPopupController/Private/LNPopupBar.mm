@@ -1840,7 +1840,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	
 	if(customBarViewController != nil)
 	{
-		LNDynamicallySubclass(customBarViewController, _LNPopupCustomBarViewController_AppearanceControl.class);
+		LNDynamicSubclass(customBarViewController, _LNPopupCustomBarViewController_AppearanceControl.class);
 	}
 	
 	[self layoutIfNeeded];

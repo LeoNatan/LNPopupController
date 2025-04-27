@@ -2,8 +2,8 @@
 //  LNPopupDebug.m
 //  LNPopupController
 //
-//  Created by Léo Natan on 4/4/25.
-//  Copyright © 2025 Léo Natan. All rights reserved.
+//  Created by Léo Natan on 2025-04-04.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupDebug.h"

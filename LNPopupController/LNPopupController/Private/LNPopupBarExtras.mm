@@ -2,8 +2,8 @@
 //  LNPopupBarExtras.mm
 //  LNPopupController
 //
-//  Created by Léo Natan on 7/4/25.
-//  Copyright © 2025 Léo Natan. All rights reserved.
+//  Created by Léo Natan on 2025-04-07.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupBar+Private.h"
