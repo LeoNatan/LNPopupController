@@ -25,6 +25,8 @@ Generally, it is recommended to present the popup bar on the outermost container
 
 Check the demo project for many common use cases of the framework in various scenarios. It contains examples in Swift and Objective C.
 
+**NOTE:** To run the example project, don't forget to update submodules by running: `git submodule update --init --recursive`
+
 ### Features
 
 * Available for iOS 13 and above, as an Xcode framework or an SPM package
