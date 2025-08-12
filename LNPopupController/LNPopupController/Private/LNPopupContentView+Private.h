@@ -7,6 +7,7 @@
 //
 
 #import <LNPopupController/LNPopupContentView.h>
+#import <LNPopupController/LNPopupBarAppearance.h>
 
 @interface LNPopupContentView ()
 
@@ -21,7 +22,7 @@
 
 - (void)setControllerOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle;
 
-- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect;
+- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc activeAppearance:(LNPopupBarAppearance*)appearance;
 
 - (void)_repositionPopupCloseButton;
 - (void)_repositionPopupCloseButtonAnimated:(BOOL)animated;

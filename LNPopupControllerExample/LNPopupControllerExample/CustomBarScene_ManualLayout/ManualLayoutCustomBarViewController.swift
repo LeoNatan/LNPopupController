@@ -11,17 +11,32 @@
 class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 	let centeredButton = UIButton(type: .system)
 	let leftButton = UIButton(type: .system)
-	let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .systemChromeMaterial))
+	let backgroundView = UIVisualEffectView(effect: nil)
+
 	
 	public
-override func viewDidLoad() {
+	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		view.autoresizingMask = []
 		
+#if compiler(>=6.2)
+		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
+			backgroundView.effect = UIGlassEffect(style: .regular)
+			backgroundView.cornerConfiguration = UICornerConfiguration.capsule()
+		} else {
+			backgroundView.effect = UIBlurEffect(style: .systemChromeMaterial)
+			backgroundView.layer.masksToBounds = true
+			backgroundView.layer.cornerCurve = .continuous
+			backgroundView.layer.cornerRadius = 15
+		}
+#else
+		backgroundView.effect = UIBlurEffect(style: .systemChromeMaterial)
 		backgroundView.layer.masksToBounds = true
 		backgroundView.layer.cornerCurve = .continuous
 		backgroundView.layer.cornerRadius = 15
+#endif
+		
 		view.addSubview(backgroundView)
 		
 		centeredButton.setTitle(NSLocalizedString("Centered", comment: ""), for: .normal)
@@ -34,26 +49,11 @@ override func viewDidLoad() {
 		leftButton.sizeToFit()
 		view.addSubview(leftButton)
 		
-		self.preferredContentSize = CGSize(width: 0, height: 50)
-		animateSize()
-	}
-	
-	var idx = 0
-	func animateSize() {
-		idx = 1 - idx;
-		UIView.animate(withDuration: 1.0, delay: 0.0, options: [.curveEaseInOut, .allowUserInteraction]) {
-			self.preferredContentSize = CGSize(width: 0, height: 50 + self.idx * 50)
-		} completion: { [weak self] _ in
-			guard let self else {
-				return
-			}
-			
-			self.animateSize()
-		}
+		self.preferredContentSize = CGSize(width: 0, height: 75)
 	}
 	
 	public
-override func viewDidLayoutSubviews() {
+	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
 		let insetLeft = CGFloat.maximum(view.safeAreaInsets.left, 20)
@@ -69,17 +69,17 @@ override func viewDidLayoutSubviews() {
 	}
 	
 	public
-override var wantsDefaultTapGestureRecognizer: Bool {
+	override var wantsDefaultTapGestureRecognizer: Bool {
 		return false
 	}
 	
 	public
-override var wantsDefaultPanGestureRecognizer: Bool {
+	override var wantsDefaultPanGestureRecognizer: Bool {
 		return false
 	}
 	
 	public
-override var wantsDefaultHighlightGestureRecognizer: Bool {
+	override var wantsDefaultHighlightGestureRecognizer: Bool {
 		return false
 	}
 }

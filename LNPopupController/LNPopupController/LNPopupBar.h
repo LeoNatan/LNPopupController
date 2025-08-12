@@ -22,19 +22,24 @@ typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	/// The default bar style for the current environment.
 	LNPopupBarStyleDefault,
 	
-	/// Compact bar style.
-	LNPopupBarStyleCompact,
-	
-	/// Prominent bar style.
-	LNPopupBarStyleProminent,
-	
 	/// Floating bar style.
-	LNPopupBarStyleFloating,
+	LNPopupBarStyleFloating = 9,
+	
+	/// Compact floating bar style.
+	LNPopupBarStyleFloatingCompact = 8,
 	
 	/// Custom bar style.
 	///
 	/// Do not set this style directly. Instead, set the `LNPopupBar.customBarViewController` property and the framework will use this style.
-	LNPopupBarStyleCustom = 0xFFFF
+	LNPopupBarStyleCustom = 0xFFFF,
+	
+	// Deprecated, will be removed eventually:
+	
+	/// Compact bar style.
+	LNPopupBarStyleCompact LN_DEPRECATED_API_OS("No longer supported on iOS 26.0 and later.", ios(2.0, 26.0)) = 1,
+	
+	/// Prominent bar style.
+	LNPopupBarStyleProminent LN_DEPRECATED_API_OS("No longer supported on iOS 26.0 and later.", ios(2.0, 26.0)) = 2,
 } NS_SWIFT_NAME(LNPopupBar.Style);
 
 /// Available styles for the popup bar progress view.

@@ -26,7 +26,10 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled] == YES)
 	{
+		titleLowerLimit = 10;
+		titleUpperLimit = 15;
 		subtitleLowerLimit = 10;
+		subtitleUpperLimit = 20;
 	}
 	
 	self.popupItem.title = [[LoremIpsum wordsWithNumber:arc4random_uniform(titleUpperLimit - titleLowerLimit) + titleLowerLimit] capitalizedString];
@@ -131,7 +134,18 @@ void LNApplyTitleWithSettings(UIViewController* self)
 {
 	LNSystemImageScale scale;
 	LNSystemImageScale backForwardScale;
-	if([[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
+		
+	BOOL isCompact = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact ||
+	[[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleFloatingCompact ||
+	([[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleDefault &&
+	 LNPopupSettingsHasOS26Glass() &&
+	 UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad);
+	BOOL isFloatingCompact = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleFloatingCompact ||
+	([[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleDefault &&
+	 LNPopupSettingsHasOS26Glass() &&
+	 UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad);
+	
+	if(isCompact)
 	{
 		scale = LNSystemImageScaleCompact;
 		backForwardScale = LNSystemImageScaleCompact;
@@ -172,7 +186,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	prev.accessibilityIdentifier = @"MoreButton";
 	prev.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	if(scale == LNSystemImageScaleCompact)
+	if(isCompact && !isFloatingCompact)
 	{
 		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{

@@ -29,33 +29,28 @@ private extension UIImage {
 class MapViewController: UIViewController, UISearchBarDelegate {
 	@IBOutlet weak var mapView: MKMapView!
 	@IBOutlet weak var topVisualEffectView: UIVisualEffectView!
-	@IBOutlet weak var backButtonBackground: UIVisualEffectView!
 	private var popupContentVC: LocationsController!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		let present = UIBarButtonItem(image: UIImage(systemName: "dock.arrow.up.rectangle"), style: .plain, target: self, action: #selector(MapViewController.presentButtonTapped(_:)))
+		let dismiss = UIBarButtonItem(image: UIImage(systemName: "dock.arrow.down.rectangle"), style: .plain, target: self, action: #selector(MapViewController.dismissButtonTapped(_:)))
+		if #available(iOS 16.0, *) {
+			let group = UIBarButtonItemGroup(barButtonItems: [present, dismiss], representativeItem: nil)
+			navigationItem.leadingItemGroups = [group]
+		} else {
+			navigationItem.leftBarButtonItems = [present, dismiss]
+		}
+		
 		mapView.showsTraffic = false
 		mapView.pointOfInterestFilter = .includingAll
-		
-		backButtonBackground.layer.cornerRadius = 10.0
-		backButtonBackground.layer.borderWidth = 1.0
-		backButtonBackground.layer.borderColor = self.view.tintColor.cgColor
-		
-		backButtonBackground.effect = UIBlurEffect(style: .systemChromeMaterial)
-		backButtonBackground.layer.cornerCurve = .continuous
 		
 	    if #available(iOS 17.0, *) {
 		   topVisualEffectView.effect = UIBlurEffect(variableBlurRadius: 3.0, imageMask: UIImage(named: "statusBarMask")!)
 	    } else {
 		   topVisualEffectView.effect = UIBlurEffect(blurRadius: 10.0)
 	    }
-	}
-	
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		super.traitCollectionDidChange(previousTraitCollection)
-		
-		backButtonBackground.layer.borderColor = self.view.tintColor.cgColor
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -66,7 +61,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	
 	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
 #if LNPOPUP
-		openPopup(animated: true, completion: nil)
+		navigationController!.openPopup(animated: true, completion: nil)
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 			self.popupContentVC.searchBar.becomeFirstResponder()
@@ -82,13 +77,14 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	
 	private func presentPopupBarIfNeeded(animated: Bool) {
 #if LNPOPUP
-		guard popupBar.customBarViewController == nil else {
+		guard navigationController!.popupBar.customBarViewController == nil else {
 			return
 		}
 		
-		popupBar.standardAppearance.shadowColor = .clear
+		navigationController!.popupBar.inheritsAppearanceFromDockingView = false
+		navigationController!.popupBar.standardAppearance.shadowColor = .clear
 		if let customMapBar = storyboard!.instantiateViewController(withIdentifier: "CustomMapBarViewController") as? CustomMapBarViewController {
-			popupBar.customBarViewController = customMapBar
+			navigationController!.popupBar.customBarViewController = customMapBar
 			
 			customMapBar.view.backgroundColor = .clear
 			customMapBar.searchBar.delegate = self
@@ -98,20 +94,19 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			}
 		} else {
 			//Manual layout bar scene
-			shouldExtendPopupBarUnderSafeArea = false
-			popupBar.customBarViewController = ManualLayoutCustomBarViewController()
-			popupBar.standardAppearance.configureWithTransparentBackground()
+			navigationController!.shouldExtendPopupBarUnderSafeArea = false
+			navigationController!.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
+			navigationController!.popupBar.standardAppearance.configureWithTransparentBackground()
 		}
 		
-		popupContentView.popupCloseButtonStyle = .none
-		popupContentView.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
-//		popupContentView.isTranslucent = false
-		popupInteractionStyle = .customizedSnap(percent: 0.15)
+		navigationController!.popupContentView.popupCloseButtonStyle = .none
+		navigationController!.popupContentView.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
+		navigationController!.popupInteractionStyle = .customizedSnap(percent: 0.15)
 		
 		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)
 		popupContentVC.tableView.backgroundColor = .clear
 		
-		presentPopupBar(with: self.popupContentVC, animated: animated, completion: nil)
+		navigationController!.presentPopupBar(with: self.popupContentVC, animated: animated, completion: nil)
 #endif
 	}
 	
@@ -124,15 +119,15 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	
 	@IBAction private func dismissButtonTapped(_ sender: Any) {
 #if LNPOPUP
-		dismissPopupBar(animated: true) {
-			self.popupBar.customBarViewController = nil
+		navigationController!.dismissPopupBar(animated: true) {
+			self.navigationController!.popupBar.customBarViewController = nil
 		}
 #endif
 	}
 
 #if LNPOPUP
 	override var shouldFadePopupBarOnDismiss: Bool {
-		return true
+		return !LNPopupSettingsHasOS26Glass()
 	}
 #endif
 }

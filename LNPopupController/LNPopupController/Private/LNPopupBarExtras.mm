@@ -9,6 +9,7 @@
 #import "LNPopupBar+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
+#import "_LNPopupGlassUtils.h"
 
 #ifndef LNPopupControllerEnforceStrictClean
 static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
@@ -22,6 +23,17 @@ static void __setupFunction(void)
 	_effectWithStyle_tintColor_invertAutomaticStyle = reinterpret_cast<decltype(_effectWithStyle_tintColor_invertAutomaticStyle)>(method_getImplementation(m));
 }
 #endif
+
+@implementation _LNTransitionPopupBar
+
+#if DEBUG
+- (void)setFrame:(CGRect)frame
+{
+	[super setFrame:frame];
+}
+#endif
+
+@end
 
 @implementation _LNPopupBarContentView @end
 
@@ -94,7 +106,34 @@ static void __setupFunction(void)
 
 @end
 
+@interface NSObject ()
+
+- (id)initWithToolbar:(id)arg1;
+
+@end
+
 @implementation _LNPopupToolbar
+
+//+_visualProviderForToolbar:
++ (id)_ln_vPFT:(id)arg1 API_AVAILABLE(ios(26.0))
+{
+	static Class visualProviderClass = NSClassFromString(LNPopupHiddenString("_UIToolbarVisualProviderModernIOS"));
+	
+	return [[visualProviderClass alloc] initWithToolbar:arg1];
+}
+
++ (void)load
+{
+	if(@available(iOS 26.0, *))
+	{
+		@autoreleasepool
+		{
+			Method m = class_getClassMethod(self, @selector(_ln_vPFT:));
+			Class metaclass = object_getClass(self);
+			class_addMethod(metaclass, NSSelectorFromString(LNPopupHiddenString("_visualProviderForToolbar:")), method_getImplementation(m), method_getTypeEncoding(m));
+		}
+	}
+}
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
@@ -138,6 +177,16 @@ static void __setupFunction(void)
 {
 	//On iOS 11, due to a bug in UIKit, the semantic content attribute must be propagaded recursively to all subviews, so that the system behaves correctly.
 	[self _deepSetSemanticContentAttribute:semanticContentAttribute toView:self startingFromView:self];
+}
+
+- (UIToolbarAppearance *)standardAppearance
+{
+	return nil;
+}
+
+- (UIToolbarAppearance *)scrollEdgeAppearance
+{
+	return nil;
 }
 
 @end

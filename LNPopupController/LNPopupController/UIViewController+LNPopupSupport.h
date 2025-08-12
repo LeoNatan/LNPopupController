@@ -166,8 +166,10 @@ NS_SWIFT_UI_ACTOR
 ///
 /// When a popup bar is presented on a view controller with the system bottom docking view, or a navigation controller with hidden toolbar, the popup bar's background view will extend under the safe area.
 ///
+/// - Note: No longer supported on iOS 26.0 and later.
+///
 /// The default value of this property is `true`.
-@property (nonatomic, assign) BOOL shouldExtendPopupBarUnderSafeArea;
+@property (nonatomic, assign) BOOL shouldExtendPopupBarUnderSafeArea LN_DEPRECATED_API_OS("No longer supported on iOS 26.0 and later.", ios(2.0, 26.0));
 
 /// Call this method to update the popup bar appearance (background effect, tint color, etc.) according to its docking view. You should call this after updating the docking view.
 ///
@@ -208,6 +210,8 @@ NS_SWIFT_UI_ACTOR
 @property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopupBar;
 
 /// Controls whether the popup bar should fade out during its dismissal animation.
+///
+/// - Note: On iOS 26.0 and later, this property is only supported for custom bars.
 ///
 /// By default, this property's value is @c true if the popup bar is extended (see @c UIViewController.shouldExtendPopupBarUnderSafeArea) and the extension is visible, or if the bottom bar (toolbar or tab bar) is about to transition to its scroll edge appearance, and the scroll edge appearance has a transparent background.
 @property (nonatomic, assign, readonly) BOOL shouldFadePopupBarOnDismiss;

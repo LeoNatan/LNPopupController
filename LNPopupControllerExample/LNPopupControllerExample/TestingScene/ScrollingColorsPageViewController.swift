@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import LNPopupController
 
 protocol Indexable {
 	var index: Int { get set }

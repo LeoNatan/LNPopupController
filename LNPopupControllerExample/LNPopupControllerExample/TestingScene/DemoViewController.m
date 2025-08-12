@@ -56,7 +56,7 @@
 
 @implementation DemoViewController
 {
-	__weak IBOutlet UIButton *_galleryButton;
+	__weak IBOutlet UIBarButtonItem *_galleryBarButton;
 	__weak IBOutlet UIButton *_nextButton;
 	
 	__weak IBOutlet UIBarButtonItem *_barStyleButton;
@@ -204,11 +204,50 @@
 	self.splitViewController.view.tintColor = self.view.tintColor;
 	//Ugly hack to fix navigation view controller tint color.
 	self.navigationController.view.tintColor = self.view.tintColor;
+
+	UIButtonConfiguration* config;
+	if(@available(iOS 26.0, *))
+	{
+		if(LNPopupSettingsHasOS26Glass())
+		{
+			config = [UIButtonConfiguration prominentGlassButtonConfiguration];
+		}
+		else
+		{
+			config = [UIButtonConfiguration plainButtonConfiguration];
+			config.baseForegroundColor = self.view.tintColor;
+		}
+	}
+	else
+	{
+		config = [UIButtonConfiguration plainButtonConfiguration];
+		config.baseForegroundColor = self.view.tintColor;
+	}
 	
-	_galleryButton.titleLabel.adjustsFontForContentSizeCategory = YES;
+	config.image = [UIImage systemImageNamed:@"xmark"];
+	config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
+	
+	UIButton* galleryButton = [UIButton buttonWithConfiguration:config primaryAction:[UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
+		[self performSegueWithIdentifier:@"UnwindSegue" sender:nil];
+	}]];
+	galleryButton.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[self.view addSubview:galleryButton];
+	[NSLayoutConstraint activateConstraints:@[
+		[self.view.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:galleryButton.trailingAnchor],
+		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:galleryButton.topAnchor],
+	]];
+	if(LNPopupSettingsHasOS26Glass())
+	{
+		[NSLayoutConstraint activateConstraints:@[
+			[galleryButton.widthAnchor constraintEqualToConstant:46],
+			[galleryButton.heightAnchor constraintEqualToConstant:46],
+		]];
+	}
+	
 	_nextButton.titleLabel.adjustsFontForContentSizeCategory = YES;
 	
-	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
+	galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
 	_nextButton.hidden = self.navigationController == nil || self.splitViewController != nil;
 	
 	if(self.tabBarController == nil || self.navigationController.topViewController == self.navigationController.viewControllers.firstObject)
@@ -310,6 +349,11 @@
 
 - (void)updateBottomDockingViewEffectForBarPresentation
 {
+	if(LNPopupSettingsHasOS26Glass())
+	{
+		return;
+	}
+	
 	UINavigationBarAppearance* nba = nil;
 	
 	BOOL disableScrollEdgeAppearance = [NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableScrollEdgeAppearance];
@@ -321,7 +365,7 @@
 	
 #if LNPOPUP
 	LNPopupBarStyle popupBarStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue];
-	if(popupBarStyle == LNPopupBarStyleFloating || (popupBarStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
+	if(popupBarStyle == LNPopupBarStyleFloating || popupBarStyle == LNPopupBarStyleFloatingCompact || (popupBarStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 #endif
 	{
 		UIBlurEffectStyle style;
@@ -466,7 +510,7 @@
 	}
 	
 	UIViewController* demoVC;
-	
+	BOOL wantsGlassBackground = YES;
 	switch([NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent])
 	{
 		case 10:
@@ -491,8 +535,17 @@
 			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingMap"];
 			break;
 		default:
+			wantsGlassBackground = NO;
 			demoVC = [DemoPopupContentViewController new];
 			break;
+	}
+	
+	if(@available(iOS 26.0, *))
+	{
+		if(wantsGlassBackground)
+		{
+			targetVC.popupContentView.backgroundEffect = [UIGlassEffect effectWithStyle:UIGlassEffectStyleClear];
+		}
 	}
 	
 	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonStyle] unsignedIntegerValue];
@@ -515,18 +568,31 @@
 	targetVC.allowPopupHapticFeedbackGeneration = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHapticFeedbackEnabled];
 	
 	targetVC.popupBar.limitFloatingContentWidth = [NSUserDefaults.settingDefaults boolForKey:PopupSettingLimitFloatingWidth];
-	
+
 	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingVisualEffectViewBlurEffect];
-	if(effectOverride != nil && effectOverride.unsignedIntValue != 0xffff)
+	if(effectOverride != nil && effectOverride.integerValue != 0xffff && (effectOverride.integerValue >= 0 || LNPopupSettingsHasOS26Glass()))
 	{
-		if(targetVC.popupBar.effectiveBarStyle == LNPopupBarStyleFloating)
+		if(@available(iOS 26.0, *))
+		if(effectOverride.integerValue < 0 && LNPopupSettingsHasOS26Glass())
 		{
-			targetVC.popupBar.standardAppearance.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:effectOverride.unsignedIntegerValue];
+			NSInteger glassStyle = labs(effectOverride.integerValue) - 1;
+			UIGlassEffect* glassEffect = [UIGlassEffect effectWithStyle:glassStyle];
+			glassEffect.interactive = YES;
+			//Always floating
+			targetVC.popupBar.standardAppearance.floatingBackgroundEffect = glassEffect;
 		}
-		else
+		
+		if(effectOverride.integerValue >= 0)
 		{
-			targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
-			targetVC.popupBar.standardAppearance.backgroundEffect = [UIBlurEffect effectWithStyle:effectOverride.unsignedIntegerValue];
+			if(targetVC.popupBar.effectiveBarStyle == LNPopupBarStyleFloating || targetVC.popupBar.effectiveBarStyle == LNPopupBarStyleFloatingCompact)
+			{
+				targetVC.popupBar.standardAppearance.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:effectOverride.integerValue];
+			}
+			else
+			{
+				targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
+				targetVC.popupBar.standardAppearance.backgroundEffect = [UIBlurEffect effectWithStyle:effectOverride.integerValue];
+			}
 		}
 	}
 	
@@ -544,7 +610,7 @@
 		appearance.floatingBarBackgroundShadow.shadowColor = UIColor.redColor;
 		appearance.imageShadow.shadowColor = UIColor.yellowColor;
 		
-		if(targetVC.popupBar.barStyle == LNPopupBarStyleFloating || (targetVC.popupBar.barStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
+		if(targetVC.popupBar.barStyle == LNPopupBarStyleFloating || targetVC.popupBar.barStyle == LNPopupBarStyleFloatingCompact || (targetVC.popupBar.barStyle == LNPopupBarStyleDefault && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 17))
 		{
 			appearance.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
 		}
