@@ -237,10 +237,15 @@ __attribute__((objc_direct_members))
 
 - (CGRect)_frameForClosedPopupBar
 {
+	return [self _frameForClosedPopupBarForBarHeight:self.popupBar.frame.size.height];
+}
+
+- (CGRect)_frameForClosedPopupBarForBarHeight:(CGFloat)barHeight
+{
 	CGRect defaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 	UIEdgeInsets insets = [_containerController insetsForBottomDockingView];
 	CGFloat offset = [_containerController _ln_popupOffsetForPopupBarStyle:_popupBar.resolvedStyle];
-	return CGRectMake(0, defaultFrame.origin.y - self.popupBar.frame.size.height - insets.bottom + offset, _containerController.view.bounds.size.width, self.popupBar.frame.size.height);
+	return CGRectMake(0, defaultFrame.origin.y - barHeight - insets.bottom + offset, _containerController.view.bounds.size.width, barHeight);
 }
 
 - (void)_repositionPopupContentMovingBottomBar:(BOOL)bottomBar animated:(BOOL)animated
@@ -1379,12 +1384,15 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar.popupOpenGestureRecognizer = [[LNPopupOpenTapGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
 	[_popupBar.contentView addGestureRecognizer:_popupBar.popupOpenGestureRecognizer];
 	
-	_popupBar.barHighlightGestureRecognizer = [[LNPopupLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
-	_popupBar.barHighlightGestureRecognizer.minimumPressDuration = 0;
-	_popupBar.barHighlightGestureRecognizer.cancelsTouchesInView = NO;
-	_popupBar.barHighlightGestureRecognizer.delaysTouchesBegan = NO;
-	_popupBar.barHighlightGestureRecognizer.delaysTouchesEnded = NO;
-	[_popupBar.contentView addGestureRecognizer:_popupBar.barHighlightGestureRecognizer];
+	if(!__LN_HAS_OS26_GLASS())
+	{
+		_popupBar.barHighlightGestureRecognizer = [[LNPopupLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];
+		_popupBar.barHighlightGestureRecognizer.minimumPressDuration = 0;
+		_popupBar.barHighlightGestureRecognizer.cancelsTouchesInView = NO;
+		_popupBar.barHighlightGestureRecognizer.delaysTouchesBegan = NO;
+		_popupBar.barHighlightGestureRecognizer.delaysTouchesEnded = NO;
+		[_popupBar.contentView addGestureRecognizer:_popupBar.barHighlightGestureRecognizer];
+	}
 	
 	return _popupBar;
 }
@@ -1601,6 +1609,26 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		self.popupBar.clipsToBounds = NO;
 		
+		__block _LNPopupTransitionView* os26TransitionView;
+		LNPopupBar* os26OutPopupBar = _popupBar;
+		if(__LN_HAS_OS26_GLASS())
+		{
+			_popupBar = [[LNPopupBar alloc] initWithFrame:os26OutPopupBar.frame];
+			_popupBar.alpha = 0.0;
+			
+			os26OutPopupBar.frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
+			
+			CGRect frame = [os26OutPopupBar.window convertRect:os26OutPopupBar.bounds fromView:os26OutPopupBar];
+			
+			os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:os26OutPopupBar];
+			os26TransitionView.frame = frame;
+			[self.popupBar.window addSubview:os26TransitionView];
+			
+			os26OutPopupBar.contentView.effectView.contentView.alpha = 0.0;
+			os26OutPopupBar.alpha = 0.0;
+			os26OutPopupBar.transform = CGAffineTransformMakeScale(0.85, 0.85);
+		}
+		
 		dispatch_block_t animations = ^{
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
 			[self.popupBar.customBarViewController _userFacing_viewWillAppear:animated];
@@ -1616,6 +1644,13 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			[self.popupBar setNeedsLayout];
 			[self.popupBar layoutIfNeeded];
+			
+			if(__LN_HAS_OS26_GLASS())
+			{
+				os26OutPopupBar.contentView.effectView.contentView.alpha = 1.0;
+				os26OutPopupBar.alpha = 1.0;
+				os26OutPopupBar.transform = CGAffineTransformIdentity;
+			}
 			
 			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
 			
@@ -1642,6 +1677,16 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			if(finalPosition != UIViewAnimatingPositionEnd)
 			{
 				return;
+			}
+			
+			if(__LN_HAS_OS26_GLASS())
+			{
+				[os26TransitionView removeFromSuperview];
+				os26TransitionView = nil;
+				
+				[_popupBar removeFromSuperview];
+				_popupBar = os26OutPopupBar;
+				[self.containerController _layoutPopupBarOrderForUse];
 			}
 			
 			if(!open)
@@ -1800,7 +1845,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	if(_popupControllerInternalState != LNPopupPresentationStateBarHidden)
 	{
 		self.popupBar.acceptsSizing = NO;
-		self.popupBar.clipsToBounds = YES;
+		if(!__LN_HAS_OS26_GLASS())
+		{
+			self.popupBar.clipsToBounds = YES;
+		}
 		
 		void (^dismissalAnimationCompletionBlock)(void) = ^
 		{
@@ -1812,6 +1860,21 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			__weak decltype(self) weakSelf = self;
 			
+			__block _LNPopupTransitionView* os26TransitionView;
+			LNPopupBar* os26OutPopupBar = _popupBar;
+			if(__LN_HAS_OS26_GLASS() && os26OutPopupBar.window != nil)
+			{
+				CGRect frame = [os26OutPopupBar.window convertRect:os26OutPopupBar.bounds fromView:os26OutPopupBar];
+				
+				os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:os26OutPopupBar];
+				os26TransitionView.frame = frame;
+				[self.popupBar.window addSubview:os26TransitionView];
+				
+				_popupBar = [[_LNTransitionPopupBar alloc] initWithFrame:os26OutPopupBar.frame];
+				_popupBar.alpha = 0.0;
+			}
+			
+			__block CGRect newBarFrame;
 			_runningBarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:0.5 dampingRatio:500 animations:^{
 				__strong decltype(weakSelf) self = weakSelf;
 				if(self == nil)
@@ -1824,9 +1887,17 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				
 				[_bottomBar _ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:YES];
 				
-				CGRect barFrame = self.popupBar.frame;
-				barFrame.size.height = 0;
-				self.popupBar.frame = barFrame;
+				newBarFrame = self.popupBar.frame;
+				newBarFrame.size.height = 0;
+				self.popupBar.frame = newBarFrame;
+				
+				if(@available(iOS 26, *))
+				if(__LN_HAS_OS26_GLASS())
+				{
+					os26OutPopupBar.contentView.effectView.contentView.alpha = 0.0;
+					os26OutPopupBar.alpha = 0.0;
+					os26OutPopupBar.transform = CGAffineTransformMakeScale(0.95, 0.95);
+				}
 				
 				self.popupBar.floatingBackgroundShadowView.alpha = 0.0;
 				
@@ -1857,11 +1928,25 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 					return;
 				}
 				
+				if(__LN_HAS_OS26_GLASS())
+				{
+					[os26TransitionView removeFromSuperview];
+					os26TransitionView = nil;
+					
+					os26OutPopupBar.contentView.effectView.contentView.alpha = 1.0;
+					os26OutPopupBar.alpha = 1.0;
+					os26OutPopupBar.transform = CGAffineTransformIdentity;
+					
+					[_popupBar removeFromSuperview];
+					_popupBar = os26OutPopupBar;
+					_popupBar.frame = newBarFrame;
+					
+					[self.containerController _layoutPopupBarOrderForUse];
+				}
+				
 				self.popupBar.shadowView.alpha = 1.0;
 				
 				[self.popupBar.customBarViewController _userFacing_viewDidDisappear:animated];
-				
-				_popupControllerInternalState = LNPopupPresentationStateBarHidden;
 				
 				[self _removeContentControllerFromContentView:_currentContentController];
 				
@@ -1890,6 +1975,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				self.bottomBar = nil;
 				
 				[self _end120HzHack];
+				
+				_popupControllerInternalState = LNPopupPresentationStateBarHidden;
 				
 				if(completionBlock != nil) { completionBlock(); }
 			}];

@@ -13,6 +13,7 @@
 #import "_LNPopupBackgroundShadowView.h"
 #import "_LNPopupBarBackgroundMaskView.h"
 #import "MarqueeLabel.h"
+#import "_LNPopupGlassUtils.h"
 
 CF_EXTERN_C_BEGIN
 
@@ -24,6 +25,17 @@ extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
 inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
 {
+	if(style == LNPopupBarStyleCustom)
+	{
+		return LNPopupBarStyleCustom;
+	}
+	
+	if(__LN_HAS_OS26_GLASS())
+	{
+		//Other bar styles are no longer supported on iOS 26.0
+		return LNPopupBarStyleFloating;
+	}
+	
 	LNPopupBarStyle rv = style;
 	if(rv == LNPopupBarStyleDefault)
 	{
@@ -143,6 +155,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 - (BOOL)isWidePad;
 
 @end
+
+@interface _LNTransitionPopupBar: LNPopupBar @end
 
 @protocol _LNPopupToolbarLayoutDelegate <NSObject>
 

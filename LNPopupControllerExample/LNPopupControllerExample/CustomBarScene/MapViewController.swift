@@ -104,7 +104,15 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		}
 		
 		popupContentView.popupCloseButtonStyle = .none
+#if compiler(>=6.2)
+		if #available(iOS 26, *) {
+			popupContentView.backgroundEffect = UIGlassEffect(style: .regular)
+		} else {
+			popupContentView.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
+		}
+#else
 		popupContentView.backgroundEffect = UIBlurEffect(style: .systemChromeMaterial)
+#endif
 //		popupContentView.isTranslucent = false
 		popupInteractionStyle = .customizedSnap(percent: 0.15)
 		

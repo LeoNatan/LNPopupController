@@ -75,7 +75,7 @@ NS_SWIFT_UI_ACTOR
 - (void)configureWithNoImageShadow;
 
 /// A specific blur effect to use for the bar floating background. This effect is composited first when constructing the bar's floating background.
-@property (nonatomic, copy, nullable) UIBlurEffect* floatingBackgroundEffect;
+@property (nonatomic, copy, nullable) UIVisualEffect* floatingBackgroundEffect;
 
 /// A color to use for the bar floating background. This color is composited over `floatingBackgroundEffect`.
 @property (nonatomic, copy, nullable) UIColor* floatingBackgroundColor;

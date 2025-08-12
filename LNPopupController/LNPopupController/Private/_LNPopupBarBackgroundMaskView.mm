@@ -1,5 +1,5 @@
 //
-//  _LNPopupBarBackgroundMaskView.m
+//  _LNPopupBarBackgroundMaskView.mm
 //  LNPopupController
 //
 //  Created by Léo Natan on 2023-09-27.

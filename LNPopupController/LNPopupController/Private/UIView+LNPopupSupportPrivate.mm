@@ -429,6 +429,11 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardA
 
 static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPopupBar* popupBar)
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return NO;
+	}
+	
 	//backgroundTransitionProgress
 	static NSString* bTP = LNPopupHiddenString("backgroundTransitionProgress");
 	
@@ -454,14 +459,18 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 		if(@available(iOS 15.0, *))
 		{
 			LNSwizzleMethod(self, @selector(layoutSubviews), @selector(_ln_layoutSubviews));
+			
+			if(!__LN_HAS_OS26_GLASS())
+			{
 #if ! LNPopupControllerEnforceStrictClean
-			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
-			LNSwizzleMethod(self, @selector(compactAppearance), @selector(_lnpopup_compactAppearance));
+				LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
+				LNSwizzleMethod(self, @selector(compactAppearance), @selector(_lnpopup_compactAppearance));
 #endif
-			LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
-			LNSwizzleMethod(self, @selector(setCompactAppearance:), @selector(_lnpopup_setCompactAppearance:));
-			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
-			LNSwizzleMethod(self, @selector(compactScrollEdgeAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
+				LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
+				LNSwizzleMethod(self, @selector(setCompactAppearance:), @selector(_lnpopup_setCompactAppearance:));
+				LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+				LNSwizzleMethod(self, @selector(compactScrollEdgeAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
+			}
 		}
 	}
 }
@@ -475,6 +484,11 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return;
+	}
+	
 	if(@available(iOS 15.0, *))
 	{
 		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
@@ -561,19 +575,27 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 {
 	@autoreleasepool
 	{
-		if(@available(iOS 15.0, *))
+		if(!__LN_HAS_OS26_GLASS())
 		{
+			if(@available(iOS 15.0, *))
+			{
 #if ! LNPopupControllerEnforceStrictClean
-			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
+				LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
 #endif
-			LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
-			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+				LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
+				LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+			}
 		}
 	}
 }
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return;
+	}
+	
 	if(@available(iOS 15.0, *))
 	{
 		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
@@ -641,13 +663,16 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 		LNSwizzleMethod(self, @selector(layoutSubviews), @selector(_ln_layoutSubviews));
 		LNSwizzleMethod(self, @selector(setSelectedItem:), @selector(_ln_setSelectedItem:));
 		
-		if(@available(iOS 15.0, *))
+		if(!__LN_HAS_OS26_GLASS())
 		{
+			if(@available(iOS 15.0, *))
+			{
 #if ! LNPopupControllerEnforceStrictClean
-			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
+				LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
 #endif
-			LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
-			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+				LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
+				LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+			}
 		}
 		
 #if ! LNPopupControllerEnforceStrictClean
@@ -700,6 +725,11 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return;
+	}
+	
 	id backgroundView = nil;
 	
 	if(@available(iOS 15.0, *))

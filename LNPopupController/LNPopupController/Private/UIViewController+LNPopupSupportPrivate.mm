@@ -316,6 +316,11 @@ CF_EXTERN_C_END
 
 - (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return NO;
+	}
+	
 	return self._ln_popupController_nocreate.popupBar.resolvedStyle != LNPopupBarStyleFloating && self.shouldExtendPopupBarUnderSafeArea;
 }
 
@@ -683,6 +688,11 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return nil;
+	}
+	
 	if(self._ln_reallyShouldExtendPopupBarUnderSafeArea == NO || self._ln_popupController_nocreate.popupControllerInternalState == LNPopupPresentationStateBarHidden)
 	{
 		[self._ln_bottomBarExtension_nocreate removeFromSuperview];

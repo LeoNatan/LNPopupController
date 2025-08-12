@@ -14,12 +14,11 @@
 #import "NSAttributedString+LNPopupSupport.h"
 #import "LNPopupImageView+Private.h"
 #import "UIView+LNPopupSupportPrivate.h"
+#import "_LNPopupGlassUtils.h"
 
 const CGFloat LNPopupBarHeightCompact = 40.0;
 const CGFloat LNPopupBarHeightProminent = 64.0;
 const CGFloat LNPopupBarHeightFloating = 64.0;
-const CGFloat LNPopupBarProminentImageWidth = 48.0;
-const CGFloat LNPopupBarFloatingImageWidth = 40.0;
 const CGFloat LNPopupBarFloatingPadImageWidth = 44.0;
 const CGFloat LNPopupBarFloatingPadWidthLimit = 954.0;
 
@@ -213,15 +212,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_inheritsAppearanceFromDockingView = YES;
 		_standardAppearance = [LNPopupBarAppearance new];
 		
-		_backgroundView = [[_LNPopupBarBackgroundView alloc] initWithEffect:nil];
-		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_backgroundView.userInteractionEnabled = NO;
-		[self addSubview:_backgroundView];
-		
-		_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
-		_floatingBackgroundShadowView.userInteractionEnabled = NO;
-		_floatingBackgroundShadowView.alpha = 0.0;
-		[self addSubview:_floatingBackgroundShadowView];
+		if(!__LN_HAS_OS26_GLASS())
+		{
+			_backgroundView = [[_LNPopupBarBackgroundView alloc] initWithEffect:nil];
+			_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+			_backgroundView.userInteractionEnabled = NO;
+			[self addSubview:_backgroundView];
+			
+			_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
+			_floatingBackgroundShadowView.userInteractionEnabled = NO;
+			_floatingBackgroundShadowView.alpha = 0.0;
+			[self addSubview:_floatingBackgroundShadowView];
+		}
 		
 		_contentView = [[_LNPopupBarContentView alloc] initWithEffect:nil];
 		_contentView.clipsToBounds = NO;
@@ -233,18 +235,21 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			[_contentView addInteraction:pointerInteraction];
 		}
 		
-		_contentMaskView = [UIView new];
-		_contentMaskView.backgroundColor = UIColor.whiteColor;
-		_contentMaskView.frame = self.bounds;
-		_contentView.maskView = _contentMaskView;
-		
-		_backgroundMaskView = [UIView new];
-		_backgroundMaskView.backgroundColor = UIColor.whiteColor;
-		_backgroundMaskView.frame = self.bounds;
-		_backgroundView.effectView.maskView = _backgroundMaskView;
-		
-		_backgroundGradientMaskView = [_LNPopupBarBackgroundMaskView new];
-		_backgroundView.maskView = _backgroundGradientMaskView;
+		if(!__LN_HAS_OS26_GLASS())
+		{
+			_contentMaskView = [UIView new];
+			_contentMaskView.backgroundColor = UIColor.whiteColor;
+			_contentMaskView.frame = self.bounds;
+			_contentView.maskView = _contentMaskView;
+			
+			_backgroundMaskView = [UIView new];
+			_backgroundMaskView.backgroundColor = UIColor.whiteColor;
+			_backgroundMaskView.frame = self.bounds;
+			_backgroundView.effectView.maskView = _backgroundMaskView;
+			
+			_backgroundGradientMaskView = [_LNPopupBarBackgroundMaskView new];
+			_backgroundView.maskView = _backgroundGradientMaskView;
+		}
 		
 		self.effectGroupingIdentifier = nil;
 		
@@ -257,7 +262,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 #if DEBUG
 		if(_LNEnableBarLayoutDebug())
 		{
-			_toolbar.standardAppearance.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
+			_toolbar.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.7];
 			_toolbar.layer.borderColor = UIColor.blackColor.CGColor;
 			_toolbar.layer.borderWidth = 1.0;
 		}
@@ -458,7 +463,17 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		}
 		contentFrame = CGRectOffset(contentFrame, 0, -2);
 		
-		_contentView.cornerRadius = 14;
+		if(__LN_HAS_OS26_GLASS())
+		{
+			_contentView.cornerRadius = contentFrame.size.height / 2;
+			_contentView.contentView.clipsToBounds = YES;
+			if(@available(iOS 26.0, *))
+				_contentView.contentView.cornerConfiguration = [UICornerConfiguration configurationWithRadius:[UICornerRadius fixedRadius:contentFrame.size.height / 2]];
+		}
+		else
+		{
+			_contentView.cornerRadius = 14;
+		}
 		
 		_backgroundGradientMaskView.hidden = NO;
 		_backgroundGradientMaskView.frame = _backgroundView.bounds;
@@ -506,8 +521,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_backgroundGradientMaskView.hidden = YES;
 		_backgroundView.maskView = nil;
 		
-		_contentView.cornerRadius = 0;
 		_floatingBackgroundShadowView.hidden = YES;
+		
+		_contentView.cornerRadius = 0;
+		if(__LN_HAS_OS26_GLASS())
+		{
+			_contentView.contentView.clipsToBounds = NO;
+			if(@available(iOS 26.0, *))
+				_contentView.contentView.cornerConfiguration = [UICornerConfiguration configurationWithRadius:[UICornerRadius fixedRadius:0]];
+		}
 	}
 	_contentView.frame = contentFrame;
 #if DEBUG
@@ -528,17 +550,20 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[_toolbar setNeedsLayout];
 	[_toolbar layoutIfNeeded];
 	
-	if(isFloating)
+	if(!__LN_HAS_OS26_GLASS())
 	{
-		[_contentView.contentView insertSubview:_highlightView belowSubview:_toolbar];
-		_highlightView.frame = _contentView.bounds;
-		_highlightView.layer.cornerRadius = _contentView.cornerRadius;
-	}
-	else
-	{
-		[self insertSubview:_highlightView aboveSubview:_backgroundView];
-		_highlightView.frame = self.bounds;
-		_highlightView.layer.cornerRadius = 0;
+		if(isFloating)
+		{
+			[_contentView.contentView insertSubview:_highlightView belowSubview:_toolbar];
+			_highlightView.frame = _contentView.bounds;
+			_highlightView.layer.cornerRadius = _contentView.cornerRadius;
+		}
+		else
+		{
+			[self insertSubview:_highlightView aboveSubview:_backgroundView];
+			_highlightView.frame = self.bounds;
+			_highlightView.layer.cornerRadius = 0;
+		}
 	}
 	
 	[_contentView.contentView insertSubview:_imageView aboveSubview:_toolbar];
@@ -549,13 +574,17 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_shadowView.frame = CGRectMake(0, 0, _backgroundView.bounds.size.width, h);
 	_bottomShadowView.frame = CGRectMake(0, _backgroundView.bounds.size.height - h, _backgroundView.bounds.size.width, h);
 	
-	CGFloat cornerRadius = _contentView.layer.cornerRadius / 2.5;
+	CGFloat cornerRadius = _contentView.cornerRadius / 2.5;
 	CGFloat width = 0;
 	CGFloat height = 0;
 	CGFloat offset = 0;
 	if(isFloating)
 	{
 		[_contentView.contentView insertSubview:_progressView aboveSubview:_toolbar];
+		if(__LN_HAS_OS26_GLASS())
+		{
+			offset = 0;
+		}
 		width = _contentView.bounds.size.width;
 		height = _contentView.bounds.size.height;
 	}
@@ -690,6 +719,11 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 
 - (void)setEffectGroupingIdentifier:(NSString *)groupingIdentifier
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return;
+	}
+	
 	[self _applyGroupingIdentifier:groupingIdentifier toVisualEffectView:self.backgroundView.effectView];
 	
 	[self._barDelegate _popupBarStyleDidChange:self];
@@ -813,7 +847,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	}
 	else
 	{
-		_contentView.effect = nil;
+		[_contentView clearEffect];
 		_contentView.foregroundColor = nil;
 		_contentView.foregroundImage = nil;
 		_contentView.foregroundImageContentMode = (UIViewContentMode)0;
@@ -1430,7 +1464,8 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 				
 				[_titlesView addArrangedSubview:_swiftuiTitleContentView];
 				[_titlesView layoutIfNeeded];
-				if(unavailable(iOS 17.0, *)) {
+				if(unavailable(iOS 17.0, *))
+				{
 					UIView* textView = _swiftuiTitleContentView.subviews.firstObject;
 					[NSLayoutConstraint activateConstraints:@[
 						[_swiftuiTitleContentView.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
@@ -1639,10 +1674,19 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
 	
 	BOOL isFloating = _resolvedStyle == LNPopupBarStyleFloating;
-	CGFloat maxImageDimention = isFloating ? LNPopupBarFloatingImageWidth : LNPopupBarProminentImageWidth;
+	CGFloat maxImageDimention = _contentView.bounds.size.height - 16;
 	CGFloat barHeight = _contentView.bounds.size.height;
 	
-	CGFloat safeLeading = 8;
+	CGFloat safeLeading;
+	
+	if(__LN_HAS_OS26_GLASS())
+	{
+		safeLeading = 20;
+	}
+	else
+	{
+		safeLeading = 8;
+	}
 	
 	if(_resolvedStyle == LNPopupBarStyleFloating && self.isWidePad == YES)
 	{
@@ -1701,12 +1745,10 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	
 	NSEnumerationOptions enumerationOptions = normalButtonsOrder ? 0 : NSEnumerationReverse;
 	
-	LNPopupBarStyle resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle);
-	
 	NSMutableArray* items = [NSMutableArray new];
 	
 	UIBarButtonItem* flexibleSpacer = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
-	if(resolvedStyle != LNPopupBarStyleCompact)
+	if(_resolvedStyle != LNPopupBarStyleCompact)
 	{
 		[items addObject:flexibleSpacer];
 	}
@@ -1715,7 +1757,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		[items addObject:barButtonItem];
 	}];
 	
-	if(resolvedStyle == LNPopupBarStyleCompact)
+	if(_resolvedStyle == LNPopupBarStyleCompact)
 	{
 		[items addObject:flexibleSpacer];
 	}

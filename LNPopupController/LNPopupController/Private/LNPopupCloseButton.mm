@@ -149,22 +149,21 @@ __attribute__((objc_direct_members))
 
 - (void)_setupForChevronButton
 {
-	CGRect frame;
-	if(_style == LNPopupCloseButtonStyleGrabber)
-	{
-		frame = CGRectMake(0, 0, 36, 15);
-	}
-	else
-	{
-		frame = CGRectMake(0, 0, 40, 20);
-	}
+	_chevronView = [[LNChevronView alloc] initWithFrame:CGRectZero];
+	_chevronView.translatesAutoresizingMaskIntoConstraints = NO;
 	
-	_chevronView = [[LNChevronView alloc] initWithFrame:frame];
 	_chevronView.width = 5.0;
 	[_chevronView setState:_style == LNPopupCloseButtonStyleGrabber ? LNChevronViewStateFlat : LNChevronViewStateUp animated:NO];
 	
 	self.tintColor = [UIColor colorWithWhite:0.5 alpha:1.0];
 	[self addSubview:_chevronView];
+	
+	[NSLayoutConstraint activateConstraints:@[
+		[_chevronView.topAnchor constraintEqualToAnchor:self.topAnchor],
+		[_chevronView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+		[_chevronView.widthAnchor constraintEqualToConstant:_style == LNPopupCloseButtonStyleGrabber ? 70 : 40],
+		[_chevronView.heightAnchor constraintEqualToConstant:_style == LNPopupCloseButtonStyleGrabber ? 15 : 20],
+	]];
 }
 
 - (void)_setupForCircularButton

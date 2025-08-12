@@ -496,11 +496,21 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (BOOL)shouldExtendPopupBarUnderSafeArea
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return NO;
+	}
+	
 	return [(objc_getAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey) ?: @1) boolValue];
 }
 
 - (void)setShouldExtendPopupBarUnderSafeArea:(BOOL)shouldExtendPopupBarUnderSafeArea
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return;
+	}
+	
 	objc_setAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey, @(shouldExtendPopupBarUnderSafeArea), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
 	self._ln_bottomBarExtension.alpha = shouldExtendPopupBarUnderSafeArea ? 1.0 : 0.0;

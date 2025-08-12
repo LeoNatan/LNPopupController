@@ -21,5 +21,9 @@
 
 #define LN_UNAVAILABLE_API(x) __attribute__((unavailable(x)))
 #define LN_DEPRECATED_API(x) __attribute__((deprecated(x)))
+#define LN_DEPRECATED_API_OS(...) API_DEPRECATED(__VA_ARGS__)
+
+#define LN_DEPRECATED_API_OS_BEGIN(...) API_DEPRECATED_BEGIN(__VA_ARGS__)
+#define LN_DEPRECATED_API_OS_END API_DEPRECATED_END
 
 #endif /* LNPopupDefinitions_h */

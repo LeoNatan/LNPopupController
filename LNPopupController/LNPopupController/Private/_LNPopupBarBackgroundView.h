@@ -15,7 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithEffect:(nullable UIVisualEffect *)effect;
 
 @property (nonatomic, strong, readonly) UIVisualEffectView* effectView;
+
 @property (nonatomic, copy, nullable) UIVisualEffect* effect;
+- (void)clearEffect;
+
 @property (nonatomic, strong, readonly) UIView* contentView;
 
 @property(nonatomic, copy, nullable) UIColor* foregroundColor;
