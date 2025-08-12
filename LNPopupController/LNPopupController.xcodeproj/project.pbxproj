@@ -23,7 +23,7 @@
 		393E4EA72670F12500929E47 /* LNPopupBarAppearance.mm in Sources */ = {isa = PBXBuildFile; fileRef = 393E4EA52670F12500929E47 /* LNPopupBarAppearance.mm */; };
 		393E4EAA2670F2D000929E47 /* LNPopupBarAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		394005FC2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h in Headers */ = {isa = PBXBuildFile; fileRef = 394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */; };
-		394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m in Sources */ = {isa = PBXBuildFile; fileRef = 394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m */; };
+		394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.mm */; };
 		3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3947E1A21B61CD1F0001178B /* UIViewController+LNPopupSupport.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.mm */; };
 		3947E1A61B61CD650001178B /* LNPopupBar.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3947E1A41B61CD650001178B /* LNPopupBar.mm */; };
@@ -63,6 +63,7 @@
 		399D37B92ADC672D00EA5038 /* LNPopupImageView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 399D37B72ADC672D00EA5038 /* LNPopupImageView.mm */; };
 		39A0DDB326F7894700E5D751 /* NSAttributedString+LNPopupSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A0DDB126F7894700E5D751 /* NSAttributedString+LNPopupSupport.h */; };
 		39A0DDB426F7894700E5D751 /* NSAttributedString+LNPopupSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A0DDB226F7894700E5D751 /* NSAttributedString+LNPopupSupport.m */; };
+		39A40E832E616BB100698F92 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A40E822E616BB100698F92 /* SwiftSupport.swift */; };
 		39A9249A1B58530A003C1C19 /* LNPopupController.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A924991B5852ED003C1C19 /* LNPopupController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39AC479126C69ACA001D53C2 /* LNMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 39AC478F26C69AC9001D53C2 /* LNMath.h */; };
 		39AC479226C69ACA001D53C2 /* LNMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 39AC479026C69AC9001D53C2 /* LNMath.m */; };
@@ -90,6 +91,8 @@
 		39E7A604200B5157007AF3AD /* _LNPopupSwizzlingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */; };
 		39E7A605200B5157007AF3AD /* _LNPopupSwizzlingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */; };
 		39E9FE11275B984B00A47D61 /* LNPopupDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		39F691122E4BF75D00BC8EEA /* _LNPopupGlassUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39F691112E4BF75D00BC8EEA /* _LNPopupGlassUtils.mm */; };
+		39F691132E4BF75D00BC8EEA /* _LNPopupGlassUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 39F691102E4BF75D00BC8EEA /* _LNPopupGlassUtils.h */; };
 		39F8228826B80B6F0070DDBA /* SwiftRefinements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */; };
 		39F9DECA2C84A211005CA5FB /* _LNPopupBase64Utils.hh in Headers */ = {isa = PBXBuildFile; fileRef = 39F9DEC92C84A207005CA5FB /* _LNPopupBase64Utils.hh */; };
 		39FA8FD12D9F84000068FD0D /* LNPopupDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = 39FA8FCF2D9F84000068FD0D /* LNPopupDebug.h */; };
@@ -117,7 +120,7 @@
 		393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupBarAppearance.h; sourceTree = "<group>"; };
 		393E4EAC26713E5700929E47 /* LNPopupBarAppearance+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupBarAppearance+Private.h"; sourceTree = "<group>"; };
 		394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupBarBackgroundMaskView.h; sourceTree = "<group>"; };
-		394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupBarBackgroundMaskView.m; sourceTree = "<group>"; };
+		394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupBarBackgroundMaskView.mm; sourceTree = "<group>"; };
 		3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIViewController+LNPopupSupport.h"; sourceTree = "<group>"; };
 		3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = "UIViewController+LNPopupSupport.mm"; sourceTree = "<group>"; };
 		3947E1A41B61CD650001178B /* LNPopupBar.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LNPopupBar.mm; sourceTree = "<group>"; };
@@ -155,6 +158,7 @@
 		399D37B72ADC672D00EA5038 /* LNPopupImageView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LNPopupImageView.mm; sourceTree = "<group>"; };
 		39A0DDB126F7894700E5D751 /* NSAttributedString+LNPopupSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+LNPopupSupport.h"; sourceTree = "<group>"; };
 		39A0DDB226F7894700E5D751 /* NSAttributedString+LNPopupSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+LNPopupSupport.m"; sourceTree = "<group>"; };
+		39A40E822E616BB100698F92 /* SwiftSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftSupport.swift; path = ../../LNPCSwiftRefinements/SwiftSupport.swift; sourceTree = "<group>"; };
 		39A924991B5852ED003C1C19 /* LNPopupController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupController.h; sourceTree = "<group>"; };
 		39AC478F26C69AC9001D53C2 /* LNMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNMath.h; sourceTree = "<group>"; };
 		39AC479026C69AC9001D53C2 /* LNMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNMath.m; sourceTree = "<group>"; };
@@ -182,6 +186,8 @@
 		39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupSwizzlingUtils.h; sourceTree = "<group>"; };
 		39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupSwizzlingUtils.m; sourceTree = "<group>"; };
 		39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDefinitions.h; sourceTree = "<group>"; };
+		39F691102E4BF75D00BC8EEA /* _LNPopupGlassUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupGlassUtils.h; sourceTree = "<group>"; };
+		39F691112E4BF75D00BC8EEA /* _LNPopupGlassUtils.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupGlassUtils.mm; sourceTree = "<group>"; };
 		39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftRefinements.swift; path = ../../LNPCSwiftRefinements/SwiftRefinements.swift; sourceTree = "<group>"; };
 		39F9DEC92C84A207005CA5FB /* _LNPopupBase64Utils.hh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = _LNPopupBase64Utils.hh; sourceTree = "<group>"; };
 		39FA8FCF2D9F84000068FD0D /* LNPopupDebug.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDebug.h; sourceTree = "<group>"; };
@@ -206,6 +212,8 @@
 				39F9DEC92C84A207005CA5FB /* _LNPopupBase64Utils.hh */,
 				39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */,
 				39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */,
+				39F691102E4BF75D00BC8EEA /* _LNPopupGlassUtils.h */,
+				39F691112E4BF75D00BC8EEA /* _LNPopupGlassUtils.mm */,
 				394A85BF1B630992004FFC61 /* _LNWeakRef.h */,
 				394A85C01B630992004FFC61 /* _LNWeakRef.m */,
 				39AC478F26C69AC9001D53C2 /* LNMath.h */,
@@ -220,7 +228,7 @@
 				397D9A152687474D005164AB /* _LNPopupBarBackgroundView.h */,
 				397D9A162687474D005164AB /* _LNPopupBarBackgroundView.m */,
 				394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */,
-				394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m */,
+				394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.mm */,
 				39C553E22D91924900F8D8B2 /* LNPopupImageView+Private.h */,
 				399D37B72ADC672D00EA5038 /* LNPopupImageView.mm */,
 				39C553DD2D8F2B3200F8D8B2 /* _LNPopupTransitionView.h */,
@@ -331,6 +339,7 @@
 				394A85B71B6304F5004FFC61 /* LNPopupItem.h */,
 				399D37B62ADC672D00EA5038 /* LNPopupImageView.h */,
 				3947E19F1B61CD1F0001178B /* UIViewController+LNPopupSupport.h */,
+				39A40E822E616BB100698F92 /* SwiftSupport.swift */,
 				39F8228726B80B6F0070DDBA /* SwiftRefinements.swift */,
 				46ECC2AE1BF31025005CE96C /* Info.plist */,
 			);
@@ -384,6 +393,7 @@
 				397AFBFB1F1A1ED200E7D95C /* LNForwardingDelegate.h in Headers */,
 				39222ADB1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.h in Headers */,
 				39C553E32D91925300F8D8B2 /* LNPopupImageView+Private.h in Headers */,
+				39F691132E4BF75D00BC8EEA /* _LNPopupGlassUtils.h in Headers */,
 				397AFC011F1A21DD00E7D95C /* LNPopupLongPressGestureRecognizer.h in Headers */,
 				390031692AC06FE10046D3DD /* _LNPopupBackgroundShadowView.h in Headers */,
 				394A85C11B630992004FFC61 /* _LNWeakRef.h in Headers */,
@@ -483,7 +493,7 @@
 				39314A531B6AE7A400574D3C /* MarqueeLabel.m in Sources */,
 				3907CDB824D9BD6E007C9300 /* LNPopupContentView.m in Sources */,
 				391481BA1DCFA514002416D1 /* LNChevronView.m in Sources */,
-				394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.m in Sources */,
+				394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.mm in Sources */,
 				399BA1D52A9E975E00CA5167 /* _LNPopupUIBarAppearanceProxy.mm in Sources */,
 				397D9A182687474E005164AB /* _LNPopupBarBackgroundView.m in Sources */,
 				3947E1A61B61CD650001178B /* LNPopupBar.mm in Sources */,
@@ -496,8 +506,10 @@
 				39B5500E2D92D29000B474EC /* _LNPopupTransitionCloseAnimator.m in Sources */,
 				39C39F422DA3DB96007630FD /* LNPopupBarExtras.mm in Sources */,
 				39B5500F2D92D29000B474EC /* _LNPopupTransitionOpenAnimator.m in Sources */,
+				39F691122E4BF75D00BC8EEA /* _LNPopupGlassUtils.mm in Sources */,
 				39B550102D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.mm in Sources */,
 				39B550112D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.mm in Sources */,
+				39A40E832E616BB100698F92 /* SwiftSupport.swift in Sources */,
 				39B550122D92D29000B474EC /* _LNPopupTransitionGenericOpenAnimator.m in Sources */,
 				39B550132D92D29000B474EC /* _LNPopupTransitionGenericCloseAnimator.m in Sources */,
 				396D62732610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.mm in Sources */,

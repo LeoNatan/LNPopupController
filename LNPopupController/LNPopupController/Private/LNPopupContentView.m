@@ -50,6 +50,11 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		_effectView.autoresizingMask = UIViewAutoresizingNone;
 		[self addSubview:_effectView];
 		
+		_contentView = [UIView new];
+		_contentView.frame = self.bounds;
+		_contentView.autoresizingMask = UIViewAutoresizingNone;
+		[self addSubview:_contentView];
+		
 		_translucent = YES;
 		_backgroundEffect = nil;
 		
@@ -96,11 +101,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	[super layoutSubviews];
 	
 	_effectView.frame = self.bounds;
-}
-
-- (UIView *)contentView
-{
-	return _effectView.contentView;
+	_contentView.frame = self.bounds;
 }
 
 - (void)setCurrentPopupContentViewController:(UIViewController *)currentPopupContentViewController
@@ -126,6 +127,9 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 		
 		if([_currentPopupContentViewController positionPopupCloseButton:self.popupCloseButton] == YES)
 		{
+			_popupCloseButtonTopConstraint.active = NO;
+			_popupCloseButtonLeadingConstraint.active = NO;
+			_popupCloseButtonCenterConstraint.active = NO;
 			return;
 		}
 		else
@@ -284,19 +288,38 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	[super setOverrideUserInterfaceStyle:self.overrideUserInterfaceStyle];
 }
 
-- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc barEffect:(UIBlurEffect*)barEffect
+- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc activeAppearance:(LNPopupBarAppearance*)appearance
 {
-	if(self.translucent == NO)
+	UIVisualEffect* effectToUse;
+	if(_backgroundEffect != nil)
 	{
-		_effectView.effect = nil;
+		effectToUse = _backgroundEffect;
 	}
-	else if(_backgroundEffect == nil)
+	else if(LNPopupEnvironmentHasGlass())
 	{
-		_effectView.effect = barEffect;
+		effectToUse = appearance.floatingBackgroundEffect;
 	}
 	else
 	{
-		_effectView.effect = _backgroundEffect;
+		effectToUse = appearance.backgroundEffect;
+	}
+	
+	if(self.translucent == NO)
+	{
+		_effectView.effect = nil;
+		_effectView.backgroundColor = UIColor.systemBackgroundColor;
+	}
+	else
+	{
+		if(@available(iOS 26.0, *))
+		if([effectToUse isKindOfClass:UIGlassEffect.class])
+		{
+			UIGlassEffect* glass = [effectToUse copy];
+			glass.interactive = NO;
+			effectToUse = glass;
+		}
+		
+		_effectView.effect = effectToUse;
 	}
 }
 

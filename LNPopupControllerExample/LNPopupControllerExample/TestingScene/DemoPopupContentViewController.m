@@ -26,7 +26,10 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled] == YES)
 	{
+		titleLowerLimit = 10;
+		titleUpperLimit = 15;
 		subtitleLowerLimit = 10;
+		subtitleUpperLimit = 20;
 	}
 	
 	self.popupItem.title = [[LoremIpsum wordsWithNumber:arc4random_uniform(titleUpperLimit - titleLowerLimit) + titleLowerLimit] capitalizedString];
@@ -129,73 +132,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection animated:(BOOL)animated
 {
-	LNSystemImageScale scale;
-	LNSystemImageScale backForwardScale;
-	if([[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact)
-	{
-		scale = LNSystemImageScaleCompact;
-		backForwardScale = LNSystemImageScaleCompact;
-	}
-	else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
-	{
-		scale = LNSystemImageScaleLarger;
-		backForwardScale = LNSystemImageScaleLarge;
-	}
-	else
-	{
-		scale = LNSystemImageScaleNormal;
-		backForwardScale = LNSystemImageScaleNormal;
-	}
-	
-	UIBarButtonItem* play = LNSystemBarButtonItem(@"pause.fill", scale != LNSystemImageScaleLarger ? scale + 1 : scale, self, @selector(button:));
-	play.accessibilityLabel = NSLocalizedString(@"Pause", @"");
-	play.accessibilityIdentifier = @"PauseButton";
-	play.accessibilityTraits = UIAccessibilityTraitButton;
-	
-	UIBarButtonItem* stop = LNSystemBarButtonItem(@"stop.fill", scale, self, @selector(button:));
-	stop.accessibilityLabel = NSLocalizedString(@"Stop", @"");
-	stop.accessibilityIdentifier = @"StopButton";
-	stop.accessibilityTraits = UIAccessibilityTraitButton;
-	
-	UIBarButtonItem* next = LNSystemBarButtonItem(@"forward.fill", backForwardScale, self, @selector(button:));
-	next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
-	next.accessibilityIdentifier = @"NextButton";
-	next.accessibilityTraits = UIAccessibilityTraitButton;
-	
-	UIBarButtonItem* prev = LNSystemBarButtonItem(@"backward.fill", backForwardScale, self, @selector(button:));
-	prev.accessibilityLabel = NSLocalizedString(@"Previous Track", @"");
-	prev.accessibilityIdentifier = @"PrevButton";
-	prev.accessibilityTraits = UIAccessibilityTraitButton;
-	
-	UIBarButtonItem* more = LNSystemBarButtonItem(@"ellipsis", scale, self, @selector(button:));
-	prev.accessibilityLabel = NSLocalizedString(@"More", @"");
-	prev.accessibilityIdentifier = @"MoreButton";
-	prev.accessibilityTraits = UIAccessibilityTraitButton;
-	
-	if(scale == LNSystemImageScaleCompact)
-	{
-		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
-		{
-			[self.popupItem setLeadingBarButtonItems:@[ play ] animated:animated];
-			[self.popupItem setTrailingBarButtonItems:@[ more ] animated:animated];
-		}
-		else
-		{
-			[self.popupItem setLeadingBarButtonItems:@[ prev, play, next ] animated:animated];
-			[self.popupItem setTrailingBarButtonItems:@[ more ] animated:animated];
-		}
-	}
-	else
-	{
-		if(collection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
-		{
-			[self.popupItem setBarButtonItems:@[ play, next ] animated:NO];
-		}
-		else
-		{		
-			[self.popupItem setBarButtonItems:@[ prev, play, next ] animated:NO];
-		}
-	}
+	LNPopupItemSetStandardMusicControls(self.popupItem, animated, collection, self, @selector(button:));
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -245,6 +182,8 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		return;
 	}
 	
+	BOOL isCloseButtonHidden = [NSUserDefaults.settingDefaults integerForKey:PopupSettingCloseButtonStyle] == LNPopupCloseButtonStyleNone;
+	
 	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 0)
 	{
 		NSShadow* shadow = [NSShadow new];
@@ -261,13 +200,15 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		NSLayoutConstraint* trailing = [_preferredTransitionView.trailingAnchor constraintGreaterThanOrEqualToAnchor:self.view.layoutMarginsGuide.trailingAnchor];
 		trailing.priority = UILayoutPriorityDefaultHigh;
 		
+		NSLayoutYAxisAnchor* anchorToUse = isCloseButtonHidden ? self.view.safeAreaLayoutGuide.topAnchor : popupContentView.popupCloseButton.bottomAnchor;
+		
 		[self.view addSubview:_preferredTransitionView];
 		[NSLayoutConstraint activateConstraints:@[
 			leading,
 			trailing,
 			[_preferredTransitionView.widthAnchor constraintLessThanOrEqualToConstant:400],
 			[_preferredTransitionView.centerXAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.centerXAnchor],
-			[_preferredTransitionView.topAnchor constraintGreaterThanOrEqualToAnchor:popupContentView.popupCloseButton.bottomAnchor constant:20],
+			[_preferredTransitionView.topAnchor constraintGreaterThanOrEqualToAnchor:anchorToUse constant:20],
 			[_preferredTransitionView.widthAnchor constraintEqualToAnchor:_preferredTransitionView.heightAnchor],
 		]];
 	}
@@ -298,13 +239,15 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		NSLayoutConstraint* trailing = [_genericTransitionView.trailingAnchor constraintGreaterThanOrEqualToAnchor:self.view.layoutMarginsGuide.trailingAnchor];
 		trailing.priority = UILayoutPriorityDefaultHigh;
 		
+		NSLayoutYAxisAnchor* anchorToUse = isCloseButtonHidden ? self.view.safeAreaLayoutGuide.topAnchor : popupContentView.popupCloseButton.bottomAnchor;
+		
 		[self.view addSubview:_genericTransitionView];
 		[NSLayoutConstraint activateConstraints:@[
 			leading,
 			trailing,
 			[_genericTransitionView.widthAnchor constraintLessThanOrEqualToConstant:400],
 			[_genericTransitionView.centerXAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.centerXAnchor],
-			[_genericTransitionView.topAnchor constraintGreaterThanOrEqualToAnchor:popupContentView.popupCloseButton.bottomAnchor constant:20],
+			[_genericTransitionView.topAnchor constraintGreaterThanOrEqualToAnchor:anchorToUse constant:20],
 			[_genericTransitionView.widthAnchor constraintEqualToAnchor:_genericTransitionView.heightAnchor],
 		]];
 		

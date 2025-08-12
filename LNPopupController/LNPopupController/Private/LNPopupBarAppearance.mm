@@ -9,6 +9,7 @@
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
+#import "_LNPopupGlassUtils.h"
 
 static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
@@ -185,12 +186,24 @@ static NSArray* __notifiedProperties = nil;
 	return rv;
 }
 
-- (UIBlurEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection
+- (UIVisualEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection
 {
 	if(_wantsDynamicFloatingBackgroundEffect == NO)
 	{
 		return _floatingBackgroundEffect;
 	}
+	
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	if(@available(iOS 26, *))
+	{
+		if(LNPopupEnvironmentHasGlass())
+		{
+			UIGlassEffect* effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
+			effect.interactive = YES;
+			return effect;
+		}
+	}
+#endif
 	
 	if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
 	{
@@ -218,7 +231,7 @@ static NSArray* __notifiedProperties = nil;
 		}
 		else
 		{
-			return [UIColor.systemGray2Color colorWithAlphaComponent:0.2];
+			return [UIColor.systemGray2Color colorWithAlphaComponent:LNPopupEnvironmentHasGlass() ? 0.3 : 0.2];
 		}
 	}];
 	
@@ -294,27 +307,67 @@ static NSArray* __notifiedProperties = nil;
 
 - (NSShadow*)_defaultFloatingBarBackgroundShadow
 {
-	NSShadow* shadow = [NSShadow new];
-	shadow.shadowColor = LNPopupBarAppearance._defaultProminentShadowColor;
-	shadow.shadowOffset = CGSizeMake(0.0, 0.0);
-	shadow.shadowBlurRadius = 8.0;
-	return shadow;
+	if(LNPopupEnvironmentHasGlass())
+	{
+		NSShadow* shadow = [NSShadow new];
+		shadow.shadowColor = [LNPopupBarAppearance._defaultProminentShadowColor colorWithAlphaComponent:0.17];
+		shadow.shadowOffset = CGSizeMake(0.0, 8.0);
+		shadow.shadowBlurRadius = 12.0;
+		return shadow;
+	}
+	else
+	{
+		NSShadow* shadow = [NSShadow new];
+		shadow.shadowColor = LNPopupBarAppearance._defaultProminentShadowColor;
+		shadow.shadowOffset = CGSizeMake(0.0, 0.0);
+		shadow.shadowBlurRadius = 8.0;
+		return shadow;
+	}
 }
 
 - (void)configureWithDefaultFloatingBackground
 {
-	self.floatingBackgroundColor = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
-		if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+	if(LNPopupEnvironmentHasGlass())
+	{
+		self.floatingBackgroundColor = nil;
+	}
+	else
+	{
+		self.floatingBackgroundColor = [[UIColor alloc] initWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+			if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+			{
+				return [UIColor.whiteColor colorWithAlphaComponent:0.1];
+			}
+			else
+			{
+				return UIColor.clearColor;
+			}
+		}];
+	}
+	self.floatingBackgroundImage = nil;
+	
+	UIVisualEffect* effect;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	if(@available(iOS 26.0, *))
+	{
+		if(LNPopupEnvironmentHasGlass())
 		{
-			return [UIColor.whiteColor colorWithAlphaComponent:0.1];
+			effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
 		}
 		else
 		{
-			return UIColor.clearColor;
+			effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
 		}
-	}];
-	self.floatingBackgroundImage = nil;
-	self.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
+	}
+	else
+	{
+#endif
+		effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	}
+#endif
+	
+	self.floatingBackgroundEffect = effect;
 	_wantsDynamicFloatingBackgroundEffect = YES;
 	self.floatingBackgroundImageContentMode = UIViewContentModeScaleToFill;
 	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;

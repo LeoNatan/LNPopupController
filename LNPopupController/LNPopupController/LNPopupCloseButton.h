@@ -40,14 +40,14 @@ NS_SWIFT_UI_ACTOR
 
 /// The effective popup close button style used by the system. (read-only)
 ///
-/// Use this property's value to determine, at runtime, what the result of `LNPopupCloseButtonStyleDefault` is.
+/// Use this property's value to determine, at runtime, what close button style the system has chosen to use.
 @property (nonatomic, assign, readonly) LNPopupCloseButtonStyle effectiveStyle;
 
 /// The button’s background view. (read-only)
 ///
 /// The value of this property will be `nil` if `style` is set to any value other than `LNPopupCloseButtonStyleRound`.
 ///
-/// @note Although this property is read-only, its own properties are read/write. Use these properties to configure the appearance and behavior of the button’s background view.
+/// Although this property is read-only, its own properties are read/write. Use these properties to configure the appearance and behavior of the button’s background view.
 @property (nonatomic, strong, readonly) UIVisualEffectView* backgroundView;
 
 @end

@@ -96,6 +96,16 @@
 	{
 		[self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 	}
+	
+	if([segue.identifier isEqualToString:@"Settings"] && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	{
+		segue.destinationViewController.modalPresentationStyle = UIModalPresentationPopover;
+		if (@available(iOS 16.0, *)) {
+			segue.destinationViewController.popoverPresentationController.sourceItem = sender;
+		} else {
+			segue.destinationViewController.popoverPresentationController.barButtonItem = sender;
+		}
+	}
 }
 
 @end

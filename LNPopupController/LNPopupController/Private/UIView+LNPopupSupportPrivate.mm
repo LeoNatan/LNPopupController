@@ -266,6 +266,19 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	LNDynamicSubclass(self, __LNPopupUIViewFrozenInsets.class);
 }
 
+- (BOOL)_ln_isAncestorOfView:(UIView *)view
+{
+	for(UIView* parent = view.superview; parent; parent = parent.superview)
+	{
+		if(parent == self)
+		{
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
 @end
 
 #if ! LNPopupControllerEnforceStrictClean
@@ -429,6 +442,11 @@ id _LNPopupReturnScrollEdgeAppearanceOrStandardAppearance(id self, SEL standardA
 
 static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPopupBar* popupBar)
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return NO;
+	}
+	
 	//backgroundTransitionProgress
 	static NSString* bTP = LNPopupHiddenString("backgroundTransitionProgress");
 	
@@ -444,6 +462,12 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	return scrollEdgeAppearance.backgroundEffect == nil && scrollEdgeAppearance.backgroundColor == nil && scrollEdgeAppearance.backgroundImage == nil;
 }
 
+@interface NSObject ()
+
+- (id)initWithToolbar:(id)arg1;
+
+@end
+
 @interface UIToolbar (ScrollEdgeSupport) @end
 @implementation UIToolbar (ScrollEdgeSupport)
 
@@ -454,17 +478,34 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 		if(@available(iOS 15.0, *))
 		{
 			LNSwizzleMethod(self, @selector(layoutSubviews), @selector(_ln_layoutSubviews));
+			
+			if(!LNPopupEnvironmentHasGlass())
+			{
 #if ! LNPopupControllerEnforceStrictClean
-			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
-			LNSwizzleMethod(self, @selector(compactAppearance), @selector(_lnpopup_compactAppearance));
+				__LNSwizzleClassMethod(self, NSSelectorFromString(LNPopupHiddenString("_visualProviderForToolbar:")), @selector(_ln_vPFT:));
+				LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
+				LNSwizzleMethod(self, @selector(compactAppearance), @selector(_lnpopup_compactAppearance));
 #endif
-			LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
-			LNSwizzleMethod(self, @selector(setCompactAppearance:), @selector(_lnpopup_setCompactAppearance:));
-			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
-			LNSwizzleMethod(self, @selector(compactScrollEdgeAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
+				LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
+				LNSwizzleMethod(self, @selector(setCompactAppearance:), @selector(_lnpopup_setCompactAppearance:));
+				LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+				LNSwizzleMethod(self, @selector(compactScrollEdgeAppearance), @selector(_lnpopup_compactScrollEdgeAppearance));
+			}
 		}
 	}
 }
+
+#if ! LNPopupControllerEnforceStrictClean
+
+//+_visualProviderForToolbar:
++ (id)_ln_vPFT:(id)arg1 API_AVAILABLE(ios(26.0))
+{
+	static Class visualProviderClass = NSClassFromString(LNPopupHiddenString("_UIToolbarVisualProviderModernIOS"));
+	
+	return [[visualProviderClass alloc] initWithToolbar:arg1];
+}
+
+#endif
 
 - (void)_ln_layoutSubviews
 {
@@ -475,6 +516,11 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return;
+	}
+	
 	if(@available(iOS 15.0, *))
 	{
 		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
@@ -516,7 +562,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	
 	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
 		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
-		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
+		return popupBar != nil && popupBar.resolvedIsFloating;
 	}];
 }
 
@@ -533,7 +579,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	
 	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
 		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
-		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
+		return popupBar != nil && popupBar.resolvedIsFloating;
 	}];
 }
 #endif
@@ -561,19 +607,27 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 {
 	@autoreleasepool
 	{
-		if(@available(iOS 15.0, *))
+		if(!LNPopupEnvironmentHasGlass())
 		{
+			if(@available(iOS 15.0, *))
+			{
 #if ! LNPopupControllerEnforceStrictClean
-			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
+				LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
 #endif
-			LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
-			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+				LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
+				LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+			}
 		}
 	}
 }
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return;
+	}
+	
 	if(@available(iOS 15.0, *))
 	{
 		self.scrollEdgeAppearance = self._lnpopup_scrollEdgeAppearance;
@@ -604,7 +658,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 	
 	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
 		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
-		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
+		return popupBar != nil && popupBar.resolvedIsFloating;
 	}];
 }
 #endif
@@ -641,13 +695,16 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 		LNSwizzleMethod(self, @selector(layoutSubviews), @selector(_ln_layoutSubviews));
 		LNSwizzleMethod(self, @selector(setSelectedItem:), @selector(_ln_setSelectedItem:));
 		
-		if(@available(iOS 15.0, *))
+		if(!LNPopupEnvironmentHasGlass())
 		{
+			if(@available(iOS 15.0, *))
+			{
 #if ! LNPopupControllerEnforceStrictClean
-			LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
+				LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
 #endif
-			LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
-			LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+				LNSwizzleMethod(self, @selector(setStandardAppearance:), @selector(_lnpopup_setStandardAppearance:));
+				LNSwizzleMethod(self, @selector(scrollEdgeAppearance), @selector(_lnpopup_scrollEdgeAppearance));
+			}
 		}
 		
 #if ! LNPopupControllerEnforceStrictClean
@@ -700,6 +757,11 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return;
+	}
+	
 	id backgroundView = nil;
 	
 	if(@available(iOS 15.0, *))
@@ -761,7 +823,7 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 	
 	return (id)[[_LNPopupUIBarAppearanceProxy alloc] initWithProxiedObject:rv shadowColorHandler:^BOOL{
 		LNPopupBar* popupBar = _LNPopupBarForBottomBarIfInPopupPresentation(weakSelf);
-		return popupBar != nil && popupBar.effectiveBarStyle == LNPopupBarStyleFloating;
+		return popupBar != nil && popupBar.resolvedIsFloating;
 	}];
 }
 #endif
@@ -886,3 +948,24 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* view, NSDirectionalE
 @end
 
 #endif
+
+@implementation UIViewPropertyAnimator (KeyFrameSupport)
+
+- (void)ln_addAnimations:(void (^)(void))animation delayFactor:(CGFloat)delayFactor durationFactor:(CGFloat)durationFactor
+{
+#if LNPopupControllerEnforceStrictClean
+	[self addAnimations:animation delayFactor:delayFactor];
+#else
+	static void (*impl)(id, SEL, void (^)(void), CGFloat, CGFloat);
+	static SEL sel;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		sel = NSSelectorFromString(LNPopupHiddenString("addAnimations:delayFactor:durationFactor:"));
+		Method m = class_getInstanceMethod(UIViewPropertyAnimator.class, sel);
+		impl = reinterpret_cast<decltype(impl)>(method_getImplementation(m));
+	});
+	impl(self, sel, animation, delayFactor, durationFactor);
+#endif
+}
+
+@end

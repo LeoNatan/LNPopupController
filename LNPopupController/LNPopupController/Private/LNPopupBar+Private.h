@@ -13,6 +13,8 @@
 #import "_LNPopupBackgroundShadowView.h"
 #import "_LNPopupBarBackgroundMaskView.h"
 #import "MarqueeLabel.h"
+#import "_LNPopupGlassUtils.h"
+#import "_LNPopupTransitionView.h"
 
 CF_EXTERN_C_BEGIN
 
@@ -22,9 +24,78 @@ extern const CGFloat LNPopupBarHeightFloating;
 
 extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
-inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
+inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom)
 {
+	//Support the legacy floating style value.
+	if(style == (LNPopupBarStyle)3)
+	{
+		style = LNPopupBarStyleFloating;
+	}
+	
+	if(style == LNPopupBarStyleCustom)
+	{
+		if(isFloating)
+		{
+			*isFloating = NO;
+		}
+		if(isCompact)
+		{
+			*isCompact = NO;
+		}
+		if(isCustom)
+		{
+			*isCustom = YES;
+		}
+		return LNPopupBarStyleCustom;
+	}
+	
+	if(isCustom)
+	{
+		*isCustom = NO;
+	}
+	
 	LNPopupBarStyle rv = style;
+	
+	if(LNPopupEnvironmentHasGlass())
+	{
+		if(isFloating)
+		{
+			//iOS 26 with glass enabled is always floating.
+			*isFloating = YES;
+		}
+		
+		if(rv == LNPopupBarStyleDefault)
+		{
+			if(UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad)
+			{
+				rv = LNPopupBarStyleFloatingCompact;
+			}
+			else
+			{
+				rv = LNPopupBarStyleFloating;
+			}
+		}
+		
+		switch(rv) {
+			case LNPopupBarStyleCompact:
+			case LNPopupBarStyleFloatingCompact:
+				if(isCompact)
+				{
+					*isCompact = YES;
+				}
+				return LNPopupBarStyleFloatingCompact;
+			case LNPopupBarStyleProminent:
+			case LNPopupBarStyleFloating:
+				if(isCompact)
+				{
+					*isCompact = NO;
+				}
+				return LNPopupBarStyleFloating;
+			default:
+				abort();
+		}
+	}
+	
 	if(rv == LNPopupBarStyleDefault)
 	{
 		if(@available(iOS 17, *)) {
@@ -35,6 +106,39 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 			rv = LNPopupBarStyleProminent;
 		}
 	}
+	
+	BOOL isFlt;
+	switch(rv)
+	{
+		case LNPopupBarStyleFloating:
+		case LNPopupBarStyleFloatingCompact:
+			isFlt = YES;
+			break;
+		default:
+			isFlt = NO;
+			break;
+	}
+	if(isFloating)
+	{
+		*isFloating = isFlt;
+	}
+	
+	BOOL isCmp;
+	switch(rv)
+	{
+		case LNPopupBarStyleCompact:
+		case LNPopupBarStyleFloatingCompact:
+			isCmp = YES;
+			break;
+		default:
+			isCmp = NO;
+			break;
+	}
+	if(isCompact)
+	{
+		*isCompact = isCmp;
+	}
+	
 	return rv;
 }
 
@@ -61,6 +165,11 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 + (void)setAnimatesItemSetter:(BOOL)animate;
 
 @property (nonatomic, assign, readonly) LNPopupBarStyle resolvedStyle;
+@property (nonatomic, assign, readonly) BOOL resolvedIsFloating;
+@property (nonatomic, assign, readonly) BOOL resolvedIsCompact;
+@property (nonatomic, assign, readonly) BOOL resolvedIsCustom;
+@property (nonatomic, assign, readonly) BOOL resolvedIsGlass;
+@property (nonatomic, assign, readonly) BOOL resolvedIsGlassInteractive;
 
 @property (nonatomic, strong) UIColor* systemTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
@@ -90,6 +199,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, strong, readwrite) UIProgressView* progressView;
 
+@property (nonatomic, strong) UIView* layoutContainer;
 @property (nonatomic, strong) _LNPopupBarBackgroundView* contentView;
 @property (nonatomic, strong) UIView* contentMaskView;
 
@@ -142,7 +252,11 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 + (BOOL)isCatalystApp;
 - (BOOL)isWidePad;
 
+@property (nonatomic, strong) _LNPopupTransitionView* os26TransitionView;
+
 @end
+
+@interface _LNTransitionPopupBar: LNPopupBar @end
 
 @protocol _LNPopupToolbarLayoutDelegate <NSObject>
 
@@ -172,7 +286,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @property (nonatomic, assign) CGFloat rate;
 @property (nonatomic, assign) CGFloat animationDelay;
-@property (nonatomic, weak) MarqueeLabel* synchronizedLabel;
+@property (nonatomic, weak) id<LNMarqueeLabel> synchronizedLabel;
 @property (nonatomic, readonly) NSTimeInterval animationDuration;
 @property (nonatomic, assign) BOOL holdScrolling;
 
@@ -201,7 +315,6 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @interface LNNonMarqueeLabel : UILabel <LNMarqueeLabel> @end
 
-@interface MarqueeLabel () <LNMarqueeLabel> @end
-
+@interface LNMarqueeLabel () <LNMarqueeLabel> @end
 
 CF_EXTERN_C_END

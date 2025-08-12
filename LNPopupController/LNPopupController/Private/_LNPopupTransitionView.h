@@ -25,6 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat cornerRadius;
 @property (nonatomic, assign) BOOL layerAlwaysMasksToBounds;
 
+@property (nonatomic, assign) BOOL matchesAlpha;
+@property (nonatomic, assign) BOOL matchesTransform;
+@property (nonatomic, assign) BOOL matchesPosition;
+
 @property (nonatomic, assign) CGAffineTransform sourceViewTransform;
 
 @end

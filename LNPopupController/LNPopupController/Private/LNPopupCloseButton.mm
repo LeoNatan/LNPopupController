@@ -11,6 +11,7 @@
 #import "LNChevronView.h"
 #import "_LNPopupBase64Utils.hh"
 #import "LNPopupContentView+Private.h"
+#import "_LNPopupGlassUtils.h"
 
 @interface LNPopupCloseButton ()
 
@@ -147,24 +148,33 @@ __attribute__((objc_direct_members))
 	self.layer.masksToBounds = YES;
 }
 
+static CGFloat LNPopupCloseButtonGrabberWidth(void)
+{
+	static CGFloat rv;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		rv = LNPopupEnvironmentHasGlass() ? 70 : 42;
+	});
+	return rv;
+}
+
 - (void)_setupForChevronButton
 {
-	CGRect frame;
-	if(_style == LNPopupCloseButtonStyleGrabber)
-	{
-		frame = CGRectMake(0, 0, 36, 15);
-	}
-	else
-	{
-		frame = CGRectMake(0, 0, 40, 20);
-	}
+	_chevronView = [[LNChevronView alloc] initWithFrame:CGRectZero];
+	_chevronView.translatesAutoresizingMaskIntoConstraints = NO;
 	
-	_chevronView = [[LNChevronView alloc] initWithFrame:frame];
 	_chevronView.width = 5.0;
 	[_chevronView setState:_style == LNPopupCloseButtonStyleGrabber ? LNChevronViewStateFlat : LNChevronViewStateUp animated:NO];
 	
 	self.tintColor = [UIColor colorWithWhite:0.5 alpha:1.0];
 	[self addSubview:_chevronView];
+	
+	[NSLayoutConstraint activateConstraints:@[
+		[_chevronView.topAnchor constraintEqualToAnchor:self.topAnchor],
+		[_chevronView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+		[_chevronView.widthAnchor constraintEqualToConstant:_style == LNPopupCloseButtonStyleGrabber ? LNPopupCloseButtonGrabberWidth() : 40],
+		[_chevronView.heightAnchor constraintEqualToConstant:_style == LNPopupCloseButtonStyleGrabber ? 15 : 20],
+	]];
 }
 
 - (void)_setupForCircularButton
@@ -289,7 +299,7 @@ __attribute__((objc_direct_members))
 	}
 	else
 	{
-		return CGSizeMake(36, 25);
+		return CGSizeMake(LNPopupCloseButtonGrabberWidth(), 25);
 	}
 }
 

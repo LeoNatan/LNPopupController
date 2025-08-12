@@ -14,12 +14,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIViewPropertyAnimator ()
-
-- (void)addAnimations:(void (^)(void))animation delayFactor:(CGFloat)delayFactor durationFactor:(CGFloat)durationFactor;
-
-@end
-
 @interface _LNPopupTransitionAnimator : NSObject
 
 - (instancetype)initWithTransitionView:(nullable _LNPopupTransitionView*)transitionView userView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView;

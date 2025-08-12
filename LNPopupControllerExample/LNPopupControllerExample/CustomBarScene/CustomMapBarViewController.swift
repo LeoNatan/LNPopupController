@@ -9,14 +9,6 @@
 #if LNPOPUP
 import UIKit
 
-class CustomMapBarView: UIView {
-	override var frame: CGRect {
-		didSet {
-			print("Size: \(self.frame)")
-		}
-	}
-}
-
 class CustomMapBarViewController: LNPopupCustomBarViewController {
 	@IBOutlet weak var searchBar: UISearchBar!
 	@IBOutlet var heightConstraint: NSLayoutConstraint!

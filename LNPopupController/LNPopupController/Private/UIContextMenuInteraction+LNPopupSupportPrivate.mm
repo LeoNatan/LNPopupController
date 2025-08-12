@@ -45,8 +45,8 @@
 	if([self.view isKindOfClass:LNPopupBar.class] && rv == nil)
 	{
 		LNPopupBar* bar = (LNPopupBar*)self.view;
-		UIView* view = bar.resolvedStyle == LNPopupBarStyleFloating ? bar.contentView : bar;
-		UIView* targetView = bar.resolvedStyle == LNPopupBarStyleFloating ? bar : bar.superview.superview;
+		UIView* view = bar.resolvedIsFloating ? bar.contentView : bar;
+		UIView* targetView = bar.resolvedIsFloating ? bar : bar.superview.superview;
 		UIPreviewTarget* target = [[UIPreviewTarget alloc] initWithContainer:targetView center:[targetView convertPoint:CGPointMake(CGRectGetMidX(view.bounds), CGRectGetMidY(view.bounds)) fromView:view]];
 		
 		UIPreviewParameters* params = [UIPreviewParameters new];
@@ -56,7 +56,7 @@
 	else if([self.view isKindOfClass:LNPopupBar.class] && rv.view == self.view)
 	{
 		LNPopupBar* bar = (LNPopupBar*)self.view;
-		UIView* view = bar.resolvedStyle == LNPopupBarStyleFloating ? bar.contentView : bar;
+		UIView* view = bar.resolvedIsFloating ? bar.contentView : bar;
 		
 		rv = [[UITargetedPreview alloc] initWithView:view parameters:rv.parameters target:rv.target];
 	}
@@ -109,7 +109,7 @@
 		popupBar.bottomShadowView.hidden = NO;
 		
 		dispatch_block_t alongside = ^ {
-			if(popupBar.resolvedStyle != LNPopupBarStyleFloating && popupBar.barContainingController._ln_shouldDisplayBottomShadowViewDuringTransition)
+			if(popupBar.resolvedIsFloating && popupBar.barContainingController._ln_shouldDisplayBottomShadowViewDuringTransition)
 			{
 				popupBar.bottomShadowView.alpha = 1.0;
 			}

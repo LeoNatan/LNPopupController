@@ -34,6 +34,8 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 
 - (void)_ln_freezeInsets;
 
+- (BOOL)_ln_isAncestorOfView:(UIView *)view;
+
 @end
 
 @interface UIView ()
@@ -56,8 +58,6 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 
 @end
 
-NS_ASSUME_NONNULL_END
-
 @interface UIScrollView (LNPopupSupportPrivate)
 
 - (BOOL)_ln_hasHorizontalContent;
@@ -68,3 +68,11 @@ NS_ASSUME_NONNULL_END
 @end
 
 @interface _LNPopupBarBackgroundGroupNameOverride: NSObject <UIObjectTraitDefinition> @end
+
+@interface UIViewPropertyAnimator (KeyFrameSupport)
+
+- (void)ln_addAnimations:(void (^)(void))animation delayFactor:(CGFloat)delayFactor durationFactor:(CGFloat)durationFactor;
+
+@end
+
+NS_ASSUME_NONNULL_END
