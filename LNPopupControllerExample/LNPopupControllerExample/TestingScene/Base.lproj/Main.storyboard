@@ -281,9 +281,7 @@
                     <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="always" id="JYD-6c-4Kf">
                         <barButtonItem key="rightBarButtonItem" title="Settings" image="gears" style="done" id="PjS-ok-m0Q">
                             <connections>
-                                <segue destination="Rxt-Jt-GTT" kind="popoverPresentation" popoverAnchorBarButtonItem="PjS-ok-m0Q" id="hNg-w3-Zdw">
-                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                </segue>
+                                <segue destination="Rxt-Jt-GTT" kind="presentation" modalPresentationStyle="formSheet" id="hNg-w3-Zdw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -511,16 +509,6 @@
                                     <segue destination="l54-z5-xcG" kind="show" id="48J-eM-45Z"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" pointerInteraction="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PfZ-Ec-LGF">
-                                <rect key="frame" x="320" y="162" width="57" height="33"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <state key="normal" title="Gallery">
-                                    <color key="titleColor" systemColor="labelColor"/>
-                                </state>
-                                <connections>
-                                    <segue destination="Kpt-cx-19r" kind="unwind" identifier="UnwindSegue" unwindAction="unwindToGallery:" id="zaT-k5-N20"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Top" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dF7-sj-hbZ">
                                 <rect key="frame" x="182" y="162" width="29.333333333333343" height="20.333333333333343"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
@@ -553,13 +541,10 @@
                             <constraint firstItem="KIX-8f-BFw" firstAttribute="centerX" secondItem="N4q-gh-14d" secondAttribute="centerX" id="0fv-yD-Bxc"/>
                             <constraint firstItem="KIX-8f-BFw" firstAttribute="bottom" secondItem="N4q-gh-14d" secondAttribute="bottom" id="7gK-sx-KzT"/>
                             <constraint firstItem="sXy-Ye-lrV" firstAttribute="centerX" secondItem="KIX-8f-BFw" secondAttribute="centerX" id="Iq1-5t-K4P"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="PfZ-Ec-LGF" secondAttribute="trailing" id="L3U-iD-b4L"/>
                             <constraint firstItem="dF7-sj-hbZ" firstAttribute="centerX" secondItem="KIX-8f-BFw" secondAttribute="centerX" id="NwX-Ih-e92"/>
                             <constraint firstAttribute="trailingMargin" secondItem="DxD-7y-6Na" secondAttribute="trailing" constant="-14" id="QKL-fS-2j5"/>
                             <constraint firstItem="DxD-7y-6Na" firstAttribute="centerY" secondItem="1ke-mH-VCb" secondAttribute="centerY" priority="999" id="Rzj-f0-6l2"/>
-                            <constraint firstItem="PfZ-Ec-LGF" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" id="fhX-Yz-XdE"/>
                             <constraint firstItem="DxD-7y-6Na" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ke-mH-VCb" secondAttribute="leadingMargin" id="jRx-Ij-5IR"/>
-                            <constraint firstItem="PfZ-Ec-LGF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ke-mH-VCb" secondAttribute="leadingMargin" id="nWt-wC-3nt"/>
                             <constraint firstItem="sXy-Ye-lrV" firstAttribute="centerY" secondItem="DxD-7y-6Na" secondAttribute="centerY" priority="999" id="rhO-bh-rQb"/>
                             <constraint firstItem="N4q-gh-14d" firstAttribute="top" relation="greaterThanOrEqual" secondItem="DxD-7y-6Na" secondAttribute="bottom" constant="8" id="rkC-wh-cOe"/>
                             <constraint firstItem="dF7-sj-hbZ" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" id="wc3-WW-zft"/>
@@ -591,9 +576,9 @@
                                 <action selector="_hideBottomBar:" destination="l54-z5-xcG" id="HIC-Da-xta"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Gallery" style="done" id="J60-GM-dOF">
+                        <barButtonItem key="rightBarButtonItem" image="xmark" catalog="system" style="done" id="J60-GM-dOF">
                             <connections>
-                                <segue destination="Kpt-cx-19r" kind="unwind" unwindAction="unwindToGallery:" id="dI4-2y-ODx"/>
+                                <segue destination="Kpt-cx-19r" kind="unwind" identifier="UnwindSegue" unwindAction="unwindToGallery:" id="dI4-2y-ODx"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -601,7 +586,7 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="_barStyleButton" destination="Mqv-hY-tWM" id="FZH-Ef-T8y"/>
-                        <outlet property="_galleryButton" destination="PfZ-Ec-LGF" id="THI-bP-GnE"/>
+                        <outlet property="_galleryBarButton" destination="J60-GM-dOF" id="gU3-W1-7u0"/>
                         <outlet property="_hidePopupBarButton" destination="q0Y-mo-S4A" id="lK5-Vi-OpV"/>
                         <outlet property="_hideTabBarButton" destination="V13-KE-dTv" id="NDX-P9-gwv"/>
                         <outlet property="_nextButton" destination="DxD-7y-6Na" id="zDA-Ko-tDF"/>
@@ -766,6 +751,7 @@
         <image name="dock.arrow.up.rectangle" catalog="system" width="128" height="93"/>
         <image name="dock.rectangle" catalog="system" width="128" height="93"/>
         <image name="gears" width="25" height="25"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

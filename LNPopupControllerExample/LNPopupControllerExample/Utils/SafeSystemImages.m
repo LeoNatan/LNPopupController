@@ -48,11 +48,7 @@ UIBarButtonItem* LNSystemBarButtonItem(NSString* name, LNSystemImageScale scale,
 	UIBarButtonItem* rv;
 	if(scale > LNSystemImageScaleNormal)
 	{
-		UIButtonConfiguration* config = [UIButtonConfiguration plainButtonConfiguration];
-		config.image = LNSystemImage(name, scale);
-		
-		UIButton* button = [UIButton buttonWithConfiguration:config primaryAction:nil];
-		[button addTarget:target action:action forControlEvents:UIControlEventPrimaryActionTriggered];
+		UIButton* button = [UIButton systemButtonWithImage:LNSystemImage(name, scale) target:target action:action];
 		
 		button.translatesAutoresizingMaskIntoConstraints = NO;
 		[NSLayoutConstraint activateConstraints:@[
@@ -73,10 +69,8 @@ UIBarButtonItem* LNSystemBarButtonItemAction(NSString* name, LNSystemImageScale 
 	UIBarButtonItem* rv;
 	if(scale > LNSystemImageScaleNormal)
 	{
-		UIButtonConfiguration* config = [UIButtonConfiguration plainButtonConfiguration];
-		config.image = LNSystemImage(name, scale);
-		
-		UIButton* button = [UIButton buttonWithConfiguration:config primaryAction:primaryAction];
+		UIButton* button = [UIButton systemButtonWithPrimaryAction:primaryAction];
+		[button setImage:LNSystemImage(name, scale) forState:UIControlStateNormal];
 		
 		button.translatesAutoresizingMaskIntoConstraints = NO;
 		[NSLayoutConstraint activateConstraints:@[

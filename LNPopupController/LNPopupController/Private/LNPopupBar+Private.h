@@ -13,6 +13,7 @@
 #import "_LNPopupBackgroundShadowView.h"
 #import "_LNPopupBarBackgroundMaskView.h"
 #import "MarqueeLabel.h"
+#import "_LNPopupGlassUtils.h"
 
 CF_EXTERN_C_BEGIN
 
@@ -22,9 +23,65 @@ extern const CGFloat LNPopupBarHeightFloating;
 
 extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
-inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style)
+inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, BOOL* isFloating, BOOL* isCompact)
 {
+	//Support the legacy floating style value.
+	if(style == (LNPopupBarStyle)3)
+	{
+		style = LNPopupBarStyleFloating;
+	}
+	
+	if(style == LNPopupBarStyleCustom)
+	{
+		if(isFloating)
+		{
+			*isFloating = NO;
+		}
+		if(isCompact)
+		{
+			*isCompact = NO;
+		}
+		return LNPopupBarStyleCustom;
+	}
+	
 	LNPopupBarStyle rv = style;
+	
+	if(__LN_HAS_OS26_GLASS())
+	{
+		if(isFloating)
+		{
+			//iOS 26 with glass enabled is always floating.
+			*isFloating = YES;
+		}
+		
+		if(rv == LNPopupBarStyleDefault)
+		{
+			if(UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad)
+			{
+				rv = LNPopupBarStyleFloatingCompact;
+			}
+			else
+			{
+				rv = LNPopupBarStyleFloating;
+			}
+		}
+		
+		switch(rv) {
+			case LNPopupBarStyleCompact:
+			case LNPopupBarStyleFloatingCompact:
+				if(isCompact)
+				{
+					*isCompact = YES;
+				}
+				return LNPopupBarStyleFloatingCompact;
+			case LNPopupBarStyleProminent:
+			case LNPopupBarStyleFloating:
+				return LNPopupBarStyleFloating;
+			default:
+				abort();
+		}
+	}
+	
 	if(rv == LNPopupBarStyleDefault)
 	{
 		if(@available(iOS 17, *)) {
@@ -35,6 +92,39 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 			rv = LNPopupBarStyleProminent;
 		}
 	}
+	
+	BOOL isFlt;
+	switch(rv)
+	{
+		case LNPopupBarStyleFloating:
+		case LNPopupBarStyleFloatingCompact:
+			isFlt = YES;
+			break;
+		default:
+			isFlt = NO;
+			break;
+	}
+	if(isFloating)
+	{
+		*isFloating = isFlt;
+	}
+	
+	BOOL isCmp;
+	switch(rv)
+	{
+		case LNPopupBarStyleCompact:
+		case LNPopupBarStyleFloatingCompact:
+			isCmp = YES;
+			break;
+		default:
+			isCmp = NO;
+			break;
+	}
+	if(isCompact)
+	{
+		*isCompact = isCmp;
+	}
+	
 	return rv;
 }
 
@@ -61,6 +151,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 + (void)setAnimatesItemSetter:(BOOL)animate;
 
 @property (nonatomic, assign, readonly) LNPopupBarStyle resolvedStyle;
+@property (nonatomic, assign, readonly) BOOL resolvedIsFloating;
+@property (nonatomic, assign, readonly) BOOL resolvedIsCompact;
 
 @property (nonatomic, strong) UIColor* systemTintColor;
 @property (nonatomic, strong) UIColor* systemBackgroundColor;
@@ -143,6 +235,8 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 - (BOOL)isWidePad;
 
 @end
+
+@interface _LNTransitionPopupBar: LNPopupBar @end
 
 @protocol _LNPopupToolbarLayoutDelegate <NSObject>
 

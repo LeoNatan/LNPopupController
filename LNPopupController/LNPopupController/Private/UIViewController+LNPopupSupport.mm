@@ -445,7 +445,10 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle
 {
-	if(barStyle != LNPopupBarStyleFloating /*|| UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone*/)
+	BOOL isFloating;
+	barStyle = _LNPopupResolveBarStyleFromBarStyle(barStyle, &isFloating, NULL);
+	
+	if(!isFloating /*|| UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone*/)
 	{
 		return 0.0;
 	}
@@ -489,18 +492,26 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (CGRect)_defaultFrameForBottomDockingViewForPopupBar:(LNPopupBar*)popupBar
 {
-	LNPopupBarStyle barStyle = popupBar != nil ? popupBar.resolvedStyle : _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyleDefault);
-	
 	return [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
 }
 
 - (BOOL)shouldExtendPopupBarUnderSafeArea
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return NO;
+	}
+	
 	return [(objc_getAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey) ?: @1) boolValue];
 }
 
 - (void)setShouldExtendPopupBarUnderSafeArea:(BOOL)shouldExtendPopupBarUnderSafeArea
 {
+	if(__LN_HAS_OS26_GLASS())
+	{
+		return;
+	}
+	
 	objc_setAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey, @(shouldExtendPopupBarUnderSafeArea), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
 	self._ln_bottomBarExtension.alpha = shouldExtendPopupBarUnderSafeArea ? 1.0 : 0.0;

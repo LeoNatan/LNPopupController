@@ -9,6 +9,7 @@
 #import "LNPopupBarAppearance+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
+#import "_LNPopupGlassUtils.h"
 
 static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
@@ -185,12 +186,24 @@ static NSArray* __notifiedProperties = nil;
 	return rv;
 }
 
-- (UIBlurEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection
+- (UIVisualEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection
 {
 	if(_wantsDynamicFloatingBackgroundEffect == NO)
 	{
 		return _floatingBackgroundEffect;
 	}
+	
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	if(@available(iOS 26, *))
+	{
+		if(__LN_HAS_OS26_GLASS())
+		{
+			UIGlassEffect* effect = [UIGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
+			effect.interactive = YES;
+			return effect;
+		}
+	}
+#endif
 	
 	if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
 	{
@@ -314,7 +327,29 @@ static NSArray* __notifiedProperties = nil;
 		}
 	}];
 	self.floatingBackgroundImage = nil;
-	self.floatingBackgroundEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
+	
+	UIVisualEffect* effect;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	if(@available(iOS 26.0, *))
+	{
+		if(__LN_HAS_OS26_GLASS())
+		{
+			effect = [UIGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
+		}
+		else
+		{
+			effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
+		}
+	}
+	else
+	{
+#endif
+		effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	}
+#endif
+	
+	self.floatingBackgroundEffect = effect;
 	_wantsDynamicFloatingBackgroundEffect = YES;
 	self.floatingBackgroundImageContentMode = UIViewContentModeScaleToFill;
 	self.floatingBarBackgroundShadow = self._defaultFloatingBarBackgroundShadow;

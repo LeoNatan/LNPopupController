@@ -99,6 +99,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (nullable UIViewController*)_ln_childViewControllerForStatusBarLogic __attribute__((objc_direct));
 
+- (void)_layoutPopupBarOrderForUse;
+
 @end
 
 @interface _LN_UIViewController_AppearanceControl : UIViewController @end
