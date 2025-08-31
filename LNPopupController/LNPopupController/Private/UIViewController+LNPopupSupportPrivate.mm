@@ -995,7 +995,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //			return [obj _ln_isAncestorOfView:self.tabBar];
 //		}];
 		
-		static NSString* className = LNPopupHiddenString("TabBarContainer");
+		static NSString* className = LNPopupHiddenString("Container");
 		NSUInteger idx = [self.view.subviews indexOfObjectPassingTest:^BOOL(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 			return [NSStringFromClass(obj.class) containsString:className];
 		}];
@@ -1972,6 +1972,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (UIEdgeInsets)insetsForBottomDockingView
 {
+	BOOL isPad = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+	
 	if(!LNPopupEnvironmentHasGlass() && self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
 	{
 		return UIEdgeInsetsZero;
@@ -1979,14 +1981,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	CGFloat offset = 0.0;
 	
-	if(LNPopupEnvironmentHasGlass() && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad && self.isToolbarHidden == NO)
+	if(LNPopupEnvironmentHasGlass() && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && !isPad && self.isToolbarHidden == NO)
 	{
 		offset = 8.0;
-	}
-	
-	if(LNPopupEnvironmentHasGlass() && UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad)
-	{
-		offset -= 2.0;
 	}
 	
 	if(@available(iOS 14.0, *))
@@ -1995,6 +1992,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return UIEdgeInsetsZero;
 	}
 	
+//	if(LNPopupEnvironmentHasGlass() && !isPad && self.view.window.safeAreaInsets.bottom == 0 && !self.isToolbarHidden)
+//	{
+//		return UIEdgeInsetsMake(0, 0, 30, 0);
+//	}
+//	
 	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom) + offset, 0);
 }
 

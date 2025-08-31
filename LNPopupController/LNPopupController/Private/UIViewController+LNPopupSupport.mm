@@ -471,13 +471,13 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	
 	if(self.view.window.safeAreaInsets.bottom == 0)
 	{
-		return -4.0;
+		return LNPopupEnvironmentHasGlass() ? -10.0 : -4.0;
 	}
 	
 	BOOL isPad = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad;
 	BOOL isRegular = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
 	
-	return isPad && isRegular ? 7.0 : isRegular ? 0.0 : LNPopupEnvironmentHasGlass() ? 12.0 : 0.0;
+	return isPad || isRegular ? 0.0 : LNPopupEnvironmentHasGlass() ? 12.0 : 0.0;
 #endif
 }
 
