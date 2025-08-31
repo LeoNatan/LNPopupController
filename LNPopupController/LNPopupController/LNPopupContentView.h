@@ -24,7 +24,7 @@ NS_SWIFT_UI_ACTOR
 
 /// The popup close button style.
 ///
-/// Defaults to `LNPopupCloseButtonStyleDefault`.
+/// Defaults to `LNPopupCloseButtonStyle.default`.
 @property (nonatomic, assign) LNPopupCloseButtonStyle popupCloseButtonStyle UI_APPEARANCE_SELECTOR;
 
 /// The effective popup close button style used by the system. (read-only)
@@ -37,10 +37,12 @@ NS_SWIFT_UI_ACTOR
 
 /// The popup content view background effect, used when the popup content controller's view has transparency.
 ///
-/// Use `nil` value to inherit the popup bar's background effect if possible, or use a default effect.
+/// Use `nil` value to inherit an appropriate effect from the popup bar when possible, or use a default effect.
 ///
 /// Defaults to `nil`.
-@property (nonatomic, copy, nullable) UIBlurEffect* backgroundEffect UI_APPEARANCE_SELECTOR;
+///
+/// - Note: Starting with iOS 26, you can use glass (default) or blur effects.
+@property (nonatomic, copy, nullable) UIVisualEffect* backgroundEffect UI_APPEARANCE_SELECTOR;
 
 /// A Boolean value that indicates whether the popup content view is translucent (`true`) or not (`false`).
 ///

@@ -445,7 +445,10 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle
 {
-	if(barStyle != LNPopupBarStyleFloating /*|| UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone*/)
+	BOOL isFloating;
+	barStyle = _LNPopupResolveBarStyleFromBarStyle(barStyle, &isFloating, NULL, NULL);
+	
+	if(!isFloating /*|| UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone*/)
 	{
 		return 0.0;
 	}
@@ -471,7 +474,10 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 		return -4.0;
 	}
 	
-	return self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular ? 7.0 : 0.0;
+	BOOL isPad = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+	BOOL isRegular = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+	
+	return isPad && isRegular ? 7.0 : isRegular ? 0.0 : LNPopupEnvironmentHasGlass() ? 12.0 : 0.0;
 #endif
 }
 
@@ -489,18 +495,26 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (CGRect)_defaultFrameForBottomDockingViewForPopupBar:(LNPopupBar*)popupBar
 {
-	LNPopupBarStyle barStyle = popupBar != nil ? popupBar.resolvedStyle : _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyleDefault);
-	
 	return [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
 }
 
 - (BOOL)shouldExtendPopupBarUnderSafeArea
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return NO;
+	}
+	
 	return [(objc_getAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey) ?: @1) boolValue];
 }
 
 - (void)setShouldExtendPopupBarUnderSafeArea:(BOOL)shouldExtendPopupBarUnderSafeArea
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return;
+	}
+	
 	objc_setAssociatedObject(self, _LNPopupShouldExtendUnderSafeAreaKey, @(shouldExtendPopupBarUnderSafeArea), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
 	self._ln_bottomBarExtension.alpha = shouldExtendPopupBarUnderSafeArea ? 1.0 : 0.0;
@@ -511,6 +525,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (BOOL)shouldFadePopupBarOnDismiss
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return NO;
+	}
+	
 	BOOL bottomBarExtensionIsVisible = self._ln_bottomBarExtension_nocreate.isHidden == NO && self._ln_bottomBarExtension_nocreate.alpha > 0 && self._ln_bottomBarExtension_nocreate.frame.size.height > 0;
 	BOOL backgroundVisible = self.ln_popupController.popupBar.backgroundView.isHidden == NO && self.ln_popupController.popupBar.backgroundView.alpha > 0;
 	BOOL scrollEdgeAppearanceRequiresFade = NO;

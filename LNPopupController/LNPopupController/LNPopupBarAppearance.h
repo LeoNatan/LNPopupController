@@ -34,9 +34,13 @@ NS_SWIFT_UI_ACTOR
 @property (nonatomic, readwrite, copy) UIBarButtonItemAppearance* doneButtonAppearance;
 
 /// The color to apply for the bar's highlight.
+///
+/// - Note: Starting with iOS 26, when a glass effect is used for the popup bar, setting a highlight color has no effect.
 @property (nonatomic, copy) UIColor* highlightColor;
 
 /// Configures the popup bar with the default highlight color.
+///
+/// - Note: Starting with iOS 26, when a glass effect is used for the popup bar, setting a highlight color has no effect.
 - (void)configureWithDefaultHighlightColor;
 
 /// When enabled, titles and subtitles that are longer than the space available will scroll text over time.
@@ -74,8 +78,10 @@ NS_SWIFT_UI_ACTOR
 - (void)configureWithStaticImageShadow;
 - (void)configureWithNoImageShadow;
 
-/// A specific blur effect to use for the bar floating background. This effect is composited first when constructing the bar's floating background.
-@property (nonatomic, copy, nullable) UIBlurEffect* floatingBackgroundEffect;
+/// A specific visual effect to use for the bar floating background. This effect is composited first when constructing the bar's floating background.
+///
+/// - Note: Starting with iOS 26, you can use glass (default) or blur effects.
+@property (nonatomic, copy, nullable) UIVisualEffect* floatingBackgroundEffect;
 
 /// A color to use for the bar floating background. This color is composited over `floatingBackgroundEffect`.
 @property (nonatomic, copy, nullable) UIColor* floatingBackgroundColor;
@@ -83,10 +89,12 @@ NS_SWIFT_UI_ACTOR
 /// An image to use for the bar floating background. This image is composited over the `floatingBackgroundColor`, and resized per the `floatingBackgroundImageContentMode`.
 @property (nonatomic, strong, nullable) UIImage* floatingBackgroundImage;
 
-/// The content mode to use when rendering the `floatingBackgroundImage`. Defaults to `UIViewContentModeScaleToFill`. `UIViewContentModeRedraw` will be reinterpreted as `UIViewContentModeScaleToFill`.
+/// The content mode to use when rendering the `floatingBackgroundImage`. Defaults to `UIViewContentMode.scaleToFill`. `UIViewContentModeRedraw` will be reinterpreted as `UIViewContentMode.scaleToFill`.
 @property (nonatomic, assign) UIViewContentMode floatingBackgroundImageContentMode;
 
 /// The shadow displayed underneath the bar floating background.
+///
+/// - Note: Starting with iOS 26, when a glass effect is used for the popup bar, setting a bar background shadow has no effect. Instead, the glass shadow is used.
 @property (nonatomic, copy, nullable) NSShadow* floatingBarBackgroundShadow;
 
 /// Reset floating background and shadow properties to their defaults.

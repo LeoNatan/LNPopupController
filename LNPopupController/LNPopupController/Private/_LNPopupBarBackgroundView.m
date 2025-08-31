@@ -7,12 +7,19 @@
 //
 
 #import "_LNPopupBarBackgroundView.h"
+#import "_LNPopupGlassUtils.h"
 
 @interface _LNPopupBarBackgroundImageView : UIImageView @end
 @implementation _LNPopupBarBackgroundImageView @end
 
-@interface _LNPopupBarBackgroundEffectView : UIVisualEffectView @end
-@implementation _LNPopupBarBackgroundEffectView @end
+@implementation _LNPopupBarBackgroundEffectView
+
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+}
+
+@end
 
 @implementation _LNPopupBarBackgroundView
 {
@@ -29,7 +36,10 @@
 	if(self)
 	{
 		_effectView = [[_LNPopupBarBackgroundEffectView alloc] initWithEffect:effect];
-		_effectView.clipsToBounds = YES;
+		if(!LNPopupEnvironmentHasGlass())
+		{
+			_effectView.clipsToBounds = YES;
+		}
 		
 		self.cornerRadius = 0;
 		self.layer.masksToBounds = NO;
@@ -62,6 +72,13 @@
 - (void)setEffect:(UIVisualEffect *)effect
 {
 	_effectView.effect = effect;
+}
+
+- (void)clearEffect
+{
+	//iOS 26.0 is retarded, and wont `nil` a glass effect, so set it to a blur first, then nil 🤦‍♂️
+	_effectView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialLight];
+	_effectView.effect = nil;
 }
 
 - (UIView *)contentView
@@ -140,6 +157,11 @@
 
 - (UIView *)transitionShadingView
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return nil;
+	}
+	
 	if(_transitionShadingView == nil)
 	{
 		_transitionShadingView = [UIView new];

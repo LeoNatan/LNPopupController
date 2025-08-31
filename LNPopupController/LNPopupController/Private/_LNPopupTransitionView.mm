@@ -51,6 +51,36 @@
 	return self;
 }
 
+- (BOOL)matchesAlpha
+{
+	return [[_portalView valueForKey:LNPopupHiddenString("matchesAlpha")] boolValue];
+}
+
+- (void)setMatchesAlpha:(BOOL)matchesAlpha
+{
+	[_portalView setValue:@(matchesAlpha) forKey:LNPopupHiddenString("matchesAlpha")];
+}
+
+- (BOOL)matchesTransform
+{
+	return [[_portalView valueForKey:LNPopupHiddenString("matchesTransform")] boolValue];
+}
+
+- (void)setMatchesTransform:(BOOL)matchesTransform
+{
+	[_portalView setValue:@(matchesTransform) forKey:LNPopupHiddenString("matchesTransform")];
+}
+
+- (BOOL)matchesPosition
+{
+	return [[_portalView valueForKey:LNPopupHiddenString("matchesPosition")] boolValue];
+}
+
+- (void)setMatchesPosition:(BOOL)matchesPosition
+{
+	[_portalView setValue:@(matchesPosition) forKey:LNPopupHiddenString("matchesPosition")];
+}
+
 - (CGFloat)cornerRadius
 {
 	return _radiusContainerView.layer.cornerRadius;

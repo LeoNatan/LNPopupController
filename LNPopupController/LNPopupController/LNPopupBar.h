@@ -22,19 +22,28 @@ typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	/// The default bar style for the current environment.
 	LNPopupBarStyleDefault,
 	
-	/// Compact bar style.
-	LNPopupBarStyleCompact,
-	
-	/// Prominent bar style.
-	LNPopupBarStyleProminent,
-	
 	/// Floating bar style.
-	LNPopupBarStyleFloating,
+	LNPopupBarStyleFloating = 9,
+	
+	/// Compact floating bar style.
+	LNPopupBarStyleFloatingCompact = 8,
 	
 	/// Custom bar style.
 	///
 	/// Do not set this style directly. Instead, set the `LNPopupBar.customBarViewController` property and the framework will use this style.
-	LNPopupBarStyleCustom = 0xFFFF
+	LNPopupBarStyleCustom = 0xFFFF,
+	
+	// Deprecated, will be removed eventually:
+	
+	/// Compact bar style.
+	///
+	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported. Will convert to `.floatingCompact` at runtime.
+	LNPopupBarStyleCompact LN_DEPRECATED_API_OS("No longer supported, starting with iOS 26.0.", ios(2.0, 26.0)) = 1,
+	
+	/// Prominent bar style.
+	///
+	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported. Will convert to `.floating` at runtime.
+	LNPopupBarStyleProminent LN_DEPRECATED_API_OS("No longer supported, starting with iOS 26.0.", ios(2.0, 26.0)) = 2,
 } NS_SWIFT_NAME(LNPopupBar.Style);
 
 /// Available styles for the popup bar progress view.
@@ -81,7 +90,7 @@ NS_SWIFT_UI_ACTOR
 
 /// The effective popup bar style used by the system. (read-only)
 ///
-/// Use this property's value to determine, at runtime, what the result of `LNPopupBarStyleDefault` is.
+/// Use this property's value to determine, at runtime, what bar style the system has chosen to use.
 @property (nonatomic, assign, readonly) LNPopupBarStyle effectiveBarStyle;
 
 /// In wide enough environments, such as iPadOS, limit the width of content of floating bars to a system-determined value.
@@ -100,7 +109,7 @@ NS_SWIFT_UI_ACTOR
 
 /// A semantic description of the bar items, used to determine the order of bar items when switching between left-to-right and right-to-left layouts.
 ///
-/// Defaults to `UISemanticContentAttributePlayback`.
+/// Defaults to `UISemanticContentAttribute.playback`.
 ///
 /// See also `UIView.semanticContentAttribute`
 @property (nonatomic) UISemanticContentAttribute barItemsSemanticContentAttribute;

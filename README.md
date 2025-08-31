@@ -13,9 +13,9 @@ For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPop
 Once a popup bar is presented with a content view controller, the user can swipe or tap the popup bar at any point to present the popup. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
 
 The framework is intended to be very generic and work in most situations, so it is implemented as a category over `UIViewController`. Each view controller can present a popup bar, docked to a bottom view. 
-For `UITabBarController` subclasses, the default docking view is the tab bar. 
-For `UINavigationController` subclasses, the default docking view is the toolbar.
-For other classes, the popup bar is presented at the bottom of the screen. View controller subclasses can provide their own docking views.
+For `UITabBarController` and its subclasses, the default docking view is the tab bar. 
+For `UINavigationController` and its subclasses, the default docking view is the toolbar.
+For other view controllers, the popup bar is presented at the bottom of the screen. View controller subclasses can provide their own docking views.
 
 The framework correctly maintains the safe area insets of the container controller’s view and its child controllers, as the popup bar is presented and dismissed.
 
@@ -25,13 +25,14 @@ Generally, it is recommended to present the popup bar on the outermost container
 
 Check the demo project for many common use cases of the framework in various scenarios. It contains examples in Swift and Objective C.
 
-**NOTE:** To run the example project, don't forget to update submodules by running: `git submodule update --init --recursive`
+> [!NOTE]
+> To run the example project, don't forget to update submodules by running: `git submodule update --init --recursive`
 
 ### Features
 
+* Supports iOS 26 glass design
 * Available for iOS 13 and above, as an Xcode framework or an SPM package
 * Good citizen in modern UIKit world
-* Modern Objective C syntax and great Swift interoperability
 * For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
 
 ## Adding to Your Project
@@ -54,39 +55,15 @@ And the dependency in your target:
 .target(name: "MyExampleApp", dependencies: ["LNPopupController"]),
 ```
 
-### Carthage
-
-Add the following to your Cartfile:
-
-```github "LeoNatan/LNPopupController"```
-
-Make sure you follow the Carthage integration instructions [here](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos).
-
-### Manual
-
-Drag the `LNPopupController.xcodeproj` project to your project, and add `LNPopupController.framework` to **Embedded Binaries** in your project target's **General** tab. Xcode should sort everything else on its own.
-
-### CocoaPods
-
-CocoaPods is not supported. There are many reasons for this. Instead of CocoaPods, use Swift Package Manager from within Xcode. You can continue using CocoaPods for for your other dependencies and Swift Package Manager for `LNPopupController`.
-
 ## Using the Framework
-
-### Swift
-
-While the framework is written in Objective C, it uses modern Objective C syntax, so using the framework in Swift is very easy and intuitive.
 
 ### Project Integration
 
-Import the module in your project:
+Import the module in your source files:
 
 ```swift
 import LNPopupController
 ```
-
-### Popup Items
-
-A popup item should always reflect the popup information about the view controller with which it is associated. The popup item should provide a title and subtitles to display in the popup bar, when the view controller is presented as a popup content controller. In addition, the item may contain additional buttons to display on the leading and/or trailing edges of the popup bar using `leadingBarButtonItems` and `trailingBarButtonItems`.
 
 ### Managing the Popup Bar
 
@@ -95,14 +72,14 @@ To present the popup bar, create a content controller, update its popup item and
 ```swift
 let demoVC = DemoPopupContentViewController()
 demoVC.view.backgroundColor = .red
-demoVC.popupItem.title = "Hello World"
-demoVC.popupItem.subtitle = "And a subtitle!"
+demoVC.popupItem.title = "Hello Title"
+demoVC.popupItem.subtitle = "And a Subtitle!"
 demoVC.popupItem.progress = 0.34
     
 tabBarController?.presentPopupBar(with: demoVC, animated: true, completion: nil)
 ```
 
-You can present a new content controller while the popup bar is presented and when the popup itself is open.
+You can present a new content controller while the popup bar is presented and even when the popup itself is open.
 
 To open and close the popup programatically, use `openPopup(animated:completion:)` and `closePopup(animated:completion:)` respectively.
 
@@ -122,7 +99,11 @@ To dismiss the popup bar, use `dismissPopupBar(animated:completion:)`.
 tabBarController?.dismissPopupBar(animated: true, completion: nil)
 ```
 
-If the popup is open when dismissing the popup bar, the popup content will also be dismissed.
+If the popup is open when dismissing the popup bar, the popup will also be closed.
+
+### Popup Items
+
+A popup item should always reflect the popup information about the view controller with which it is associated. The popup item should provide a title and subtitles to display in the popup bar, when the view controller is presented as a popup content controller. In addition, the item may contain bar buttons to display, by setting the `barButtonItems` property.
 
 ### Popup Container View Controllers
 
@@ -148,9 +129,21 @@ override var defaultFrameForBottomDockingView: CGRect {
 
 ### Appearance and Behavior
 
-`LNPopupController` provides three distinct styles of popup look and feel, each based on Music app looks and feels, that Apple has introduced over the years. Popup bar styles are labeled "floating”, “prominent" and "compact", matching the appropriate Apple style. Popup interaction styles are labeled "snap" for modern style snapping popups and "drag" for iOS 9 interactive popup interaction. Popup close buttons styles are labeled "chevron" for modern style chevron close button and "round" for iOS 9-style close buttons. For each, there is a "default" style for choosing the most suitable one for the current platform and operating system version.
+`LNPopupController` provides many different properties to present users with popup bars, popups and interacting with them. By default, the framework chooses styles to match the user’s current operating system version, but can all be customized as required.
+
+<p align="center"><img src="./Supplements/floating_bar_style.gif" width="360"/></p>
 
 The defaults are:
+
+- iOS 26:
+
+  - Floating compact bar style
+
+  - Snap interaction style
+
+  - Grabber close button style
+
+  - No progress view style
 
 - iOS 17:
 
@@ -172,11 +165,12 @@ The defaults are:
 
   * No progress view style
 
+> [!NOTE]
+> On iOS 26 and above, `UIDesignRequiresCompatibility` is supported, and the framework will use legacy styles and appearance when the key is present in your app’s Info.plist and is set to `YES`.
+
 You can also present completely custom popup bars. For more information, see [Custom Popup Bars](#custom-popup-bars).
 
-By default, for navigation and tab bar container controllers, the appearance of the popup bar is determined according to the bottom bar's appearance. For other container controllers, a default appearance is used, most suitable for the current environment.
-
-<p align="center"><img src="./Supplements/floating_bar_style.gif" width="360"/></p>
+By default, for navigation and tab bar container controllers, the popup bar inherits its appearance from the bottom bar. For other container controllers, a default appearance is used, most suitable for the current environment.
 
 To disable inheriting the bottom bar’s appearance, set the `inheritsAppearanceFromDockingView` property to `false`.
 
@@ -184,11 +178,22 @@ To disable inheriting the bottom bar’s appearance, set the `inheritsAppearance
 
 Customizing the popup bar style is achieved by setting the popup bar's `barStyle` property.
 
+Starting with iOS 26, the framework supports a floating and a compact floating popup bar.
+
 ```swift
-navigationController?.popupBar.barStyle = .compact
+navigationController?.popupBar.barStyle = .floating
 ```
 
-<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/> <img src="./Supplements/modern_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="360"/> <img src="./Supplements/floating_no_scroll.gif" width="360"/></p>
+
+##### Legacy Bar Styles
+
+On iOS 18 and below, the framework presents popup bar styles and animations that are appropriate for the operating system. The non-floating prominent and compact bar styles are also available.
+
+<p align="center"><img src="./Supplements/legacy_floating_no_scroll.gif" width="360"/> <img src="./Supplements/legacy_modern_no_scroll.gif" width="360"/> <img src="./Supplements/legacy_compact_scroll.gif" width="360"/></p>
+
+> [!NOTE]
+> On iOS 26 and later, non-floating bar styles will be automatically converted to the appropriate floating style.
 
 #### Interaction Style
 
@@ -222,13 +227,13 @@ navigationController.popupContentView.popupCloseButtonStyle = .round
 
 To hide the popup close button, set the `popupCloseButtonStyle` property to `LNPopupCloseButton.Style.none`.
 
-<p align="center"><img src="./Supplements/close_button_none.png" width="360"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="360"/><br/><br/><img src="./Supplements/close_button_round.png" width="360"/></p>
+<p align="center"><img src="./Supplements/close_button_grabber.png" width="360"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="360"/><br/><br/><img src="./Supplements/close_button_round.png" width="360"/><br/><br/><img src="./Supplements/close_button_none.png" width="360"/></p>
 
 #### Text Marquee Scroll
 
 Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee is enabled. Otherwise, the text will be truncated.
 
-<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/> <img src="./Supplements/scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_no_scroll_delay.gif" width="360"/> <img src="./Supplements/legacy_compact_scroll.gif" width="360"/></p>
 
 #### Popup Transitions
 
@@ -252,9 +257,9 @@ Transitions are only available for prominent and floating popup bar styles with 
 
 #### Popup Bar Customization
 
-`LNPopupBar` exposes many APIs to customize the default popup bar's appearance. Use `LNPopupBarAppearance` objects to define the standard appearance of the bar.
+`LNPopupBar` exposes many APIs to customize the popup bar's appearance. Use `LNPopupBarAppearance` objects to define the standard appearance of the bar.
 
-Remember to set the `inheritsAppearanceFromDockingView` property to `false`, or some of your customizations might be overridden by the bottom bar’s appearance.
+Remember to set the `inheritsAppearanceFromDockingView` property to `false`, or some of your customizations might be overridden by inheriting the bottom bar’s appearance.
 
 ```swift
 let appearance = LNPopupBarAppearance()
@@ -277,18 +282,13 @@ imageShadow.shadowOffset = .zero
 imageShadow.shadowBlurRadius = 3.0
 appearance.imageShadow = imageShadow
 
-if navigationController?.popupBar.barStyle == .floating {
-    appearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
-} else {
-    appearance.backgroundEffect = UIBlurEffect(style: .dark)
-    navigationController?.popupBar.inheritsAppearanceFromDockingView = false
-}
+appearance.floatingBackgroundEffect = UIBlurEffect(style: .dark)
 
 navigationController?.popupBar.standardAppearance = appearance
 navigationController?.popupBar.tintColor = .yellow
 ```
 
-<p align="center"><img src="./Supplements/floating_custom.png" width="360"/> <img src="./Supplements/modern_custom.png" width="360"/> <img src="./Supplements/compact_custom.png" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_custom.png" width="360"/></p>
 
 #### System Interactions
 
@@ -302,11 +302,11 @@ The `hidesBottomBarWhenPushed` property is supported for navigation and tab bar 
 
 Starting with iPadOS 18, the framework supports `UITabBarController` sidebars. When the sidebar displaces the underlying content, the popup bar moves out of the way.
 
-<p align="center"><img src="./Supplements/tab_bar_sidebar_floating.gif" width="600"/><br /><br /><img src="./Supplements/tab_bar_sidebar_prominent.gif" width="600"/></p>
+<p align="center"><img src="./Supplements/tab_bar_sidebar_floating.gif" width="600"/></p>
 
 When the sidebar overlays the underlying content, the popup bar dims together with the content:
 
-<p align="center"><img src="./Supplements/tab_bar_sidebar_landscape_floating.png" width="360"/></p>
+<p align="center"><img src="./Supplements/tab_bar_sidebar_portrait_floating.png" width="360"/></p>
 
 
 
@@ -334,7 +334,9 @@ For custom popup bar controllers, the `LNPopupCustomBarViewController` class imp
 
 ##### Scroll-edge Appearance
 
-Starting with iOS 15, scroll-edge appearance is automatically disabled for toolbars and tab bars when a popup bar is presented, regardless of the scroll position of the content. Once the popup bar is dismissed, the scroll-edge appearance is restored.
+With iOS versions 15 up to 18, scroll-edge appearance is automatically disabled for toolbars and tab bars when a popup bar is presented, regardless of the scroll position of the content. Once the popup bar is dismissed, the scroll-edge appearance is restored.
+
+On iOS 26, this is no longer necessary.
 
 <p align="center"><img src="./Supplements/scroll_edge_appearance.gif" width="360"/></p>
 
@@ -382,7 +384,7 @@ For multidirectional scroll content, the system will not attempt to close the po
 You can implement the delegate of the interaction gesture recognizer in order to influence its behavior, such as preventing popup interaction when the user is interacting with other controls or views inside the popup content view hierarchy.
 
 > [!CAUTION]
-> If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code. Instead, consider implementing the gesture recognizer's delegate and providing custom logic to disable the interaction.
+> If you disable the gesture recognizer after opening the popup, you must monitor the state of the popup and reenable the gesture recognizer once closed by the user or through code. Instead, consider either implementing `viewForPopupInteractionGestureRecognizer` and return an appropriate view, or set the gesture recognizer's delegate and provide custom logic to disable interactions when required.
 
 #### Full Right-to-Left Support
 

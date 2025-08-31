@@ -11,46 +11,6 @@ import UIKit
 @_exported import LNPopupController_ObjC
 #endif
 
-#if canImport(SwiftUI)
-import SwiftUI
-
-@_cdecl("__ln_doNotCall__fixUIHostingViewHitTest")
-@_spi(LNPopupControllerInternal)
-public
-func __ln_doNotCall__fixUIHostingViewHitTest() {
-	DispatchQueue.main.async {
-		guard let view = UIHostingController(rootView: EmptyView()).view else {
-			return
-		}
-		
-		let cls = type(of: view)
-		let sel = #selector(UIView.hitTest(_:with:))
-		let method = class_getInstanceMethod(cls, sel)!
-		
-		let _orig: @convention(c) (_ self: UIView, _ sel: Selector, _ point: CGPoint, _ event: UIEvent?) -> UIView?
-		_orig = unsafeBitCast(method_getImplementation(method), to: type(of: _orig))
-		
-		let orig: (UIView, CGPoint, UIEvent?) -> UIView? = { _self, point, event in
-			_orig(_self, sel, point, event)
-		}
-		
-		let impl: @convention(block) (UIView, CGPoint, UIEvent?) -> UIView? = { _self, point, event in
-			if let popupContentView = _self.subviews.filter({ $0 is LNPopupContentView }).first, popupContentView.point(inside: popupContentView.convert(point, from: _self), with: event), let popupContentViewHitTest = popupContentView.hitTest(popupContentView.convert(point, from: _self), with: event) {
-				return popupContentViewHitTest
-			}
-			
-			if let popupBar = _self.subviews.filter({ $0 is LNPopupBar }).first, popupBar.point(inside: popupBar.convert(point, from: _self), with: event), let popupBarHitTest = popupBar.hitTest(popupBar.convert(point, from: _self), with: event) {
-				return popupBarHitTest
-			}
-			
-			return orig(_self, point, event)
-		}
-		
-		method_setImplementation(method, imp_implementationWithBlock(impl))
-	}
-}
-#endif
-
 public
 extension Double {
 	/// The default popup snap percent. See `LNPopupInteractionStyle.customizedSnap(percent:)` for more information.
@@ -123,6 +83,9 @@ extension UIViewController {
 		}
 	}
 	
+	/// The effective popup interaction style. (read-only)
+	///
+	/// Use this property's value to determine, at runtime, what interaction style the system has chosen to use.
 	var effectivePopupInteractionStyle: PopupInteractionStyle {
 		switch __effectivePopupInteractionStyle {
 		case .drag:

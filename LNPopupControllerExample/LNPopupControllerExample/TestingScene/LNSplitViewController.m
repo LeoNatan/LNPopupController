@@ -16,13 +16,13 @@
 	
 	if([self isKindOfClass:LNSplitViewControllerSecondaryPopup.class] == NO)
 	{
-		self.minimumPrimaryColumnWidth = 400;
-		self.maximumPrimaryColumnWidth = 400;
+		self.minimumPrimaryColumnWidth = 370;
+		self.maximumPrimaryColumnWidth = 500;
 		
 		if(self.style == UISplitViewControllerStyleTripleColumn)
 		{
-			self.minimumSupplementaryColumnWidth = 400;
-			self.maximumSupplementaryColumnWidth = 400;
+			self.minimumSupplementaryColumnWidth = 370;
+			self.maximumSupplementaryColumnWidth = 500;
 		}
 	}
 }

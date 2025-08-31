@@ -11,6 +11,7 @@
 #import "_LNPopupUIBarAppearanceProxy.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
+#import "_LNPopupGlassUtils.h"
 
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
@@ -61,6 +62,11 @@ return super_class(&super, _cmd); \
 
 + (void)load
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return;
+	}
+	
 	@autoreleasepool {
 		id imp = ^id(_LNPopupBarBackgroundDataSubclass* self, SEL _cmd){
 			LN_SHADOW_CLEAR_COLOR_OR_SUPER

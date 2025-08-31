@@ -58,20 +58,22 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		
-#if LNPOPUP
 		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSetting.barStyle)  as? Int ?? 0)!
 		tabBarController?.popupBar.barStyle = barStyle
-	
-		if tabBarController?.popupBar.effectiveBarStyle == .floating {
-			let tba = UITabBarAppearance()
-			tba.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
-			tabBarController!.tabBar.standardAppearance = tba
-			
-			let nba = UINavigationBarAppearance()
-			nba.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
-			navigationController!.navigationBar.standardAppearance = nba
-		}
+		
+		if !LNPopupSettingsHasOS26Glass() {
+#if LNPOPUP
+			if [.floating, .floatingCompact].contains(tabBarController?.popupBar.effectiveBarStyle) {
+				let tba = UITabBarAppearance()
+				tba.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
+				tabBarController!.tabBar.standardAppearance = tba
+				
+				let nba = UINavigationBarAppearance()
+				nba.backgroundEffect = UIBlurEffect(style: .systemThinMaterial)
+				navigationController!.navigationBar.standardAppearance = nba
+			}
 #endif
+		}
 
 		demoAlbumImageView.layer.cornerCurve = .continuous
 		demoAlbumImageView.layer.cornerRadius = 8
