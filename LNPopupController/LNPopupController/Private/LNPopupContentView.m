@@ -313,7 +313,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	{
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
-		if([effectToUse isKindOfClass:UIGlassEffect.class])
+		if(effectToUse.ln_isGlass)
 		{
 			UIGlassEffect* glass = [effectToUse copy];
 			glass.interactive = NO;

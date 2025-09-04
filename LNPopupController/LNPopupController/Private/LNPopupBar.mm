@@ -234,7 +234,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
 		_floatingBackgroundShadowView.userInteractionEnabled = NO;
-		_floatingBackgroundShadowView.alpha = 0.0;
 		[self addSubview:_floatingBackgroundShadowView];
 		
 		_layoutContainer = [UIView new];
@@ -513,8 +512,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 			if(@available(iOS 26.0, *))
 				_contentView.effectView.cornerConfiguration = [self.activeAppearance floatingBackgroundCornerConfigurationForCustomBar:_resolvedIsCustom];
+			_floatingBackgroundShadowView.cornerConfiguration = _contentView.effectView.cornerConfiguration;
 #endif
-			_floatingBackgroundShadowView.cornerRadius = contentFrame.size.height / 2;
 		}
 		else
 		{
@@ -880,13 +879,13 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	_resolvedIsGlassInteractive = NO;
 	if(_resolvedIsFloating)
 	{
-		id effect = [self.activeAppearance floatingBackgroundEffectForTraitCollection:self.traitCollection];
+		UIVisualEffect* effect = [self.activeAppearance floatingBackgroundEffectForTraitCollection:self.traitCollection];
 		_contentView.effect = effect;
 		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		{
-			_resolvedIsGlass = [effect isKindOfClass:UIGlassEffect.class];
+			_resolvedIsGlass = effect.ln_isGlass;
 			_resolvedIsGlassInteractive = _resolvedIsGlass && ((UIGlassEffect*)effect).isInteractive;
 		}
 #endif

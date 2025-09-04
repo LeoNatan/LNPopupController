@@ -31,6 +31,23 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	return rv;
 }
 
+@implementation UIVisualEffect (LNPopupSupport)
+
+- (BOOL)ln_isGlass
+{
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	if(@available(iOS 26.0, *))
+	if([self isKindOfClass:UIGlassEffect.class])
+	{
+		return YES;
+	}
+#endif
+	
+	return NO;
+}
+
+@end
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 
 @implementation LNPopupGlassEffect

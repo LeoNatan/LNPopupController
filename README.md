@@ -129,7 +129,7 @@ override var defaultFrameForBottomDockingView: CGRect {
 
 ### Appearance and Behavior
 
-`LNPopupController` provides many different properties to present users with popup bars, popups and interacting with them. By default, the framework chooses styles to match the user’s current operating system version, but can all be customized as required.
+`LNPopupController` provides many different properties to present users with popup bars, open popups and let the user interact with them. By default, the framework chooses styles to match the user’s current operating system version, but can all be customized as required.
 
 <p align="center"><img src="./Supplements/floating_bar_style.gif" width="360"/></p>
 
@@ -138,21 +138,20 @@ The defaults are:
 - iOS 26:
 
   - Floating compact bar style
-- Snap interaction style
+  - Snap interaction style
   - Grabber close button style
 
 - iOS 17-18:
 
-  * Floating bar style
-* Snap interaction style
-  * Grabber close button style
+  - Floating bar style
+  - Snap interaction style
+  - Grabber close button style
 
 - iOS 16 and below:
 
   - Prominent bar style
-
-  * Snap interaction style
-* Chevron close button style
+  - Snap interaction style
+  - Chevron close button style
 
 > [!NOTE]
 > On iOS 26 and above, `UIDesignRequiresCompatibility` is supported, and the framework will use legacy styles and appearance when the key is present in your app’s Info.plist and is set to `YES`.
@@ -167,7 +166,7 @@ To disable inheriting the bottom bar’s appearance, set the `inheritsAppearance
 
 Customizing the popup bar style is achieved by setting the popup bar's `barStyle` property.
 
-Starting with iOS 26, the framework supports a floating and a compact floating popup bar.
+Starting with iOS 26, the framework supports primarily a floating and a compact floating popup bar.
 
 ```swift
 navigationController?.popupBar.barStyle = .floating
@@ -183,7 +182,7 @@ navigationController?.popupBar.barStyle = .floating
 
 ##### Legacy Bar Styles
 
-On iOS 18 and below, the framework presents popup bar styles and animations that are appropriate for the operating system. The non-floating prominent and compact bar styles are also available.
+On iOS 18 and below, the framework presents popup bar styles and animations that are appropriate for the user's operating system. Non-floating prominent and compact bar styles are also available.
 
 ###### Floating:
 <p align="center"><img src="./Supplements/legacy_floating_no_scroll.gif" width="360"/>

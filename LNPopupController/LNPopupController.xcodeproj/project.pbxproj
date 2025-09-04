@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		390031692AC06FE10046D3DD /* _LNPopupBackgroundShadowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 390031672AC06FE10046D3DD /* _LNPopupBackgroundShadowView.h */; };
-		3900316A2AC06FE10046D3DD /* _LNPopupBackgroundShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.m */; };
+		3900316A2AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm */; };
 		39052F192DABC46C003CED10 /* LNPopupPresentationContainerSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 39052F172DABC46C003CED10 /* LNPopupPresentationContainerSupport.h */; };
 		39052F1A2DABC46C003CED10 /* LNPopupPresentationContainerSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 39052F182DABC46C003CED10 /* LNPopupPresentationContainerSupport.m */; };
 		3907CDB824D9BD6E007C9300 /* LNPopupContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */; };
@@ -101,7 +101,7 @@
 
 /* Begin PBXFileReference section */
 		390031672AC06FE10046D3DD /* _LNPopupBackgroundShadowView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupBackgroundShadowView.h; sourceTree = "<group>"; };
-		390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupBackgroundShadowView.m; sourceTree = "<group>"; };
+		390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupBackgroundShadowView.mm; sourceTree = "<group>"; };
 		39052F172DABC46C003CED10 /* LNPopupPresentationContainerSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupPresentationContainerSupport.h; sourceTree = "<group>"; };
 		39052F182DABC46C003CED10 /* LNPopupPresentationContainerSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupPresentationContainerSupport.m; sourceTree = "<group>"; };
 		3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupContentView.m; sourceTree = "<group>"; };
@@ -224,7 +224,7 @@
 				391481B91DCFA514002416D1 /* LNChevronView.h */,
 				391481B81DCFA514002416D1 /* LNChevronView.m */,
 				390031672AC06FE10046D3DD /* _LNPopupBackgroundShadowView.h */,
-				390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.m */,
+				390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm */,
 				397D9A152687474D005164AB /* _LNPopupBarBackgroundView.h */,
 				397D9A162687474D005164AB /* _LNPopupBarBackgroundView.m */,
 				394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */,
@@ -478,7 +478,7 @@
 				39F8228826B80B6F0070DDBA /* SwiftRefinements.swift in Sources */,
 				399D37B92ADC672D00EA5038 /* LNPopupImageView.mm in Sources */,
 				39E7A605200B5157007AF3AD /* _LNPopupSwizzlingUtils.m in Sources */,
-				3900316A2AC06FE10046D3DD /* _LNPopupBackgroundShadowView.m in Sources */,
+				3900316A2AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm in Sources */,
 				397AFC021F1A21DD00E7D95C /* LNPopupLongPressGestureRecognizer.m in Sources */,
 				39222ADC1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.m in Sources */,
 				3975A5C42C663B520027FCDD /* _LNPopupAddressInfo.mm in Sources */,

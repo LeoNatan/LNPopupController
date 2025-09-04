@@ -1619,13 +1619,23 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				{
 					self.popupBar.contentView.effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
 					self.popupBar.contentView.contentView.alpha = 0.0;
+					self.popupBar.floatingBackgroundShadowView.alpha = 0.0;
 #ifndef LNPopupControllerEnforceStrictClean
 					self.popupBar.contentView.contentView.layer.filters = @[__LNPopupEmptyBlurFilter()];
 					[self.popupBar.contentView.contentView.layer setValue:@5 forKeyPath:__LNPopupBlurFilterUpdateKey];
 #endif
 				}
 				
-				self.popupBar.os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:self.popupBar.layoutContainer];
+				UIView* target;
+				if(self.popupBar.activeAppearance.floatingBackgroundEffect.ln_isGlass)
+				{
+					target = self.popupBar.layoutContainer;
+				}
+				else
+				{
+					target = self.popupBar;
+				}
+				self.popupBar.os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:target];
 				self.popupBar.os26TransitionView.matchesTransform = NO;
 				self.popupBar.os26TransitionView.matchesPosition = NO;
 				self.popupBar.os26TransitionView.frame = frame;
@@ -1655,6 +1665,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			{
 				self.popupBar.os26TransitionView.transform = CGAffineTransformIdentity;
 				self.popupBar.os26TransitionView.alpha = 1.0;
+				self.popupBar.floatingBackgroundShadowView.alpha = 1.0;
 #ifndef LNPopupControllerEnforceStrictClean
 				[self.popupBar.contentView.contentView.layer setValue:@0 forKeyPath:__LNPopupBlurFilterUpdateKey];
 #endif
@@ -1692,9 +1703,13 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			});
 		}
 		
-		dispatch_block_t middle = ^{
-			self.popupBar.floatingBackgroundShadowView.alpha = 1.0;
-		};
+		dispatch_block_t middle = nil;
+		if(!LNPopupEnvironmentHasGlass())
+		{
+			middle = ^{
+				self.popupBar.floatingBackgroundShadowView.alpha = 1.0;
+			};
+		}
 		
 		void (^completion)(UIViewAnimatingPosition) = ^(UIViewAnimatingPosition finalPosition) {
 			if(finalPosition != UIViewAnimatingPositionEnd)
@@ -1749,11 +1764,14 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 		[_runningBarAnimation startAnimation];
 		
-		_runningBarSidecarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:LNPopupBarTransitionDuration * 0.6 dampingRatio:500 animations:middle];
-		[_runningBarSidecarAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
-			_runningBarSidecarAnimation = nil;
-		}];
-		[self _addEventQueueResumptionStep:_runningBarSidecarAnimation];
+		if(middle != nil)
+		{
+			_runningBarSidecarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:LNPopupBarTransitionDuration * 0.6 dampingRatio:500 animations:middle];
+			[_runningBarSidecarAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
+				_runningBarSidecarAnimation = nil;
+			}];
+			[self _addEventQueueResumptionStep:_runningBarSidecarAnimation];
+		}
 		if(animated == NO)
 		{
 			[_runningBarSidecarAnimation startAnimation];
@@ -1903,7 +1921,16 @@ id __LNPopupEmptyBlurFilter(void)
 				[UIView performWithoutAnimation:^{
 					CGRect frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
 					
-					self.popupBar.os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:self.popupBar.contentView];
+					UIView* target;
+					if(self.popupBar.activeAppearance.floatingBackgroundEffect.ln_isGlass)
+					{
+						target = self.popupBar.contentView;
+					}
+					else
+					{
+						target = self.popupBar;
+					}
+					self.popupBar.os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:target];
 					self.popupBar.os26TransitionView.matchesTransform = NO;
 					self.popupBar.os26TransitionView.frame = frame;
 #ifndef LNPopupControllerEnforceStrictClean

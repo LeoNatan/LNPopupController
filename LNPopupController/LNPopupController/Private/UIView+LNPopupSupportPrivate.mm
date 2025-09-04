@@ -279,6 +279,24 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	return NO;
 }
 
+- (CGFloat)_ln_simulatedCornerRadiusFromCorners
+{
+	static NSString* cornersName = LNPopupHiddenString("cornerRadii");
+	
+	NSValue* corners = [self.layer valueForKey:cornersName];
+	CGSize asArray[4];
+	[corners getValue:asArray size:sizeof(asArray)];
+	
+	CGFloat radius = CGFLOAT_MAX;
+	for(size_t idx = 0; idx < 4; idx++) {
+		CGSize size = asArray[idx];
+		
+		radius = MIN(radius, MIN(size.width, size.height));
+	}
+	
+	return radius;
+}
+
 @end
 
 #if ! LNPopupControllerEnforceStrictClean
