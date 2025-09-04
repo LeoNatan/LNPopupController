@@ -30,7 +30,7 @@ Check the demo project for many common use cases of the framework in various sce
 
 ### Features
 
-* Supports iOS 26 glass design
+* Supports iOS 26 glass design, while maintaining a system-apropriate look and feel on previous iOS versions
 * Available for iOS 13 and above, as an Xcode framework or an SPM package
 * Good citizen in modern UIKit world
 * For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
@@ -138,32 +138,21 @@ The defaults are:
 - iOS 26:
 
   - Floating compact bar style
-
-  - Snap interaction style
-
+- Snap interaction style
   - Grabber close button style
 
-  - No progress view style
-
-- iOS 17:
+- iOS 17-18:
 
   * Floating bar style
-
-  * Snap interaction style
-
+* Snap interaction style
   * Grabber close button style
-
-  * No progress view style
 
 - iOS 16 and below:
 
   - Prominent bar style
 
   * Snap interaction style
-
-  * Chevron close button style
-
-  * No progress view style
+* Chevron close button style
 
 > [!NOTE]
 > On iOS 26 and above, `UIDesignRequiresCompatibility` is supported, and the framework will use legacy styles and appearance when the key is present in your app’s Info.plist and is set to `YES`.
@@ -184,13 +173,26 @@ Starting with iOS 26, the framework supports a floating and a compact floating p
 navigationController?.popupBar.barStyle = .floating
 ```
 
-<p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="360"/> <img src="./Supplements/floating_no_scroll.gif" width="360"/></p>
+###### Floating Compact:
+
+<p align="center"><img src="./Supplements/floating_compact_no_scroll.gif" width="360"/></p>
+
+###### Floating:
+
+<p align="center"><img src="./Supplements/floating_no_scroll.gif" width="360"/></p>
 
 ##### Legacy Bar Styles
 
 On iOS 18 and below, the framework presents popup bar styles and animations that are appropriate for the operating system. The non-floating prominent and compact bar styles are also available.
 
-<p align="center"><img src="./Supplements/legacy_floating_no_scroll.gif" width="360"/> <img src="./Supplements/legacy_modern_no_scroll.gif" width="360"/> <img src="./Supplements/legacy_compact_scroll.gif" width="360"/></p>
+###### Floating:
+<p align="center"><img src="./Supplements/legacy_floating_no_scroll.gif" width="360"/>
+
+###### Prominent:
+<p align="center"><img src="./Supplements/legacy_modern_no_scroll.gif" width="360"/></p>
+
+###### Compact:
+<p align="center"><img src="./Supplements/legacy_compact_scroll.gif" width="360"/></p>
 
 > [!NOTE]
 > On iOS 26 and later, non-floating bar styles will be automatically converted to the appropriate floating style.
@@ -213,7 +215,7 @@ Customizing the popup bar progress view style is achieved by setting the popup b
 navigationController?.popupBar.progressViewStyle = .top
 ```
 
-To hide the progress view, set the `progressViewStyle` property to `LNPopupBar.ProgressViewStyle.none`.
+By default, progress view is hidden.
 
 <p align="center"><img src="./Supplements/progress_view_none.png" width="360"/><br/><br/><img src="./Supplements/progress_view_top.png" width="360"/><br/><br/><img src="./Supplements/progress_view_bottom.png" width="360"/></p>
 
@@ -435,6 +437,8 @@ demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsForm
 * Legacy non-translucent tab bar and toolbars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars, and supporting those is not a priority for `LNPopupController`.
   * The correct way to achieve an opaque bar is to use the `UIBarAppearance.configureWithOpaqueBackground()` API, which is supported by `LNPopupController`.
 * Manually setting bottom bar properties, such as setting a tab bar’s or a toolbar’s `isHidden = true` **is explicitly discouraged by Apple and not supported by the framework**; it will lead to undefined behavior by the framework.
+  * `UINavigationController.setToolbarHidden(_:animated:)` and `UITabBarController.setTabBarHidden(_:animated:)` are fully supported
+
 
 ## Acknowledgements
 
