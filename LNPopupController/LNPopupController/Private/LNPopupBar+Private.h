@@ -36,7 +36,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 	{
 		if(isFloating)
 		{
-			*isFloating = NO;
+			*isFloating = LNPopupEnvironmentHasGlass();
 		}
 		if(isCompact)
 		{
@@ -168,6 +168,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 @property (nonatomic, assign, readonly) BOOL resolvedIsFloating;
 @property (nonatomic, assign, readonly) BOOL resolvedIsCompact;
 @property (nonatomic, assign, readonly) BOOL resolvedIsCustom;
+@property (nonatomic, assign, readonly) BOOL resolvedIsFloatingCustom;
 @property (nonatomic, assign, readonly) BOOL resolvedIsGlass;
 @property (nonatomic, assign, readonly) BOOL resolvedIsGlassInteractive;
 

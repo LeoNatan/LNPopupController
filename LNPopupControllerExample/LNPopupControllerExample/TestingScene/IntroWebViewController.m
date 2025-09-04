@@ -78,10 +78,12 @@
 	[_webView addObserver:self forKeyPath:@"themeColor" options:NSKeyValueObservingOptionNew context:NULL];
 	[_webView addObserver:self forKeyPath:@"underPageBackgroundColor" options:NSKeyValueObservingOptionNew context:NULL];
 	
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if (@available(iOS 26.0, *))
 	{
 		_webView.scrollView.topEdgeEffect.hidden = YES;
 	}
+#endif
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context

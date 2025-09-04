@@ -13,12 +13,16 @@ CF_EXTERN_C_BEGIN
 
 extern BOOL LNPopupEnvironmentHasGlass(void);
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+
 API_AVAILABLE(ios(26.0))
 @interface LNPopupGlassEffect: UIGlassEffect
 
 @property (nonatomic, assign) UIGlassEffectStyle style;
 
 @end
+
+#endif
 
 CF_EXTERN_C_END
 NS_ASSUME_NONNULL_END

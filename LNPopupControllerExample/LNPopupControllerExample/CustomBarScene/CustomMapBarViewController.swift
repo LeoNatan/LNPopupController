@@ -33,15 +33,21 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 		
 		updateConstraint()
 		
-		guard let bg = (containingPopupBar?.value(forKey: "backgroundView") as? UIView) else {
-			return
+		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
+#if compiler(>=6.2)
+			containingPopupBar?.standardAppearance.floatingBackgroundEffect = UIGlassEffect(style: .regular)
+			containingPopupBar?.standardAppearance.floatingBackgroundCornerConfiguration = .capsule()
+#endif
+		} else {
+			guard let backgroundView = containingPopupBar?.value(forKey: "backgroundView") as? UIView else {
+				return
+			}
+			
+			backgroundView.clipsToBounds = true
+			backgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+			backgroundView.layer.cornerRadius = 20
+			backgroundView.layer.cornerCurve = .continuous
 		}
-		
-		bg.clipsToBounds = true
-		bg.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-		bg.layer.cornerRadius = 20
-		bg.layer.cornerCurve = .continuous
-		
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {

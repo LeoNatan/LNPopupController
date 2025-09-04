@@ -31,6 +31,8 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	return rv;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+
 @implementation LNPopupGlassEffect
 
 + (instancetype)effectWithStyle:(UIGlassEffectStyle)style
@@ -41,3 +43,5 @@ BOOL LNPopupEnvironmentHasGlass(void)
 }
 
 @end
+
+#endif

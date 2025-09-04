@@ -57,6 +57,7 @@
 @implementation DemoViewController
 {
 	__weak IBOutlet UIBarButtonItem *_galleryBarButton;
+	UIButton* _galleryButton;
 	__weak IBOutlet UIButton *_nextButton;
 	
 	__weak IBOutlet UIBarButtonItem *_barStyleButton;
@@ -119,6 +120,15 @@
 {
 	[super viewDidLoad];
 	
+	if(LNPopupSettingsHasOS26Glass())
+	{
+		_galleryBarButton.title = nil;
+	}
+	else
+	{
+		_galleryBarButton.image = nil;
+	}
+	
 	[self updateNavigationBarTitlePositionForTraitCollection:self.traitCollection];
 	
 	if(self.colorSeedString == nil)
@@ -153,6 +163,57 @@
 	}
 	
 	[self updateHideTabBarButtonHiddenStateForTraitCollection:self.traitCollection];
+	
+	UIButtonConfiguration* config;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	if(@available(iOS 26.0, *))
+	{
+		if(LNPopupSettingsHasOS26Glass())
+		{
+			config = [UIButtonConfiguration prominentGlassButtonConfiguration];
+		}
+		else
+		{
+			config = [UIButtonConfiguration borderlessButtonConfiguration];
+			config.baseForegroundColor = self.view.tintColor;
+		}
+	}
+	else
+	{
+#endif
+		config = [UIButtonConfiguration borderlessButtonConfiguration];
+		config.baseForegroundColor = self.view.tintColor;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	}
+#endif
+	
+	if(LNPopupSettingsHasOS26Glass())
+	{
+		config.image = [UIImage systemImageNamed:@"checkmark"];
+	}
+	else
+	{
+		config.attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Gallery", @"") attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]}];
+	}
+	config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
+	
+	_galleryButton = [UIButton buttonWithConfiguration:config primaryAction:[UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
+		[self performSegueWithIdentifier:@"UnwindSegue" sender:nil];
+	}]];
+	_galleryButton.translatesAutoresizingMaskIntoConstraints = NO;
+	
+	[self.view addSubview:_galleryButton];
+	[NSLayoutConstraint activateConstraints:@[
+		[self.view.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:_galleryButton.trailingAnchor],
+		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_galleryButton.topAnchor],
+	]];
+	if(LNPopupSettingsHasOS26Glass())
+	{
+		[NSLayoutConstraint activateConstraints:@[
+			[_galleryButton.widthAnchor constraintEqualToConstant:46],
+			[_galleryButton.heightAnchor constraintEqualToConstant:46],
+		]];
+	}
 	
 //	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings"];
 //	[self addChildViewController:settings];
@@ -204,50 +265,10 @@
 	self.splitViewController.view.tintColor = self.view.tintColor;
 	//Ugly hack to fix navigation view controller tint color.
 	self.navigationController.view.tintColor = self.view.tintColor;
-
-	UIButtonConfiguration* config;
-	if(@available(iOS 26.0, *))
-	{
-		if(LNPopupSettingsHasOS26Glass())
-		{
-			config = [UIButtonConfiguration prominentGlassButtonConfiguration];
-		}
-		else
-		{
-			config = [UIButtonConfiguration plainButtonConfiguration];
-			config.baseForegroundColor = self.view.tintColor;
-		}
-	}
-	else
-	{
-		config = [UIButtonConfiguration plainButtonConfiguration];
-		config.baseForegroundColor = self.view.tintColor;
-	}
-	
-	config.image = [UIImage systemImageNamed:@"checkmark"];
-	config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
-	
-	UIButton* galleryButton = [UIButton buttonWithConfiguration:config primaryAction:[UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
-		[self performSegueWithIdentifier:@"UnwindSegue" sender:nil];
-	}]];
-	galleryButton.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	[self.view addSubview:galleryButton];
-	[NSLayoutConstraint activateConstraints:@[
-		[self.view.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:galleryButton.trailingAnchor],
-		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:galleryButton.topAnchor],
-	]];
-	if(LNPopupSettingsHasOS26Glass())
-	{
-		[NSLayoutConstraint activateConstraints:@[
-			[galleryButton.widthAnchor constraintEqualToConstant:46],
-			[galleryButton.heightAnchor constraintEqualToConstant:46],
-		]];
-	}
 	
 	_nextButton.titleLabel.adjustsFontForContentSizeCategory = YES;
 	
-	galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
+	_galleryButton.hidden = [self.parentViewController isKindOfClass:[UINavigationController class]];
 	_nextButton.hidden = self.navigationController == nil || self.splitViewController != nil;
 	
 	if(self.tabBarController == nil || self.navigationController.topViewController == self.navigationController.viewControllers.firstObject)
@@ -543,6 +564,7 @@
 			break;
 	}
 	
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if(@available(iOS 26.0, *))
 	{
 		if(wantsGlassBackground)
@@ -550,6 +572,7 @@
 			targetVC.popupContentView.backgroundEffect = [UIGlassEffect effectWithStyle:UIGlassEffectStyleClear];
 		}
 	}
+#endif
 	
 	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonStyle] unsignedIntegerValue];
 	
@@ -575,6 +598,7 @@
 	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingVisualEffectViewBlurEffect];
 	if(effectOverride != nil && effectOverride.integerValue != 0xffff && (effectOverride.integerValue >= 0 || LNPopupSettingsHasOS26Glass()))
 	{
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		if(effectOverride.integerValue < 0 && LNPopupSettingsHasOS26Glass())
 		{
@@ -584,6 +608,7 @@
 			//Always floating
 			targetVC.popupBar.standardAppearance.floatingBackgroundEffect = glassEffect;
 		}
+#endif
 		
 		if(effectOverride.integerValue >= 0)
 		{
@@ -644,7 +669,7 @@
 	{
 		targetVC.shouldExtendPopupBarUnderSafeArea = NO;
 		targetVC.popupBar.inheritsAppearanceFromDockingView = NO;
-		targetVC.popupBar.customBarViewController = [ManualLayoutCustomBarViewController new];
+		targetVC.popupBar.customBarViewController = [[ManualLayoutCustomBarViewController alloc] initWithCustomCornerConfiguration:NO];
 		[targetVC.popupBar.standardAppearance configureWithTransparentBackground];
 	}
 	

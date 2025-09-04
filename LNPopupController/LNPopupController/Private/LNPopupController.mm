@@ -1608,8 +1608,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		self.popupBar.clipsToBounds = NO;
 		
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26, *))
-		if(LNPopupEnvironmentHasGlass() && animated && self.popupBar.resolvedIsCustom == NO)
+		if(animated && LNPopupEnvironmentHasGlass())
 		{
 			[UIView performWithoutAnimation:^{
 				CGRect frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
@@ -1632,6 +1633,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				self.popupBar.os26TransitionView.alpha = 0.0;
 			}];
 		}
+#endif
 		
 		dispatch_block_t animations = ^{
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
@@ -1649,7 +1651,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			[self.popupBar setNeedsLayout];
 			[self.popupBar layoutIfNeeded];
 			
-			if(LNPopupEnvironmentHasGlass() && animated && self.popupBar.resolvedIsCustom == NO)
+			if(animated && LNPopupEnvironmentHasGlass())
 			{
 				self.popupBar.os26TransitionView.transform = CGAffineTransformIdentity;
 				self.popupBar.os26TransitionView.alpha = 1.0;
@@ -1675,7 +1677,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			}
 		};
 		
-		if(animated && LNPopupEnvironmentHasGlass() && self.popupBar.resolvedIsCustom == NO)
+		if(animated && LNPopupEnvironmentHasGlass())
 		{
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(LNPopupBarTransitionDuration * 0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 				[UIView animateWithDuration:LNPopupBarTransitionDuration * 0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -1700,7 +1702,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				return;
 			}
 			
-			if(LNPopupEnvironmentHasGlass() && animated && self.popupBar.resolvedIsCustom == NO)
+			if(animated && LNPopupEnvironmentHasGlass())
 			{
 				[self.popupBar.os26TransitionView removeFromSuperview];
 				self.popupBar.os26TransitionView = nil;
@@ -1896,7 +1898,7 @@ id __LNPopupEmptyBlurFilter(void)
 			
 			__weak decltype(self) weakSelf = self;
 			
-			if(animated && LNPopupEnvironmentHasGlass() && self.popupBar.resolvedIsCustom == NO)
+			if(animated && LNPopupEnvironmentHasGlass())
 			{
 				[UIView performWithoutAnimation:^{
 					CGRect frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
@@ -1936,7 +1938,7 @@ id __LNPopupEmptyBlurFilter(void)
 				if(animated)
 				{
 					[UIView animateWithDuration:LNPopupBarTransitionDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-						if(_containerController.shouldFadePopupBarOnDismiss && (!LNPopupEnvironmentHasGlass() || self.popupBar.resolvedIsCustom))
+						if(_containerController.shouldFadePopupBarOnDismiss && !LNPopupEnvironmentHasGlass())
 						{
 							self.popupBar.alpha = 0.0;
 						}
@@ -1945,9 +1947,10 @@ id __LNPopupEmptyBlurFilter(void)
 						self.popupBarStorage.alpha = currentBarAlpha;
 					}];
 				}
-				
+		
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 				if(@available(iOS 26, *))
-				if(animated && LNPopupEnvironmentHasGlass() && self.popupBar.resolvedIsCustom == NO)
+				if(animated && LNPopupEnvironmentHasGlass())
 				{
 					self.popupBar.contentView.effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
 					self.popupBar.os26TransitionView.transform = CGAffineTransformMakeScale(1.05, 1.05);
@@ -1957,9 +1960,10 @@ id __LNPopupEmptyBlurFilter(void)
 					[self.popupBar.contentView.contentView.layer setValue:@20 forKeyPath:__LNPopupBlurFilterUpdateKey];
 #endif
 				}
+#endif
 			}];
 			
-			if(animated && LNPopupEnvironmentHasGlass() && self.popupBar.resolvedIsCustom == NO)
+			if(animated && LNPopupEnvironmentHasGlass())
 			{
 				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(LNPopupBarTransitionDuration * 0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 					[UIView animateWithDuration:LNPopupBarTransitionDuration * 0.4 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -1980,7 +1984,7 @@ id __LNPopupEmptyBlurFilter(void)
 					return;
 				}
 				
-				if(animated && LNPopupEnvironmentHasGlass() && self.popupBar.resolvedIsCustom == NO)
+				if(animated && LNPopupEnvironmentHasGlass())
 				{
 					[self.popupBar.os26TransitionView removeFromSuperview];
 					self.popupBar.os26TransitionView = nil;

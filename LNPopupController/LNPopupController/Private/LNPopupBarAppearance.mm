@@ -214,6 +214,28 @@ static NSArray* __notifiedProperties = nil;
 	return [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+- (UICornerConfiguration*)floatingBackgroundCornerConfigurationForCustomBar:(BOOL)isCustomBar API_AVAILABLE(ios(26.0))
+{
+	if(!LNPopupEnvironmentHasGlass())
+	{
+		return [UICornerConfiguration configurationWithRadius:[UICornerRadius fixedRadius:0]];
+	}
+	
+	if(self.floatingBackgroundCornerConfiguration != nil)
+	{
+		return self.floatingBackgroundCornerConfiguration;
+	}
+	
+	if(isCustomBar)
+	{
+		return [UICornerConfiguration configurationWithUniformTopRadius:[UICornerRadius fixedRadius:12] uniformBottomRadius:[UICornerRadius containerConcentricRadiusWithMinimum:12]];
+	}
+	
+	return [UICornerConfiguration capsuleConfiguration];
+}
+#endif
+
 - (void)setFloatingBackgroundEffect:(UIBlurEffect *)floatingBackgroundEffect
 {
 	_wantsDynamicFloatingBackgroundEffect = NO;

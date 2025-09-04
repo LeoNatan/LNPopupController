@@ -15,6 +15,7 @@ import LoremIpsum
 
 class DemoAlbumTableViewController: UITableViewController {
 	@IBOutlet var demoAlbumImageView: UIImageView!
+	@IBOutlet var galleryBarButton: UIBarButtonItem!
 	
 	var images: [UIImage]
 	var titles: [String]
@@ -32,6 +33,12 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.view.tintColor = view.tintColor
 		
         super.viewDidLoad()
+		
+		if LNPopupSettingsHasOS26Glass() {
+			galleryBarButton.title = nil
+		} else {
+			galleryBarButton.image = nil
+		}
 		
 //		let backgroundImageView = UIImageView(image: UIImage(named: "demoAlbum"))
 //		backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

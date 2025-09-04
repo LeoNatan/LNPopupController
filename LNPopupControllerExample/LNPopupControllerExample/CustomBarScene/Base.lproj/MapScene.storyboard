@@ -45,7 +45,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="FqG-7m-AwO">
-                        <barButtonItem key="rightBarButtonItem" image="checkmark" catalog="system" style="done" id="Xrl-a1-Ury">
+                        <barButtonItem key="rightBarButtonItem" title="Gallery" image="checkmark" catalog="system" style="done" id="Xrl-a1-Ury">
                             <connections>
                                 <segue destination="RgK-1F-W7f" kind="unwind" unwindAction="unwindToGallery:" id="VVP-k5-v81"/>
                             </connections>
@@ -53,6 +53,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="galleryBarButton" destination="Xrl-a1-Ury" id="Bcb-SP-TP0"/>
                         <outlet property="mapView" destination="0EZ-UY-PPz" id="GuK-zJ-CCA"/>
                         <outlet property="topVisualEffectView" destination="z3u-Zt-das" id="v79-xZ-0M1"/>
                     </connections>
@@ -220,7 +221,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for a place or address" translatesAutoresizingMaskIntoConstraints="NO" id="zJz-wK-6yg">
-                                <rect key="frame" x="14" y="0.0" width="347" height="65"/>
+                                <rect key="frame" x="4" y="0.0" width="367" height="65"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="65" id="eDH-mI-Dgf"/>
                                 </constraints>
@@ -229,9 +230,9 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ldy-mW-kXZ"/>
                         <constraints>
-                            <constraint firstItem="ldy-mW-kXZ" firstAttribute="trailing" secondItem="zJz-wK-6yg" secondAttribute="trailing" constant="14" id="EvB-p6-GVc"/>
+                            <constraint firstItem="ldy-mW-kXZ" firstAttribute="trailing" secondItem="zJz-wK-6yg" secondAttribute="trailing" constant="4" id="EvB-p6-GVc"/>
                             <constraint firstAttribute="top" secondItem="zJz-wK-6yg" secondAttribute="top" id="V8B-bo-le0"/>
-                            <constraint firstItem="zJz-wK-6yg" firstAttribute="leading" secondItem="ldy-mW-kXZ" secondAttribute="leading" constant="14" id="WBI-yr-XwK"/>
+                            <constraint firstItem="zJz-wK-6yg" firstAttribute="leading" secondItem="ldy-mW-kXZ" secondAttribute="leading" constant="4" id="WBI-yr-XwK"/>
                             <constraint firstAttribute="bottom" secondItem="zJz-wK-6yg" secondAttribute="bottom" id="j8J-rw-bjh"/>
                         </constraints>
                     </view>
@@ -270,7 +271,7 @@
     <resources>
         <image name="checkmark" catalog="system" width="128" height="114"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -227,13 +227,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_inheritsAppearanceFromDockingView = YES;
 		_standardAppearance = [LNPopupBarAppearance new];
 		
-		if(!LNPopupEnvironmentHasGlass())
-		{
-			_backgroundView = [[_LNPopupBarBackgroundView alloc] initWithEffect:nil];
-			_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-			_backgroundView.userInteractionEnabled = NO;
-			[self addSubview:_backgroundView];
-		}
+		_backgroundView = [[_LNPopupBarBackgroundView alloc] initWithEffect:nil];
+		_backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_backgroundView.userInteractionEnabled = NO;
+		[self addSubview:_backgroundView];
 		
 		_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
 		_floatingBackgroundShadowView.userInteractionEnabled = NO;
@@ -267,12 +264,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			
 			_backgroundGradientMaskView = [_LNPopupBarBackgroundMaskView new];
 			_backgroundView.maskView = _backgroundGradientMaskView;
-		}
-		
-		if(@available(iOS 26.0, *))
-		if(LNPopupEnvironmentHasGlass())
-		{
-			_contentView.cornerConfiguration = [UICornerConfiguration capsuleConfiguration];
 		}
 		
 		self.effectGroupingIdentifier = nil;
@@ -472,7 +463,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	frame = UIEdgeInsetsInsetRect(frame, _LNEdgeInsetsFromDirectionalEdgeInsets(self, __hackyMargins));
 	
 	[_backgroundView setFrame:frame];
-	_backgroundView.layer.mask.frame = _backgroundView.bounds;
+	if(!LNPopupEnvironmentHasGlass())
+	{
+		_backgroundView.layer.mask.frame = _backgroundView.bounds;
+	}
 	
 	BOOL isCustom = _resolvedStyle == LNPopupBarStyleCustom;
 	BOOL isRTL = self.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
@@ -482,7 +476,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		if(LNPopupEnvironmentHasGlass())
 		{
-			contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, self.layoutMargins.left + 1, 0, self.layoutMargins.right + 1));
+			if(_resolvedIsCustom && self.activeAppearance.customBarWantsFullBarWidth)
+			{
+				contentFrame = frame;
+			}
+			else
+			{
+				contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, self.layoutMargins.left + 1, 0, self.layoutMargins.right + 1));
+			}
 		}
 		else
 		{
@@ -508,10 +509,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		if(LNPopupEnvironmentHasGlass())
 		{
-			_contentView.cornerRadius = contentFrame.size.height / 2;
-			_contentView.contentView.clipsToBounds = YES;
+			_contentView.effectView.clipsToBounds = YES;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 			if(@available(iOS 26.0, *))
-				_contentView.contentView.cornerConfiguration = [UICornerConfiguration configurationWithRadius:[UICornerRadius fixedRadius:contentFrame.size.height / 2]];
+				_contentView.effectView.cornerConfiguration = [self.activeAppearance floatingBackgroundCornerConfigurationForCustomBar:_resolvedIsCustom];
+#endif
 			_floatingBackgroundShadowView.cornerRadius = contentFrame.size.height / 2;
 		}
 		else
@@ -520,21 +522,23 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			_floatingBackgroundShadowView.cornerRadius = _contentView.cornerRadius;
 		}
 		
-		_backgroundGradientMaskView.hidden = NO;
-		_backgroundGradientMaskView.frame = _backgroundView.bounds;
-		_backgroundGradientMaskView.floatingFrame = contentFrame;
-		_backgroundGradientMaskView.floatingCornerRadius = _contentView.cornerRadius;
-		[_backgroundGradientMaskView setWantsCutout:self.wantsBackgroundCutout animated:NO];
-		[_backgroundGradientMaskView setNeedsDisplay];
-		
-		if(_backgroundView.maskView != _backgroundGradientMaskView)
+		if(!LNPopupEnvironmentHasGlass())
 		{
-			_backgroundView.maskView = _backgroundGradientMaskView;
+			_backgroundGradientMaskView.hidden = NO;
+			_backgroundGradientMaskView.frame = _backgroundView.bounds;
+			_backgroundGradientMaskView.floatingFrame = contentFrame;
+			_backgroundGradientMaskView.floatingCornerRadius = _contentView.cornerRadius;
+			[_backgroundGradientMaskView setWantsCutout:self.wantsBackgroundCutout animated:NO];
+			[_backgroundGradientMaskView setNeedsDisplay];
+			
+			if(_backgroundView.maskView != _backgroundGradientMaskView)
+			{
+				_backgroundView.maskView = _backgroundGradientMaskView;
+			}
 		}
 		
 		_floatingBackgroundShadowView.hidden = _resolvedIsGlass;
 		_floatingBackgroundShadowView.frame = contentFrame;
-		
 #if DEBUG
 		_floatingBackgroundShadowView.hidden = _resolvedIsGlass || [__LNDebugUserDefaults() boolForKey:@"__LNPopupBarHideShadow"];
 #endif
@@ -568,12 +572,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_floatingBackgroundShadowView.hidden = YES;
 		
 		_contentView.cornerRadius = 0;
-		if(LNPopupEnvironmentHasGlass())
-		{
-			_contentView.contentView.clipsToBounds = NO;
-			if(@available(iOS 26.0, *))
-				_contentView.contentView.cornerConfiguration = [UICornerConfiguration configurationWithRadius:[UICornerRadius fixedRadius:0]];
-		}
 	}
 	_contentView.frame = contentFrame;
 #if DEBUG
@@ -885,11 +883,13 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 		id effect = [self.activeAppearance floatingBackgroundEffectForTraitCollection:self.traitCollection];
 		_contentView.effect = effect;
 		
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		{
 			_resolvedIsGlass = [effect isKindOfClass:UIGlassEffect.class];
 			_resolvedIsGlassInteractive = _resolvedIsGlass && ((UIGlassEffect*)effect).isInteractive;
 		}
+#endif
 		
 		__auto_type floatingBackgroundColor = self.activeAppearance.floatingBackgroundColor;
 		__auto_type floatingBackgroundImage = self.activeAppearance.floatingBackgroundImage;

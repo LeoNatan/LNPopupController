@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<_LNPopupBarAppearanceDelegate> delegate;
 
 - (UIBlurEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+- (UICornerConfiguration*)floatingBackgroundCornerConfigurationForCustomBar:(BOOL)isCustomBar API_AVAILABLE(ios(26.0));
+#endif
 
 @end
 

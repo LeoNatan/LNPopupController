@@ -28,11 +28,18 @@ private extension UIImage {
 
 class MapViewController: UIViewController, UISearchBarDelegate {
 	@IBOutlet weak var mapView: MKMapView!
+	@IBOutlet weak var galleryBarButton: UIBarButtonItem!
 	@IBOutlet weak var topVisualEffectView: UIVisualEffectView!
 	private var popupContentVC: LocationsController!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		if LNPopupSettingsHasOS26Glass() {
+			galleryBarButton.title = nil
+		} else {
+			galleryBarButton.image = nil
+		}
 		
 		let present = UIBarButtonItem(image: UIImage(systemName: "dock.arrow.up.rectangle"), style: .plain, target: self, action: #selector(MapViewController.presentButtonTapped(_:)))
 		let dismiss = UIBarButtonItem(image: UIImage(systemName: "dock.arrow.down.rectangle"), style: .plain, target: self, action: #selector(MapViewController.dismissButtonTapped(_:)))
@@ -83,6 +90,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		
 		navigationController!.popupBar.inheritsAppearanceFromDockingView = false
 		navigationController!.popupBar.standardAppearance.shadowColor = .clear
+		
 		if let customMapBar = storyboard!.instantiateViewController(withIdentifier: "CustomMapBarViewController") as? CustomMapBarViewController {
 			navigationController!.popupBar.customBarViewController = customMapBar
 			
@@ -96,7 +104,6 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			//Manual layout bar scene
 			navigationController!.shouldExtendPopupBarUnderSafeArea = false
 			navigationController!.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
-			navigationController!.popupBar.standardAppearance.configureWithTransparentBackground()
 		}
 		
 		navigationController!.popupContentView.popupCloseButtonStyle = .none

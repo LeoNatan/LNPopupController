@@ -12,32 +12,53 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 	let centeredButton = UIButton(type: .system)
 	let leftButton = UIButton(type: .system)
 	let backgroundView = UIVisualEffectView(effect: nil)
-
+	
+	let userCustomCornerConfiguration: Bool
+	
+	@objc(initWithCustomCornerConfiguration:)
+	init(userCustomCornerConfiguration: Bool = true) {
+		self.userCustomCornerConfiguration = userCustomCornerConfiguration
+		
+		super.init(nibName: nil, bundle: nil)
+	}
+	
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+	
+	func setupBackgroundView() {
+		backgroundView.effect = UIBlurEffect(style: .systemChromeMaterial)
+		backgroundView.layer.masksToBounds = true
+		backgroundView.layer.cornerCurve = .continuous
+		backgroundView.layer.cornerRadius = 15
+		view.addSubview(backgroundView)
+	}
 	
 	public
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		if LNPopupSettingsHasOS26Glass() {
+#if compiler(>=6.2)
+			if #available(iOS 26.0, *), userCustomCornerConfiguration {
+				containingPopupBar?.standardAppearance.floatingBackgroundCornerConfiguration = .uniformEdges(topRadius: .fixedRadius(20), bottomRadius: .containerConcentricRadius(withMinimum: 20))
+			}
+#endif
+		} else {
+			containingPopupBar?.standardAppearance.configureWithTransparentBackground()
+		}
 		
 		view.autoresizingMask = []
 		
 #if compiler(>=6.2)
 		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
-			backgroundView.effect = UIGlassEffect(style: .regular)
-			backgroundView.cornerConfiguration = UICornerConfiguration.capsule()
+			// Use system background
 		} else {
-			backgroundView.effect = UIBlurEffect(style: .systemChromeMaterial)
-			backgroundView.layer.masksToBounds = true
-			backgroundView.layer.cornerCurve = .continuous
-			backgroundView.layer.cornerRadius = 15
+			setupBackgroundView()
 		}
 #else
-		backgroundView.effect = UIBlurEffect(style: .systemChromeMaterial)
-		backgroundView.layer.masksToBounds = true
-		backgroundView.layer.cornerCurve = .continuous
-		backgroundView.layer.cornerRadius = 15
+		setupBackgroundView()
 #endif
-		
-		view.addSubview(backgroundView)
 		
 		centeredButton.setTitle(NSLocalizedString("Centered", comment: ""), for: .normal)
 		centeredButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
