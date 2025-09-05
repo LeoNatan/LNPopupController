@@ -1197,19 +1197,8 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 {
 	UILabel<LNMarqueeLabel>* _rv = nil;
 	
-	if(!marqueeEnabled || _resolvedIsGlass)
+	if(!marqueeEnabled)
 	{
-		if(marqueeEnabled && _resolvedIsGlass)
-		{
-			static dispatch_once_t onceToken;
-			dispatch_once(&onceToken, ^{
-				NSString* frameworkName = NSClassFromString(@"__LNPopupUI") ? @"LNPopupUI" : @"LNPopupController";
-				NSString* subsystem = [NSString stringWithFormat:@"com.LeoNatan.%@", frameworkName];
-				os_log_t customLog = os_log_create(subsystem.UTF8String, frameworkName.UTF8String);
-				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: Marquee scroll is currently not supported with glass popup bars", frameworkName);
-			});
-		}
-		
 		LNNonMarqueeLabel* rv = [LNNonMarqueeLabel new];
 		rv.minimumScaleFactor = 1.0;
 		rv.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -1447,7 +1436,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 		case LNPopupBarStyleFloatingCompact:
 		case LNPopupBarStyleCompact:
 			fontSize = 13.5;
-			fontWeight = UIFontWeightRegular;
+			fontWeight = UIFontWeightMedium;
 			textStyle = UIFontTextStyleSubheadline;
 			break;
 		default:

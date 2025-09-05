@@ -19,7 +19,7 @@
 		39222ADB1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 39222AD91F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		39222ADC1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 39222ADA1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.m */; };
 		39314A521B6AE7A400574D3C /* MarqueeLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 39314A501B6AE7A400574D3C /* MarqueeLabel.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		39314A531B6AE7A400574D3C /* MarqueeLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 39314A511B6AE7A400574D3C /* MarqueeLabel.m */; };
+		39314A531B6AE7A400574D3C /* MarqueeLabel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39314A511B6AE7A400574D3C /* MarqueeLabel.mm */; };
 		393E4EA72670F12500929E47 /* LNPopupBarAppearance.mm in Sources */ = {isa = PBXBuildFile; fileRef = 393E4EA52670F12500929E47 /* LNPopupBarAppearance.mm */; };
 		393E4EAA2670F2D000929E47 /* LNPopupBarAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		394005FC2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h in Headers */ = {isa = PBXBuildFile; fileRef = 394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */; };
@@ -115,7 +115,7 @@
 		39222AD91F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupOpenTapGestureRecognizer.h; sourceTree = "<group>"; };
 		39222ADA1F1A1C5800388E06 /* LNPopupOpenTapGestureRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupOpenTapGestureRecognizer.m; sourceTree = "<group>"; };
 		39314A501B6AE7A400574D3C /* MarqueeLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarqueeLabel.h; sourceTree = "<group>"; };
-		39314A511B6AE7A400574D3C /* MarqueeLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarqueeLabel.m; sourceTree = "<group>"; };
+		39314A511B6AE7A400574D3C /* MarqueeLabel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MarqueeLabel.mm; sourceTree = "<group>"; };
 		393E4EA52670F12500929E47 /* LNPopupBarAppearance.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LNPopupBarAppearance.mm; sourceTree = "<group>"; };
 		393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupBarAppearance.h; sourceTree = "<group>"; };
 		393E4EAC26713E5700929E47 /* LNPopupBarAppearance+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupBarAppearance+Private.h"; sourceTree = "<group>"; };
@@ -254,7 +254,7 @@
 				394A85BB1B6306AE004FFC61 /* LNPopupItem+Private.h */,
 				394A85B81B6304F5004FFC61 /* LNPopupItem.m */,
 				39314A501B6AE7A400574D3C /* MarqueeLabel.h */,
-				39314A511B6AE7A400574D3C /* MarqueeLabel.m */,
+				39314A511B6AE7A400574D3C /* MarqueeLabel.mm */,
 				396D62702610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.h */,
 				396D62712610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.mm */,
 				399BA1D22A9E975E00CA5167 /* _LNPopupUIBarAppearanceProxy.h */,
@@ -490,7 +490,7 @@
 				394A85BA1B6304F5004FFC61 /* LNPopupItem.m in Sources */,
 				3947E1B31B61CE4A0001178B /* LNPopupController.mm in Sources */,
 				397AFBFC1F1A1ED200E7D95C /* LNForwardingDelegate.m in Sources */,
-				39314A531B6AE7A400574D3C /* MarqueeLabel.m in Sources */,
+				39314A531B6AE7A400574D3C /* MarqueeLabel.mm in Sources */,
 				3907CDB824D9BD6E007C9300 /* LNPopupContentView.m in Sources */,
 				391481BA1DCFA514002416D1 /* LNChevronView.m in Sources */,
 				394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.mm in Sources */,

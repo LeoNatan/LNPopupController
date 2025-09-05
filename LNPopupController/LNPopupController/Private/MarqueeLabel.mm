@@ -7,6 +7,8 @@
 //
 
 #import "MarqueeLabel.h"
+#import "_LNPopupBase64Utils.hh"
+#import "_LNPopupSwizzlingUtils.h"
 #import <QuartzCore/QuartzCore.h>
 
 // Notification strings
@@ -38,12 +40,26 @@ typedef void(^MLAnimationCompletionBlock)(BOOL finished);
 - (CGFloat)durationPercentageForPositionPercentage:(CGFloat)positionPercentage withDuration:(NSTimeInterval)duration;
 @end
 
+@interface LNMarqueeLabelSublabel : UILabel @end
+@implementation LNMarqueeLabelSublabel
+
++ (void)load
+{
+	@autoreleasepool {
+		static SEL fuckOffApple = NSSelectorFromString(LNPopupHiddenString("mt_setContentEffects:"));
+		Method someMethod = class_getInstanceMethod(self, @selector(setFont:));
+		class_addMethod(self, fuckOffApple, imp_implementationWithBlock(^(id, id) {}), method_getTypeEncoding(someMethod));
+	}
+}
+
+@end
+
 @interface MarqueeLabel()
 {
 	MarqueeType _userMarqueeType;
 }
 
-@property (nonatomic, strong) UILabel *subLabel;
+@property (nonatomic, strong) LNMarqueeLabelSublabel *subLabel;
 
 @property (nonatomic, assign) NSTimeInterval animationDuration;
 @property (nonatomic, assign, readonly) BOOL labelShouldScroll;
@@ -227,9 +243,9 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     self.numberOfLines = 1;
     
     // Create first sublabel
-    self.subLabel = [[UILabel alloc] initWithFrame:self.bounds];
+    self.subLabel = [[LNMarqueeLabelSublabel alloc] initWithFrame:self.bounds];
     self.subLabel.tag = 700;
-    self.subLabel.layer.anchorPoint = CGPointMake(0.0f, 0.0f);
+	self.subLabel.layer.anchorPoint = CGPointZero;
     
     [self addSubview:self.subLabel];
     
