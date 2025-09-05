@@ -880,6 +880,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	if(_resolvedIsFloating)
 	{
 		UIVisualEffect* effect = [self.activeAppearance floatingBackgroundEffectForTraitCollection:self.traitCollection];
+		[_contentView clearEffect];
 		_contentView.effect = effect;
 		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5

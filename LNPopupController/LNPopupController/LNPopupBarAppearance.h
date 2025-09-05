@@ -96,7 +96,7 @@ NS_SWIFT_UI_ACTOR
 /// A configuration that defines the corners of the floating background view.
 ///
 /// Set to `nil` to use the system default.
-@property (nonatomic, copy, nullable) UICornerConfiguration* floatingBackgroundCornerConfiguration API_AVAILABLE(ios(26.0));
+@property (nonatomic, copy, nullable) UICornerConfiguration* floatingBackgroundCornerConfiguration NS_REFINED_FOR_SWIFT API_AVAILABLE(ios(26.0));
 #endif
 
 /// The shadow displayed underneath the bar floating background.

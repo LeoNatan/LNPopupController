@@ -35,6 +35,13 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 		
 		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
 #if compiler(>=6.2)
+			searchBar.searchTextField.backgroundColor = UIColor(dynamicProvider: { traitCollection in
+				if traitCollection.userInterfaceStyle == .dark {
+					return UIColor.tertiarySystemBackground.withAlphaComponent(0.15)
+				} else {
+					return UIColor.lightGray.withAlphaComponent(0.15)
+				}
+			})
 			containingPopupBar?.standardAppearance.floatingBackgroundCornerConfiguration = .capsule()
 #endif
 		} else {

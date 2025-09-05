@@ -41,7 +41,7 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 		if LNPopupSettingsHasOS26Glass() {
 #if compiler(>=6.2)
 			if #available(iOS 26.0, *), userCustomCornerConfiguration {
-				containingPopupBar?.standardAppearance.floatingBackgroundCornerConfiguration = .uniformEdges(topRadius: .fixedRadius(20), bottomRadius: .containerConcentricRadius(withMinimum: 20))
+				containingPopupBar?.standardAppearance.floatingBackgroundCornerConfiguration = .uniformEdges(topRadius: .fixed(20), bottomRadius: .containerConcentric(minimum: 20))
 			}
 #endif
 		} else {

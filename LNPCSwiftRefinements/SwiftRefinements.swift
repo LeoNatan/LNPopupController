@@ -158,6 +158,34 @@ extension LNPopupBarAppearance {
 			__subtitleTextAttributes = newValue != nil ? Dictionary(newValue!) : nil
 		}
 	}
+	
+#if compiler(>=6.2)
+	/// A configuration that defines the corners of the floating background view.
+	///
+	/// Set to `nil` to use the system default.
+	@available(iOS 26, *)
+	var floatingBackgroundCornerConfiguration: UICornerConfiguration? {
+		//These convert from/to Swift UIKit.UICornerConfiguration to/from Objective C UICornerConfiguration
+		get {
+			if let __floatingBackgroundCornerConfiguration {
+				let helper = UIView()
+				helper.setValue(__floatingBackgroundCornerConfiguration, forKey: "cornerConfiguration")
+				return helper.cornerConfiguration
+			} else {
+				return nil
+			}
+		}
+		set {
+			if let newValue {
+				let helper = UIView()
+				helper.cornerConfiguration = newValue
+				setValue(helper.value(forKey: "cornerConfiguration"), forKey: "floatingBackgroundCornerConfiguration")
+			} else {
+				__floatingBackgroundCornerConfiguration = nil
+			}
+		}
+	}
+#endif
 }
 
 public

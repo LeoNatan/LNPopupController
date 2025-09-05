@@ -1675,6 +1675,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 				[UIView animateWithDuration:LNPopupBarTransitionDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
+					[self.popupBar.contentView clearEffect];
 					self.popupBar.contentView.effect = [self.popupBar.activeAppearance floatingBackgroundEffectForTraitCollection:self.popupBar.traitCollection];
 				} completion:nil];
 			});
@@ -1995,6 +1996,7 @@ id __LNPopupEmptyBlurFilter(void)
 					
 					self.popupBar.contentView.contentView.alpha = 1.0;
 					self.popupBar.contentView.contentView.layer.filters = nil;
+					[self.popupBar.contentView clearEffect];
 					self.popupBar.contentView.effect = [self.popupBar.activeAppearance floatingBackgroundEffectForTraitCollection:self.popupBar.traitCollection];
 					
 					[self.containerController _layoutPopupBarOrderForUse];
