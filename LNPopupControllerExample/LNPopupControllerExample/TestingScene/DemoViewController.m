@@ -87,8 +87,22 @@
 			target = self.navigationController;
 		}
 		
-		//This is safe even with the UITab API, because this will be accessed very early on, when loaded from storyboard.
-		super.tabBarItem.image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%lu.square.fill", [self.tabBarController.viewControllers indexOfObject:target] + 1]];
+		NSInteger idx = [self.tabBarController.viewControllers indexOfObject:target] + 1;
+		
+		if(idx != 4 || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26)
+		{
+			//This is safe even with the UITab API, because this will be accessed very early on, when loaded from storyboard.
+			super.tabBarItem.image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%lu.square.fill", idx]];
+		}
+		else
+		{
+			if(super.tabBarItem.tag != 1)
+			{
+				super.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:1];
+				super.tabBarItem.image = [UIImage systemImageNamed:@"magnifyingglass"];
+				super.tabBarItem.title = NSLocalizedString(@"Search", @"");
+			}
+		}
 	}
 	
 	return super.tabBarItem;

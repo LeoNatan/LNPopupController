@@ -77,12 +77,22 @@
 		for(UIViewController* vc in self.viewControllers)
 		{
 			NSString* title = vc.tabBarItem.title;
-			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+			if(idx != 3 && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
 			{
 				title = [NSString stringWithFormat:@"%@ %@", title, @(idx + 1)];
 			}
 			
-			UITab* tab = [[UITab alloc] initWithTitle:title image:[UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square", @(idx + 1)]] identifier:[NSString stringWithFormat:@"%@_%@", vc.tabBarItem.title, @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
+			UIImage* image;
+			if(idx != 3 || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26)
+			{
+				image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square", @(idx + 1)]];
+			}
+			else
+			{
+				image = [UIImage systemImageNamed:@"magnifyingglass"];
+			}
+			
+			UITab* tab = [[UITab alloc] initWithTitle:title image:image identifier:[NSString stringWithFormat:@"%@_%@", vc.tabBarItem.title, @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
 				return vc;
 			}];
 			[_tabs addObject:tab];

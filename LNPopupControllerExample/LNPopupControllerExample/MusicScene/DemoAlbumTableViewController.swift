@@ -40,20 +40,6 @@ class DemoAlbumTableViewController: UITableViewController {
 			galleryBarButton.image = nil
 		}
 		
-//		let backgroundImageView = UIImageView(image: UIImage(named: "demoAlbum"))
-//		backgroundImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//		backgroundImageView.contentMode = .scaleAspectFill
-//		let backgroundEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
-//		backgroundEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//		let container = UIView(frame: tableView.bounds)
-//		container.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//		backgroundImageView.frame = container.bounds
-//		backgroundEffectView.frame = container.bounds
-//		container.addSubview(backgroundImageView)
-//		container.addSubview(backgroundEffectView)
-//
-//		tableView.backgroundView = container
-		
 		let view = ZStack {
 			Image("demoAlbum")
 				.resizable()
@@ -67,6 +53,9 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSetting.barStyle)  as? Int ?? 0)!
 		tabBarController?.popupBar.barStyle = barStyle
+		if #available(iOS 26.0, *) {
+			tabBarController?.tabBarMinimizeBehavior = .onScrollDown
+		}
 		
 		if !LNPopupSettingsHasOS26Glass() {
 #if LNPOPUP
