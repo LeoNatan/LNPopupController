@@ -32,55 +32,66 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 
 - (void)animateWithAnimator:(UIViewPropertyAnimator *)animator otherAnimations:(void (^)(void))otherAnimations
 {
+	//LNPopupUI support
 	static SEL transitionWillBegin = NSSelectorFromString(@"_transitionWillBeginToState:");
 	static SEL transitionDidEnd = NSSelectorFromString(@"_transitionDidEnd");
 	
 	[UIView performWithoutAnimation:^{
 		[self.popupContentView layoutIfNeeded];
-		self.popupBar.imageView.alpha = 0.0;
-		
-		if(self.transitionView == nil)
+		if(self.transitionView == nil && self.view != nil)
 		{
 			_transitionView = [[_LNPopupTransitionView alloc] initWithSourceView:self.view];
 		}
 		
-		UIImage* image;
-		if(self.popupBar.swiftuiImageController != nil)
+		if(_transitionView != nil)
 		{
-			id contents = self.popupBar.swiftuiImageController.view.subviews.firstObject.layer.contents;
-			if(contents != nil && CFGetTypeID((__bridge CFTypeRef)contents) == CGImageGetTypeID())
+			self.popupBar.imageView.alpha = 0.0;
+			
+			UIImage* image;
+			if(self.popupBar.swiftuiImageController != nil)
 			{
-				image = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)contents];
+				id contents = self.popupBar.swiftuiImageController.view.subviews.firstObject.layer.contents;
+				if(contents != nil && CFGetTypeID((__bridge CFTypeRef)contents) == CGImageGetTypeID())
+				{
+					image = [[UIImage alloc] initWithCGImage:(__bridge CGImageRef)contents];
+				}
+				else
+				{
+					image = [[[UIGraphicsImageRenderer alloc] initWithSize:self.popupBar.imageView.bounds.size] imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
+						[self.popupBar.imageView drawViewHierarchyInRect:self.popupBar.imageView.bounds afterScreenUpdates:NO];
+					}];
+				}
 			}
 			else
 			{
-				image = [[[UIGraphicsImageRenderer alloc] initWithSize:self.popupBar.imageView.bounds.size] imageWithActions:^(UIGraphicsImageRendererContext * _Nonnull rendererContext) {
-					[self.popupBar.imageView drawViewHierarchyInRect:self.popupBar.imageView.bounds afterScreenUpdates:NO];
-				}];
+				image = self.popupBar.imageView.image;
 			}
-		}
-		else
-		{
-			image = self.popupBar.imageView.image;
+			
+			_crossfadeView = [[LNPopupImageView alloc] initWithImage:image];
+			_crossfadeView.contentMode = self.popupBar.imageView.contentMode;
+			_crossfadeView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+			_crossfadeView.frame = _transitionView.bounds;
+			[_transitionView addSubview:_crossfadeView];
+			
+			_transitionView.frame = self.sourceFrame;
 		}
 		
-		_crossfadeView = [[LNPopupImageView alloc] initWithImage:image];
-		_crossfadeView.contentMode = self.popupBar.imageView.contentMode;
-		_crossfadeView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_crossfadeView.frame = _transitionView.bounds;
-		[_transitionView addSubview:_crossfadeView];
-		
-		_transitionView.frame = self.sourceFrame;
 		[self beforeAnyAnimation];
 		
-		objc_setAssociatedObject(self.transitionView.sourceView, _LNPopupOpenCloseTransitionViewKey, _transitionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		if(_transitionView != nil)
+		{
+			objc_setAssociatedObject(self.transitionView.sourceView, _LNPopupOpenCloseTransitionViewKey, _transitionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		}
 	}];
 	
 	[animator addAnimations:otherAnimations];
 	
 	[animator addAnimations:^{
 		[UIView performWithoutAnimation:^{
-			[self.popupContentView.window addSubview:_transitionView];
+			if(_transitionView != nil)
+			{
+				[self.popupContentView.window addSubview:_transitionView];
+			}
 			[self performBeforeAdditionalAnimations];
 		}];
 		
@@ -88,6 +99,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		
 		if([self.view respondsToSelector:transitionWillBegin])
 		{
+			//LNPopupUI support
 			NSInvocation* invocation = [NSInvocation invocationWithMethodSignature:[self.view methodSignatureForSelector:transitionWillBegin]];
 			invocation.target = self.view;
 			LNPopupPresentationState targetState = self.targetState;

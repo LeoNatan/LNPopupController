@@ -443,12 +443,14 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	return CGRectZero;
 }
 
-- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle
+- (CGFloat)_ln_popupOffsetForPopupBar:(LNPopupBar*)popupBar
 {
-	BOOL isFloating;
-	barStyle = _LNPopupResolveBarStyleFromBarStyle(barStyle, &isFloating, NULL, NULL);
+	if(!popupBar.resolvedIsFloating)
+	{
+		return 0.0;
+	}
 	
-	if(!isFloating /*|| UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone*/)
+	if(popupBar.resolvedIsCustom && popupBar.customBarWantsFullBarWidth)
 	{
 		return 0.0;
 	}

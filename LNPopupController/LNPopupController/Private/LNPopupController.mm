@@ -241,7 +241,7 @@ __attribute__((objc_direct_members))
 {
 	CGRect defaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 	UIEdgeInsets insets = [_containerController insetsForBottomDockingView];
-	CGFloat offset = [_containerController _ln_popupOffsetForPopupBarStyle:_popupBar.resolvedStyle];
+	CGFloat offset = [_containerController _ln_popupOffsetForPopupBar:_popupBar];
 	return CGRectMake(0, defaultFrame.origin.y - barHeight - insets.bottom + offset, _containerController.view.bounds.size.width, barHeight);
 }
 
@@ -272,7 +272,7 @@ __attribute__((objc_direct_members))
 	
 	if(self.popupControllerTargetState <= LNPopupPresentationStateBarPresented)
 	{
-		CGFloat offset = [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.effectiveBarStyle];
+		CGFloat offset = [_containerController _ln_popupOffsetForPopupBar:self.popupBar];
 		contentFrame.size.height = 0;
 		contentFrame.origin.y -= offset;
 	}
@@ -333,6 +333,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	_cachedDefaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 	_cachedInsets = [_containerController insetsForBottomDockingView];
+	CGFloat offset = [_containerController _ln_popupOffsetForPopupBar:_popupBar];
+	_cachedInsets.bottom -= offset;
 	
 	self.popupBar.frame = targetFrame;
 	
@@ -443,11 +445,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)animateOpenTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(_LNPopupTransitionView*)userTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
-	if(userView == nil)
-	{
-		return;
-	}
-	
 	_LNPopupTransitionOpenAnimator* handler;
 	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
 	{
@@ -463,11 +460,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)animateCloseTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(_LNPopupTransitionView*)userTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
-	if(userView == nil)
-	{
-		return;
-	}
-	
 	_LNPopupTransitionCloseAnimator* handler;
 	
 	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
@@ -722,35 +714,20 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 #endif
 
-	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring && userView == nil ? 0.85 : 1.0 animations:nil];
+	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring ? 0.85 : 1.0 animations:nil];
 	_runningPopupAnimation.userInteractionEnabled = NO;
 	
-	if(stateAtStart == LNPopupPresentationStateBarPresented && userView != nil)
+	if(stateAtStart == LNPopupPresentationStateBarPresented)
 	{
 		[self animateOpenTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
 	}
-	else if(state == LNPopupPresentationStateBarPresented && userView != nil)
+	else if(state == LNPopupPresentationStateBarPresented)
 	{
 		[self animateCloseTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
 	}
 	else
 	{
 		[_runningPopupAnimation addAnimations:animationBlock];
-		
-		if(state == LNPopupPresentationStateBarPresented)
-		{
-			[_runningPopupAnimation addAnimations:^{
-				if(self.containerController._ln_shouldPopupContentAnyFadeForTransition && self.containerController._ln_shouldPopupContentViewFadeForTransition)
-				{
-					self.popupContentView.alpha = 0.0;
-				}
-			} delayFactor:0.15];
-			
-			[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
-				self.popupContentView.alpha = 1.0;
-//				self.currentContentController.view.alpha = 1.0;
-			}];
-		}
 	}
 	
 	[_runningPopupAnimation addCompletion:completionBlock];
@@ -1673,7 +1650,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
 			
-			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height - [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle], 0));
+			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height - [_containerController _ln_popupOffsetForPopupBar:self.popupBar], 0));
 			
 			if(open)
 			{
@@ -2137,7 +2114,7 @@ id __LNPopupEmptyBlurFilter(void)
 	barFrame.origin.y -= (barFrame.size.height - currentHeight);
 	self.popupBar.frame = barFrame;
 	
-	_LNPopupSupportSetPopupInsetsForViewController(_containerController, layout, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height - [_containerController _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle], 0));
+	_LNPopupSupportSetPopupInsetsForViewController(_containerController, layout, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height - [_containerController _ln_popupOffsetForPopupBar:self.popupBar], 0));
 }
 
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar

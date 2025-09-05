@@ -123,6 +123,11 @@ NS_SWIFT_UI_ACTOR
 /// Set this property to an ``LNPopupCustomBarViewController`` subclass object to provide a popup bar with custom content.
 @property (nullable, nonatomic, strong) __kindof LNPopupCustomBarViewController* customBarViewController;
 
+/// Indicates whether the full bar width should be used for the custom bar.
+///
+/// This only has effect on iOS 26 with glass enabled.
+@property (nonatomic, assign) BOOL customBarWantsFullBarWidth;
+
 @end
 
 NS_ASSUME_NONNULL_END

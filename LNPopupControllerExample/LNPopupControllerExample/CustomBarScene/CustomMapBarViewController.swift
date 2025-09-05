@@ -35,7 +35,6 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 		
 		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
 #if compiler(>=6.2)
-			containingPopupBar?.standardAppearance.floatingBackgroundEffect = UIGlassEffect(style: .regular)
 			containingPopupBar?.standardAppearance.floatingBackgroundCornerConfiguration = .capsule()
 #endif
 		} else {

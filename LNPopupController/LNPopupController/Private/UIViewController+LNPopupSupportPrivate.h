@@ -64,7 +64,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 - (nullable UIView *)bottomDockingViewForPopup_nocreateOrDeveloper;
 - (nonnull UIView *)bottomDockingViewForPopup_internalOrDeveloper;
 
-- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle;
+- (CGFloat)_ln_popupOffsetForPopupBar:(LNPopupBar*)popupBar;
 
 + (void)_ln_beginTransitioningLockWithWindow:(UIWindow*)window userInteractionsEnabled:(BOOL)userInteractionEnabled allowedViews:(NSArray* __nullable)allowedViews lockRotation:(BOOL)lockRotation;
 + (void)_ln_endTransitioningLockWithWindow:(UIWindow*)window unlockingRotation:(BOOL)unlockRotation;

@@ -297,7 +297,7 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	}
 	else if(LNPopupEnvironmentHasGlass())
 	{
-		effectToUse = appearance.floatingBackgroundEffect;
+		effectToUse = [appearance floatingBackgroundEffectForTraitCollection:vc.traitCollection];
 	}
 	else
 	{

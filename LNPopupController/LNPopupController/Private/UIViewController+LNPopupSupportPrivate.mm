@@ -792,7 +792,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		
 		if(self._ln_popupController_nocreate.popupControllerInternalState != LNPopupPresentationStateBarHidden)
 		{
-			CGFloat offset = [self _ln_popupOffsetForPopupBarStyle:self.popupBar.resolvedStyle];
+			CGFloat offset = [self _ln_popupOffsetForPopupBar:self.popupBar];
 			CGFloat realHeight = _LNPopupBarHeightForPopupBar(self.popupBar);
 			CGFloat barHeightToUse;
 			
@@ -1153,11 +1153,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return self.tabBar.hidden == NO && self._isTabBarHiddenDuringTransition == NO ? UIEdgeInsetsZero : self.view.superview.safeAreaInsets;
 }
 
-- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle
+- (CGFloat)_ln_popupOffsetForPopupBar:(LNPopupBar *)popupBar
 {
 	if(self._isTabBarHiddenDuringTransition)
 	{
-		return [super _ln_popupOffsetForPopupBarStyle:barStyle];
+		return [super _ln_popupOffsetForPopupBar:popupBar];
 	}
 	
 	if(LNPopupEnvironmentHasGlass())
@@ -1332,7 +1332,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 {
 	CGRect defaultFrame = [self defaultFrameForBottomDockingView];
 	CGRect frame = self._ln_popupController_nocreate.popupBar.frame;
-	CGFloat offset = [self _ln_popupOffsetForPopupBarStyle:self._ln_popupController_nocreate.popupBar.resolvedStyle];
+	CGFloat offset = [self _ln_popupOffsetForPopupBar:self._ln_popupController_nocreate.popupBar];
 	frame.origin.y = defaultFrame.origin.y - frame.size.height - self.insetsForBottomDockingView.bottom + offset;
 	self._ln_popupController_nocreate.popupBar.frame = frame;
 }
@@ -1510,7 +1510,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
 		[self _setTabBarHiddenDuringTransition:YES];
 		
-		CGFloat barOffset = [self _ln_popupOffsetForPopupBarStyle:self._ln_popupController_nocreate.popupBar.resolvedStyle];
+		CGFloat barOffset = [self _ln_popupOffsetForPopupBar:self._ln_popupController_nocreate.popupBar];
 		
 		if(transition != 1)
 		{
@@ -1620,7 +1620,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		}
 	}
 	
-	CGFloat laterBarOffset = [self _ln_popupOffsetForPopupBarStyle:self._ln_popupController_nocreate.popupBar.resolvedStyle];
+	CGFloat laterBarOffset = [self _ln_popupOffsetForPopupBar:self._ln_popupController_nocreate.popupBar];
 	
 	if(isExplicit == NO)
 	{
@@ -1922,9 +1922,9 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return self.toolbar;
 }
 
-- (CGFloat)_ln_popupOffsetForPopupBarStyle:(LNPopupBarStyle)barStyle
+- (CGFloat)_ln_popupOffsetForPopupBar:(LNPopupBar *)popupBar
 {
-	return self.isToolbarHidden ? [super _ln_popupOffsetForPopupBarStyle:barStyle] : LNPopupEnvironmentHasGlass() ? -8.0 : 0.0;
+	return self.isToolbarHidden ? [super _ln_popupOffsetForPopupBar:popupBar] : LNPopupEnvironmentHasGlass() ? -8.0 : 0.0;
 }
 
 - (CGRect)defaultFrameForBottomDockingView
@@ -2183,7 +2183,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[self _setIgnoringLayoutDuringTransition:YES];
 	}
 	
-	CGFloat earlyBarOffset = [self _ln_popupOffsetForPopupBarStyle:self._ln_popupController_nocreate.popupBar.resolvedStyle];
+	CGFloat earlyBarOffset = [self _ln_popupOffsetForPopupBar:self._ln_popupController_nocreate.popupBar];
 	
 	__ln_hideBarEdge = edge;
 	__ln_alreadyInHideShowBar = YES;
@@ -2213,7 +2213,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		CGRect initialBackgroundViewFrame;
 		CGRect targetBackgroundViewFrame;
 		
-		CGFloat laterBarOffset = [self _ln_popupOffsetForPopupBarStyle:self._ln_popupController_nocreate.popupBar.resolvedStyle];
+		CGFloat laterBarOffset = [self _ln_popupOffsetForPopupBar:self._ln_popupController_nocreate.popupBar];
 		
 		if(edge == UIRectEdgeBottom)
 		{

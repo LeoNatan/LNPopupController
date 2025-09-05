@@ -9,8 +9,12 @@
 #import "_LNPopupTransitionCloseAnimator.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupBar+Private.h"
+#import "LNPopupContentView+Private.h"
 
 @implementation _LNPopupTransitionCloseAnimator
+{
+	BOOL _wasGlass;
+}
 
 - (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView currentContentController:(UIViewController *)currentContentController containerController:(UIViewController *)containerController
 {
@@ -65,19 +69,39 @@
 	[super performAdditionalAnimations];
 	
 	[self.transitionView setTargetFrameUpdatingTransform:self.targetFrame];
-	
 	self.crossfadeView.cornerRadius = self.popupBar.imageView.cornerRadius;
+	
+	if(self.popupContentView.effectView.effect.ln_isGlass)
+	{
+		_wasGlass = YES;
+	}
 }
 
 - (void)performAdditionalDelayed015Animations
 {
 	[super performAdditionalDelayed015Animations];
+}
+
+- (void)performAdditional04Delayed015Animations
+{
+	[super performAdditional04Delayed015Animations];
+	
+	self.crossfadeView.alpha = 1.0;
 	
 	if(self.containerController._ln_shouldPopupContentAnyFadeForTransition)
 	{
 		if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
 		{
-			self.popupContentView.alpha = 0.0;
+			if(_wasGlass)
+			{
+				self.currentContentController.view.alpha = 0.0;
+				//An effect view with glass effect has its layer contained in a _UIMultiLayer
+				self.popupContentView.effectView.layer.superlayer.opacity = 0.0;
+			}
+			else
+			{
+				self.popupContentView.alpha = 0.0;
+			}
 		}
 		else
 		{
@@ -86,19 +110,16 @@
 	}
 }
 
-- (void)performAdditional04Delayed015Animations
-{
-	[super performAdditional04Delayed015Animations];
-	
-	self.crossfadeView.alpha = 1.0;
-}
-
 - (void)performAdditionalCompletion
 {
 	[super performAdditionalCompletion];
 	
 	self.popupContentView.alpha = 1.0;
 	self.currentContentController.view.alpha = 1.0;
+	if(_wasGlass)
+	{
+		self.popupContentView.effectView.layer.superlayer.opacity = 1.0;
+	}
 }
 
 @end

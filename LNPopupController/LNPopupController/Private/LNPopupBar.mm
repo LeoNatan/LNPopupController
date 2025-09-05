@@ -475,7 +475,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	{
 		if(LNPopupEnvironmentHasGlass())
 		{
-			if(_resolvedIsCustom && self.activeAppearance.customBarWantsFullBarWidth)
+			if(_resolvedIsCustom && self.customBarWantsFullBarWidth)
 			{
 				contentFrame = frame;
 			}

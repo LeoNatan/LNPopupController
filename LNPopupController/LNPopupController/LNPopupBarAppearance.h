@@ -113,11 +113,6 @@ NS_SWIFT_UI_ACTOR
 /// Reset floating background and shadow properties to be transparent.
 - (void)configureWithTransparentFloatingBackground;
 
-/// Indicates whether the full bar width should be used for the custom bar.
-///
-/// This only has effect on iOS 26 with glass enabled.
-@property (nonatomic, assign) BOOL customBarWantsFullBarWidth;
-
 @end
 
 NS_ASSUME_NONNULL_END
