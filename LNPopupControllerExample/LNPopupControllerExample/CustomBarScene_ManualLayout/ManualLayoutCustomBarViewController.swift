@@ -77,10 +77,10 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
-		let insetLeft = CGFloat.maximum(view.safeAreaInsets.left, 20)
-		let insetRight = CGFloat.maximum(view.safeAreaInsets.right, 20)
+		let insetLeft = LNPopupSettingsHasOS26Glass() ? 0.0 : CGFloat.maximum(view.safeAreaInsets.left, 20)
+		let insetRight = LNPopupSettingsHasOS26Glass() ? 0.0 : CGFloat.maximum(view.safeAreaInsets.right, 20)
 		
-		backgroundView.frame = CGRect(x: insetLeft, y: 2, width: view.bounds.width - insetLeft - insetRight, height: view.bounds.height - 4)
+		backgroundView.frame = CGRect(x: insetLeft, y: 2, width: view.bounds.width - insetLeft - insetRight, height: view.bounds.height - 4.0)
 		centeredButton.center = backgroundView.center
 		if UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .leftToRight {
 			leftButton.frame = CGRect(x: insetLeft + 20, y: backgroundView.center.y - leftButton.bounds.size.height / 2, width: leftButton.bounds.size.width, height: leftButton.bounds.size.height)
