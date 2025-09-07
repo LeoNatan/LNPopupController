@@ -7,32 +7,35 @@
 //
 
 #import "_LNPopupSwizzlingUtils.h"
-@import ObjectiveC;
 
-BOOL __LNSwizzleMethod(Class cls, SEL orig, SEL alt)
+BOOL __LNSwizzleShouldTrapAndPrint(void)
 {
 	static BOOL shouldTrapAndPrint = NO;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		shouldTrapAndPrint = [NSProcessInfo.processInfo.environment[@"LNPOPUP_DEBUG_SWIZZLES"] boolValue] == YES;
 	});
-	
-	Method origMethod = class_getInstanceMethod(cls, orig);
-	if (!origMethod) {
-		LNSwizzleComplain(@"original method %@ not found for class %@", NSStringFromSelector(orig), cls);
+	return shouldTrapAndPrint;
+}
+
+BOOL __LNSwizzleMethod(Class cls, SEL orig, SEL alt)
+{
+	Method origMethod = LNSwizzleClassGetInstanceMethod(cls, orig);
+	if (!origMethod)
+	{
 		return NO;
 	}
 	
-	Method altMethod = class_getInstanceMethod(cls, alt);
-	if (!altMethod) {
-		LNSwizzleComplain(@"alternate method %@ not found for class %@", NSStringFromSelector(alt), cls);
+	Method altMethod = LNSwizzleClassGetInstanceMethod(cls, alt);
+	if (!altMethod)
+	{
 		return NO;
 	}
 	
 	class_addMethod(cls, orig, class_getMethodImplementation(cls, orig), method_getTypeEncoding(origMethod));
 	class_addMethod(cls, alt, class_getMethodImplementation(cls, alt), method_getTypeEncoding(altMethod));
 	
-	method_exchangeImplementations(class_getInstanceMethod(cls, orig), class_getInstanceMethod(cls, alt));
+	method_exchangeImplementations(LNSwizzleClassGetInstanceMethod(cls, orig), LNSwizzleClassGetInstanceMethod(cls, alt));
 	return YES;
 }
 
@@ -66,6 +69,26 @@ static void __LNCopyMethods(Class orig, Class target)
 	}
 	
 	free(methods);
+}
+
+Method __LNSwizzleClassGetInstanceMethod(Class cls, SEL sel)
+{
+	Method m = class_getInstanceMethod(cls, sel);
+	if(m == nil)
+	{
+		LNSwizzleComplain(@"original method %@ not found for class %@", NSStringFromSelector(sel), cls);
+	}
+	return m;
+}
+
+Method __LNSwizzleClassGetClassMethod(Class cls, SEL sel)
+{
+	Method m = class_getClassMethod(cls, sel);
+	if(m == nil)
+	{
+		LNSwizzleComplain(@"original method %@ not found for class %@", NSStringFromSelector(sel), cls);
+	}
+	return m;
 }
 
 BOOL __LNDynamicSubclass(id obj, Class target)

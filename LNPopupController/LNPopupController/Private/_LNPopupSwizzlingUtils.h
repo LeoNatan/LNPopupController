@@ -14,23 +14,33 @@ CF_EXTERN_C_BEGIN
 
 #define unavailable(...) @available(__VA_ARGS__)) { } else if(YES
 
+extern BOOL __LNSwizzleShouldTrapAndPrint(void);
+
 #define LNSwizzleComplain(FORMAT, ...) \
-if(shouldTrapAndPrint) { \
+if(__LNSwizzleShouldTrapAndPrint()) { \
 NSString *errStr = [NSString stringWithFormat:@"%s: " FORMAT,__func__,##__VA_ARGS__]; \
 NSLog(@"LNPopupController: %@", errStr); \
 raise(SIGTRAP); \
 }
 
+#define LNSwizzleComplainClassSEL LNSwizzleComplain(@"original method %@ not found for class %@", NSStringFromSelector(sel), cls)
+
 #ifndef LNAlwaysInline
-#define LNAlwaysInline CF_INLINE
+#define LNAlwaysInline static __inline__ __attribute__((always_inline))
 #endif /* LNAlwaysInline */
+
+extern Method __LNSwizzleClassGetInstanceMethod(Class cls, SEL sel);
+extern Method __LNSwizzleClassGetClassMethod(Class cls, SEL sel);
+
+#define LNSwizzleClassGetInstanceMethod __LNSwizzleClassGetInstanceMethod
+#define LNSwizzleClassGetClassMethod __LNSwizzleClassGetClassMethod
 
 extern BOOL __LNSwizzleMethod(Class cls, SEL orig, SEL alt);
 
 #define LNSwizzleMethod __LNSwizzleMethod
 
 LNAlwaysInline
-BOOL __LNSwizzleClassMethod(Class cls, SEL orig, SEL alt)
+BOOL LNSwizzleClassMethod(Class cls, SEL orig, SEL alt)
 {
 	return LNSwizzleMethod(object_getClass((id)cls), orig, alt);
 }

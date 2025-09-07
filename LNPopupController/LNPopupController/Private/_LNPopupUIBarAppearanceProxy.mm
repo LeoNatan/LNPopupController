@@ -22,7 +22,7 @@ static const void* _LNPopupBarBackgroundDataSubclassShadowHandlerKey = &_LNPopup
 static SEL OS_CONCAT(sel, hiddenString) = NSSelectorFromString(LNPopupHiddenString(OS_STRINGIFY(hiddenString))); \
 class_addMethod(cls, OS_CONCAT(sel, hiddenString), imp_implementationWithBlock(^id(id _self){ \
 return ((id(^)(id, SEL))impBlock)(_self, OS_CONCAT(sel, hiddenString)); \
-}), method_getTypeEncoding(class_getInstanceMethod(NSObject.class, @selector(description))));
+}), method_getTypeEncoding(LNSwizzleClassGetInstanceMethod(NSObject.class, @selector(description))));
 
 #define LN_SHADOW_CLEAR_COLOR_OR_SUPER if(self._ln_shouldHideShadow) { \
 return UIColor.clearColor; \

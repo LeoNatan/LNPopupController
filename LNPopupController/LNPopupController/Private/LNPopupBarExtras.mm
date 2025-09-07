@@ -19,7 +19,7 @@ __attribute__((constructor))
 static void __setupFunction(void)
 {
 	_effectWithStyle_tintColor_invertAutomaticStyle_SEL = NSSelectorFromString(LNPopupHiddenString("_effectWithStyle:tintColor:invertAutomaticStyle:"));
-	Method m = class_getClassMethod(UIBlurEffect.class, _effectWithStyle_tintColor_invertAutomaticStyle_SEL);
+	Method m = LNSwizzleClassGetClassMethod(UIBlurEffect.class, _effectWithStyle_tintColor_invertAutomaticStyle_SEL);
 	_effectWithStyle_tintColor_invertAutomaticStyle = reinterpret_cast<decltype(_effectWithStyle_tintColor_invertAutomaticStyle)>(method_getImplementation(m));
 }
 #endif
@@ -128,7 +128,7 @@ static void __setupFunction(void)
 	{
 		@autoreleasepool
 		{
-			Method m = class_getClassMethod(self, @selector(_ln_vPFT:));
+			Method m = LNSwizzleClassGetClassMethod(self, @selector(_ln_vPFT:));
 			Class metaclass = object_getClass(self);
 			class_addMethod(metaclass, NSSelectorFromString(LNPopupHiddenString("_visualProviderForToolbar:")), method_getImplementation(m), method_getTypeEncoding(m));
 		}
@@ -193,14 +193,85 @@ static void __setupFunction(void)
 
 @implementation LNNonMarqueeLabel
 
-- (void)resetLabel {}
-- (void)unpauseLabel {}
-- (void)pauseLabel {}
-- (void)restartLabel {}
-- (void)shutdownLabel {}
-- (BOOL)isPaused { return YES; }
-- (NSTimeInterval)animationDuration { return 0.0; }
+@synthesize marqueeScrollEnabled, running, synchronizedLabels;
 
-@synthesize rate=_rate, animationDelay=_animationDelay, synchronizedLabel=_synchronizedLabel, holdScrolling=_holdScrolling;
+- (void)reset {}
+
+@end
+
+@implementation LNLegacyMarqueeLabel
+{
+	BOOL _enabled;
+	NSHashTable<LNLegacyMarqueeLabel*>* _weakSynchronizedLabels;
+}
+
+- (BOOL)isMarqueeScrollEnabled
+{
+	return _enabled;
+}
+
+-(void)setMarqueeScrollEnabled:(BOOL)marqueeScrollEnabled
+{
+	_enabled = marqueeScrollEnabled;
+	if(!_enabled)
+	{
+		[self shutdownLabel];
+	}
+}
+
+- (BOOL)isRunning
+{
+	return self.awayFromHome;
+}
+
+- (void)setRunning:(BOOL)running
+{
+	if(running)
+	{
+		[self triggerScrollStart];
+	} else {
+		[self shutdownLabel];
+	}
+}
+
+- (NSArray<id<LNMarqueeLabel>> *)synchronizedLabels
+{
+	return _weakSynchronizedLabels.allObjects;
+}
+
+- (void)setSynchronizedLabels:(NSArray<id<LNMarqueeLabel>> *)synchronizedLabels
+{
+	_weakSynchronizedLabels = [NSHashTable weakObjectsHashTable];
+	for (id object in synchronizedLabels)
+	{
+		[_weakSynchronizedLabels addObject:object];
+	}
+}
+
+- (void)reset
+{
+	[self shutdownLabel];
+}
+
+- (void)labelReturnedToHome:(BOOL)finished
+{
+	NSIndexSet* stillRunning = [self.synchronizedLabels indexesOfObjectsPassingTest:^BOOL(id<LNMarqueeLabel> _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		return obj.isMarqueeScrollEnabled && obj.isRunning;
+	}];
+	
+	if(stillRunning.count > 0)
+	{
+		self.holdScrolling = YES;
+		return;
+	}
+	
+	for(LNLegacyMarqueeLabel* label in _weakSynchronizedLabels)
+	{
+		if(label.isMarqueeScrollEnabled)
+		{
+			label.holdScrolling = NO;
+		}
+	}
+}
 
 @end

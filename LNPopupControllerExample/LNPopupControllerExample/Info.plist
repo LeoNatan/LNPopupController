@@ -49,8 +49,6 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>UIDesignRequiresCompatibility</key>
-	<false/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -84,5 +82,9 @@
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>LNPopupUseSystemMarqueeLabel</key>
+	<false/>
+	<key>UIDesignRequiresCompatibility</key>
+	<false/>
 </dict>
 </plist>

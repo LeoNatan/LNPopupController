@@ -11,6 +11,7 @@
 #import "_LNPopupBase64Utils.hh"
 #import <objc/message.h>
 #import "UIView+LNPopupSupportPrivate.h"
+#import "_LNPopupSwizzlingUtils.h"
 
 typedef struct {
 	CGSize x1;
@@ -28,7 +29,7 @@ typedef struct {
 	{
 		Class cls = self;
 		SEL sel = NSSelectorFromString(LNPopupHiddenString("setCornerRadii:"));
-		Method from = class_getInstanceMethod(cls, @selector(_ln_setCorners:));
+		Method from = LNSwizzleClassGetInstanceMethod(cls, @selector(_ln_setCorners:));
 		class_addMethod(cls, sel, method_getImplementation(from), method_getTypeEncoding(from));
 	}
 }

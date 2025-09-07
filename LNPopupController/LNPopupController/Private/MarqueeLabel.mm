@@ -1167,7 +1167,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 }
 
 - (void)labelWillBeginScroll {
-	[self.synchronizedLabel beginScroll];
+	return;
 }
 
 - (void)labelReturnedToHome:(BOOL)finished {

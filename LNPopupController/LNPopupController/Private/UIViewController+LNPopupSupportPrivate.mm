@@ -129,21 +129,21 @@ static void __accessibilityBundleLoadHandler(void)
 		//UIViewControllerAccessibility
 		//_accessibilitySpeakThisViewController
 		NSString* clsName = LNPopupHiddenString("UIViewControllerAccessibility");
-		Method m1 = class_getInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
+		Method m1 = LNSwizzleClassGetInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
 		__orig_uiVCA_aSTVC = reinterpret_cast<decltype(__orig_uiVCA_aSTVC)>(method_getImplementation(m1));
-		Method m2 = class_getInstanceMethod([UIViewController class], NSSelectorFromString(@"_aSTVC"));
+		Method m2 = LNSwizzleClassGetInstanceMethod([UIViewController class], NSSelectorFromString(@"_aSTVC"));
 		method_exchangeImplementations(m1, m2);
 		
 		clsName = LNPopupHiddenString("UINavigationControllerAccessibility");
-		m1 = class_getInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
+		m1 = LNSwizzleClassGetInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
 		__orig_uiNVCA_aSTVC = reinterpret_cast<decltype(__orig_uiNVCA_aSTVC)>(method_getImplementation(m1));
-		m2 = class_getInstanceMethod([UINavigationController class], NSSelectorFromString(@"_aSTVC"));
+		m2 = LNSwizzleClassGetInstanceMethod([UINavigationController class], NSSelectorFromString(@"_aSTVC"));
 		method_exchangeImplementations(m1, m2);
 		
 		clsName = LNPopupHiddenString("UITabBarControllerAccessibility");
-		m1 = class_getInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
+		m1 = LNSwizzleClassGetInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
 		__orig_uiTBCA_aSTVC = reinterpret_cast<decltype(__orig_uiTBCA_aSTVC)>(method_getImplementation(m1));
-		m2 = class_getInstanceMethod([UITabBarController class], NSSelectorFromString(@"_aSTVC"));
+		m2 = LNSwizzleClassGetInstanceMethod([UITabBarController class], NSSelectorFromString(@"_aSTVC"));
 		method_exchangeImplementations(m1, m2);
 		
 		[[NSNotificationCenter defaultCenter] removeObserver:__accessibilityBundleLoadObserver];

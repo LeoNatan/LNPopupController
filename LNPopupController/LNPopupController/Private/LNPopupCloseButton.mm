@@ -12,6 +12,7 @@
 #import "_LNPopupBase64Utils.hh"
 #import "LNPopupContentView+Private.h"
 #import "_LNPopupGlassUtils.h"
+#import "_LNPopupSwizzlingUtils.h"
 
 @interface LNPopupCloseButton ()
 
@@ -43,7 +44,7 @@ __attribute__((objc_direct_members))
 {
 	@autoreleasepool
 	{
-		Method m = class_getInstanceMethod(self, @selector(_aPVFGR));
+		Method m = LNSwizzleClassGetInstanceMethod(self, @selector(_aPVFGR));
 		class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("_actingParentViewForGestureRecognizers")), method_getImplementation(m), method_getTypeEncoding(m));
 	}
 }

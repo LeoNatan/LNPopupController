@@ -12,9 +12,13 @@
 #import "_LNPopupBarBackgroundView.h"
 #import "_LNPopupBackgroundShadowView.h"
 #import "_LNPopupBarBackgroundMaskView.h"
-#import "MarqueeLabel.h"
 #import "_LNPopupGlassUtils.h"
 #import "_LNPopupTransitionView.h"
+
+#import "MarqueeLabel.h"
+#if __has_include(<LNSystemMarqueeLabel.h>)
+#import <LNSystemMarqueeLabel.h>
+#endif
 
 CF_EXTERN_C_BEGIN
 
@@ -66,7 +70,7 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 		
 		if(rv == LNPopupBarStyleDefault)
 		{
-			if(UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad)
+			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
 			{
 				rv = LNPopupBarStyleFloatingCompact;
 			}
@@ -276,23 +280,6 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @end
 
-@protocol LNMarqueeLabel <NSObject>
-
-- (void)resetLabel;
-- (void)unpauseLabel;
-- (void)pauseLabel;
-- (void)restartLabel;
-- (BOOL)isPaused;
-- (void)shutdownLabel;
-
-@property (nonatomic, assign) CGFloat rate;
-@property (nonatomic, assign) CGFloat animationDelay;
-@property (nonatomic, weak) id<LNMarqueeLabel> synchronizedLabel;
-@property (nonatomic, readonly) NSTimeInterval animationDuration;
-@property (nonatomic, assign) BOOL holdScrolling;
-
-@end
-
 @interface _LNPopupBarContentView : _LNPopupBarBackgroundView @end
 
 @interface _LNPopupBarTitlesView : UIStackView @end
@@ -314,8 +301,21 @@ inline __attribute__((always_inline)) LNPopupBarStyle _LNPopupResolveBarStyleFro
 
 @interface _LNPopupBarShadowView : UIImageView @end
 
-@interface LNNonMarqueeLabel : UILabel <LNMarqueeLabel> @end
+@protocol LNMarqueeLabel <NSObject>
 
-@interface LNMarqueeLabel () <LNMarqueeLabel> @end
+@property (nonatomic, getter=isMarqueeScrollEnabled) BOOL marqueeScrollEnabled;
+@property (nonatomic, getter=isRunning) BOOL running;
+
+@property (nonatomic, copy) NSArray<id<LNMarqueeLabel>>* synchronizedLabels;
+
+- (void)reset;
+
+@end
+
+@interface LNNonMarqueeLabel : UILabel <LNMarqueeLabel> @end
+@interface LNLegacyMarqueeLabel: LNMarqueeLabel <LNMarqueeLabel> @end
+#if __has_include(<LNSystemMarqueeLabel.h>)
+@interface LNSystemMarqueeLabel () <LNMarqueeLabel> @end
+#endif
 
 CF_EXTERN_C_END

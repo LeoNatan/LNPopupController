@@ -561,7 +561,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		SEL sel = NSSelectorFromString(LNPopupHiddenString("beginDisablingInterfaceAutorotation"));
-		Method m = class_getInstanceMethod(UIWindow.class, sel);
+		Method m = LNSwizzleClassGetInstanceMethod(UIWindow.class, sel);
 		if(m == NULL)
 		{
 			disableRotation = nil;
@@ -592,7 +592,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		SEL sel = NSSelectorFromString(LNPopupHiddenString("endDisablingInterfaceAutorotationAnimated:"));
-		Method m = class_getInstanceMethod(UIWindow.class, sel);
+		Method m = LNSwizzleClassGetInstanceMethod(UIWindow.class, sel);
 		if(m == NULL)
 		{
 			enableRotation = nil;

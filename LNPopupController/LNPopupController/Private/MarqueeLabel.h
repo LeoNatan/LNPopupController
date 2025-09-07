@@ -286,9 +286,6 @@ IB_DESIGNABLE
 
 @property (nonatomic, assign) IBInspectable CGFloat animationDelay;
 
-@property (nonatomic, weak) MarqueeLabel* synchronizedLabel;
-
-
 /** The read-only duration of the scroll animation (not including delay). 
  
  The value of this property is calculated when using the `scrollRate` property to set label animation speed. The value of this property

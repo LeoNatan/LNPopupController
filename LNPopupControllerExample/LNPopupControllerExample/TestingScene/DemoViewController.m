@@ -159,9 +159,13 @@
 			NSUInteger tabIdx = self.tabIndexInAncestorTabBarController;
 			self.colorSeedString = [NSString stringWithFormat:@"tab_%@", @(tabIdx)];
 		}
+		else if(self.navigationController != nil)
+		{
+			self.colorSeedString = [NSString stringWithFormat:@"nil"];
+		}
 		else
 		{
-			self.colorSeedString = @"nil";
+			self.colorSeedString = @"ZviewZz";
 		}
 		self.colorSeedCount = 0;
 	}
@@ -218,8 +222,8 @@
 	
 	[self.view addSubview:_galleryButton];
 	[NSLayoutConstraint activateConstraints:@[
-		[self.view.layoutMarginsGuide.trailingAnchor constraintEqualToAnchor:_galleryButton.trailingAnchor],
-		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_galleryButton.topAnchor],
+		[self.view.safeAreaLayoutGuide.trailingAnchor constraintEqualToAnchor:_galleryButton.trailingAnchor constant:LNPopupSettingsHasOS26Glass() ? 20 : 8],
+		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_galleryButton.topAnchor constant:LNPopupSettingsHasOS26Glass() ? 6 : -1],
 	]];
 	if(LNPopupSettingsHasOS26Glass())
 	{

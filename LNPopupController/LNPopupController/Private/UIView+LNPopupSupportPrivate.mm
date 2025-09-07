@@ -38,7 +38,7 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 {
 	@autoreleasepool 
 	{
-		const char* encoding = method_getTypeEncoding(class_getInstanceMethod(UIView.class, @selector(needsUpdateConstraints)));
+		const char* encoding = method_getTypeEncoding(LNSwizzleClassGetInstanceMethod(UIView.class, @selector(needsUpdateConstraints)));
 		class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("_safeAreaInsetsFrozen")), imp_implementationWithBlock(^ (id self, SEL _cmd) {
 			return YES;
 		}), encoding);
@@ -110,28 +110,28 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 		
 		{
 			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProvider"));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+			Method m = LNSwizzleClassGetInstanceMethod(cls, updateBackgroundGroupNameSEL);
 			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
 		
 		{
 			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderLegacyIOS"));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+			Method m = LNSwizzleClassGetInstanceMethod(cls, updateBackgroundGroupNameSEL);
 			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
 		
 		{
 			Class cls = NSClassFromString(LNPopupHiddenString("_UINavigationBarVisualProviderModernIOS"));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+			Method m = LNSwizzleClassGetInstanceMethod(cls, updateBackgroundGroupNameSEL);
 			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
 		
 		{
 			Class cls = NSClassFromString(LNPopupHiddenString("_UITabBarVisualProviderLegacyIOS"));
-			Method m = class_getInstanceMethod(cls, updateBackgroundGroupNameSEL);
+			Method m = LNSwizzleClassGetInstanceMethod(cls, updateBackgroundGroupNameSEL);
 			void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
@@ -500,7 +500,7 @@ static BOOL __ln_scrollEdgeAppearanceRequiresFadeForPopupBar(id bottomBar, LNPop
 			if(!LNPopupEnvironmentHasGlass())
 			{
 #if ! LNPopupControllerEnforceStrictClean
-				__LNSwizzleClassMethod(self, NSSelectorFromString(LNPopupHiddenString("_visualProviderForToolbar:")), @selector(_ln_vPFT:));
+				LNSwizzleClassMethod(self, NSSelectorFromString(LNPopupHiddenString("_visualProviderForToolbar:")), @selector(_ln_vPFT:));
 				LNSwizzleMethod(self, @selector(standardAppearance), @selector(_lnpopup_standardAppearance));
 				LNSwizzleMethod(self, @selector(compactAppearance), @selector(_lnpopup_compactAppearance));
 #endif
@@ -730,7 +730,7 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 		{
 			Class cls = NSClassFromString(LNPopupHiddenString("_UIBarBackground"));
 			SEL sel = NSSelectorFromString(LNPopupHiddenString("transitionBackgroundViewsAnimated:"));
-			Method m = class_getInstanceMethod(cls, sel);
+			Method m = LNSwizzleClassGetInstanceMethod(cls, sel);
 			void (*orig)(id, SEL, BOOL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			method_setImplementation(m, imp_implementationWithBlock(^(id _self, BOOL animated) {
 				if([objc_getAssociatedObject(_self, LNPopupBarBackgroundViewForceAnimatedKey) boolValue] == YES)
@@ -901,9 +901,9 @@ static NSString* __ln_queueingScrollViewClassPrefix = LNPopupHiddenString("Queu"
 		if(self._ln_hasVerticalContent)
 		{
 			static SEL viewBeforeViewSEL = NSSelectorFromString(LNPopupHiddenString("_viewBeforeView:"));
-			static id (*viewBeforeView)(id, SEL, id) = reinterpret_cast<decltype(viewBeforeView)>(method_getImplementation(class_getInstanceMethod(self.class, viewBeforeViewSEL)));
+			static id (*viewBeforeView)(id, SEL, id) = reinterpret_cast<decltype(viewBeforeView)>(method_getImplementation(LNSwizzleClassGetInstanceMethod(self.class, viewBeforeViewSEL)));
 			static SEL visibleViewSEL = NSSelectorFromString(LNPopupHiddenString("visibleView"));
-			static id (*visibleView)(id, SEL) = reinterpret_cast<decltype(visibleView)>(method_getImplementation(class_getInstanceMethod(self.class, visibleViewSEL)));
+			static id (*visibleView)(id, SEL) = reinterpret_cast<decltype(visibleView)>(method_getImplementation(LNSwizzleClassGetInstanceMethod(self.class, visibleViewSEL)));
 			
 			id visible = visibleView(self, visibleViewSEL);
 			return visible == nil || viewBeforeView(self, viewBeforeViewSEL, visible) == nil;
@@ -979,7 +979,7 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* view, NSDirectionalE
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		sel = NSSelectorFromString(LNPopupHiddenString("addAnimations:delayFactor:durationFactor:"));
-		Method m = class_getInstanceMethod(UIViewPropertyAnimator.class, sel);
+		Method m = LNSwizzleClassGetInstanceMethod(UIViewPropertyAnimator.class, sel);
 		impl = reinterpret_cast<decltype(impl)>(method_getImplementation(m));
 	});
 	impl(self, sel, animation, delayFactor, durationFactor);

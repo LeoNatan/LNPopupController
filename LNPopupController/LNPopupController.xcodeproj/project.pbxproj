@@ -87,6 +87,8 @@
 		39C553DF2D8F2B3200F8D8B2 /* _LNPopupTransitionView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39C553DE2D8F2B3200F8D8B2 /* _LNPopupTransitionView.mm */; };
 		39C553E02D8F2B3200F8D8B2 /* _LNPopupTransitionView.h in Headers */ = {isa = PBXBuildFile; fileRef = 39C553DD2D8F2B3200F8D8B2 /* _LNPopupTransitionView.h */; };
 		39C553E32D91925300F8D8B2 /* LNPopupImageView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 39C553E22D91924900F8D8B2 /* LNPopupImageView+Private.h */; };
+		39C7D1A52E6E70C3001C7D62 /* LNSystemMarqueeLabel in Frameworks */ = {isa = PBXBuildFile; productRef = 39C7D1A42E6E70C3001C7D62 /* LNSystemMarqueeLabel */; };
+		39C7D1A92E6EB18E001C7D62 /* LNSystemMarqueeLabel in Frameworks */ = {isa = PBXBuildFile; productRef = 39C7D1A82E6EB18E001C7D62 /* LNSystemMarqueeLabel */; };
 		39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85B71B6304F5004FFC61 /* LNPopupItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39E7A604200B5157007AF3AD /* _LNPopupSwizzlingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */; };
 		39E7A605200B5157007AF3AD /* _LNPopupSwizzlingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */; };
@@ -200,6 +202,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39C7D1A52E6E70C3001C7D62 /* LNSystemMarqueeLabel in Frameworks */,
+				39C7D1A92E6EB18E001C7D62 /* LNSystemMarqueeLabel in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,12 +313,20 @@
 			name = TransitionAnimators;
 			sourceTree = "<group>";
 		};
+		39C7D1A32E6E70C3001C7D62 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		39DB52DB1B5823330061C589 = {
 			isa = PBXGroup;
 			children = (
 				39DB52E71B5823330061C589 /* LNPopupController */,
 				39A924991B5852ED003C1C19 /* LNPopupController.h */,
 				39DB52E61B5823330061C589 /* Products */,
+				39C7D1A32E6E70C3001C7D62 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -421,6 +433,8 @@
 			);
 			name = LNPopupController;
 			packageProductDependencies = (
+				39C7D1A42E6E70C3001C7D62 /* LNSystemMarqueeLabel */,
+				39C7D1A82E6EB18E001C7D62 /* LNSystemMarqueeLabel */,
 			);
 			productName = LNPopupController;
 			productReference = 39DB52E51B5823330061C589 /* LNPopupController.framework */;
@@ -451,6 +465,7 @@
 			);
 			mainGroup = 39DB52DB1B5823330061C589;
 			packageReferences = (
+				39C7D1A72E6EB18E001C7D62 /* XCRemoteSwiftPackageReference "LNSystemMarqueeLabel" */,
 			);
 			projectDirPath = "";
 			projectRoot = "";
@@ -732,6 +747,29 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		39C7D1A72E6EB18E001C7D62 /* XCRemoteSwiftPackageReference "LNSystemMarqueeLabel" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/LeoNatan/LNSystemMarqueeLabel";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		39C7D1A42E6E70C3001C7D62 /* LNSystemMarqueeLabel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LNSystemMarqueeLabel;
+		};
+		39C7D1A82E6EB18E001C7D62 /* LNSystemMarqueeLabel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39C7D1A72E6EB18E001C7D62 /* XCRemoteSwiftPackageReference "LNSystemMarqueeLabel" */;
+			productName = LNSystemMarqueeLabel;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 39DB52DC1B5823330061C589 /* Project object */;
 }

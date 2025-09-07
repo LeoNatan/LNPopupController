@@ -31,7 +31,7 @@ static NSArray* __notifiedProperties = nil;
 			__notifiedProperties = LNPopupGetPropertyNames(self, nil);
 			
 #ifndef LNPopupControllerEnforceStrictClean
-			Method m1 = class_getInstanceMethod(self, @selector(a:cC:));
+			Method m1 = LNSwizzleClassGetInstanceMethod(self, @selector(a:cC:));
 			class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("appearance:categoriesChanged:")), method_getImplementation(m1), method_getTypeEncoding(m1));
 #endif
 		});
