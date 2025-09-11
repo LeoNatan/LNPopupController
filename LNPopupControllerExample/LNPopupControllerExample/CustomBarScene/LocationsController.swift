@@ -14,10 +14,12 @@ class LocationsController: UITableViewController, UISearchBarDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+#if compiler(>=6.2)
 		if #available(iOS 26, *) {
 			tableView.topEdgeEffect.isHidden = true
 			tableView.bottomEdgeEffect.isHidden = true
 		}
+#endif
 		
 		searchBar.delegate = self
 	}
