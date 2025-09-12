@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'LNPopupController'
-  s.version      = '4.0.5'  # use a real tag from the repo
+  s.version      = '4.0.5'
   s.summary      = 'Popup bar like Apple Music/Podcasts.'
   s.description  = 'LNPopupController provides a popup bar and content presentation.'
   s.homepage     = 'https://github.com/LeoNatan/LNPopupController'
@@ -11,16 +11,20 @@ Pod::Spec.new do |s|
   s.swift_version = '5.9'
   s.platforms = { :ios => '13.0' }
 
-  # Subspec mirroring SPM targets
   s.subspec 'ObjC' do |ss|
     ss.source_files = [
-      'LNPopupController/LNPopupController/**/*.{h,m,mm,c,cpp,hh}',   # ObjC sources (and their headers)
-      'LNPopupController/LNPopupController.h'                      # umbrella header (top-level)
-    ]
-    ss.public_header_files = [
-      'LNPopupController/LNPopupController/**/*.h',
+      'LNPopupController/LNPopupController/**/*.{m,mm,c,cpp}',
+      'LNPopupController/LNPopupController/*.h',
       'LNPopupController/LNPopupController.h'
     ]
+
+    ss.private_header_files = 'LNPopupController/LNPopupController/Private/**/*.{h,hh}'
+
+    ss.public_header_files = [
+      'LNPopupController/LNPopupController/*.h',
+      'LNPopupController/LNPopupController.h'
+    ]
+
     ss.exclude_files = ['LNPopupController/Info.plist']
 
     ss.frameworks = 'UIKit'
@@ -34,9 +38,8 @@ Pod::Spec.new do |s|
 
   s.subspec 'Swift' do |ss|
     ss.dependency 'LNPopupController/ObjC'
-    ss.source_files = 'LNPCSwiftRefinements/**/*.swift'            # Swift target only
+    ss.source_files = 'LNPCSwiftRefinements/**/*.swift'
   end
 
-  # Default = both targets
   s.default_subspecs = ['ObjC', 'Swift']
 end
