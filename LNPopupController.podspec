@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   # Subspec mirroring SPM targets
   s.subspec 'ObjC' do |ss|
     ss.source_files = [
-      'LNPopupController/LNPopupController/**/*.{h,m,mm,c,cpp}',   # ObjC sources (and their headers)
+      'LNPopupController/LNPopupController/**/*.{h,m,mm,c,cpp,hh}',   # ObjC sources (and their headers)
       'LNPopupController/LNPopupController.h'                      # umbrella header (top-level)
     ]
     ss.public_header_files = [
