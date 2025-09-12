@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.homepage     = 'https://github.com/LeoNatan/LNPopupController'
   s.license      = { :type => 'MIT', :file => 'LICENSE' }
   s.author       = { 'Leo Natan' => 'leonatan@icloud.com' }
-  s.source       = { :git => 'https://github.com/LeoNatan/LNPopupController.git', :tag => s.version.to_s }
+  s.source       = { :git => 'https://github.com/everappz/LNPopupController.git', :tag => s.version.to_s }
 
   s.swift_version = '5.9'
   s.platforms = { :ios => '13.0' }
