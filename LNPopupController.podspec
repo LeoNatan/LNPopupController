@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'ObjC' do |ss|
     ss.source_files = [
-      'LNPopupController/LNPopupController/**/*.{m,mm,c,cpp}',
+      'LNPopupController/LNPopupController/**/*.{m,mm,c,cpp,h,hh}',
       'LNPopupController/LNPopupController/*.h',
       'LNPopupController/LNPopupController.h'
     ]
