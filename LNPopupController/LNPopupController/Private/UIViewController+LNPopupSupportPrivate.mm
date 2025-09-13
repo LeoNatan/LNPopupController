@@ -159,6 +159,16 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 
 @implementation UIViewController (LNPopupLayout)
 
+void LNPopupRegisterBuggyAdditionalSafeAreaClasses(NSArray<Class> *classes)
+{
+    if (classes.count == 0) return;
+    @synchronized (__LNPopupBuggyAdditionalSafeAreaClasses) {
+        NSMutableSet *m = (__LNPopupBuggyAdditionalSafeAreaClasses ? [__LNPopupBuggyAdditionalSafeAreaClasses mutableCopy] : [NSMutableSet new]);
+        for (Class c in classes) { if (c) [m addObject:c]; }
+        __LNPopupBuggyAdditionalSafeAreaClasses = [m copy];
+    }
+}
+
 + (void)load
 {
 	@autoreleasepool

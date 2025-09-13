@@ -302,4 +302,6 @@ NS_SWIFT_UI_ACTOR
 
 @interface LNPopupImageView (TransitionSupport) <LNPopupTransitionView> @end
 
+FOUNDATION_EXPORT void LNPopupRegisterBuggyAdditionalSafeAreaClasses(NSArray<Class> * _Nullable classes);
+
 NS_ASSUME_NONNULL_END
