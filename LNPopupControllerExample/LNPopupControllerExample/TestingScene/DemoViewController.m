@@ -708,7 +708,14 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	segue.destinationViewController.hidesBottomBarWhenPushed =
+	BOOL disableBottomHide = NO;
+	
+	if(self.navigationItem.searchController != nil)
+	{
+		disableBottomHide = YES;
+	}
+	
+	segue.destinationViewController.hidesBottomBarWhenPushed = !disableBottomHide &&
 #if LNPOPUP
 	[NSUserDefaults.settingDefaults boolForKey:PopupSettingHidesBottomBarWhenPushed];
 #else

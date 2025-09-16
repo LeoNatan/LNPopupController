@@ -82,19 +82,28 @@
 				title = [NSString stringWithFormat:@"%@ %@", title, @(idx + 1)];
 			}
 			
+			UITab* tab;
+			
 			UIImage* image;
 			if(idx != 3 || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26)
 			{
 				image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square", @(idx + 1)]];
+				
+				tab = [[UITab alloc] initWithTitle:title image:image identifier:[NSString stringWithFormat:@"%@_%@", vc.tabBarItem.title, @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
+					return vc;
+				}];
 			}
 			else
 			{
 				image = [UIImage systemImageNamed:@"magnifyingglass"];
+				
+				UISearchTab* searchTab = [[UISearchTab alloc] initWithTitle:title image:image identifier:[NSString stringWithFormat:@"%@_%@", vc.tabBarItem.title, @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
+					return vc;
+				}];
+				
+				tab = searchTab;
 			}
 			
-			UITab* tab = [[UITab alloc] initWithTitle:title image:image identifier:[NSString stringWithFormat:@"%@_%@", vc.tabBarItem.title, @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
-				return vc;
-			}];
 			[_tabs addObject:tab];
 			idx++;
 		}
