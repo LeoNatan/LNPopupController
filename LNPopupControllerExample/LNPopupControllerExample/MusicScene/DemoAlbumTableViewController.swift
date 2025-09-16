@@ -51,8 +51,10 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		
+#if LNPOPUP
 		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSetting.barStyle)  as? Int ?? 0)!
 		tabBarController?.popupBar.barStyle = barStyle
+#endif
 #if compiler(>=6.2)
 		if #available(iOS 26.0, *) {
 			tabBarController?.tabBarMinimizeBehavior = .onScrollDown

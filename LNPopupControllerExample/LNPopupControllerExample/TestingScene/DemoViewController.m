@@ -98,6 +98,8 @@
 		{
 			if(super.tabBarItem.tag != 1)
 			{
+				self.navigationItem.searchController = [UISearchController new];
+				
 				super.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemSearch tag:1];
 				super.tabBarItem.image = [UIImage systemImageNamed:@"magnifyingglass"];
 				super.tabBarItem.title = NSLocalizedString(@"Search", @"");
