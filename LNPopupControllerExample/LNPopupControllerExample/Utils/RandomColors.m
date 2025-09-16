@@ -34,6 +34,17 @@ static void LNInitializeDemoColors(void)
 	}
 }
 
+UIColor* LNSubduedColor(UIColor* self)
+{
+	CGFloat h, s, b, a;
+	if ([self getHue:&h saturation:&s brightness:&b alpha:&a])
+		return [UIColor colorWithHue:h
+						  saturation:s * 0.3
+						  brightness:b
+							   alpha:a];
+	return nil;
+}
+
 UIColor* LNRandomSystemColor(void)
 {
 //	return namedSystemColors[arc4random_uniform((uint32_t)namedSystemColors.count)];
@@ -77,6 +88,22 @@ UIColor* _LNSeedAdaptiveColor(long seed)
 	}];
 }
 
+UIColor* _LNSeedAdaptiveSubduedColor(long seed)
+{
+	UIColor* light = LNSubduedColor(_LNSeedLightColor(seed));
+	UIColor* dark = LNSubduedColor(_LNSeedDarkColor(seed));
+	return [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull collection) {
+		if(collection.userInterfaceStyle == UIUserInterfaceStyleDark)
+		{
+			return dark;
+		}
+		else
+		{
+			return light;
+		}
+	}];
+}
+
 UIColor* _LNSeedAdaptiveInvertedColor(long seed)
 {
 	UIColor* light = _LNSeedLightColor(seed);
@@ -106,6 +133,11 @@ UIColor* LNRandomAdaptiveInvertedColor(void)
 UIColor* LNSeedAdaptiveColor(NSString* seed)
 {
 	return _LNSeedAdaptiveColor(seed.hash);
+}
+
+UIColor* LNSeedAdaptiveSubduedColor(NSString* seed)
+{
+	return _LNSeedAdaptiveSubduedColor(seed.hash);
 }
 
 UIColor* LNSeedAdaptiveInvertedColor(NSString* seed)

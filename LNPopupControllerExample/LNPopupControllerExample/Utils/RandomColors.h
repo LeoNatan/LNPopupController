@@ -13,6 +13,7 @@ extern UIColor* LNRandomSystemColor(void);
 extern UIColor* LNSeedAdaptiveColor(NSString* seed);
 extern UIColor* LNSeedAdaptiveInvertedColor(NSString* seed);
 extern UIColor* LNRandomAdaptiveColor(void);
+extern UIColor* LNSeedAdaptiveSubduedColor(NSString* seed);
 extern UIColor* LNRandomAdaptiveInvertedColor(void);
 
 extern UIColor* LNSeedDarkColor(NSString* seed);

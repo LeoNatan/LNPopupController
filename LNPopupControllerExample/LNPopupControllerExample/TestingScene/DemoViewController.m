@@ -89,7 +89,7 @@
 		
 		NSInteger idx = [self.tabBarController.viewControllers indexOfObject:target] + 1;
 		
-		if(idx != 4 || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26)
+		if(idx != 4 || self.navigationController == nil || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26)
 		{
 			//This is safe even with the UITab API, because this will be accessed very early on, when loaded from storyboard.
 			super.tabBarItem.image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%lu.square.fill", idx]];
@@ -276,6 +276,21 @@
 - (void)viewIsAppearing:(BOOL)animated
 {
 	[super viewIsAppearing:animated];
+	
+	if(self.isInSearchTab)
+	{
+		self.navigationItem.title = self.navigationItem.searchController != nil ? NSLocalizedString(@"Search", @"") : NSLocalizedString(@"Search Result", @"");
+	
+		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
+		{
+			NSString* seed = [NSString stringWithFormat:@"%@%@", self.colorSeedString, self.colorSeedCount == 0 ? @"" : [NSString stringWithFormat:@"%@", @(self.colorSeedCount)]];
+			self.view.backgroundColor = LNSeedAdaptiveSubduedColor(seed);
+		}
+		else
+		{
+			self.view.backgroundColor = UIColor.systemBackgroundColor;
+		}
+	}
 	
 	[self updateBottomDockingViewEffectForBarPresentation];
 	
@@ -706,16 +721,24 @@
 #endif
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (BOOL)isInSearchTab
 {
-	BOOL disableBottomHide = NO;
+	BOOL rv = NO;
 	
-	if(self.navigationItem.searchController != nil)
+	if(@available(iOS 18.0, *))
 	{
-		disableBottomHide = YES;
+		if([self.tab isKindOfClass:UISearchTab.class])
+		{
+			rv = YES;
+		}
 	}
 	
-	segue.destinationViewController.hidesBottomBarWhenPushed = !disableBottomHide &&
+	return rv;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+	segue.destinationViewController.hidesBottomBarWhenPushed = self.isInSearchTab == NO &&
 #if LNPOPUP
 	[NSUserDefaults.settingDefaults boolForKey:PopupSettingHidesBottomBarWhenPushed];
 #else
