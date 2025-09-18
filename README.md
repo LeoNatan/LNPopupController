@@ -244,10 +244,10 @@ The framework supports popup image transitions:
 
 Transitions are opt-in and require you either use an `LNPopupImageView` image view in your popup content, which is discovered automatically by the system, or provide a view that will serve as the transition target/source by implementing `viewForPopupTransition(from:to:)` in popup content controller.
 
-For optimal results, always use `LNPopupImageView` instances that displays the same image displayed in the popup bar's image view. By default, the system discovers the `LNPopupImageView` image view in your content controller's view hierarchy automatically, and will use that as the transition target/source. The system will smoothly transition between the popup bar's image view and the `LNPopupImageView` instance, taking into account the corner radii and shadows of the views.
+For optimal results, use an `LNPopupImageView` instance in your popup content view hierarchy, that displays the same image displayed in the popup bar's image view. By default, the system discovers the `LNPopupImageView` instance  automatically, and will use that as the transition target/source. The system will smoothly transition between the popup bar's image view and the `LNPopupImageView` instance, taking into account the corner radii and shadow of the view.
 
 > [!TIP]
-> When using automatic discovery, there must be only a single `LNPopupImageView` instance in your content controller's view hierarchy, or results will be undefined. For more advanced scenarios where automatic discovery fails, implement `viewForPopupTransition(from:to:)` in your content controller to return the correct instance.
+> When relying on automatic discovery, there must only be a single `LNPopupImageView` instance in your popup content controller's view hierarchy, or results will be undefined. For more advanced scenarios where automatic discovery fails, implement `viewForPopupTransition(from:to:)` in your content controller to return the correct instance.
 
 You can return any custom view in `viewForPopupTransition(from:to:)` to serve as the transition target/source. The system will attempt to match the attributes of the provided view and the popup bar's image view as closely as possible to transition smoothly between them. Implement the `LNPopupTransitionView` protocol in your custom view to allow the system to smoothly transition between your custom view and the popup bar image view.
 
