@@ -125,7 +125,7 @@ NS_SWIFT_UI_ACTOR
 
 /// Indicates whether the full bar width should be used for the custom bar.
 ///
-/// This only has effect on iOS 26 with glass enabled.
+/// This only has effect on iOS 26.
 @property (nonatomic, assign) BOOL customBarWantsFullBarWidth;
 
 @end

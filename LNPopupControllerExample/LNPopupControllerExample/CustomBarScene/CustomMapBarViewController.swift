@@ -42,7 +42,6 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 					return UIColor.lightGray.withAlphaComponent(0.15)
 				}
 			})
-			containingPopupBar?.standardAppearance.floatingBackgroundCornerConfiguration = .capsule()
 #endif
 		} else {
 			guard let backgroundView = containingPopupBar?.value(forKey: "backgroundView") as? UIView else {

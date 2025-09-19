@@ -38,13 +38,7 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		if LNPopupSettingsHasOS26Glass() {
-#if compiler(>=6.2)
-			if #available(iOS 26.0, *), userCustomCornerConfiguration {
-				containingPopupBar?.standardAppearance.floatingBackgroundCornerConfiguration = .uniformEdges(topRadius: .fixed(20), bottomRadius: .containerConcentric(minimum: 20))
-			}
-#endif
-		} else {
+		if !LNPopupSettingsHasOS26Glass() {
 			containingPopupBar?.standardAppearance.configureWithTransparentBackground()
 		}
 		
@@ -70,7 +64,24 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 		leftButton.sizeToFit()
 		view.addSubview(leftButton)
 		
-		self.preferredContentSize = CGSize(width: 0, height: 75)
+		self.preferredContentSize = CGSize(width: 0, height: 170)
+	}
+	
+	var idx = 1
+	@IBAction
+	func animateSize(_ sender: UIBarButtonItem) {
+		idx = 1 - idx;
+		
+		let changes = {
+			self.preferredContentSize = CGSize(width: 0, height: 70 + self.idx * 100)
+			sender.image = self.idx == 0 ? UIImage(systemName: "rectangle.expand.vertical") : UIImage(systemName: "rectangle.compress.vertical")
+		}
+		
+		if #available(iOS 18.0, *) {
+			UIView.animate(.easeInOut, changes: changes)
+		} else {
+			UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 500, initialSpringVelocity: 0.0, animations: changes)
+		}
 	}
 	
 	public

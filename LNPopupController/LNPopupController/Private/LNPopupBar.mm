@@ -521,8 +521,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			_contentView.effectView.clipsToBounds = YES;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 			if(@available(iOS 26.0, *))
-				_contentView.effectView.cornerConfiguration = [self.activeAppearance floatingBackgroundCornerConfigurationForCustomBar:_resolvedIsCustom];
-			_floatingBackgroundShadowView.cornerConfiguration = _contentView.effectView.cornerConfiguration;
+			{
+				_contentView.effectView.cornerConfiguration = [self.activeAppearance floatingBackgroundCornerConfigurationForCustomBar:_resolvedIsCustom barHeight:barHeight screen:self.window.screen wantsFullWidth:self.customBarWantsFullBarWidth margins:self.layoutMargins];
+				_floatingBackgroundShadowView.cornerConfiguration = _contentView.effectView.cornerConfiguration;
+			}
 #endif
 		}
 		else
@@ -1960,8 +1962,10 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	
 	[self _updateViewsAfterCustomBarViewControllerUpdate];
 	[self setBarStyle:_customBarViewController != nil ? LNPopupBarStyleCustom : LNPopupBarStyleDefault];
+	[self _appearanceDidChange];
 	
 	[self setNeedsLayout];
+	[self layoutIfNeeded];
 }
 
 - (void)setLeadingBarButtonItems:(NSArray<UIBarButtonItem*> *)leadingBarButtonItems

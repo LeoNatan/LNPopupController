@@ -32,8 +32,21 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	@IBOutlet weak var topVisualEffectView: UIVisualEffectView!
 	private var popupContentVC: LocationsController!
 
+#if LNPOPUP
+	lazy var resize = UIBarButtonItem(image: UIImage(systemName: "rectangle.compress.vertical"), style: .plain, target: navigationController!.popupBar.customBarViewController!, action: #selector(ManualLayoutCustomBarViewController.animateSize(_:)))
+	lazy var resizeGroup = UIBarButtonItemGroup(barButtonItems: [resize], representativeItem: nil)
+	
+	lazy var presentDismiss = [
+		UIBarButtonItem(image: UIImage(systemName: "dock.arrow.up.rectangle"), style: .plain, target: self, action: #selector(MapViewController.presentButtonTapped(_:))),
+		UIBarButtonItem(image: UIImage(systemName: "dock.arrow.down.rectangle"), style: .plain, target: self, action: #selector(MapViewController.dismissButtonTapped(_:)))
+	]
+	lazy var presentDismissGroup = UIBarButtonItemGroup(barButtonItems: presentDismiss, representativeItem: nil)
+#endif
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		
+		self.presentPopupBarIfNeeded(animated: false)
 		
 		if LNPopupSettingsHasOS26Glass() {
 			galleryBarButton.title = nil
@@ -41,29 +54,43 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			galleryBarButton.image = nil
 		}
 		
-		let present = UIBarButtonItem(image: UIImage(systemName: "dock.arrow.up.rectangle"), style: .plain, target: self, action: #selector(MapViewController.presentButtonTapped(_:)))
-		let dismiss = UIBarButtonItem(image: UIImage(systemName: "dock.arrow.down.rectangle"), style: .plain, target: self, action: #selector(MapViewController.dismissButtonTapped(_:)))
-		if #available(iOS 16.0, *) {
-			let group = UIBarButtonItemGroup(barButtonItems: [present, dismiss], representativeItem: nil)
-			navigationItem.leadingItemGroups = [group]
-		} else {
-			navigationItem.leftBarButtonItems = [present, dismiss]
-		}
+#if LNPOPUP
+		resetBarButtonItems()
+#endif
 		
 		mapView.showsTraffic = false
 		mapView.pointOfInterestFilter = .includingAll
 		
-	    if #available(iOS 17.0, *) {
-		   topVisualEffectView.effect = UIBlurEffect(variableBlurRadius: 3.0, imageMask: UIImage(named: "statusBarMask")!)
-	    } else {
-		   topVisualEffectView.effect = UIBlurEffect(blurRadius: 10.0)
-	    }
+		if #available(iOS 17.0, *) {
+			topVisualEffectView.effect = UIBlurEffect(variableBlurRadius: 3.0, imageMask: UIImage(named: "statusBarMask")!)
+		} else {
+			topVisualEffectView.effect = UIBlurEffect(blurRadius: 10.0)
+		}
 	}
+	
+#if LNPOPUP
+	func resetBarButtonItems() {
+		let canResize = navigationController!.popupBar.customBarViewController!.responds(to: resize.action!)
+		if canResize, #unavailable(iOS 16.0) {
+			presentDismiss.append(resize)
+		}
+		
+		if #available(iOS 16.0, *) {
+			var groups = [presentDismissGroup]
+			if canResize {
+				groups.append(resizeGroup)
+			}
+			navigationItem.leadingItemGroups = groups
+		} else {
+			navigationItem.leftBarButtonItems = presentDismiss
+		}
+		
+		resize.image = UIImage(systemName: "rectangle.compress.vertical")
+	}
+#endif
 	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-		
-		self.presentPopupBarIfNeeded(animated: false)
 	}
 	
 	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -113,6 +140,10 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		popupContentVC.tableView.backgroundColor = .clear
 		
 		navigationController!.presentPopupBar(with: self.popupContentVC, animated: animated, completion: nil)
+		
+		resize.target = navigationController!.popupBar.customBarViewController!
+		
+		resetBarButtonItems()
 #endif
 	}
 	
@@ -127,6 +158,10 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 #if LNPOPUP
 		navigationController!.dismissPopupBar(animated: true) {
 			self.navigationController!.popupBar.customBarViewController = nil
+		}
+		
+		if #available(iOS 16.0, *) {
+			navigationItem.leadingItemGroups = [presentDismissGroup]
 		}
 #endif
 	}

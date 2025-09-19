@@ -65,6 +65,8 @@
 		39A0DDB426F7894700E5D751 /* NSAttributedString+LNPopupSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A0DDB226F7894700E5D751 /* NSAttributedString+LNPopupSupport.m */; };
 		39A40E832E616BB100698F92 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39A40E822E616BB100698F92 /* SwiftSupport.swift */; };
 		39A9249A1B58530A003C1C19 /* LNPopupController.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A924991B5852ED003C1C19 /* LNPopupController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		39A9D5432E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 39A9D5412E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.h */; };
+		39A9D5442E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39A9D5422E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.mm */; };
 		39AC479126C69ACA001D53C2 /* LNMath.h in Headers */ = {isa = PBXBuildFile; fileRef = 39AC478F26C69AC9001D53C2 /* LNMath.h */; };
 		39AC479226C69ACA001D53C2 /* LNMath.m in Sources */ = {isa = PBXBuildFile; fileRef = 39AC479026C69AC9001D53C2 /* LNMath.m */; };
 		39B3EB0D24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 39B3EB0B24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -162,6 +164,8 @@
 		39A0DDB226F7894700E5D751 /* NSAttributedString+LNPopupSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+LNPopupSupport.m"; sourceTree = "<group>"; };
 		39A40E822E616BB100698F92 /* SwiftSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftSupport.swift; path = ../../LNPCSwiftRefinements/SwiftSupport.swift; sourceTree = "<group>"; };
 		39A924991B5852ED003C1C19 /* LNPopupController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupController.h; sourceTree = "<group>"; };
+		39A9D5412E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIScreen+LNPopupSupportPrivate.h"; sourceTree = "<group>"; };
+		39A9D5422E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIScreen+LNPopupSupportPrivate.mm"; sourceTree = "<group>"; };
 		39AC478F26C69AC9001D53C2 /* LNMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNMath.h; sourceTree = "<group>"; };
 		39AC479026C69AC9001D53C2 /* LNMath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNMath.m; sourceTree = "<group>"; };
 		39B3EB0B24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+LNPopupSupportPrivate.h"; sourceTree = "<group>"; };
@@ -265,6 +269,8 @@
 				399BA1D32A9E975E00CA5167 /* _LNPopupUIBarAppearanceProxy.mm */,
 				39052F172DABC46C003CED10 /* LNPopupPresentationContainerSupport.h */,
 				39052F182DABC46C003CED10 /* LNPopupPresentationContainerSupport.m */,
+				39A9D5412E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.h */,
+				39A9D5422E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.mm */,
 				39B3EB0B24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.h */,
 				39B3EB0C24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.mm */,
 				3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.mm */,
@@ -400,6 +406,7 @@
 				396D62722610A42000D03A42 /* UIContextMenuInteraction+LNPopupSupportPrivate.h in Headers */,
 				39314A521B6AE7A400574D3C /* MarqueeLabel.h in Headers */,
 				391481BB1DCFA514002416D1 /* LNChevronView.h in Headers */,
+				39A9D5432E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.h in Headers */,
 				39052F192DABC46C003CED10 /* LNPopupPresentationContainerSupport.h in Headers */,
 				39599BAD1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h in Headers */,
 				397AFBFB1F1A1ED200E7D95C /* LNForwardingDelegate.h in Headers */,
@@ -490,6 +497,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39A9D5442E7D6D1400727B26 /* UIScreen+LNPopupSupportPrivate.mm in Sources */,
 				39F8228826B80B6F0070DDBA /* SwiftRefinements.swift in Sources */,
 				399D37B92ADC672D00EA5038 /* LNPopupImageView.mm in Sources */,
 				39E7A605200B5157007AF3AD /* _LNPopupSwizzlingUtils.m in Sources */,
