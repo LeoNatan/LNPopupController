@@ -230,7 +230,7 @@ NS_SWIFT_UI_ACTOR
 
 /// Controls whether the framework manages the safe area of the container controller indirectly.
 ///
-/// By default, the framework modifies the container controller's safe area insets directly, which in turn updates children. In some cases, such as when the bottom docking view uses autolayout against the safe area insets, it would be undesirable to modify the container controller's safe area insets. Instead, when this property returns `true`, the framework updates child controller's safe areas instead.
+/// By default, the framework modifies the container controller's safe area insets directly, which in turn updates children. In some cases, such as when the container controller uses the safe area to position the bottom docking view (for example, a custom tab bar), it would be undesirable to modify the container controller's safe area insets directly. Instead, when this property returns `true`, the framework updates the container's children's safe areas instead.
 ///
 /// If you have a very complex hierarchy of container controllers, you can set this property for your inner containers and it will be respected.
 ///
