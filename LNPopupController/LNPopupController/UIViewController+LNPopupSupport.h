@@ -228,6 +228,15 @@ NS_SWIFT_UI_ACTOR
 /// @warning This API is experimental and will probably change in the future. Use with care.
 @property (nonatomic, readonly) UIEdgeInsets insetsForBottomDockingView;
 
+/// Controls whether the framework manages the safe area of the container controller indirectly.
+///
+/// By default, the framework modifies the container controller's safe area insets directly, which in turn updates children. In some cases, such as when the bottom docking view uses autolayout against the safe area insets, it would be undesirable to modify the container controller's safe area insets. Instead, when this property returns `true`, the framework updates child controller's safe areas instead.
+///
+/// If you have a very complex hierarchy of container controllers, you can set this property for your inner containers and it will be respected.
+///
+/// Defaults to `true` for `UITabBarController` and `UINavigationController` subclasses; `false` otherwise.
+@property (nonatomic, assign, readonly) BOOL requiresIndirectSafeAreaManagement;
+
 @end
 
 NS_SWIFT_UI_ACTOR

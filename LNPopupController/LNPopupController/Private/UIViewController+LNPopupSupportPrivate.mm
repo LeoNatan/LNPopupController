@@ -27,9 +27,7 @@ static const void* LNPopupChildAdditiveSafeAreaInsets = &LNPopupChildAdditiveSaf
 static const void* LNPopupIgnorePrepareTabBar = &LNPopupIgnorePrepareTabBar;
 static const void* LNPopupBarExtensionView = &LNPopupBarExtensionView;
 
-static NSSet<Class>* __LNPopupBuggyAdditionalSafeAreaClasses;
 static void __LNPopupUpdateChildInsets(UIViewController* controller);
-static BOOL __LNPopupIsClassBuggyForAdditionalSafeArea(UIViewController* controller);
 
 BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 
@@ -166,8 +164,6 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
 			__ln_doNotCall__fixUIHostingViewHitTest();
-			
-			__LNPopupBuggyAdditionalSafeAreaClasses = [NSSet setWithObjects:UINavigationController.class, UITabBarController.class, nil];
 			
 			LNSwizzleMethod(self,
 							@selector(isModalInPresentation),
@@ -910,22 +906,9 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 
 @end
 
-static BOOL __LNPopupIsClassBuggyForAdditionalSafeArea(UIViewController* controller)
-{
-	for (Class cls in __LNPopupBuggyAdditionalSafeAreaClasses)
-	{
-		if([controller isKindOfClass:cls])
-		{
-			return YES;
-		}
-	}
-	
-	return NO;
-}
-
 static void __LNPopupUpdateChildInsets(UIViewController* controller)
 {
-	if(__LNPopupIsClassBuggyForAdditionalSafeArea(controller) == YES)
+	if(controller.requiresIndirectSafeAreaManagement == YES)
 	{
 		for (__kindof UIViewController* obj in controller.childViewControllers)
 		{
@@ -939,7 +922,7 @@ static void __LNPopupUpdateChildInsets(UIViewController* controller)
 	
 	UIViewController* parentViewController = controller.parentViewController;
 	
-	while(parentViewController != nil && __LNPopupIsClassBuggyForAdditionalSafeArea(parentViewController) == YES)
+	while(parentViewController != nil && parentViewController.requiresIndirectSafeAreaManagement == YES)
 	{
 		popupSafeAreaInsets = __LNEdgeInsetsSum(popupSafeAreaInsets, _LNPopupChildAdditiveSafeAreas(parentViewController));
 		parentViewController = parentViewController.parentViewController;
@@ -954,7 +937,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	//Container classes with bottom bars have bugs if additional safe areas are applied directly to them.
 	//Instead, set a custom property and update their children recursively to take care of the additional safe area.
-	if(__LNPopupIsClassBuggyForAdditionalSafeArea(controller) == YES)
+	if(controller.requiresIndirectSafeAreaManagement == YES)
 	{
 		UIEdgeInsets current = _LNPopupChildAdditiveSafeAreas(controller);
 		if(UIEdgeInsetsEqualToEdgeInsets(current, popupEdgeInsets) == NO)
@@ -1166,6 +1149,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	
 	return 0.0;
+}
+
+- (BOOL)requiresIndirectSafeAreaManagement
+{
+	return YES;
 }
 
 - (CGRect)defaultFrameForBottomDockingView
@@ -1998,6 +1986,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 //	}
 //	
 	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom) + offset, 0);
+}
+
+- (BOOL)requiresIndirectSafeAreaManagement
+{
+	return YES;
 }
 
 + (void)load

@@ -543,6 +543,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	return backgroundVisible && (bottomBarExtensionIsVisible || scrollEdgeAppearanceRequiresFade);
 }
 
+- (BOOL)requiresIndirectSafeAreaManagement
+{
+	return NO;
+}
+
 + (void)_ln_beginTransitioningLockWithWindow:(UIWindow*)window userInteractionsEnabled:(BOOL)userInteractionEnabled allowedViews:(NSArray*)allowedViews lockRotation:(BOOL)lockRotation
 {
 //	NSLog(@"_ln_beginTransitioningLockWithWindow: %@ userInteractionsEnabled: %@ allowedViews: %@ lockRotation: %@", window, @(userInteractionEnabled), allowedViews, @(lockRotation));
