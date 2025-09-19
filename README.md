@@ -41,12 +41,12 @@ Check the demo project for many common use cases of the framework in various sce
 
 Swift Package Manager is the recommended way to integrate `LNPopupController` in your project.
 
-`LNPopupController` supports SPM versions 5.5 and above. To use SPM, you should use Xcode 13 to open your project. Click `File` -> `Swift Packages` -> `Add Package Dependency`, enter `https://github.com/LeoNatan/LNPopupController`. Select the version you’d like to use.
+`LNPopupController` supports SPM versions 6.0 and above (Xcode 16). In Xcode, click `File` → `Add Package Dependencies…`, enter `https://github.com/LeoNatan/LNPopupController`. Select the version you’d like to use.
 
 You can also manually add the package to your Package.swift file:
 
 ```swift
-.package(url: "https://github.com/LeoNatan/LNPopupController.git", from: "2.15.0")
+.package(url: "https://github.com/LeoNatan/LNPopupController.git", from: "4.0.0")
 ```
 
 And the dependency in your target:

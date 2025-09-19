@@ -156,7 +156,10 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	[animator addCompletion:^(UIViewAnimatingPosition finalPosition) {
 		if([self.view respondsToSelector:transitionDidEnd])
 		{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 			[self.view performSelector:transitionDidEnd];
+#pragma clang diagnostic pop
 		}
 		
 		[self completeTransition];

@@ -80,7 +80,7 @@ __attribute__((objc_direct_members))
 		{
 			self.pointerInteractionEnabled = YES;
 			self.pointerStyleProvider = ^UIPointerStyle * _Nullable(UIButton * _Nonnull button, UIPointerEffect * _Nonnull proposedEffect, UIPointerShape * _Nonnull proposedShape) {
-				UIPointerLiftEffect* effect = [UIPointerLiftEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:self]];
+				UIPointerLiftEffect* effect = [UIPointerLiftEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:button]];
 				UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
 				
 				return [UIPointerStyle styleWithEffect:effect shape:shape];

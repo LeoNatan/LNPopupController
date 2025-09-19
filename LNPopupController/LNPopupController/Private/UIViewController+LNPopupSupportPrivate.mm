@@ -473,7 +473,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		{
 			[coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 				static SEL sel = NSSelectorFromString(LNPopupHiddenString("_forceUpdateScrollViewIfNecessary"));
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 				[self performSelector:sel];
+#pragma clang diagnostic pop
 			}];
 		}
 	}
@@ -1133,6 +1136,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (UIEdgeInsets)insetsForBottomDockingView
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return UIEdgeInsetsZero;
+	}
+	
 	return self.tabBar.hidden == NO && self._isTabBarHiddenDuringTransition == NO ? UIEdgeInsetsZero : self.view.superview.safeAreaInsets;
 }
 
@@ -1158,6 +1166,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (CGRect)defaultFrameForBottomDockingView
 {
+	if(LNPopupEnvironmentHasGlass() && self._isTabBarHiddenDuringTransition)
+	{
+		return super.defaultFrameForBottomDockingView_internal;
+	}
+	
 	CGRect bottomBarFrame = self.tabBar.frame;
 	bottomBarFrame.origin = CGPointMake(0, self.view.bounds.size.height - (self._isTabBarHiddenDuringTransition ? 0.0 : bottomBarFrame.size.height));
 	return bottomBarFrame;

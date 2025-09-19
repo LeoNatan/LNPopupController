@@ -240,7 +240,11 @@ __attribute__((objc_direct_members))
 - (CGRect)_frameForClosedPopupBarForBarHeight:(CGFloat)barHeight
 {
 	CGRect defaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
-	UIEdgeInsets insets = [_containerController insetsForBottomDockingView];
+	UIEdgeInsets insets = UIEdgeInsetsZero;
+	if(!LNPopupEnvironmentHasGlass())
+	{
+		insets = [_containerController insetsForBottomDockingView];
+	}
 	CGFloat offset = [_containerController _ln_popupOffsetForPopupBar:_popupBar];
 	return CGRectMake(0, defaultFrame.origin.y - barHeight - insets.bottom + offset, _containerController.view.bounds.size.width, barHeight);
 }
@@ -332,7 +336,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	_cachedDefaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
-	_cachedInsets = [_containerController insetsForBottomDockingView];
+	if(LNPopupEnvironmentHasGlass())
+	{
+		_cachedInsets = UIEdgeInsetsZero;
+	}
+	else
+	{
+		_cachedInsets = [_containerController insetsForBottomDockingView];
+	}
 	CGFloat offset = [_containerController _ln_popupOffsetForPopupBar:_popupBar];
 	_cachedInsets.bottom -= offset;
 	
@@ -994,7 +1005,14 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:NO forceFeedbackGenerationAtStart:NO completion:nil];
 		
 		_cachedDefaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
-		_cachedInsets = [_containerController insetsForBottomDockingView];
+		if(LNPopupEnvironmentHasGlass())
+		{
+			_cachedInsets = UIEdgeInsetsZero;
+		}
+		else
+		{
+			_cachedInsets = [_containerController insetsForBottomDockingView];
+		}
 		_cachedOpenPopupFrame = [self _frameForOpenPopupBar];
 		
 		_dismissGestureStarted = YES;
@@ -1859,7 +1877,10 @@ id __LNPopupEmptyBlurFilter(void)
 	static Class cls = NSClassFromString(LNPopupHiddenString("CAFilter"));
 	static SEL sel = NSSelectorFromString(LNPopupHiddenString("filterWithName:"));
 	
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 	id rv = [cls performSelector:sel withObject:__LNPopupBlurFilterName];
+#pragma clang diagnostic pop
 	[rv setValue:@0 forKey:__LNPopupBlurFilterInputRadius];
 	
 	return rv;

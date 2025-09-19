@@ -224,9 +224,7 @@ NS_SWIFT_UI_ACTOR
 /// The insets for the bottom docking view from bottom of the container controller's view. By default, this returns ` UIEdgeInsets.zero`. Currently, only the bottom inset is respected.
 ///
 /// The system calculates the position of the popup bar and the bottom docking view by summing the bottom docking view's height and the bottom of the insets.
-///
-/// @warning This API is experimental and will probably change in the future. Use with care.
-@property (nonatomic, readonly) UIEdgeInsets insetsForBottomDockingView;
+@property (nonatomic, readonly) UIEdgeInsets insetsForBottomDockingView LN_DEPRECATED_API_OS("No longer supported on iOS 26.0 and later.", ios(2.0, 26.0));
 
 /// Controls whether the framework manages the safe area of the container controller indirectly.
 ///
