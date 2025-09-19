@@ -1917,13 +1917,23 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (CGRect)defaultFrameForBottomDockingView
 {
-	CGRect toolbarBarFrame = self.toolbar.frame;
 	if(LNPopupEnvironmentHasGlass())
 	{
-		//Apple is retarded. The toolbar is no longer part of the view hierarchy and sometimes isn't sized correctly.
-		toolbarBarFrame.size.height = 44;
+		static auto key = LNPopupHiddenString("_floatingBarContainerView.toolbarOverlayInset");
+		CGFloat inset;
+		if(self.isToolbarHidden)
+		{
+			inset = self.view.safeAreaInsets.bottom;
+		}
+		else
+		{
+			inset = [[self valueForKeyPath:key] doubleValue];
+		}
+		return CGRectMake(0, self.view.bounds.size.height - inset, self.view.bounds.size.width, inset);
 	}
 	
+	CGRect toolbarBarFrame = self.toolbar.frame;
+
 	CGFloat bottomSafeAreaHeight = 0.0;
 	if(unavailable(iOS 18.0, *))
 	{
@@ -1937,22 +1947,19 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	if(@available(iOS 18.0, *))
 	{
-		if(!LNPopupEnvironmentHasGlass())
+		CGFloat offset = 0;
+		
+		if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		{
-			CGFloat offset = 0;
-			
-			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+			static auto key = LNPopupHiddenString("_backgroundView.bounds");
+			if([[self.toolbar valueForKeyPath:key] CGRectValue].size.height < (self.toolbar.bounds.size.height + self.view.safeAreaInsets.bottom))
 			{
-				static auto key = LNPopupHiddenString("_backgroundView.bounds");
-				if([[self.toolbar valueForKeyPath:key] CGRectValue].size.height < (self.toolbar.bounds.size.height + self.view.safeAreaInsets.bottom))
-				{
-					//Something in UIKit reports safe area insets incorrectly on iPadOS. This is a workaround for this issue.
-					offset = 5.0;
-				}
+				//Something in UIKit reports safe area insets incorrectly on iPadOS. This is a workaround for this issue.
+				offset = 5.0;
 			}
-			
-			toolbarBarFrame.origin.y += offset;
 		}
+		
+		toolbarBarFrame.origin.y += offset;
 	}
 	
 	return toolbarBarFrame;
@@ -1960,32 +1967,19 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (UIEdgeInsets)insetsForBottomDockingView
 {
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return UIEdgeInsetsZero;
+	}
+	
 	BOOL isPad = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad;
 	
-	if(!LNPopupEnvironmentHasGlass() && self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
+	if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
 	{
 		return UIEdgeInsetsZero;
 	}
-	
-	CGFloat offset = 0.0;
-	
-	if(LNPopupEnvironmentHasGlass() && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && !isPad && self.isToolbarHidden == NO)
-	{
-		offset = 8.0;
-	}
-	
-	if(@available(iOS 14.0, *))
-	if(LNPopupEnvironmentHasGlass() && self.splitViewController != nil && [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary] == self)
-	{
-		return UIEdgeInsetsZero;
-	}
-	
-//	if(LNPopupEnvironmentHasGlass() && !isPad && self.view.window.safeAreaInsets.bottom == 0 && !self.isToolbarHidden)
-//	{
-//		return UIEdgeInsetsMake(0, 0, 30, 0);
-//	}
-//	
-	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom) + offset, 0);
+
+	return UIEdgeInsetsMake(0, 0, MAX(self.view.superview.safeAreaInsets.bottom, self.view.window.safeAreaInsets.bottom), 0);
 }
 
 - (BOOL)requiresIndirectSafeAreaManagement
