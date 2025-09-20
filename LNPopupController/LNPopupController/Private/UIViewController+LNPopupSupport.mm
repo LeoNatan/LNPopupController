@@ -552,6 +552,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 {
 //	NSLog(@"_ln_beginTransitioningLockWithWindow: %@ userInteractionsEnabled: %@ allowedViews: %@ lockRotation: %@", window, @(userInteractionEnabled), allowedViews, @(lockRotation));
 	
+	[window _ln_setLockedForPopupTransition:YES];
 	if(userInteractionEnabled)
 	{
 		[window _ln_setPopupInteractionOnly:allowedViews];
@@ -613,6 +614,8 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	{
 		enableRotation(window);
 	}
+	
+	[window _ln_setLockedForPopupTransition:NO];
 #endif
 }
 

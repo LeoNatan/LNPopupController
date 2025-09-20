@@ -14,11 +14,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface _LNPopupTransitionView : UIView <LNPopupTransitionView>
 
 + (instancetype)transitionViewWithSourceView:(UIView*)sourceView;
++ (instancetype)transitionViewWithSourceLayer:(CALayer*)sourceLayer;
 
 - (instancetype)initWithSourceView:(UIView*)sourceView;
+- (instancetype)initWithSourceLayer:(CALayer*)sourceLayer;
 
 - (void)setTargetFrameUpdatingTransform:(CGRect)targetFrame;
 
+@property (nonatomic, strong, readonly) CALayer* sourceLayer;
 @property (nonatomic, strong, readonly) UIView* sourceView;
 
 @property (nonatomic, copy) NSShadow* shadow;

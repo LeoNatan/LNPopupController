@@ -387,6 +387,17 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 }
 
 static const void* LNPopupInteractionOnlyKey = &LNPopupInteractionOnlyKey;
+static const void* LNPopupWindowIsLocked = &LNPopupWindowIsLocked;
+
+- (BOOL)_ln_isLockedForPopupTransition
+{
+	return [objc_getAssociatedObject(self, LNPopupWindowIsLocked) boolValue];
+}
+
+- (void)_ln_setLockedForPopupTransition:(BOOL)lockedForPopupTransition
+{
+	objc_setAssociatedObject(self, LNPopupWindowIsLocked, @(lockedForPopupTransition), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 - (NSArray*)_ln_popupInteractionOnly
 {
@@ -395,11 +406,16 @@ static const void* LNPopupInteractionOnlyKey = &LNPopupInteractionOnlyKey;
 
 - (void)_ln_setPopupInteractionOnly:(NSArray*)popupInteractionOnly
 {
-	objc_setAssociatedObject(self, LNPopupInteractionOnlyKey, popupInteractionOnly, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	objc_setAssociatedObject(self, LNPopupInteractionOnlyKey, popupInteractionOnly, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 - (UIView *)_ln_hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
+	if(self._ln_isLockedForPopupTransition == NO)
+	{
+		return [self _ln_hitTest:point withEvent:event];
+	}
+	
 	id tested = [self _ln_hitTest:point withEvent:event];
 	
 	NSArray<UIView*>* allowedViews = self._ln_popupInteractionOnly;
@@ -415,7 +431,16 @@ static const void* LNPopupInteractionOnlyKey = &LNPopupInteractionOnlyKey;
 			}
 		}
 		
-		return isAllowed ? tested : nil;
+		if(isAllowed == NO)
+		{
+			tested = nil;
+		}
+	}
+	
+	if(tested == nil && self._ln_isLockedForPopupTransition)
+	{
+		//Suppress UIKit log print.
+		return [UIView new];
 	}
 	
 	return tested;

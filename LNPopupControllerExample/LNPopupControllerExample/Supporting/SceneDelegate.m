@@ -7,7 +7,7 @@
 {
 	id rv = [super hitTest:point withEvent:event];
 	
-//	NSLog(@"DemoWindow hitTest %@", rv);
+//	NSLog(@"DemoWindow hitTest %@ userInteractionEnabled: %@", rv, [self valueForKey:@"userInteractionEnabled"]);
 	
 	return rv;
 }

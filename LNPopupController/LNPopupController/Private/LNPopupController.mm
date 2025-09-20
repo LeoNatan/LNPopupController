@@ -425,16 +425,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return YES;
 }
 
-- (_LNPopupTransitionView*)_userTransitionViewForTransitionFromState:(LNPopupPresentationState)fromState toState:(LNPopupPresentationState)state userView:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)userView
+- (_LNPopupTransitionView*)_customTransitionViewForTransitionFromState:(LNPopupPresentationState)fromState toState:(LNPopupPresentationState)state userView:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)userView
 {
+	//Normally, only LNPopupUI should provide a custom transition view
 	_LNPopupTransitionView* userTransitionView = (id)[self.currentContentController _ln_transitionViewForPopupTransitionFromPresentationState:fromState toPresentationState:state view:userView];
 	
 	if(userTransitionView == nil || [userTransitionView isKindOfClass:_LNPopupTransitionView.class] == NO)
-	{
-		return nil;
-	}
-	
-	if([self _validateViewForTransition:userTransitionView.sourceView] == NO)
 	{
 		return nil;
 	}
@@ -454,22 +450,22 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	return userView;
 }
 
-- (void)animateOpenTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(_LNPopupTransitionView*)userTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
+- (void)animateOpenTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator customTransitionView:(_LNPopupTransitionView*)customTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
 	_LNPopupTransitionOpenAnimator* handler;
 	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
 	{
-		handler = [[_LNPopupTransitionPreferredOpenAnimator alloc] initWithTransitionView:userTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView];
+		handler = [[_LNPopupTransitionPreferredOpenAnimator alloc] initWithTransitionView:customTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView];
 	}
 	else
 	{
-		handler = [[_LNPopupTransitionGenericOpenAnimator alloc] initWithTransitionView:userTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView];
+		handler = [[_LNPopupTransitionGenericOpenAnimator alloc] initWithTransitionView:customTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView];
 	}
 	
 	[handler animateWithAnimator:animator otherAnimations:otherAnimations];
 }
 
-- (void)animateCloseTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator userTransitionView:(_LNPopupTransitionView*)userTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
+- (void)animateCloseTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator customTransitionView:(_LNPopupTransitionView*)userTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
 	_LNPopupTransitionCloseAnimator* handler;
 	
@@ -709,7 +705,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	   ((stateAtStart == LNPopupPresentationStateBarPresented && state == LNPopupPresentationStateOpen) ||
 		(state == LNPopupPresentationStateBarPresented)))
 	{
-		transitionView = [self _userTransitionViewForTransitionFromState:publicStateAtStart toState:state userView:&userView];
+		//Normally, only LNPopupUI should provide a custom transition view
+		transitionView = [self _customTransitionViewForTransitionFromState:publicStateAtStart toState:state userView:&userView];
 		
 		if(transitionView == nil)
 		{
@@ -726,15 +723,15 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 #endif
 
 	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring ? 0.85 : 1.0 animations:nil];
-	_runningPopupAnimation.userInteractionEnabled = NO;
+	_runningPopupAnimation.userInteractionEnabled = state == LNPopupPresentationStateOpen;
 	
 	if(stateAtStart == LNPopupPresentationStateBarPresented)
 	{
-		[self animateOpenTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
+		[self animateOpenTransitionIfNeededWithAnimator:_runningPopupAnimation customTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
 	}
 	else if(state == LNPopupPresentationStateBarPresented)
 	{
-		[self animateCloseTransitionIfNeededWithAnimator:_runningPopupAnimation userTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
+		[self animateCloseTransitionIfNeededWithAnimator:_runningPopupAnimation customTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
 	}
 	else
 	{
@@ -753,7 +750,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if(animated)
 	{
-		[self _beginTransitionLockWithUserInteractionEnabled:NO];
+		[self _beginTransitionLockWithUserInteractionEnabled:state == LNPopupPresentationStateOpen];
 	}
 	
 	[_runningPopupAnimation startAnimation];
@@ -2172,7 +2169,7 @@ id __LNPopupEmptyBlurFilter(void)
 			{
 				NSString* frameworkName = NSClassFromString(@"__LNPopupUI") ? @"LNPopupUI" : @"LNPopupController";
 				NSString* subsystem = [NSString stringWithFormat:@"com.LeoNatan.%@", frameworkName];
-				os_log_t customLog = os_log_create(subsystem.UTF8String, frameworkName.UTF8String);
+				os_log_t customLog = os_log_create(subsystem.UTF8String, "ProMotion");
 				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: This device supports ProMotion, but %{public}s does not enable the full range of refresh rates by setting the “CADisableMinimumFrameDurationOnPhone” Info.plist key to “true”. See https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro", frameworkName, NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
 			}
 		}

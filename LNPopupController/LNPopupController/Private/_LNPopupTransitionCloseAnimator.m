@@ -31,7 +31,7 @@
 
 - (CGRect)sourceFrame
 {
-	return [self.popupContentView.window convertRect:self.transitionView.sourceView.bounds fromView:self.transitionView.sourceView];
+	return [self.popupContentView.window.layer convertRect:self.transitionView.sourceLayer.bounds fromLayer:self.transitionView.sourceLayer];
 }
 
 - (CGRect)targetFrame

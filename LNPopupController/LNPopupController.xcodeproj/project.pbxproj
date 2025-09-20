@@ -239,8 +239,6 @@
 				394005FB2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.mm */,
 				39C553E22D91924900F8D8B2 /* LNPopupImageView+Private.h */,
 				399D37B72ADC672D00EA5038 /* LNPopupImageView.mm */,
-				39C553DD2D8F2B3200F8D8B2 /* _LNPopupTransitionView.h */,
-				39C553DE2D8F2B3200F8D8B2 /* _LNPopupTransitionView.mm */,
 				3947E1B81B6300370001178B /* LNPopupBar+Private.h */,
 				39C39F412DA3DB90007630FD /* LNPopupBarExtras.mm */,
 				3947E1A41B61CD650001178B /* LNPopupBar.mm */,
@@ -301,6 +299,8 @@
 		39B54FFE2D92D26300B474EC /* TransitionAnimators */ = {
 			isa = PBXGroup;
 			children = (
+				39C553DD2D8F2B3200F8D8B2 /* _LNPopupTransitionView.h */,
+				39C553DE2D8F2B3200F8D8B2 /* _LNPopupTransitionView.mm */,
 				39B54FFF2D92D29000B474EC /* _LNPopupTransitionAnimator.h */,
 				39B550002D92D29000B474EC /* _LNPopupTransitionAnimator.mm */,
 				39B550012D92D29000B474EC /* _LNPopupTransitionCloseAnimator.h */,

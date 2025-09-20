@@ -20,19 +20,38 @@
 	return [[self alloc] initWithSourceView:sourceView];
 }
 
++ (instancetype)transitionViewWithSourceLayer:(CALayer *)sourceLayer
+{
+	return [[self alloc] initWithSourceLayer:sourceLayer];
+}
+
 - (instancetype)initWithSourceView:(UIView*)sourceView
+{
+	self = [self initWithSourceLayer:sourceView.layer];
+	if(self)
+	{
+		_sourceView = sourceView;
+	}
+	return self;
+}
+
+- (instancetype)initWithSourceLayer:(CALayer *)sourceLayer
 {
 	self = [super initWithFrame:CGRectZero];
 	
 	if(self)
 	{
-		_sourceView = sourceView;
+		_sourceLayer = sourceLayer;
 		
 		_portalView = [[NSClassFromString(LNPopupHiddenString("_UIPortalView")) alloc] initWithFrame:CGRectZero];
 		_portalView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		[_portalView setValue:sourceView forKey:LNPopupHiddenString("sourceView")];
+		[_portalView.layer setValue:sourceLayer forKey:LNPopupHiddenString("sourceLayer")];
 		[_portalView setValue:@YES forKey:LNPopupHiddenString("hidesSourceView")];
 		[_portalView setValue:@YES forKey:LNPopupHiddenString("matchesTransform")];
+		if(@available(iOS 26.0, *))
+		{
+			[_portalView setValue:@NO forKey:LNPopupHiddenString("hidesSourceLayerInOtherPortals")];
+		}
 		_portalView.layer.contentsGravity = kCAGravityResize;
 		
 		_radiusContainerView = [[UIView alloc] initWithFrame:CGRectZero];

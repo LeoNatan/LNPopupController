@@ -56,7 +56,8 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 
 @property (nonatomic, strong, readonly) UIEvent* _ln_currentEvent;
 
-@property (nonatomic, assign, nullable, getter=_ln_popupInteractionOnly, setter=_ln_setPopupInteractionOnly:) NSArray* popupInteractionOnly;
+@property (nonatomic, getter=_ln_isLockedForPopupTransition, setter=_ln_setLockedForPopupTransition:) BOOL lockedForPopupTransition;
+@property (nullable, nonatomic, copy, getter=_ln_popupInteractionOnly, setter=_ln_setPopupInteractionOnly:) NSArray* popupInteractionOnly;
 
 @end
 
