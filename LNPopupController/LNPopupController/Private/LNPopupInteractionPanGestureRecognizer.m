@@ -119,6 +119,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	
 	if([otherGestureRecognizer.view isKindOfClass:[UIScrollView class]])
 	{
+		if(@available(iOS 26.0, *))
+		{
+			return NO;
+		}
+		
 		if(otherGestureRecognizer.view == gestureRecognizer.view)
 		{
 			return NO;

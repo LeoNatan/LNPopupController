@@ -604,7 +604,7 @@
 	{
 		if(wantsGlassBackground)
 		{
-			targetVC.popupContentView.backgroundEffect = [UIGlassEffect effectWithStyle:UIGlassEffectStyleClear];
+			targetVC.popupContentView.backgroundEffect = [UIGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
 		}
 	}
 #endif

@@ -16,7 +16,7 @@ class ScrollingMapViewController: UIViewController {
 		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
 		
 		let gridBarButtonItem = UIBarButtonItem()
-		gridBarButtonItem.image = LNSystemImage("map", scale: useCompact ? .compact : .normal)
+		gridBarButtonItem.image = LNSystemImage("map.fill", scale: useCompact ? .compact : .normal)
 		popupItem.barButtonItems = [gridBarButtonItem]
 		
 		LNApplyTitleWithSettings(to: self)
