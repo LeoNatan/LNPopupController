@@ -31,17 +31,15 @@ Check the demo project for many common use cases of the framework in various sce
 ### Features
 
 * Supports iOS 26 glass design, while maintaining a system-apropriate look and feel on previous iOS versions
-* Available for iOS 13 and above, as an Xcode framework or an SPM package
+* Available for iOS 13 and above, as an SPM package for Swift and Objective C
 * Good citizen in modern UIKit world
-* For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI).
+* For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI)
 
 ## Adding to Your Project
 
 ### Swift Package Manager
 
-Swift Package Manager is the recommended way to integrate `LNPopupController` in your project.
-
-`LNPopupController` supports SPM versions 6.0 and above (Xcode 16). In Xcode, click `File` → `Add Package Dependencies…`, enter `https://github.com/LeoNatan/LNPopupController`. Select the version you’d like to use.
+`LNPopupController` supports SPM versions 6.0 (Xcode 16) and above. In Xcode, click `File` → `Add Package Dependencies…`, enter `https://github.com/LeoNatan/LNPopupController`. Select the version you’d like to use.
 
 You can also manually add the package to your Package.swift file:
 
@@ -234,7 +232,7 @@ To hide the popup close button, set the `popupCloseButtonStyle` property to `LNP
 
 Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee is enabled. Otherwise, the text will be truncated.
 
-<p align="center"><img src="./Supplements/floating_no_scroll_delay.gif" width="360"/> <img src="./Supplements/legacy_compact_scroll.gif" width="360"/></p>
+<p align="center"><img src="./Supplements/floating_compact_no_scroll_delay.gif" width="360"/> <img src="./Supplements/floating_compact_scroll.gif" width="360"/></p>
 
 #### Popup Transitions
 
