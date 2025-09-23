@@ -546,9 +546,10 @@
                             <constraint firstAttribute="trailingMargin" secondItem="DxD-7y-6Na" secondAttribute="trailing" constant="-14" id="QKL-fS-2j5"/>
                             <constraint firstItem="DxD-7y-6Na" firstAttribute="centerY" secondItem="1ke-mH-VCb" secondAttribute="centerY" priority="999" id="Rzj-f0-6l2"/>
                             <constraint firstItem="DxD-7y-6Na" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ke-mH-VCb" secondAttribute="leadingMargin" id="jRx-Ij-5IR"/>
+                            <constraint firstAttribute="top" relation="lessThanOrEqual" secondItem="dF7-sj-hbZ" secondAttribute="top" constant="-10" id="lt0-M0-0M2"/>
                             <constraint firstItem="sXy-Ye-lrV" firstAttribute="centerY" secondItem="DxD-7y-6Na" secondAttribute="centerY" priority="999" id="rhO-bh-rQb"/>
                             <constraint firstItem="N4q-gh-14d" firstAttribute="top" relation="greaterThanOrEqual" secondItem="DxD-7y-6Na" secondAttribute="bottom" constant="8" id="rkC-wh-cOe"/>
-                            <constraint firstItem="dF7-sj-hbZ" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" id="wc3-WW-zft"/>
+                            <constraint firstItem="dF7-sj-hbZ" firstAttribute="top" secondItem="KIX-8f-BFw" secondAttribute="top" priority="990" id="wc3-WW-zft"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Tab" image="1.square" catalog="system" id="wDA-8g-o9a"/>

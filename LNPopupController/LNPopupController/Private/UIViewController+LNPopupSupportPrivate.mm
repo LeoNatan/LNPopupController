@@ -2405,6 +2405,16 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 }
 
+- (BOOL)requiresIndirectSafeAreaManagement
+{
+	if(LNPopupEnvironmentHasGlass())
+	{
+		return YES;
+	}
+	
+	return super.requiresIndirectSafeAreaManagement;
+}
+
 @end
 
 #pragma mark - View controller appearance control

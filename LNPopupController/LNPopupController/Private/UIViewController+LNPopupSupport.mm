@@ -445,6 +445,10 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (CGFloat)_ln_popupOffsetForPopupBar:(LNPopupBar*)popupBar
 {
+#if DEBUG_POPUP_BAR_OFFSET
+	return -80;
+#else
+	
 	if(!popupBar.resolvedIsFloating)
 	{
 		return 0.0;
@@ -455,9 +459,6 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 		return 0.0;
 	}
 	
-#if DEBUG_POPUP_BAR_OFFSET
-	return -80;
-#else
 	id dockingView = self.bottomDockingViewForPopupBar;
 	
 	if(dockingView != nil && ([dockingView isKindOfClass:UIToolbar.class] || [dockingView isKindOfClass:UITabBar.class]) == NO)
@@ -474,6 +475,14 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	if(self.view.window.safeAreaInsets.bottom == 0)
 	{
 		return LNPopupEnvironmentHasGlass() ? -10.0 : -4.0;
+	}
+	
+	if(LNPopupEnvironmentHasGlass())
+	{
+		if(self.presentingViewController != nil && [NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"])
+		{
+			return -20;
+		}
 	}
 	
 	BOOL isPad = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad;

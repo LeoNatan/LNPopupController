@@ -222,13 +222,21 @@
 	}]];
 	_galleryButton.translatesAutoresizingMaskIntoConstraints = NO;
 	
+	NSLayoutConstraint* x = [self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_galleryButton.topAnchor constant:LNPopupSettingsHasOS26Glass() ? 6 : -1];
+	x.priority = UILayoutPriorityRequired - 10;
+	
 	[self.view addSubview:_galleryButton];
 	[NSLayoutConstraint activateConstraints:@[
 		[self.view.safeAreaLayoutGuide.trailingAnchor constraintEqualToAnchor:_galleryButton.trailingAnchor constant:LNPopupSettingsHasOS26Glass() ? 20 : 8],
-		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_galleryButton.topAnchor constant:LNPopupSettingsHasOS26Glass() ? 6 : -1],
+		x
 	]];
+	
 	if(LNPopupSettingsHasOS26Glass())
 	{
+		NSLayoutConstraint* y = [self.view.topAnchor constraintLessThanOrEqualToAnchor:_galleryButton.topAnchor constant:-10];
+		y.priority = UILayoutPriorityRequired;
+		y.active = YES;
+		
 		[NSLayoutConstraint activateConstraints:@[
 			[_galleryButton.widthAnchor constraintEqualToConstant:46],
 			[_galleryButton.heightAnchor constraintEqualToConstant:46],
@@ -336,18 +344,20 @@
 			traitCollection = self.traitCollection;
 		}
 		
+		BOOL canHaveSidebar = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		
 		if(self.tabBarController != nil)
 		{
-			[self.navigationItem setHidesBackButton:self.tabBarController.sidebar.isHidden == NO];
+			[self.navigationItem setHidesBackButton:canHaveSidebar && self.tabBarController.sidebar.isHidden == NO];
 		}
 		
 		BOOL isFirst = [self.navigationController.viewControllers indexOfObject:self] == 0;
 		BOOL isTNil = self.tabBarController == nil;
 		BOOL isNNil = self.navigationController == nil;
-		BOOL canHaveSidebar = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		BOOL isSNil = self.splitViewController == nil;
 		BOOL isSidebarHidden = self.tabBarController.sidebar.isHidden;
 		
-		_hideTabBarButton.hidden = isFirst == NO || isNNil || (!isTNil && canHaveSidebar && isSidebarHidden == NO);
+		_hideTabBarButton.hidden = isSNil == NO || isFirst == NO || isNNil || (!isTNil && canHaveSidebar && isSidebarHidden == NO);
 	}
 	else
 	{
@@ -362,17 +372,11 @@
 	}
 }
 
-- (void)viewWillLayoutSubviews
+- (void)viewDidLayoutSubviews
 {
-	[super viewWillLayoutSubviews];
+	[super viewDidLayoutSubviews];
 	
-	if(@available(iOS 18.0, *))
-	{
-		if(self.tabBarController != nil)
-		{
-			[self updateHideTabBarButtonHiddenStateForTraitCollection:self.traitCollection];
-		}
-	}
+	[self updateHideTabBarButtonHiddenStateForTraitCollection:self.traitCollection];
 }
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator

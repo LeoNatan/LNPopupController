@@ -22,6 +22,7 @@
 #import "_LNPopupTransitionGenericCloseAnimator.h"
 #import "_LNPopupTransitionPreferredCloseAnimator.h"
 #import "LNPopupPresentationContainerSupport.h"
+#import "_LNPopupBarTabBarAccessoryView.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -1563,6 +1564,13 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 - (void)_presentPopupBarWithContentViewController:(UIViewController*)contentViewController openPopup:(BOOL)open animated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
 	_containerController.popupContentViewController = contentViewController;
+	if(@available(iOS 26.0, *))
+	{
+		if([_containerController isKindOfClass:UITabBarController.class])
+		{
+			[(UITabBarController*)_containerController setBottomAccessory:[[UITabAccessory alloc] initWithContentView:[[_LNPopupBarTabBarAccessoryView alloc] initWithPopupController:self]]];
+		}
+	}
 	
 	[self _start120HzHack];
 	
@@ -1601,38 +1609,38 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		self.popupBar.clipsToBounds = NO;
 		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
-		if(@available(iOS 26, *))
-		if(animated && LNPopupEnvironmentHasGlass())
+		if(animated)
 		{
 			[UIView performWithoutAnimation:^{
-				CGRect frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
+				self.popupBar.floatingBackgroundShadowView.alpha = 0.0;
 				
-				if(animated)
+				if(@available(iOS 26.0, *))
+				if(LNPopupEnvironmentHasGlass())
 				{
+					CGRect frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
 					self.popupBar.contentView.effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
 					self.popupBar.contentView.contentView.alpha = 0.0;
-					self.popupBar.floatingBackgroundShadowView.alpha = 0.0;
 #ifndef LNPopupControllerEnforceStrictClean
 					self.popupBar.contentView.contentView.layer.filters = @[__LNPopupEmptyBlurFilter()];
 					[self.popupBar.contentView.contentView.layer setValue:@5 forKeyPath:__LNPopupBlurFilterUpdateKey];
 #endif
+					
+					UIView* target;
+					if(self.popupBar.activeAppearance.floatingBackgroundEffect.ln_isGlass)
+					{
+						target = self.popupBar.layoutContainer;
+					}
+					else
+					{
+						target = self.popupBar;
+					}
+					self.popupBar.os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:target];
+					self.popupBar.os26TransitionView.matchesTransform = NO;
+					self.popupBar.os26TransitionView.matchesPosition = NO;
+					self.popupBar.os26TransitionView.frame = frame;
+					self.popupBar.os26TransitionView.transform = CGAffineTransformMakeScale(1.05, 1.05);
+					self.popupBar.os26TransitionView.alpha = 0.0;
 				}
-				
-				UIView* target;
-				if(self.popupBar.activeAppearance.floatingBackgroundEffect.ln_isGlass)
-				{
-					target = self.popupBar.layoutContainer;
-				}
-				else
-				{
-					target = self.popupBar;
-				}
-				self.popupBar.os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:target];
-				self.popupBar.os26TransitionView.matchesTransform = NO;
-				self.popupBar.os26TransitionView.matchesPosition = NO;
-				self.popupBar.os26TransitionView.frame = frame;
-				self.popupBar.os26TransitionView.transform = CGAffineTransformMakeScale(1.05, 1.05);
-				self.popupBar.os26TransitionView.alpha = 0.0;
 			}];
 		}
 #endif
