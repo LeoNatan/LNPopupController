@@ -22,7 +22,6 @@
 #import "_LNPopupTransitionGenericCloseAnimator.h"
 #import "_LNPopupTransitionPreferredCloseAnimator.h"
 #import "LNPopupPresentationContainerSupport.h"
-#import "_LNPopupBarTabBarAccessoryView.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -1564,13 +1563,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 - (void)_presentPopupBarWithContentViewController:(UIViewController*)contentViewController openPopup:(BOOL)open animated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
 	_containerController.popupContentViewController = contentViewController;
-	if(@available(iOS 26.0, *))
-	{
-		if([_containerController isKindOfClass:UITabBarController.class])
-		{
-			[(UITabBarController*)_containerController setBottomAccessory:[[UITabAccessory alloc] initWithContentView:[[_LNPopupBarTabBarAccessoryView alloc] initWithPopupController:self]]];
-		}
-	}
 	
 	[self _start120HzHack];
 	
