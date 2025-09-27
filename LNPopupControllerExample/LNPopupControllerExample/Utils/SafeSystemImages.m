@@ -38,10 +38,11 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, BOOL animated, 
 	LNSystemImageScale scale;
 	LNSystemImageScale backForwardScale;
 	
+	BOOL isMinimized = traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline;
 	BOOL isCompact = LNBarIsCompact();
 	BOOL isFloatingCompact = LNBarIsFloatingCompact();
 	
-	if(isCompact)
+	if(isMinimized || isCompact)
 	{
 		scale = LNSystemImageScaleCompact;
 		backForwardScale = LNSystemImageScaleCompact;
@@ -57,10 +58,10 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, BOOL animated, 
 		backForwardScale = LNSystemImageScaleNormal;
 	}
 	
-	UIBarButtonItem* play = LNSystemBarButtonItem(@"pause.fill", scale != LNSystemImageScaleLarger ? scale + 1 : scale, target, action);
-	play.accessibilityLabel = NSLocalizedString(@"Pause", @"");
-	play.accessibilityIdentifier = @"PauseButton";
-	play.accessibilityTraits = UIAccessibilityTraitButton;
+	UIBarButtonItem* pause = LNSystemBarButtonItem(@"pause.fill", scale != LNSystemImageScaleLarger ? scale + 1 : scale, target, action);
+	pause.accessibilityLabel = NSLocalizedString(@"Pause", @"");
+	pause.accessibilityIdentifier = @"PauseButton";
+	pause.accessibilityTraits = UIAccessibilityTraitButton;
 	
 	UIBarButtonItem* stop = LNSystemBarButtonItem(@"stop.fill", scale, target, action);
 	stop.accessibilityLabel = NSLocalizedString(@"Stop", @"");
@@ -86,24 +87,28 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, BOOL animated, 
 	{
 		if(traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
-			[popupItem setLeadingBarButtonItems:@[ play ] animated:animated];
+			[popupItem setLeadingBarButtonItems:@[ pause ] animated:animated];
 			[popupItem setTrailingBarButtonItems:@[ more ] animated:animated];
 		}
 		else
 		{
-			[popupItem setLeadingBarButtonItems:@[ prev, play, next ] animated:animated];
+			[popupItem setLeadingBarButtonItems:@[ prev, pause, next ] animated:animated];
 			[popupItem setTrailingBarButtonItems:@[ more ] animated:animated];
 		}
 	}
 	else
 	{
-		if(traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+		if(isMinimized)
 		{
-			[popupItem setBarButtonItems:@[ play, next ] animated:NO];
+			[popupItem setBarButtonItems:@[ pause ] animated:animated];
+		}
+		else if(traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+		{
+			[popupItem setBarButtonItems:@[ pause, next ] animated:animated];
 		}
 		else
 		{
-			[popupItem setBarButtonItems:@[ prev, play, next ] animated:NO];
+			[popupItem setBarButtonItems:@[ prev, pause, next ] animated:animated];
 		}
 	}
 }

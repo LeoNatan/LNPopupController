@@ -1,4 +1,4 @@
-name: "Feature Request"
+name: "Feature Request / Enhancement"
 description: "Suggest an idea for this project."
 labels: [enhancement]
 body:
@@ -19,4 +19,4 @@ body:
       label: "Additional Context:"
       description: "Add any other context or screenshots about the feature request here."
     validations:
-      required: true
+      required: false

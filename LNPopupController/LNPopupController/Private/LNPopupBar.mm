@@ -214,8 +214,6 @@ __attribute__((objc_direct_members))
 	LNPopupImageView* _imageView;
 	
 	_LNPopupBarTitlesView* _titlesView;
-	NSLayoutConstraint* _titlesViewLeadingConstraint;
-	NSLayoutConstraint* _titlesViewTrailingConstraint;
 	
 	UILabel<LNMarqueeLabel>* _titleLabel;
 	UILabel<LNMarqueeLabel>* _subtitleLabel;
@@ -305,7 +303,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 }
 
-- (void)set_hackyMargins:(NSDirectionalEdgeInsets)_hackyMargins
+- (void)_setHackyMargins:(NSDirectionalEdgeInsets)_hackyMargins
 {
 	__hackyMargins = _hackyMargins;
 	
@@ -342,6 +340,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		self.clipsToBounds = NO;
 		
 		self.limitFloatingContentWidth = YES;
+		self.supportsMinimization = YES;
 		
 		_inheritsAppearanceFromDockingView = YES;
 		_standardAppearance = [LNPopupBarAppearance new];
@@ -426,20 +425,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_titlesView.autoresizingMask = UIViewAutoresizingNone;
 		_titlesView.accessibilityTraits = UIAccessibilityTraitButton;
 		_titlesView.isAccessibilityElement = YES;
-		_titlesView.translatesAutoresizingMaskIntoConstraints = NO;
 		
 		_backgroundView.accessibilityTraits = UIAccessibilityTraitButton;
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
 		
 		[_contentView.contentView addSubview:_titlesView];
-		_titlesViewLeadingConstraint = [_titlesView.leadingAnchor constraintEqualToAnchor:_contentView.leadingAnchor];
-		_titlesViewTrailingConstraint = [_contentView.trailingAnchor constraintEqualToAnchor:_titlesView.trailingAnchor];
-		[NSLayoutConstraint activateConstraints:@[
-			_titlesViewLeadingConstraint,
-			_titlesViewTrailingConstraint,
-			[_contentView.centerYAnchor constraintEqualToAnchor:_titlesView.centerYAnchor]
-		]];
-		
+
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
 		_progressView.progressViewStyle = UIProgressViewStyleBar;
 		_progressView.trackImage = [UIImage new];
@@ -575,6 +566,23 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 }
 
+- (NSDirectionalEdgeInsets)floatingLayoutMargins
+{
+	NSDirectionalEdgeInsets rv = NSDirectionalEdgeInsetsZero;
+	BOOL isRTL = self.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
+	if(isRTL)
+	{
+		rv.leading = self.layoutMargins.right + 1;
+		rv.trailing = self.layoutMargins.left + 1;
+	}
+	else
+	{
+		rv.leading = self.layoutMargins.left + 1;
+		rv.trailing = self.layoutMargins.right + 1;
+	}
+	return rv;
+}
+
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
@@ -587,7 +595,10 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	frame.size.height = barHeight;
 	_layoutContainer.frame = frame;
 	
-	frame = UIEdgeInsetsInsetRect(frame, _LNEdgeInsetsFromDirectionalEdgeInsets(self, __hackyMargins));
+	if(_resolvedIsCustom == NO || self.customBarWantsFullBarWidth == NO)
+	{
+		frame = UIEdgeInsetsInsetRect(frame, _LNEdgeInsetsFromDirectionalEdgeInsets(self, __hackyMargins));
+	}
 	
 	[_backgroundView setFrame:frame];
 	if(!LNPopupEnvironmentHasGlass())
@@ -609,7 +620,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			}
 			else
 			{
-				contentFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(0, self.layoutMargins.left + 1, 0, self.layoutMargins.right + 1));
+				contentFrame = UIEdgeInsetsInsetRect(frame, _LNEdgeInsetsFromDirectionalEdgeInsets(self, self.floatingLayoutMargins));
 			}
 		}
 		else
@@ -1563,7 +1574,6 @@ static BOOL __LNPopupUseSystemMarqueeLabel(void)
 		widthRight = MAX(widthRight, _contentView.layoutMargins.right);
 	}
 	
-	//The added padding is for iOS 10 and below, or for certain conditions where iOS 11 won't put its own padding
 	titleInsets->left = widthLeft;
 	titleInsets->right = widthRight;
 }
@@ -1665,17 +1675,6 @@ static BOOL __LNPopupUseSystemMarqueeLabel(void)
 	else
 	{
 		[self _updateTitleInsetsForProminentBar:&titleInsets];
-	}
-	
-	if(self.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
-	{
-		_titlesViewLeadingConstraint.constant = titleInsets.left;
-		_titlesViewTrailingConstraint.constant = titleInsets.right;
-	}
-	else
-	{
-		_titlesViewLeadingConstraint.constant = titleInsets.right;
-		_titlesViewTrailingConstraint.constant = titleInsets.left;
 	}
 	
 #if DEBUG
@@ -1797,6 +1796,11 @@ static BOOL __LNPopupUseSystemMarqueeLabel(void)
 			[_subtitleLabel reset];
 		}
 	}
+	
+	_titlesView.frame = CGRectMake(titleInsets.left, 0, _contentView.bounds.size.width - titleInsets.left - titleInsets.right, [_titlesView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height);
+	CGPoint center = _titlesView.center;
+	center.y = _contentView.contentView.center.y;
+	_titlesView.center = center;
 	
 	[self _updateAccessibility];
 	
@@ -2002,7 +2006,19 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		[items addObject:barButtonItem];
 	}];
 	
-	[_toolbar setItems:items animated:__animatesItemSetter];
+	void (^setter)(void) = ^ {
+		[_toolbar setItems:items animated:__animatesItemSetter];
+		[_toolbar layoutIfNeeded];
+	};
+	
+	if(__animatesItemSetter)
+	{
+		setter();
+	}
+	else
+	{
+		[UIView performWithoutAnimation:setter];
+	}
 	
 	[self _setNeedsTitleLayoutRemovingLabels:NO];
 	
@@ -2295,3 +2311,39 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 }
 
 @end
+
+#pragma mark LNPopupBarEnvironmentTrait
+
+@implementation LNPopupBarEnvironmentTrait
+
++ (NSInteger)defaultValue
+{
+	return LNPopupBarEnvironmentUnspecified;
+}
+
++ (NSString *)name
+{
+	return @"LNPopupBarEnvironmentTrait";
+}
+
++ (NSString *)identifier
+{
+	return @"com.LeoNatan.LNPopupController.LNPopupBarEnvironmentTrait";
+}
+
+@end
+
+@implementation UITraitCollection (LNPopupBarEnvironmentSupport)
+
+- (LNPopupBarEnvironment)popupBarEnvironment
+{
+	if(@available(iOS 17.0, *))
+	{
+		return (LNPopupBarEnvironment)[self valueForNSIntegerTrait:LNPopupBarEnvironmentTrait.class];
+	}
+	
+	return LNPopupBarEnvironmentUnspecified;
+}
+
+@end
+

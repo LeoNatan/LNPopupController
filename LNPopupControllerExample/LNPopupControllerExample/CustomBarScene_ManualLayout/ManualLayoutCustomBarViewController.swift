@@ -84,6 +84,12 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 		}
 	}
 	
+	public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		
+		print(traitCollection.popUpBarEnvironment.rawValue)
+	}
+	
 	public
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()

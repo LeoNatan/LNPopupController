@@ -79,7 +79,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, copy) NSAttributedString* attributedTitle;
 @property (nonatomic, copy) NSAttributedString* attributedSubtitle;
 
-@property (nonatomic) NSDirectionalEdgeInsets _hackyMargins;
+@property (nonatomic, readonly) NSDirectionalEdgeInsets floatingLayoutMargins;
+@property (nonatomic, setter=_setHackyMargins:) NSDirectionalEdgeInsets _hackyMargins;
 
 @property (nonatomic, strong) UIImage* image;
 

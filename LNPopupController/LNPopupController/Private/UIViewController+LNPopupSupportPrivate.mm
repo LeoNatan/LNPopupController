@@ -11,6 +11,7 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
 #import "UIView+LNPopupSupportPrivate.h"
+#import "UITabBar+LNPopupMinimizationSupport.h"
 
 CF_EXTERN_C_BEGIN
 extern void __ln_doNotCall__fixUIHostingViewHitTest(void) noexcept;
@@ -756,10 +757,8 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	[self _ln_popup_viewDidDisappear:animated];
 }
 
-- (void)_ln_popup_viewDidLayoutSubviews
+- (void)_ln_layoutPopupBarAndContent
 {
-	[self _ln_popup_viewDidLayoutSubviews];
-	
 	if(self._ln_popupController_nocreate.popupControllerInternalState > LNPopupPresentationStateBarHidden)
 	{
 		if(self.bottomDockingViewForPopup_nocreateOrDeveloper == self._ln_bottomBarSupport_nocreate)
@@ -835,6 +834,13 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 			extensionView.alpha = 1.0;
 		}
 	}
+}
+
+- (void)_ln_popup_viewDidLayoutSubviews
+{
+	[self _ln_popup_viewDidLayoutSubviews];
+	
+	[self _ln_layoutPopupBarAndContent];
 }
 
 - (BOOL)_ignoringLayoutDuringTransition
@@ -970,17 +976,12 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 #pragma mark - UITabBarController
 
-@interface UITabBarController (LNPopupSupportPrivate) @end
 @implementation UITabBarController (LNPopupSupportPrivate)
 
 - (void)_layoutModernTabBarControllerFloatingPopupWithSuperFallback:(void(^)(void))superFallback API_AVAILABLE(ios(26.0))
 {
 	void (^traditionalTabBarFallback)(void) = ^
 	{
-//		NSUInteger idx = [self.view.subviews indexOfObjectPassingTest:^BOOL(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//			return [obj _ln_isAncestorOfView:self.tabBar];
-//		}];
-		
 		static NSString* className = LNPopupHiddenString("Container");
 		NSUInteger idx = [self.view.subviews indexOfObjectPassingTest:^BOOL(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 			return [NSStringFromClass(obj.class) containsString:className];
@@ -1005,29 +1006,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	};
 	
 	LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
-	NSDirectionalEdgeInsets barInsets = NSDirectionalEdgeInsetsZero;
-	
-	static NSString* outlineViewKey = LNPopupHiddenString("_outlineView");
-	UIView* outlineView = [self.sidebar valueForKey:outlineViewKey];
 
-	if(outlineView != nil)
-	{
-		static NSString* tabContainerViewKey = LNPopupHiddenString("visualStyle.tabContainerView");
-		UIView* parentForPopupBar = [self valueForKeyPath:tabContainerViewKey];
-		
-		static NSString* sidebarLayoutKey = LNPopupHiddenString("sidebarLayout");
-		
-		NSUInteger sidebarLayout = [[parentForPopupBar valueForKey:sidebarLayoutKey] unsignedIntegerValue];
-		
-		if(sidebarLayout == 2)
-		{
-			barInsets = NSDirectionalEdgeInsetsMake(0, self.sidebar.isHidden ? 0 : outlineView.bounds.size.width + 8, 0, 0);
-		}
-	}
-	
 	traditionalTabBarFallback();
 	
-	popupBar._hackyMargins = barInsets;
+	popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:popupBar];
 	
 	[popupBar layoutIfNeeded];
 }
@@ -1065,21 +1047,16 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				return;
 			}
 			
-			static NSString* tabContainerViewKey = LNPopupHiddenString("visualStyle.tabContainerView");
-			UIView* parentForPopupBar = [self valueForKeyPath:tabContainerViewKey];
-			
-			static NSString* sidebarLayoutKey = LNPopupHiddenString("sidebarLayout");
-			
-			NSUInteger sidebarLayout = [[parentForPopupBar valueForKey:sidebarLayoutKey] unsignedIntegerValue];
-			
-			if(sidebarLayout == 0)
+			popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:popupBar];
+			if(popupBar._hackyMargins.leading > 0)
 			{
-				popupBar._hackyMargins = NSDirectionalEdgeInsetsMake(0, self.sidebar.isHidden ? 0 : outlineView.bounds.size.width, 0, 0);
 				[super _layoutPopupBarOrderForUse];
 				[popupBar layoutIfNeeded];
 				return;
 			}
 			
+			static NSString* tabContainerViewKey = LNPopupHiddenString("visualStyle.tabContainerView");
+			UIView* parentForPopupBar = [self valueForKeyPath:tabContainerViewKey];
 			[parentForPopupBar insertSubview:popupBar atIndex:0];
 			[parentForPopupBar insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:popupBar];
 			[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView atIndex:parentForPopupBar.subviews.count];
@@ -1149,6 +1126,12 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	if(self._isTabBarHiddenDuringTransition)
 	{
 		return [super _ln_popupOffsetForPopupBar:popupBar];
+	}
+	
+	if(LNPopupEnvironmentTabBarSupportsMinimizationAPI() && popupBar.supportsMinimization && self._ln_isFloatingTabBar == NO && (popupBar.resolvedIsCustom == NO || popupBar.customBarWantsFullBarWidth == NO))
+	{
+		CGRect proposedFrame = self.tabBar._ln_proposedFrameForPopupBar;
+		return proposedFrame.origin.y + proposedFrame.size.height;
 	}
 	
 	if(LNPopupEnvironmentHasGlass())
@@ -1282,7 +1265,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[UIViewController class]
 	};
 	void (*super_call)(struct objc_super*, SEL) = (void (*)(struct objc_super*, SEL))objc_msgSendSuper;
-	super_call(&superInfo, @selector(viewDidLayoutSubviews));
+	super_call(&superInfo, _cmd);
 	
 	if(self._ignoringLayoutDuringTransition == NO)
 	{

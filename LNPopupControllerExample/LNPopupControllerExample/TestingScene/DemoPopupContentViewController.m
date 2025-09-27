@@ -22,9 +22,9 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	uint32_t titleUpperLimit = 5;
 	
 	uint32_t subtitleLowerLimit = 4;
-	uint32_t subtitleUpperLimit = 16;
+	uint32_t subtitleUpperLimit = 8;
 	
-	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled] == YES)
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingLongerLoremIpsumTitles] == YES)
 	{
 		titleLowerLimit = 10;
 		titleUpperLimit = 15;
@@ -96,11 +96,17 @@ void LNApplyTitleWithSettings(UIViewController* self)
 {
 	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self updateUserInterfaceStyleOverrideFromCollection:newCollection];
-		[self _setPopupItemButtonsWithTraitCollection:newCollection animated:context.animated];
 		[self updateTransitionViewShadowColor];
 	} completion:nil];
 	
 	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+	[super traitCollectionDidChange:previousTraitCollection];
+	
+	[self _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:NO];
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator

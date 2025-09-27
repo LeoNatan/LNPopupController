@@ -101,9 +101,17 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (void)_layoutPopupBarOrderForUse;
 
+- (void)_ln_layoutPopupBarAndContent;
+
 @end
 
 @interface _LN_UIViewController_AppearanceControl : UIViewController @end
+
+@interface UITabBarController (LNPopupSupportPrivate)
+
+- (BOOL)_ln_isFloatingTabBar;
+
+@end
 
 NS_ASSUME_NONNULL_END
 

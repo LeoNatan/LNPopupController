@@ -128,6 +128,39 @@ NS_SWIFT_UI_ACTOR
 /// This only has effect on iOS 26.
 @property (nonatomic, assign) BOOL customBarWantsFullBarWidth;
 
+/// Enables or disables minimization into the bottom docking view.
+///
+/// Defaults to `true`.
+///
+/// - Note: Supported on iOS 26 and above, for tab bar container controllers.
+@property (nonatomic, assign) BOOL supportsMinimization;
+
+@end
+
+typedef NS_ENUM(NSInteger, LNPopupBarEnvironment) {
+	/// Indicates the absence of any information about whether or not the trait collection is
+	/// from a popup bar presentation.
+	LNPopupBarEnvironmentUnspecified,
+	
+	/// The environment for when the popup bar is laid out either:
+	///   - above the bottom bar when it is visible; or,
+	///   - at the bottom of the container controller's view.
+	LNPopupBarEnvironmentRegular,
+	
+	/// The environment for when the popup bar is laid out inline with
+	/// the collapsed bottom bar.
+	LNPopupBarEnvironmentInline,
+} NS_SWIFT_NAME(LNPopupBar.Environment);
+
+NS_REFINED_FOR_SWIFT
+/// A trait that specifies the `LNPopupBarEnvironment`, if any, of the view or view controller. It is set on popup bars, views inside custom popup bars and popup content view controllers. Defaults to `LNPopupBarEnvironmentUnspecified`.
+@interface LNPopupBarEnvironmentTrait : NSObject <UINSIntegerTraitDefinition> @end
+
+@interface UITraitCollection (LNPopupBarEnvironmentSupport)
+
+/// The popup bar environment represents whether a given trait collection is from a popup bar, a view in a custom popup bar or a popup content view controller.
+@property (nonatomic, readonly) LNPopupBarEnvironment popupBarEnvironment NS_REFINED_FOR_SWIFT;
+
 @end
 
 NS_ASSUME_NONNULL_END

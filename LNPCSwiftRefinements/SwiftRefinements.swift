@@ -243,3 +243,25 @@ extension UIViewController {
 		__dismissPopupBar(animated: animated, completion: completion)
 	}
 }
+
+public
+extension LNPopupBar {
+	/// A trait that specifies the `LNPopupBar.Environment`, if any, of the view or view controller. It is set on popup bars, views inside custom popup bars and popup content view controllers. Defaults to `LNPopupBar.Environment.unspecified`.
+	struct EnvironmentTrait: UITraitDefinition {
+		public static let defaultValue = LNPopupBar.Environment.unspecified
+		public static let name = "LNPopupBarEnvironmentTrait"
+		public static let identifier = "com.LeoNatan.LNPopupController.LNPopupBarEnvironmentTrait"
+	}
+}
+
+public
+extension UITraitCollection {
+	/// The popup bar environment represents whether a given trait collection is from a popup bar, a view in a custom popup bar or a popup content view controller.
+	var popUpBarEnvironment: LNPopupBar.Environment {
+		guard #available(iOS 17.0, *) else {
+			return .unspecified
+		}
+		
+		return self[LNPopupBar.EnvironmentTrait.self]
+	}
+}

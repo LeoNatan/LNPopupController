@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24408" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24402"/>
         <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,7 +15,7 @@
             <objects>
                 <tabBarController modalPresentationStyle="fullScreen" id="sTg-sL-qRq" customClass="PortraitTabBarController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="7rm-Dn-iNB">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="7rm-Dn-iNB" customClass="DemoTabBar">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" systemColor="systemTealColor"/>
@@ -29,13 +31,13 @@
             </objects>
             <point key="canvasLocation" x="-584" y="712"/>
         </scene>
-        <!--Music-->
+        <!--Home-->
         <scene sceneID="38q-Kc-L0T">
             <objects>
                 <navigationController storyboardIdentifier="AAAA" modalPresentationStyle="fullScreen" id="yVZ-Nv-QXJ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Music" image="play.circle.fill" catalog="system" id="vBw-QA-u4Y"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="music.note.house.fill" catalog="system" id="vBw-QA-u4Y"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Gmu-0O-wzk">
-                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -56,7 +58,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <color key="separatorColor" systemColor="systemPinkColor"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" id="ZYs-3T-f9s">
-                            <rect key="frame" x="0.0" y="0.0" width="393" height="398"/>
+                            <rect key="frame" x="0.0" y="0.0" width="393" height="418"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="demoAlbum" translatesAutoresizingMaskIntoConstraints="NO" id="Zg4-Ff-lwN">
@@ -130,7 +132,7 @@
                         </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MusicCell" textLabel="tKl-KM-lNG" detailTextLabel="RSt-Vz-4n5" imageView="HTm-AH-96L" style="IBUITableViewCellStyleSubtitle" id="McV-oN-Mrx" customClass="MusicCell" customModule="LNPopupControllerExample" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="448" width="393" height="55"/>
+                                <rect key="frame" x="0.0" y="468" width="393" height="55"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="McV-oN-Mrx" id="Efo-NR-jhI">
                                     <rect key="frame" x="0.0" y="0.0" width="393" height="55"/>
@@ -184,6 +186,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="demoAlbumImageView" destination="Zg4-Ff-lwN" id="Ihp-SD-L8m"/>
                         <outlet property="galleryBarButton" destination="vJg-GX-Evh" id="4GU-Kj-rKI"/>
@@ -192,15 +195,15 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rH2-NO-Hdh" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="qqn-xz-Mhv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1244.6511627906978" y="622.53218884120179"/>
+            <point key="canvasLocation" x="2101.5267175572517" y="650.70422535211276"/>
         </scene>
-        <!--Artists-->
+        <!--New-->
         <scene sceneID="2du-v5-87H">
             <objects>
                 <navigationController id="fst-JL-nMD" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Artists" image="music.microphone" catalog="system" id="wmG-jF-o9a"/>
+                    <tabBarItem key="tabBarItem" title="New" image="square.grid.2x2.fill" catalog="system" id="wmG-jF-o9a"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DVk-h5-a3S">
-                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -211,13 +214,13 @@
             </objects>
             <point key="canvasLocation" x="415" y="785"/>
         </scene>
-        <!--Composers-->
+        <!--Library-->
         <scene sceneID="C6e-rq-0IG">
             <objects>
                 <navigationController id="AxQ-vF-9zl" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Composers" image="music.quarternote.3" catalog="system" id="2hs-ep-FyF"/>
+                    <tabBarItem key="tabBarItem" title="Library" image="music.note.square.stack.fill" catalog="system" id="2hs-ep-FyF"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uG5-sG-lf4">
-                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -228,51 +231,67 @@
             </objects>
             <point key="canvasLocation" x="415" y="1433"/>
         </scene>
-        <!--Recents-->
+        <!--Navigation Controller-->
         <scene sceneID="Scr-u1-MCI">
             <objects>
                 <navigationController id="FDh-R3-2kK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Recents" image="clock.fill" catalog="system" id="c4d-XQ-fP0"/>
+                    <tabBarItem key="tabBarItem" systemItem="search" id="c4d-XQ-fP0"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="pUY-Qq-0Gw">
-                        <rect key="frame" x="0.0" y="118" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="1lI-95-UbP" kind="relationship" relationship="rootViewController" id="ABc-SJ-NGd"/>
+                        <segue destination="9Be-bT-rms" kind="relationship" relationship="rootViewController" id="hth-l6-7ca"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PWF-64-SDp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="415" y="2083"/>
+            <point key="canvasLocation" x="5" y="2287"/>
+        </scene>
+        <!--Demo Music Search Controller-->
+        <scene sceneID="149-M0-tEt">
+            <objects>
+                <viewController id="9Be-bT-rms" customClass="DemoMusicSearchController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="h1q-YP-2Cx">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="9cg-Vn-1Yl"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="HeY-2b-6eI"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Wwm-p6-Tff" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="847" y="2287"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="v0s-BZ-lGy"/>
+        <segue reference="8Zm-ca-Hsg"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
         <image name="checkmark" catalog="system" width="128" height="114"/>
-        <image name="clock.fill" catalog="system" width="128" height="123"/>
-        <image name="demoAlbum" width="2048" height="2048"/>
         <image name="genre1" width="88" height="88"/>
-        <image name="music.microphone" catalog="system" width="128" height="119"/>
-        <image name="music.quarternote.3" catalog="system" width="128" height="102"/>
-        <image name="play.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="genre8" width="88" height="88"/>
+        <image name="music.note.house.fill" catalog="system" width="128" height="104"/>
+        <image name="music.note.square.stack.fill" catalog="system" width="105" height="128"/>
         <image name="play.fill" catalog="system" width="120" height="128"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <image name="shuffle" catalog="system" width="128" height="95"/>
+        <image name="square.grid.2x2.fill" catalog="system" width="128" height="114"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529410000001" green="0.69019607839999997" blue="0.78039215689999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.76470588235294112" blue="0.81568627450980391" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

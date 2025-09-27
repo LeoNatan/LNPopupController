@@ -32,6 +32,10 @@ class DemoAlbumTableViewController: UITableViewController {
     override func viewDidLoad() {
 		tabBarController?.view.tintColor = view.tintColor
 		
+		let footer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4))
+		tableView.tableFooterView = footer
+//		tableView.showsVerticalScrollIndicator = false
+		
         super.viewDidLoad()
 		
 		if LNPopupSettingsHasOS26Glass() {
@@ -40,20 +44,14 @@ class DemoAlbumTableViewController: UITableViewController {
 			galleryBarButton.image = nil
 		}
 		
-		let view = ZStack {
-			Image("demoAlbum")
-				.resizable()
-			Color(uiColor: .secondarySystemBackground)
-				.opacity(0.35)
-		}.compositingGroup().blur(radius: 80, opaque: true)
-		
-		tableView.backgroundView = UIHostingController(rootView: view).view
-		
-		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
-		
 #if LNPOPUP
 		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSetting.barStyle)  as? Int ?? 0)!
 		tabBarController?.popupBar.barStyle = barStyle
+#endif
+#if compiler(>=6.2)
+		if #available(iOS 26.0, *) {
+			self.tabBarController?.tabBarMinimizeBehavior = .onScrollDown
+		}
 #endif
 		
 		if !LNPopupSettingsHasOS26Glass() {
@@ -99,19 +97,6 @@ class DemoAlbumTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 30
     }
-	
-	override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-		return 2
-	}
-	
-	override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		let separator = UIView(frame: CGRect(x: view.layoutMargins.left, y: 0, width: tableView.bounds.size.width - view.layoutMargins.left, height: 1 / UIScreen.main.scale))
-		separator.backgroundColor = .separator
-		separator.autoresizingMask = .flexibleWidth
-		let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 2))
-		view.addSubview(separator)
-		return view
-	}
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell", for: indexPath)
@@ -134,7 +119,6 @@ class DemoAlbumTableViewController: UITableViewController {
 		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
 		tabBarController?.presentPopupBar(with: popupContentController, animated: true, completion: nil)
-		tabBarController?.popupBar.imageView.layer.cornerRadius = 3
 		tabBarController?.popupBar.tintColor = UIColor.label
 		tabBarController?.popupBar.progressViewStyle = .top
 		

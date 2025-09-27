@@ -206,8 +206,17 @@
 
 @end
 
+//@interface UITabBar ()
+//
+//@property (readonly, nonatomic) struct CGRect _frameForHostedAccessoryView;
+//
+//@end
+
 @interface DemoTabBar : UITabBar @end
 @implementation DemoTabBar
+//{
+//	UIView* _zaza;
+//}
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
@@ -219,6 +228,23 @@
 //	NSLog(@"🤦‍♂️ frame: %@ safe area: %@", @(frame), [self valueForKey:@"safeAreaInsets"]);
 	
 	[super setFrame:frame];
+}
+
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	
+//	self.backgroundColor = [UIColor.yellowColor colorWithAlphaComponent:0.2];
+//	
+//	if(_zaza == nil)
+//	{
+//		_zaza = [UIView new];
+//		_zaza.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.2];
+//		[self addSubview:_zaza];
+//	}
+//	
+//	[self bringSubviewToFront:_zaza];
+//	_zaza.frame = [self _frameForHostedAccessoryView];
 }
 
 @end

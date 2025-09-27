@@ -22,6 +22,7 @@
 #import "_LNPopupTransitionGenericCloseAnimator.h"
 #import "_LNPopupTransitionPreferredCloseAnimator.h"
 #import "LNPopupPresentationContainerSupport.h"
+#import "UITabBar+LNPopupMinimizationSupport.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -88,7 +89,7 @@ static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector
 
 #pragma mark Popup Controller
 
-@interface LNPopupController () <_LNPopupItemDelegate>
+@interface LNPopupController () <_LNPopupItemDelegate, _LNPopupTabBarMinimizationDelegate>
 
 - (void)_applicationDidEnterBackground;
 - (void)_applicationWillEnterForeground;
@@ -375,17 +376,21 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[currentContentController viewDidMoveToPopupContainerContentView:self.popupContentView];
 }
 
-- (void)_removeContentControllerFromContentView:(UIViewController*)currentContentController
+- (void)_removeContentControllerFromContentView:(UIViewController*)oldContentController
 {
-	if(currentContentController == nil)
+	if(oldContentController == nil)
 	{
 		return;
 	}
 	
-	[currentContentController viewWillMoveToPopupContainerContentView:nil];
-	[currentContentController.view removeFromSuperview];
-	currentContentController.popupPresentationContainerViewController = nil;
-	[currentContentController viewDidMoveToPopupContainerContentView:nil];
+	[oldContentController viewWillMoveToPopupContainerContentView:nil];
+	[oldContentController.view removeFromSuperview];
+	if(@available(iOS 17.0, *))
+	{
+		[oldContentController.traitOverrides removeTrait:LNPopupBarEnvironmentTrait.class];
+	}
+	oldContentController.popupPresentationContainerViewController = nil;
+	[oldContentController viewDidMoveToPopupContainerContentView:nil];
 }
 
 - (void)_generateSoftFeedbackWithIntensity:(CGFloat)intensity
@@ -1344,7 +1349,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	
 	if([_bottomBar.superview isKindOfClass:[UIScrollView class]])
 	{
-		NSLog(@"LNPopupController: Attempted to present popup bar %@ on top of a UIScrollView subclass %@. This is unsupported and may result in unexpected behavior.", self.popupBar, _bottomBar.superview);
+		os_log_t customLog = __LNPopupFrameworkLogger("UnsupportedPresentation");
+		os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: Attempted to present popup bar %{public}@ on top of scroll view %{public}@. This is unsupported and may result in unexpected behavior.", __LNPopupFrameworkName(), self.popupBar, _bottomBar.superview);
 	}
 	
 	[self.popupBar layoutIfNeeded];
@@ -1384,6 +1390,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	_popupBar.barHighlightGestureRecognizer.delaysTouchesBegan = NO;
 	_popupBar.barHighlightGestureRecognizer.delaysTouchesEnded = NO;
 	[_popupBar.contentView addGestureRecognizer:_popupBar.barHighlightGestureRecognizer];
+	
+	
+	if(@available(iOS 17.0, *))
+	{
+		[_popupBar.traitOverrides setNSIntegerValue:LNPopupBarEnvironmentRegular forTrait:LNPopupBarEnvironmentTrait.class];
+	}
 	
 	return _popupBar;
 }
@@ -1564,6 +1576,27 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 {
 	_containerController.popupContentViewController = contentViewController;
 	
+	NSInteger value = LNPopupBarEnvironmentRegular;
+	
+	if(@available(iOS 26.0, *))
+	{
+		__weak decltype(self) weakSelf = self;
+		
+		if([_containerController isKindOfClass:UITabBarController.class])
+		{
+			UITabBar* bar = [_containerController tabBar];
+			bar.minimizationDelegate = self;
+			
+			value = self.popupBarStorage.supportsMinimization && bar._ln_requiresMinimizedPopupBar ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
+		}
+	}
+
+	if(@available(iOS 17.0, *))
+	{
+		[contentViewController.traitOverrides setNSIntegerValue:value forTrait:LNPopupBarEnvironmentTrait.class];
+		[self.popupBarStorage.traitOverrides setNSIntegerValue:value forTrait:LNPopupBarEnvironmentTrait.class];
+	}
+	
 	[self _start120HzHack];
 	
 	UIViewController* old = _currentContentController;
@@ -1600,12 +1633,11 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		self.popupBar.clipsToBounds = NO;
 		
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(animated)
 		{
 			[UIView performWithoutAnimation:^{
 				self.popupBar.floatingBackgroundShadowView.alpha = 0.0;
-				
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 				if(@available(iOS 26.0, *))
 				if(LNPopupEnvironmentHasGlass())
 				{
@@ -1633,9 +1665,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 					self.popupBar.os26TransitionView.transform = CGAffineTransformMakeScale(1.05, 1.05);
 					self.popupBar.os26TransitionView.alpha = 0.0;
 				}
+#endif
 			}];
 		}
-#endif
 		
 		dispatch_block_t animations = ^{
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
@@ -2157,7 +2189,61 @@ id __LNPopupEmptyBlurFilter(void)
 	}
 }
 
+#pragma mark _LNPopupTabBarMinimizationDelegate
+
+- (void)tabBar:(UITabBar *)tabBar didMinimize:(BOOL)wasMinimized API_AVAILABLE(ios(26.0))
+{
+	void (^updateMargins)(void) = ^{
+		self.popupBar._hackyMargins = [self.containerController _ln_popupBarMarginsForPopupBar:self.popupBar];
+		[self.popupBar layoutIfNeeded];
+	};
+	void (^layoutVerticalBarPosition)(void) = ^{
+		[self.containerController _ln_layoutPopupBarAndContent];
+	};
+	
+	NSInteger newValue = self.popupBar.supportsMinimization && wasMinimized ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
+	if(self.popupBar.traitCollection.popupBarEnvironment == newValue)
+	{
+		[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
+			updateMargins();
+			layoutVerticalBarPosition();
+		} completion:nil];
+	}
+	else
+	{
+		auto animator = [[UIViewPropertyAnimator alloc] initWithDuration:0.5 dampingRatio:1.0 animations:nil];
+		
+		[_containerController.popupContentViewController.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
+		[self.popupBar.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
+		
+		[animator addAnimations:updateMargins delayFactor: wasMinimized ? 0.0 : 0.2];
+		[animator ln_addAnimations:layoutVerticalBarPosition delayFactor:wasMinimized ? 0.2 : 0.0 durationFactor:wasMinimized ? 0.8 : 0.35];
+		
+		[animator startAnimation];
+	}
+}
+
 #pragma mark Utils
+
+static NSString* __LNPopupFrameworkName(void)
+{
+	static NSString* frameworkName;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		frameworkName = NSClassFromString(@"__LNPopupUI") ? @"LNPopupUI" : @"LNPopupController";
+	});
+	return frameworkName;
+}
+
+static os_log_t __LNPopupFrameworkLogger(const char* category)
+{
+	static NSString* subsystem;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		subsystem = [NSString stringWithFormat:@"com.LeoNatan.%@", __LNPopupFrameworkName()];
+	});
+	return os_log_create(subsystem.UTF8String, category);
+}
 
 - (void)_check120HzHackAndNotifyIfNeeded
 {
@@ -2167,10 +2253,8 @@ id __LNPopupEmptyBlurFilter(void)
 		{
 			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && UIScreen.mainScreen.maximumFramesPerSecond > 60 && [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CADisableMinimumFrameDurationOnPhone"] boolValue] == NO)
 			{
-				NSString* frameworkName = NSClassFromString(@"__LNPopupUI") ? @"LNPopupUI" : @"LNPopupController";
-				NSString* subsystem = [NSString stringWithFormat:@"com.LeoNatan.%@", frameworkName];
-				os_log_t customLog = os_log_create(subsystem.UTF8String, "ProMotion");
-				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: This device supports ProMotion, but %{public}s does not enable the full range of refresh rates by setting the “CADisableMinimumFrameDurationOnPhone” Info.plist key to “true”. See https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro", frameworkName, NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
+				os_log_t customLog = __LNPopupFrameworkLogger("ProMotion");
+				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: This device supports ProMotion, but %{public}s does not enable the full range of refresh rates by setting the “CADisableMinimumFrameDurationOnPhone” Info.plist key to “true”. See https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro", __LNPopupFrameworkName(), NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
 			}
 		}
 	});

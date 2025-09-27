@@ -101,7 +101,14 @@ static NSArray* __notifiedProperties = nil;
 		[self configureWithDefaultImageShadow];
 		[self configureWithDefaultHighlightColor];
 		[self configureWithDefaultMarqueeScroll];
-		[self configureWithDisabledMarqueeScroll];
+		if(LNPopupEnvironmentHasGlass())
+		{
+			[self configureWithDefaultMarqueeScroll];
+		}
+		else
+		{
+			[self configureWithDisabledMarqueeScroll];
+		}
 		
 		[self configureWithDefaultFloatingBackground];
 

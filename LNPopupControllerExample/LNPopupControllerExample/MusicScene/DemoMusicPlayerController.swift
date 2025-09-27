@@ -196,8 +196,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		print("✓")
 	}
 	
-	fileprivate func updateBarItems(with traitCollection: UITraitCollection) {
-		LNPopupItemSetStandardMusicControls(popupItem, false, traitCollection, self, #selector(DemoMusicPlayerController.button(_:)))
+	fileprivate func updateBarItems(with traitCollection: UITraitCollection, animated: Bool = false) {
+		LNPopupItemSetStandardMusicControls(popupItem, animated, traitCollection, self, #selector(DemoMusicPlayerController.button(_:)))
 	}
 	
 	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
@@ -260,10 +260,10 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		}
 	}
 	
-	override func willTransition(to newCollection: UITraitCollection, with coordinator: any UIViewControllerTransitionCoordinator) {
-		super.willTransition(to: newCollection, with: coordinator)
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
 		
-		updateBarItems(with: newCollection)
+		updateBarItems(with: traitCollection, animated: traitCollection.popUpBarEnvironment != previousTraitCollection?.popUpBarEnvironment)
 	}
 	
 	var songTitle: String = "" {
