@@ -30,7 +30,7 @@ Check the demo project for many common use cases of the framework in various sce
 
 ### Features
 
-* Supports iOS 26 glass design, while maintaining a system-apropriate look and feel on previous iOS versions
+* Supports iOS 26 glass design, while maintaining an appropriate look and feel on previous iOS versions
 * Available for iOS 13 and above, as an SPM package for Swift and Objective C
 * Good citizen in modern UIKit world
 * For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI)
