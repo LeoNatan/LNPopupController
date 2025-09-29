@@ -275,3 +275,27 @@ static void __setupFunction(void)
 }
 
 @end
+
+//@implementation _LNPopupBarGlassGroupBackground
+//
+//+ (__kindof id<NSObject>)defaultValue
+//{
+//	return nil;
+//}
+//
+//+ (NSString*)identifier
+//{
+//	return @"UIGlassGroupTrait";
+//}
+//
+//+ (NSString*)name
+//{
+//	return @"GlassGroup";
+//}
+//
+//+ (BOOL)_isPrivate
+//{
+//	return YES;
+//}
+//
+//@end

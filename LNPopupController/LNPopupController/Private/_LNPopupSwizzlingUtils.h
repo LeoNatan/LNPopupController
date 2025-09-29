@@ -12,7 +12,7 @@
 
 CF_EXTERN_C_BEGIN
 
-#define unavailable(...) @available(__VA_ARGS__)) { } else if(YES
+#define ln_unavailable(...) @available(__VA_ARGS__)) { } else if(YES
 
 extern BOOL __LNSwizzleShouldTrapAndPrint(void);
 
@@ -50,7 +50,7 @@ extern BOOL __LNDynamicSubclass(id obj, Class target);
 extern Class __LNDynamicSubclassSuper(id obj, Class dynamic);
 #define LNDynamicSubclassSuper __LNDynamicSubclassSuper
 
-NSArray<NSString*>* __LNPopupGetPropertyNames(Class cls, NSArray<NSString*>* excludedProperties);
+NSArray<NSString*>* __LNPopupGetPropertyNames(Class cls, NSArray<NSString*>* excludedProperties, BOOL ignoreAttribs);
 #define LNPopupGetPropertyNames __LNPopupGetPropertyNames
 
 CF_EXTERN_C_END

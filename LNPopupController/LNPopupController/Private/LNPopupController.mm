@@ -1271,7 +1271,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_configurePopupBarFromBottomBarModifyingGroupingIdentifier:(BOOL)modifyingGroupingIdentifier
 {
-	if(unavailable(iOS 17.0, *))
+	if(ln_unavailable(iOS 17.0, *))
 	{
 		if(modifyingGroupingIdentifier == YES)
 		{

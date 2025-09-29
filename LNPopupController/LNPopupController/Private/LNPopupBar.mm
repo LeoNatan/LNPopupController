@@ -473,6 +473,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_wantsBackgroundCutout = YES;
 		
+		[self registerForTraitChanges:@[LNPopupBarEnvironmentTrait.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
+			[traitEnvironment _recalcActiveAppearanceChain];
+			[traitEnvironment _appearanceDidChange];
+		}];
+		
 		[self _recalcActiveAppearanceChain];
 		[self _appearanceDidChange];
 	}
@@ -969,9 +974,33 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	[self _recalcActiveAppearanceChain];
 }
 
+- (void)setInlineAppearance:(LNPopupBarAppearance *)inlineAppearance
+{
+	if([_inlineAppearance isEqual:inlineAppearance] == YES)
+	{
+		return;
+	}
+	
+	_inlineAppearance = [inlineAppearance copy];
+	
+	[self _recalcActiveAppearanceChain];
+}
+
 - (void)_recalcActiveAppearanceChain
 {
 	NSMutableArray* chain = [NSMutableArray new];
+	
+	BOOL isInline = self.traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline;
+	
+	if(isInline && self.popupItem.inlineAppearance != nil)
+	{
+		[chain addObject:self.popupItem.inlineAppearance];
+	}
+	
+	if(isInline && self.inlineAppearance != nil)
+	{
+		[chain addObject:self.inlineAppearance];
+	}
 	
 	if(self.popupItem.standardAppearance != nil)
 	{
@@ -1021,8 +1050,11 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	if(_resolvedIsFloating)
 	{
 		UIVisualEffect* effect = [self.activeAppearance floatingBackgroundEffectForTraitCollection:self.traitCollection];
-		[_contentView clearEffect];
-		_contentView.effect = effect;
+		if(_contentView.effect == nil || [_contentView.effect isEqual:effect] == NO)
+		{
+			[_contentView clearEffect];
+			_contentView.effect = effect;
+		}
 		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
@@ -1031,7 +1063,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 			_resolvedIsGlassInteractive = _resolvedIsGlass && ((UIGlassEffect*)effect).isInteractive;
 		}
 #endif
-		
+			
 		__auto_type floatingBackgroundColor = self.activeAppearance.floatingBackgroundColor;
 		__auto_type floatingBackgroundImage = self.activeAppearance.floatingBackgroundImage;
 		
@@ -1701,7 +1733,7 @@ static BOOL __LNPopupUseSystemMarqueeLabel(void)
 			
 			[_titlesView addArrangedSubview:_swiftuiTitleContentView];
 			[_titlesView layoutIfNeeded];
-			if(unavailable(iOS 17.0, *))
+			if(ln_unavailable(iOS 17.0, *))
 			{
 				UIView* textView = _swiftuiTitleContentView.subviews.firstObject;
 				[NSLayoutConstraint activateConstraints:@[

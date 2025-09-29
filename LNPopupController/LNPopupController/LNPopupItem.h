@@ -77,6 +77,13 @@ NS_SWIFT_UI_ACTOR
 /// See `LNPopupBarAppearance.standardAppearance` for further details.
 @property (nonatomic, readwrite, copy, nullable) LNPopupBarAppearance* standardAppearance;
 
+/// When set and this item is displayed, overrides the hosting popup bar's `inlineAppearance` as well as any appearance inherited from the system.
+///
+/// Set to `nil` to use the standard appearance when the bar is an inline environment.
+///
+/// See `LNPopupBarAppearance.inlineAppearance` for further details.
+@property (nonatomic, readwrite, copy, nullable) LNPopupBarAppearance* inlineAppearance;
+
 @end
 
 @interface LNPopupItem (Accessibility)

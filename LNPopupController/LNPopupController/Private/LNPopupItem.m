@@ -28,7 +28,7 @@ NSArray* __LNPopupItemObservedKeys;
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		__LNPopupItemObservedKeys = [LNPopupGetPropertyNames(self, nil) arrayByAddingObjectsFromArray:@[@"accessibilityHint", @"accessibilityLabel"]];
+		__LNPopupItemObservedKeys = [LNPopupGetPropertyNames(self, nil, NO) arrayByAddingObjectsFromArray:@[@"accessibilityHint", @"accessibilityLabel"]];
 	});
 }
 

@@ -98,8 +98,15 @@ NS_SWIFT_UI_ACTOR
 /// Defaults to `true`.
 @property (nonatomic, assign) BOOL limitFloatingContentWidth;
 
-/// Describes the appearance attributes for the popup bar to use.
+/// Describes the appearance attributes for the popup bar to use when in standard environment.
 @property (nonatomic, copy, null_resettable) LNPopupBarAppearance* standardAppearance UI_APPEARANCE_SELECTOR;
+
+/// Describes the appearance attributes for the popup bar to use when in inline environment.
+///
+/// Set to `nil` to use the standard appearance when the bar is an inline environment.
+///
+/// Defaults to `nil`.
+@property (nonatomic, copy, nullable) LNPopupBarAppearance* inlineAppearance UI_APPEARANCE_SELECTOR;
 
 /// The popup bar's progress view style.
 @property (nonatomic, assign) LNPopupBarProgressViewStyle progressViewStyle UI_APPEARANCE_SELECTOR;

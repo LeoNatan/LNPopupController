@@ -203,4 +203,6 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @interface LNSystemMarqueeLabel () <LNMarqueeLabel> @end
 #endif
 
+//@interface _LNPopupBarGlassGroupBackground : NSObject <UIObjectTraitDefinition> @end
+
 CF_EXTERN_C_END

@@ -146,7 +146,7 @@ Class __LNDynamicSubclassSuper(id obj, Class dynamic)
 	return cls;
 }
 
-NSArray<NSString*>* __LNPopupGetPropertyNames(Class cls, NSArray<NSString*>* excludedProperties)
+NSArray<NSString*>* __LNPopupGetPropertyNames(Class cls, NSArray<NSString*>* excludedProperties, BOOL ignoreAttribs)
 {
 	unsigned int propertyCount = 0;
 	objc_property_t* properties = class_copyPropertyList(cls, &propertyCount);
@@ -162,25 +162,28 @@ NSArray<NSString*>* __LNPopupGetPropertyNames(Class cls, NSArray<NSString*>* exc
 		
 		BOOL hasVar = NO;
 		BOOL isWeak = NO;
-		unsigned int attribCount = 0;
-		objc_property_attribute_t* attribs = property_copyAttributeList(properties[idx], &attribCount);
-		
-		for(unsigned int idx2 = 0; idx2 < attribCount; idx2++)
+		if(ignoreAttribs == NO)
 		{
-			if(strncmp(attribs[idx2].name, "V", 1) == 0 && strlen(attribs[idx2].value) > 0)
+			unsigned int attribCount = 0;
+			objc_property_attribute_t* attribs = property_copyAttributeList(properties[idx], &attribCount);
+			
+			for(unsigned int idx2 = 0; idx2 < attribCount; idx2++)
 			{
-				hasVar = YES;
+				if(strncmp(attribs[idx2].name, "V", 1) == 0 && strlen(attribs[idx2].value) > 0)
+				{
+					hasVar = YES;
+				}
+				
+				if(strncmp(attribs[idx2].name, "W", 1) == 0)
+				{
+					isWeak = YES;
+				}
 			}
 			
-			if(strncmp(attribs[idx2].name, "W", 1) == 0)
-			{
-				isWeak = YES;
-			}
+			free(attribs);
 		}
 		
-		free(attribs);
-	
-		if(hasVar && !isWeak)
+		if(ignoreAttribs || (hasVar && !isWeak))
 		{
 			[rv addObject:propertyName];
 		}

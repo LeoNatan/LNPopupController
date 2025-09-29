@@ -11,6 +11,7 @@
 #import "_LNPopupBase64Utils.hh"
 #import "_LNPopupGlassUtils.h"
 #import "UIScreen+LNPopupSupportPrivate.h"
+#import <LNPopupController/LNPopupBar.h>
 
 static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
@@ -29,7 +30,7 @@ static NSArray* __notifiedProperties = nil;
 	{
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
-			__notifiedProperties = LNPopupGetPropertyNames(self, nil);
+			__notifiedProperties = LNPopupGetPropertyNames(self, nil, NO);
 			
 #ifndef LNPopupControllerEnforceStrictClean
 			Method m1 = LNSwizzleClassGetInstanceMethod(self, @selector(a:cC:));
@@ -206,7 +207,18 @@ static NSArray* __notifiedProperties = nil;
 	{
 		if(LNPopupEnvironmentHasGlass())
 		{
-			UIGlassEffect* effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
+//			UIGlassEffectStyle style;
+//			if(traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline)
+//			{
+//				style = UIGlassEffectStyleClear;
+//			}
+//			else
+//			{
+//				style = UIGlassEffectStyleRegular;
+//			}
+			UIGlassEffectStyle style = UIGlassEffectStyleRegular;
+			
+			UIGlassEffect* effect = [LNPopupGlassEffect effectWithStyle:style];
 			effect.interactive = YES;
 			return effect;
 		}

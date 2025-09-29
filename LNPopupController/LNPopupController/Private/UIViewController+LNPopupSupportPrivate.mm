@@ -980,19 +980,19 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (void)_layoutModernTabBarControllerFloatingPopupWithSuperFallback:(void(^)(void))superFallback API_AVAILABLE(ios(26.0))
 {
-	void (^traditionalTabBarFallback)(void) = ^
+	LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
+
+	static NSString* className = LNPopupHiddenString("Container");
+	NSUInteger idx = [self.view.subviews indexOfObjectPassingTest:^BOOL(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		return [NSStringFromClass(obj.class) containsString:className];
+	}];
+	
+	if(idx == NSNotFound)
 	{
-		static NSString* className = LNPopupHiddenString("Container");
-		NSUInteger idx = [self.view.subviews indexOfObjectPassingTest:^BOOL(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-			return [NSStringFromClass(obj.class) containsString:className];
-		}];
-		
-		if(idx == NSNotFound)
-		{
-			superFallback();
-			return;
-		}
-		
+		superFallback();
+	}
+	else
+	{
 		UIView* tabBarContainer = [self.view.subviews objectAtIndex:idx];
 		
 		[self.view insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:tabBarContainer];
@@ -1001,13 +1001,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		{
 			[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
 		}
-		
-		return;
-	};
-	
-	LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
-
-	traditionalTabBarFallback();
+	}
 	
 	popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:popupBar];
 	
@@ -1377,7 +1371,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (BOOL)_ln_isFloatingTabBar
 {
-	if(unavailable(iOS 18.0, *))
+	if(ln_unavailable(iOS 18.0, *))
 	{
 		return NO;
 	}
@@ -1931,7 +1925,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	CGRect toolbarBarFrame = self.toolbar.frame;
 
 	CGFloat bottomSafeAreaHeight = 0.0;
-	if(unavailable(iOS 18.0, *))
+	if(ln_unavailable(iOS 18.0, *))
 	{
 		bottomSafeAreaHeight = self.view.safeAreaInsets.bottom;
 		if([NSStringFromClass(self.nonMemoryLeakingPresentationController.class) containsString:@"Preview"] == NO)

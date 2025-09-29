@@ -7,6 +7,7 @@
 //
 
 #import "_LNPopupGlassUtils.h"
+#import "_LNPopupBase64Utils.hh"
 
 BOOL LNPopupEnvironmentHasGlass(void)
 {
@@ -57,6 +58,22 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	LNPopupGlassEffect* effect = (id)[super effectWithStyle:style];
 	effect.style = style;
 	return effect;
+}
+
+@end
+
+@interface UIGlassEffect (LNPopupEqualityCheck) @end
+@implementation UIGlassEffect (LNPopupEqualityCheck)
+
+- (BOOL)isEqual:(UIGlassEffect*)object
+{
+	if([object isKindOfClass:UIGlassEffect.class] == NO)
+	{
+		return NO;
+	}
+	
+	static NSString* const key = LNPopupHiddenString("glass");
+	return [[self valueForKey:key] isEqual:[object valueForKey:key]];
 }
 
 @end
