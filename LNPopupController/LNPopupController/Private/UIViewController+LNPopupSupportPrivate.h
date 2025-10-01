@@ -101,6 +101,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (void)_layoutPopupBarOrderForUse;
 
+- (void)_ln_updatePopupBarContainerInsets;
 - (void)_ln_layoutPopupBarAndContent;
 
 @end

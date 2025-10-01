@@ -1158,10 +1158,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_reconfigureBarItems
 {
-	[self.popupBarStorage _delayBarButtonLayout];
 	[self.popupBarStorage setLeadingBarButtonItems:_currentPopupItem.leadingBarButtonItems];
 	[self.popupBarStorage setTrailingBarButtonItems:_currentPopupItem.trailingBarButtonItems];
-	[self.popupBarStorage _layoutBarButtonItems];
 }
 
 - (void)_popupItem:(LNPopupItem*)popupItem didChangeToValue:(id)value forKey:(NSString*)key
@@ -2165,7 +2163,7 @@ id __LNPopupEmptyBlurFilter(void)
 	barFrame.origin.y -= (barFrame.size.height - currentHeight);
 	self.popupBar.frame = barFrame;
 	
-	_LNPopupSupportSetPopupInsetsForViewController(_containerController, layout, UIEdgeInsetsMake(0, 0, self.popupBar.frame.size.height - [_containerController _ln_popupOffsetForPopupBar:self.popupBar], 0));
+	[_containerController _ln_updatePopupBarContainerInsets];
 }
 
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar
@@ -2193,7 +2191,11 @@ id __LNPopupEmptyBlurFilter(void)
 
 - (void)tabBar:(UITabBar *)tabBar didMinimize:(BOOL)wasMinimized API_AVAILABLE(ios(26.0))
 {
+	NSInteger newValue = self.popupBar.supportsMinimization && wasMinimized ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
+	
 	void (^updateMargins)(void) = ^{
+		[_containerController.popupContentViewController.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
+		[self.popupBar.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
 		self.popupBar._hackyMargins = [self.containerController _ln_popupBarMarginsForPopupBar:self.popupBar];
 		[self.popupBar layoutIfNeeded];
 	};
@@ -2201,10 +2203,9 @@ id __LNPopupEmptyBlurFilter(void)
 		[self.containerController _ln_layoutPopupBarAndContent];
 	};
 	
-	NSInteger newValue = self.popupBar.supportsMinimization && wasMinimized ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
 	if(self.popupBar.traitCollection.popupBarEnvironment == newValue)
 	{
-		[UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:0.0 options:0 animations:^{
+		[UIView _ln_animatedUsingSwiftUIWithDuration:0.4 animations:^{
 			updateMargins();
 			layoutVerticalBarPosition();
 		} completion:nil];
@@ -2213,12 +2214,8 @@ id __LNPopupEmptyBlurFilter(void)
 	{
 		auto animator = [[UIViewPropertyAnimator alloc] initWithDuration:0.5 dampingRatio:1.0 animations:nil];
 		
-		[_containerController.popupContentViewController.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
-		[self.popupBar.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
-		
 		[animator addAnimations:updateMargins delayFactor: wasMinimized ? 0.0 : 0.2];
 		[animator ln_addAnimations:layoutVerticalBarPosition delayFactor:wasMinimized ? 0.2 : 0.0 durationFactor:wasMinimized ? 0.8 : 0.35];
-		
 		[animator startAnimation];
 	}
 }
@@ -2355,7 +2352,12 @@ static os_log_t __LNPopupFrameworkLogger(const char* category)
 
 - (void)_popupItem_update_standardAppearance
 {
-	[self.popupBarStorage _recalcActiveAppearanceChain];
+	[self.popupBarStorage _setNeedsRecalcActiveAppearanceChain];
+}
+
+- (void)_popupItem_update_inlineAppearance
+{
+	[self.popupBarStorage _setNeedsRecalcActiveAppearanceChain];
 }
 
 @end

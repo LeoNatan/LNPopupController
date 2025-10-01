@@ -917,7 +917,7 @@ static NSString* __ln_queueingScrollViewClassPrefix = LNPopupHiddenString("Queu"
 {
 	BOOL rv = self.contentSize.height > self._ln_adjustedBounds.size.height;
 	
-//	NSLog(@"_ln_hasVerticalContent: %@ contentSize: %@ adjustedBounds: %@ ajustedInsets: %@", @(rv), @(self.contentSize), @(self._ln_adjustedBounds), @(self.adjustedContentInset));
+//	NSLog(@"_ln_hasVerticalContent: %@ contentSize: %@ adjustedBounds: %@ adjustedInsets: %@", @(rv), @(self.contentSize), @(self._ln_adjustedBounds), @(self.adjustedContentInset));
 	
 	return rv;
 }

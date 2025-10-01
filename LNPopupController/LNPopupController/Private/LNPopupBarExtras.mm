@@ -10,6 +10,7 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
 #import "_LNPopupGlassUtils.h"
+#import "UIView+LNPopupSupportPrivate.h"
 
 #ifndef LNPopupControllerEnforceStrictClean
 static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
@@ -43,8 +44,9 @@ static void __setupFunction(void)
 
 + (instancetype)wrapperForLabel:(UILabel*)wrapped
 {
-	_LNPopupTitleLabelWrapper* rv = [[_LNPopupTitleLabelWrapper alloc] initWithFrame:wrapped.frame];
+	_LNPopupTitleLabelWrapper* rv = [[_LNPopupTitleLabelWrapper alloc] initWithFrame:wrapped.bounds];
 	rv.wrapped = wrapped;
+	rv.wrapped.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	rv.translatesAutoresizingMaskIntoConstraints = wrapped.translatesAutoresizingMaskIntoConstraints;
 	[rv addSubview:wrapped];
@@ -72,16 +74,13 @@ static void __setupFunction(void)
 	if(UIView.inheritedAnimationDuration == 0.0)
 	{
 		_wrappedWidthConstraint.constant = bounds.size.width;
-		[_wrapped layoutSubviews];
+		[self layoutSubviews];
 	}
 	else
 	{
-		[UIView transitionWithView:_wrapped
-						  duration:UIView.inheritedAnimationDuration / 2.0
-						   options:UIViewAnimationOptionTransitionCrossDissolve | UIViewAnimationOptionCurveEaseOut
-						animations:^{
+		[UIView _ln_animatedUsingSwiftUIWithDuration:UIView.inheritedAnimationDuration animations:^{
 			_wrappedWidthConstraint.constant = bounds.size.width;
-			[_wrapped layoutSubviews];
+			[self layoutSubviews];
 		} completion:nil];
 	}
 }

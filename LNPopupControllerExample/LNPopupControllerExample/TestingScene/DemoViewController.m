@@ -274,13 +274,6 @@
 	[super viewSafeAreaInsetsDidChange];
 }
 
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
-{
-	[super traitCollectionDidChange:previousTraitCollection];
-	
-	[self updateBottomDockingViewEffectForBarPresentation];
-}
-
 - (void)viewIsAppearing:(BOOL)animated
 {
 	[super viewIsAppearing:animated];

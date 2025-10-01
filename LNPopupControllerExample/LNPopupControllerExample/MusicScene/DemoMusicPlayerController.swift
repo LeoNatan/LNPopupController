@@ -263,7 +263,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 		
-		updateBarItems(with: traitCollection, animated: traitCollection.popUpBarEnvironment != previousTraitCollection?.popUpBarEnvironment)
+		updateBarItems(with: traitCollection, animated: true)
 	}
 	
 	var songTitle: String = "" {

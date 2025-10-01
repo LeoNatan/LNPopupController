@@ -174,6 +174,11 @@
 	__ln_popup_suppressViewControllerLifecycle = NO;
 }
 
+- (BOOL)_ln_popupUIRequiresZeroInsets
+{
+	return YES;
+}
+
 @end
 
 #pragma mark - Custom bar controller appearance control

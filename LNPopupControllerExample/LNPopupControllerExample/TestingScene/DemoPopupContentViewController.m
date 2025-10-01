@@ -80,6 +80,25 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	[self updateUserInterfaceStyleOverrideFromCollection:self.traitCollection];
 }
 
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	
+	[self _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:NO];
+	[self updateTransitionViewShadowColor];
+	
+	if(@available(iOS 17.0, *))
+	{
+		[self registerForTraitChanges:@[UITraitUserInterfaceStyle.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
+			[traitEnvironment updateUserInterfaceStyleOverrideFromCollection:traitEnvironment.traitCollection];
+		}];
+		
+		[self registerForTraitChanges:@[LNPopupBarEnvironmentTrait.class, UITraitHorizontalSizeClass.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
+			[traitEnvironment _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:YES];
+		}];
+	}
+}
+
 - (void)updateUserInterfaceStyleOverrideFromCollection:(UITraitCollection *)collection
 {
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
@@ -90,28 +109,6 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	{
 		self.view.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
 	}
-}
-
-- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self updateUserInterfaceStyleOverrideFromCollection:newCollection];
-		[self updateTransitionViewShadowColor];
-	} completion:nil];
-	
-	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
-}
-
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
-{
-	[super traitCollectionDidChange:previousTraitCollection];
-	
-	[self _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:NO];
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 - (void)_updateBackground
@@ -489,6 +486,36 @@ void LNApplyTitleWithSettings(UIViewController* self)
 - (BOOL)prefersHomeIndicatorAutoHidden
 {
 	return YES;
+}
+
+@end
+
+@implementation DemoPopupContentViewController (Deprecated)
+
+- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
+	
+	if(@available(iOS 17.0, *))
+	{
+		return;
+	}
+	
+	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self updateUserInterfaceStyleOverrideFromCollection:newCollection];
+	} completion:nil];
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
+	[super traitCollectionDidChange:previousTraitCollection];
+	
+	if(@available(iOS 17.0, *))
+	{
+		return;
+	}
+	
+	[self _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:NO];
 }
 
 @end

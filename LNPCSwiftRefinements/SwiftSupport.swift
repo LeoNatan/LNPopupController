@@ -48,3 +48,18 @@ func __ln_doNotCall__fixUIHostingViewHitTest() {
 		method_setImplementation(method, imp_implementationWithBlock(impl))
 	}
 }
+
+extension UIView {
+	@objc(_ln_animatedUsingSwiftUIWithDuration:animations:completion:)
+	@_spi(LNPopupControllerInternal)
+	static public
+	func __animateUsingSwiftUI(duration: TimeInterval, changes: @escaping () -> Void, completion: (() -> Void)? = nil) {
+		if #available(iOS 18.0, *) {
+			UIView.animate(.spring(.snappy(duration: duration)), changes: changes, completion: completion)
+		} else {
+			UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 500, initialSpringVelocity: 0.0, animations: changes) { _ in
+				completion?()
+			}
+		}
+	}
+}
