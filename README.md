@@ -10,7 +10,7 @@ For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPop
 
 <p align="center"><img src="./Supplements/intro.gif"/></p>
 
-Once a popup bar is presented with a content view controller, the user can swipe or tap the popup bar at any point to present the popup. After finishing, the user dismisses the popup by either swiping or tapping the popup close button.
+Once a popup bar is presented with a content view controller, the user can swipe or tap the popup bar present the popup, interact with the popup content and dismiss the popup by either swiping down or tapping the popup close button.
 
 The framework is intended to be very generic and work in most situations, so it is implemented as a category over `UIViewController`. Each view controller can present a popup bar, docked to a bottom view. 
 For `UITabBarController` and its subclasses, the default docking view is the tab bar. 
@@ -65,36 +65,36 @@ import LNPopupController
 
 ### Managing the Popup Bar
 
-To present the popup bar, create a content controller, update its popup item and present the popup bar using `presentPopupBar(with:animated:completion:)`.
+To present a popup bar, first create a content controller, update its popup item and present the bar using `presentPopupBar(with:animated:completion:)`.
 
 ```swift
-let demoVC = DemoPopupContentViewController()
-demoVC.view.backgroundColor = .red
-demoVC.popupItem.title = "Hello Title"
-demoVC.popupItem.subtitle = "And a Subtitle!"
-demoVC.popupItem.progress = 0.34
+let contentVC = PopupContentViewController()
+contentVC.view.backgroundColor = .red
+contentVC.popupItem.title = "Hello Title"
+contentVC.popupItem.subtitle = "And a Subtitle!"
+contentVC.popupItem.progress = 0.34
     
-tabBarController?.presentPopupBar(with: demoVC, animated: true, completion: nil)
+tabBarController?.presentPopupBar(with: contentVC, animated: true)
 ```
 
-You can present a new content controller while the popup bar is presented and even when the popup itself is open.
+Normally, each popup content controller manages its own popup item and is responsible to keep its information up to date. You can present a new content controller while the popup bar is presented and even when the popup itself is open; the popup bar will update its content with the content controller's popup item and the content view will update with the new controller's view.
 
 To open and close the popup programatically, use `openPopup(animated:completion:)` and `closePopup(animated:completion:)` respectively.
 
 ```swift
-tabBarController?.openPopup(animated: true, completion: nil)
+tabBarController?.openPopup(animated: true)
 ```
 
 Alternatively, you can present the popup bar and open the popup in one animation, using `presentPopupBar(with:openPopup:animated:completion:)`.
 
 ```swift
-tabBarController?.presentPopupBar(with: demoVC, openPopup:true, animated: true, completion: nil)
+tabBarController?.presentPopupBar(with: demoVC, openPopup:true, animated: true)
 ```
 
 To dismiss the popup bar, use `dismissPopupBar(animated:completion:)`.
 
 ```swift
-tabBarController?.dismissPopupBar(animated: true, completion: nil)
+tabBarController?.dismissPopupBar(animated: true)
 ```
 
 If the popup is open when dismissing the popup bar, the popup will also be closed.
@@ -102,28 +102,6 @@ If the popup is open when dismissing the popup bar, the popup will also be close
 ### Popup Items
 
 A popup item should always reflect the popup information about the view controller with which it is associated. The popup item should provide a title and subtitles to display in the popup bar, when the view controller is presented as a popup content controller. In addition, the item may contain bar buttons to display, by setting the `barButtonItems` property.
-
-### Popup Container View Controllers
-
-Any `UIViewController` subclasses can be popup container view controllers. The popup bar is attached to a bottom docking view. By default, `UITabBarController` and `UINavigationController` subclasses return their bottom bars as docking view, while other controllers return a hidden 0pt height view on the bottom of the view. In your subclass, override `bottomDockingViewForPopupBar` and `defaultFrameForBottomDockingView` and return your view and frame accordingly. **The returned view must be attached to the bottom of the view controller's view, or results are undefined.**
-
-```swift
-override var bottomDockingViewForPopupBar: UIView? {
-    return myCoolBottomView
-}
-
-override var defaultFrameForBottomDockingView: CGRect {
-    var bottomViewFrame = myCoolBottomView.frame
-
-    if isMyCoolBottomViewHidden {
-        bottomViewFrame.origin = CGPoint(x: bottomViewFrame.x, y: view.bounds.height)
-    } else {
-        bottomViewFrame.origin = CGPoint(x: bottomViewFrame.x, y: view.bounds.height - bottomViewFrame.height)
-    }
-
-    return bottomViewFrame
-}
-```
 
 ### Appearance and Behavior
 
@@ -331,8 +309,6 @@ When the sidebar overlays the underlying content, the popup bar dims together wi
 
 <p align="center"><img src="./Supplements/tab_bar_sidebar_portrait_floating.png" width="414"/></p>
 
-
-
 ##### Status Bar Management
 
 Status bar management of the popup content view controller is respected and applied when appropriate.
@@ -381,6 +357,34 @@ The included demo project includes two example custom popup bar scenes.
 
 > [!TIP]
 > Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the UIKit system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the [many customization APIs](#popup-bar-customization) to tweak the standard bar styles to fit your app’s design.
+
+#### Custom Popup Container View Controllers
+
+Any `UIViewController` can be a popup container view controller. The popup bar can be attached to either the bottom of the screen or above a bottom docking view. By default, popup bars presented on `UITabBarController` and `UINavigationController` subclasses are attached to their respective bottom bars as docking view, while for all other controllers, the popup bar is attached to the bottom of the screen by default. 
+
+If you have a custom container controller, such as a custom tab controller, you can override the `bottomDockingViewForPopupBar` property to return the bottom docking view, and `defaultFrameForBottomDockingView` to return the expected frame of the docking view when the popup is closed. If you return `nil` from `bottomDockingViewForPopupBar`, the popup bar will be attached to the bottom of the screen.
+
+> [!TIP]
+> The returned view should be attached to the relative bottom of the view controller's view. The popup bar will appear above it when it is closed, and will open full screen when the popup is opened either by the user or programatically.
+
+```swift
+override var bottomDockingViewForPopupBar: UIView? {
+    return myCustomTabBar
+}
+
+override var defaultFrameForBottomDockingView: CGRect {
+    var bottomViewFrame = myCustomTabBar.frame
+
+    bottomViewFrame.origin = CGPoint(x: bottomViewFrame.x, y: view.bounds.height - bottomViewFrame.height)
+
+    return bottomViewFrame
+}
+```
+If your container controller has more advanced functionality, such as the ability to hide the bottom bar, or move it, make the appropriate changes and call `layoutIfNeeded()` on your controller's view, returning appropriate values from `bottomDockingViewForPopupBar` and `defaultFrameForBottomDockingView`. The system will animate the new position for the popup bar.
+
+##### Indirect Safe Area Management
+
+If your bottom docking view is dependent on the safe area of your custom container controller, you might not want to have that be modified by the presentation of the popup bar. In such a case, implement the `requiresIndirectSafeAreaManagement` property to return `true`. The system will then modify the child controller's safe areas instead of modifying the container controller's safe area.
 
 #### ProMotion Support
 
