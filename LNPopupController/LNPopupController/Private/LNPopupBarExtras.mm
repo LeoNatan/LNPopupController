@@ -275,6 +275,62 @@ static void __setupFunction(void)
 
 @end
 
+/**
+ A helper view for view controllers without real bottom bars.
+ */
+@implementation _LNPopupBottomBarSupport
+{
+}
+
+- (nonnull instancetype)initWithFrame:(CGRect)frame
+{
+	self = [super initWithFrame:frame];
+	if(self)
+	{
+		self.userInteractionEnabled = NO;
+	}
+	return self;
+}
+
+#if DEBUG
+
+- (void)setFrame:(CGRect)frame
+{
+	[super setFrame:frame];
+}
+
+#endif
+
+@end
+
+@implementation _LNPopupBarExtensionView
+
+#if DEBUG
+
+- (void)didMoveToSuperview
+{
+	[super didMoveToSuperview];
+}
+
+- (void)setAlpha:(CGFloat)alpha
+{
+	[super setAlpha:alpha];
+}
+
+- (void)setHidden:(BOOL)hidden
+{
+	[super setHidden:hidden];
+}
+
+- (void)setFrame:(CGRect)frame
+{
+	[super setFrame:frame];
+}
+
+#endif
+
+@end
+
 //@implementation _LNPopupBarGlassGroupBackground
 //
 //+ (__kindof id<NSObject>)defaultValue

@@ -257,7 +257,7 @@ __attribute__((objc_direct_members))
 	CGFloat barHeight = (_bottomBar.isHidden ? 0 : _bottomBar.bounds.size.height) + _cachedInsets.bottom;
 	CGFloat heightForContent = _containerController.view.bounds.size.height - (1.0 - percent) * barHeight;
 	
-	if(bottomBar && !LNPopupEnvironmentHasGlass())
+	if(bottomBar && _containerController.bottomDockingViewForPopupBar == nil && !LNPopupEnvironmentHasGlass())
 	{
 		CGRect bottomBarFrame = _cachedDefaultFrame;
 		bottomBarFrame.origin.y -= _cachedInsets.bottom;
@@ -1580,7 +1580,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	{
 		__weak decltype(self) weakSelf = self;
 		
-		if([_containerController isKindOfClass:UITabBarController.class])
+		if([_containerController isKindOfClass:UITabBarController.class] && _containerController.bottomDockingViewForPopupBar == nil)
 		{
 			UITabBar* bar = [_containerController tabBar];
 			bar.minimizationDelegate = self;
@@ -2212,7 +2212,7 @@ id __LNPopupEmptyBlurFilter(void)
 	}
 	else
 	{
-		auto animator = [[UIViewPropertyAnimator alloc] initWithDuration:0.5 dampingRatio:1.0 animations:nil];
+		auto animator = [[UIViewPropertyAnimator alloc] initWithDuration:0.4 dampingRatio:1.0 animations:nil];
 		
 		[animator addAnimations:updateMargins delayFactor: wasMinimized ? 0.0 : 0.2];
 		[animator ln_addAnimations:layoutVerticalBarPosition delayFactor:wasMinimized ? 0.2 : 0.0 durationFactor:wasMinimized ? 0.8 : 0.35];

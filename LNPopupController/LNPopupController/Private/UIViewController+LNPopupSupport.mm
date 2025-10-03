@@ -420,17 +420,27 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (nullable UIView *)bottomDockingViewForPopup_nocreateOrDeveloper
 {
-	return self.bottomDockingViewForPopupBar ?: self._ln_bottomBarSupport_nocreate;
+	return self.bottomDockingViewForPopupBar ?: self.bottomDockingViewForPopup_internal ?: self._ln_bottomBarSupport_nocreate;
 }
 
 - (nonnull UIView *)bottomDockingViewForPopup_internalOrDeveloper
 {
-	return self.bottomDockingViewForPopupBar ?: self._ln_bottomBarSupport;
+	return self.bottomDockingViewForPopupBar ?: self.bottomDockingViewForPopup_internal ?: self._ln_bottomBarSupport;
+}
+
+- (nullable UIView *)bottomDockingViewForPopup_internal
+{
+	return nil;
 }
 
 - (nullable UIView *)bottomDockingViewForPopupBar
 {
 	return nil;
+}
+
+- (BOOL)isBottomDockingViewForPopupBarHidden
+{
+	return NO;
 }
 
 - (UIEdgeInsets)insetsForBottomDockingView
@@ -443,11 +453,21 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	return CGRectZero;
 }
 
+- (CGFloat)bottomDockingViewMarginForPopupBar
+{
+	return 0;
+}
+
 - (CGFloat)_ln_popupOffsetForPopupBar:(LNPopupBar*)popupBar
 {
 #if DEBUG_POPUP_BAR_OFFSET
 	return -80;
 #else
+	if(self.bottomDockingViewForPopupBar != nil && self.isBottomDockingViewForPopupBarHidden == NO)
+	{
+		//User docking view, use user offset.
+		return -self.bottomDockingViewMarginForPopupBar;
+	}
 	
 	if(!popupBar.resolvedIsFloating)
 	{
@@ -456,14 +476,6 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	
 	if(popupBar.resolvedIsCustom && popupBar.customBarWantsFullBarWidth)
 	{
-		return 0.0;
-	}
-	
-	id dockingView = self.bottomDockingViewForPopupBar;
-	
-	if(dockingView != nil && ([dockingView isKindOfClass:UIToolbar.class] || [dockingView isKindOfClass:UITabBar.class]) == NO)
-	{
-		//User docking view, do not offset.
 		return 0.0;
 	}
 	
@@ -506,7 +518,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (CGRect)_defaultFrameForBottomDockingViewForPopupBar:(LNPopupBar*)popupBar
 {
-	return [self bottomDockingViewForPopupBar] != nil ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
+	return self.bottomDockingViewForPopupBar != nil && self.isBottomDockingViewForPopupBarHidden == NO ? [self defaultFrameForBottomDockingView] : [self defaultFrameForBottomDockingView_internal];
 }
 
 - (BOOL)shouldExtendPopupBarUnderSafeArea

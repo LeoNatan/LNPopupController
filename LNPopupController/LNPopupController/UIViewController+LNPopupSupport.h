@@ -202,29 +202,25 @@ NS_SWIFT_UI_ACTOR
 /// Popup presentation containment support in custom container view controller subclasses.
 @interface UIViewController (LNPopupCustomContainer)
 
-/// Return a view to dock the popup bar to, or `nil` to use an appropriate system-provided view.
+/// Return a view to dock the popup bar above, or `nil` to place the popup bar at the bottom of the view.
 ///
-/// A default implementation is provided for `UIViewController`, `UINavigationController` and `UITabBarController`.
-///
-/// The default implementation for `UIViewController` returns an invisible `UIView` instance, docked to the bottom. For `UINavigationController`, the toolbar is returned. For `UITabBarController`, the tab bar is returned.
+/// If your custom container controller supports hiding the bottom docking view, always return your docking view here, and return `true` or `false` in `isBottomDockingViewForPopupBarHidden`. To trigger a hide or show transition, trigger a layout pass for your container controller's view to position the popup bar correctly.
 @property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopupBar;
 
-/// Controls whether the popup bar should fade out during its dismissal animation.
+/// Return the default frame of the bottom docking view, used to position the popup bar when it is presented. If `bottomDockingViewForPopupBar` returns `nil` or `isBottomDockingViewForPopupBarHidden` returns `true`, this method is not called, and a default positioning is used.
 ///
-/// By default, this property's value is `true` if the popup bar is extended (see `UIViewController.shouldExtendPopupBarUnderSafeArea`) and the extension is visible, or if the bottom bar (toolbar or tab bar) is about to transition to its scroll edge appearance, and the scroll edge appearance has a transparent background.
-///
-/// - Note: On iOS 26.0 and later, this property is only supported for custom bars.
-@property (nonatomic, assign, readonly) BOOL shouldFadePopupBarOnDismiss;
+/// If the frame should be updated, trigger a layout pass for your container controller's view to position the popup bar correctly.
+@property (nonatomic, assign, readonly) CGRect defaultFrameForBottomDockingView;
 
-/// Return the default frame for the docking view, when the popup is in hidden or closed state. If `bottomDockingViewForPopupBar` returns `nil`, this method is not called, and the default system-provided frame is used.
+/// Returns whether the bottom docking view for your custom container is hidden or not.
 ///
-/// A default implementation is provided for `UIViewController`, `UINavigationController` and `UITabBarController`.
-@property (nonatomic, readonly) CGRect defaultFrameForBottomDockingView;
+/// To trigger a hide or show transition, trigger a layout pass for your container controller's view to position the popup bar correctly.
+@property (nonatomic, assign, readonly, getter=isBottomDockingViewForPopupBarHidden) BOOL bottomDockingViewForPopupBarHidden;
 
-/// The insets for the bottom docking view from bottom of the container controller's view. By default, this returns ` UIEdgeInsets.zero`. Currently, only the bottom inset is respected.
+/// Return the margin between the popup bar and the bottom docking view.
 ///
-/// The system calculates the position of the popup bar and the bottom docking view by summing the bottom docking view's height and the bottom of the insets.
-@property (nonatomic, readonly) UIEdgeInsets insetsForBottomDockingView LN_DEPRECATED_API_OS("No longer supported on iOS 26.0 and later.", ios(2.0, 26.0));
+/// Defaults to `0`.
+@property (nonatomic, assign, readonly) CGFloat bottomDockingViewMarginForPopupBar;
 
 /// Controls whether the framework manages the safe area of the container controller indirectly.
 ///
@@ -234,6 +230,13 @@ NS_SWIFT_UI_ACTOR
 ///
 /// Defaults to `true` for `UITabBarController` and `UINavigationController` subclasses; `false` otherwise.
 @property (nonatomic, assign, readonly) BOOL requiresIndirectSafeAreaManagement;
+
+/// Controls whether the popup bar should fade out during its dismissal animation.
+///
+/// By default, this property's value is `true` if the popup bar is extended (see `UIViewController.shouldExtendPopupBarUnderSafeArea`) and the extension is visible, or if the bottom bar (toolbar or tab bar) is about to transition to its scroll edge appearance, and the scroll edge appearance has a transparent background.
+///
+/// - Note: On iOS 26.0 and later, this property is only supported for custom bars.
+@property (nonatomic, assign, readonly) BOOL shouldFadePopupBarOnDismiss;
 
 @end
 
@@ -308,5 +311,14 @@ NS_SWIFT_UI_ACTOR
 @end
 
 @interface LNPopupImageView (TransitionSupport) <LNPopupTransitionView> @end
+
+@interface UIViewController (LNPopupCustomContainerDeprecated)
+
+/// The insets for the bottom docking view from bottom of the container controller's view. By default, this returns ` UIEdgeInsets.zero`. Currently, only the bottom inset is respected.
+///
+/// The system calculates the position of the popup bar and the bottom docking view by summing the bottom docking view's height and the bottom of the insets.
+@property (nonatomic, readonly) UIEdgeInsets insetsForBottomDockingView LN_DEPRECATED_API_OS("No longer supported on iOS 26.0 and later.", ios(2.0, 26.0));
+
+@end
 
 NS_ASSUME_NONNULL_END

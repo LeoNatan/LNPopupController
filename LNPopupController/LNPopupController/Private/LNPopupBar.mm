@@ -286,6 +286,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		barStyle = LNPopupBarStyleDefault;
 	}
 	
+	if(_customBarViewController != nil && barStyle != LNPopupBarStyleCustom)
+	{
+		barStyle = LNPopupBarStyleCustom;
+	}
+	
 	if(_barStyle != barStyle)
 	{
 		_barStyle = barStyle;

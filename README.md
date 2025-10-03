@@ -358,34 +358,6 @@ The included demo project includes two example custom popup bar scenes.
 > [!TIP]
 > Only implement a custom popup bar if you need a design that is significantly different than the provided [standard popup bar styles](#bar-style). A lot of care and effort has been put into integrating these popup bar styles with the UIKit system, including look, feel, transitions and interactions. Custom bars provide a blank canvas for you to implement a bar of your own, but if you end up recreating a bar design that is similar to a standard bar style, you are more than likely losing subtleties that have been added and perfected over the years in the standard implementations. Instead, consider using the [many customization APIs](#popup-bar-customization) to tweak the standard bar styles to fit your app’s design.
 
-#### Custom Popup Container View Controllers
-
-Any `UIViewController` can be a popup container view controller. The popup bar can be attached to either the bottom of the screen or above a bottom docking view. By default, popup bars presented on `UITabBarController` and `UINavigationController` subclasses are attached to their respective bottom bars as docking view, while for all other controllers, the popup bar is attached to the bottom of the screen by default. 
-
-If you have a custom container controller, such as a custom tab controller, you can override the `bottomDockingViewForPopupBar` property to return the bottom docking view, and `defaultFrameForBottomDockingView` to return the expected frame of the docking view when the popup is closed. If you return `nil` from `bottomDockingViewForPopupBar`, the popup bar will be attached to the bottom of the screen.
-
-> [!TIP]
-> The returned view should be attached to the relative bottom of the view controller's view. The popup bar will appear above it when it is closed, and will open full screen when the popup is opened either by the user or programatically.
-
-```swift
-override var bottomDockingViewForPopupBar: UIView? {
-    return myCustomTabBar
-}
-
-override var defaultFrameForBottomDockingView: CGRect {
-    var bottomViewFrame = myCustomTabBar.frame
-
-    bottomViewFrame.origin = CGPoint(x: bottomViewFrame.x, y: view.bounds.height - bottomViewFrame.height)
-
-    return bottomViewFrame
-}
-```
-If your container controller has more advanced functionality, such as the ability to hide the bottom bar, or move it, make the appropriate changes and call `layoutIfNeeded()` on your controller's view, returning appropriate values from `bottomDockingViewForPopupBar` and `defaultFrameForBottomDockingView`. The system will animate the new position for the popup bar.
-
-##### Indirect Safe Area Management
-
-If your bottom docking view is dependent on the safe area of your custom container controller, you might not want to have that be modified by the presentation of the popup bar. In such a case, implement the `requiresIndirectSafeAreaManagement` property to return `true`. The system will then modify the child controller's safe areas instead of modifying the container controller's safe area.
-
 #### ProMotion Support
 
 `LNPopupController` fully supports ProMotion on iPhone and iPad.
@@ -457,7 +429,60 @@ demoVC.popupItem.accessibilityProgressLabel = NSLocalizedString("Custom accessib
 demoVC.popupItem.accessibilityProgressValue = "\(accessibilityDateComponentsFormatter.stringFromTimeInterval(NSTimeInterval(popupItem.progress) * totalTime)!) \(NSLocalizedString("of", comment: "")) \(accessibilityDateComponentsFormatter.stringFromTimeInterval(totalTime)!)"
 ```
 
-## Notes
+### Custom Popup Container View Controllers
+
+Any `UIViewController` can be a popup container view controller. The popup bar can be attached to either the bottom of the screen or above a bottom docking view. By default, popup bars presented on `UITabBarController` and `UINavigationController` subclasses are attached to their respective system bottom bars as docking views, while on all other controllers, the popup bar is attached to the bottom of the screen. 
+
+If you have a custom container controller, such as a custom tab bar controller, you can override the `bottomDockingViewForPopupBar` property to return your designated bottom docking view, and `defaultFrameForBottomDockingView` to return the expected frame of the docking view. When presented, the popup bar will appear above the designated bottom docking view. If the container controller needs to reposition the bottom docking view, trigger a layout pass so the popup bar can take the new frame into account.
+
+If you return `nil` from `bottomDockingViewForPopupBar`, the popup bar will be positioned at the bottom of the screen, or above the appropriate system bottom bar, such as a tab bar or a toolbar.
+
+If your custom container controller supports hiding the designated bottom docking view, implement `isBottomDockingViewForPopupBarHidden` and return the correct value. To trigger a popup bar update, trigger a layout pass for your container controller's view. If the bottom docking view is hidden, the popup bar will be positioned at the bottom of the screen.
+
+You can control the margin between the popup bar and the bottom docking view by implementing `bottomDockingViewMarginForPopupBar`.
+
+###### Indirect Safe Area Management
+
+If your bottom docking view is dependent on the safe area of your custom container controller, you might not want to have that be modified by the presentation of the popup bar. In such a case, implement the `requiresIndirectSafeAreaManagement` property to return `true`. The system will then modify the child controller's safe areas instead of modifying the container controller's safe area.
+
+#### Example Implementation
+
+```swift
+class MyCustomTabBarController: UITabBarController {
+	override var bottomDockingViewForPopupBar: UIView? {
+		return myCustomTabBar
+	}
+	
+	override var defaultFrameForBottomDockingView: CGRect {
+		myCustomTabBar.frame
+	}
+	
+	override var isBottomDockingViewForPopupBarHidden: Bool {
+		!isMyCustomTabBarVisible
+	}
+	
+	override var bottomDockingViewMarginForPopupBar: CGFloat {
+		8.0
+	}
+	
+	func toggleMyCustomTabBarVisible() {
+		UIView.animate(withDuration: 0.4, 
+                       delay: 0.0, 
+                       usingSpringWithDamping: 1.0, 
+                       initialSpringVelocity: 0.0) {
+			self.isMyCustomTabBarVisible.toggle()
+			
+			// Animate your bar position here according to isMyCustomTabBarVisible.
+            self.updateMyCustomTabBarConstraints()
+			
+			// Trigger a layout pass so that the popup bar animates to the correct position
+			self.view.layoutIfNeeded()
+		}
+	}
+}
+```
+
+## Additional Notes
 
 * Legacy non-translucent tab bar and toolbars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars, and supporting those is not a priority for `LNPopupController`.
   * The correct way to achieve an opaque bar is to use the `UIBarAppearance.configureWithOpaqueBackground()` API, which is supported by `LNPopupController`.

@@ -61,7 +61,7 @@ class DemoAlbumTableViewController: UITableViewController {
 #endif
 #if compiler(>=6.2)
 		if #available(iOS 26.0, *) {
-			self.tabBarController?.tabBarMinimizeBehavior = .onScrollDown
+			tabBarController?.tabBarMinimizeBehavior = .onScrollDown
 		}
 #endif
 		
