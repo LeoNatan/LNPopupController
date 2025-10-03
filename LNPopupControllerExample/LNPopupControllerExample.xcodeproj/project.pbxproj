@@ -67,6 +67,10 @@
 		39DB61801B8891ED001BFF8F /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39DB61811B8891ED001BFF8F /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
+		39F031B02E8FC0DD0079F2FD /* CustomContainer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39F031AF2E8FC0DD0079F2FD /* CustomContainer.storyboard */; };
+		39F031B12E8FC0DD0079F2FD /* CustomContainer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39F031AF2E8FC0DD0079F2FD /* CustomContainer.storyboard */; };
+		39F031B32E8FC2770079F2FD /* CustomContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F031B22E8FC2770079F2FD /* CustomContainerController.swift */; };
+		39F031B42E8FC2770079F2FD /* CustomContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F031B22E8FC2770079F2FD /* CustomContainerController.swift */; };
 		39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
 		39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
 		39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
@@ -186,6 +190,8 @@
 		39D6C8BA2B2D02B500F53E70 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = ../../../LNPopupSettings/SettingsViewController.swift; sourceTree = "<group>"; };
 		39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LNPopupController.xcodeproj; path = ../LNPopupController/LNPopupController.xcodeproj; sourceTree = "<group>"; };
 		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		39F031AF2E8FC0DD0079F2FD /* CustomContainer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CustomContainer.storyboard; sourceTree = "<group>"; };
+		39F031B22E8FC2770079F2FD /* CustomContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContainerController.swift; sourceTree = "<group>"; };
 		39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExampleNoPopup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LNPopupControllerExampleNoPopup-Info.plist"; path = "../LNPopupControllerExampleNoPopup-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -257,6 +263,7 @@
 				397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */,
 				393F23211E16BEF5000E969D /* Demo - Custom Pupup Bar Scene (Swift) */,
 				39BBA86324FEC16600D9712A /* Demo - Custom Pupup Bar Scene - Manual Layout (Swift) */,
+				39F031AE2E8FC0420079F2FD /* Demo - Custom Container */,
 				3908C3491E7C9E8A00451B5D /* Settings */,
 				39837A221B756F9B004D2DA9 /* Utils */,
 				39277A071B58228000293F95 /* Supporting Files */,
@@ -380,6 +387,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		39F031AE2E8FC0420079F2FD /* Demo - Custom Container */ = {
+			isa = PBXGroup;
+			children = (
+				39F031AF2E8FC0DD0079F2FD /* CustomContainer.storyboard */,
+				39F031B22E8FC2770079F2FD /* CustomContainerController.swift */,
+			);
+			name = "Demo - Custom Container";
+			path = CustomContainer;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -500,6 +517,7 @@
 				392E2AC52AD5CAB600944CB2 /* LaunchScreen.storyboard in Resources */,
 				39277A171B58228000293F95 /* Assets.xcassets in Resources */,
 				39277A151B58228000293F95 /* Main.storyboard in Resources */,
+				39F031B02E8FC0DD0079F2FD /* CustomContainer.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,6 +530,7 @@
 				39B0DFE72B1819A9008CCF36 /* MapScene.storyboard in Resources */,
 				39B0DFEB2B1819BC008CCF36 /* Settings.storyboard in Resources */,
 				39FAFC4F24E71A6C008BBC2D /* Assets.xcassets in Resources */,
+				39F031B12E8FC0DD0079F2FD /* CustomContainer.storyboard in Resources */,
 				39FAFC5024E71A6C008BBC2D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -531,6 +550,7 @@
 				39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
 				39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */,
+				39F031B42E8FC2770079F2FD /* CustomContainerController.swift in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
 				39B645F02CA61B0200AB038B /* ScrollingMapViewController.swift in Sources */,
 				394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */,
@@ -567,6 +587,7 @@
 				39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */,
 				39FAFC3B24E71A6C008BBC2D /* LNSplitViewController.m in Sources */,
 				39FAFC3C24E71A6C008BBC2D /* AppDelegate.m in Sources */,
+				39F031B32E8FC2770079F2FD /* CustomContainerController.swift in Sources */,
 				3987A4C32E86E42D0090E273 /* DemoMusicSearchController.swift in Sources */,
 				39FAFC3E24E71A6C008BBC2D /* main.m in Sources */,
 				39FAFC3F24E71A6C008BBC2D /* RandomColors.m in Sources */,

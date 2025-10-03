@@ -10,6 +10,7 @@
 #import "SafeSystemImages.h"
 #import "SettingKeys.h"
 #import "DemoPopupContentViewController.h"
+#import "LNPopupControllerExampleSupport.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

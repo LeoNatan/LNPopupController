@@ -7,6 +7,7 @@
 //
 
 #import "LNPopupControllerExampleSupport.h"
+#import "LNPopupControllerExample-Swift.h"
 #import "SettingKeys.h"
 
 @interface DemoGalleryControllerTableView : UITableView @end
@@ -44,8 +45,6 @@
 
 @end
 
-@interface DemoTabBarController : UITabBarController @end
-
 @implementation DemoTabBarController
 {
 	NSMutableArray<UITab*>* _tabs API_AVAILABLE(ios(18.0));
@@ -71,6 +70,11 @@
 {
 	if(@available(iOS 18.0, *))
 	{
+		if(_tabs.count > 0)
+		{
+			return;
+		}
+		
 		_tabs = [NSMutableArray new];
 		
 		NSUInteger idx = 0;
@@ -85,7 +89,7 @@
 			UITab* tab;
 			
 			UIImage* image;
-			if(idx != 3 || [vc isKindOfClass:UINavigationController.class] == NO || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26)
+			if(idx != 3 || [self isKindOfClass:LNCustomContainerController.class] || [vc isKindOfClass:UINavigationController.class] == NO || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26)
 			{
 				image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square", @(idx + 1)]];
 				
@@ -109,7 +113,7 @@
 		}
 		
 		_sidebarTabs = [NSMutableArray new];
-		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingTabBarHasSidebar])
+		if([self isKindOfClass:LNCustomContainerController.class] == NO && [NSUserDefaults.settingDefaults boolForKey:PopupSettingTabBarHasSidebar])
 		{
 			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
 			{
@@ -167,7 +171,7 @@
 
 - (void)updateTabsForTraitCollection:(UITraitCollection*)collection API_AVAILABLE(ios(18.0))
 {
-	if(collection.userInterfaceIdiom == UIUserInterfaceIdiomPad && collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && _sidebarTabs.count > 0 && self.splitViewController == nil)
+	if([self isKindOfClass:LNCustomContainerController.class] == NO && collection.userInterfaceIdiom == UIUserInterfaceIdiomPad && collection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && _sidebarTabs.count > 0 && self.splitViewController == nil)
 	{
 		self.tabs = [_tabs arrayByAddingObjectsFromArray:_sidebarTabs];
 		self.compactTabIdentifiers = [_tabs valueForKey:@"identifier"];

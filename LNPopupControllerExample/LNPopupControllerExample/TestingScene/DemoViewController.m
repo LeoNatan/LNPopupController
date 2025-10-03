@@ -89,7 +89,7 @@
 		
 		NSInteger idx = [self.tabBarController.viewControllers indexOfObject:target] + 1;
 		
-		if(idx != 4 || self.navigationController == nil || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26)
+		if(idx != 4 || self.navigationController == nil || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26 || [self.tabBarController isKindOfClass:LNCustomContainerController.class])
 		{
 			//This is safe even with the UITab API, because this will be accessed very early on, when loaded from storyboard.
 			super.tabBarItem.image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%lu.square.fill", idx]];
@@ -254,7 +254,7 @@
 {
 	if(@available(iOS 18.0, *))
 	{
-		if(self.tabBarController == nil || UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad || traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+		if([self.tabBarController isKindOfClass:LNCustomContainerController.class] == YES || self.tabBarController == nil || UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad || traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
 			_hideTabBarButton.image = [UIImage systemImageNamed:@"dock.rectangle"];
 			self.navigationItem.backButtonDisplayMode = UINavigationItemBackButtonDisplayModeGeneric;
@@ -337,7 +337,8 @@
 			traitCollection = self.traitCollection;
 		}
 		
-		BOOL canHaveSidebar = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		BOOL isCustomContainer = [self.tabBarController isKindOfClass:LNCustomContainerController.class];
+		BOOL canHaveSidebar = isCustomContainer == NO && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
 		
 		if(self.tabBarController != nil)
 		{
@@ -350,7 +351,7 @@
 		BOOL isSNil = self.splitViewController == nil;
 		BOOL isSidebarHidden = self.tabBarController.sidebar.isHidden;
 		
-		_hideTabBarButton.hidden = isSNil == NO || isFirst == NO || isNNil || (!isTNil && canHaveSidebar && isSidebarHidden == NO);
+		_hideTabBarButton.hidden = isCustomContainer == YES || isSNil == NO || isFirst == NO || isNNil || (!isTNil && canHaveSidebar && isSidebarHidden == NO);
 	}
 	else
 	{

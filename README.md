@@ -482,6 +482,8 @@ class MyCustomTabBarController: UITabBarController {
 }
 ```
 
+The example project includes a fully functional example scene with a custom tab bar container controller, including animated and/or interactive custom tab bar hiding support.
+
 ## Additional Notes
 
 * Legacy non-translucent tab bar and toolbars are not supported and can cause visual artifacts or layout glitches. Apple has many problem with such bars, and supporting those is not a priority for `LNPopupController`.
