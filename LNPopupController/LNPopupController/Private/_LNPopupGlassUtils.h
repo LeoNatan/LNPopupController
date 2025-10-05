@@ -22,9 +22,27 @@ extern BOOL LNPopupEnvironmentHasGlass(void);
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 
 API_AVAILABLE(ios(26.0))
-@interface LNPopupGlassEffect: UIGlassEffect
+@interface _LNPopupGlassEffect: UIGlassEffect
 
 @property (nonatomic, assign) UIGlassEffectStyle style;
+
+@end
+
+API_AVAILABLE(ios(26.0))
+@interface _LNPopupBorrowedGlassEffect: UIGlassEffect
+
++ (instancetype)shineEffect;
+
+@end
+
+API_AVAILABLE(ios(26.0))
+@interface _LNPopupGlassWrapperEffect: UIGlassEffect
+
++ (instancetype)wrapperWithEffect:(UIVisualEffect*)effect;
+
+@property (nonatomic, assign) BOOL disableForeground;
+@property (nonatomic, assign) BOOL disableInteractive;
+@property (nonatomic, assign) BOOL disableShadow;
 
 @end
 

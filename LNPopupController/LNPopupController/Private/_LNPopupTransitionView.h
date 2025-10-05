@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTargetFrameUpdatingTransform:(CGRect)targetFrame;
 
-@property (nonatomic, strong, readonly) CALayer* sourceLayer;
+@property (nonatomic, strong) CALayer* sourceLayer;
 @property (nonatomic, strong, readonly) UIView* sourceView;
 
 @property (nonatomic, copy) NSShadow* shadow;

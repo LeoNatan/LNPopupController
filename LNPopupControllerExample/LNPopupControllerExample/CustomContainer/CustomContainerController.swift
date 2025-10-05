@@ -36,6 +36,7 @@ class CustomTabBar: UIView {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		
+#if compiler(>=6.2)
 		if #available(iOS 26, *) {
 			effectView.cornerConfiguration = .capsule()
 			stackView.cornerConfiguration = .capsule()
@@ -44,9 +45,15 @@ class CustomTabBar: UIView {
 			layer.cornerRadius = 8
 			layer.cornerCurve = .continuous
 		}
+#else
+		clipsToBounds = true
+		layer.cornerRadius = 8
+		layer.cornerCurve = .continuous
+#endif
 		
 		effectView.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(effectView)
+#if compiler(>=6.2)
 		if #available(iOS 26, *) {
 			let glass = UIGlassEffect(style: .regular)
 			glass.isInteractive = true
@@ -54,6 +61,9 @@ class CustomTabBar: UIView {
 		} else {
 			effectView.effect = UIBlurEffect(style: .systemChromeMaterial)
 		}
+#else
+		effectView.effect = UIBlurEffect(style: .systemChromeMaterial)
+#endif
 		
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 		effectView.contentView.addSubview(stackView)
@@ -135,10 +145,6 @@ class CustomContainerController: DemoTabBarController {
 		customTabBar.delegate = self
 	}
 	
-	override func viewIsAppearing(_ animated: Bool) {
-		super.viewIsAppearing(animated)
-	}
-	
 	override var tabs: [UITab] {
 		didSet {
 			updateCustomTabBarFrame()
@@ -181,6 +187,8 @@ class CustomContainerController: DemoTabBarController {
 	}
 	
 	override func viewDidLayoutSubviews() {
+		view.bringSubviewToFront(customTabBar)
+		
 		super.viewDidLayoutSubviews()
 		
 		updateCustomTabBarFrame()
@@ -223,7 +231,17 @@ extension CustomContainerController: CustomTabBar.Delegate {
 @available(iOS 18.0, *)
 extension CustomContainerController: UINavigationControllerDelegate {
 	func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-		navigationController.transitionCoordinator?.animate { _ in
+		let wasHidden = isCustomTabBarHidden
+		
+		if navigationController.transitionCoordinator?.isInteractive == true {
+			navigationController.transitionCoordinator?.notifyWhenInteractionChanges { context in
+				if context.isCancelled {
+					self.isCustomTabBarHidden = wasHidden
+				}
+			}
+		}
+		
+		navigationController.transitionCoordinator?.animate { context in
 			defer {
 				self.updateCustomTabBarFrame()
 			}

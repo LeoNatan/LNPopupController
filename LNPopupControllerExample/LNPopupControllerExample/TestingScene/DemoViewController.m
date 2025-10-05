@@ -688,6 +688,8 @@
 		targetVC.popupBar.standardAppearance = appearance;
 	}
 	
+	targetVC.popupBar.standardAppearance.floatingBarShineEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingShineEnabled];
+	
 	targetVC.popupBar.standardAppearance.marqueeScrollEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled];
 	targetVC.popupBar.standardAppearance.coordinateMarqueeScroll = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeCoordinationEnabled];
 	

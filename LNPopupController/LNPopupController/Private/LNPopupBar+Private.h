@@ -48,6 +48,12 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @end
 
+@interface _LNPopupBarContentView : _LNPopupBarBackgroundView
+
+@property (nonatomic, assign, getter=isShiny) BOOL shiny;
+
+@end
+
 @interface LNPopupBar () <UIPointerInteractionDelegate, _LNPopupBarAppearanceDelegate>
 
 + (void)setAnimatesItemSetter:(BOOL)animate;
@@ -90,7 +96,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, strong, readwrite) UIProgressView* progressView;
 
 @property (nonatomic, strong) UIView* layoutContainer;
-@property (nonatomic, strong) _LNPopupBarBackgroundView* contentView;
+@property (nonatomic, strong) _LNPopupBarContentView* contentView;
 @property (nonatomic, strong) UIView* contentMaskView;
 
 @property (nonatomic, strong) _LNPopupBarBackgroundView* backgroundView;
@@ -165,8 +171,6 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 - (UIColor*)_subtitleColor;
 
 @end
-
-@interface _LNPopupBarContentView : _LNPopupBarBackgroundView @end
 
 @interface _LNPopupBarTitlesView : UIStackView @end
 

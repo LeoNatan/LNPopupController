@@ -290,36 +290,36 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc activeAppearance:(LNPopupBarAppearance*)appearance
 {
-	UIVisualEffect* effectToUse;
-	if(_backgroundEffect != nil)
-	{
-		effectToUse = _backgroundEffect;
-	}
-	else if(LNPopupEnvironmentHasGlass())
-	{
-		effectToUse = [appearance floatingBackgroundEffectForTraitCollection:vc.traitCollection];
-	}
-	else
-	{
-		effectToUse = appearance.backgroundEffect;
-	}
-	
 	if(self.translucent == NO)
 	{
+		//This is so glass effect get's really removed. 🤦‍♂️
+		_effectView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
 		_effectView.effect = nil;
 		_effectView.backgroundColor = UIColor.systemBackgroundColor;
 	}
 	else
 	{
+		UIVisualEffect* effectToUse;
+		if(_backgroundEffect != nil)
+		{
+			effectToUse = _backgroundEffect;
+		}
+		else
+		{
+			effectToUse = [appearance floatingBackgroundEffectForPopupBar:nil containerController:nil traitCollection:vc.traitCollection];
+		}
+		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		if(effectToUse.ln_isGlass)
 		{
-			UIGlassEffect* glass = [effectToUse copy];
-			glass.interactive = NO;
-			effectToUse = glass;
+			_LNPopupGlassWrapperEffect* wrapper = [_LNPopupGlassWrapperEffect wrapperWithEffect:effectToUse];
+			wrapper.disableForeground = YES;
+			wrapper.disableInteractive = _backgroundEffect == nil;
+			effectToUse = wrapper;
 		}
 #endif
+		
 		_effectView.effect = effectToUse;
 	}
 }

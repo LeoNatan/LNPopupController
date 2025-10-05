@@ -450,7 +450,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (CGRect)defaultFrameForBottomDockingView
 {
-	return CGRectZero;
+	return self.bottomDockingViewForPopupBar.frame;
 }
 
 - (CGFloat)bottomDockingViewMarginForPopupBar

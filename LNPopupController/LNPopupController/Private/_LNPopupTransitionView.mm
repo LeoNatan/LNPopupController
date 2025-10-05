@@ -162,4 +162,11 @@
 	_portalView.transform = sourceViewTransform;
 }
 
+- (void)setSourceLayer:(CALayer *)sourceLayer
+{
+	_sourceLayer = sourceLayer;
+	
+	[_portalView.layer setValue:sourceLayer forKey:LNPopupHiddenString("sourceLayer")];
+}
+
 @end

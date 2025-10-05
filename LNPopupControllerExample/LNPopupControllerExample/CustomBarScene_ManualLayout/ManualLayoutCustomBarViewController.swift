@@ -64,10 +64,10 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 		leftButton.sizeToFit()
 		view.addSubview(leftButton)
 		
-		self.preferredContentSize = CGSize(width: 0, height: 170)
+		self.preferredContentSize = CGSize(width: 0, height: 70)
 	}
 	
-	var idx = 1
+	var idx = 0
 	@IBAction
 	func animateSize(_ sender: UIBarButtonItem) {
 		idx = 1 - idx;
@@ -86,8 +86,6 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 	
 	public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
-		
-		print(traitCollection.popUpBarEnvironment.rawValue)
 	}
 	
 	public

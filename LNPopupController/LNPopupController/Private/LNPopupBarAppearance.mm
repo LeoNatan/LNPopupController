@@ -11,7 +11,7 @@
 #import "_LNPopupBase64Utils.hh"
 #import "_LNPopupGlassUtils.h"
 #import "UIScreen+LNPopupSupportPrivate.h"
-#import <LNPopupController/LNPopupBar.h>
+#import "LNPopupBar+Private.h"
 
 static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;
 
@@ -195,7 +195,7 @@ static NSArray* __notifiedProperties = nil;
 	return rv;
 }
 
-- (UIVisualEffect *)floatingBackgroundEffectForTraitCollection:(UITraitCollection*)traitCollection
+- (UIVisualEffect*)floatingBackgroundEffectForPopupBar:(LNPopupBar*)popupBar containerController:(UIViewController*)container traitCollection:(UITraitCollection*)traitCollection
 {
 	if(_wantsDynamicFloatingBackgroundEffect == NO)
 	{
@@ -207,18 +207,19 @@ static NSArray* __notifiedProperties = nil;
 	{
 		if(LNPopupEnvironmentHasGlass())
 		{
-//			UIGlassEffectStyle style;
-//			if(traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline)
+//			if(popupBar.resolvedIsCustom && traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
 //			{
-//				style = UIGlassEffectStyleClear;
+//				return _LNPopupBorrowedGlassEffect.buttonEffect;
 //			}
-//			else
+//			
+//			if(popupBar.resolvedIsCustom == NO && traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline)
 //			{
-//				style = UIGlassEffectStyleRegular;
+//				return _LNPopupBorrowedGlassEffect.buttonEffect;
 //			}
+			
 			UIGlassEffectStyle style = UIGlassEffectStyleRegular;
 			
-			UIGlassEffect* effect = [LNPopupGlassEffect effectWithStyle:style];
+			UIGlassEffect* effect = [_LNPopupGlassEffect effectWithStyle:style];
 			effect.interactive = YES;
 			return effect;
 		}
@@ -229,7 +230,6 @@ static NSArray* __notifiedProperties = nil;
 	{
 		return [UIBlurEffect effectWithStyle:UIBlurEffectStyleProminent];
 	}
-	
 	
 	return [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemChromeMaterial];
 }
@@ -271,9 +271,7 @@ static NSArray* __notifiedProperties = nil;
 - (void)setFloatingBackgroundEffect:(UIBlurEffect *)floatingBackgroundEffect
 {
 	_wantsDynamicFloatingBackgroundEffect = NO;
-	[self willChangeValueForKey:@"floatingBackgroundEffect"];
 	_floatingBackgroundEffect = floatingBackgroundEffect;
-	[self didChangeValueForKey:@"floatingBackgroundEffect"];
 }
 
 - (void)configureWithDefaultHighlightColor
@@ -406,7 +404,7 @@ static NSArray* __notifiedProperties = nil;
 	{
 		if(LNPopupEnvironmentHasGlass())
 		{
-			effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
+			effect = [_LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
 		}
 		else
 		{

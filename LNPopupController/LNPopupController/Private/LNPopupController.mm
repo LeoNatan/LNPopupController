@@ -1640,7 +1640,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				if(LNPopupEnvironmentHasGlass())
 				{
 					CGRect frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
-					self.popupBar.contentView.effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
+					self.popupBar.contentView.effect = [_LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
 					self.popupBar.contentView.contentView.alpha = 0.0;
 #ifndef LNPopupControllerEnforceStrictClean
 					self.popupBar.contentView.contentView.layer.filters = @[__LNPopupEmptyBlurFilter()];
@@ -1720,7 +1720,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 				[UIView animateWithDuration:LNPopupBarTransitionDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
-					self.popupBar.contentView.effect = [self.popupBar.activeAppearance floatingBackgroundEffectForTraitCollection:self.popupBar.traitCollection];
+					self.popupBar.contentView.effect = [self.popupBar.activeAppearance floatingBackgroundEffectForPopupBar:self.popupBar containerController:self.containerController traitCollection:self.popupBar.traitCollection];
 				} completion:nil];
 			});
 		}
@@ -2004,7 +2004,7 @@ id __LNPopupEmptyBlurFilter(void)
 				if(@available(iOS 26, *))
 				if(animated && LNPopupEnvironmentHasGlass())
 				{
-					self.popupBar.contentView.effect = [LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
+					self.popupBar.contentView.effect = [_LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
 					self.popupBar.os26TransitionView.transform = CGAffineTransformMakeScale(1.05, 1.05);
 					self.popupBar.os26TransitionView.alpha = 0.0;
 					
@@ -2044,7 +2044,7 @@ id __LNPopupEmptyBlurFilter(void)
 					self.popupBar.contentView.contentView.alpha = 1.0;
 					self.popupBar.contentView.contentView.layer.filters = nil;
 					[self.popupBar.contentView clearEffect];
-					self.popupBar.contentView.effect = [self.popupBar.activeAppearance floatingBackgroundEffectForTraitCollection:self.popupBar.traitCollection];
+					self.popupBar.contentView.effect = [self.popupBar.activeAppearance floatingBackgroundEffectForPopupBar:self.popupBar containerController:self.containerController traitCollection:self.popupBar.traitCollection];
 					
 					[self.containerController _layoutPopupBarOrderForUse];
 				}

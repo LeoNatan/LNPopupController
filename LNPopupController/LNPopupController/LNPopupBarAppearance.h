@@ -104,6 +104,13 @@ NS_SWIFT_UI_ACTOR
 /// - Note: Starting with iOS 26, when a glass effect is used for the popup bar, setting a bar background shadow has no effect. Instead, the glass shadow is used.
 @property (nonatomic, copy, nullable) NSShadow* floatingBarBackgroundShadow;
 
+/// Enables outer shine on a floating popup bar.
+///
+/// Defaults to `false`.
+///
+/// - Note: Shine only has effect on iOS 26.0 and above.
+@property (nonatomic, assign, getter=isFloatingBarShineEnabled) BOOL floatingBarShineEnabled;
+
 /// Reset floating background and shadow properties to their defaults.
 - (void)configureWithDefaultFloatingBackground;
 

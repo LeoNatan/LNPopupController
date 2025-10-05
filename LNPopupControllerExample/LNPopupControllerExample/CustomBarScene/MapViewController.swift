@@ -33,7 +33,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	private var popupContentVC: LocationsController!
 
 #if LNPOPUP
-	lazy var resize = UIBarButtonItem(image: UIImage(systemName: "rectangle.compress.vertical"), style: .plain, target: navigationController!.popupBar.customBarViewController!, action: #selector(ManualLayoutCustomBarViewController.animateSize(_:)))
+	lazy var resize = UIBarButtonItem(image: UIImage(systemName: "rectangle.expand.vertical"), style: .plain, target: navigationController!.popupBar.customBarViewController!, action: #selector(ManualLayoutCustomBarViewController.animateSize(_:)))
 	lazy var resizeGroup = UIBarButtonItemGroup(barButtonItems: [resize], representativeItem: nil)
 	
 	lazy var presentDismiss = [
@@ -85,7 +85,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			navigationItem.leftBarButtonItems = presentDismiss
 		}
 		
-		resize.image = UIImage(systemName: "rectangle.compress.vertical")
+		resize.image = UIImage(systemName: "rectangle.expand.vertical")
 	}
 #endif
 	
@@ -133,7 +133,14 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			navigationController!.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
 		}
 		
+		navigationController!.popupBar.standardAppearance.isFloatingBarShineEnabled = true
+		
 		navigationController!.popupContentView.popupCloseButtonStyle = .none
+		if #available(iOS 26, *) {
+			navigationController!.popupContentView.backgroundEffect = UIGlassEffect(style: .regular)
+		} else {
+			navigationController!.popupContentView.backgroundEffect = UIBlurEffect(style: .systemMaterial)
+		}
 		navigationController!.popupInteractionStyle = .customizedSnap(percent: 0.15)
 		
 		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)

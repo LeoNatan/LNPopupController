@@ -34,15 +34,7 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 		updateConstraint()
 		
 		if #available(iOS 26.0, *), LNPopupSettingsHasOS26Glass() {
-#if compiler(>=6.2)
-			searchBar.searchTextField.backgroundColor = UIColor(dynamicProvider: { traitCollection in
-				if traitCollection.userInterfaceStyle == .dark {
-					return UIColor.tertiarySystemBackground.withAlphaComponent(0.15)
-				} else {
-					return UIColor.lightGray.withAlphaComponent(0.15)
-				}
-			})
-#endif
+			updateFromUserInterfaceStyle()
 		} else {
 			guard let backgroundView = containingPopupBar?.value(forKey: "backgroundView") as? UIView else {
 				return
@@ -52,6 +44,29 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 			backgroundView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
 			backgroundView.layer.cornerRadius = 20
 			backgroundView.layer.cornerCurve = .continuous
+		}
+	}
+	
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		
+		if #available(iOS 26.0, *) {
+			updateFromUserInterfaceStyle()
+		}
+	}
+	
+	@available(iOS 26.0, *)
+	func updateFromUserInterfaceStyle() {
+		containingPopupBar?.standardAppearance.configureWithOpaqueFloatingBackground()
+		if containingPopupBar?.traitCollection.userInterfaceStyle == .dark {
+			searchBar.searchTextField.backgroundColor = .clear
+			let glass = UIGlassEffect(style: .clear)
+			glass.isInteractive = true
+			glass.tintColor = UIColor.systemBackground.withAlphaComponent(0.55)
+			containingPopupBar?.standardAppearance.floatingBackgroundEffect = glass
+		} else {
+			searchBar.searchTextField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.15)
+			containingPopupBar?.standardAppearance.configureWithDefaultFloatingBackground()
 		}
 	}
 	

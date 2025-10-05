@@ -485,6 +485,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		{
 			[self registerForTraitChanges:@[LNPopupBarEnvironmentTrait.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
 				[traitEnvironment _setNeedsRecalcActiveAppearanceChain];
+				[traitEnvironment _setNeedsAppearanceUpdate];
 			}];
 		}
 		
@@ -508,7 +509,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	[super traitCollectionDidChange:previousTraitCollection];
 	
 	[self _setNeedsTitleLayoutByRemovingLabels:NO];
-	[self setNeedsLayout];
 	
 	[self._barDelegate _traitCollectionForPopupBarDidChange:self];
 	if(previousTraitCollection.userInterfaceStyle != self.traitCollection.userInterfaceStyle)
@@ -823,16 +823,29 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_bottomShadowView.frame = CGRectMake(0, _backgroundView.bounds.size.height - h, _backgroundView.bounds.size.width, h);
 	}
 	
-	CGFloat cornerRadius = _contentView.cornerRadius / 2.5;
+	CGFloat cornerRadius;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	if(@available(iOS 26.0, *))
+	{
+		cornerRadius = [_contentView.effectView effectiveRadiusForCorner:UIRectCornerAllCorners];
+	}
+	else
+	{
+#endif
+		cornerRadius = _contentView.cornerRadius / 2.5;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	}
+#endif
 	CGFloat width = 0;
 	CGFloat height = 0;
 	CGFloat offset = 0;
+	CGFloat offsetAfter = 0;
 	if(_resolvedIsFloating)
 	{
 		[_contentView.contentView insertSubview:_progressView aboveSubview:_toolbar];
 		if(LNPopupEnvironmentHasGlass())
 		{
-			offset = 0;
+			offset = -10;
 		}
 		width = _contentView.bounds.size.width;
 		height = _contentView.bounds.size.height;
@@ -848,7 +861,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
 	{
-		_progressView.frame = CGRectMake(cornerRadius + offset, 0, width - 2 * cornerRadius, 1.5);
+		_progressView.frame = CGRectMake(cornerRadius + offset, 0, width - 2 * (cornerRadius + offset), 1.5);
 	}
 	else
 	{
@@ -1125,7 +1138,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	_resolvedIsGlassInteractive = NO;
 	if(_resolvedIsFloating)
 	{
-		UIVisualEffect* effect = [self.activeAppearance floatingBackgroundEffectForTraitCollection:self.traitCollection];
+		UIVisualEffect* effect = [self.activeAppearance floatingBackgroundEffectForPopupBar:self containerController:self._ln_attachedPopupController.containerController traitCollection:self.traitCollection];
 		
 		BOOL oldIsGlass = _contentView.effect.ln_isGlass;
 		BOOL newIsGlass = effect.ln_isGlass;
@@ -1134,6 +1147,16 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 		{
 			[_contentView clearEffect];
 		}
+		
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+		if(@available(iOS 26.0, *))
+		if(effect.ln_isGlass)
+		{
+			auto wrapper = [_LNPopupGlassWrapperEffect wrapperWithEffect:effect];
+			wrapper.disableForeground = self.activeAppearance.isFloatingBarShineEnabled;
+			effect = wrapper;
+		}
+#endif
 		
 		_contentView.effect = effect;
 		
@@ -1204,6 +1227,11 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	_imageView.shadow = self.activeAppearance.imageShadow;
 
+	if(@available(iOS 26.0, *))
+	{
+		_contentView.shiny = self.activeAppearance.isFloatingBarShineEnabled;
+	}
+	
 	[self.customBarViewController _activeAppearanceDidChange:self.activeAppearance];
 	
 	//Recalculate labels

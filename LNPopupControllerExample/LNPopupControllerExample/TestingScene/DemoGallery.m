@@ -95,6 +95,7 @@
 	
 	self.navigationController.popupBar.barStyle = LNPopupBarStyleFloating;
 	self.navigationController.popupBar.standardAppearance.marqueeScrollEnabled = YES;
+	self.navigationController.popupBar.standardAppearance.floatingBarShineEnabled = YES;
 
 	self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
 	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:NO completion:nil];
