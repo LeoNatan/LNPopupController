@@ -275,9 +275,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	
 	var albumTitle: String = "" {
 		didSet {
-			if LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: .barStyle) as? Int ?? 0)! == .compact {
-				popupItem.subtitle = albumTitle
-			}
+			popupItem.subtitle = albumTitle
 			playerView.playbackSettings.albumTitle = albumTitle
 		}
 	}

@@ -1732,14 +1732,14 @@ static BOOL __LNPopupUseSystemMarqueeLabel(void)
 	}
 	
 	CGFloat fontSize = 15;
-	UIFontWeight fontWeight = UIFontWeightMedium;
-	UIFontTextStyle textStyle = UIFontTextStyleBody;
+	UIFontWeight fontWeight = UIFontWeightSemibold;
+	UIFontTextStyle textStyle = UIFontTextStyleHeadline;
 	
 	switch(_resolvedStyle)
 	{
 		case LNPopupBarStyleFloating:
 			fontSize = 15;
-			fontWeight = UIFontWeightMedium;
+			fontWeight = UIFontWeightSemibold;
 			textStyle = UIFontTextStyleHeadline;
 			break;
 		case LNPopupBarStyleProminent:
@@ -1748,6 +1748,10 @@ static BOOL __LNPopupUseSystemMarqueeLabel(void)
 			textStyle = UIFontTextStyleBody;
 			break;
 		case LNPopupBarStyleFloatingCompact:
+			fontSize = 13;
+			fontWeight = UIFontWeightSemibold;
+			textStyle = UIFontTextStyleHeadline;
+			break;
 		case LNPopupBarStyleCompact:
 			fontSize = 13.5;
 			fontWeight = UIFontWeightMedium;
@@ -2099,7 +2103,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	
 	if(LNPopupEnvironmentHasGlass())
 	{
-		safeLeading = _resolvedIsCompact ? 16 : 20;
+		safeLeading = _resolvedIsCompact || self.traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline ? 16 : 20;
 	}
 	else
 	{
