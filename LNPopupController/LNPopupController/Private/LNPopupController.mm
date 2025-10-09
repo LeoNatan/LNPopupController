@@ -488,10 +488,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completion
 {
-//	if(state == _popupControllerInternalState)
-//	{
-//		return;
-//	}
+	if(state == _popupControllerInternalState)
+	{
+		return;
+	}
 	
 	if(_popupControllerInternalState == LNPopupPresentationStateBarPresented)
 	{
@@ -1124,7 +1124,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		[_popupContentView.popupCloseButton _setButtonContainerStationary];
 		if(targetState == LNPopupPresentationStateOpen)
 		{
-			[self openPopupAnimated:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap completion:nil];
+			[self openPopupAnimated:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap trollState:resolvedStyle == LNPopupInteractionStyleSnap completion:nil];
 		}
 		else
 		{
@@ -1847,12 +1847,17 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self openPopupAnimated:animated allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:completionBlock];
+	[self openPopupAnimated:animated allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES trollState:NO completion:completionBlock];
 }
 
-- (void)openPopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
+- (void)openPopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart trollState:(BOOL)trollState completion:(void(^)(void))completionBlock
 {
 	[self _enqueueEvent:[_LNPopupControllerEvent openEventWithOperation:^{
+		if(trollState)
+		{
+			_popupControllerInternalState = _LNPopupPresentationStateTransitioning;
+			_popupControllerTargetState = _LNPopupPresentationStateTransitioning;
+		}
 		[self _openPopupAnimated:animated allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
 	}]];
 }
