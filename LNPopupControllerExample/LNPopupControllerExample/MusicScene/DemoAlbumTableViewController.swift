@@ -30,13 +30,16 @@ class DemoAlbumTableViewController: UITableViewController {
 	}
 	
     override func viewDidLoad() {
+		super.viewDidLoad()
+		
 		tabBarController?.view.tintColor = view.tintColor
 		
 		let footer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4))
 		tableView.tableFooterView = footer
 //		tableView.showsVerticalScrollIndicator = false
 		
-        super.viewDidLoad()
+		tableView.rowHeight = UITableView.automaticDimension
+		tableView.estimatedRowHeight = 55
 		
 		if LNPopupSettingsHasOS26Glass() {
 			galleryBarButton.title = nil
@@ -58,6 +61,7 @@ class DemoAlbumTableViewController: UITableViewController {
 #if LNPOPUP
 		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSetting.barStyle)  as? Int ?? 0)!
 		tabBarController?.popupBar.barStyle = barStyle
+		tabBarController?.popupBar.standardAppearance.isFloatingBarShineEnabled = true
 #endif
 #if compiler(>=6.2)
 		if #available(iOS 26.0, *) {
@@ -87,7 +91,7 @@ class DemoAlbumTableViewController: UITableViewController {
 			images += [UIImage(named: "genre\(idx)")!]
 			
 			var title = LoremIpsum.title
-			var sentence = LoremIpsum.sentence
+			var sentence = tabIsEven ? LoremIpsum.sentence : LoremIpsum.sentences(withNumber: UInt.random(in: 1...3))
 			
 #if LNPOPUP
 			if UserDefaults.standard.bool(forKey: PopupSetting.forceRTL) {
@@ -101,6 +105,10 @@ class DemoAlbumTableViewController: UITableViewController {
 		}
     }
 	
+	var tabIsEven: Bool {
+		(self.tabBarController!.viewControllers?.firstIndex(of: self.navigationController!))! % 2 == 0
+	}
+	
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -111,10 +119,21 @@ class DemoAlbumTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell", for: indexPath)
-
-		cell.imageView?.image = images[(indexPath as NSIndexPath).row]
-		cell.textLabel?.text = titles[(indexPath as NSIndexPath).row]
-		cell.detailTextLabel?.text = subtitles[(indexPath as NSIndexPath).row]
+		
+		var cellConfig = UIListContentConfiguration.subtitleCell()
+		cellConfig.image = images[(indexPath as NSIndexPath).row]
+		cellConfig.imageProperties.cornerRadius = 8
+		cellConfig.imageProperties.maximumSize = CGSize(width: 48, height: 48)
+		cellConfig.text = titles[(indexPath as NSIndexPath).row]
+		cellConfig.textProperties.font = .preferredFont(forTextStyle: .body)
+		cellConfig.textProperties.numberOfLines = tabIsEven ? 1 : 0
+		cellConfig.secondaryText = subtitles[(indexPath as NSIndexPath).row]
+		cellConfig.secondaryTextProperties.font = .preferredFont(forTextStyle: .footnote)
+		cellConfig.secondaryTextProperties.numberOfLines = tabIsEven ? 1 : 0
+		cellConfig.imageToTextPadding = 10
+		cellConfig.textToSecondaryTextVerticalPadding = tabIsEven ? 2 : 4
+		cellConfig.directionalLayoutMargins = NSDirectionalEdgeInsets(top: tabIsEven ? 4 : 8, leading: 0, bottom: tabIsEven ? 4 : 8, trailing: 0)
+		cell.contentConfiguration = cellConfig
 		
         return cell
     }

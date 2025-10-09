@@ -252,14 +252,6 @@ LNPopupCloseButtonStyle _LNPopupResolveCloseButtonStyleFromCloseButtonStyle(LNPo
 	}
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-	if(scrollView.contentOffset.y > 0)
-	{
-		scrollView.contentOffset = CGPointZero;
-	}
-}
-
 #if DEBUG
 
 - (void)safeAreaInsetsDidChange

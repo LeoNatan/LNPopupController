@@ -21,6 +21,11 @@ class ScrollingColorsViewController: UICollectionViewController {
 		
 		collectionView.collectionViewLayout = isVertical ? createVerticalGridLayout() : createHorizontalGridLayout()
 		
+		if #available(iOS 26.0, *) {
+			collectionView.topEdgeEffect.isHidden = true
+			collectionView.bottomEdgeEffect.isHidden = true
+		}
+		
 		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
 		
 		let gridBarButtonItem = UIBarButtonItem()
@@ -31,13 +36,10 @@ class ScrollingColorsViewController: UICollectionViewController {
 		
 //		collectionView.contentInsetAdjustmentBehavior = .always
 //		collectionView.isDirectionalLockEnabled = true
-		collectionView.automaticallyAdjustsScrollIndicatorInsets = false
 	}
 	
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
-		
-		collectionView.scrollIndicatorInsets = view.safeAreaInsets
 	}
 	
 	var isVertical: Bool {

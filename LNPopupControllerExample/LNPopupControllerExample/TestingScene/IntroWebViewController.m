@@ -82,6 +82,7 @@
 	if (@available(iOS 26.0, *))
 	{
 		_webView.scrollView.topEdgeEffect.hidden = YES;
+		_webView.scrollView.bottomEdgeEffect.hidden = YES;
 	}
 #endif
 }

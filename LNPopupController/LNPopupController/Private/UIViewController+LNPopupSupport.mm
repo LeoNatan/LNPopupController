@@ -584,25 +584,10 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	}
 	
 #if ! LNPopupControllerEnforceStrictClean
-	static void (^disableRotation)(id);
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		SEL sel = NSSelectorFromString(LNPopupHiddenString("beginDisablingInterfaceAutorotation"));
-		Method m = LNSwizzleClassGetInstanceMethod(UIWindow.class, sel);
-		if(m == NULL)
-		{
-			disableRotation = nil;
-			return;
-		}
-		void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
-		disableRotation = ^ (id self) {
-			orig(self, sel);
-		};
-	});
-	
-	if(lockRotation && disableRotation)
+	static SEL sel = NSSelectorFromString(LNPopupHiddenString("beginDisablingInterfaceAutorotation"));
+	if(lockRotation && [window respondsToSelector:sel])
 	{
-		disableRotation(window);
+		[window performSelector:sel];
 	}
 #endif
 }
@@ -615,29 +600,15 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	window.userInteractionEnabled = YES;
 	
 #if ! LNPopupControllerEnforceStrictClean
-	static void (^enableRotation)(id);
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		SEL sel = NSSelectorFromString(LNPopupHiddenString("endDisablingInterfaceAutorotationAnimated:"));
-		Method m = LNSwizzleClassGetInstanceMethod(UIWindow.class, sel);
-		if(m == NULL)
-		{
-			enableRotation = nil;
-			return;
-		}
-		void (*orig)(id, SEL, BOOL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
-		enableRotation = ^ (id self) {
-			orig(self, sel, YES);
-		};
-	});
+	static SEL sel = NSSelectorFromString(LNPopupHiddenString("endDisablingInterfaceAutorotationAnimated:"));
 	
-	if(unlockRotation && enableRotation)
+	if(unlockRotation && [window respondsToSelector:sel])
 	{
-		enableRotation(window);
+		[window performSelector:sel];
 	}
+#endif
 	
 	[window _ln_setLockedForPopupTransition:NO];
-#endif
 }
 
 @end

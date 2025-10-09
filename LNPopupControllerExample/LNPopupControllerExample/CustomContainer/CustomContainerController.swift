@@ -232,12 +232,13 @@ extension CustomContainerController: CustomTabBar.Delegate {
 extension CustomContainerController: UINavigationControllerDelegate {
 	func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 		let wasHidden = isCustomTabBarHidden
+		var shouldRevert: Bool = false
 		
-		if navigationController.transitionCoordinator?.isInteractive == true {
-			navigationController.transitionCoordinator?.notifyWhenInteractionChanges { context in
-				if context.isCancelled {
-					self.isCustomTabBarHidden = wasHidden
-				}
+		//The animateAlongside: completion handler is called twice, while this is called only once per cancellation,
+		//so we mark here that the interactive pop was cancelled, so that we can restore the hidden value in the completion handler.
+		navigationController.transitionCoordinator?.notifyWhenInteractionChanges { context in
+			if context.isCancelled {
+				shouldRevert = true
 			}
 		}
 		
@@ -252,6 +253,10 @@ extension CustomContainerController: UINavigationControllerDelegate {
 			}
 			
 			self.isCustomTabBarHidden = viewController.hidesBottomBarWhenPushed
+		} completion: { context in
+			if shouldRevert {
+				self.isCustomTabBarHidden = wasHidden
+			}
 		}
 	}
 }

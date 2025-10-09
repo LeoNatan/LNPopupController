@@ -828,12 +828,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(LNPopupBar.isCatalystApp)
 	{
 		UIEvent* event = self.popupBar.window._ln_currentEvent;
-		if(event.type == 22 /*NSEventTypeScrollWheel*/)
-		{
-			return;
-		}
-		
-		if(event != nil && event.type == 22)
+		if(event != nil && event.type == 22 /*NSEventTypeScrollWheel*/)
 		{
 			return;
 		}

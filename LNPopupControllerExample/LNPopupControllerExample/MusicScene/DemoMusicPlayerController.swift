@@ -222,6 +222,9 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		overrideUserInterfaceStyle = .dark
+		view.tintColor = .white
+		
 		updateBarItems(with: traitCollection)
 	}
 	
