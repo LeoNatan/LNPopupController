@@ -488,10 +488,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completion
 {
-	if(state == _popupControllerInternalState)
-	{
-		return;
-	}
+//	if(state == _popupControllerInternalState)
+//	{
+//		return;
+//	}
 	
 	if(_popupControllerInternalState == LNPopupPresentationStateBarPresented)
 	{
@@ -933,6 +933,11 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	CGPoint translation = [pgr translationInView:pgr.view];
 	BOOL isVerticalPan = fabs(translation.y) > fabs(translation.x);
 	
+	if(CGPointEqualToPoint(translation, CGPointZero))
+	{
+		return;
+	}
+	
 	if(pgr != _popupContentView.popupInteractionGestureRecognizer)
 	{
 		UIScrollView* possibleScrollView = (id)pgr.view;
@@ -959,7 +964,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			if(([delegate respondsToSelector:@selector(gestureRecognizer:shouldRequireFailureOfGestureRecognizer:)] && [delegate gestureRecognizer:_popupContentView.popupInteractionGestureRecognizer shouldRequireFailureOfGestureRecognizer:pgr] == YES) ||
 			   ([delegate respondsToSelector:@selector(gestureRecognizer:shouldRecognizeSimultaneouslyWithGestureRecognizer:)] && [delegate gestureRecognizer:_popupContentView.popupInteractionGestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:pgr] == NO) ||
-			   (_dismissGestureStarted == NO && possibleScrollView._ln_isAtTop == NO))
+			   (_dismissGestureStarted == NO && (possibleScrollView._ln_isAtTop == NO || translation.y < 0)))
 			{
 				return;
 			}
@@ -1077,11 +1082,24 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 
 - (void)_popupBarPresentationByUserPanGestureHandler_endedOrCancelled:(UIPanGestureRecognizer*)pgr
 {
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
-	
-	if(_dismissGestureStarted == YES)
+	if(_dismissGestureStarted == NO)
 	{
-		LNPopupPresentationState targetState = _stateBeforeDismissStarted;
+		[self _end120HzHack];
+		[self _endTransitioningLock];
+	}
+	else
+	{
+		LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+		
+		LNPopupPresentationState targetState;
+		if(resolvedStyle == LNPopupInteractionStyleSnap)
+		{
+			targetState = _popupControllerPublicState;
+		}
+		else
+		{
+			targetState = _stateBeforeDismissStarted;
+		}
 		
 		if(resolvedStyle == LNPopupInteractionStyleDrag || resolvedStyle == LNPopupInteractionStyleScroll)
 		{
