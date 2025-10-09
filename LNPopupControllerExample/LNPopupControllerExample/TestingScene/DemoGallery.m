@@ -7,6 +7,7 @@
 //
 
 #import "DemoGallery.h"
+#import "SettingKeys.h"
 
 #if LNPOPUP
 @import LNPopupController;
@@ -97,7 +98,10 @@
 	self.navigationController.popupBar.standardAppearance.marqueeScrollEnabled = YES;
 	self.navigationController.popupBar.standardAppearance.floatingBarShineEnabled = YES;
 
-	self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
+	if(!LNPopupSettingsHasOS26Glass())
+	{
+		self.navigationController.view.tintColor = self.navigationController.navigationBar.tintColor;
+	}
 	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:NO completion:nil];
 	
 	[self.navigationController.popupBar addInteraction:[LNPopupDemoContextMenuInteraction new]];

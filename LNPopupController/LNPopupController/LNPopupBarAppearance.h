@@ -35,12 +35,12 @@ NS_SWIFT_UI_ACTOR
 
 /// The color to apply for the bar's highlight.
 ///
-/// - Note: Starting with iOS 26, when a glass effect is used for the popup bar, setting a highlight color has no effect.
+/// - Note: Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a highlight color has no effect.
 @property (nonatomic, copy) UIColor* highlightColor;
 
 /// Configures the popup bar with the default highlight color.
 ///
-/// - Note: Starting with iOS 26, when a glass effect is used for the popup bar, setting a highlight color has no effect.
+/// - Note: Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a highlight color has no effect.
 - (void)configureWithDefaultHighlightColor;
 
 /// When enabled, titles and subtitles that are longer than the space available will scroll text over time.
@@ -80,7 +80,7 @@ NS_SWIFT_UI_ACTOR
 
 /// A specific visual effect to use for the bar floating background. This effect is composited first when constructing the bar's floating background.
 ///
-/// - Note: Starting with iOS 26, you can use glass (default) or blur effects.
+/// - Note: Starting with iOS 26.0, glass (default) and blur effects are supported.
 @property (nonatomic, copy, nullable) UIVisualEffect* floatingBackgroundEffect;
 
 /// A color to use for the bar floating background. This color is composited over `floatingBackgroundEffect`.
@@ -101,14 +101,14 @@ NS_SWIFT_UI_ACTOR
 
 /// The shadow displayed underneath the bar floating background.
 ///
-/// - Note: Starting with iOS 26, when a glass effect is used for the popup bar, setting a bar background shadow has no effect. Instead, the glass shadow is used.
+/// - Note: Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a bar background shadow has no effect. Instead, the glass shadow is used.
 @property (nonatomic, copy, nullable) NSShadow* floatingBarBackgroundShadow;
 
 /// Enables outer shine on a floating popup bar.
 ///
 /// Defaults to `false`.
 ///
-/// - Note: Shine only has effect on iOS 26.0 and above.
+/// - Note: Shine only has effect on iOS 26.0 and later.
 @property (nonatomic, assign, getter=isFloatingBarShineEnabled) BOOL floatingBarShineEnabled;
 
 /// Reset floating background and shadow properties to their defaults.

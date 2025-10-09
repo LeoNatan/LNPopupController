@@ -553,6 +553,20 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 			[self.view layoutIfNeeded];
 		}
 	}
+	
+	if(LNPopupEnvironmentHasGlass())
+	{
+		//Trigger an update for the popup content view controller.
+		if(self.popupContentViewController != nil)
+		{
+			CGFloat contentMargin = contentMarginFunc(self, contentMarginSEL);
+			
+			UIEdgeInsets insets = __LNEdgeInsetsSum(self.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self).bottom, 0));
+			
+			_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self.popupContentViewController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
+			setContentMarginFunc(self.popupContentViewController, setContentMarginSEL, contentMargin);
+		}
+	}
 		
 	if(self.popupPresentationContainerViewController != nil)
 	{
@@ -771,7 +785,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 		
 		if(self._ignoringLayoutDuringTransition == NO && self._ln_popupController_nocreate.popupControllerInternalState != LNPopupPresentationStateBarHidden)
 		{
-			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState];
+			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState animated:NO];
 		}
 		
 		if(self._ignoringLayoutDuringTransition == NO)

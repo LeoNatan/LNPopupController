@@ -6,6 +6,7 @@
 //  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
+#import "LNPopupController.h"
 #import "LNPopupCloseButton+Private.h"
 #import <objc/runtime.h>
 #import "LNChevronView.h"
@@ -13,6 +14,70 @@
 #import "LNPopupContentView+Private.h"
 #import "_LNPopupGlassUtils.h"
 #import "_LNPopupSwizzlingUtils.h"
+
+BOOL _LNPopupCloseButtonStyleIsGlass(LNPopupCloseButtonStyle style)
+{
+	static const NSUInteger __LNPopupButtonGlassStyleMask = 0x100;
+	return (style & __LNPopupButtonGlassStyleMask) == __LNPopupButtonGlassStyleMask;
+}
+
+void _LNPopupResolveCloseButtonStyleAndPositioning(LNPopupCloseButtonStyle style, LNPopupCloseButtonPositioning positioning, LNPopupCloseButtonStyle* resolvedStyle, LNPopupCloseButtonPositioning* resolvedPositioning)
+{
+	*resolvedStyle = style;
+	if(style == LNPopupCloseButtonStyleDefault)
+	{
+		if(LNPopupEnvironmentHasGlass())
+		{
+			if([LNPopupBar isCatalystApp])
+			{
+				*resolvedStyle = LNPopupCloseButtonStyleProminentGlass;
+			}
+			else
+			{
+				*resolvedStyle = LNPopupCloseButtonStyleGrabber;
+			}
+		}
+		else
+		{
+			if([LNPopupBar isCatalystApp])
+			{
+				*resolvedStyle =  LNPopupCloseButtonStyleRound;
+			}
+			else
+			{
+				*resolvedStyle = LNPopupCloseButtonStyleGrabber;
+			}
+		}
+	}
+	
+	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26.0 && _LNPopupCloseButtonStyleIsGlass(style))
+	{
+		*resolvedStyle = LNPopupCloseButtonStyleRound;
+	}
+	
+	*resolvedPositioning = positioning;
+	if(positioning == LNPopupCloseButtonPositioningDefault)
+	{
+		if(_LNPopupCloseButtonStyleIsGlass(*resolvedStyle))
+		{
+			*resolvedPositioning = LNPopupCloseButtonPositioningTrailing;
+		}
+		else
+		{
+			switch(*resolvedStyle)
+			{
+				case LNPopupCloseButtonStyleChevron:
+				case LNPopupCloseButtonStyleGrabber:
+					*resolvedPositioning = LNPopupCloseButtonPositioningCenter;
+					break;
+				case LNPopupCloseButtonStyleRound:
+				default:
+					*resolvedPositioning = LNPopupCloseButtonPositioningLeading;
+					break;
+			}
+		}
+	}
+}
 
 @interface LNPopupCloseButton ()
 
@@ -30,13 +95,13 @@
 __attribute__((objc_direct_members))
 @implementation LNPopupCloseButton
 {
-	__weak LNPopupContentView* _contentView;
-	
 	UIVisualEffectView* _effectView;
 	UIView* _highlightView;
 	
 	LNChevronView* _chevronView;
 }
+
+@synthesize style=__style;
 
 #ifndef LNPopupControllerEnforceStrictClean
 
@@ -52,7 +117,7 @@ __attribute__((objc_direct_members))
 //_actingParentViewForGestureRecognizers
 - (id)_aPVFGR
 {
-	return _contentView.currentPopupContentViewController.view;
+	return _popupContentView.currentPopupContentViewController.view;
 }
 
 #endif
@@ -63,7 +128,7 @@ __attribute__((objc_direct_members))
 	
 	if(self)
 	{
-		_contentView = contentView;
+		_popupContentView = contentView;
 		
 		self.accessibilityLabel = NSLocalizedString(@"Close", @"");
 		
@@ -73,8 +138,7 @@ __attribute__((objc_direct_members))
 		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 		[self setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		
-		_style = LNPopupCloseButtonStyleGrabber;
-		[self _setupForChevronButton];
+		__style = LNPopupCloseButtonStyleDefault;
 		
 		if(@available(iOS 13.4, *))
 		{
@@ -96,6 +160,11 @@ __attribute__((objc_direct_members))
 	return self.popupContentView.effectivePopupCloseButtonStyle;
 }
 
+- (LNPopupCloseButtonPositioning)effectivePositioning
+{
+	return self.popupContentView.effectivePopupCloseButtonPositioning;
+}
+
 - (void)setStyle:(LNPopupCloseButtonStyle)style
 {
 	//This will take care of cases where the user sets LNPopupCloseButtonStyleDefault as well as close button repositioning.
@@ -104,23 +173,35 @@ __attribute__((objc_direct_members))
 
 - (void)_setStyle:(LNPopupCloseButtonStyle)style
 {
-	if(_style == style)
-	{
-		return;
-	}
-	
-	_style = style;
+	__style = style;
 	
 	[self _cleanup];
 	
-	if(_style == LNPopupCloseButtonStyleRound)
+	if(@available(iOS 26.0, *))
+	{
+		if(_LNPopupCloseButtonStyleIsGlass(self.effectiveStyle))
+		{
+			[self _setupForGlassButton];
+		}
+	}
+	if(self.effectiveStyle == LNPopupCloseButtonStyleRound)
 	{
 		[self _setupForCircularButton];
 	}
-	else if(_style == LNPopupCloseButtonStyleChevron || _style == LNPopupCloseButtonStyleGrabber)
+	else if(self.effectiveStyle == LNPopupCloseButtonStyleChevron || self.effectiveStyle == LNPopupCloseButtonStyleGrabber)
 	{
 		[self _setupForChevronButton];
 	}
+}
+
+- (void)setPositioning:(LNPopupCloseButtonPositioning)positioning
+{
+	[self.popupContentView setPopupCloseButtonPositioning:positioning];
+}
+
+- (void)_setPositioning:(LNPopupCloseButtonPositioning)positioning
+{
+	_positioning = positioning;
 }
 
 - (UIVisualEffectView*)backgroundView
@@ -146,7 +227,7 @@ __attribute__((objc_direct_members))
 	self.layer.shadowOpacity = 0;
 	self.layer.shadowRadius = 0;
 	self.layer.shadowOffset = CGSizeMake(0, 0);
-	self.layer.masksToBounds = YES;
+	self.layer.masksToBounds = NO;
 }
 
 static CGFloat LNPopupCloseButtonGrabberWidth(void)
@@ -161,11 +242,18 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (void)_setupForChevronButton
 {
+	if(@available(iOS 21.0, *))
+	{
+		self.configuration = nil;
+	}
+	
+	self.layer.masksToBounds = YES;
+	
 	_chevronView = [[LNChevronView alloc] initWithFrame:CGRectZero];
 	_chevronView.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	_chevronView.width = 5.0;
-	[_chevronView setState:_style == LNPopupCloseButtonStyleGrabber ? LNChevronViewStateFlat : LNChevronViewStateUp animated:NO];
+	[_chevronView setState:self.effectiveStyle == LNPopupCloseButtonStyleGrabber ? LNChevronViewStateFlat : LNChevronViewStateUp animated:NO];
 	
 	self.tintColor = [UIColor colorWithWhite:0.5 alpha:1.0];
 	[self addSubview:_chevronView];
@@ -173,13 +261,18 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	[NSLayoutConstraint activateConstraints:@[
 		[_chevronView.topAnchor constraintEqualToAnchor:self.topAnchor],
 		[_chevronView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
-		[_chevronView.widthAnchor constraintEqualToConstant:_style == LNPopupCloseButtonStyleGrabber ? LNPopupCloseButtonGrabberWidth() : 40],
-		[_chevronView.heightAnchor constraintEqualToConstant:_style == LNPopupCloseButtonStyleGrabber ? 15 : 20],
+		[_chevronView.widthAnchor constraintEqualToConstant:self.effectiveStyle == LNPopupCloseButtonStyleGrabber ? LNPopupCloseButtonGrabberWidth() : 40],
+		[_chevronView.heightAnchor constraintEqualToConstant:self.effectiveStyle == LNPopupCloseButtonStyleGrabber ? 15 : 20],
 	]];
 }
 
 - (void)_setupForCircularButton
 {
+	if(@available(iOS 21.0, *))
+	{
+		self.configuration = nil;
+	}
+	
 	UIBlurEffectStyle blurStyle = UIBlurEffectStyleSystemChromeMaterial;
 	
 	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
@@ -217,6 +310,34 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	[self setImage:image forState:UIControlStateNormal];
 }
 
+- (void)_setupForGlassButton API_AVAILABLE(ios(26.0))
+{
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
+	UIButtonConfiguration* glassConfig;
+	switch(self.effectiveStyle)
+	{
+		case LNPopupCloseButtonStyleGlass:
+			glassConfig = UIButtonConfiguration.glassButtonConfiguration;
+			break;
+		case LNPopupCloseButtonStyleClearGlass:
+			glassConfig = UIButtonConfiguration.clearGlassButtonConfiguration;
+			break;
+		case LNPopupCloseButtonStyleProminentGlass:
+			glassConfig = UIButtonConfiguration.prominentGlassButtonConfiguration;
+			break;
+		case LNPopupCloseButtonStyleProminentClearGlass:
+			glassConfig = UIButtonConfiguration.prominentClearGlassButtonConfiguration;
+			break;
+		default:
+			return;
+			break;
+	}
+	glassConfig.image = [UIImage systemImageNamed:@"xmark"];
+	glassConfig.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
+	self.configuration = glassConfig;
+#endif
+}
+
 - (void)_didTouchDown
 {
 	[self _setHighlighted:YES animated:NO];
@@ -244,7 +365,7 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (void)_setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
-	if(_style == LNPopupCloseButtonStyleRound)
+	if(self.effectiveStyle == LNPopupCloseButtonStyleRound)
 	{
 		dispatch_block_t alphaBlock = ^{
 			_highlightView.alpha = highlighted ? 1.0 : 0.0;
@@ -265,7 +386,7 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 {
 	[super layoutSubviews];
 	
-	if(_style == LNPopupCloseButtonStyleRound)
+	if(self.effectiveStyle == LNPopupCloseButtonStyleRound)
 	{
 		[self sendSubviewToBack:_effectView];
 		
@@ -290,11 +411,15 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-	if(_style == LNPopupCloseButtonStyleRound)
+	if(_LNPopupCloseButtonStyleIsGlass(self.effectiveStyle))
+	{
+		return CGSizeMake(44, 44);
+	}
+	else if(self.effectiveStyle == LNPopupCloseButtonStyleRound)
 	{
 		return CGSizeMake(24, 24);
 	}
-	else if(_style == LNPopupCloseButtonStyleChevron)
+	else if(self.effectiveStyle == LNPopupCloseButtonStyleChevron)
 	{
 		return CGSizeMake(42, 25);
 	}
@@ -311,12 +436,7 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (void)_setButtonContainerStationary
 {
-	if(_style == LNPopupCloseButtonStyleRound)
-	{
-		return;
-	}
-	
-	if(_style == LNPopupCloseButtonStyleGrabber)
+	if(self.effectiveStyle != LNPopupCloseButtonStyleChevron)
 	{
 		return;
 	}
@@ -326,12 +446,7 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (void)_setButtonContainerTransitioning
 {
-	if(_style == LNPopupCloseButtonStyleRound)
-	{
-		return;
-	}
-	
-	if(_style == LNPopupCloseButtonStyleGrabber)
+	if(self.effectiveStyle != LNPopupCloseButtonStyleChevron)
 	{
 		return;
 	}
@@ -348,7 +463,12 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (void)tintColorDidChange
 {
-	[self setTitleColor:self.tintColor forState:UIControlStateNormal];
+	[super tintColorDidChange];
+	
+	if(_LNPopupCloseButtonStyleIsGlass(self.effectiveStyle) == NO)
+	{
+		[self setTitleColor:self.tintColor forState:UIControlStateNormal];
+	}
 }
 
 @end

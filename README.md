@@ -199,18 +199,20 @@ By default, progress view is hidden.
 Customizing the popup close button style is achieved by setting the popup content view's `popupCloseButtonStyle` property.
 
 ```swift
-navigationController.popupContentView.popupCloseButtonStyle = .round
+navigationController.popupContentView.popupCloseButtonStyle = .prominentGlass
 ```
 
 To hide the popup close button, set the `popupCloseButtonStyle` property to `LNPopupCloseButton.Style.none`.
 
-<p align="center"><img src="./Supplements/close_button_grabber.png" width="414"/><br/><br/><img src="./Supplements/close_button_chevron.png" width="414"/><br/><br/><img src="./Supplements/close_button_round.png" width="414"/><br/><br/><img src="./Supplements/close_button_none.png" width="414"/></p>
+<p align="center"><img src="./Supplements/close_button_grabber.png" width="414"/><br/><br/><img src="./Supplements/close_button_glass.png" width="414"/> <img src="./Supplements/close_button_chevron.png" width="414"/><br/><br/><img src="./Supplements/close_button_round.png" width="414"/> <img src="./Supplements/close_button_none.png" width="414"/></p>
+
+Positioning of the popup close button—leading, center or trailing, is controlled through the `popupCloseButtonPositioning` property.
 
 #### Text Marquee Scroll
 
 Supplying long text for the title and/or subtitle will result in a scrolling text, if text marquee is enabled. Otherwise, the text will be truncated.
 
-<p align="center"><img src="./Supplements/floating_compact_no_scroll_delay.gif" width="414"/> <img src="./Supplements/floating_compact_scroll.gif" width="414"/></p>
+<p align="center"><img src="./Supplements/floating_compact_scroll.gif" width="414"/> <img src="./Supplements/floating_compact_no_scroll_delay.gif" width="414"/></p>
 
 #### Popup Transitions
 

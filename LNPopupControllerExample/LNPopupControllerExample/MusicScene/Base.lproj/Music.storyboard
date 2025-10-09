@@ -37,6 +37,7 @@
                 <navigationController storyboardIdentifier="AAAA" modalPresentationStyle="fullScreen" id="yVZ-Nv-QXJ" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Home" image="music.note.house.fill" catalog="system" id="vBw-QA-u4Y"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Gmu-0O-wzk">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -179,7 +180,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Demo Music App" id="IeA-um-YyM">
-                        <barButtonItem key="rightBarButtonItem" title="Gallery" image="checkmark" catalog="system" style="done" id="vJg-GX-Evh">
+                        <barButtonItem key="rightBarButtonItem" title="Gallery" image="xmark" catalog="system" style="done" id="vJg-GX-Evh">
                             <connections>
                                 <segue destination="qqn-xz-Mhv" kind="unwind" unwindAction="unwindToGallery:" id="5uE-Xu-28A"/>
                             </connections>
@@ -202,6 +203,7 @@
                 <navigationController id="fst-JL-nMD" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="New" image="square.grid.2x2.fill" catalog="system" id="wmG-jF-o9a"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DVk-h5-a3S">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -218,6 +220,7 @@
                 <navigationController id="AxQ-vF-9zl" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Library" image="music.note.square.stack.fill" catalog="system" id="2hs-ep-FyF"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uG5-sG-lf4">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -235,6 +238,7 @@
                     <tabBarItem key="tabBarItem" systemItem="search" id="c4d-XQ-fP0"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="pUY-Qq-0Gw">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -268,7 +272,6 @@
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
-        <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="demoAlbum" width="2048" height="2048"/>
         <image name="ellipsis" catalog="system" width="128" height="37"/>
         <image name="genre1" width="88" height="88"/>
@@ -277,6 +280,7 @@
         <image name="play.fill" catalog="system" width="120" height="128"/>
         <image name="shuffle" catalog="system" width="128" height="95"/>
         <image name="square.grid.2x2.fill" catalog="system" width="128" height="114"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

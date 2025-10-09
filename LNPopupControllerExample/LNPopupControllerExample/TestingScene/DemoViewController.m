@@ -209,7 +209,7 @@
 	
 	if(LNPopupSettingsHasOS26Glass())
 	{
-		config.image = [UIImage systemImageNamed:@"checkmark"];
+		config.image = [UIImage systemImageNamed:@"xmark"];
 	}
 	else
 	{
@@ -238,8 +238,8 @@
 		y.active = YES;
 		
 		[NSLayoutConstraint activateConstraints:@[
-			[_galleryButton.widthAnchor constraintEqualToConstant:46],
-			[_galleryButton.heightAnchor constraintEqualToConstant:46],
+			[_galleryButton.widthAnchor constraintEqualToConstant:44],
+			[_galleryButton.heightAnchor constraintEqualToConstant:44],
 		]];
 	}
 	
@@ -608,6 +608,7 @@
 #endif
 	
 	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonStyle] unsignedIntegerValue];
+	LNPopupCloseButtonPositioning closeButtonPositioning = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonPositioning] unsignedIntegerValue];
 	
 	targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
@@ -623,6 +624,7 @@
 	}
 
 	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
+	targetVC.popupContentView.popupCloseButtonPositioning = closeButtonPositioning;
 	
 	targetVC.allowPopupHapticFeedbackGeneration = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHapticFeedbackEnabled];
 	
@@ -757,9 +759,7 @@
 	{
 		if(@available(iOS 18.0, *))
 		{
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 180000
 			[self.tabBarController setTabBarHidden:!self.tabBarController.isTabBarHidden animated:YES];
-#endif
 		}
 	}
 	else if(self.navigationController != nil)

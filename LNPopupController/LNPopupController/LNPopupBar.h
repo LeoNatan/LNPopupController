@@ -37,12 +37,12 @@ typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	
 	/// Compact bar style.
 	///
-	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported. Will convert to `.floatingCompact` at runtime.
+	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported and will be converted to `.floatingCompact` at runtime.
 	LNPopupBarStyleCompact LN_DEPRECATED_API_OS("No longer supported, starting with iOS 26.0.", ios(2.0, 26.0)) = 1,
 	
 	/// Prominent bar style.
 	///
-	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported. Will convert to `.floating` at runtime.
+	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported and will be converted to `.floating` at runtime.
 	LNPopupBarStyleProminent LN_DEPRECATED_API_OS("No longer supported, starting with iOS 26.0.", ios(2.0, 26.0)) = 2,
 } NS_SWIFT_NAME(LNPopupBar.Style);
 
@@ -132,14 +132,14 @@ NS_SWIFT_UI_ACTOR
 
 /// Indicates whether the full bar width should be used for the custom bar.
 ///
-/// This only has effect on iOS 26.
+/// This only has effect on iOS 26.0 and later.
 @property (nonatomic, assign) BOOL customBarWantsFullBarWidth;
 
 /// Enables or disables minimization into the bottom docking view.
 ///
 /// Defaults to `true`.
 ///
-/// - Note: Supported on iOS 26 and above, for tab bar container controllers.
+/// - Note: Supported on iOS 26.0 and later, for tab bar container controllers.
 @property (nonatomic, assign) BOOL supportsMinimization;
 
 @end

@@ -582,17 +582,24 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (NSDirectionalEdgeInsets)floatingLayoutMargins
 {
+	UIEdgeInsets layoutMargins = LNPopupEnvironmentLayoutInsets(self);
+	CGFloat extra = 0;
+	if(self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+	{
+		extra = 1;
+	}
+	
 	NSDirectionalEdgeInsets rv = NSDirectionalEdgeInsetsZero;
 	BOOL isRTL = self.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft;
 	if(isRTL)
 	{
-		rv.leading = self.layoutMargins.right + 1;
-		rv.trailing = self.layoutMargins.left + 1;
+		rv.leading = layoutMargins.right + extra;
+		rv.trailing = layoutMargins.left + extra;
 	}
 	else
 	{
-		rv.leading = self.layoutMargins.left + 1;
-		rv.trailing = self.layoutMargins.right + 1;
+		rv.leading = layoutMargins.left + extra;
+		rv.trailing = layoutMargins.right + extra;
 	}
 	return rv;
 }

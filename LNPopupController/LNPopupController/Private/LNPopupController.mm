@@ -775,7 +775,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	switch (lpgr.state) {
+	switch(lpgr.state)
+	{
 		case UIGestureRecognizerStateBegan:
 			[self.popupBar setHighlighted:YES animated:YES];
 			break;
@@ -811,7 +812,8 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	switch (tgr.state) {
+	switch(tgr.state)
+	{
 		case UIGestureRecognizerStateEnded:
 		{
 			[_containerController.view setNeedsLayout];
@@ -1142,7 +1144,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return;
 	}
 	
-	switch (pgr.state)
+	switch(pgr.state)
 	{
 		case UIGestureRecognizerStateBegan:
 			[self _popupBarPresentationByUserPanGestureHandler_began:pgr];

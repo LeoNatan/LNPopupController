@@ -16,6 +16,50 @@
 #import "_LNWeakRef.h"
 #import <objc/runtime.h>
 
+UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView)
+{
+	if(@available(iOS 26.0, *))
+	if(LNPopupEnvironmentHasGlass())
+	{
+		//TODO: Find out where to get these constants from the system.
+		if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+		{
+			if(containerView.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+			{
+				return UIEdgeInsetsMake(containerView.safeAreaInsets.top, 20, 20, 20);
+			}
+			else
+			{
+				return UIEdgeInsetsMake(20, 38, 20, 38);
+			}
+		}
+		else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		{
+			UIEdgeInsets safeArea = [containerView edgeInsetsForLayoutRegion:[UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:UIViewLayoutRegionAdaptivityAxisHorizontal]];
+			if(safeArea.left > 20)
+			{
+				safeArea.left += 10;
+			}
+			
+			if(safeArea.right > 20)
+			{
+				safeArea.right += 10;
+			}
+			
+			if(containerView.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+			{
+				return UIEdgeInsetsMake(safeArea.top, safeArea.left, 10, safeArea.right);
+			}
+			else
+			{
+				return UIEdgeInsetsMake(safeArea.top, safeArea.left, 10, safeArea.right);
+			}
+		}
+	}
+	
+	return containerView.layoutMargins;
+}
+
 @implementation _LNPopupBarBackgroundGroupNameOverride
 
 + (__kindof id<NSObject>)defaultValue

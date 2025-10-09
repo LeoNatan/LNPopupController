@@ -27,10 +27,22 @@ NS_SWIFT_UI_ACTOR
 /// Defaults to `LNPopupCloseButtonStyle.default`.
 @property (nonatomic, assign) LNPopupCloseButtonStyle popupCloseButtonStyle UI_APPEARANCE_SELECTOR;
 
+/// The popup close button positioning.
+///
+/// Defaults to `LNPopupCloseButtonPositioning.default`.
+///
+/// The value of this property only has effect if the system positions the popup close button.
+@property (nonatomic, assign) LNPopupCloseButtonPositioning popupCloseButtonPositioning UI_APPEARANCE_SELECTOR;
+
 /// The effective popup close button style used by the system. (read-only)
 ///
-/// Use this property's value to determine, at runtime, what the result of `LNPopupCloseButtonStyleDefault` is.
+/// Use this property's value to determine, at runtime, what the result of `LNPopupCloseButtonStyle.default` is.
 @property (nonatomic, assign, readonly) LNPopupCloseButtonStyle effectivePopupCloseButtonStyle;
+
+/// The effective popup close button positioning used by the system. (read-only)
+///
+/// Use this property's value to determine, at runtime, what the result of `LNPopupCloseButtonPositioning.default` is.
+@property (nonatomic, assign, readonly) LNPopupCloseButtonPositioning effectivePopupCloseButtonPositioning;
 
 /// The popup close button. (read-only)
 @property (nonatomic, strong, readonly) LNPopupCloseButton* popupCloseButton;
@@ -41,7 +53,7 @@ NS_SWIFT_UI_ACTOR
 ///
 /// Defaults to `nil`.
 ///
-/// - Note: Starting with iOS 26, you can use glass (default) or blur effects.
+/// - Note: Starting with iOS 26, glass (default) and blur effects are supported.
 @property (nonatomic, copy, nullable) UIVisualEffect* backgroundEffect UI_APPEARANCE_SELECTOR;
 
 /// A Boolean value that indicates whether the popup content view is translucent (`true`) or not (`false`).

@@ -485,7 +485,8 @@ void LNApplyTitleWithSettings(UIViewController* self)
 
 - (BOOL)prefersHomeIndicatorAutoHidden
 {
-	return YES;
+//	return YES;
+	return NO;
 }
 
 @end

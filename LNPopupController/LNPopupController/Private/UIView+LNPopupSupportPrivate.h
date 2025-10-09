@@ -11,7 +11,10 @@
 @class LNPopupBar;
 @class LNPopupController;
 
+CF_EXTERN_C_BEGIN
 NS_ASSUME_NONNULL_BEGIN
+
+extern UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView);
 
 typedef void (^LNInWindowBlock)(dispatch_block_t);
 
@@ -85,3 +88,4 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 @end
 
 NS_ASSUME_NONNULL_END
+CF_EXTERN_C_END
