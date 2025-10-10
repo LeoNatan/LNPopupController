@@ -578,21 +578,20 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Tab" image="1.square" catalog="system" id="wDA-8g-o9a"/>
                     <toolbarItems>
-                        <barButtonItem title="Present Bar" id="L0d-F2-GTi">
+                        <barButtonItem image="dock.arrow.up.rectangle" catalog="system" id="L0d-F2-GTi">
                             <connections>
                                 <action selector="_presentBar:" destination="l54-z5-xcG" id="xd5-fh-z8p"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="wfv-5d-KZ8"/>
-                        <barButtonItem title="Appearance" id="Mqv-hY-tWM">
+                        <barButtonItem image="dock.arrow.down.rectangle" catalog="system" id="via-gg-BV5">
                             <connections>
-                                <action selector="_changeBarStyle:" destination="l54-z5-xcG" id="Rf3-YV-ndy"/>
+                                <action selector="_dismissBar:" destination="l54-z5-xcG" id="Aq6-af-BTv"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Hqh-tz-zeD"/>
-                        <barButtonItem title="Dismiss Bar" id="via-gg-BV5">
+                        <barButtonItem title="Appearance" id="Mqv-hY-tWM">
                             <connections>
-                                <action selector="_dismissBar:" destination="l54-z5-xcG" id="Aq6-af-BTv"/>
+                                <action selector="_changeBarStyle:" destination="l54-z5-xcG" id="Rf3-YV-ndy"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
@@ -609,7 +608,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="_barStyleButton" destination="Mqv-hY-tWM" id="FZH-Ef-T8y"/>
                         <outlet property="_galleryBarButton" destination="J60-GM-dOF" id="gU3-W1-7u0"/>

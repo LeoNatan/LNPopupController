@@ -17,6 +17,8 @@
 #import "LNSplitViewController.h"
 #if LNPOPUP
 #import "LNPopupControllerExample-Swift.h"
+#else
+#import "LNPopupControllerExampleNoPopup-Swift.h"
 #endif
 #import "LNPopupDemoContextMenuInteraction.h"
 #import "LNPopupControllerExample-Bridging-Header.h"
@@ -24,7 +26,8 @@
 
 @interface UIImage ()
 
-+ (instancetype)_systemImageNamed:(NSString*)arg1;
++ (instancetype)_systemImageNamed:(NSString*)name;
++ (instancetype)_systemImageNamed:(NSString*)name withConfiguration:(nullable UIImageConfiguration *)configuration allowPrivate:(BOOL)allowPrivate;
 
 @end
 
@@ -89,7 +92,12 @@
 		
 		NSInteger idx = [self.tabBarController.viewControllers indexOfObject:target] + 1;
 		
-		if(idx != 4 || self.navigationController == nil || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26 || [self.tabBarController isKindOfClass:LNCustomContainerController.class])
+		BOOL isCustomContainer = NO;
+		if(@available(iOS 18.0, *))
+		{
+			isCustomContainer = [self.tabBarController isKindOfClass:LNCustomContainerController.class];
+		}
+		if(idx != 4 || self.navigationController == nil || NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26 || isCustomContainer)
 		{
 			//This is safe even with the UITab API, because this will be accessed very early on, when loaded from storyboard.
 			super.tabBarItem.image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%lu.square.fill", idx]];
@@ -132,9 +140,34 @@
 	}
 }
 
+- (void)updatePopupContentViewAppearanceOverrideWithTraitCollection:(UITraitCollection*)traitCollection
+{
+	_barStyleButton.image = [UIImage _systemImageNamed:@"appearance"];
+	if(_barStyleButton.image != nil)
+	{
+		_barStyleButton.title = nil;
+	}
+	
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
+	{
+		self._targetVCForPopup.popupContentView.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+	}
+	else
+	{
+		self._targetVCForPopup.popupContentView.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
+	}
+}
+
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	
+	if (@available(iOS 17.0, *)) {
+		[self registerForTraitChanges:@[UITraitUserInterfaceStyle.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
+			[traitEnvironment updatePopupContentViewAppearanceOverrideWithTraitCollection:traitEnvironment.traitCollection];
+		}];
+	}
+	[self updatePopupContentViewAppearanceOverrideWithTraitCollection:self.traitCollection];
 	
 	if(LNPopupSettingsHasOS26Glass())
 	{
@@ -313,9 +346,21 @@
 	}
 }
 
+- (void)updatePopupCloseButtonTintColor
+{
+#if LNPOPUP
+	if(self._targetVCForPopup.popupContentView.popupCloseButton.effectiveStyle == LNPopupCloseButtonStyleProminentGlass)
+	{
+		self._targetVCForPopup.popupContentView.popupCloseButton.tintColor = self.view.backgroundColor;
+	}
+#endif
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
+	
+	[self updatePopupCloseButtonTintColor];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -379,6 +424,7 @@
 	
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self updateNavigationBarTitlePositionForTraitCollection:newCollection];
+		[self updatePopupContentViewAppearanceOverrideWithTraitCollection:newCollection];
 	} completion:nil];
 }
 
@@ -608,6 +654,11 @@
 #endif
 	
 	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonStyle] unsignedIntegerValue];
+	if(LNPopupSettingsHasOS26Glass() && closeButtonStyle == LNPopupCloseButtonStyleDefault)
+	{
+		closeButtonStyle = LNPopupCloseButtonStyleShinyGlass;
+	}
+	
 	LNPopupCloseButtonPositioning closeButtonPositioning = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonPositioning] unsignedIntegerValue];
 	
 	targetVC.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString(@"Custom popup button accessibility label", @"");
@@ -625,6 +676,7 @@
 
 	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
 	targetVC.popupContentView.popupCloseButtonPositioning = closeButtonPositioning;
+	[self updatePopupCloseButtonTintColor];
 	
 	targetVC.allowPopupHapticFeedbackGeneration = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHapticFeedbackEnabled];
 	

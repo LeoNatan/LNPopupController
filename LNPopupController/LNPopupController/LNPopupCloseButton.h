@@ -43,6 +43,11 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 	/// Glass buttons are only available on iOS 26.0 and later. Otherwise, round will be used.
 	LNPopupCloseButtonStyleProminentClearGlass = 0x103,
 	
+	/// Shiny glass close button style.
+	///
+	/// Glass buttons are only available on iOS 26.0 and later. Otherwise, round will be used.
+	LNPopupCloseButtonStyleShinyGlass = 0x104,
+	
 	/// No close button.
 	LNPopupCloseButtonStyleNone = 0xFFFF,
 	

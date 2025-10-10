@@ -326,6 +326,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
+	if(_resolvedIsGlass)
+	{
+		return;
+	}
+	
 	id block = ^ { self.highlightView.alpha = highlighted ? 1.0 : 0.0; };
 	
 	if(animated)
@@ -582,9 +587,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (NSDirectionalEdgeInsets)floatingLayoutMargins
 {
-	UIEdgeInsets layoutMargins = LNPopupEnvironmentLayoutInsets(self);
+	UIEdgeInsets layoutMargins = LNPopupEnvironmentLayoutInsets(self, UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone);
 	CGFloat extra = 0;
-	if(self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 	{
 		extra = 1;
 	}

@@ -7,7 +7,11 @@
 //
 
 #import "LNPopupControllerExampleSupport.h"
+#if LNPOPUP
 #import "LNPopupControllerExample-Swift.h"
+#else
+#import "LNPopupControllerExampleNoPopup-Swift.h"
+#endif
 #import "SettingKeys.h"
 
 @interface DemoGalleryControllerTableView : UITableView @end

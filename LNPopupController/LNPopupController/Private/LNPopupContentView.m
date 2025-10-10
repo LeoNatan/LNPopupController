@@ -241,7 +241,7 @@
 		return;
 	}
 	
-	UIEdgeInsets layoutMargins = LNPopupEnvironmentLayoutInsets(self.currentPopupContentViewController.view);
+	UIEdgeInsets layoutMargins = LNPopupEnvironmentLayoutInsets(self.currentPopupContentViewController.view, false);
 	
 	CGFloat topConstant = layoutMargins.top;
 	

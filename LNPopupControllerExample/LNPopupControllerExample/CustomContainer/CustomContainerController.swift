@@ -7,6 +7,9 @@
 //
 
 import UIKit
+#if LNPOPUP
+import LNPopupController
+#endif
 
 let buttonSize: CGFloat = 44.0
 let buttonSpacing: CGFloat = buttonSize / 3.0
@@ -198,6 +201,9 @@ class CustomContainerController: DemoTabBarController {
 	}
 }
 
+#if LNPOPUP
+// MARK: LNPopupController custom container support
+
 @available(iOS 18.0, *)
 extension CustomContainerController {
 	override var bottomDockingViewForPopupBar: UIView? {
@@ -220,6 +226,7 @@ extension CustomContainerController {
 		true
 	}
 }
+#endif
 
 @available(iOS 18.0, *)
 extension CustomContainerController: CustomTabBar.Delegate {

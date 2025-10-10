@@ -14,7 +14,7 @@
 CF_EXTERN_C_BEGIN
 NS_ASSUME_NONNULL_BEGIN
 
-extern UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView);
+extern UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas);
 
 typedef void (^LNInWindowBlock)(dispatch_block_t);
 

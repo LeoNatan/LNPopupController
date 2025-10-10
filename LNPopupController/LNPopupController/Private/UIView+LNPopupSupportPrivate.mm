@@ -16,10 +16,10 @@
 #import "_LNWeakRef.h"
 #import <objc/runtime.h>
 
-UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView)
+UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas)
 {
 	if(@available(iOS 26.0, *))
-	if(LNPopupEnvironmentHasGlass())
+	if(LNPopupEnvironmentHasGlass() && !limitToSafeAreas)
 	{
 		//TODO: Find out where to get these constants from the system.
 		if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
@@ -36,11 +36,14 @@ UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView)
 		else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		{
 			UIEdgeInsets safeArea = [containerView edgeInsetsForLayoutRegion:[UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:UIViewLayoutRegionAdaptivityAxisHorizontal]];
+			
+			safeArea.left = MAX(safeArea.left, 10);
 			if(safeArea.left > 20)
 			{
 				safeArea.left += 10;
 			}
 			
+			safeArea.right = MAX(safeArea.right, 10);
 			if(safeArea.right > 20)
 			{
 				safeArea.right += 10;

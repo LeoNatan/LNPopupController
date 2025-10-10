@@ -10,6 +10,8 @@ import UIKit
 
 class LocationsController: UITableViewController, UISearchBarDelegate {
 	@IBOutlet weak var searchBar: UISearchBar!
+	@IBOutlet weak var trailingConstraint: NSLayoutConstraint!
+	@IBOutlet weak var closeButtonContainer: UIView?
 		
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -20,6 +22,10 @@ class LocationsController: UITableViewController, UISearchBarDelegate {
 			tableView.bottomEdgeEffect.isHidden = true
 		}
 #endif
+		
+		if LNPopupSettingsHasOS26Glass() {
+			trailingConstraint.constant = 74
+		}
 		
 		searchBar.delegate = self
 	}
@@ -49,5 +55,10 @@ class LocationsController: UITableViewController, UISearchBarDelegate {
 #if LNPOPUP
 		popupItem.title = searchText
 #endif
+	}
+	
+	override func positionPopupCloseButton(_ popupCloseButton: LNPopupCloseButton) -> Bool {
+		closeButtonContainer?.addSubview(popupCloseButton)
+		return closeButtonContainer != nil
 	}
 }

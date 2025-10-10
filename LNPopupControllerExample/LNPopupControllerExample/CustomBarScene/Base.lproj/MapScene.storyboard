@@ -78,17 +78,28 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search for a place or address" translatesAutoresizingMaskIntoConstraints="NO" id="l4J-iT-MKq">
-                                    <rect key="frame" x="14" y="0.0" width="365" height="65"/>
+                                    <rect key="frame" x="14" y="0.0" width="309" height="65"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="65" id="inZ-NR-YbV"/>
                                     </constraints>
                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 </searchBar>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pfv-i2-fiQ">
+                                    <rect key="frame" x="329" y="10.666666666666664" width="44" height="44"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="44" id="Rqo-46-h8I"/>
+                                        <constraint firstAttribute="width" constant="44" id="vk2-2z-EHr"/>
+                                    </constraints>
+                                </view>
                             </subviews>
                             <viewLayoutGuide key="safeArea" id="P03-RZ-pvR"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstItem="P03-RZ-pvR" firstAttribute="trailing" secondItem="l4J-iT-MKq" secondAttribute="trailing" constant="14" id="Yzw-KL-iIp"/>
+                                <constraint firstItem="Pfv-i2-fiQ" firstAttribute="centerY" secondItem="l4J-iT-MKq" secondAttribute="centerY" id="Muh-z3-ReO"/>
+                                <constraint firstItem="P03-RZ-pvR" firstAttribute="trailing" secondItem="l4J-iT-MKq" secondAttribute="trailing" constant="70" id="Yzw-KL-iIp"/>
                                 <constraint firstItem="l4J-iT-MKq" firstAttribute="leading" secondItem="P03-RZ-pvR" secondAttribute="leading" constant="14" id="hb9-Mc-IHi"/>
+                                <constraint firstItem="P03-RZ-pvR" firstAttribute="trailing" secondItem="Pfv-i2-fiQ" secondAttribute="trailing" constant="20" id="uzl-dU-qET"/>
                                 <constraint firstItem="l4J-iT-MKq" firstAttribute="centerY" secondItem="pNG-dh-qzg" secondAttribute="centerY" id="zfG-mO-IpY"/>
                             </constraints>
                         </view>
@@ -206,7 +217,9 @@
                     <navigationItem key="navigationItem" id="2SO-M9-gUd"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="closeButtonContainer" destination="Pfv-i2-fiQ" id="yg6-Ca-0RF"/>
                         <outlet property="searchBar" destination="l4J-iT-MKq" id="DKl-ow-j4f"/>
+                        <outlet property="trailingConstraint" destination="Yzw-KL-iIp" id="1Cf-pP-taL"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="66n-0J-CHI" userLabel="First Responder" sceneMemberID="firstResponder"/>

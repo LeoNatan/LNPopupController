@@ -211,6 +211,11 @@ __attribute__((objc_direct_members))
 
 - (void)_cleanup
 {
+	if(@available(iOS 21.0, *))
+	{
+		self.configuration = nil;
+	}
+	
 	[_chevronView removeFromSuperview];
 	_chevronView = nil;
 	
@@ -242,11 +247,6 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (void)_setupForChevronButton
 {
-	if(@available(iOS 21.0, *))
-	{
-		self.configuration = nil;
-	}
-	
 	self.layer.masksToBounds = YES;
 	
 	_chevronView = [[LNChevronView alloc] initWithFrame:CGRectZero];
@@ -268,11 +268,6 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (void)_setupForCircularButton
 {
-	if(@available(iOS 21.0, *))
-	{
-		self.configuration = nil;
-	}
-	
 	UIBlurEffectStyle blurStyle = UIBlurEffectStyleSystemChromeMaterial;
 	
 	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:blurStyle]];
@@ -328,10 +323,22 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 		case LNPopupCloseButtonStyleProminentClearGlass:
 			glassConfig = UIButtonConfiguration.prominentClearGlassButtonConfiguration;
 			break;
+		case LNPopupCloseButtonStyleShinyGlass:
+			static NSString* const shinyGlassConfig = LNPopupHiddenString("_posterSwitcherGlassButtonConfiguration");
+			if([UIButtonConfiguration respondsToSelector:NSSelectorFromString(shinyGlassConfig)])
+			{
+				glassConfig = [UIButtonConfiguration valueForKey:shinyGlassConfig];
+			}
+			else
+			{
+				glassConfig = UIButtonConfiguration.glassButtonConfiguration;
+			}
+			break;
 		default:
 			return;
 			break;
 	}
+	glassConfig.baseBackgroundColor = UIColor.redColor;
 	glassConfig.image = [UIImage systemImageNamed:@"xmark"];
 	glassConfig.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
 	self.configuration = glassConfig;

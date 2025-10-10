@@ -135,10 +135,11 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		
 		navigationController!.popupBar.standardAppearance.isFloatingBarShineEnabled = true
 		
-		navigationController!.popupContentView.popupCloseButtonStyle = .none
 		if #available(iOS 26, *) {
+			navigationController!.popupContentView.popupCloseButtonStyle = .glass
 			navigationController!.popupContentView.backgroundEffect = UIGlassEffect(style: .regular)
 		} else {
+			navigationController!.popupContentView.popupCloseButtonStyle = .none
 			navigationController!.popupContentView.backgroundEffect = UIBlurEffect(style: .systemMaterial)
 		}
 		navigationController!.popupInteractionStyle = .customizedSnap(percent: 0.15)

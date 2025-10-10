@@ -152,6 +152,7 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="searchBar" destination="l4J-iT-MKq" id="DKl-ow-j4f"/>
+                        <outlet property="trailingConstraint" destination="Yzw-KL-iIp" id="Isu-J6-4ku"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="66n-0J-CHI" userLabel="First Responder" sceneMemberID="firstResponder"/>

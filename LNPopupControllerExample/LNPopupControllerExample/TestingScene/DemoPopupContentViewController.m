@@ -76,8 +76,6 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	self.view = [DemoPopupContentView new];
 	LNApplyTitleWithSettings(self);
 	[self _updateBackground];
-	
-	[self updateUserInterfaceStyleOverrideFromCollection:self.traitCollection];
 }
 
 - (void)viewDidLoad
@@ -89,25 +87,9 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	
 	if(@available(iOS 17.0, *))
 	{
-		[self registerForTraitChanges:@[UITraitUserInterfaceStyle.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
-			[traitEnvironment updateUserInterfaceStyleOverrideFromCollection:traitEnvironment.traitCollection];
-		}];
-		
 		[self registerForTraitChanges:@[LNPopupBarEnvironmentTrait.class, UITraitHorizontalSizeClass.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
 			[traitEnvironment _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:YES];
 		}];
-	}
-}
-
-- (void)updateUserInterfaceStyleOverrideFromCollection:(UITraitCollection *)collection
-{
-	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
-	{
-		self.view.overrideUserInterfaceStyle = collection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
-	}
-	else
-	{
-		self.view.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
 	}
 }
 
@@ -492,20 +474,6 @@ void LNApplyTitleWithSettings(UIViewController* self)
 @end
 
 @implementation DemoPopupContentViewController (Deprecated)
-
-- (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
-	
-	if(@available(iOS 17.0, *))
-	{
-		return;
-	}
-	
-	[coordinator animateAlongsideTransitionInView:self.popupPresentationContainerViewController.view animation:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self updateUserInterfaceStyleOverrideFromCollection:newCollection];
-	} completion:nil];
-}
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
