@@ -57,8 +57,10 @@ class LocationsController: UITableViewController, UISearchBarDelegate {
 #endif
 	}
 	
+#if LNPOPUP
 	override func positionPopupCloseButton(_ popupCloseButton: LNPopupCloseButton) -> Bool {
 		closeButtonContainer?.addSubview(popupCloseButton)
 		return closeButtonContainer != nil
 	}
+#endif
 }

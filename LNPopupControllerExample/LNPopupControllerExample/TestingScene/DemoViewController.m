@@ -142,6 +142,7 @@
 
 - (void)updatePopupContentViewAppearanceOverrideWithTraitCollection:(UITraitCollection*)traitCollection
 {
+#if LNPOPUP
 	_barStyleButton.image = [UIImage _systemImageNamed:@"appearance"];
 	if(_barStyleButton.image != nil)
 	{
@@ -156,6 +157,7 @@
 	{
 		self._targetVCForPopup.popupContentView.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
 	}
+#endif
 }
 
 - (void)viewDidLoad

@@ -270,16 +270,12 @@
 	}
 }
 
-#if DEBUG
-
 - (void)safeAreaInsetsDidChange
 {
 	[super safeAreaInsetsDidChange];
 	
 	[self _repositionPopupCloseButtonAnimated:NO];
 }
-
-#endif
 
 - (UIUserInterfaceStyle)overrideUserInterfaceStyle
 {

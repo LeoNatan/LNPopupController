@@ -323,12 +323,10 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(state == LNPopupPresentationStateOpen)
 	{
 		targetFrame = [self _frameForOpenPopupBar];
-		self.popupContentView.popupCloseButton.alpha = 1.0;
 	}
 	else if(state == LNPopupPresentationStateBarPresented || (state == _LNPopupPresentationStateTransitioning && (_popupControllerTargetState == LNPopupPresentationStateBarHidden || _popupControllerTargetState == LNPopupPresentationStateBarPresented)))
 	{
 		targetFrame = [self _frameForClosedPopupBar];
-		self.popupContentView.popupCloseButton.alpha = 0.0;
 	}
 	else
 	{
@@ -1355,34 +1353,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[_containerController._ln_bottomBarExtension_nocreate hideOrShowImageViewIfNecessary];
 }
 
-- (void)_movePopupBarAndContentToBottomBarSuperview
-{
-	[self.popupBar removeFromSuperview];
-	[self.popupContentView removeFromSuperview];
-	
-	if([_bottomBar.superview isKindOfClass:[UIScrollView class]])
-	{
-		os_log_t customLog = __LNPopupFrameworkLogger("UnsupportedPresentation");
-		os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: Attempted to present popup bar %{public}@ on top of scroll view %{public}@. This is unsupported and may result in unexpected behavior.", __LNPopupFrameworkName(), self.popupBar, _bottomBar.superview);
-	}
-	
-	[self.popupBar layoutIfNeeded];
-	
-	if(_bottomBar.superview != nil)
-	{
-		[_bottomBar.superview insertSubview:self.popupBar belowSubview:_bottomBar];
-		[self.popupBar.superview bringSubviewToFront:self.popupBar];
-		[self.popupBar.superview bringSubviewToFront:_bottomBar];
-		[self.popupBar.superview insertSubview:self.popupContentView belowSubview:self.popupBar];
-	}
-	else
-	{
-		[_containerController.view addSubview:self.popupBar];
-		[_containerController.view bringSubviewToFront:self.popupBar];
-		[_containerController.view insertSubview:self.popupContentView belowSubview:self.popupBar];
-	}
-}
-
 - (LNPopupBar*)popupBarStorage
 {
 	if(_popupBar)
@@ -1634,7 +1604,12 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		self.popupBarStorage.hidden = NO;
 		
-		[self _movePopupBarAndContentToBottomBarSuperview];
+		if([_containerController.view isKindOfClass:[UIScrollView class]])
+		{
+			os_log_t customLog = __LNPopupFrameworkLogger("UnsupportedPresentation");
+			os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: Attempted to present popup bar with content view controller %{public}@ on %{public}@ whose view %{public}@ is a scroll view. This is unsupported and may result in unexpected behavior.", __LNPopupFrameworkName(), contentViewController, _containerController, _containerController.view);
+		}
+		
 		[self _configurePopupBarFromBottomBar];
 		
 		[self.popupBar.contentView addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
@@ -1725,16 +1700,24 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			}
 		};
 		
+		CGFloat animationDuration = LNPopupBarTransitionDuration;
+#if DEBUG
+		if(_LNEnableSlowTransitionsDebug())
+		{
+			animationDuration = 4.0;
+		}
+#endif
+		
 		if(animated && LNPopupEnvironmentHasGlass())
 		{
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(LNPopupBarTransitionDuration * 0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				[UIView animateWithDuration:LNPopupBarTransitionDuration * 0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(animationDuration * 0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+				[UIView animateWithDuration:animationDuration * 0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
 					self.popupBar.contentView.effectView.contentView.alpha = 1.0;
 				} completion:nil];
 			});
 			
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				[UIView animateWithDuration:LNPopupBarTransitionDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
+				[UIView animateWithDuration:animationDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
 					self.popupBar.contentView.effect = [self.popupBar.activeAppearance floatingBackgroundEffectForPopupBar:self.popupBar containerController:self.containerController traitCollection:self.popupBar.traitCollection];
 				} completion:nil];
 			});
@@ -1792,7 +1775,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 //		[self _clearRunningBarAnimators];
 //		[self _clearRunningPopupAnimators];
 		
-		_runningBarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:LNPopupBarTransitionDuration dampingRatio:500 animations:animations];
+		_runningBarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:500 animations:animations];
 		[_runningBarAnimation addCompletion:completion];
 		[_runningBarAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
 			_runningBarAnimation = nil;
@@ -1803,7 +1786,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		if(middle != nil)
 		{
-			_runningBarSidecarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:LNPopupBarTransitionDuration * 0.6 dampingRatio:500 animations:middle];
+			_runningBarSidecarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration * 0.6 dampingRatio:500 animations:middle];
 			[_runningBarSidecarAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
 				_runningBarSidecarAnimation = nil;
 			}];
@@ -1984,8 +1967,16 @@ id __LNPopupEmptyBlurFilter(void)
 				}];
 			}
 			
+			CGFloat animationDuration = LNPopupBarTransitionDuration;
+#if DEBUG
+			if(_LNEnableSlowTransitionsDebug())
+			{
+				animationDuration = 4.0;
+			}
+#endif
+			
 			__block CGRect newBarFrame;
-			_runningBarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:LNPopupBarTransitionDuration dampingRatio:500 animations:^{
+			_runningBarAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:500 animations:^{
 				__strong decltype(weakSelf) self = weakSelf;
 				if(self == nil)
 				{
@@ -2009,7 +2000,7 @@ id __LNPopupEmptyBlurFilter(void)
 				CGFloat currentBarAlpha = self.popupBarStorage.alpha;
 				if(animated)
 				{
-					[UIView animateWithDuration:LNPopupBarTransitionDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
+					[UIView animateWithDuration:animationDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
 						if(_containerController.shouldFadePopupBarOnDismiss && !LNPopupEnvironmentHasGlass())
 						{
 							self.popupBar.alpha = 0.0;
@@ -2037,8 +2028,8 @@ id __LNPopupEmptyBlurFilter(void)
 			
 			if(animated && LNPopupEnvironmentHasGlass())
 			{
-				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(LNPopupBarTransitionDuration * 0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-					[UIView animateWithDuration:LNPopupBarTransitionDuration * 0.4 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
+				dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(animationDuration * 0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+					[UIView animateWithDuration:animationDuration * 0.4 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
 						self.popupBar.contentView.contentView.alpha = 0.0;
 					} completion:nil];
 				});

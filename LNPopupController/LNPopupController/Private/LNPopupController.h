@@ -50,8 +50,6 @@ CF_EXTERN_C_BEGIN
 - (void)_setContentToState:(LNPopupPresentationState)state;
 - (void)_setContentToState:(LNPopupPresentationState)state animated:(BOOL)animated;
 
-- (void)_movePopupBarAndContentToBottomBarSuperview;
-
 - (void)presentPopupBarWithContentViewController:(UIViewController*)contentViewController openPopup:(BOOL)open animated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)openPopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock;
