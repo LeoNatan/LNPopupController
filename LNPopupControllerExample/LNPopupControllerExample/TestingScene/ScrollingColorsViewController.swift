@@ -26,7 +26,7 @@ class ScrollingColorsViewController: UICollectionViewController {
 			collectionView.bottomEdgeEffect.isHidden = true
 		}
 		
-		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
+		let useCompact = LNBarIsCompact()
 		
 		let gridBarButtonItem = UIBarButtonItem()
 		gridBarButtonItem.image = LNSystemImage(isVertical ? "square.grid.3x3.fill" : "rectangle.portrait.fill", scale: useCompact ? .compact : .normal)

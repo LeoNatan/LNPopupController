@@ -146,6 +146,10 @@
 	_barStyleButton.image = [UIImage _systemImageNamed:@"appearance"];
 	if(_barStyleButton.image != nil)
 	{
+		if(@available(iOS 17.0, *))
+		{
+			_barStyleButton.symbolAnimationEnabled = YES;
+		}
 		_barStyleButton.title = nil;
 	}
 	
@@ -164,7 +168,8 @@
 {
 	[super viewDidLoad];
 	
-	if (@available(iOS 17.0, *)) {
+	if(@available(iOS 17.0, *))
+	{
 		[self registerForTraitChanges:@[UITraitUserInterfaceStyle.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
 			[traitEnvironment updatePopupContentViewAppearanceOverrideWithTraitCollection:traitEnvironment.traitCollection];
 		}];
@@ -439,11 +444,6 @@
 {
 	UIUserInterfaceStyle currentStyle = self.navigationController.traitCollection.userInterfaceStyle;
 	self.navigationController.overrideUserInterfaceStyle = currentStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
-	self.navigationController.toolbar.tintColor = LNRandomSystemColor();
-	[self.navigationController.toolbar.items enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		obj.tintColor = self.navigationController.toolbar.tintColor;
-	}];
-	self.navigationController.navigationBar.tintColor = self.navigationController.toolbar.tintColor;
 #if LNPOPUP
 	[self.navigationController setNeedsPopupBarAppearanceUpdate];
 #endif
@@ -639,6 +639,15 @@
 		case 100:
 			demoVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingMap"];
 			break;
+			
+		case 200:
+			demoVC = [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateInitialViewController];
+			demoVC.popupItem.barButtonItems = @[
+				[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"gear", LNBarIsCompact() ? LNSystemImageScaleCompact : LNSystemImageScaleNormal) landscapeImagePhone:nil style:UIBarButtonItemStylePlain target:nil action:nil]
+			];
+			LNApplyTitleWithSettings(demoVC);
+			break;
+
 		default:
 			wantsGlassBackground = NO;
 			demoVC = [DemoPopupContentViewController new];

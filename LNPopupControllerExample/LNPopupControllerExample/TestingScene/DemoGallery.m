@@ -130,9 +130,12 @@
 	if([segue.identifier isEqualToString:@"Settings"] && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
 	{
 		segue.destinationViewController.modalPresentationStyle = UIModalPresentationPopover;
-		if (@available(iOS 16.0, *)) {
+		if(@available(iOS 16.0, *))
+		{
 			segue.destinationViewController.popoverPresentationController.sourceItem = sender;
-		} else {
+		}
+		else
+		{
 			segue.destinationViewController.popoverPresentationController.barButtonItem = sender;
 		}
 	}

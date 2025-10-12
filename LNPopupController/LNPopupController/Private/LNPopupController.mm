@@ -179,6 +179,8 @@ __attribute__((objc_direct_members))
 	UIWindow* _lockedRotationWindow;
 }
 
+@synthesize popupContentView=_popupContentView;
+
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController
 {
 	self = [super init];
@@ -365,7 +367,6 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	}
 	
 	[currentContentController viewWillMoveToPopupContainerContentView:self.popupContentView];
-	[self.popupContentView setControllerOverrideUserInterfaceStyle:currentContentController.overrideUserInterfaceStyle];
 	currentContentController.view.translatesAutoresizingMaskIntoConstraints = YES;
 	currentContentController.view.autoresizingMask = UIViewAutoresizingNone;
 	currentContentController.view.frame = self.popupContentView.contentView.bounds;
@@ -595,7 +596,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		
 		if(state == LNPopupPresentationStateOpen && stateAtStart == LNPopupPresentationStateBarPresented)
 		{
-			_popupContentView.hidden = NO;
+			[UIView performWithoutAnimation:^{
+				_popupContentView.hidden = NO;
+			}];
 			[_currentContentController _userFacing_viewWillAppear:animated];
 		}
 		
@@ -941,7 +944,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	if(pgr != _popupContentView.popupInteractionGestureRecognizer)
 	{
 		UIScrollView* possibleScrollView = (id)pgr.view;
-		if([possibleScrollView isKindOfClass:[UIScrollView class]])
+		if([possibleScrollView isKindOfClass:[UIScrollView class]] && [NSStringFromClass(pgr.class) hasPrefix:@"UIScrollView"])
 		{
 			//If not scrolling only vertically, ignore the scroll view's pan gesture recognizer.
 			if(possibleScrollView._ln_scrollingOnlyVertically == NO)
@@ -1059,6 +1062,9 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 			
 			pgr.enabled = NO;
 			pgr.enabled = YES;
+			
+			_popupContentView.popupInteractionGestureRecognizer.enabled = NO;
+			_popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			
 			[self closePopupAnimated:YES completion:^ {
 				[_popupContentView.popupCloseButton _setButtonContainerStationary];
@@ -1405,7 +1411,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		return _popupContentView;
 	}
 	
-	self.popupContentView = [[LNPopupContentView alloc] initWithFrame:_containerController.view.bounds];
+	_popupContentView = [[LNPopupContentView alloc] initWithFrame:_containerController.view.bounds];
 	_popupContentView.clipsToBounds = YES;
 	[_popupContentView.popupCloseButton addTarget:self action:@selector(_closePopupContent) forControlEvents:UIControlEventTouchUpInside];
 	
@@ -2075,7 +2081,7 @@ id __LNPopupEmptyBlurFilter(void)
 				
 				[self.popupContentView removeFromSuperview];
 				self.popupContentView.popupInteractionGestureRecognizer = nil;
-				self.popupContentView = nil;
+				_popupContentView = nil;
 				
 				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
 				

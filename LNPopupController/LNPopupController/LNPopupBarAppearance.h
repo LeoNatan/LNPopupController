@@ -108,7 +108,7 @@ NS_SWIFT_UI_ACTOR
 ///
 /// Defaults to `false`.
 ///
-/// - Note: Shine only has effect on iOS 26.0 and later.
+/// - Note: Shine is only supported on iOS 26.0 and later.
 @property (nonatomic, assign, getter=isFloatingBarShineEnabled) BOOL floatingBarShineEnabled;
 
 /// Reset floating background and shadow properties to their defaults.

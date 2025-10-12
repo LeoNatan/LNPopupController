@@ -53,7 +53,7 @@ static void __setupFunction(void)
 	[super layoutSubviews];
 	
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
-	if (@available(iOS 26.0, *))
+	if(@available(iOS 26.0, *))
 	{
 		if(self.isShiny)
 		{

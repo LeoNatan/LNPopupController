@@ -21,13 +21,13 @@ BOOL __LNSwizzleShouldTrapAndPrint(void)
 BOOL __LNSwizzleMethod(Class cls, SEL orig, SEL alt)
 {
 	Method origMethod = LNSwizzleClassGetInstanceMethod(cls, orig);
-	if (!origMethod)
+	if(!origMethod)
 	{
 		return NO;
 	}
 	
 	Method altMethod = LNSwizzleClassGetInstanceMethod(cls, alt);
-	if (!altMethod)
+	if(!altMethod)
 	{
 		return NO;
 	}

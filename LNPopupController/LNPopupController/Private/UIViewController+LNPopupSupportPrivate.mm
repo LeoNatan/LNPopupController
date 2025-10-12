@@ -132,10 +132,6 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 							@selector(_ln_isModalInPresentation));
 			
 			LNSwizzleMethod(self,
-							@selector(setOverrideUserInterfaceStyle:),
-							@selector(_ln_popup_setOverrideUserInterfaceStyle:));
-			
-			LNSwizzleMethod(self,
 							@selector(viewWillAppear:),
 							@selector(_ln_popup_viewWillAppear:));
 			
@@ -260,16 +256,6 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 	BOOL bottomBarIsVisible = [self.bottomDockingViewForPopup_internalOrDeveloper isKindOfClass:_LNPopupBottomBarSupport.class] == NO && self.ln_popupController.bottomBar.hidden == NO && self.ln_popupController.bottomBar.window != nil;
 	
 	return bottomBarExtensionIsVisible == NO && (bottomBarIsVisible == NO || LNPopupEnvironmentHasGlass());
-}
-
-- (void)_ln_popup_setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
-{
-	[self _ln_popup_setOverrideUserInterfaceStyle:overrideUserInterfaceStyle];
-	
-	if(self._isContainedInPopupController)
-	{
-		[self.popupPresentationContainerViewController.popupContentView setControllerOverrideUserInterfaceStyle:overrideUserInterfaceStyle];
-	}
 }
 
 - (BOOL)_ln_reallyShouldExtendPopupBarUnderSafeArea
@@ -622,7 +608,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 //_viewControllerUnderlapsStatusBar
 - (BOOL)_vCUSB
 {
-	if ([self _isContainedInPopupController])
+	if([self _isContainedInPopupController])
 	{
 		UIViewController* statusBarVC = [self childViewControllerForStatusBarHidden] ?: self;
 		
@@ -1901,7 +1887,22 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	
 	[self.view insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:floatingBarContainer];
-	[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:floatingBarContainer];
+	if(LNPopupEnvironmentHasGlass() && self.view.superview != nil)
+	{
+		if (@available(iOS 17.0, *))
+		{
+			self._ln_popupController_nocreate.popupContentView.systemUserInterfaceStyleTraitModifier = self.view.traitCollection.userInterfaceStyle;
+		}
+		[self.view.superview addSubview:self._ln_popupController_nocreate.popupContentView];
+	}
+	else
+	{
+		if (@available(iOS 17.0, *))
+		{
+			self._ln_popupController_nocreate.popupContentView.systemUserInterfaceStyleTraitModifier = UIUserInterfaceStyleUnspecified;
+		}
+		[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:floatingBarContainer];
+	}
 	[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
 }
 

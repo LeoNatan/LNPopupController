@@ -27,30 +27,56 @@
 
 - (instancetype)initWithSourceView:(UIView*)sourceView
 {
-	self = [self initWithSourceLayer:sourceView.layer];
-	if(self)
-	{
-		_sourceView = sourceView;
-	}
-	return self;
+	return [self _initWithSourceView:sourceView orLayer:nil];
 }
 
 - (instancetype)initWithSourceLayer:(CALayer *)sourceLayer
+{
+	return [self _initWithSourceView:nil orLayer:sourceLayer];
+}
+
+static Class const PortalClass = NSClassFromString(LNPopupHiddenString("_UIPortalView"));
+static NSString* const SourceViewKey = LNPopupHiddenString("sourceView");
+static NSString* const SourceLayerKey = LNPopupHiddenString("sourceLayer");
+static NSString* const HideSourceViewKey = LNPopupHiddenString("hidesSourceView");
+static NSString* const MatchesTransformKey = LNPopupHiddenString("matchesTransform");
+static NSString* const HidesInOtherPortalsKey = LNPopupHiddenString("hidesSourceLayerInOtherPortals");
+static NSString* const MatchesAlphaKey = LNPopupHiddenString("matchesAlpha");
+static NSString* const MatchesPositionKey = LNPopupHiddenString("matchesPosition");
+static NSString* const ForwardHitTestingKey = LNPopupHiddenString("forwardsClientHitTestingToSourceView");
+
+- (instancetype)_initWithSourceView:(UIView*)sourceView orLayer:(CALayer *)sourceLayer
 {
 	self = [super initWithFrame:CGRectZero];
 	
 	if(self)
 	{
-		_sourceLayer = sourceLayer;
+		if(sourceView != nil)
+		{
+			_sourceView = sourceView;
+			_sourceLayer = sourceView.layer;
+		}
+		else
+		{
+			_sourceLayer = sourceLayer;
+		}
 		
-		_portalView = [[NSClassFromString(LNPopupHiddenString("_UIPortalView")) alloc] initWithFrame:CGRectZero];
+		_portalView = [[PortalClass alloc] initWithFrame:CGRectZero];
 		_portalView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		[_portalView.layer setValue:sourceLayer forKey:LNPopupHiddenString("sourceLayer")];
-		[_portalView setValue:@YES forKey:LNPopupHiddenString("hidesSourceView")];
-		[_portalView setValue:@YES forKey:LNPopupHiddenString("matchesTransform")];
+		if(sourceView != nil)
+		{
+			[_portalView setValue:sourceView forKey:SourceViewKey];
+		}
+		else
+		{
+			[_portalView.layer setValue:sourceLayer forKey:SourceLayerKey];
+		}
+		[_portalView setValue:@YES forKey:HideSourceViewKey];
+		[_portalView setValue:@YES forKey:MatchesTransformKey];
+//		[_portalView setValue:@YES forKey:ForwardHitTestingKey];
 		if(@available(iOS 26.0, *))
 		{
-			[_portalView setValue:@NO forKey:LNPopupHiddenString("hidesSourceLayerInOtherPortals")];
+			[_portalView setValue:@NO forKey:HidesInOtherPortalsKey];
 		}
 		_portalView.layer.contentsGravity = kCAGravityResize;
 		
@@ -72,32 +98,32 @@
 
 - (BOOL)matchesAlpha
 {
-	return [[_portalView valueForKey:LNPopupHiddenString("matchesAlpha")] boolValue];
+	return [[_portalView valueForKey:MatchesAlphaKey] boolValue];
 }
 
 - (void)setMatchesAlpha:(BOOL)matchesAlpha
 {
-	[_portalView setValue:@(matchesAlpha) forKey:LNPopupHiddenString("matchesAlpha")];
+	[_portalView setValue:@(matchesAlpha) forKey:MatchesAlphaKey];
 }
 
 - (BOOL)matchesTransform
 {
-	return [[_portalView valueForKey:LNPopupHiddenString("matchesTransform")] boolValue];
+	return [[_portalView valueForKey:MatchesTransformKey] boolValue];
 }
 
 - (void)setMatchesTransform:(BOOL)matchesTransform
 {
-	[_portalView setValue:@(matchesTransform) forKey:LNPopupHiddenString("matchesTransform")];
+	[_portalView setValue:@(matchesTransform) forKey:MatchesTransformKey];
 }
 
 - (BOOL)matchesPosition
 {
-	return [[_portalView valueForKey:LNPopupHiddenString("matchesPosition")] boolValue];
+	return [[_portalView valueForKey:MatchesPositionKey] boolValue];
 }
 
 - (void)setMatchesPosition:(BOOL)matchesPosition
 {
-	[_portalView setValue:@(matchesPosition) forKey:LNPopupHiddenString("matchesPosition")];
+	[_portalView setValue:@(matchesPosition) forKey:MatchesPositionKey];
 }
 
 - (CGFloat)cornerRadius
@@ -166,7 +192,7 @@
 {
 	_sourceLayer = sourceLayer;
 	
-	[_portalView.layer setValue:sourceLayer forKey:LNPopupHiddenString("sourceLayer")];
+	[_portalView.layer setValue:sourceLayer forKey:SourceLayerKey];
 }
 
 @end

@@ -379,11 +379,14 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 			_highlightView.alpha = highlighted ? 1.0 : 0.0;
 		};
 		
-		if (animated) {
+		if(animated)
+		{
 			[UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
 				alphaBlock();
 			} completion:nil];
-		} else {
+		}
+		else
+		{
 			alphaBlock();
 		}
 	}

@@ -11,12 +11,10 @@
 #import "LNPopupCloseButton+Private.h"
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import "UIView+LNPopupSupportPrivate.h"
+#import "_LNUITraitOverridesWrapper.h"
 
 @implementation LNPopupContentView
 {
-	NSInteger _userOverrideUserInterfaceStyle;
-	NSInteger _controllerOverrideUserInterfaceStyle;
-	
 	NSLayoutConstraint* _popupCloseButtonTopConstraint;
 
 	NSLayoutConstraint* _popupCloseButtonCenterConstraint;
@@ -24,7 +22,31 @@
 	NSLayoutConstraint* _popupCloseButtonTrailingConstraint;
 }
 
-- (nonnull instancetype)initWithFrame:(CGRect)frame
+- (id<UITraitOverrides>)traitOverrides
+{
+	return [[_LNUITraitOverridesWrapper alloc] initWithTraitOverrides:super.traitOverrides contentView:self];
+}
+
+- (void)setUserUserInterfaceStyleTraitModifier:(UIUserInterfaceStyle)userUserInterfaceStyleTraitModifier
+{
+	_userUserInterfaceStyleTraitModifier = userUserInterfaceStyleTraitModifier;
+	
+	[self _updateTraitOverrides];
+}
+
+- (void)setSystemUserInterfaceStyleTraitModifier:(UIUserInterfaceStyle)systemUserInterfaceStyleTraitModifier
+{
+	_systemUserInterfaceStyleTraitModifier = systemUserInterfaceStyleTraitModifier;
+	
+	[self _updateTraitOverrides];
+}
+
+- (void)_updateTraitOverrides API_AVAILABLE(ios(17.0))
+{
+	super.traitOverrides.userInterfaceStyle = self.userUserInterfaceStyleTraitModifier != UIUserInterfaceStyleUnspecified ? self.userUserInterfaceStyleTraitModifier : self.systemUserInterfaceStyleTraitModifier;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
 {
 	self = [super initWithFrame:frame];
 	
@@ -257,6 +279,11 @@
 		_popupCloseButtonLeadingConstraint.constant = layoutMargins.left;
 		_popupCloseButtonTrailingConstraint.constant = -layoutMargins.right;
 		
+		if(self.window == nil)
+		{
+			return;
+		}
+		
 		if(animated == NO || UIView.inheritedAnimationDuration > 0.0)
 		{
 			[self layoutIfNeeded];
@@ -270,30 +297,16 @@
 	}
 }
 
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+	[super willMoveToSuperview:newSuperview];
+}
+
 - (void)safeAreaInsetsDidChange
 {
 	[super safeAreaInsetsDidChange];
 	
 	[self _repositionPopupCloseButtonAnimated:NO];
-}
-
-- (UIUserInterfaceStyle)overrideUserInterfaceStyle
-{
-	return _userOverrideUserInterfaceStyle != UIUserInterfaceStyleUnspecified ? _userOverrideUserInterfaceStyle : _controllerOverrideUserInterfaceStyle;
-}
-
-- (void)setOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
-{
-	_userOverrideUserInterfaceStyle = overrideUserInterfaceStyle;
-	
-	[super setOverrideUserInterfaceStyle:self.overrideUserInterfaceStyle];
-}
-
-- (void)setControllerOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle
-{
-	_controllerOverrideUserInterfaceStyle = overrideUserInterfaceStyle;
-	
-	[super setOverrideUserInterfaceStyle:self.overrideUserInterfaceStyle];
 }
 
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc activeAppearance:(LNPopupBarAppearance*)appearance

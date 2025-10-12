@@ -13,7 +13,7 @@ class ScrollingMapViewController: UIViewController {
         super.viewDidLoad()
 
 #if LNPOPUP
-		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
+		let useCompact = LNBarIsCompact()
 		
 		let gridBarButtonItem = UIBarButtonItem()
 		gridBarButtonItem.image = LNSystemImage("map.fill", scale: useCompact ? .compact : .normal)

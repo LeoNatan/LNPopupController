@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 #if canImport(LNPopupController_ObjC)
 @_exported import LNPopupController_ObjC
 #endif
@@ -252,6 +253,22 @@ extension LNPopupBar {
 		public static let name = "LNPopupBarEnvironmentTrait"
 		public static let identifier = "com.LeoNatan.LNPopupController.LNPopupBarEnvironmentTrait"
 	}
+	
+	@available(iOS 17.0, *)
+	struct Placement: EnvironmentKey, UITraitBridgedEnvironmentKey {
+		public static
+		let defaultValue = LNPopupBar.Environment.unspecified
+		
+		public static
+		func read(from traitCollection: UITraitCollection) -> LNPopupBar.Environment {
+			traitCollection.popUpBarEnvironment
+		}
+		
+		public static
+		func write(to mutableTraits: inout any UIMutableTraits, value: LNPopupBar.Environment) {
+			
+		}
+	}
 }
 
 public
@@ -265,3 +282,20 @@ extension UITraitCollection {
 		return self[LNPopupBar.EnvironmentTrait.self]
 	}
 }
+
+public
+extension EnvironmentValues {
+	var popupBarPlacement: LNPopupBar.Environment {
+		get {
+			guard #available(iOS 17.0, *) else {
+				return .unspecified
+			}
+			
+			return self[LNPopupBar.Placement.self] }
+		set { guard #available(iOS 27.0, *) else { return }
+			self[LNPopupBar.Placement.self] = newValue
+		}
+	}
+}
+
+

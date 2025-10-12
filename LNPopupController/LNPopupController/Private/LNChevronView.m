@@ -55,6 +55,11 @@ IB_DESIGNABLE
 {
 	[super layoutSubviews];
 	
+	if(self.superview == nil)
+	{
+		return;
+	}
+	
 	if(_leftView == nil)
 	{
 		_leftView = [[UIView alloc] initWithFrame:CGRectZero];

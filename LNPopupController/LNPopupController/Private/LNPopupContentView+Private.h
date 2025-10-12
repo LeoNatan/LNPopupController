@@ -20,12 +20,13 @@
 
 @property (nonatomic, weak) UIViewController* currentPopupContentViewController;
 
-- (void)setControllerOverrideUserInterfaceStyle:(UIUserInterfaceStyle)overrideUserInterfaceStyle;
-
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc activeAppearance:(LNPopupBarAppearance*)appearance;
 
 - (void)_repositionPopupCloseButton;
 - (void)_repositionPopupCloseButtonAnimated:(BOOL)animated;
+
+@property (nonatomic) UIUserInterfaceStyle userUserInterfaceStyleTraitModifier API_AVAILABLE(ios(17.0));
+@property (nonatomic) UIUserInterfaceStyle systemUserInterfaceStyleTraitModifier API_AVAILABLE(ios(17.0));
 
 @end
 

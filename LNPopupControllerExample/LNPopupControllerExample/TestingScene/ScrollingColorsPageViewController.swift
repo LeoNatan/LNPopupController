@@ -16,7 +16,7 @@ class _ScrollingColorsPageViewController<T: UIViewController & Indexable>: UIPag
     override func viewDidLoad() {
         super.viewDidLoad()
 #if LNPOPUP
-		let useCompact = UserDefaults.settings.integer(forKey: .barStyle) == LNPopupBar.Style.compact.rawValue
+		let useCompact = LNBarIsCompact()
 		
 		let gridBarButtonItem = UIBarButtonItem()
 		gridBarButtonItem.image = LNSystemImage("rectangle.portrait.fill", scale: useCompact ? .compact : .normal)

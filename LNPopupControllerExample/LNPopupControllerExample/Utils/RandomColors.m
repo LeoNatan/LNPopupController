@@ -37,11 +37,11 @@ static void LNInitializeDemoColors(void)
 UIColor* LNSubduedColor(UIColor* self)
 {
 	CGFloat h, s, b, a;
-	if ([self getHue:&h saturation:&s brightness:&b alpha:&a])
-		return [UIColor colorWithHue:h
-						  saturation:s * 0.3
-						  brightness:b
-							   alpha:a];
+	if([self getHue:&h saturation:&s brightness:&b alpha:&a])
+	{
+		return [UIColor colorWithHue:h saturation:s * 0.3  brightness:b alpha:a];
+	}
+	
 	return nil;
 }
 
