@@ -139,7 +139,9 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 		{
 			SEL sel = NSSelectorFromString(LNPopupHiddenString("setSafeAreaInsets:"));
 			Method m = __LNSwizzleClassGetInstanceMethod(UIView.class, sel);
+			void (*orig)(id, SEL, UIEdgeInsets) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 			class_addMethod(LNPopupBar.class, sel, imp_implementationWithBlock(^(id _self, UIEdgeInsets insets) {
+				orig(_self, sel, UIEdgeInsetsMake(0, insets.left, 0, insets.right));
 			}), method_getTypeEncoding(m));
 		}
 		

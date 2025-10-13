@@ -27,6 +27,10 @@ class DemoAlbumTableViewController: UITableViewController {
 		subtitles = []
 		
 		super.init(coder:aDecoder)
+		
+		if self.navigationController?.tabBarItem.image == nil {
+			self.navigationController?.tabBarItem.image = UIImage(systemName: "square.stack.fill")
+		}
 	}
 	
     override func viewDidLoad() {

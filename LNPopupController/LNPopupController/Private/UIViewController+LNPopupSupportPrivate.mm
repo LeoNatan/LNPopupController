@@ -630,7 +630,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 {
 	UIView* bottomBar = self.bottomDockingViewForPopup_internalOrDeveloper;
 	LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
-	UIView* parentForPopupBar = bottomBar.superview != nil ? bottomBar.superview : popupBar.superview;
+	UIView* parentForPopupBar = bottomBar.superview != nil ? bottomBar.superview : self.view;
 	
 	if(!LNPopupEnvironmentHasGlass() && popupBar.resolvedIsFloating)
 	{

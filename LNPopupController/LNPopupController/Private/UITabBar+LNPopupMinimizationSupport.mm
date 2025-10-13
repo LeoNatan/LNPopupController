@@ -111,7 +111,7 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 			
 			NSUInteger sidebarLayout = [[parentForPopupBar valueForKey:sidebarLayoutKey] unsignedIntegerValue];
 			
-			if(sidebarLayout == 2 || sidebarLayout == 0)
+			if(sidebarLayout == 0)
 			{
 				barInsets.leading = self.sidebar.isHidden ? 0 : outlineView.bounds.size.width + 8;
 			}
