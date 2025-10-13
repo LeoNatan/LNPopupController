@@ -291,14 +291,14 @@ __attribute__((objc_direct_members))
 	[self.popupContentView _repositionPopupCloseButtonAnimated:animated];
 }
 
-static CGFloat __saturate(CGFloat x)
+static CGFloat __clamp(CGFloat x)
 {
 	return MAX(0, MIN(1, x));
 }
 
 static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
-	float t = __saturate((x - a)/(b - a));
+	float t = __clamp((x - a)/(b - a));
 	return t * t * (3.0 - (2.0 * t));
 }
 
@@ -311,7 +311,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	CGFloat percent = [self _percentFromPopupBar];
 	
-	return __smoothstep(0.00, 1.0, percent);
+	return __smoothstep(0.0, 1.0, percent);
 }
 
 - (void)_setContentToState:(LNPopupPresentationState)state

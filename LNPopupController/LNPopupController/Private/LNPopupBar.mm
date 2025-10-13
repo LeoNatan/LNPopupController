@@ -494,6 +494,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			}];
 		}
 		
+		if(@available(iOS 26.0, *))
+		{
+			UIScrollEdgeElementContainerInteraction* scroll = [UIScrollEdgeElementContainerInteraction new];
+			scroll.edge = UIRectEdgeBottom;
+			[self addInteraction:scroll];
+		}
+		
 		[self _setNeedsRecalcActiveAppearanceChain];
 	}
 	
@@ -1150,7 +1157,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	_resolvedIsGlassInteractive = NO;
 	if(_resolvedIsFloating)
 	{
-		UIVisualEffect* effect = [self.activeAppearance floatingBackgroundEffectForPopupBar:self containerController:self._ln_attachedPopupController.containerController traitCollection:self.traitCollection];
+		UIVisualEffect* effect = [self.activeAppearance floatingBackgroundEffectForPopupBar:self containerController:self.barContainingController traitCollection:self.traitCollection];
 		
 		BOOL oldIsGlass = _contentView.effect.ln_isGlass;
 		BOOL newIsGlass = effect.ln_isGlass;

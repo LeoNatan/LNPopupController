@@ -338,7 +338,6 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 			return;
 			break;
 	}
-	glassConfig.baseBackgroundColor = UIColor.redColor;
 	glassConfig.image = [UIImage systemImageNamed:@"xmark"];
 	glassConfig.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
 	self.configuration = glassConfig;
