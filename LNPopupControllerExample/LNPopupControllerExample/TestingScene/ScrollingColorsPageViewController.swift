@@ -65,10 +65,12 @@ class _ScrollingColorsPageViewController<T: UIViewController & Indexable>: UIPag
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
+#if compiler(>=6.2)
 		if #available(iOS 26.0, *), let scrollView = value(forKey: "scrollView") as? UIScrollView {
 			scrollView.topEdgeEffect.isHidden = true
 			scrollView.bottomEdgeEffect.isHidden = true
 		}
+#endif
 	}
 	
 	override func viewSafeAreaInsetsDidChange() {

@@ -57,6 +57,7 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 	
 	@available(iOS 26.0, *)
 	func updateFromUserInterfaceStyle() {
+#if compiler(>=6.2)
 		containingPopupBar?.standardAppearance.configureWithOpaqueFloatingBackground()
 		if containingPopupBar?.traitCollection.userInterfaceStyle == .dark {
 			searchBar.searchTextField.backgroundColor = .clear
@@ -68,6 +69,7 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 			searchBar.searchTextField.backgroundColor = UIColor.lightGray.withAlphaComponent(0.15)
 			containingPopupBar?.standardAppearance.configureWithDefaultFloatingBackground()
 		}
+#endif
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
