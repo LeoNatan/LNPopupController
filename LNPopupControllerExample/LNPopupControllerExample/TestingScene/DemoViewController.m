@@ -142,7 +142,6 @@
 
 - (void)updatePopupContentViewAppearanceOverrideWithTraitCollection:(UITraitCollection*)traitCollection
 {
-#if LNPOPUP
 	_barStyleButton.image = [UIImage _systemImageNamed:@"appearance"];
 	if(_barStyleButton.image != nil)
 	{
@@ -153,6 +152,7 @@
 		_barStyleButton.title = nil;
 	}
 	
+#if LNPOPUP
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
 	{
 		self._targetVCForPopup.popupContentView.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;

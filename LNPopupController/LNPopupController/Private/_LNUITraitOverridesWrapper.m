@@ -55,6 +55,6 @@
 	return _traitOverrides.debugDescription;
 }
 
-#pragma clang diagnostic pop
-
 @end
+
+#pragma clang diagnostic pop

@@ -12,6 +12,7 @@
 #import "_LNPopupBase64Utils.hh"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "UITabBar+LNPopupMinimizationSupport.h"
+#import "UIToolbar+LNPopupMinimizationSupport.h"
 
 CF_EXTERN_C_BEGIN
 extern void __ln_doNotCall__fixUIHostingViewHitTest(void) noexcept;
@@ -1904,6 +1905,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:floatingBarContainer];
 	}
 	[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
+	
+	self._ln_popupController_nocreate.popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
 }
 
 - (void)_layoutPopupBarOrderForTransition

@@ -94,6 +94,8 @@
 		39C7D1A52E6E70C3001C7D62 /* LNSystemMarqueeLabel in Frameworks */ = {isa = PBXBuildFile; productRef = 39C7D1A42E6E70C3001C7D62 /* LNSystemMarqueeLabel */; };
 		39C7D1A92E6EB18E001C7D62 /* LNSystemMarqueeLabel in Frameworks */ = {isa = PBXBuildFile; productRef = 39C7D1A82E6EB18E001C7D62 /* LNSystemMarqueeLabel */; };
 		39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85B71B6304F5004FFC61 /* LNPopupItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		39E4F45A2E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39E4F4592E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.mm */; };
+		39E4F45B2E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E4F4582E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.h */; };
 		39E7A604200B5157007AF3AD /* _LNPopupSwizzlingUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */; };
 		39E7A605200B5157007AF3AD /* _LNPopupSwizzlingUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */; };
 		39E9FE11275B984B00A47D61 /* LNPopupDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -195,6 +197,8 @@
 		39C553DE2D8F2B3200F8D8B2 /* _LNPopupTransitionView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupTransitionView.mm; sourceTree = "<group>"; };
 		39C553E22D91924900F8D8B2 /* LNPopupImageView+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupImageView+Private.h"; sourceTree = "<group>"; };
 		39DB52E51B5823330061C589 /* LNPopupController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LNPopupController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		39E4F4582E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIToolbar+LNPopupMinimizationSupport.h"; sourceTree = "<group>"; };
+		39E4F4592E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "UIToolbar+LNPopupMinimizationSupport.mm"; sourceTree = "<group>"; };
 		39E7A602200B5157007AF3AD /* _LNPopupSwizzlingUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _LNPopupSwizzlingUtils.h; sourceTree = "<group>"; };
 		39E7A603200B5157007AF3AD /* _LNPopupSwizzlingUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _LNPopupSwizzlingUtils.m; sourceTree = "<group>"; };
 		39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDefinitions.h; sourceTree = "<group>"; };
@@ -228,6 +232,7 @@
 				3987A4BB2E86B5BE0090E273 /* Utils */,
 				397AFBFE1F1A216400E7D95C /* GestureRecognizers */,
 				39B54FFE2D92D26300B474EC /* TransitionAnimators */,
+				3987A4B62E86B3EA0090E273 /* Minimization */,
 				391481B91DCFA514002416D1 /* LNChevronView.h */,
 				391481B81DCFA514002416D1 /* LNChevronView.m */,
 				390031672AC06FE10046D3DD /* _LNPopupBackgroundShadowView.h */,
@@ -266,7 +271,6 @@
 				3947E1A01B61CD1F0001178B /* UIViewController+LNPopupSupport.mm */,
 				394A85C71B63FB96004FFC61 /* UIViewController+LNPopupSupportPrivate.h */,
 				394A85C81B63FE52004FFC61 /* UIViewController+LNPopupSupportPrivate.mm */,
-				3987A4B62E86B3EA0090E273 /* Minimization */,
 			);
 			name = Implementation;
 			path = Private;
@@ -294,6 +298,8 @@
 			children = (
 				3987A4B72E86B41E0090E273 /* UITabBar+LNPopupMinimizationSupport.h */,
 				3987A4B82E86B41E0090E273 /* UITabBar+LNPopupMinimizationSupport.mm */,
+				39E4F4582E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.h */,
+				39E4F4592E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.mm */,
 			);
 			name = Minimization;
 			sourceTree = "<group>";
@@ -409,6 +415,7 @@
 				39599BAA1E02CD65008EE386 /* LNPopupCustomBarViewController.h in Headers */,
 				39FA8FD12D9F84000068FD0D /* LNPopupDebug.h in Headers */,
 				399BA1D42A9E975E00CA5167 /* _LNPopupUIBarAppearanceProxy.h in Headers */,
+				39E4F45B2E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.h in Headers */,
 				39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */,
 				39A0DDB326F7894700E5D751 /* NSAttributedString+LNPopupSupport.h in Headers */,
 				3947E1A11B61CD1F0001178B /* UIViewController+LNPopupSupport.h in Headers */,
@@ -561,6 +568,7 @@
 				39B5500E2D92D29000B474EC /* _LNPopupTransitionCloseAnimator.m in Sources */,
 				39C39F422DA3DB96007630FD /* LNPopupBarExtras.mm in Sources */,
 				39B5500F2D92D29000B474EC /* _LNPopupTransitionOpenAnimator.m in Sources */,
+				39E4F45A2E9CF3F8000D7D85 /* UIToolbar+LNPopupMinimizationSupport.mm in Sources */,
 				39F691122E4BF75D00BC8EEA /* _LNPopupGlassUtils.mm in Sources */,
 				39B550102D92D29000B474EC /* _LNPopupTransitionPreferredOpenAnimator.mm in Sources */,
 				39B550112D92D29000B474EC /* _LNPopupTransitionPreferredCloseAnimator.mm in Sources */,

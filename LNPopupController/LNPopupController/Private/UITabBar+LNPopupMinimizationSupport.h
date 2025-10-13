@@ -22,7 +22,7 @@ extern BOOL LNPopupEnvironmentTabBarSupportsMinimizationAPI(void);
 
 @interface UITabBar (LNPopupMinimizationSupport)
 
-@property (nonatomic, readonly, getter=_ln_requiresMinimizedPopupBar) BOOL requiresMinimizedPopupBar;
+@property (nonatomic, readonly, getter=_ln_wantsMinimizedPopupBar) BOOL requiresMinimizedPopupBar;
 @property (nonatomic, readonly, getter =_ln_proposedFrameForPopupBar) CGRect proposedFrameForPopupBar;
 
 @property (nonatomic, weak, nullable, getter=_ln_minimizationDelegate, setter=_ln_setMinimizationDelegate:) id<_LNPopupTabBarMinimizationDelegate> minimizationDelegate;

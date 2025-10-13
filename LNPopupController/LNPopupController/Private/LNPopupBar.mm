@@ -494,13 +494,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			}];
 		}
 		
-		if(@available(iOS 26.0, *))
-		{
-			UIScrollEdgeElementContainerInteraction* scroll = [UIScrollEdgeElementContainerInteraction new];
-			scroll.edge = UIRectEdgeBottom;
-			[self addInteraction:scroll];
-		}
-		
 		[self _setNeedsRecalcActiveAppearanceChain];
 	}
 	

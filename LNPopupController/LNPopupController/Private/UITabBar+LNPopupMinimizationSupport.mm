@@ -49,7 +49,7 @@ BOOL LNPopupEnvironmentTabBarSupportsMinimizationAPI(void)
 	}
 }
 
-- (BOOL)_ln_requiresMinimizedPopupBar
+- (BOOL)_ln_wantsMinimizedPopupBar
 {
 	if(__LNPopupTabBarSupportsMinimizationAPI == NO)
 	{
@@ -120,14 +120,13 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 	
 	if(__LNPopupTabBarSupportsMinimizationAPI && popupBar.supportsMinimization && [self _ln_isFloatingTabBar] == NO)
 	{
-		BOOL isMinimized = self.tabBar._ln_requiresMinimizedPopupBar;
-		CGRect proposedMinimizedFrame = [[self.tabBar valueForKey:__LNFrameForHostedAccessoryViewKey] CGRectValue];
-		NSDirectionalEdgeInsets barFloatingInsets = self.popupBar.floatingLayoutMargins;
+		CGRect proposedMinimizedFrame = self.tabBar._ln_proposedFrameForPopupBar;
+		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
 		
 		barInsets.leading = proposedMinimizedFrame.origin.x;
 		barInsets.trailing = self.tabBar.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;
-		barInsets.leading -= barFloatingInsets.leading;
-		barInsets.trailing -= barFloatingInsets.trailing;
+		barInsets.leading -= floatingLayoutMargins.leading;
+		barInsets.trailing -= floatingLayoutMargins.trailing;
 	}
 	
 	return barInsets;

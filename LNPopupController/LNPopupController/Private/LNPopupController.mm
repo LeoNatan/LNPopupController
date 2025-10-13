@@ -1576,7 +1576,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			UITabBar* bar = [_containerController tabBar];
 			bar.minimizationDelegate = self;
 			
-			value = self.popupBarStorage.supportsMinimization && bar._ln_requiresMinimizedPopupBar ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
+			value = self.popupBarStorage.supportsMinimization && bar._ln_wantsMinimizedPopupBar ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
 		}
 	}
 
