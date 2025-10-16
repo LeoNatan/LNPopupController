@@ -859,9 +859,12 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 	[self _start120HzHack];
 	[self _beginTransitionLockWithUserInteractionEnabled:YES];
 	
+	CGPoint velocity = [pgr velocityInView:self.popupBar];
+	BOOL isVertical = fabs(velocity.y) > fabs(velocity.x);
+	
 	if(resolvedStyle == LNPopupInteractionStyleSnap)
 	{
-		if((_popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y < 0))
+		if((_popupControllerInternalState == LNPopupPresentationStateBarPresented && isVertical && velocity.y < 0))
 		{
 			[self _end120HzHack];
 			
@@ -887,7 +890,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 		}
 	}
 	
-	if(resolvedStyle == LNPopupInteractionStyleDrag && _popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y > 0)
+	if(resolvedStyle == LNPopupInteractionStyleDrag && _popupControllerInternalState == LNPopupPresentationStateBarPresented && (isVertical == NO || [pgr velocityInView:self.popupBar].y > 0))
 	{
 		[self _end120HzHack];
 		[self _endTransitioningLock];
