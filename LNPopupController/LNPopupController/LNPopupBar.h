@@ -38,12 +38,12 @@ typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	/// Compact bar style.
 	///
 	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported and will be converted to `.floatingCompact` at runtime.
-	LNPopupBarStyleCompact LN_DEPRECATED_API_OS("No longer supported, starting with iOS 26.0.", ios(2.0, 26.0)) = 1,
+	LNPopupBarStyleCompact LN_DEPRECATED_API_OS("Non-floating bars are no longer supported on iOS 26.0 and later.", ios(2.0, 26.0)) = 1,
 	
 	/// Prominent bar style.
 	///
 	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported and will be converted to `.floating` at runtime.
-	LNPopupBarStyleProminent LN_DEPRECATED_API_OS("No longer supported, starting with iOS 26.0.", ios(2.0, 26.0)) = 2,
+	LNPopupBarStyleProminent LN_DEPRECATED_API_OS("Non-floating bars are no longer supported on iOS 26.0 and later.", ios(2.0, 26.0)) = 2,
 } NS_SWIFT_NAME(LNPopupBar.Style);
 
 /// Available styles for the popup bar progress view.
