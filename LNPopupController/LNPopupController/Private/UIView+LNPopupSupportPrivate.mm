@@ -8,7 +8,7 @@
 
 #import "UIView+LNPopupSupportPrivate.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
-#import "LNPopupController.h"
+#import "LNPopupControllerImpl.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
 #import "LNPopupBar+Private.h"

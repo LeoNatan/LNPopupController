@@ -7,7 +7,7 @@
 //
 
 #import "LNPopupItem+Private.h"
-#import "LNPopupController.h"
+#import "LNPopupControllerImpl.h"
 #import "_LNPopupSwizzlingUtils.h"
 
 static void* _LNPopupItemObservationContext = &_LNPopupItemObservationContext;

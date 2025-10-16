@@ -152,7 +152,7 @@ class DemoAlbumTableViewController: UITableViewController {
 		popupContentController.popupItem.accessibilityHint = NSLocalizedString("Double Tap to Expand the Mini Player", comment: "")
 		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
 		
-		tabBarController?.presentPopupBar(with: popupContentController, animated: true, completion: nil)
+		tabBarController?.presentPopupBar(with: popupContentController)
 		tabBarController?.popupBar.tintColor = UIColor.label
 		tabBarController?.popupBar.progressViewStyle = .top
 		

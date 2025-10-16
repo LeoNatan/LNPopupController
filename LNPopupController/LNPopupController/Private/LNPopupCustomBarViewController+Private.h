@@ -8,7 +8,7 @@
 
 #import <LNPopupController/LNPopupItem.h>
 #import <LNPopupController/LNPopupCustomBarViewController.h>
-#import "LNPopupController.h"
+#import "LNPopupControllerImpl.h"
 
 @interface LNPopupCustomBarViewController ()
 

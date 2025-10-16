@@ -1,5 +1,5 @@
 //
-//  SwiftRefinements.swift
+//  LNPopupController+Swift.swift
 //  LNPopupController
 //
 //  Created by Léo Natan on 2021-08-02.
@@ -201,7 +201,7 @@ extension UIViewController {
 	///   - openPopup: Pass `true` to open the popup in the same animation; otherwise, pass `false`.
 	///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
 	///   - completion: The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-	func presentPopupBar(with contentViewController: UIViewController, openPopup: Bool = false, animated: Bool, completion: (() -> Void)? = nil) {
+	func presentPopupBar(with contentViewController: UIViewController, openPopup: Bool = false, animated: Bool = true, completion: (() -> Void)? = nil) {
 		__presentPopupBar(withContentViewController: contentViewController, openPopup: openPopup, animated: animated, completion: completion)
 	}
 	
@@ -216,7 +216,7 @@ extension UIViewController {
 	///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
 	///   - completion: The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
 	@available(*, deprecated, message: "Use presentPopupBar(with:openPopup:animated:completion:) instead.")
-	func presentPopupBar(withContentViewController contentViewController: UIViewController, openPopup: Bool = false, animated: Bool, completion: (() -> Void)? = nil) {
+	func presentPopupBar(withContentViewController contentViewController: UIViewController, openPopup: Bool = false, animated: Bool = true, completion: (() -> Void)? = nil) {
 		__presentPopupBar(withContentViewController: contentViewController, openPopup: openPopup, animated: animated, completion: completion)
 	}
 	
@@ -224,7 +224,7 @@ extension UIViewController {
 	/// - Parameters:
 	///   - animated: Pass `true` to animate; otherwise, pass `false`.
 	///   - completion: The block to execute after the popup is opened. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-	func openPopup(animated: Bool, completion: (() -> Void)? = nil) {
+	func openPopup(animated: Bool = true, completion: (() -> Void)? = nil) {
 		__openPopup(animated: animated, completion: completion)
 	}
 	
@@ -232,7 +232,7 @@ extension UIViewController {
 	/// - Parameters:
 	///   - animated: Pass `true` to animate; otherwise, pass `false`.
 	///   - completion: The block to execute after the popup is closed. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-	func closePopup(animated: Bool, completion: (() -> Void)? = nil) {
+	func closePopup(animated: Bool = true, completion: (() -> Void)? = nil) {
 		__closePopup(animated: animated, completion: completion)
 	}
 	
@@ -240,7 +240,7 @@ extension UIViewController {
 	/// - Parameters:
 	///   - animated: Pass `true` to animate; otherwise, pass `false`.
 	///   - completion: The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
-	func dismissPopupBar(animated: Bool, completion: (() -> Void)? = nil) {
+	func dismissPopupBar(animated: Bool = true, completion: (() -> Void)? = nil) {
 		__dismissPopupBar(animated: animated, completion: completion)
 	}
 }

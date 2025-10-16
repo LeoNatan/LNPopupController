@@ -6,7 +6,7 @@
 //  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
-#import "LNPopupController.h"
+#import "LNPopupControllerImpl.h"
 #import "LNPopupCloseButton+Private.h"
 #import <objc/runtime.h>
 #import "LNChevronView.h"

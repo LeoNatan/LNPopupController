@@ -64,3 +64,4 @@ iOSInjectionProject/
 .swiftpm
 swiftpm
 _tmp_release_notes.md
+/.build

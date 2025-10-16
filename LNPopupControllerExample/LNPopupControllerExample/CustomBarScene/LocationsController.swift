@@ -7,6 +7,9 @@
 //
 
 import UIKit
+#if LNPOPUP
+import LNPopupController
+#endif
 
 class LocationsController: UITableViewController, UISearchBarDelegate {
 	@IBOutlet weak var searchBar: UISearchBar!
@@ -47,7 +50,7 @@ class LocationsController: UITableViewController, UISearchBarDelegate {
 		searchBar.resignFirstResponder()
 #if LNPOPUP
 		popupItem.title = tableView.cellForRow(at: indexPath)?.textLabel?.text
-		popupPresentationContainer?.closePopup(animated: true, completion: nil)
+		popupPresentationContainer?.closePopup()
 #endif
 	}
 	

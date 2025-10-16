@@ -9,7 +9,7 @@
 #import "LNPopupInteractionPanGestureRecognizer.h"
 #import "LNForwardingDelegate.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
-#import "LNPopupController.h"
+#import "LNPopupControllerImpl.h"
 #import "UIView+LNPopupSupportPrivate.h"
 
 extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style);

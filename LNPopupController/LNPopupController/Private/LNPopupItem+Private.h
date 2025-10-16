@@ -7,7 +7,7 @@
 //
 
 #import <LNPopupController/LNPopupItem.h>
-#import "LNPopupController.h"
+#import "LNPopupControllerImpl.h"
 
 extern NSArray* __LNPopupItemObservedKeys;
 

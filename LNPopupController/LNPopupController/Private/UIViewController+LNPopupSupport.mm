@@ -587,7 +587,10 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	static SEL sel = NSSelectorFromString(LNPopupHiddenString("beginDisablingInterfaceAutorotation"));
 	if(lockRotation && [window respondsToSelector:sel])
 	{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 		[window performSelector:sel];
+#pragma clang diagnostic pop
 	}
 #endif
 }
@@ -604,7 +607,10 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	
 	if(unlockRotation && [window respondsToSelector:sel])
 	{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 		[window performSelector:sel];
+#pragma clang diagnostic pop
 	}
 #endif
 	

@@ -7,16 +7,12 @@
 //
 
 #import "UIViewController+LNPopupSupportPrivate.h"
-#import "LNPopupController.h"
+#import "LNPopupControllerImpl.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "UITabBar+LNPopupMinimizationSupport.h"
 #import "UIToolbar+LNPopupMinimizationSupport.h"
-
-CF_EXTERN_C_BEGIN
-extern void __ln_doNotCall__fixUIHostingViewHitTest(void) noexcept;
-CF_EXTERN_C_END
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -126,7 +122,7 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 	{
 		static dispatch_once_t onceToken;
 		dispatch_once(&onceToken, ^{
-			__ln_doNotCall__fixUIHostingViewHitTest();
+			[UIView _ln_fixUIHostingViewHitTest];
 			
 			LNSwizzleMethod(self,
 							@selector(isModalInPresentation),

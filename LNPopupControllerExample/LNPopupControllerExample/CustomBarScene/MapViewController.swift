@@ -95,7 +95,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	
 	func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
 #if LNPOPUP
-		navigationController!.openPopup(animated: true, completion: nil)
+		navigationController!.openPopup()
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 			self.popupContentVC.searchBar.becomeFirstResponder()
@@ -149,7 +149,7 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		popupContentVC = (storyboard!.instantiateViewController(withIdentifier: "PopupContentController") as! LocationsController)
 		popupContentVC.tableView.backgroundColor = .clear
 		
-		navigationController!.presentPopupBar(with: self.popupContentVC, animated: animated, completion: nil)
+		navigationController!.presentPopupBar(with: self.popupContentVC, animated: animated)
 		
 		resize.target = navigationController!.popupBar.customBarViewController!
 		
