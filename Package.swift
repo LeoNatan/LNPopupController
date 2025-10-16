@@ -1,4 +1,5 @@
 // swift-tools-version:6.0
+// LNPopupController:4.2.6
 
 import PackageDescription
 import Foundation.NSFileManager
