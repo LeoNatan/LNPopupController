@@ -141,55 +141,6 @@ static void __setupFunction(void)
 
 @end
 
-@implementation _LNPopupBarTitlesView @end
-
-@implementation _LNPopupTitleLabelWrapper
-
-+ (instancetype)wrapperForLabel:(UILabel*)wrapped
-{
-	_LNPopupTitleLabelWrapper* rv = [[_LNPopupTitleLabelWrapper alloc] initWithFrame:wrapped.bounds];
-	rv.wrapped = wrapped;
-	rv.wrapped.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	rv.translatesAutoresizingMaskIntoConstraints = wrapped.translatesAutoresizingMaskIntoConstraints;
-	[rv addSubview:wrapped];
-	
-	rv.wrappedWidthConstraint = [wrapped.widthAnchor constraintEqualToConstant:rv.bounds.size.width];
-	
-	[NSLayoutConstraint activateConstraints:@[
-		[rv.leadingAnchor constraintEqualToAnchor:wrapped.leadingAnchor],
-		[rv.heightAnchor constraintEqualToAnchor:wrapped.heightAnchor],
-		rv->_wrappedWidthConstraint
-	]];
-	
-	return rv;
-}
-
-- (void)setBounds:(CGRect)bounds
-{
-	[super setBounds:bounds];
-	
-	if(_wrappedWidthConstraint.constant == bounds.size.width)
-	{
-		return;
-	}
-	
-	if(UIView.inheritedAnimationDuration == 0.0)
-	{
-		_wrappedWidthConstraint.constant = bounds.size.width;
-		[self layoutSubviews];
-	}
-	else
-	{
-		[UIView _ln_animatedUsingSwiftUIWithDuration:UIView.inheritedAnimationDuration animations:^{
-			_wrappedWidthConstraint.constant = bounds.size.width;
-			[self layoutSubviews];
-		} completion:nil];
-	}
-}
-
-@end
-
 @implementation _LNPopupBarShadowView
 
 #if DEBUG

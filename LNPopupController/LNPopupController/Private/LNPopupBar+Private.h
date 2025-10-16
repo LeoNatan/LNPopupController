@@ -22,6 +22,14 @@
 
 CF_EXTERN_C_BEGIN
 
+#ifdef DEBUG
+extern BOOL _LNEnableBarLayoutDebug(void);
+#endif
+
+#if __has_include(<LNSystemMarqueeLabel.h>)
+extern BOOL __LNPopupUseSystemMarqueeLabel(void);
+#endif
+
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
 extern const CGFloat LNPopupBarHeightFloating;
@@ -172,20 +180,9 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @end
 
-@interface _LNPopupBarTitlesView : UIStackView @end
-
 @interface _LNPopupToolbar : UIToolbar
 
 @property (nonatomic, weak) id<_LNPopupToolbarLayoutDelegate> _layoutDelegate;
-
-@end
-
-@interface _LNPopupTitleLabelWrapper: UIView
-
-+ (instancetype)wrapperForLabel:(UILabel*)wrapped;
-
-@property (nonatomic, strong) UILabel* wrapped;
-@property (nonatomic, strong) NSLayoutConstraint* wrappedWidthConstraint;
 
 @end
 

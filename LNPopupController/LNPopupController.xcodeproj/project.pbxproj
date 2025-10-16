@@ -138,6 +138,7 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		390F59C62EA1254700F935D8 /* Titles */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Titles; sourceTree = "<group>"; };
 		399415252EA0ECB3000C550F /* Minimization */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Minimization; sourceTree = "<group>"; };
 		3994153A2EA0ECD5000C550F /* TransitionAnimators */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TransitionAnimators; sourceTree = "<group>"; };
 		399415612EA0ED52000C550F /* Utils */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (399415782EA0ED53000C550F /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 399415792EA0ED53000C550F /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Utils; sourceTree = "<group>"; };
@@ -166,6 +167,7 @@
 				3994153A2EA0ECD5000C550F /* TransitionAnimators */,
 				399415252EA0ECB3000C550F /* Minimization */,
 				3995DE242EA10AF3001A4C58 /* Swift */,
+				390F59C62EA1254700F935D8 /* Titles */,
 				390031672AC06FE10046D3DD /* _LNPopupBackgroundShadowView.h */,
 				390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm */,
 				397D9A152687474D005164AB /* _LNPopupBarBackgroundView.h */,
@@ -301,6 +303,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				390F59C62EA1254700F935D8 /* Titles */,
 				399415252EA0ECB3000C550F /* Minimization */,
 				3994153A2EA0ECD5000C550F /* TransitionAnimators */,
 				399415612EA0ED52000C550F /* Utils */,

@@ -14,6 +14,7 @@
 #import "LNPopupImageView+Private.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupGlassUtils.h"
+#import "_LNPopupTitlesController.h"
 #if __has_include(<LNSystemMarqueeLabel.h>)
 #import <LNSystemMarqueeLabel.h>
 #endif
@@ -29,7 +30,7 @@ const CGFloat LNPopupBarFloatingPadWidthLimitModern = 700;
 #ifdef DEBUG
 #import "LNPopupDebug.h"
 
-static BOOL _LNEnableBarLayoutDebug(void)
+BOOL _LNEnableBarLayoutDebug(void)
 {
 	return [__LNDebugUserDefaults() boolForKey:@"__LNPopupBarEnableLayoutDebug"];
 }
@@ -211,14 +212,10 @@ __attribute__((objc_direct_members))
 {
 	LNPopupImageView* _imageView;
 	
-	_LNPopupBarTitlesView* _titlesView;
-	
-	UILabel<LNMarqueeLabel>* _titleLabel;
-	UILabel<LNMarqueeLabel>* _subtitleLabel;
+	_LNPopupTitlesController* _titlesController;
 	
 	BOOL _needsLabelsLayout;
 	BOOL _needsLabelsLayoutRemove;
-	BOOL _marqueePaused;
 	BOOL _needsAppearanceProxyRefresh;
 	BOOL _needsAppearanceUpdate;
 	BOOL _needsBarButtonItemLayout;
@@ -431,18 +428,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_toolbar.layer.masksToBounds = YES;
 		[_contentView.contentView addSubview:_toolbar];
 		
-		_titlesView = [[_LNPopupBarTitlesView alloc] initWithFrame:_contentView.bounds];
-		_titlesView.axis = UILayoutConstraintAxisVertical;
-		_titlesView.alignment = UIStackViewAlignmentFill;
-		_titlesView.distribution = UIStackViewDistributionFill;
-		_titlesView.autoresizingMask = UIViewAutoresizingNone;
-		_titlesView.accessibilityTraits = UIAccessibilityTraitButton;
-		_titlesView.isAccessibilityElement = YES;
+		_titlesController = [[_LNPopupTitlesController alloc] initWithPopupBar:self];
 		
 		_backgroundView.accessibilityTraits = UIAccessibilityTraitButton;
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
 		
-		[_contentView.contentView addSubview:_titlesView];
+		[_contentView.contentView addSubview:_titlesController.view];
 
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
 		_progressView.progressViewStyle = UIProgressViewStyleBar;
@@ -825,7 +816,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	[_contentView.contentView insertSubview:_imageView aboveSubview:_toolbar];
-	[_contentView.contentView insertSubview:_titlesView aboveSubview:_imageView];
+	[_contentView.contentView insertSubview:_titlesController.view aboveSubview:_imageView];
 	
 	UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
 	if(!LNPopupEnvironmentHasGlass())
@@ -917,7 +908,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		titleSpacing += additionalHeight;
 	}
 	
-	_titlesView.spacing = titleSpacing;
+	_titlesController.spacing = titleSpacing;
 	
 	[self _layoutTitles];
 	
@@ -1443,14 +1434,14 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 {
 	_accessibilityCenterHint = accessibilityCenterHint;
 	
-	[self _updateAccessibility];
+	[_titlesController updateAccessibility];
 }
 
 - (void)setAccessibilityCenterLabel:(NSString *)accessibilityCenterLabel
 {
 	_accessibilityCenterLabel = accessibilityCenterLabel;
 	
-	[self _updateAccessibility];
+	[_titlesController updateAccessibility];
 }
 
 - (void)setAccessibilityImageLabel:(NSString *)accessibilityImageLabel
@@ -1492,7 +1483,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 }
 
 #if __has_include(<LNSystemMarqueeLabel.h>)
-static BOOL __LNPopupUseSystemMarqueeLabel(void)
+BOOL __LNPopupUseSystemMarqueeLabel(void)
 {
 	static BOOL bundleRequest;
 	static dispatch_once_t onceToken;
@@ -1502,46 +1493,6 @@ static BOOL __LNPopupUseSystemMarqueeLabel(void)
 	return bundleRequest || [NSUserDefaults.standardUserDefaults boolForKey:@"LNPopupUseSystemMarqueeLabel"];
 }
 #endif
-
-- (UILabel<LNMarqueeLabel>*)_labelWithFrame:(CGRect)frame marqueeEnabled:(BOOL)marqueeEnabled
-{
-	UILabel<LNMarqueeLabel>* _rv = nil;
-	
-	if(!marqueeEnabled)
-	{
-		LNNonMarqueeLabel* rv = [[LNNonMarqueeLabel alloc] initWithFrame:frame];
-		rv.minimumScaleFactor = 1.0;
-		rv.lineBreakMode = NSLineBreakByTruncatingTail;
-		_rv = rv;
-	}
-	else
-	{
-#if __has_include(<LNSystemMarqueeLabel.h>)
-		if(__LNPopupUseSystemMarqueeLabel())
-		{
-			LNSystemMarqueeLabel* rv = [[LNSystemMarqueeLabel alloc] initWithFrame:frame];
-			_rv = rv;
-		}
-		else
-		{
-#endif
-			LNLegacyMarqueeLabel* rv = [[LNLegacyMarqueeLabel alloc] initWithFrame:frame rate:self.activeAppearance.marqueeScrollRate andFadeLength:10];
-			rv.leadingBuffer = 0.0;
-			rv.trailingBuffer = 50.0;
-			rv.animationDelay = self.activeAppearance.marqueeScrollDelay;
-			rv.marqueeType = MLContinuous;
-			_rv = rv;
-#if __has_include(<LNSystemMarqueeLabel.h>)
-		}
-#endif
-	}
-	
-	_rv.numberOfLines = 1;
-	_rv.adjustsFontForContentSizeCategory = YES;
-	_rv.translatesAutoresizingMaskIntoConstraints = NO;
-	[_rv setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-	return _rv;
-}
 
 - (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem
 {
@@ -1847,208 +1798,33 @@ static BOOL __LNPopupUseSystemMarqueeLabel(void)
 #if DEBUG
 	if(_LNEnableBarLayoutDebug())
 	{
-		_titlesView.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.6];
+		_titlesController.view.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.6];
 	}
 	else
 	{
-		_titlesView.backgroundColor = nil;
+		_titlesController.view.backgroundColor = nil;
 	}
 #endif
 	
 	if(_needsLabelsLayout == YES)
 	{
-		_needsLabelsLayout = NO;
+		[_titlesController layoutTitlesRemovingLabels:_needsLabelsLayoutRemove];
 		
-		[UIView performWithoutAnimation:^{
-			BOOL reset = NO;
-			
-			CGRect titleFrameToUse = CGRectZero;
-			CGRect subtitleFrameToUse = CGRectZero;
-			if(_needsLabelsLayoutRemove == YES)
-			{
-				_needsLabelsLayoutRemove = NO;
-				
-				titleFrameToUse = _titleLabel.bounds;
-				if(_titleLabel.superview == _titlesView)
-				{
-					[_titleLabel removeFromSuperview];
-				}
-				else
-				{
-					[_titleLabel.superview removeFromSuperview];
-				}
-				
-				subtitleFrameToUse = _titleLabel.bounds;
-				if(_subtitleLabel.superview == _titlesView)
-				{
-					[_subtitleLabel removeFromSuperview];
-				}
-				else
-				{
-					[_subtitleLabel.superview removeFromSuperview];
-				}
-				
-				_titleLabel = nil;
-				_subtitleLabel = nil;
-			}
-			
-			if(_swiftuiTitleContentView != nil)
-			{
-				[_titleLabel.superview removeFromSuperview];
-				_titleLabel = nil;
-				[_subtitleLabel.superview removeFromSuperview];
-				_subtitleLabel = nil;
-				
-				if(_swiftuiTitleContentView.superview != _titlesView)
-				{
-					[_titlesView addArrangedSubview:_swiftuiTitleContentView];
-					[_titlesView layoutIfNeeded];
-				}
-				if(ln_unavailable(iOS 17.0, *))
-				{
-					UIView* textView = _swiftuiTitleContentView.subviews.firstObject;
-					[NSLayoutConstraint activateConstraints:@[
-						[_swiftuiTitleContentView.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
-					]];
-				}
-			}
-			else
-			{
-				NSAttributedString* attr = _attributedTitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedTitle defaultAttributes:self.activeAppearance.titleTextAttributes] : nil;
-				
-				if(attr.length > 0)
-				{
-					if(_titleLabel == nil)
-					{
-						_titleLabel = [self _labelWithFrame:titleFrameToUse marqueeEnabled:self.activeAppearance.marqueeScrollEnabled];
-#if DEBUG
-						if(_LNEnableBarLayoutDebug())
-						{
-							_titleLabel.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.5];
-						}
-						else
-						{
-							_titleLabel.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.0];
-						}
-#endif
-						_titleLabel.textColor = self._titleColor;
-						_titleLabel.font = self._titleFont;
-						if(_resolvedStyle == LNPopupBarStyleCompact)
-						{
-							_titleLabel.textAlignment = NSTextAlignmentCenter;
-						}
-						
-//						[_titlesView addArrangedSubview:_titleLabel];
-						[_titlesView addArrangedSubview:[_LNPopupTitleLabelWrapper wrapperForLabel:_titleLabel]];
-					}
-					
-					if([_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
-					{
-						_titleLabel.attributedText = attr;
-						reset = YES;
-					}
-				}
-				else
-				{
-					[_titleLabel removeFromSuperview];
-					_titleLabel = nil;
-				}
-				
-				attr = _attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_attributedSubtitle defaultAttributes:self.activeAppearance.subtitleTextAttributes] : nil;
-				
-				if(attr.length > 0)
-				{
-					if(_subtitleLabel == nil)
-					{
-						_subtitleLabel = [self _labelWithFrame:subtitleFrameToUse marqueeEnabled:self.activeAppearance.marqueeScrollEnabled];
-#if DEBUG
-						if(_LNEnableBarLayoutDebug())
-						{
-							_subtitleLabel.backgroundColor = [UIColor.cyanColor colorWithAlphaComponent:0.5];
-						}
-						else
-						{
-							_subtitleLabel.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.0];
-						}
-#endif
-						_subtitleLabel.textColor = self._subtitleColor;
-						_subtitleLabel.font = self._subtitleFont;
-						if(_resolvedStyle == LNPopupBarStyleCompact)
-						{
-							_subtitleLabel.textAlignment = NSTextAlignmentCenter;
-						}
-						
-//						[_titlesView addArrangedSubview:_subtitleLabel];
-						[_titlesView addArrangedSubview:[_LNPopupTitleLabelWrapper wrapperForLabel:_subtitleLabel]];
-					}
-					
-					if([_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
-					{
-						_subtitleLabel.attributedText = attr;
-						reset = YES;
-					}
-				}
-				else
-				{
-					[_subtitleLabel removeFromSuperview];
-					_subtitleLabel = nil;
-				}
-			}
-			
-			if(reset)
-			{
-				[_titleLabel reset];
-				[_subtitleLabel reset];
-			}
-		}];
+		_needsLabelsLayoutRemove = NO;
+		_needsLabelsLayout = NO;
 	}
 	
-	CGRect frameBefore = _titlesView.frame;
+	CGRect frameBefore = _titlesController.view.frame;
 	
-	CGFloat size = [_titleLabel systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + [_subtitleLabel systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height + (_titleLabel && _subtitleLabel ? 1 : 0) * _titlesView.spacing;
-	_titlesView.frame = CGRectMake(titleInsets.left, 0, _contentView.bounds.size.width - titleInsets.left - titleInsets.right, size);
-	CGPoint center = _titlesView.center;
+	CGFloat size = _titlesController.heightFittingTitleLabel + _titlesController.heightFittingSubtitleLabel + (_titlesController.numberOfLabels > 1 ? 1 : 0) * _titlesController.spacing;
+	_titlesController.view.frame = CGRectMake(titleInsets.left, 0, _contentView.bounds.size.width - titleInsets.left - titleInsets.right, size);
+	CGPoint center = _titlesController.view.center;
 	center.y = _contentView.contentView.center.y;
-	_titlesView.center = center;
+	_titlesController.view.center = center;
 	
-	if(CGRectEqualToRect(frameBefore, _titlesView.frame) == NO)
+	if(CGRectEqualToRect(frameBefore, _titlesController.view.frame) == NO)
 	{
-		[_titlesView layoutIfNeeded];
-	}
-	
-	[self _updateAccessibility];
-	
-	[self _recalculateCoordinatedMarqueeAndStartScrollIfNeeded];
-}
-
-- (void)_updateAccessibility
-{
-	if(_accessibilityCenterLabel.length > 0)
-	{
-		_titlesView.accessibilityLabel = _accessibilityCenterLabel;
-	}
-	else
-	{
-		NSMutableString* accessibilityLabel = [NSMutableString new];
-		if(_attributedTitle.length > 0)
-		{
-			[accessibilityLabel appendString:_attributedTitle.string];
-			[accessibilityLabel appendString:@"\n"];
-		}
-		if(_attributedSubtitle.length > 0)
-		{
-			[accessibilityLabel appendString:_attributedSubtitle.string];
-		}
-		_titlesView.accessibilityLabel = accessibilityLabel;
-	}
-	
-	if(_accessibilityCenterHint.length > 0)
-	{
-		_titlesView.accessibilityHint = _accessibilityCenterHint;
-	}
-	else
-	{
-		_titlesView.accessibilityHint = NSLocalizedString(@"Double tap to open.", @"");
+		[_titlesController.view layoutIfNeeded];
 	}
 }
 
@@ -2161,19 +1937,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 
 - (void)_setTitleViewMarqueesPaused:(BOOL)paused
 {
-	_marqueePaused = paused;
-	
-	if(_marqueePaused)
-	{
-		[_titleLabel reset];
-		_titleLabel.marqueeScrollEnabled = NO;
-		[_titleLabel reset];
-		_subtitleLabel.marqueeScrollEnabled = NO;
-	}
-	else
-	{
-		[self _recalculateCoordinatedMarqueeAndStartScrollIfNeeded];
-	}
+	_titlesController.marqueePaused = paused;
 }
 
 - (void)_setNeedsBarButtonItemLayout
@@ -2226,7 +1990,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	BOOL hide = _customBarViewController != nil;
 	_imageView.hidden = hide;
 	_toolbar.hidden = hide;
-	_titlesView.hidden = hide;
+	_titlesController.view.hidden = hide;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -2324,38 +2088,6 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	{
 		[self _layoutBarButtonItems];
 	}
-}
-
-- (void)_recalculateCoordinatedMarqueeAndStartScrollIfNeeded
-{
-	if(self.activeAppearance.marqueeScrollEnabled == NO)
-	{
-		return;
-	}
-	
-	if(_marqueePaused == YES)
-	{
-		return;
-	}
-	
-	id<LNMarqueeLabel> titleLabel = (id)_titleLabel;
-	id<LNMarqueeLabel> subtitleLabel = (id)_subtitleLabel;
-	
-	if(self.activeAppearance.coordinateMarqueeScroll == YES && _titleLabel != nil && _subtitleLabel != nil)
-	{
-		titleLabel.synchronizedLabels = @[_subtitleLabel];
-		subtitleLabel.synchronizedLabels = @[_titleLabel];
-	}
-	else
-	{
-		titleLabel.synchronizedLabels = nil;
-		subtitleLabel.synchronizedLabels = nil;
-	}
-	
-	titleLabel.marqueeScrollEnabled = YES;
-	subtitleLabel.marqueeScrollEnabled = YES;
-	titleLabel.running = YES;
-	subtitleLabel.running = YES;
 }
 
 - (void)_transitionCustomBarViewControllerWithPopupContainerSize:(CGSize)size withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
