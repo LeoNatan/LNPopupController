@@ -8,6 +8,7 @@
 
 #import "_LNPopupTitlesController.h"
 #import "LNPopupBar+Private.h"
+#import "LNPopupItem+Private.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "NSAttributedString+LNPopupSupport.h"
 #import "_LNPopupSwizzlingUtils.h"
@@ -74,25 +75,45 @@
 @implementation _LNPopupTitlesController
 {
 	_LNPopupBarTitlesView* _titlesView;
+	UIView* _wrapperView;
 	
 	UILabel<LNMarqueeLabel>* _titleLabel;
 	UILabel<LNMarqueeLabel>* _subtitleLabel;
 	
 	__weak LNPopupBar* _popupBar;
+	LNPopupItem* _popupItem;
 }
 
-- (instancetype)initWithPopupBar:(LNPopupBar*)popupBar
+- (instancetype)initWithPopupBar:(LNPopupBar *)popupBar
+{
+	return [self initWithPopupBar:popupBar popupItem:nil];
+}
+
+- (instancetype)initWithPopupBar:(LNPopupBar*)popupBar popupItem:(LNPopupItem*)popupItem
 {
 	self = [super init];
 	if(self)
 	{
 		_popupBar = popupBar;
+		_popupItem = popupItem;
 	}
 	return self;
 }
 
+- (LNPopupItem *)popupItem
+{
+	if(_popupItem != nil)
+	{
+		return _popupItem;
+	}
+	
+	return _popupBar.popupItem;
+}
+
 - (void)loadView
 {
+	_wrapperView = [UIView new];
+	
 	_titlesView = [_LNPopupBarTitlesView new];
 	_titlesView.axis = UILayoutConstraintAxisVertical;
 	_titlesView.alignment = UIStackViewAlignmentFill;
@@ -101,17 +122,25 @@
 	_titlesView.accessibilityTraits = UIAccessibilityTraitButton;
 	_titlesView.isAccessibilityElement = YES;
 	
-	self.view = _titlesView;
+	[_wrapperView addSubview:_titlesView];
+	
+	self.view = _wrapperView;
+}
+
+- (_LNPopupBarTitlesView*)titlesView
+{
+	[self loadViewIfNeeded];
+	return _titlesView;
 }
 
 - (CGFloat)spacing
 {
-	return _titlesView.spacing;
+	return self.titlesView.spacing;
 }
 
 - (void)setSpacing:(CGFloat)spacing
 {
-	_titlesView.spacing = spacing;
+	self.titlesView.spacing = spacing;
 }
 
 - (NSUInteger)numberOfLabels
@@ -171,180 +200,182 @@
 
 - (void)layoutTitlesRemovingLabels:(BOOL)remove
 {
-		[UIView performWithoutAnimation:^{
-			BOOL reset = NO;
-			
-			CGRect titleFrameToUse = CGRectZero;
-			CGRect subtitleFrameToUse = CGRectZero;
-			if(remove == YES)
+	[UIView performWithoutAnimation:^{
+		BOOL reset = NO;
+		
+		CGRect titleFrameToUse = CGRectZero;
+		CGRect subtitleFrameToUse = CGRectZero;
+		if(remove == YES)
+		{
+			titleFrameToUse = _titleLabel.bounds;
+			if(_titleLabel.superview == self.titlesView)
 			{
-				titleFrameToUse = _titleLabel.bounds;
-				if(_titleLabel.superview == _titlesView)
-				{
-					[_titleLabel removeFromSuperview];
-				}
-				else
-				{
-					[_titleLabel.superview removeFromSuperview];
-				}
-				
-				subtitleFrameToUse = _titleLabel.bounds;
-				if(_subtitleLabel.superview == _titlesView)
-				{
-					[_subtitleLabel removeFromSuperview];
-				}
-				else
-				{
-					[_subtitleLabel.superview removeFromSuperview];
-				}
-				
-				_titleLabel = nil;
-				_subtitleLabel = nil;
+				[_titleLabel removeFromSuperview];
 			}
-			
-			if(_popupBar.swiftuiTitleContentView != nil)
+			else
 			{
 				[_titleLabel.superview removeFromSuperview];
-				_titleLabel = nil;
+			}
+			
+			subtitleFrameToUse = _titleLabel.bounds;
+			if(_subtitleLabel.superview == self.titlesView)
+			{
+				[_subtitleLabel removeFromSuperview];
+			}
+			else
+			{
 				[_subtitleLabel.superview removeFromSuperview];
-				_subtitleLabel = nil;
-				
-				if(_popupBar.swiftuiTitleContentView.superview != _titlesView)
+			}
+			
+			_titleLabel = nil;
+			_subtitleLabel = nil;
+		}
+		
+		if(self.popupItem.swiftuiTitleContentView != nil)
+		{
+			[_titleLabel.superview removeFromSuperview];
+			_titleLabel = nil;
+			[_subtitleLabel.superview removeFromSuperview];
+			_subtitleLabel = nil;
+			
+			if(self.popupItem.swiftuiTitleContentView.superview != self.titlesView)
+			{
+				[self.titlesView addArrangedSubview:self.popupItem.swiftuiTitleContentView];
+				[self.titlesView layoutIfNeeded];
+			}
+			if(ln_unavailable(iOS 17.0, *))
+			{
+				UIView* textView = self.popupItem.swiftuiTitleContentView.subviews.firstObject;
+				[NSLayoutConstraint activateConstraints:@[
+					[self.popupItem.swiftuiTitleContentView.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
+				]];
+			}
+		}
+		else
+		{
+			NSAttributedString* attr = self.popupItem.attributedTitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:self.popupItem.attributedTitle defaultAttributes:_popupBar.activeAppearance.titleTextAttributes] : nil;
+			
+			if(attr.length > 0)
+			{
+				if(_titleLabel == nil)
 				{
-					[_titlesView addArrangedSubview:_popupBar.swiftuiTitleContentView];
-					[_titlesView layoutIfNeeded];
+					_titleLabel = [self _labelWithFrame:titleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
+#if DEBUG
+					if(_LNEnableBarLayoutDebug())
+					{
+						_titleLabel.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.5];
+					}
+					else
+					{
+						_titleLabel.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.0];
+					}
+#endif
+					_titleLabel.textColor = _popupBar._titleColor;
+					_titleLabel.font = _popupBar._titleFont;
+					if(_popupBar.resolvedStyle == LNPopupBarStyleCompact)
+					{
+						_titleLabel.textAlignment = NSTextAlignmentCenter;
+					}
+					
+//					[_titlesView addArrangedSubview:_titleLabel];
+					[self.titlesView addArrangedSubview:[_LNPopupTitleLabelWrapper wrapperForLabel:_titleLabel]];
 				}
-				if(ln_unavailable(iOS 17.0, *))
+				
+				if([_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
 				{
-					UIView* textView = _popupBar.swiftuiTitleContentView.subviews.firstObject;
-					[NSLayoutConstraint activateConstraints:@[
-						[_popupBar.swiftuiTitleContentView.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
-					]];
+					_titleLabel.attributedText = attr;
+					reset = YES;
 				}
 			}
 			else
 			{
-				NSAttributedString* attr = _popupBar.attributedTitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_popupBar.attributedTitle defaultAttributes:_popupBar.activeAppearance.titleTextAttributes] : nil;
-				
-				if(attr.length > 0)
-				{
-					if(_titleLabel == nil)
-					{
-						_titleLabel = [self _labelWithFrame:titleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
-#if DEBUG
-						if(_LNEnableBarLayoutDebug())
-						{
-							_titleLabel.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.5];
-						}
-						else
-						{
-							_titleLabel.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.0];
-						}
-#endif
-						_titleLabel.textColor = _popupBar._titleColor;
-						_titleLabel.font = _popupBar._titleFont;
-						if(_popupBar.resolvedStyle == LNPopupBarStyleCompact)
-						{
-							_titleLabel.textAlignment = NSTextAlignmentCenter;
-						}
-						
-//						[_titlesView addArrangedSubview:_titleLabel];
-						[_titlesView addArrangedSubview:[_LNPopupTitleLabelWrapper wrapperForLabel:_titleLabel]];
-					}
-					
-					if([_titleLabel.attributedText isEqualToAttributedString:attr] == NO)
-					{
-						_titleLabel.attributedText = attr;
-						reset = YES;
-					}
-				}
-				else
-				{
-					[_titleLabel removeFromSuperview];
-					_titleLabel = nil;
-				}
-				
-				attr = _popupBar.attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:_popupBar.attributedSubtitle defaultAttributes:_popupBar.activeAppearance.subtitleTextAttributes] : nil;
-				
-				if(attr.length > 0)
-				{
-					if(_subtitleLabel == nil)
-					{
-						_subtitleLabel = [self _labelWithFrame:subtitleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
-#if DEBUG
-						if(_LNEnableBarLayoutDebug())
-						{
-							_subtitleLabel.backgroundColor = [UIColor.cyanColor colorWithAlphaComponent:0.5];
-						}
-						else
-						{
-							_subtitleLabel.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.0];
-						}
-#endif
-						_subtitleLabel.textColor = _popupBar._subtitleColor;
-						_subtitleLabel.font = _popupBar._subtitleFont;
-						if(_popupBar.resolvedStyle == LNPopupBarStyleCompact)
-						{
-							_subtitleLabel.textAlignment = NSTextAlignmentCenter;
-						}
-						
-						//						[_titlesView addArrangedSubview:_subtitleLabel];
-						[_titlesView addArrangedSubview:[_LNPopupTitleLabelWrapper wrapperForLabel:_subtitleLabel]];
-					}
-					
-					if([_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
-					{
-						_subtitleLabel.attributedText = attr;
-						reset = YES;
-					}
-				}
-				else
-				{
-					[_subtitleLabel removeFromSuperview];
-					_subtitleLabel = nil;
-				}
+				[_titleLabel removeFromSuperview];
+				_titleLabel = nil;
 			}
 			
-			if(reset)
+			attr = self.popupItem.attributedSubtitle.length > 0 ? [NSAttributedString ln_attributedStringWithAttributedString:self.popupItem.attributedSubtitle defaultAttributes:_popupBar.activeAppearance.subtitleTextAttributes] : nil;
+			
+			if(attr.length > 0)
 			{
-				[_titleLabel reset];
-				[_subtitleLabel reset];
+				if(_subtitleLabel == nil)
+				{
+					_subtitleLabel = [self _labelWithFrame:subtitleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
+#if DEBUG
+					if(_LNEnableBarLayoutDebug())
+					{
+						_subtitleLabel.backgroundColor = [UIColor.cyanColor colorWithAlphaComponent:0.5];
+					}
+					else
+					{
+						_subtitleLabel.backgroundColor = [UIColor.blackColor colorWithAlphaComponent:0.0];
+					}
+#endif
+					_subtitleLabel.textColor = _popupBar._subtitleColor;
+					_subtitleLabel.font = _popupBar._subtitleFont;
+					if(_popupBar.resolvedStyle == LNPopupBarStyleCompact)
+					{
+						_subtitleLabel.textAlignment = NSTextAlignmentCenter;
+					}
+					
+//					[_titlesView addArrangedSubview:_subtitleLabel];
+					[self.titlesView addArrangedSubview:[_LNPopupTitleLabelWrapper wrapperForLabel:_subtitleLabel]];
+				}
+				
+				if([_subtitleLabel.attributedText isEqualToAttributedString:attr] == NO)
+				{
+					_subtitleLabel.attributedText = attr;
+					reset = YES;
+				}
 			}
-		}];
+			else
+			{
+				[_subtitleLabel removeFromSuperview];
+				_subtitleLabel = nil;
+			}
+		}
+		
+		if(reset)
+		{
+			[_titleLabel reset];
+			[_subtitleLabel reset];
+		}
+	}];
 	
 	[self updateAccessibility];
 	
 	[self _recalculateCoordinatedMarqueeAndStartScrollIfNeeded];
+	
+	[self.view setNeedsLayout];
 }
 
 - (void)updateAccessibility
 {
 	if(_popupBar.accessibilityCenterLabel.length > 0)
 	{
-		_titlesView.accessibilityLabel = _popupBar.accessibilityCenterLabel;
+		self.titlesView.accessibilityLabel = _popupBar.accessibilityCenterLabel;
 	}
 	else
 	{
 		NSMutableString* accessibilityLabel = [NSMutableString new];
-		if(_popupBar.attributedTitle.length > 0)
+		if(self.popupItem.attributedTitle.length > 0)
 		{
-			[accessibilityLabel appendString:_popupBar.attributedTitle.string];
+			[accessibilityLabel appendString:self.popupItem.attributedTitle.string];
 			[accessibilityLabel appendString:@"\n"];
 		}
-		if(_popupBar.attributedSubtitle.length > 0)
+		if(self.popupItem.attributedSubtitle.length > 0)
 		{
-			[accessibilityLabel appendString:_popupBar.attributedSubtitle.string];
+			[accessibilityLabel appendString:self.popupItem.attributedSubtitle.string];
 		}
-		_titlesView.accessibilityLabel = accessibilityLabel;
+		self.titlesView.accessibilityLabel = accessibilityLabel;
 	}
 	
 	if(_popupBar.accessibilityCenterHint.length > 0)
 	{
-		_titlesView.accessibilityHint = _popupBar.accessibilityCenterHint;
+		self.titlesView.accessibilityHint = _popupBar.accessibilityCenterHint;
 	}
 	else
 	{
-		_titlesView.accessibilityHint = NSLocalizedString(@"Double tap to open.", @"");
+		self.titlesView.accessibilityHint = NSLocalizedString(@"Double tap to open.", @"");
 	}
 }
 
@@ -395,6 +426,30 @@
 	{
 		[self _recalculateCoordinatedMarqueeAndStartScrollIfNeeded];
 	}
+}
+
+- (void)viewDidLayoutSubviews
+{
+	[super viewDidLayoutSubviews];
+	
+	CGFloat titlesHeight = self.heightFittingTitleLabel + self.heightFittingSubtitleLabel + (self.numberOfLabels > 1 ? 1 : 0) * self.spacing;
+	
+	__block CGRect currentFrame = self.titlesView.frame;
+	CGRect targetFrame = _wrapperView.bounds;
+	CGFloat dy = targetFrame.size.height - titlesHeight;
+	
+	[UIView performWithoutAnimation:^{
+		currentFrame.size.height = titlesHeight;
+		currentFrame.origin.y = targetFrame.origin.y + (dy / 2.0);
+		self.titlesView.frame = currentFrame;
+		
+		[self.titlesView layoutIfNeeded];
+	}];
+	
+	currentFrame.size.width = targetFrame.size.width;
+	currentFrame.origin.x = targetFrame.origin.x;
+	
+	self.titlesView.frame = currentFrame;
 }
 
 @end

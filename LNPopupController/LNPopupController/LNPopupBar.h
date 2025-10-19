@@ -13,8 +13,6 @@
 #import <LNPopupController/LNPopupBarAppearance.h>
 #import <LNPopupController/LNPopupImageView.h>
 
-#define LN_UNAVAILABLE_PREVIEWING_MSG "Add context menu interaction or register for previewing directly on the popup bar view."
-
 NS_ASSUME_NONNULL_BEGIN
 
 /// Available styles for the popup bar.
@@ -37,12 +35,12 @@ typedef NS_ENUM(NSInteger, LNPopupBarStyle) {
 	
 	/// Compact bar style.
 	///
-	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported and will be converted to `.floatingCompact` at runtime.
+	/// Starting with iOS 26, non-floating bar styles are no longer supported and will be converted to `.floatingCompact` at runtime.
 	LNPopupBarStyleCompact LN_DEPRECATED_API_OS("Non-floating bars are no longer supported on iOS 26.0 and later.", ios(2.0, 26.0)) = 1,
 	
 	/// Prominent bar style.
 	///
-	/// - Note: Starting with iOS 26, non-floating bar styles are no longer supported and will be converted to `.floating` at runtime.
+	/// Starting with iOS 26, non-floating bar styles are no longer supported and will be converted to `.floating` at runtime.
 	LNPopupBarStyleProminent LN_DEPRECATED_API_OS("Non-floating bars are no longer supported on iOS 26.0 and later.", ios(2.0, 26.0)) = 2,
 } NS_SWIFT_NAME(LNPopupBar.Style);
 
@@ -62,25 +60,87 @@ typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
 } NS_SWIFT_NAME(LNPopupBar.ProgressViewStyle);
 
 NS_SWIFT_UI_ACTOR
-/// A popup bar is a control that displays popup information. Content is populated from ``LNPopupItem`` items.
+@protocol LNPopupBarDataSource <NSObject>
+
+@optional
+
+/// Asks the data source to provide the initial popup item for the popup bar. This method will only be called if ``LNPopupBar/popupItem`` is `nil` when presenting a content controller.
+///
+/// If this method is not implemented, you must set a popup item for the popup bar **before** attempting to present it.
+- (nonnull LNPopupItem*)initialPopupItemForPopupBar:(LNPopupBar*)popupBar;
+
+// Paging support. The following methods must be implemented by the data source in order to enable paging.
+
+/// Asks the data source to provide a popup item before the specified popup item. Return `nil` to indicate there is no item before.
+- (nullable LNPopupItem*)popupBar:(LNPopupBar*)popupBar popupItemBeforePopupItem:(LNPopupItem*)popupItem NS_SWIFT_NAME(popupBar(_:popupItemBefore:));
+/// Asks the data source to provide a popup item after the specified popup item. Return `nil` to indicate there is no item after.
+- (nullable LNPopupItem*)popupBar:(LNPopupBar*)popupBar popupItemAfterPopupItem:(LNPopupItem*)popupItem NS_SWIFT_NAME(popupBar(_:popupItemAfter:));
+
+@end
+
+NS_SWIFT_UI_ACTOR
+@protocol LNPopupBarDelegate <NSObject>
+
+@optional
+
+/// Notifies the delegate when a new popup item is displayed on the popup bar.
+/// - Parameters:
+///   - popupBar: The popup bar
+///   - newPopupItem: The new popup item
+///   - previousPopupItem: The previous popup item, if any
+- (void)popupBar:(LNPopupBar*)popupBar didDisplayPopupItem:(LNPopupItem*)newPopupItem previousPopupItem:(LNPopupItem* __nullable)previousPopupItem NS_SWIFT_NAME(popupBar(_:didDisplay:previous:));
+
+@end
+
+NS_SWIFT_UI_ACTOR
+/// A popup bar is a view that displays popup information. Content is populated from ``LNPopupItem`` items.
 @interface LNPopupBar : UIView <UIAppearanceContainer>
 
 /// If `true`, the popup bar will automatically inherit its appearance from the bottom docking view.
+///
+/// Defaults to `true`.
 @property (nonatomic, assign) BOOL inheritsAppearanceFromDockingView UI_APPEARANCE_SELECTOR;
 
-/// The currently displayed popup item. (read-only)
-@property (nullable, nonatomic, weak, readonly) LNPopupItem* popupItem;
+/// Controls whether the popup bar uses popup items from the content controller directly.
+///
+/// When **`true`**, the content controller's ``UIKit/UIViewController/popupItem`` property is used to populate the user interface of the popup bar. Presenting a different content controller switches the displayed popup item to the new controller's ``UIKit/UIViewController/popupItem``. Attempting to manually set the popup bar's item directly is ignored and setting the ``dataSource`` has no effect. This is the default behavior.
+///
+/// When **`false`**, allows setting the popup item directly for the popup bar, or through the ``dataSource``'s ``LNPopupBarDataSource/initialPopupItem(for:)``. Also allows popup item paging by setting the data source and implementing **both** ``LNPopupBarDataSource/popupBar(_:popupItemBefore:)`` and ``LNPopupBarDataSource/popupBar(_:popupItemAfter:)`` methods.
+///
+/// Changes to popup item properties are observed and the UI is automatically updated.
+///
+/// Defaults to `true`.
+@property (nonatomic) BOOL usesContentControllersAsDataSource;
+
+/// The currently displayed popup item.
+///
+/// When ``usesContentControllersAsDataSource`` is set to `false`, changes to this property trigger a call to ``UIKit/UIViewController/popupItemDidChange(_:)`` to let you know when the popup item changes (for example, by paging).
+///
+/// See ``usesContentControllersAsDataSource`` for more information.
+@property (nullable, nonatomic, strong) LNPopupItem* popupItem;
+
+/// The popup bar's data source.
+///
+/// To enable data source usage, first set the popup bar's ``usesContentControllersAsDataSource`` to `false`, then set a data source.
+///
+/// Data sources can serve two distinct purposes; first, to provide an initial popup item to be used when presenting a popup bar, and, second, to allow for popup item paging.
+///
+///	To provide an initial popup item, implement ``LNPopupBarDataSource/initialPopupItem(for:)``. The system calls this method when it requires an initial popup item.
+///
+/// To implement popup item paging, in your data source, implement **both** ``LNPopupBarDataSource/popupBar(_:popupItemBefore:)`` and ``LNPopupBarDataSource/popupBar(_:popupItemAfter:)`` methods. The system will ask for popup items before and/or after the specified popup item as the user attempts to swipe on the popup bar.
+@property (nullable, nonatomic, weak) id<LNPopupBarDataSource> dataSource;
+
+/// The popup bar's delegate.
+@property (nullable, nonatomic, weak) id<LNPopupBarDelegate> delegate;
 
 /// An array of custom bar button items. (read-only)
-///
-/// For compact popup bars, this property is equivalent to `trailingBarButtonItems`.
 @property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* barButtonItems;
 
-/// An array of custom bar button items to display on the left side. (read-only)
-@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* leadingBarButtonItems;
+/// An array of custom bar button items to display on the leading side. (read-only)
+@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* leadingBarButtonItems LN_DEPRECATED_API("Non-floating bars are no longer supported on iOS 26.0 and later.");
 
-/// An array of custom bar button items to display on the right side. (read-only)
-@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
+/// An array of custom bar button items to display on the trailing side. (read-only)
+@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* trailingBarButtonItems LN_DEPRECATED_API("Non-floating bars are no longer supported on iOS 26.0 and later.");
 
 /// An image view displayed when the bar style is prominent. (read-only)
 @property (nonatomic, strong, readonly) LNPopupImageView* imageView;
@@ -116,7 +176,7 @@ NS_SWIFT_UI_ACTOR
 
 /// A semantic description of the bar items, used to determine the order of bar items when switching between left-to-right and right-to-left layouts.
 ///
-/// Defaults to `UISemanticContentAttribute.playback`.
+/// Defaults to `UIUISemanticContentAttribute.playback`.
 ///
 /// See also `UIView.semanticContentAttribute`
 @property (nonatomic) UISemanticContentAttribute barItemsSemanticContentAttribute;
@@ -137,10 +197,15 @@ NS_SWIFT_UI_ACTOR
 
 /// Enables or disables minimization into the bottom docking view.
 ///
-/// Defaults to `true`.
+/// Supported on iOS 26.0 and later, for tab bar container controllers.
 ///
-/// - Note: Supported on iOS 26.0 and later, for tab bar container controllers.
+/// Defaults to `true`.
 @property (nonatomic, assign) BOOL supportsMinimization;
+
+/// Controls whether paging popup items generates haptic feedback to the user.
+///
+/// Defaults to `true`.
+@property (nonatomic, assign) BOOL allowHapticFeedbackGenerationOnItemPaging;
 
 @end
 

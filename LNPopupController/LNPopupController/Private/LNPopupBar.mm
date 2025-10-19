@@ -15,6 +15,7 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupGlassUtils.h"
 #import "_LNPopupTitlesController.h"
+#import "_LNPopupTitlesPagingController.h"
 #if __has_include(<LNSystemMarqueeLabel.h>)
 #import <LNSystemMarqueeLabel.h>
 #endif
@@ -212,6 +213,7 @@ __attribute__((objc_direct_members))
 {
 	LNPopupImageView* _imageView;
 	
+	_LNPopupTitlesPagingController* _titlePagingController;
 	_LNPopupTitlesController* _titlesController;
 	
 	BOOL _needsLabelsLayout;
@@ -223,7 +225,6 @@ __attribute__((objc_direct_members))
 	UIColor* _userTintColor;
 	UIColor* _userBackgroundColor;
 	
-	_LNPopupToolbar* _toolbar;
 	BOOL _inLayout;
 	
 	UIWindow* _swiftHacksWindow1;
@@ -349,6 +350,9 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		self.preservesSuperviewLayoutMargins = YES;
 		self.clipsToBounds = NO;
 		
+		self.usesContentControllersAsDataSource = YES;
+		self.allowHapticFeedbackGenerationOnItemPaging = YES;
+		
 		self.limitFloatingContentWidth = YES;
 		self.supportsMinimization = YES;
 		
@@ -428,12 +432,15 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_toolbar.layer.masksToBounds = YES;
 		[_contentView.contentView addSubview:_toolbar];
 		
+		_titlePagingController = [[_LNPopupTitlesPagingController alloc] initWithPopupBar:self];
 		_titlesController = [[_LNPopupTitlesController alloc] initWithPopupBar:self];
+		
+		[_titlePagingController setViewControllers:@[_titlesController] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 		
 		_backgroundView.accessibilityTraits = UIAccessibilityTraitButton;
 		_backgroundView.accessibilityIdentifier = @"PopupBarView";
 		
-		[_contentView.contentView addSubview:_titlesController.view];
+		[_contentView.contentView addSubview:_titlePagingController.view];
 
 		_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
 		_progressView.progressViewStyle = UIProgressViewStyleBar;
@@ -816,7 +823,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	[_contentView.contentView insertSubview:_imageView aboveSubview:_toolbar];
-	[_contentView.contentView insertSubview:_titlesController.view aboveSubview:_imageView];
+	[_contentView.contentView insertSubview:_titlePagingController.view aboveSubview:_imageView];
 	
 	UIScreen* screen = self.window.screen ?: UIScreen.mainScreen;
 	if(!LNPopupEnvironmentHasGlass())
@@ -911,6 +918,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	_titlesController.spacing = titleSpacing;
 	
 	[self _layoutTitles];
+	
+	if(LNPopupEnvironmentHasGlass())
+	{
+		[_contentView.contentView bringSubviewToFront:_progressView];
+	}
 	
 	_inLayout = NO;
 }
@@ -1101,7 +1113,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	{
 		return;
 	}
-	else if(_activeAppearanceChain)
+	else if(_activeAppearanceChain != nil)
 	{
 		[_activeAppearanceChain setChainDelegate:nil];
 	}
@@ -1113,6 +1125,11 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 }
 
 - (void)setPopupItem:(LNPopupItem *)popupItem
+{
+	[self._barDelegate _popupBar:self setUserPopupItem:popupItem];
+}
+
+- (void)_setPopupItem:(LNPopupItem*)popupItem
 {
 	_popupItem = popupItem;
 	
@@ -1210,7 +1227,15 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	}
 	
 	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
-	_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.doneButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
+	
+	if(@available(iOS 26.0, *))
+	{
+		_toolbar.standardAppearance.prominentButtonAppearance = self.activeAppearance.prominentButtonAppearance ?: _toolbar.standardAppearance.prominentButtonAppearance;
+	}
+	else
+	{
+		_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.prominentButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
+	}
 	
 	if(!LNPopupEnvironmentHasGlass())
 	{
@@ -1510,7 +1535,7 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 
 - (void)_getLeftmostView:(UIView* __strong *)leftmostView rightmostView:(UIView* __strong *)rightmostView fromBarButtonItems:(NSArray<UIBarButtonItem*>*)barButtonItems
 {
-	NSArray<UIBarButtonItem*>* filtered = [barButtonItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"isSystemItem == NO || (systemItem != %@ && systemItem != %@)", @(UIBarButtonSystemItemFixedSpace), @(UIBarButtonSystemItemFlexibleSpace)]];
+	NSArray<UIBarButtonItem*>* filtered = [barButtonItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(isSystemItem == NO || (systemItem != %@ && systemItem != %@)) && isHidden == NO", @(UIBarButtonSystemItemFixedSpace), @(UIBarButtonSystemItemFlexibleSpace)]];
 	
 	NSArray<UIBarButtonItem*>* sorted = [filtered sortedArrayWithOptions:0 usingComparator:^NSComparisonResult(UIBarButtonItem*  _Nonnull obj1, UIBarButtonItem*  _Nonnull obj2) {
 		
@@ -1530,6 +1555,8 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	
 	UIView* leftViewLast;
 	UIView* rightViewFirst;
+	
+	[_toolbar layoutIfNeeded];
 	
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
@@ -1552,7 +1579,6 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	
 	[leftViewLast.superview layoutIfNeeded];
 	[rightViewFirst.superview layoutIfNeeded];
-	[_toolbar layoutIfNeeded];
 	
 	CGRect leftViewLastFrame = CGRectZero;
 	if(leftViewLast != nil)
@@ -1587,6 +1613,8 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	
 	UIView* leftViewLast;
 	UIView* rightViewFirst;
+	
+	[_toolbar layoutIfNeeded];
 	
 	NSArray* allItems = _toolbar.items;
 
@@ -1798,11 +1826,11 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 #if DEBUG
 	if(_LNEnableBarLayoutDebug())
 	{
-		_titlesController.view.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.6];
+		_titlePagingController.view.backgroundColor = [UIColor.orangeColor colorWithAlphaComponent:0.6];
 	}
 	else
 	{
-		_titlesController.view.backgroundColor = nil;
+		_titlePagingController.view.backgroundColor = nil;
 	}
 #endif
 	
@@ -1814,17 +1842,16 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 		_needsLabelsLayout = NO;
 	}
 	
-	CGRect frameBefore = _titlesController.view.frame;
+	CGRect frameBefore = _titlePagingController.view.frame;
 	
-	CGFloat size = _titlesController.heightFittingTitleLabel + _titlesController.heightFittingSubtitleLabel + (_titlesController.numberOfLabels > 1 ? 1 : 0) * _titlesController.spacing;
-	_titlesController.view.frame = CGRectMake(titleInsets.left, 0, _contentView.bounds.size.width - titleInsets.left - titleInsets.right, size);
-	CGPoint center = _titlesController.view.center;
+	_titlePagingController.view.frame = CGRectMake(titleInsets.left, 0, _contentView.bounds.size.width - titleInsets.left - titleInsets.right, _contentView.bounds.size.height);
+	CGPoint center = _titlePagingController.view.center;
 	center.y = _contentView.contentView.center.y;
-	_titlesController.view.center = center;
+	_titlePagingController.view.center = center;
 	
-	if(CGRectEqualToRect(frameBefore, _titlesController.view.frame) == NO)
+	if(CGRectEqualToRect(frameBefore, _titlePagingController.view.frame) == NO)
 	{
-		[_titlesController.view layoutIfNeeded];
+		[_titlePagingController.view layoutIfNeeded];
 	}
 }
 
@@ -1981,6 +2008,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}];
 	
 	[_toolbar setItems:items animated:NO];
+	[_toolbar layoutIfNeeded];
 	
 	[self _setNeedsTitleLayoutByRemovingLabels:NO];
 }
@@ -1990,7 +2018,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	BOOL hide = _customBarViewController != nil;
 	_imageView.hidden = hide;
 	_toolbar.hidden = hide;
-	_titlesController.view.hidden = hide;
+	_titlePagingController.view.hidden = hide;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -2171,6 +2199,13 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	_backgroundViewFrameDuringAnimation = backgroundViewFrameDuringAnimation;
 	
 	[self setNeedsLayout];
+}
+
+- (void)setDataSource:(id<LNPopupBarDataSource>)dataSource
+{
+	_dataSource = dataSource;
+	
+	_titlePagingController.pagingEnabled = _dataSource != nil && [_dataSource respondsToSelector:@selector(popupBar:popupItemBeforePopupItem:)] && [_dataSource respondsToSelector:@selector(popupBar:popupItemAfterPopupItem:)];
 }
 
 #pragma mark UIPointerInteractionDelegate

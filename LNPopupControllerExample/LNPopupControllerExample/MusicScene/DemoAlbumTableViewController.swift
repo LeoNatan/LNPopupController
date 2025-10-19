@@ -13,19 +13,14 @@ import LNPopupController
 #endif
 import LoremIpsum
 
-class DemoAlbumTableViewController: UITableViewController {
+@available(iOS 18.0, *)
+class DemoAlbumTableViewController: UITableViewController, LNPopupBarDataSource, LNPopupBarDelegate {
 	@IBOutlet var demoAlbumImageView: UIImageView!
 	@IBOutlet var galleryBarButton: UIBarButtonItem!
 	
-	var images: [UIImage]
-	var titles: [String]
-	var subtitles: [String]
+	var playlist = [LNPopupItem]()
 	
 	required init?(coder aDecoder: NSCoder) {
-		images = []
-		titles = []
-		subtitles = []
-		
 		super.init(coder:aDecoder)
 		
 		if self.navigationController?.tabBarItem.image == nil {
@@ -40,7 +35,6 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 		let footer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4))
 		tableView.tableFooterView = footer
-//		tableView.showsVerticalScrollIndicator = false
 		
 		tableView.rowHeight = UITableView.automaticDimension
 		tableView.estimatedRowHeight = 55
@@ -62,17 +56,6 @@ class DemoAlbumTableViewController: UITableViewController {
 //		
 //		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		
-#if LNPOPUP
-		let barStyle = LNPopupBar.Style(rawValue: UserDefaults.settings.object(forKey: PopupSetting.barStyle)  as? Int ?? 0)!
-		tabBarController?.popupBar.barStyle = barStyle
-		tabBarController?.popupBar.standardAppearance.isFloatingBarShineEnabled = true
-#endif
-#if compiler(>=6.2)
-		if #available(iOS 26.0, *) {
-			tabBarController?.tabBarMinimizeBehavior = .onScrollDown
-		}
-#endif
-		
 		if !LNPopupSettingsHasOS26Glass() {
 #if LNPOPUP
 			if [.floating, .floatingCompact].contains(tabBarController?.popupBar.effectiveBarStyle) {
@@ -91,21 +74,15 @@ class DemoAlbumTableViewController: UITableViewController {
 		demoAlbumImageView.layer.cornerRadius = 8
 		demoAlbumImageView.layer.masksToBounds = true
 		
-		for idx in 1...self.tableView(tableView, numberOfRowsInSection: 0) {
-			images += [UIImage(named: "genre\(idx)")!]
+		for idx in 0..<Int.random(in: 20...50) {
+			let item = LNPopupItem()
 			
-			var title = LoremIpsum.title
-			var sentence = tabIsEven ? LoremIpsum.sentence : LoremIpsum.sentences(withNumber: UInt.random(in: 1...3))
-			
-#if LNPOPUP
-			if UserDefaults.standard.bool(forKey: PopupSetting.forceRTL) {
-				title = title.applyingTransform(.latinToHebrew, reverse: false)!
-				sentence = sentence.applyingTransform(.latinToHebrew, reverse: false)!
-			}
-#endif
-			
-			titles.append(title)
-			subtitles.append(sentence)
+			item.title = LoremIpsum.title
+			item.subtitle = tabIsEven ? LoremIpsum.sentence : LoremIpsum.sentences(withNumber: UInt.random(in: 1...3))
+			item.image = UIImage(named: "genre\((idx % 30) + 1)")!
+			item.userInfo = ["idx": idx]
+
+			playlist.append(item)
 		}
     }
 	
@@ -118,46 +95,136 @@ class DemoAlbumTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 30
+		return playlist.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MusicCell", for: indexPath)
 		
 		var cellConfig = UIListContentConfiguration.subtitleCell()
-		cellConfig.image = images[(indexPath as NSIndexPath).row]
+		cellConfig.image = playlist[indexPath.row].image
 		cellConfig.imageProperties.cornerRadius = 8
 		cellConfig.imageProperties.maximumSize = CGSize(width: 48, height: 48)
-		cellConfig.text = titles[(indexPath as NSIndexPath).row]
+		cellConfig.text = playlist[indexPath.row].title
 		cellConfig.textProperties.font = .preferredFont(forTextStyle: .body)
 		cellConfig.textProperties.numberOfLines = tabIsEven ? 1 : 0
-		cellConfig.secondaryText = subtitles[(indexPath as NSIndexPath).row]
+		cellConfig.secondaryText = playlist[indexPath.row].subtitle
 		cellConfig.secondaryTextProperties.font = .preferredFont(forTextStyle: .footnote)
 		cellConfig.secondaryTextProperties.numberOfLines = tabIsEven ? 1 : 0
 		cellConfig.imageToTextPadding = 10
 		cellConfig.textToSecondaryTextVerticalPadding = tabIsEven ? 2 : 4
 		cellConfig.directionalLayoutMargins = NSDirectionalEdgeInsets(top: tabIsEven ? 4 : 8, leading: 0, bottom: tabIsEven ? 4 : 8, trailing: 0)
+		
 		cell.contentConfiguration = cellConfig
+		
+		if tabBarController?.popupBar.dataSource === self && tabBarController?.popupBar.popupItem?.userInfo?["idx"] as? Int == indexPath.row {
+			var bg = UIBackgroundConfiguration.listCell()
+			bg.backgroundColor = .tintColor.withAlphaComponent(0.2)
+			cell.backgroundConfiguration = bg
+		} else {
+			cell.backgroundConfiguration = nil
+		}
 		
         return cell
     }
+	
+	func popupItem(before popupItem: LNPopupItem) -> LNPopupItem? {
+		guard let idx = popupItem.userInfo?["idx"] as? Int else {
+			return nil
+		}
+		
+		if idx == 0 {
+			return nil
+		}
+		
+		let rv = playlist[idx - 1]
+		rv.progress = 0.0
+		return rv
+	}
+	
+	func popupItem(after popupItem: LNPopupItem) -> LNPopupItem? {
+		guard let idx = popupItem.userInfo?["idx"] as? Int else {
+			return nil
+		}
+		
+		if idx == playlist.count - 1 {
+			return nil
+		}
+		
+		let rv = playlist[idx + 1]
+		rv.progress = 0.0
+		return rv
+	}
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 #if LNPOPUP
-		let popupContentController = DemoMusicPlayerController()
-		popupContentController.songTitle = titles[(indexPath as NSIndexPath).row]
-		popupContentController.albumTitle = subtitles[(indexPath as NSIndexPath).row]
-		popupContentController.albumArt = images[(indexPath as NSIndexPath).row]
+		let item = playlist[indexPath.row]
+		item.progress = 0.0
+		tabBarController?.popupBar.popupItem = item
+		tabBarController?.popupBar.dataSource = self
+		tabBarController?.popupBar.delegate = self
 		
-		popupContentController.popupItem.accessibilityHint = NSLocalizedString("Double Tap to Expand the Mini Player", comment: "")
-		tabBarController?.popupContentView.popupCloseButton.accessibilityLabel = NSLocalizedString("Dismiss Now Playing Screen", comment: "")
+		updateCells(highlighting: indexPath.row)
 		
-		tabBarController?.presentPopupBar(with: popupContentController)
-		tabBarController?.popupBar.tintColor = UIColor.label
-		tabBarController?.popupBar.progressViewStyle = .top
-		
+		if let popupContent = tabBarController?.popupContent as? DemoMusicPlayerController {
+			popupContent.nextSong = { [weak self] item in
+				guard let self else {
+					return false
+				}
+				
+				guard let item = popupItem(after: item) else {
+					return false
+				}
+				
+				tabBarController?.popupBar.popupItem = item
+				return true
+			}
+			popupContent.prevSong = { [weak self] item in
+				guard let self else {
+					return
+				}
+				
+				guard let item = popupItem(before: item) else {
+					return
+				}
+				
+				tabBarController?.popupBar.popupItem = item
+			}
+			
+			popupContent.play()
+		}
 #endif
 		
 		tableView.deselectRow(at: indexPath, animated: true)
+	}
+	
+	func popupBar(_ popupBar: LNPopupBar, popupItemBefore popupItem: LNPopupItem) -> LNPopupItem? {
+		self.popupItem(before: popupItem)
+	}
+	
+	func popupBar(_ popupBar: LNPopupBar, popupItemAfter popupItem: LNPopupItem) -> LNPopupItem? {
+		self.popupItem(after: popupItem)
+	}
+	
+	func updateCells(highlighting idx: Int) {
+		for cell in tableView.visibleCells {
+			cell.backgroundConfiguration = nil
+		}
+		
+		if let cell = tableView.cellForRow(at: IndexPath(row: idx, section: 0)) {
+			var bg = UIBackgroundConfiguration.listCell()
+			bg.backgroundColor = .tintColor.withAlphaComponent(0.2)
+			cell.backgroundConfiguration = bg
+		}
+	}
+	
+	func popupBar(_ popupBar: LNPopupBar, didDisplay newPopupItem: LNPopupItem, previous previousPopupItem: LNPopupItem?) {
+		guard let idx = newPopupItem.userInfo?["idx"] as? Int else {
+			return
+		}
+		
+		UIView.animate(.spring) {
+			updateCells(highlighting: idx)
+		}
 	}
 }

@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_UI_ACTOR
 /// An object for customizing the appearance of popup bars.
 ///
-/// After creating a `LNPopupBarAppearance` object, use the methods and properties of this class to specify the appearance of items in the popup bar. Use the inherited properties from `UIBarAppearance` to configure the background and shadow attributes of the popup bar itself.
+/// After creating a ``LNPopupBarAppearance`` object, use the methods and properties of this class to specify the appearance of items in the popup bar. Use the inherited properties from `UIBarAppearance` to configure the background and shadow attributes of the popup bar itself.
 @interface LNPopupBarAppearance : UIBarAppearance
 
 /// Display attributes for the popup bar’s title text.
@@ -31,16 +31,19 @@ NS_SWIFT_UI_ACTOR
 @property (nonatomic, readwrite, copy) UIBarButtonItemAppearance* buttonAppearance;
 
 /// The appearance for done-style bar button items.
-@property (nonatomic, readwrite, copy) UIBarButtonItemAppearance* doneButtonAppearance;
+@property (nonatomic, readwrite, copy) UIBarButtonItemAppearance* prominentButtonAppearance;
+
+/// The appearance for done-style bar button items.
+@property (nonatomic, readwrite, copy) UIBarButtonItemAppearance* doneButtonAppearance LN_DEPRECATED_API("Use prominentButtonAppearance instead.");
 
 /// The color to apply for the bar's highlight.
 ///
-/// - Note: Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a highlight color has no effect.
+/// Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a highlight color has no effect.
 @property (nonatomic, copy) UIColor* highlightColor;
 
 /// Configures the popup bar with the default highlight color.
 ///
-/// - Note: Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a highlight color has no effect.
+/// Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a highlight color has no effect.
 - (void)configureWithDefaultHighlightColor;
 
 /// When enabled, titles and subtitles that are longer than the space available will scroll text over time.
@@ -80,16 +83,16 @@ NS_SWIFT_UI_ACTOR
 
 /// A specific visual effect to use for the bar floating background. This effect is composited first when constructing the bar's floating background.
 ///
-/// - Note: Starting with iOS 26.0, glass (default) and blur effects are supported.
+/// Starting with iOS 26.0, glass (default) and blur effects are supported.
 @property (nonatomic, copy, nullable) UIVisualEffect* floatingBackgroundEffect;
 
-/// A color to use for the bar floating background. This color is composited over `floatingBackgroundEffect`.
+/// A color to use for the bar floating background. This color is composited over ``floatingBackgroundEffect``.
 @property (nonatomic, copy, nullable) UIColor* floatingBackgroundColor;
 
-/// An image to use for the bar floating background. This image is composited over the `floatingBackgroundColor`, and resized per the `floatingBackgroundImageContentMode`.
+/// An image to use for the bar floating background. This image is composited over the ``floatingBackgroundColor``, and resized per the `floatingBackgroundImageContentMode`.
 @property (nonatomic, strong, nullable) UIImage* floatingBackgroundImage;
 
-/// The content mode to use when rendering the `floatingBackgroundImage`. Defaults to `UIViewContentMode.scaleToFill`. `UIViewContentModeRedraw` will be reinterpreted as `UIViewContentMode.scaleToFill`.
+/// The content mode to use when rendering the ``floatingBackgroundImage``. Defaults to `UIViewContentMode.scaleToFill`. `UIViewContentMode.redraw` will be reinterpreted as `UIViewContentMode.scaleToFill`.
 @property (nonatomic, assign) UIViewContentMode floatingBackgroundImageContentMode;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
@@ -101,14 +104,14 @@ NS_SWIFT_UI_ACTOR
 
 /// The shadow displayed underneath the bar floating background.
 ///
-/// - Note: Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a bar background shadow has no effect. Instead, the glass shadow is used.
+/// Starting with iOS 26.0, when a glass effect is used for the popup bar, setting a bar background shadow has no effect. Instead, the glass shadow is used.
 @property (nonatomic, copy, nullable) NSShadow* floatingBarBackgroundShadow;
 
 /// Enables outer shine on a floating popup bar.
 ///
 /// Defaults to `false`.
 ///
-/// - Note: Shine is only supported on iOS 26.0 and later.
+/// Shine is only supported on iOS 26.0 and later.
 @property (nonatomic, assign, getter=isFloatingBarShineEnabled) BOOL floatingBarShineEnabled;
 
 /// Reset floating background and shadow properties to their defaults.

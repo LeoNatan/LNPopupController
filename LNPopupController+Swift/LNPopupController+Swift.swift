@@ -191,30 +191,36 @@ extension LNPopupBarAppearance {
 
 public
 extension UIViewController {
-	/// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view.
+	/// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation.
 	///
-	/// You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
+	/// You may call this method multiple times with different content controllers, triggering replacement to the popup content view and update to the popup bar, if the popup is open or the bar presented, respectively.
 	///
 	/// The provided controller is retained by the system and will be released once a different controller is presented or when the popup bar is dismissed.
+	///
+	/// The popup bar is attached to the receiver's docking view. See ``UIViewController/bottomDockingViewForPopupBar`` for more information on the bottom docking view.
+	///
 	/// - Parameters:
 	///   - contentViewController: The controller for popup presentation.
 	///   - openPopup: Pass `true` to open the popup in the same animation; otherwise, pass `false`.
 	///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
-	///   - completion: The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
+	///   - completion: The closure to execute after the presentation finishes. This closure has no return value and takes no parameters. You may specify `nil` for this parameter.
 	func presentPopupBar(with contentViewController: UIViewController, openPopup: Bool = false, animated: Bool = true, completion: (() -> Void)? = nil) {
 		__presentPopupBar(withContentViewController: contentViewController, openPopup: openPopup, animated: animated, completion: completion)
 	}
 	
-	/// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view.
+	/// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation.
 	///
-	/// You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
+	/// You may call this method multiple times with different content controllers, triggering replacement to the popup content view and update to the popup bar, if the popup is open or the bar presented, respectively.
 	///
 	/// The provided controller is retained by the system and will be released once a different controller is presented or when the popup bar is dismissed.
+	///
+	/// The popup bar is attached to the receiver's docking view. See ``UIViewController/bottomDockingViewForPopupBar`` for more information on the bottom docking view.
+	///
 	/// - Parameters:
 	///   - contentViewController: The controller for popup presentation.
 	///   - openPopup: Pass `true` to open the popup in the same animation; otherwise, pass `false`.
 	///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
-	///   - completion: The block to execute after the presentation finishes. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
+	///   - completion: The closure to execute after the presentation finishes. This closure has no return value and takes no parameters. You may specify `nil` for this parameter.
 	@available(*, deprecated, message: "Use presentPopupBar(with:openPopup:animated:completion:) instead.")
 	func presentPopupBar(withContentViewController contentViewController: UIViewController, openPopup: Bool = false, animated: Bool = true, completion: (() -> Void)? = nil) {
 		__presentPopupBar(withContentViewController: contentViewController, openPopup: openPopup, animated: animated, completion: completion)
@@ -223,7 +229,7 @@ extension UIViewController {
 	/// Opens the popup, displaying the content view controller's view.
 	/// - Parameters:
 	///   - animated: Pass `true` to animate; otherwise, pass `false`.
-	///   - completion: The block to execute after the popup is opened. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
+	///   - completion: The closure to execute after the popup is opened. This closure has no return value and takes no parameters. You may specify `nil` for this parameter.
 	func openPopup(animated: Bool = true, completion: (() -> Void)? = nil) {
 		__openPopup(animated: animated, completion: completion)
 	}
@@ -231,7 +237,7 @@ extension UIViewController {
 	/// Closes the popup, hiding the content view controller's view.
 	/// - Parameters:
 	///   - animated: Pass `true` to animate; otherwise, pass `false`.
-	///   - completion: The block to execute after the popup is closed. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
+	///   - completion: The closure to execute after the popup is closed. This closure has no return value and takes no parameters. You may specify `nil` for this parameter.
 	func closePopup(animated: Bool = true, completion: (() -> Void)? = nil) {
 		__closePopup(animated: animated, completion: completion)
 	}
@@ -239,7 +245,7 @@ extension UIViewController {
 	/// Dismisses the popup presentation, closing the popup if open and dismissing the popup bar.
 	/// - Parameters:
 	///   - animated: Pass `true` to animate; otherwise, pass `false`.
-	///   - completion: The block to execute after the dismissal. This block has no return value and takes no parameters. You may specify `nil` for this parameter.
+	///   - completion: The closure to execute after the dismissal. This closure has no return value and takes no parameters. You may specify `nil` for this parameter.
 	func dismissPopupBar(animated: Bool = true, completion: (() -> Void)? = nil) {
 		__dismissPopupBar(animated: animated, completion: completion)
 	}
@@ -261,7 +267,7 @@ extension LNPopupBar {
 		
 		public static
 		func read(from traitCollection: UITraitCollection) -> LNPopupBar.Environment {
-			traitCollection.popUpBarEnvironment
+			traitCollection.popupBarEnvironment
 		}
 		
 		public static
@@ -274,17 +280,26 @@ extension LNPopupBar {
 public
 extension UITraitCollection {
 	/// The popup bar environment represents whether a given trait collection is from a popup bar, a view in a custom popup bar or a popup content view controller.
-	var popUpBarEnvironment: LNPopupBar.Environment {
+	var popupBarEnvironment: LNPopupBar.Environment {
 		guard #available(iOS 17.0, *) else {
 			return .unspecified
 		}
 		
 		return self[LNPopupBar.EnvironmentTrait.self]
 	}
+	
+	/// The popup bar environment represents whether a given trait collection is from a popup bar, a view in a custom popup bar or a popup content view controller.
+	@available(*, deprecated, message: "Use popupBarEnvironment instead.")
+	var popUpBarEnvironment: LNPopupBar.Environment  {
+		return self.popupBarEnvironment
+	}
 }
 
 public
 extension EnvironmentValues {
+	/// The current placement of the popup bar.
+	///
+	/// An ``LNPopupBar/Environment/unspecified`` value corresponds to an undefined placement.
 	var popupBarPlacement: LNPopupBar.Environment {
 		get {
 			guard #available(iOS 17.0, *) else {

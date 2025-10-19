@@ -34,6 +34,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 @interface UIViewController (LNPopupSupport)
 
+@property (nonatomic, retain, readwrite) LNPopupItem* popupItem;
 @property (nullable, nonatomic, weak, readwrite) UIViewController* popupPresentationContainerViewController;
 @property (nullable, nonatomic, strong, readwrite) UIViewController* popupContentViewController;
 

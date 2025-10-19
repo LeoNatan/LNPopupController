@@ -26,7 +26,7 @@
 		3980E7FC26DEBCAF00AC0728 /* LoremIpsum in Frameworks */ = {isa = PBXBuildFile; productRef = 3980E7FB26DEBCAF00AC0728 /* LoremIpsum */; };
 		39837A201B756F1A004D2DA9 /* RandomColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 39837A1F1B756F1A004D2DA9 /* RandomColors.m */; };
 		39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
-		39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A251B759721004D2DA9 /* PortraitTabBarController.swift */; };
+		39837A261B759721004D2DA9 /* MusicTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A251B759721004D2DA9 /* MusicTabBarController.swift */; };
 		3985DE602549539B00CD76EE /* IntroWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3985DE5F2549539B00CD76EE /* IntroWebViewController.m */; };
 		3987A4C22E86E42D0090E273 /* DemoMusicSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3987A4C12E86E42D0090E273 /* DemoMusicSearchController.swift */; };
 		3987A4C32E86E42D0090E273 /* DemoMusicSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3987A4C12E86E42D0090E273 /* DemoMusicSearchController.swift */; };
@@ -71,6 +71,8 @@
 		39F031B12E8FC0DD0079F2FD /* CustomContainer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39F031AF2E8FC0DD0079F2FD /* CustomContainer.storyboard */; };
 		39F031B32E8FC2770079F2FD /* CustomContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F031B22E8FC2770079F2FD /* CustomContainerController.swift */; };
 		39F031B42E8FC2770079F2FD /* CustomContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F031B22E8FC2770079F2FD /* CustomContainerController.swift */; };
+		39F5ACD52EA583F8002EF1E6 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F5ACD42EA583F2002EF1E6 /* PlayerView.swift */; };
+		39F5ACD62EA583F8002EF1E6 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39F5ACD42EA583F2002EF1E6 /* PlayerView.swift */; };
 		39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */; };
 		39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */; };
 		39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
@@ -82,7 +84,7 @@
 		39FAFC4124E71A6C008BBC2D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23241E16C04A000E969D /* MapViewController.swift */; };
 		39FAFC4224E71A6C008BBC2D /* DemoPopupContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 399748711D5652250079492B /* DemoPopupContentViewController.m */; };
 		39FAFC4324E71A6C008BBC2D /* DemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3988E3571B59C3000039C09B /* DemoViewController.m */; };
-		39FAFC4424E71A6C008BBC2D /* PortraitTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A251B759721004D2DA9 /* PortraitTabBarController.swift */; };
+		39FAFC4424E71A6C008BBC2D /* MusicTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39837A251B759721004D2DA9 /* MusicTabBarController.swift */; };
 		39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39631FAC230DA03E0059D119 /* SceneDelegate.m */; };
 		39FAFC4624E71A6C008BBC2D /* MusicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397C56291B753A45007A67F0 /* MusicCell.swift */; };
 		39FAFC4824E71A6C008BBC2D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DDA0AD230D5F63007DCCD8 /* MapKit.framework */; };
@@ -153,7 +155,6 @@
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
 		394E1AA5276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupDemoContextMenuInteraction.h; sourceTree = "<group>"; };
 		394E1AA6276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupDemoContextMenuInteraction.m; sourceTree = "<group>"; };
-		3951F7D62E884EC3009FD602 /* RevealServer.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:2V82U7HN27:Itty Bitty Labs Pty Ltd"; lastKnownFileType = wrapper.xcframework; name = RevealServer.xcframework; path = "../../../../Library/Application Support/Reveal/RevealServer/RevealServer.xcframework"; sourceTree = "<group>"; };
 		39631FAB230DA03D0059D119 /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		39631FAC230DA03E0059D119 /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
 		39756325254ED9EB0066981E /* DemoGallery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoGallery.h; sourceTree = "<group>"; };
@@ -163,7 +164,7 @@
 		39837A1F1B756F1A004D2DA9 /* RandomColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RandomColors.m; sourceTree = "<group>"; };
 		39837A211B756F4C004D2DA9 /* RandomColors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RandomColors.h; sourceTree = "<group>"; };
 		39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoMusicPlayerController.swift; sourceTree = "<group>"; };
-		39837A251B759721004D2DA9 /* PortraitTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortraitTabBarController.swift; sourceTree = "<group>"; };
+		39837A251B759721004D2DA9 /* MusicTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicTabBarController.swift; sourceTree = "<group>"; };
 		3985DE5E2549539B00CD76EE /* IntroWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntroWebViewController.h; sourceTree = "<group>"; };
 		3985DE5F2549539B00CD76EE /* IntroWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IntroWebViewController.m; sourceTree = "<group>"; };
 		3987A4C12E86E42D0090E273 /* DemoMusicSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoMusicSearchController.swift; sourceTree = "<group>"; };
@@ -192,6 +193,7 @@
 		39DDA0AD230D5F63007DCCD8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		39F031AF2E8FC0DD0079F2FD /* CustomContainer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CustomContainer.storyboard; sourceTree = "<group>"; };
 		39F031B22E8FC2770079F2FD /* CustomContainerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomContainerController.swift; sourceTree = "<group>"; };
+		39F5ACD42EA583F2002EF1E6 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		39FAFC5724E71A6C008BBC2D /* LNPopupControllerExampleNoPopup.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExampleNoPopup.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39FAFC5824E71A6C008BBC2D /* LNPopupControllerExampleNoPopup-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LNPopupControllerExampleNoPopup-Info.plist"; path = "../LNPopupControllerExampleNoPopup-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -338,12 +340,13 @@
 		397C560C1B74D747007A67F0 /* Demo - Music Scene (Swift) */ = {
 			isa = PBXGroup;
 			children = (
+				39F5ACD42EA583F2002EF1E6 /* PlayerView.swift */,
 				39B0DFF52B1819EF008CCF36 /* Music.storyboard */,
 				397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */,
 				39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */,
 				3987A4C12E86E42D0090E273 /* DemoMusicSearchController.swift */,
 				397C56291B753A45007A67F0 /* MusicCell.swift */,
-				39837A251B759721004D2DA9 /* PortraitTabBarController.swift */,
+				39837A251B759721004D2DA9 /* MusicTabBarController.swift */,
 			);
 			name = "Demo - Music Scene (Swift)";
 			path = MusicScene;
@@ -381,7 +384,6 @@
 		39DDA0AC230D5F63007DCCD8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3951F7D62E884EC3009FD602 /* RevealServer.xcframework */,
 				39DDA0AD230D5F63007DCCD8 /* MapKit.framework */,
 			);
 			name = Frameworks;
@@ -553,6 +555,7 @@
 				39F031B42E8FC2770079F2FD /* CustomContainerController.swift in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
 				39B645F02CA61B0200AB038B /* ScrollingMapViewController.swift in Sources */,
+				39F5ACD52EA583F8002EF1E6 /* PlayerView.swift in Sources */,
 				394E1AA7276C014900C5BE31 /* LNPopupDemoContextMenuInteraction.m in Sources */,
 				39277A091B58228000293F95 /* main.m in Sources */,
 				39D6C8BB2B2D02B500F53E70 /* SettingKeys.m in Sources */,
@@ -567,7 +570,7 @@
 				399748721D5652250079492B /* DemoPopupContentViewController.m in Sources */,
 				3988E3581B59C3000039C09B /* DemoViewController.m in Sources */,
 				39C4026E2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift in Sources */,
-				39837A261B759721004D2DA9 /* PortraitTabBarController.swift in Sources */,
+				39837A261B759721004D2DA9 /* MusicTabBarController.swift in Sources */,
 				39631FAD230DA03E0059D119 /* SceneDelegate.m in Sources */,
 				397C562A1B753A45007A67F0 /* MusicCell.swift in Sources */,
 			);
@@ -597,7 +600,8 @@
 				39FAFC4324E71A6C008BBC2D /* DemoViewController.m in Sources */,
 				39D6C8BC2B2D02B500F53E70 /* SettingKeys.m in Sources */,
 				39B645EE2CA5AA1300AB038B /* PageCardViewController.swift in Sources */,
-				39FAFC4424E71A6C008BBC2D /* PortraitTabBarController.swift in Sources */,
+				39FAFC4424E71A6C008BBC2D /* MusicTabBarController.swift in Sources */,
+				39F5ACD62EA583F8002EF1E6 /* PlayerView.swift in Sources */,
 				39B645F12CA61B0200AB038B /* ScrollingMapViewController.swift in Sources */,
 				39988C772AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */,
@@ -784,6 +788,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
+				DOCC_EXTRACT_OBJC_INFO_FOR_SWIFT_SYMBOLS = YES;
+				DOCC_EXTRACT_SWIFT_INFO_FOR_OBJC_SYMBOLS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"LNPOPUP=1",
 					"DEBUG=1",
@@ -800,6 +806,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RUN_DOCUMENTATION_COMPILER = YES;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/Supporting/LNPopupControllerExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -821,6 +828,8 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = S9QFG2VH2E;
+				DOCC_EXTRACT_OBJC_INFO_FOR_SWIFT_SYMBOLS = YES;
+				DOCC_EXTRACT_SWIFT_INFO_FOR_OBJC_SYMBOLS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "LNPOPUP=1";
 				INFOPLIST_FILE = LNPopupControllerExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -834,6 +843,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				RUN_DOCUMENTATION_COMPILER = YES;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "LNPopupControllerExample/Supporting/LNPopupControllerExample-Bridging-Header.h";

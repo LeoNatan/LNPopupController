@@ -198,7 +198,7 @@
                             </tableViewSection>
                             <tableViewSection headerTitle="Demo App" footerTitle="Presents a rudimentary recreation of a music app." id="Gta-F3-Ame">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="music" textLabel="KHO-fT-c7X" style="IBUITableViewCellStyleDefault" id="Eee-L9-s2S">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="music" textLabel="KHO-fT-c7X" style="IBUITableViewCellStyleDefault" id="Eee-L9-s2S" customClass="OS18GalleryCell">
                                         <rect key="frame" x="20" y="538.66666221618652" width="353" height="51"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Eee-L9-s2S" id="oWC-62-YfI">
@@ -304,7 +304,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="always" id="JYD-6c-4Kf">
-                        <barButtonItem key="rightBarButtonItem" title="Settings" image="gears" style="plain" id="PjS-ok-m0Q">
+                        <barButtonItem key="rightBarButtonItem" title="Settings" image="gears" id="PjS-ok-m0Q">
                             <connections>
                                 <segue destination="Rxt-Jt-GTT" kind="presentation" identifier="Settings" modalPresentationStyle="formSheet" id="hNg-w3-Zdw"/>
                             </connections>
@@ -503,7 +503,7 @@
                 <viewControllerPlaceholder storyboardName="Music" id="Edz-3n-arZ" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LzQ-ua-Rsf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-541" y="-918"/>
+            <point key="canvasLocation" x="-583" y="-919"/>
         </scene>
         <!--FirstViewController-->
         <scene sceneID="43s-6c-3hg">
@@ -629,7 +629,7 @@
                 <viewControllerPlaceholder storyboardName="CustomContainer" id="dSO-ot-Xul" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cqu-zw-pw4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1950" y="-2292"/>
+            <point key="canvasLocation" x="-1042" y="-2245"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="fHL-ZM-8LF">

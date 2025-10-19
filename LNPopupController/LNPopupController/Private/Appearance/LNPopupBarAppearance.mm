@@ -457,6 +457,16 @@ static NSArray* __notifiedProperties = nil;
 	[self _notify];
 }
 
+- (UIBarButtonItemAppearance *)doneButtonAppearance
+{
+	return self.prominentButtonAppearance;
+}
+
+- (void)setDoneButtonAppearance:(UIBarButtonItemAppearance *)doneButtonAppearance
+{
+	self.prominentButtonAppearance = doneButtonAppearance;
+}
+
 @end
 
 @implementation _LNPopupDominantColorTrait

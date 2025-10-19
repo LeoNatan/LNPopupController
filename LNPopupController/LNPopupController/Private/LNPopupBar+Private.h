@@ -47,6 +47,10 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 - (void)_popupBar:(LNPopupBar*)bar updateCustomBarController:(LNPopupCustomBarViewController*)customController cleanup:(BOOL)cleanup;
 - (void)_removeInteractionGestureForPopupBar:(LNPopupBar*)bar;
 
+- (void)_popupBar:(LNPopupBar*)bar setUserPopupItem:(LNPopupItem*)newItem;
+- (void)_popupBar:(LNPopupBar*)bar setPagedPopupItem:(LNPopupItem*)newItem;
+- (void)_generatePagingFeedbackForPopupBar:(LNPopupBar*)bar;
+
 @end
 
 @protocol _LNPopupBarSupport <NSObject>
@@ -61,6 +65,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, assign, getter=isShiny) BOOL shiny;
 
 @end
+
+@class _LNPopupToolbar;
 
 @interface LNPopupBar () <UIPointerInteractionDelegate, _LNPopupBarAppearanceDelegate>
 
@@ -82,10 +88,12 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 - (void)_setNeedsRecalcActiveAppearanceChain;
 
+@property (nonatomic, strong) _LNPopupToolbar* toolbar;
+
 @property (nonatomic, strong) UIImageView* shadowView;
 @property (nonatomic, strong) UIImageView* bottomShadowView;
 
-@property (nonatomic, weak, readwrite) LNPopupItem* popupItem;
+- (void)_setPopupItem:(LNPopupItem*)popupItem;
 
 @property (nonatomic, weak) __kindof UIViewController* barContainingController;
 @property (nonatomic, weak) id<_LNPopupBarDelegate> _barDelegate;
@@ -183,6 +191,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @interface _LNPopupToolbar : UIToolbar
 
 @property (nonatomic, weak) id<_LNPopupToolbarLayoutDelegate> _layoutDelegate;
+
+- (void)forceLayoutOnButtons;
 
 @end
 

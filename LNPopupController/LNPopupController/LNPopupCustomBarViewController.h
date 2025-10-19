@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_UI_ACTOR
 /// An object that manages a custom popup bar view hierarchy.
-///
-/// Implement the `UIPointerInteractionDelegate` methods to customize pointer interactions.
 @interface LNPopupCustomBarViewController : UIViewController <UIPointerInteractionDelegate>
 
 /// The containing popup bar. (read-only)
@@ -45,8 +43,11 @@ NS_SWIFT_UI_ACTOR
 /// Called after the view has been loaded. For view controllers created in code, this is after `loadView()`. For view controllers unarchived from a nib, this is after the view is set.
 - (void)viewDidLoad NS_REQUIRES_SUPER;
 
-/// Called by the framework to notify the popup bar content view controller that one or more keys of the the popup item have been updated, or the entire popup item has changed.
+/// Called by the framework to notify the popup bar content view controller that one or more keys of the the popup item have been updated. If the controller does not implement `popupItemDidChange(_:)`, this method is also called when the entire popup item changes.
 - (void)popupItemDidUpdate;
+
+/// Called by the framework when the popup bar's popup item changes. For changes to specific fields of popup item, implement ``popupItemDidUpdate()``.
+- (void)popupItemDidChange:(LNPopupItem*)previousPopupItem;
 
 /// Called by the framework no notify the popup bar content view controller that the custom bar is about to move to a popup bar.
 ///

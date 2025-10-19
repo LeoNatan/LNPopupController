@@ -242,6 +242,18 @@ static void __setupFunction(void)
 	return nil;
 }
 
+- (void)forceLayoutOnButtons
+{
+	static NSString* viewKey = LNPopupHiddenString("view");
+	
+	for(UIBarButtonItem* button in self.items)
+	{
+		UIView* view = [button valueForKey:viewKey];
+		[view setNeedsLayout];
+		[view layoutIfNeeded];
+	}
+}
+
 @end
 
 @implementation LNNonMarqueeLabel
@@ -282,7 +294,9 @@ static void __setupFunction(void)
 	if(running)
 	{
 		[self triggerScrollStart];
-	} else {
+	}
+	else
+	{
 		[self shutdownLabel];
 	}
 }

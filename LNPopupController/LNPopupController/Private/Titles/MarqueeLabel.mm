@@ -304,17 +304,27 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
     [self updateSublabel];
 }
 
+- (void)shutdownOnNilWindow
+{
+	if (!self.window)
+	{
+		return;
+	}
+	
+	[self shutdownLabel];
+}
+
 - (void)willMoveToWindow:(UIWindow *)newWindow {
     if (!newWindow) {
-        [self shutdownLabel];
+		[NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(shutdownOnNilWindow) userInfo:nil repeats:NO];
     }
 }
 
 - (void)didMoveToWindow {
-    if (!self.window) {
-        [self shutdownLabel];
-    } else {
-        [self updateSublabel];
+    if (self.window) {
+		if(!self.awayFromHome) {
+			[self updateSublabel];
+		}
     }
 }
 

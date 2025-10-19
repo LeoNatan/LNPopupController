@@ -75,12 +75,16 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_UI_ACTOR
 @interface LNPopupCloseButton : UIButton <UIAppearanceContainer>
 
-/// Gets or sets the style of the popup close button. Has the same effect as setting the `LNPopupContentView.popupCloseButtonStyle` property of the popup content view.
+/// Gets or sets the style of the popup close button. Has the same effect as setting the ``LNPopupContentView/popupCloseButtonStyle`` property of the popup content view.
+///
+/// Defaults to ``LNPopupCloseButton/Style/default``.
 @property (nonatomic, assign) LNPopupCloseButtonStyle style UI_APPEARANCE_SELECTOR;
 
-/// Gets or sets the positioning of the popup close button. Has the same effect as setting the `LNPopupContentView.popupCloseButtonPositioning` property of the popup content view.
+/// Gets or sets the positioning of the popup close button. Has the same effect as setting the ``LNPopupContentView/popupCloseButtonPositioning`` property of the popup content view.
 ///
 /// The value of this property only has effect if the system positions the popup close button.
+///
+/// Defaults to ``LNPopupCloseButton/Style/default``.
 @property (nonatomic, assign) LNPopupCloseButtonPositioning positioning UI_APPEARANCE_SELECTOR;
 
 /// The effective popup close button style used by the system. (read-only)
@@ -95,7 +99,7 @@ NS_SWIFT_UI_ACTOR
 
 /// The button’s background view. (read-only)
 ///
-/// The value of this property will be `nil` if `style` is set to any value other than `LNPopupCloseButtonStyleRound`.
+/// The value of this property will be `nil` if `style` is set to any value other than ``LNPopupCloseButton/Style/round``.
 ///
 /// Although this property is read-only, its own properties are read/write. Use these properties to configure the appearance and behavior of the button’s background view.
 @property (nonatomic, strong, readonly) UIVisualEffectView* backgroundView;

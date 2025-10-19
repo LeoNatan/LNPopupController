@@ -28,7 +28,10 @@ NSArray* __LNPopupItemObservedKeys;
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		__LNPopupItemObservedKeys = [LNPopupGetPropertyNames(self, nil, NO) arrayByAddingObjectsFromArray:@[@"accessibilityHint", @"accessibilityLabel"]];
+		NSMutableArray* keys = [LNPopupGetPropertyNames(self, nil, NO) mutableCopy];
+		[keys addObjectsFromArray:@[@"accessibilityHint", @"accessibilityLabel"]];
+		[keys removeObjectsInArray:@[@"leftBarButtonItems", @"rightBarButtonItems"]];
+		__LNPopupItemObservedKeys = keys;
 	});
 }
 
@@ -38,6 +41,7 @@ NSArray* __LNPopupItemObservedKeys;
 	
 	if(self)
 	{
+		_identifier = NSUUID.UUID.UUIDString;
 		[__LNPopupItemObservedKeys enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 			[self addObserver:self forKeyPath:obj options:NSKeyValueObservingOptionNew context:_LNPopupItemObservationContext];
 		}];
@@ -68,7 +72,7 @@ NSArray* __LNPopupItemObservedKeys;
 
 - (NSString *)title
 {
-	if(_title == nil && _subtitle == nil)
+	if(_title == nil && _subtitle == nil && _attributedTitle == nil && _attributedSubtitle == nil)
 	{
 		return self._containerController.title;
 	}
@@ -104,7 +108,7 @@ NSArray* __LNPopupItemObservedKeys;
 		return;
 	}
 	
-	_title = nil;
+	_title = [attributedTitle.string copy];
 	_attributedTitle = [attributedTitle copy];
 	
 	if(self.swiftuiTitleContentView != nil)
@@ -141,7 +145,7 @@ NSArray* __LNPopupItemObservedKeys;
 		return;
 	}
 	
-	_subtitle = nil;
+	_subtitle = [attributedSubtitle.string copy];
 	_attributedSubtitle = [attributedSubtitle copy];
 	
 	if(self.swiftuiTitleContentView != nil)
@@ -193,12 +197,18 @@ NSArray* __LNPopupItemObservedKeys;
 
 - (NSArray<UIBarButtonItem *> *)barButtonItems
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	return self.trailingBarButtonItems;
+#pragma clang diagnostic pop
 }
 
 - (void)setBarButtonItems:(NSArray<UIBarButtonItem *> *)barButtonItems
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 	self.trailingBarButtonItems = barButtonItems;
+#pragma clang diagnostic pop
 }
 
 - (void)setBarButtonItems:(NSArray<UIBarButtonItem *> *)barButtonItems animated:(BOOL)animated
@@ -226,6 +236,11 @@ NSArray* __LNPopupItemObservedKeys;
 	[self setTrailingBarButtonItems:trailingBarButtonItems];
 	
 	[LNPopupBar setAnimatesItemSetter:NO];
+}
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@: %p title: “%@” subtitle: “%@” image: %@", NSStringFromClass(self.class), self, self.title, self.subtitle, self.image];
 }
 
 @end

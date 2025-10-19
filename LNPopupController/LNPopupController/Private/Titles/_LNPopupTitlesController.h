@@ -9,12 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @class LNPopupBar;
+@class LNPopupItem;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupTitlesController : UIViewController
 
 - (instancetype)initWithPopupBar:(LNPopupBar*)popupBar;
+- (instancetype)initWithPopupBar:(LNPopupBar*)popupBar popupItem:(nullable LNPopupItem*)popupItem;
 
 @property (nonatomic) CGFloat spacing;
 

@@ -23,4 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface UIImage ()
+
++ (instancetype)_systemImageNamed:(NSString*)name;
++ (instancetype)_systemImageNamed:(NSString*)name withConfiguration:(nullable UIImageConfiguration *)configuration allowPrivate:(BOOL)allowPrivate;
+
+@end
+
 NS_ASSUME_NONNULL_END

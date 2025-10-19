@@ -270,6 +270,19 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	return rv;
 }
 
+- (void)setPopupItem:(LNPopupItem *)popupItem
+{
+	LNPopupItem* previousItem = objc_getAssociatedObject(self, _LNPopupItemKey);
+	
+	objc_setAssociatedObject(self, _LNPopupItemKey, popupItem, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	[popupItem _setContainerController:self];
+	
+	if([self respondsToSelector:@selector(popupItemDidChange:)])
+	{
+		[self popupItemDidChange:previousItem];
+	}
+}
+
 - (BOOL)positionPopupCloseButton:(LNPopupCloseButton*)popupCloseButton
 {
 	return NO;
@@ -297,7 +310,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (LNPopupBar *)popupBar
 {
-	return self._ln_popupController.popupBarStorage;
+	return self._ln_popupController.popupBar;
 }
 
 - (LNPopupContentView *)popupContentView

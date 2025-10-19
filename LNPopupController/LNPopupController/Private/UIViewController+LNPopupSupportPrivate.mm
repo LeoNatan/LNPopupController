@@ -13,6 +13,7 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "UITabBar+LNPopupMinimizationSupport.h"
 #import "UIToolbar+LNPopupMinimizationSupport.h"
+#import "_LNPopupTitlesPagingController.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>

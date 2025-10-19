@@ -49,8 +49,8 @@ typedef NS_ENUM(NSInteger, LNPopupPresentationState){
 	/// The popup is open and the content controller's view is displayed.
 	LNPopupPresentationStateOpen = 3,
 	
-	LNPopupPresentationStateHidden LN_UNAVAILABLE_API("Use LNPopupPresentationStateBarHidden instead.") = LNPopupPresentationStateBarHidden,
-	LNPopupPresentationStateClosed LN_UNAVAILABLE_API("Use LNPopupPresentationStateBarPresented instead.") = LNPopupPresentationStateBarPresented,
+	LNPopupPresentationStateHidden LN_UNAVAILABLE_API("Use PopupPresentationState.barHidden instead.") = LNPopupPresentationStateBarHidden,
+	LNPopupPresentationStateClosed LN_UNAVAILABLE_API("Use PopupPresentationState.barPresented instead.") = LNPopupPresentationStateBarPresented,
 	LNPopupPresentationStateTransitioning LN_UNAVAILABLE_API("Should no longer be used.") = 2,
 } NS_SWIFT_NAME(UIViewController.PopupPresentationState);
 
@@ -101,13 +101,14 @@ NS_SWIFT_UI_ACTOR
 /// Popup presentation support for ``UIViewController`` subclasses.
 @interface UIViewController (LNPopupPresentation)
 
-/// Presents an interactive popup bar in the receiver's view hierarchy. The popup bar is attached to the receiver's docking view.
+/// Presents an interactive popup bar in the receiver's view hierarchy.
 ///
-/// You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
+/// You may call this method multiple times with different content controllers, triggering replacement to the popup content view and update to the popup bar, if the popup is open or the bar presented, respectively.
 ///
 /// The provided controller is retained by the system and will be released once a different controller is presented or when the popup bar is dismissed.
 ///
-/// See `UIViewController.bottomDockingViewForPopupBar` for more information on the bottom docking view..
+/// The popup bar is attached to the receiver's docking view. See ``UIViewController/bottomDockingViewForPopupBar`` for more information on the bottom docking view.
+///
 /// - Parameters:
 ///   - controller: The controller for popup presentation.
 ///   - animated: Pass `true` to animate the presentation; otherwise, pass `false`.
@@ -115,11 +116,14 @@ NS_SWIFT_UI_ACTOR
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller animated:(BOOL)animated completion:(nullable void(^)(void))completion NS_REFINED_FOR_SWIFT NS_SWIFT_DISABLE_ASYNC;
 
 
-/// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation. The popup bar is attached to the receiver's docking view.
+/// Presents an interactive popup bar in the receiver's view hierarchy and optionally opens the popup in the same animation.
 ///
-/// You may call this method multiple times with different controllers, triggering replacement to the popup content view and update to the popup bar, if popup is open or bar presented, respectively.
+/// You may call this method multiple times with different content controllers, triggering replacement to the popup content view and update to the popup bar, if the popup is open or the bar presented, respectively.
 ///
 /// The provided controller is retained by the system and will be released once a different controller is presented or when the popup bar is dismissed.
+///
+/// The popup bar is attached to the receiver's docking view. See ``UIViewController/bottomDockingViewForPopupBar`` for more information on the bottom docking view.
+///
 /// - Parameters:
 ///   - controller: The controller for popup presentation.
 ///   - openPopup: Pass `true` to open the popup in the same animation; otherwise, pass `false`.
@@ -153,8 +157,9 @@ NS_SWIFT_UI_ACTOR
 /// Use this property's value to determine, at runtime, what interaction style the system has chosen to use.
 @property (nonatomic, assign, readonly) LNPopupInteractionStyle effectivePopupInteractionStyle NS_REFINED_FOR_SWIFT;
 
-
 /// The percent of the container controller's view height to drag before closing the popup.
+///
+/// Only has effect when the popup's interaction style is ``UIKit/UIViewController/PopupInteractionStyle/snap``.
 @property (nonatomic, assign) double popupSnapPercent NS_REFINED_FOR_SWIFT;
 
 
@@ -173,9 +178,9 @@ NS_SWIFT_UI_ACTOR
 
 /// Call this method to update the popup bar appearance (background effect, tint color, etc.) according to its docking view. You should call this after updating the docking view.
 ///
-/// If the popup bar's ``inheritsAppearanceFromDockingView`` property is set to `false`, or a custom popup bar view controller is used, this method has no effect.
+/// If the popup bar's ``LNPopupBar/inheritsAppearanceFromDockingView`` property is set to `false`, or a custom popup bar view controller is used, this method has no effect.
 ///
-/// See `LNPopupBar.inheritsAppearanceFromDockingView` and `LNPopupBar.customBarViewController` for more information.
+/// See ``LNPopupBar/inheritsAppearanceFromDockingView`` and ``LNPopupBar/customBarViewController`` for more information.
 - (void)setNeedsPopupBarAppearanceUpdate;
 
 /// The popup content container view. (read-only)
@@ -189,54 +194,13 @@ NS_SWIFT_UI_ACTOR
 /// The delegate that handles popup presentation-related messages.
 @property (nonatomic, weak) id<LNPopupPresentationDelegate> popupPresentationDelegate;
 
-/// The content view controller of the receiver. If there is no popup presentation, the property will be `nil`. (read-only)
+/// The content view controller of the receiver. If there is no popup presentation, the value of this property will be `nil`. (read-only)
 @property (nullable, nonatomic, strong, readonly) __kindof UIViewController* popupContentViewController;
 
 /// Controls whether interaction with the popup generates haptic feedback to the user.
 ///
 /// Defaults to `true`.
 @property (nonatomic, assign) BOOL allowPopupHapticFeedbackGeneration;
-
-@end
-
-/// Popup presentation containment support in custom container view controller subclasses.
-@interface UIViewController (LNPopupCustomContainer)
-
-/// Return a view to dock the popup bar above, or `nil` to place the popup bar at the bottom of the view.
-///
-/// If your custom container controller supports hiding the bottom docking view, always return your docking view here, and return `true` or `false` in `isBottomDockingViewForPopupBarHidden`. To trigger a hide or show transition, trigger a layout pass for your container controller's view to position the popup bar correctly.
-@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopupBar;
-
-/// Return the default frame of the bottom docking view, used to position the popup bar when it is presented. If `bottomDockingViewForPopupBar` returns `nil` or `isBottomDockingViewForPopupBarHidden` returns `true`, this method is not called, and a default positioning is used.
-///
-/// If the frame should be updated, trigger a layout pass for your container controller's view to position the popup bar correctly.
-@property (nonatomic, assign, readonly) CGRect defaultFrameForBottomDockingView;
-
-/// Returns whether the bottom docking view for your custom container is hidden or not.
-///
-/// To trigger a hide or show transition, trigger a layout pass for your container controller's view to position the popup bar correctly.
-@property (nonatomic, assign, readonly, getter=isBottomDockingViewForPopupBarHidden) BOOL bottomDockingViewForPopupBarHidden;
-
-/// Return the margin between the popup bar and the bottom docking view.
-///
-/// Defaults to `0`.
-@property (nonatomic, assign, readonly) CGFloat bottomDockingViewMarginForPopupBar;
-
-/// Controls whether the framework manages the safe area of the container controller indirectly.
-///
-/// By default, the framework modifies the container controller's safe area insets directly, which in turn updates children. In some cases, such as when the container controller uses the safe area to position the bottom docking view (for example, a custom tab bar), it would be undesirable to modify the container controller's safe area insets directly. Instead, when this property returns `true`, the framework updates the container's children's safe areas instead.
-///
-/// If you have a very complex hierarchy of container controllers, you can set this property for your inner containers and it will be respected.
-///
-/// Defaults to `true` for `UITabBarController` and `UINavigationController` subclasses; `false` otherwise.
-@property (nonatomic, assign, readonly) BOOL requiresIndirectSafeAreaManagement;
-
-/// Controls whether the popup bar should fade out during its dismissal animation.
-///
-/// By default, this property's value is `true` if the popup bar is extended (see `UIViewController.shouldExtendPopupBarUnderSafeArea`) and the extension is visible, or if the bottom bar (toolbar or tab bar) is about to transition to its scroll edge appearance, and the scroll edge appearance has a transparent background.
-///
-/// - Note: Starting with iOS 26.0, this property is only supported for custom bars.
-@property (nonatomic, assign, readonly) BOOL shouldFadePopupBarOnDismiss;
 
 @end
 
@@ -261,10 +225,23 @@ NS_SWIFT_UI_ACTOR
 
 /// The popup item used to represent the view controller in a popup presentation. (read-only)
 ///
-/// This is a unique instance of ``LNPopupItem``, created to represent the view controller when it is presented in a popup. The ``LNPopupItem`` object is created the first time the property is accessed. Therefore, you should not access this property if you are not using popup presentation to display the view controller. To ensure the popup item is configured, you can either override this property and add code to create the bar button items when first accessed or create the items in your view controller's initialization code.
+///	The behavior of this property depends on the value of the presenting popup bar's ``LNPopupBar/usesContentControllersAsDataSource``.
 ///
-/// The default behavior is to create a popup item that displays the view controller's title.
+/// When **`true`**, this property returns unique instance of ``LNPopupItem``, created to represent the view controller when it is presented in a popup. The `LNPopupItem` object is created the first time the property is accessed. Therefore, you should not access this property if you are not using popup presentation to display the view controller. ``UIKit/UIViewController/popupItemDidChange(_:)`` will never be called in mode.
+///
+/// When **`false`**, this property reflects the currently displayed popup item in the presenting popup bar. If the popup item changes, ``UIKit/UIViewController/popupItemDidChange(_:)`` is called to notify the content controller of the change.
+///
+///	See ``LNPopupBar/usesContentControllersAsDataSource`` for more information.
+///
+/// Changes to popup item properties are observed and the UI is automatically updated.
 @property (nonatomic, retain, readonly) LNPopupItem* popupItem;
+
+/// Called by the framework when the presenting popup bar's popup item has changed.
+///
+/// Will only be called by the system when the presenting popup bar's ``LNPopupBar/usesContentControllersAsDataSource`` is set to `false`.
+///
+///	See ``LNPopupBar/usesContentControllersAsDataSource`` for more information.
+- (void)popupItemDidChange:(nullable LNPopupItem*)previousPopupItem;
 
 /// Return the view to which the popup interaction gesture recognizer should be added to.
 ///
@@ -311,6 +288,47 @@ NS_SWIFT_UI_ACTOR
 @end
 
 @interface LNPopupImageView (TransitionSupport) <LNPopupTransitionView> @end
+
+/// Popup presentation containment support in custom container view controller subclasses.
+@interface UIViewController (LNPopupCustomContainer)
+
+/// Return a view to dock the popup bar above, or `nil` to place the popup bar at the bottom of the view.
+///
+/// If your custom container controller supports hiding the bottom docking view, always return your docking view here, and return `true` or `false` from ``UIKit/UIViewController/isBottomDockingViewForPopupBarHidden``. To trigger a hide or show transition, trigger a layout pass for your container controller's view in the same animation block to position the popup bar correctly.
+@property (nullable, nonatomic, strong, readonly) __kindof UIView* bottomDockingViewForPopupBar;
+
+/// Return the default frame of the bottom docking view, used to position the popup bar when it is presented. If ``UIKit/UIViewController/bottomDockingViewForPopupBar`` returns `nil` or ``UIKit/UIViewController/isBottomDockingViewForPopupBarHidden`` returns `true`, this method is not called, and a default positioning is used.
+///
+/// If the frame should be updated, trigger a layout pass for your container controller's view to position the popup bar correctly.
+@property (nonatomic, assign, readonly) CGRect defaultFrameForBottomDockingView;
+
+/// Returns whether the bottom docking view for your custom container is hidden or not.
+///
+/// To trigger a hide or show transition, trigger a layout pass for your container controller's view in the same animation block to position the popup bar correctly.
+@property (nonatomic, assign, readonly, getter=isBottomDockingViewForPopupBarHidden) BOOL bottomDockingViewForPopupBarHidden;
+
+/// Return the margin between the popup bar and the bottom docking view.
+///
+/// Defaults to `0`.
+@property (nonatomic, assign, readonly) CGFloat bottomDockingViewMarginForPopupBar;
+
+/// Controls whether the framework manages the safe area of the container controller indirectly.
+///
+/// By default, the framework modifies the container controller's safe area insets directly, which in turn updates children. In some cases, such as when the container controller uses the safe area to position the bottom docking view (for example, a custom tab bar), it would be undesirable to modify the container controller's safe area insets directly. Instead, when this property returns `true`, the framework updates the container's children's safe areas instead.
+///
+/// If you have a very complex hierarchy of container controllers, you can set this property for your inner containers and it will be respected.
+///
+/// Defaults to `true` for `UITabBarController`, `UINavigationController` and `UISplitViewController` subclasses; `false` otherwise.
+@property (nonatomic, assign, readonly) BOOL requiresIndirectSafeAreaManagement;
+
+/// Controls whether the popup bar should fade out during its dismissal animation.
+///
+/// By default, this property's value is `true` if the popup bar is extended (see `UIViewController.shouldExtendPopupBarUnderSafeArea`) and the extension is visible, or if the bottom bar (toolbar or tab bar) is about to transition to its scroll edge appearance, and the scroll edge appearance has a transparent background.
+///
+/// - Note: Starting with iOS 26.0, this property is only supported for custom bars.
+@property (nonatomic, assign, readonly) BOOL shouldFadePopupBarOnDismiss;
+
+@end
 
 @interface UIViewController (LNPopupCustomContainerDeprecated)
 

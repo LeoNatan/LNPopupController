@@ -110,14 +110,13 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	}
 }
 
-- (void)button:(UIBarButtonItem*)button
-{
-	NSLog(@"✓");
-}
-
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection animated:(BOOL)animated
 {
-	LNPopupItemSetStandardMusicControls(self.popupItem, animated, collection, self, @selector(button:));
+	UIAction* action = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
+		NSLog(@"✓");
+	}];
+	
+	LNPopupItemSetStandardMusicControls(self.popupItem, false, animated, collection, action, action, action);
 }
 
 - (BOOL)prefersStatusBarHidden

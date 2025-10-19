@@ -13,6 +13,9 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
+
 @implementation LNPopupCustomBarViewController
 
 @dynamic preferredContentSize;
@@ -106,7 +109,7 @@
 
 - (LNPopupItem *)popupItem
 {
-	return self.popupContentViewController.popupItem;
+	return self.containingPopupBar.popupItem;
 }
 
 - (LNPopupBar *)popupBar
@@ -216,3 +219,5 @@
 }
 
 @end
+
+#pragma clang diagnostic pop

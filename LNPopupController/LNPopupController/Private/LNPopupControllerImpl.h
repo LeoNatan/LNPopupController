@@ -23,9 +23,7 @@ CF_EXTERN_C_BEGIN
 
 @property (nonatomic, weak) UIView* bottomBar;
 
-@property (nonatomic, strong) LNPopupBar* popupBar;
-@property (nonatomic, strong, readonly) LNPopupBar* popupBarStorage;
-@property (nonatomic, strong, readonly) LNPopupBar* popupBarNoCreate;
+@property (nonatomic, strong, readonly) LNPopupBar* popupBar;
 @property (nonatomic, strong, readonly) LNPopupContentView* popupContentView;
 
 @property (nonatomic) LNPopupPresentationState popupControllerPublicState;
