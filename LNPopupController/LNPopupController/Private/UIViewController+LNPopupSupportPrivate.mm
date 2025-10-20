@@ -1976,7 +1976,14 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return [super _ln_popupOffsetForPopupBar:popupBar];
 	}
 	
-	return self._ln_isToolbarHiddenOrSwiftUIBuggyToolbar ? [super _ln_popupOffsetForPopupBar:popupBar] : LNPopupEnvironmentHasGlass() ? -8.0 : 0.0;
+	CGFloat glassToolbarOffset = -8.0;
+	if(@available(iOS 26.1, *))
+	{
+		//iOS 26.1 beta 3+, floatingBarContainerView.toolbarOverlayInset contains the 8pt margin, so no need to add it here.
+		glassToolbarOffset = 0.0;
+	}
+	
+	return self._ln_isToolbarHiddenOrSwiftUIBuggyToolbar ? [super _ln_popupOffsetForPopupBar:popupBar] : LNPopupEnvironmentHasGlass() ? glassToolbarOffset : 0.0;
 }
 
 - (CGRect)defaultFrameForBottomDockingView_internal

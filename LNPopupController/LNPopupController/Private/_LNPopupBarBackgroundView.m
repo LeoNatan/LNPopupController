@@ -77,7 +77,7 @@
 - (void)clearEffect
 {
 	//iOS 26.0 is retarded, and wont `nil` a glass effect, so set it to a blur first, then nil 🤦‍♂️
-	_effectView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleSystemMaterialLight];
+	_effectView.effect = [UIVisualEffect new];
 	_effectView.effect = nil;
 }
 

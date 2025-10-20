@@ -18,9 +18,11 @@
 	
 	if(popupBar.supportsMinimization && self.isToolbarHidden == NO && LNPopupEnvironmentHasGlass())
 	{
+		static CGFloat margin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 28 : 8;
+		
 		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
-		barInsets.leading = MAX(28 - (floatingLayoutMargins.leading - self.view.safeAreaInsets.left), 0);
-		barInsets.trailing = MAX(28 - (floatingLayoutMargins.trailing - self.view.safeAreaInsets.right), 0);
+		barInsets.leading = MAX(margin - (floatingLayoutMargins.leading - self.view.safeAreaInsets.left), 0);
+		barInsets.trailing = MAX(margin - (floatingLayoutMargins.trailing - self.view.safeAreaInsets.right), 0);
 	}
 	
 	return barInsets;

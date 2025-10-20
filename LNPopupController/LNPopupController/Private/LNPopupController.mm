@@ -2060,10 +2060,10 @@ id __LNPopupEmptyBlurFilter(void)
 				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
 				
 				CGFloat currentBarAlpha = self.popupBar.alpha;
-				if(animated)
+				if(!LNPopupEnvironmentHasGlass() && animated)
 				{
 					[UIView animateWithDuration:animationDuration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
-						if(_containerController.shouldFadePopupBarOnDismiss && !LNPopupEnvironmentHasGlass())
+						if(_containerController.shouldFadePopupBarOnDismiss)
 						{
 							self.popupBar.alpha = 0.0;
 						}
