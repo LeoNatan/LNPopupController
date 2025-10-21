@@ -8,6 +8,7 @@
 
 import UIKit
 
+#if LNPOPUP
 extension LNPopupItem {
 	var isEmptyPlaybackItem: Bool {
 		identifier == "noSong"
@@ -22,6 +23,7 @@ extension LNPopupItem {
 		return rv
 	}
 }
+#endif
 
 @available(iOS 17.0, *)
 class MusicTabBarController: UITabBarController {

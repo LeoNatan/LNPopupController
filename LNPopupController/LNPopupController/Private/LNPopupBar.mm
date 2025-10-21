@@ -1228,14 +1228,18 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
 	
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if(@available(iOS 26.0, *))
 	{
 		_toolbar.standardAppearance.prominentButtonAppearance = self.activeAppearance.prominentButtonAppearance ?: _toolbar.standardAppearance.prominentButtonAppearance;
 	}
 	else
 	{
+#endif
 		_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.prominentButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	}
+#endif
 	
 	if(!LNPopupEnvironmentHasGlass())
 	{
