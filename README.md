@@ -25,7 +25,7 @@ Generally, it is recommended to present the popup bar on the outermost container
 
 Check the demo project for many common use cases of the framework in various scenarios. It contains examples in Swift and Objective C.
 
-> [!NOTE]
+> [!TIP]
 > To run the example project, don't forget to update submodules by running: `git submodule update --init --recursive`
 
 ### Features
@@ -169,7 +169,7 @@ func popupBar(_ popupBar: LNPopupBar, didDisplay newPopupItem: LNPopupItem, prev
 }
 ```
 
-> [!NOTE]
+> [!TIP]
 > In this mode, carefully consider how you route data between the different components of your app. The framework provides as much information as possible to trigger updates in your content as a response to programatic and user changes to popup items.
 
 ### Popup Items
