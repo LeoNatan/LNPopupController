@@ -149,24 +149,24 @@
 		[self.popupCloseButton _setStyle:_popupCloseButtonStyle];
 		[self.popupCloseButton _setPositioning:_popupCloseButtonPositioning];
 		
-		if([_currentPopupContentViewController positionPopupCloseButton:self.popupCloseButton] == YES)
-		{
-			_popupCloseButtonTopConstraint.active = NO;
-			_popupCloseButtonLeadingConstraint.active = NO;
-			_popupCloseButtonTrailingConstraint.active = NO;
-			_popupCloseButtonCenterConstraint.active = NO;
-			return;
-		}
-		else
-		{
-			if(self.popupCloseButton.superview != self.contentView)
-			{
-				[self.contentView addSubview:self.popupCloseButton];
-			}
-		}
-		
 		if(self.effectivePopupCloseButtonStyle != LNPopupCloseButtonStyleNone)
 		{
+			if([_currentPopupContentViewController positionPopupCloseButton:self.popupCloseButton] == YES)
+			{
+				_popupCloseButtonTopConstraint.active = NO;
+				_popupCloseButtonLeadingConstraint.active = NO;
+				_popupCloseButtonTrailingConstraint.active = NO;
+				_popupCloseButtonCenterConstraint.active = NO;
+				return;
+			}
+			else
+			{
+				if(self.popupCloseButton.superview != self.contentView)
+				{
+					[self.contentView addSubview:self.popupCloseButton];
+				}
+			}
+			
 			self.popupCloseButton.translatesAutoresizingMaskIntoConstraints = NO;
 			
 			if(_popupCloseButtonTopConstraint == nil)
@@ -195,7 +195,7 @@
 		}
 		else
 		{
-			self.popupCloseButton.hidden = YES;
+			[self.popupCloseButton removeFromSuperview];
 		}
 	}];
 }

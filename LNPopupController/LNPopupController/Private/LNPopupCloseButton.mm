@@ -18,7 +18,7 @@
 BOOL _LNPopupCloseButtonStyleIsGlass(LNPopupCloseButtonStyle style)
 {
 	static const NSUInteger __LNPopupButtonGlassStyleMask = 0x100;
-	return (style & __LNPopupButtonGlassStyleMask) == __LNPopupButtonGlassStyleMask;
+	return (style != LNPopupCloseButtonStyleNone && (style & __LNPopupButtonGlassStyleMask) == __LNPopupButtonGlassStyleMask);
 }
 
 void _LNPopupResolveCloseButtonStyleAndPositioning(LNPopupCloseButtonStyle style, LNPopupCloseButtonPositioning positioning, LNPopupCloseButtonStyle* resolvedStyle, LNPopupCloseButtonPositioning* resolvedPositioning)
