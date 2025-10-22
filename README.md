@@ -63,7 +63,7 @@ import LNPopupController
 
 A popup presentation consists of the following concepts:
 
-- **Popup container controller** —the `UIViewController` that hosts the popup presentation. Normally this is the deepest tab bar or navigation controller, but can be any `UIViewController`, including a custom container with its own custom bottom bar.
+- **Popup container controller** —the `UIViewController` that hosts the popup presentation. Normally this is the outer-most tab bar or navigation controller, but can be any `UIViewController`, including a custom container with its own custom bottom bar.
 - **Popup content controller**—a `UIViewController` that represents the content, when the popup is open.
 - **Popup bar**—a bar, docked to the bottom of the container controller’s view, either above the container’s bottom bar or directly at the bottom of the screen, presenting at-a-glance information to the user and allows interaction by the user. Can be a default system popup bar style or a completely custom implementation.
 - **Popup items**—the source of data that is displayed on the popup bar at any given time.
