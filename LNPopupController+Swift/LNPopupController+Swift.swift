@@ -302,12 +302,13 @@ extension EnvironmentValues {
 	/// An ``LNPopupBar/Environment/unspecified`` value corresponds to an undefined placement.
 	var popupBarPlacement: LNPopupBar.Environment {
 		get {
-			guard #available(iOS 17.0, *) else {
-				return .unspecified
+			guard #available(iOS 26.0, *) else {
+				return .regular
 			}
 			
 			return self[LNPopupBar.Placement.self] }
-		set { guard #available(iOS 27.0, *) else { return }
+		set {
+			guard #available(iOS 26.0, *) else { return }
 			self[LNPopupBar.Placement.self] = newValue
 		}
 	}
