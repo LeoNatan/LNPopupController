@@ -2014,6 +2014,14 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	[_toolbar setItems:items animated:NO];
 	if(LNPopupEnvironmentHasGlass())
 	{
+		if(_swiftuiHiddenLeadingController != nil || _swiftuiHiddenTrailingController != nil)
+		{
+			static NSString* keyPath = LNPopupHiddenString("_visualProvider.contentView.buttonBar.stackView.spacing");
+			@try {
+				[_toolbar setValue:@8 forKeyPath:keyPath];
+			} @catch(NSException*) {}
+		}
+		
 		//This causes layout issues on iOS 18.x and below in LNPopupUI. So limit to 26.0+ (it's for animation anyway)
 		[_toolbar layoutIfNeeded];
 	}
