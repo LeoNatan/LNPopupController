@@ -2012,7 +2012,11 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}];
 	
 	[_toolbar setItems:items animated:NO];
-	[_toolbar layoutIfNeeded];
+	if(LNPopupEnvironmentHasGlass())
+	{
+		//This causes layout issues on iOS 18.x and below in LNPopupUI. So limit to 26.0+ (it's for animation anyway)
+		[_toolbar layoutIfNeeded];
+	}
 	
 	[self _setNeedsTitleLayoutByRemovingLabels:NO];
 }
