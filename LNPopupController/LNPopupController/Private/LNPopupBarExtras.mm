@@ -192,6 +192,19 @@ static void __setupFunction(void)
 {
 	UIView* rv = [super hitTest:point withEvent:event];
 	
+	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 18)
+	{
+		if(rv != nil && rv != self)
+		{
+			CGRect frameInBarCoords = [self convertRect:rv.bounds fromView:rv];
+			CGRect instetFrame = CGRectInset(frameInBarCoords, 2, 0);
+			
+			return CGRectContainsPoint(instetFrame, point) ? rv : self;
+		}
+		
+		return rv;
+	}
+	
 	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO && [NSStringFromClass(rv.class) containsString:@"BarItemView"] == NO)
 	{
 		rv = nil;
@@ -200,12 +213,29 @@ static void __setupFunction(void)
 	return rv;
 }
 
+- (void)setItemSpacing:(CGFloat)itemSpacing
+{
+	_itemSpacing = itemSpacing;
+	
+	[self setNeedsLayout];
+}
+
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
 	
 	//On iOS 11 and above reset the semantic content attribute to make sure it propagades to all subviews.
 	[self setSemanticContentAttribute:self.semanticContentAttribute];
+	
+	static NSString* stackViewKeyPath = LNPopupHiddenString("_visualProvider.contentView.buttonBar.stackView");
+	UIStackView* stackView = [self valueForKeyPath:stackViewKeyPath];
+	stackView.layoutMarginsRelativeArrangement = NO;
+	stackView.baselineRelativeArrangement = NO;
+	
+	static NSString* minimumInterItemSpaceKeyPath = LNPopupHiddenString("_visualProvider.contentView.buttonBar.minimumInterItemSpace");
+	@try {
+		[self setValue:@(_itemSpacing) forKeyPath:minimumInterItemSpaceKeyPath];
+	} @catch(NSException*) {}
 	
 	[self._layoutDelegate _toolbarDidLayoutSubviews];
 }

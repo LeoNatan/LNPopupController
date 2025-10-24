@@ -49,11 +49,23 @@ extension UIView {
 		}
 	}
 
-	@objc(_ln_animatedUsingSwiftUIWithDuration:animations:completion:)
+	@objc(_ln_animateUsingSwiftUIWithDuration:animations:completion:)
 	static private
 	func __animateUsingSwiftUI(duration: TimeInterval, changes: @escaping () -> Void, completion: (() -> Void)? = nil) {
 		if #available(iOS 18.0, *) {
 			UIView.animate(.spring(.snappy(duration: duration)), changes: changes, completion: completion)
+		} else {
+			UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 500, initialSpringVelocity: 0.0, animations: changes) { _ in
+				completion?()
+			}
+		}
+	}
+	
+	@objc(_ln_animateInteractiveUsingSwiftUIWithDuration:animations:completion:)
+	static private
+	func __animateInteractiveUsingSwiftUI(duration: TimeInterval, changes: @escaping () -> Void, completion: (() -> Void)? = nil) {
+		if #available(iOS 18.0, *) {
+			UIView.animate(.interactiveSpring(duration: duration), changes: changes, completion: completion)
 		} else {
 			UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 500, initialSpringVelocity: 0.0, animations: changes) { _ in
 				completion?()

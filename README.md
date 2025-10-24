@@ -382,11 +382,14 @@ To listen to bar environment changes in your popup content controller and update
 
 ```swift
 registerForTraitChanges([LNPopupBar.EnvironmentTrait.self]) { (self: Self, previousTraitCollection) in
-    popupItem.barButtonItems = self.traitCollection.popUpBarEnvironment == .inline ? /* inline bar */ : /* regular bar */
+    self.popupItem.barButtonItems?.last?.isHidden = self.traitCollection.popupBarEnvironment == .inline
 }
 ```
 
 You can also handle changes in `traitCollectionDidChange(_:)`.
+
+> [!TIP]
+> When handling environment trait changes, for optimal transition animation, it is preferred to set bar button items as visible/hidden instead of adding and removing button objects.
 
 Popup bar minimization is enabled by default, and is supported for system and custom popup bars, with the exception of custom bars with `LNPopupBar.customBarWantsFullBarWidth = true`. To disable popup bar minimization, set `LNPopupBar.supportsMinimization` to `false`.
 

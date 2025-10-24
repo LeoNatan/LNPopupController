@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, getter=isMarqueePaused) BOOL marqueePaused;
 
-- (void)layoutTitlesRemovingLabels:(BOOL)remove;
+- (void)setNeedsTitleLayoutRemovingLabels:(BOOL)remove;
 - (void)updateAccessibility;
 
 @end

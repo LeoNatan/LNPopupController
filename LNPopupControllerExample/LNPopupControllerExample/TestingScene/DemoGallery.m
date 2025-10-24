@@ -28,6 +28,8 @@
 
 -(void)setEnabled:(BOOL)enabled
 {
+	_enabled = enabled;
+	
 	if(enabled)
 	{
 		self.textLabel.textColor = UIColor.labelColor;
@@ -118,6 +120,17 @@
 	}
 	
 	return YES;
+}
+
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	EnableableGalleryCell* cell = [tableView cellForRowAtIndexPath:indexPath];
+	if([cell isKindOfClass:EnableableGalleryCell.class] == NO)
+	{
+		return YES;
+	}
+	
+	return cell.isEnabled;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

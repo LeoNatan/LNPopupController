@@ -12,6 +12,7 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "NSAttributedString+LNPopupSupport.h"
 #import "_LNPopupSwizzlingUtils.h"
+#include "LNMath.h"
 
 @interface _LNPopupTitleLabelWrapper: UIView
 
@@ -23,14 +24,22 @@
 @end
 
 @implementation _LNPopupTitleLabelWrapper
+{
+	double _percent;
+	CGFloat _step;
+	CGFloat _start;
+	CGFloat _target;
+	CADisplayLink* _displayLink;
+}
 
 + (instancetype)wrapperForLabel:(UILabel*)wrapped
 {
 	_LNPopupTitleLabelWrapper* rv = [[_LNPopupTitleLabelWrapper alloc] initWithFrame:wrapped.bounds];
 	rv.wrapped = wrapped;
-	rv.wrapped.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	rv.translatesAutoresizingMaskIntoConstraints = wrapped.translatesAutoresizingMaskIntoConstraints;
+	rv.wrapped.translatesAutoresizingMaskIntoConstraints = NO;
+	
 	[rv addSubview:wrapped];
 	
 	rv.wrappedWidthConstraint = [wrapped.widthAnchor constraintEqualToConstant:rv.bounds.size.width];
@@ -46,6 +55,11 @@
 
 - (void)setBounds:(CGRect)bounds
 {
+	if(CGRectEqualToRect(bounds, super.bounds) == YES)
+	{
+		return;
+	}
+	
 	[super setBounds:bounds];
 	
 	if(_wrappedWidthConstraint.constant == bounds.size.width)
@@ -53,17 +67,47 @@
 		return;
 	}
 	
-	if(UIView.inheritedAnimationDuration == 0.0)
+	if(UIView.inheritedAnimationDuration == 0.0 || UIView.areAnimationsEnabled == NO)
 	{
 		_wrappedWidthConstraint.constant = bounds.size.width;
 		[self layoutSubviews];
 	}
 	else
 	{
-		[UIView _ln_animatedUsingSwiftUIWithDuration:UIView.inheritedAnimationDuration animations:^{
-			_wrappedWidthConstraint.constant = bounds.size.width;
-			[self layoutSubviews];
-		} completion:nil];
+		[_displayLink invalidate];
+		_displayLink = nil;
+		
+		_percent = 0.0;
+		_start = _wrappedWidthConstraint.constant;
+		_target = bounds.size.width;
+		_step = 1 / (0.5 * UIView.inheritedAnimationDuration * 60);
+		_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_tick)];
+		if(@available(iOS 15.0, *))
+		{
+			_displayLink.preferredFrameRateRange = CAFrameRateRangeMake(60, 60, 60);
+		}
+		else
+		{
+			_displayLink.preferredFramesPerSecond = 60;
+		}
+		[_displayLink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
+	}
+}
+
+- (void)_tick
+{
+	_percent += _step;
+	
+	_wrappedWidthConstraint.constant = _ln_lerp(_start, _target, _ln_smoothstep(0.0, 1.0, _percent));
+	
+	[self layoutSubviews];
+	
+	if(_percent > 1.0)
+	{
+		[_displayLink invalidate];
+		_displayLink = nil;
+		
+		return;
 	}
 }
 
@@ -82,6 +126,9 @@
 	
 	__weak LNPopupBar* _popupBar;
 	LNPopupItem* _popupItem;
+	
+	BOOL _needsTitleLayout;
+	BOOL _needsTitleRemove;
 }
 
 - (instancetype)initWithPopupBar:(LNPopupBar *)popupBar
@@ -96,6 +143,8 @@
 	{
 		_popupBar = popupBar;
 		_popupItem = popupItem;
+		
+		[self setNeedsTitleLayoutRemovingLabels:NO];
 	}
 	return self;
 }
@@ -125,6 +174,8 @@
 	[_wrapperView addSubview:_titlesView];
 	
 	self.view = _wrapperView;
+	
+	self.view.autoresizingMask = UIViewAutoresizingNone;
 }
 
 - (_LNPopupBarTitlesView*)titlesView
@@ -198,32 +249,45 @@
 	return _rv;
 }
 
+- (void)setNeedsTitleLayoutRemovingLabels:(BOOL)remove
+{
+	_needsTitleLayout = YES;
+	_needsTitleRemove = remove;
+	
+	[self.view setNeedsLayout];
+}
+
 - (void)layoutTitlesRemovingLabels:(BOOL)remove
 {
-	[UIView performWithoutAnimation:^{
+	_needsTitleLayout = NO;
+	_needsTitleRemove = NO;
+	
+//	[UIView performWithoutAnimation:^{
 		BOOL reset = NO;
 		
 		CGRect titleFrameToUse = CGRectZero;
 		CGRect subtitleFrameToUse = CGRectZero;
 		if(remove == YES)
 		{
-			titleFrameToUse = _titleLabel.bounds;
 			if(_titleLabel.superview == self.titlesView)
 			{
+				titleFrameToUse = _titleLabel.bounds;
 				[_titleLabel removeFromSuperview];
 			}
 			else
 			{
+				titleFrameToUse = _titleLabel.superview.bounds;
 				[_titleLabel.superview removeFromSuperview];
 			}
 			
-			subtitleFrameToUse = _titleLabel.bounds;
 			if(_subtitleLabel.superview == self.titlesView)
 			{
+				subtitleFrameToUse = _titleLabel.bounds;
 				[_subtitleLabel removeFromSuperview];
 			}
 			else
 			{
+				subtitleFrameToUse = _subtitleLabel.superview.bounds;
 				[_subtitleLabel.superview removeFromSuperview];
 			}
 			
@@ -339,13 +403,11 @@
 			[_titleLabel reset];
 			[_subtitleLabel reset];
 		}
-	}];
+//	}];
 	
 	[self updateAccessibility];
 	
 	[self _recalculateCoordinatedMarqueeAndStartScrollIfNeeded];
-	
-	[self.view setNeedsLayout];
 }
 
 - (void)updateAccessibility
@@ -431,6 +493,11 @@
 - (void)viewDidLayoutSubviews
 {
 	[super viewDidLayoutSubviews];
+	
+	if(_needsTitleLayout)
+	{
+		[self layoutTitlesRemovingLabels:_needsTitleRemove];
+	}
 	
 	CGFloat titlesHeight = self.heightFittingTitleLabel + self.heightFittingSubtitleLabel + (self.numberOfLabels > 1 ? 1 : 0) * self.spacing;
 	

@@ -88,7 +88,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	if(@available(iOS 17.0, *))
 	{
 		[self registerForTraitChanges:@[LNPopupBarEnvironmentTrait.class, UITraitHorizontalSizeClass.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
-			[traitEnvironment _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:YES];
+			[traitEnvironment _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:NO];
 		}];
 	}
 }

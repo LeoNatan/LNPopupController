@@ -9,7 +9,19 @@
 #include "LNMath.h"
 #import <Foundation/Foundation.h>
 
-double _ln_clamp(double v, double lo, double hi)
+CGFloat _ln_clamp(CGFloat v, CGFloat lo, CGFloat hi)
 {
-	return MIN(hi, MAX(v, lo));
+	return MAX(lo, MIN(hi, v));
+}
+
+CGFloat _ln_smoothstep(CGFloat a, CGFloat b, CGFloat x)
+{
+	float t = _ln_clamp((x - a)/(b - a), 0, 1);
+	return t * t * (3.0 - (2.0 * t));
+}
+
+CGFloat _ln_lerp(CGFloat a, CGFloat b, CGFloat x)
+{
+	x = _ln_clamp(x, 0.0, 1.0);
+	return a * (1 - x) + b * x;
 }

@@ -147,6 +147,13 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 			}), method_getTypeEncoding(m));
 		}
 		
+		{
+			SEL sel = NSSelectorFromString(LNPopupHiddenString("setSafeAreaInsets:"));
+			Method m = __LNSwizzleClassGetInstanceMethod(UIView.class, sel);
+			class_addMethod(_LNPopupToolbar.class, sel, imp_implementationWithBlock(^(id _self, UIEdgeInsets insets) {
+			}), method_getTypeEncoding(m));
+		}
+		
 		SEL updateBackgroundGroupNameSEL = NSSelectorFromString(LNPopupHiddenString("updateBackgroundGroupName"));
 		
 		id (^trampoline)(void (*)(id, SEL)) = ^ id (void (*orig)(id, SEL)){

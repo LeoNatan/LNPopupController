@@ -13,7 +13,9 @@
 
 CF_EXTERN_C_BEGIN
 
-extern double _ln_clamp(double v, double lo, double hi);
+extern CGFloat _ln_clamp(CGFloat v, CGFloat lo, CGFloat hi);
+extern CGFloat _ln_smoothstep(CGFloat a, CGFloat b, CGFloat x);
+extern CGFloat _ln_lerp(CGFloat a, CGFloat b, CGFloat x);
 
 CF_EXTERN_C_END
 

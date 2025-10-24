@@ -231,6 +231,8 @@ __attribute__((objc_direct_members))
 	UIWindow* _swiftHacksWindow2;
 	
 	BOOL _animatesItemSetter;
+	
+	NSArray<UIBarButtonItem*>* _nonSpacingBarButtonItems;
 }
 
 static BOOL __animatesItemSetter = NO;
@@ -407,6 +409,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:CGRectMake(0, 0, 400, 44)];
 		_toolbar._layoutDelegate = self;
 		[_toolbar.standardAppearance configureWithTransparentBackground];
+		[self _resetToolbarItemSpacing];
 		
 #if DEBUG
 		if(_LNEnableBarLayoutDebug())
@@ -502,6 +505,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 - (void)setFrame:(CGRect)frame
 {
+	if(CGRectEqualToRect(frame, super.frame) == YES)
+	{
+		return;
+	}
+	
 	[super setFrame:frame];
 }
 
@@ -605,6 +613,45 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		rv.trailing = layoutMargins.right + extra;
 	}
 	return rv;
+}
+
+- (BOOL)_toolbarHasHiddenFirstItem
+{
+	if(@available(iOS 16.0, *))
+	{
+		return _nonSpacingBarButtonItems.firstObject.isHidden;
+	}
+	
+	return NO;
+}
+
+- (BOOL)_toolbarHasHiddenLastItem
+{
+	if(@available(iOS 16.0, *))
+	{
+		return _nonSpacingBarButtonItems.lastObject.isHidden;
+	}
+	
+	return NO;
+}
+
+- (void)_resetToolbarItemSpacing
+{
+	CGFloat spacing = 8.0;
+	BOOL hasSwiftUI = _swiftuiHiddenLeadingController != nil || _swiftuiHiddenTrailingController != nil;
+	
+	if(hasSwiftUI)
+	{
+		if(LNPopupEnvironmentHasGlass())
+		{
+			spacing = 12.0;
+		}
+		else if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 18)
+		{
+			spacing = 0.0;
+		}
+	}
+	_toolbar.itemSpacing = spacing;
 }
 
 - (void)layoutSubviews
@@ -735,13 +782,13 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			UIEdgeInsets insets;
 			if(isRTL)
 			{
-				CGFloat inset = (!_resolvedIsCompact ? MAX(self.safeAreaInsets.right, self.layoutMargins.right) : self.safeAreaInsets.right) - 8;
-				insets = UIEdgeInsetsMake(0, 0, 0, inset);
+				CGFloat inset = (!_resolvedIsCompact ? self.safeAreaInsets.right : self.safeAreaInsets.right);
+				insets = UIEdgeInsetsMake(0, inset, 0, inset);
 			}
 			else
 			{
-				CGFloat inset = (!_resolvedIsCompact ? MAX(self.safeAreaInsets.left, self.layoutMargins.left) : self.safeAreaInsets.left) - 8;
-				insets = UIEdgeInsetsMake(0, inset, 0, 0);
+				CGFloat inset = (!_resolvedIsCompact ? self.safeAreaInsets.left : self.safeAreaInsets.left);
+				insets = UIEdgeInsetsMake(0, inset, 0, inset);
 			}
 			
 			contentFrame = UIEdgeInsetsInsetRect(frame, insets);
@@ -801,8 +848,12 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		
 		_animatesItemSetter = NO;
 	}
-	_toolbar.bounds = CGRectMake(0, 0, _contentView.bounds.size.width, 44);
-	_toolbar.center = CGPointMake(CGRectGetMidX(_contentView.bounds), CGRectGetMidY(_contentView.bounds));
+	
+	BOOL hasHiddenLastItem = self._toolbarHasHiddenLastItem;
+	static constexpr CGFloat padding = 8;
+	
+	_toolbar.bounds = CGRectMake(0, 0, _contentView.bounds.size.width - (hasHiddenLastItem ? padding * 2 : 0), 44);
+	_toolbar.center = CGPointMake(CGRectGetMidX(_contentView.bounds) - (isRTL ? -1 : 1) * (hasHiddenLastItem ? padding : 0), CGRectGetMidY(_contentView.bounds));
 	[_toolbar layoutIfNeeded];
 	
 	if(_resolvedIsGlassInteractive)
@@ -1133,6 +1184,8 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 {
 	_popupItem = popupItem;
 	
+	_titlesController = _titlePagingController.viewControllers.firstObject;
+	
 	[self _setNeedsRecalcActiveAppearanceChain];
 }
 
@@ -1402,6 +1455,8 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	_swiftuiHiddenLeadingController = swiftuiHiddenLeadingController;
 	_swiftuiHiddenLeadingController.view.frame = CGRectMake(0, 0, 400, 400);
 	
+	[self _resetToolbarItemSpacing];
+	
 	if(_swiftHacksWindow1 != nil)
 	{
 		_swiftHacksWindow1.hidden = YES;
@@ -1437,6 +1492,8 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	_swiftuiHiddenTrailingController = swiftuiHiddenTrailingController;
 	_swiftuiHiddenTrailingController.view.frame = CGRectMake(0, 0, 400, 400);
+	
+	[self _resetToolbarItemSpacing];
 	
 	if(_swiftHacksWindow2 != nil)
 	{
@@ -1551,6 +1608,11 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	
 	if(leftmostView != NULL) { *leftmostView = [self _viewForBarButtonItem:sorted.firstObject]; }
 	if(rightmostView != NULL) { *rightmostView = [self _viewForBarButtonItem:sorted.lastObject]; }
+}
+
+- (BOOL)_needSwiftUIFixesForBarButtonItemView:(UIView*)view
+{
+	return [view _ln_isObjectFromSwiftUI];
 }
 
 - (void)_updateTitleInsetsForCompactBar:(UIEdgeInsets*)titleInsets
@@ -1681,7 +1743,7 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 		}
 		else
 		{
-			leftViewLastFrame.size.width -= (__applySwiftUILayoutFixes ? -8 : isTrailingSystem ? 8 : 0);
+			leftViewLastFrame.size.width -= (self._toolbarHasHiddenFirstItem || [self _needSwiftUIFixesForBarButtonItemView:leftViewLast] ? -8 : isTrailingSystem ? 8 : 0);
 		}
 	}
 	else
@@ -1700,12 +1762,12 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 		}
 		else
 		{
-			rightViewFirstFrame.origin.x += (__applySwiftUILayoutFixes ? -8 : isTrailingSystem ? 8 : 0);
+			rightViewFirstFrame.origin.x += ([self _needSwiftUIFixesForBarButtonItemView:rightViewFirst] ? -8 : isTrailingSystem ? 8 : 0);
 		}
 	}
 	else
 	{
-		rightViewFirstFrame.origin.x -= 20;
+		rightViewFirstFrame.origin.x -= _resolvedIsFloating ? 20 : 8;
 	}
 	
 	CGFloat widthLeft = 0;
@@ -1840,7 +1902,7 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	
 	if(_needsLabelsLayout == YES)
 	{
-		[_titlesController layoutTitlesRemovingLabels:_needsLabelsLayoutRemove];
+		[_titlesController setNeedsTitleLayoutRemovingLabels:_needsLabelsLayoutRemove];
 		
 		_needsLabelsLayoutRemove = NO;
 		_needsLabelsLayout = NO;
@@ -1849,6 +1911,7 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	CGRect frameBefore = _titlePagingController.view.frame;
 	
 	_titlePagingController.view.frame = CGRectMake(titleInsets.left, 0, _contentView.bounds.size.width - titleInsets.left - titleInsets.right, _contentView.bounds.size.height);
+	
 	CGPoint center = _titlePagingController.view.center;
 	center.y = _contentView.contentView.center.y;
 	_titlePagingController.view.center = center;
@@ -1856,6 +1919,7 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	if(CGRectEqualToRect(frameBefore, _titlePagingController.view.frame) == NO)
 	{
 		[_titlePagingController.view layoutIfNeeded];
+		[_titlesController.view layoutIfNeeded];
 	}
 }
 
@@ -1938,7 +2002,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}
 	else
 	{
-		safeLeading = 8;
+		safeLeading = _resolvedIsFloating ? 8 : 20;
 	}
 	
 	if(_resolvedIsFloating && _resolvedIsCompact == NO && self.isWidePad == YES)
@@ -2011,17 +2075,25 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		[items addObject:barButtonItem];
 	}];
 	
-	[_toolbar setItems:items animated:NO];
-	if(LNPopupEnvironmentHasGlass())
+	for(UIBarButtonItem* item in items)
 	{
-		if(_swiftuiHiddenLeadingController != nil || _swiftuiHiddenTrailingController != nil)
+		UIView* view = [item valueForKey:@"view"];
+		if(view == nil)
 		{
-			static NSString* keyPath = LNPopupHiddenString("_visualProvider.contentView.buttonBar.stackView.spacing");
-			@try {
-				[_toolbar setValue:@8 forKeyPath:keyPath];
-			} @catch(NSException*) {}
+			continue;
 		}
 		
+		if([self _needSwiftUIFixesForBarButtonItemView:view])
+		{
+			view.translatesAutoresizingMaskIntoConstraints = NO;
+		}
+	}
+	
+	[_toolbar setItems:items animated:NO];
+	_nonSpacingBarButtonItems = [items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(isSystemItem == NO || (systemItem != %@ && systemItem != %@))", @(UIBarButtonSystemItemFixedSpace), @(UIBarButtonSystemItemFlexibleSpace)]];
+	
+	if(LNPopupEnvironmentHasGlass())
+	{
 		//This causes layout issues on iOS 18.x and below in LNPopupUI. So limit to 26.0+ (it's for animation anyway)
 		[_toolbar layoutIfNeeded];
 	}
@@ -2110,28 +2182,28 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 {	
 	_leadingBarButtonItems = [leadingBarButtonItems copy];
 	
-	if(@available(iOS 26.0, *))
+//	if(@available(iOS 26.0, *))
 	{
 		[self _setNeedsBarButtonItemLayout];
 	}
-	else
-	{
-		[self _layoutBarButtonItems];
-	}
+//	else
+//	{
+//		[self _layoutBarButtonItems];
+//	}
 }
 
 - (void)setTrailingBarButtonItems:(NSArray<UIBarButtonItem*> *)trailingBarButtonItems
 {
 	_trailingBarButtonItems = [trailingBarButtonItems copy];
 	
-	if(@available(iOS 26.0, *))
+//	if(@available(iOS 26.0, *))
 	{
 		[self _setNeedsBarButtonItemLayout];
 	}
-	else
-	{
-		[self _layoutBarButtonItems];
-	}
+//	else
+//	{
+//		[self _layoutBarButtonItems];
+//	}
 }
 
 - (void)_transitionCustomBarViewControllerWithPopupContainerSize:(CGSize)size withCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -2164,12 +2236,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 
 - (void)set_applySwiftUILayoutFixes:(BOOL)_applySwiftUILayoutFixes
 {
-	if(__applySwiftUILayoutFixes != _applySwiftUILayoutFixes)
-	{
-		__applySwiftUILayoutFixes = _applySwiftUILayoutFixes;
-		
-		[self _setNeedsBarButtonItemLayout];;
-	}
+	//Keep this for legacy LNPopupUI sake
 }
 
 - (void)_cancelGestureRecognizers

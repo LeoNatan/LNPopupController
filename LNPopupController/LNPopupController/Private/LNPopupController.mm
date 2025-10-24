@@ -23,6 +23,7 @@
 #import "_LNPopupTransitionPreferredCloseAnimator.h"
 #import "LNPopupPresentationContainerSupport.h"
 #import "UITabBar+LNPopupMinimizationSupport.h"
+#import "LNMath.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -292,17 +293,6 @@ __attribute__((objc_direct_members))
 	[self.popupContentView _repositionPopupCloseButtonAnimated:animated];
 }
 
-static CGFloat __clamp(CGFloat x)
-{
-	return MAX(0, MIN(1, x));
-}
-
-static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
-{
-	float t = __clamp((x - a)/(b - a));
-	return t * t * (3.0 - (2.0 * t));
-}
-
 - (CGFloat)_percentFromPopupBar
 {
 	return 1 - (CGRectGetMaxY(self.popupBar.frame) / (_cachedDefaultFrame.origin.y - _cachedInsets.bottom));
@@ -312,7 +302,7 @@ static CGFloat __smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
 	CGFloat percent = [self _percentFromPopupBar];
 	
-	return __smoothstep(0.0, 1.0, percent);
+	return _ln_smoothstep(0.0, 1.0, percent);
 }
 
 - (void)_setContentToState:(LNPopupPresentationState)state
@@ -2313,7 +2303,7 @@ id __LNPopupEmptyBlurFilter(void)
 	
 	if(self.popupBar.traitCollection.popupBarEnvironment == newValue)
 	{
-		[UIView _ln_animatedUsingSwiftUIWithDuration:0.4 animations:^{
+		[UIView _ln_animateUsingSwiftUIWithDuration:0.4 animations:^{
 			updateMargins();
 			layoutVerticalBarPosition();
 		} completion:nil];

@@ -110,6 +110,32 @@ static void __accessibilityBundleLoadHandler(void)
 }
 #endif
 
+@implementation NSObject (SwiftUISupport)
+
+- (BOOL)_ln_isObjectFromSwiftUI
+{
+#ifndef LNPopupControllerEnforceStrictClean
+	static NSString* className = LNPopupHiddenString("UIHostingView");
+	Class cls = self.class;
+	while(cls != nil)
+	{
+		if([NSStringFromClass(cls) containsString:className])
+		{
+			return YES;
+		}
+		
+		cls = [cls superclass];
+	}
+	
+	static NSString* key = LNPopupHiddenString("_isFromSwiftUI");
+	return [self.class respondsToSelector:NSSelectorFromString(key)] && [[self.class valueForKey:key] boolValue];
+#else
+	return NO;
+#endif
+}
+
+@end
+
 #pragma mark - UIViewController
 
 BOOL __ln_alreadyInHideShowBar = NO;
@@ -232,12 +258,6 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 	}
 	
 	return [self _ln_isModalInPresentation];
-}
-
-- (BOOL)_ln_isObjectFromSwiftUI
-{
-	static NSString* key = LNPopupHiddenString("_isFromSwiftUI");
-	return [self.class respondsToSelector:NSSelectorFromString(key)] && [[self.class valueForKey:key] boolValue];
 }
 
 - (BOOL)_ln_shouldPopupContentAnyFadeForTransition
@@ -1870,7 +1890,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 #pragma mark - UINavigationController
 
-@interface UINavigationController (LNPopupSupportPrivate) @end
 @implementation UINavigationController (LNPopupSupportPrivate)
 
 - (void)_layoutModernNavigationControllerFloatingPopupWithSuperFallback:(void(^)(void))superFallback
@@ -1960,9 +1979,19 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	if(@available(iOS 26.0, *))
 	{
-		if(self.topViewController == self.viewControllers.firstObject && self.topViewController.toolbarItems.count == 0)
+		if(LNPopupEnvironmentHasGlass())
 		{
-			return YES;
+			static auto floatingBarContainerViewKey = LNPopupHiddenString("floatingBarContainerView");
+			static auto toolbarOverlayInsetKey = LNPopupHiddenString("toolbarOverlayInset");
+			
+			UIView* floatingBarContainerView = [self valueForKey:floatingBarContainerViewKey];
+			[floatingBarContainerView layoutIfNeeded];
+			CGFloat inset = [[floatingBarContainerView valueForKey:toolbarOverlayInsetKey] doubleValue];
+			
+			if(inset == 0)
+			{
+				return YES;
+			}
 		}
 	}
 	
@@ -1997,17 +2026,16 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	{
 		static auto floatingBarContainerViewKey = LNPopupHiddenString("floatingBarContainerView");
 		static auto toolbarOverlayInsetKey = LNPopupHiddenString("toolbarOverlayInset");
-		CGFloat inset;
+
+		UIView* floatingBarContainerView = [self valueForKey:floatingBarContainerViewKey];
+		[floatingBarContainerView layoutIfNeeded];
+		CGFloat inset = [[floatingBarContainerView valueForKey:toolbarOverlayInsetKey] doubleValue];
+		
 		if(self._ln_isToolbarHiddenOrSwiftUIBuggyToolbar)
 		{
 			inset = self.view.safeAreaInsets.bottom;
 		}
-		else
-		{
-			UIView* floatingBarContainerView = [self valueForKey:floatingBarContainerViewKey];
-			[floatingBarContainerView layoutIfNeeded];
-			inset = [[floatingBarContainerView valueForKey:toolbarOverlayInsetKey] doubleValue];
-		}
+		
 		return CGRectMake(0, self.view.bounds.size.height - inset, self.view.bounds.size.width, inset);
 	}
 	

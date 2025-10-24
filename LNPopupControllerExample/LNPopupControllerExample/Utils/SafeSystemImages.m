@@ -41,15 +41,15 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, BOOL isPlay, BO
 	BOOL isCompact = LNBarIsCompact();
 	BOOL isFloatingCompact = LNBarIsFloatingCompact();
 	
-	if(isCompact)
+	if(isCompact && !isFloatingCompact)
 	{
 		scale = LNSystemImageScaleCompact;
 		backForwardScale = LNSystemImageScaleCompact;
 	}
-	else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad && traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+	else if(traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
 	{
-		scale = LNSystemImageScaleLarger;
-		backForwardScale = LNSystemImageScaleLarge;
+		scale = isFloatingCompact ? LNSystemImageScaleLarge : LNSystemImageScaleLarger;
+		backForwardScale = LNSystemImageScaleNormal;
 	}
 	else
 	{
@@ -57,12 +57,12 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, BOOL isPlay, BO
 		backForwardScale = LNSystemImageScaleNormal;
 	}
 	
-	UIBarButtonItem* pause = LNSystemBarButtonItemAction(@"pause.fill", scale != LNSystemImageScaleLarger ? scale + 1 : scale, playPauseAction);
+	UIBarButtonItem* pause = LNSystemBarButtonItemAction(@"pause.fill", scale, playPauseAction);
 	pause.accessibilityLabel = NSLocalizedString(@"Pause", @"");
 	pause.accessibilityIdentifier = @"PauseButton";
 	pause.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* play = LNSystemBarButtonItemAction(@"play.fill", scale != LNSystemImageScaleLarger ? scale + 1 : scale, playPauseAction);
+	UIBarButtonItem* play = LNSystemBarButtonItemAction(@"play.fill", scale, playPauseAction);
 	pause.accessibilityLabel = NSLocalizedString(@"Play", @"");
 	pause.accessibilityIdentifier = @"PlayButton";
 	pause.accessibilityTraits = UIAccessibilityTraitButton;
@@ -77,7 +77,7 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, BOOL isPlay, BO
 	prev.accessibilityIdentifier = @"PrevButton";
 	prev.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* more = LNSystemBarButtonItemAction(@"ellipsis", scale, nil);
+	UIBarButtonItem* more = LNSystemBarButtonItemAction(@"ellipsis", LNSystemImageScaleNormal, nil);
 	prev.accessibilityLabel = NSLocalizedString(@"More", @"");
 	prev.accessibilityIdentifier = @"MoreButton";
 	prev.accessibilityTraits = UIAccessibilityTraitButton;
@@ -136,9 +136,9 @@ CGFloat _LNWidthForScale(LNSystemImageScale scale)
 	dispatch_once(&onceToken, ^{
 		widthMap = @{
 			@(LNSystemImageScaleCompact): @(44),
-			@(LNSystemImageScaleNormal): @(60),
-			@(LNSystemImageScaleLarge): @(60),
-			@(LNSystemImageScaleLarger): @(62),
+			@(LNSystemImageScaleNormal): @(44),
+			@(LNSystemImageScaleLarge): @(44),
+			@(LNSystemImageScaleLarger): @(44),
 		};
 	});
 	
@@ -161,7 +161,7 @@ UIBarButtonItem* LNSystemBarButtonItem(NSString* name, LNSystemImageScale scale,
 	}
 	else{
 		rv = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(name, scale) style:UIBarButtonItemStylePlain target:target action:action];
-		rv.width = _LNWidthForScale(scale);
+//		rv.width = _LNWidthForScale(scale);
 	}
 	return rv;
 }
@@ -184,7 +184,7 @@ UIBarButtonItem* LNSystemBarButtonItemAction(NSString* name, LNSystemImageScale 
 	else{
 		rv = [[UIBarButtonItem alloc] initWithPrimaryAction:primaryAction];
 		rv.image = LNSystemImage(name, scale);
-		rv.width = _LNWidthForScale(scale);
+//		rv.width = _LNWidthForScale(scale);
 	}
 	return rv;
 }

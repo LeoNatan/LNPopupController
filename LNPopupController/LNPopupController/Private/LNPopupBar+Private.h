@@ -190,6 +190,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @interface _LNPopupToolbar : UIToolbar
 
+@property (nonatomic) CGFloat itemSpacing;
 @property (nonatomic, weak) id<_LNPopupToolbarLayoutDelegate> _layoutDelegate;
 
 - (void)forceLayoutOnButtons;

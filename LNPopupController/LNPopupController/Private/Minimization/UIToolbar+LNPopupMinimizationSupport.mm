@@ -9,6 +9,7 @@
 #import "UIToolbar+LNPopupMinimizationSupport.h"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupBase64Utils.hh"
+#import "UIViewController+LNPopupSupportPrivate.h"
 
 @implementation UINavigationController (LNPopupMinimizationSupport)
 
@@ -16,7 +17,7 @@
 {
 	NSDirectionalEdgeInsets barInsets = NSDirectionalEdgeInsetsZero;
 	
-	if(popupBar.supportsMinimization && self.isToolbarHidden == NO && LNPopupEnvironmentHasGlass())
+	if(popupBar.supportsMinimization && self._ln_isToolbarHiddenOrSwiftUIBuggyToolbar == NO && LNPopupEnvironmentHasGlass())
 	{
 		static CGFloat margin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 28 : 8;
 		

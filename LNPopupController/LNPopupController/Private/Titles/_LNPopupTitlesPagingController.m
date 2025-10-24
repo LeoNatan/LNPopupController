@@ -27,6 +27,8 @@
 	{
 		self.delegate = self;
 		_popupBar = popupBar;
+		
+		self.view.autoresizingMask = UIViewAutoresizingNone;
 	}
 	return self;
 }
@@ -111,7 +113,7 @@
 	
 	_LNPopupTitlesController* prevNextController = [[_LNPopupTitlesController alloc] initWithPopupBar:_popupBar popupItem:prevNextItem];
 	prevNextController.spacing = viewController.spacing;
-	[prevNextController layoutTitlesRemovingLabels:NO];
+	[prevNextController setNeedsTitleLayoutRemovingLabels:NO];
 	return prevNextController;
 }
 
