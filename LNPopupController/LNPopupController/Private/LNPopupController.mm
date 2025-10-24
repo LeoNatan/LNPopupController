@@ -1311,11 +1311,6 @@ __attribute__((objc_direct_members))
 			[self _popupItem:_currentPopupItem didChangeToValue:[_currentPopupItem valueForKey:key] forKey:key];
 		}
 	}
-	
-	if(notify)
-	{
-		//TODO: Notify delegate
-	}
 }
 
 - (void)_configurePopupBarFromBottomBar

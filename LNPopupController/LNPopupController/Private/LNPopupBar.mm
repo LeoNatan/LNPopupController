@@ -1185,6 +1185,8 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	_popupItem = popupItem;
 	
 	_titlesController = _titlePagingController.viewControllers.firstObject;
+	//Clear the popup item so that it loads its values from the popup bar's popup item.
+	_titlesController.popupItem = nil;
 	
 	[self _setNeedsRecalcActiveAppearanceChain];
 }
@@ -1910,14 +1912,14 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	
 	CGRect frameBefore = _titlePagingController.view.frame;
 	
-	_titlePagingController.view.frame = CGRectMake(titleInsets.left, 0, _contentView.bounds.size.width - titleInsets.left - titleInsets.right, _contentView.bounds.size.height);
+	CGRect frame = UIEdgeInsetsInsetRect(_contentView.bounds, titleInsets);
+	//Without this, UIPageViewController breaks in spectacular ways with certain non-round frame sizes 🤦‍♂️
+	frame.size.width = round(frame.size.width);
 	
-	CGPoint center = _titlePagingController.view.center;
-	center.y = _contentView.contentView.center.y;
-	_titlePagingController.view.center = center;
-	
-	if(CGRectEqualToRect(frameBefore, _titlePagingController.view.frame) == NO)
+	if(CGRectEqualToRect(frameBefore, frame) == NO)
 	{
+		_titlePagingController.view.frame = frame;
+		
 		BOOL hasSwiftUI = _swiftuiHiddenLeadingController != nil || _swiftuiHiddenTrailingController != nil;
 		
 		if(hasSwiftUI && UIView.inheritedAnimationDuration == 0.0)

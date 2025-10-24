@@ -161,7 +161,9 @@ class DemoAlbumTableViewController: UITableViewController {
 		
 		updateCells(highlighting: indexPath.row)
 		
-		popupBar.popupItem = item
+		UIView.performWithoutAnimation {
+			popupBar.popupItem = item
+		}
 		
 		if let popupContent = tabBarController?.popupContent as? DemoMusicPlayerController {
 			popupContent.nextSong = { [weak self] item in

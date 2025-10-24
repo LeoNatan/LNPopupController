@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithPopupBar:(LNPopupBar*)popupBar;
 - (instancetype)initWithPopupBar:(LNPopupBar*)popupBar popupItem:(nullable LNPopupItem*)popupItem;
 
+@property (nonatomic, weak, nullable, readonly) LNPopupBar* popupBar;
+@property (nonatomic, strong, nullable) LNPopupItem* popupItem;
+
 @property (nonatomic) CGFloat spacing;
 
 @property (nonatomic, readonly) NSUInteger numberOfLabels;

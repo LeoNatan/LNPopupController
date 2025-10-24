@@ -12,106 +12,7 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "NSAttributedString+LNPopupSupport.h"
 #import "_LNPopupSwizzlingUtils.h"
-#include "LNMath.h"
-
-@interface _LNPopupTitleLabelWrapper: UIView
-
-+ (instancetype)wrapperForLabel:(UILabel*)wrapped;
-
-@property (nonatomic, strong) UILabel* wrapped;
-@property (nonatomic, strong) NSLayoutConstraint* wrappedWidthConstraint;
-
-@end
-
-@implementation _LNPopupTitleLabelWrapper
-{
-	double _percent;
-	CGFloat _step;
-	CGFloat _start;
-	CGFloat _target;
-	CADisplayLink* _displayLink;
-}
-
-+ (instancetype)wrapperForLabel:(UILabel*)wrapped
-{
-	_LNPopupTitleLabelWrapper* rv = [[_LNPopupTitleLabelWrapper alloc] initWithFrame:wrapped.bounds];
-	rv.wrapped = wrapped;
-	
-	rv.translatesAutoresizingMaskIntoConstraints = wrapped.translatesAutoresizingMaskIntoConstraints;
-	rv.wrapped.translatesAutoresizingMaskIntoConstraints = NO;
-	
-	[rv addSubview:wrapped];
-	
-	rv.wrappedWidthConstraint = [wrapped.widthAnchor constraintEqualToConstant:rv.bounds.size.width];
-	
-	[NSLayoutConstraint activateConstraints:@[
-		[rv.leadingAnchor constraintEqualToAnchor:wrapped.leadingAnchor],
-		[rv.heightAnchor constraintEqualToAnchor:wrapped.heightAnchor],
-		rv->_wrappedWidthConstraint
-	]];
-	
-	return rv;
-}
-
-- (void)setBounds:(CGRect)bounds
-{
-	if(CGRectEqualToRect(bounds, super.bounds) == YES)
-	{
-		return;
-	}
-	
-	[super setBounds:bounds];
-	
-	if(_wrappedWidthConstraint.constant == bounds.size.width)
-	{
-		return;
-	}
-	
-	[_displayLink invalidate];
-	_displayLink = nil;
-	
-	if(UIView.inheritedAnimationDuration == 0.0 || UIView.areAnimationsEnabled == NO)
-	{
-		_wrappedWidthConstraint.constant = bounds.size.width;
-		[self layoutSubviews];
-	}
-	else
-	{
-		_percent = 0.0;
-		_start = _wrappedWidthConstraint.constant;
-		_target = bounds.size.width;
-		_step = 1 / (0.5 * UIView.inheritedAnimationDuration * 60);
-		_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_tick)];
-		if(@available(iOS 15.0, *))
-		{
-			_displayLink.preferredFrameRateRange = CAFrameRateRangeMake(60, 60, 60);
-		}
-		else
-		{
-			_displayLink.preferredFramesPerSecond = 60;
-		}
-		[_displayLink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
-	}
-}
-
-- (void)_tick
-{
-	_percent += _step;
-	
-	_wrappedWidthConstraint.constant = _ln_lerp(_start, _target, _ln_smoothstep(0.0, 1.0, _percent));
-	
-	[self layoutSubviews];
-	
-	if(_percent > 1.0)
-	{
-		[_displayLink invalidate];
-		_displayLink = nil;
-		
-		return;
-	}
-}
-
-@end
+#import "_LNPopupTitleLabelWrapper.h"
 
 @interface _LNPopupBarTitlesView : UIStackView @end
 @implementation _LNPopupBarTitlesView @end
@@ -123,9 +24,6 @@
 	
 	UILabel<LNMarqueeLabel>* _titleLabel;
 	UILabel<LNMarqueeLabel>* _subtitleLabel;
-	
-	__weak LNPopupBar* _popupBar;
-	LNPopupItem* _popupItem;
 	
 	BOOL _needsTitleLayout;
 	BOOL _needsTitleRemove;
@@ -517,6 +415,11 @@
 	currentFrame.origin.x = targetFrame.origin.x;
 	
 	self.titlesView.frame = currentFrame;
+}
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@: %p title: “%@” subtitle: “%@”>", self.class, self, _titleLabel.text, _subtitleLabel.text];
 }
 
 @end
