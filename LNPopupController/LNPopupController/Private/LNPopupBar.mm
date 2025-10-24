@@ -1918,8 +1918,20 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	
 	if(CGRectEqualToRect(frameBefore, _titlePagingController.view.frame) == NO)
 	{
-		[_titlePagingController.view layoutIfNeeded];
-		[_titlesController.view layoutIfNeeded];
+		BOOL hasSwiftUI = _swiftuiHiddenLeadingController != nil || _swiftuiHiddenTrailingController != nil;
+		
+		if(hasSwiftUI && UIView.inheritedAnimationDuration == 0.0)
+		{
+			[UIView animateWithDuration:0.1 animations:^{
+				[_titlePagingController.view layoutIfNeeded];
+				[_titlesController.view layoutIfNeeded];
+			}];
+		}
+		else
+		{
+			[_titlePagingController.view layoutIfNeeded];
+			[_titlesController.view layoutIfNeeded];
+		}
 	}
 }
 

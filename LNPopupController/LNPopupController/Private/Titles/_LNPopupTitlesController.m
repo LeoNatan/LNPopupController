@@ -67,6 +67,9 @@
 		return;
 	}
 	
+	[_displayLink invalidate];
+	_displayLink = nil;
+	
 	if(UIView.inheritedAnimationDuration == 0.0 || UIView.areAnimationsEnabled == NO)
 	{
 		_wrappedWidthConstraint.constant = bounds.size.width;
@@ -74,9 +77,6 @@
 	}
 	else
 	{
-		[_displayLink invalidate];
-		_displayLink = nil;
-		
 		_percent = 0.0;
 		_start = _wrappedWidthConstraint.constant;
 		_target = bounds.size.width;
