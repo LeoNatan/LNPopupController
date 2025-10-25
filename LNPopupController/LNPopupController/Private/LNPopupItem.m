@@ -156,35 +156,59 @@ NSArray* __LNPopupItemObservedKeys;
 
 - (void)setSwiftuiTitleContentView:(UIView *)swiftuiTitleContentView
 {
+	if(_swiftuiTitleContentView == swiftuiTitleContentView)
+	{
+		return;
+	}
+	
 	_swiftuiTitleContentView = swiftuiTitleContentView;
 	
-	if(self.title != nil)
+	if(_swiftuiTitleContentView != nil)
 	{
-		self.title = nil;
-	}
-	if(self.attributedTitle != nil)
-	{
-		self.attributedTitle = nil;
+		if(self.title != nil)
+		{
+			self.title = nil;
+		}
+		if(self.attributedTitle != nil)
+		{
+			self.attributedTitle = nil;
+		}
 	}
 }
 
 - (void)setImage:(UIImage *)image
 {
+	if(_image == image)
+	{
+		return;
+	}
+	
 	_image = image;
 	
-	if(self.swiftuiImageController != nil)
+	if(_image != nil)
 	{
-		self.swiftuiImageController = nil;
+		if(self.swiftuiImageController != nil)
+		{
+			self.swiftuiImageController = nil;
+		}
 	}
 }
 
 - (void)setSwiftuiImageController:(UIViewController *)swiftuiImageController
 {
+	if(_swiftuiImageController == swiftuiImageController)
+	{
+		return;
+	}
+	
 	_swiftuiImageController = swiftuiImageController;
 	
-	if(self.image != nil)
+	if(_swiftuiImageController != nil)
 	{
-		self.image = nil;
+		if(self.image != nil)
+		{
+			self.image = nil;
+		}
 	}
 }
 
@@ -240,7 +264,7 @@ NSArray* __LNPopupItemObservedKeys;
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@: %p title: “%@” subtitle: “%@” image: %@", NSStringFromClass(self.class), self, self.title, self.subtitle, self.image];
+	return [NSString stringWithFormat:@"<%@: %p %@ image: %@", NSStringFromClass(self.class), self, self.swiftuiTitleContentView ? [NSString stringWithFormat:@"titleView: %@", self.swiftuiTitleContentView] : [NSString stringWithFormat:@"title: “%@” subtitle: “%@”", self.title, self.subtitle], self.swiftuiImageController ?: self.image];
 }
 
 @end

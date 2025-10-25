@@ -93,7 +93,7 @@ static NSArray* __notifiedProperties = nil;
 
 - (instancetype)initWithIdiom:(UIUserInterfaceIdiom)idiom
 {
-	self = [super initWithIdiom:UIUserInterfaceIdiomUnspecified];
+	self = [super initWithIdiom:idiom];
 	
 	if(self)
 	{
@@ -169,6 +169,8 @@ static NSArray* __notifiedProperties = nil;
 		{
 			[self setValue:[other valueForKey:key] forKey:key];
 		}
+		
+		_wantsDynamicFloatingBackgroundEffect = other->_wantsDynamicFloatingBackgroundEffect;
 		
 		[self _commonInit];
 	}
@@ -404,7 +406,9 @@ static NSArray* __notifiedProperties = nil;
 	{
 		if(LNPopupEnvironmentHasGlass())
 		{
-			effect = [_LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
+			_LNPopupGlassEffect* glassEffect = [_LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
+			glassEffect.interactive = YES;
+			effect = glassEffect;
 		}
 		else
 		{
