@@ -176,6 +176,28 @@ NSArray* __LNPopupItemObservedKeys;
 	}
 }
 
+- (void)setSwiftuiTitleContentViewController:(UIViewController*)swiftuiTitleContentViewController
+{
+	if(_swiftuiTitleContentViewController == swiftuiTitleContentViewController)
+	{
+		return;
+	}
+	
+	_swiftuiTitleContentViewController = swiftuiTitleContentViewController;
+	
+	if(_swiftuiTitleContentViewController != nil)
+	{
+		if(self.title != nil)
+		{
+			self.title = nil;
+		}
+		if(self.attributedTitle != nil)
+		{
+			self.attributedTitle = nil;
+		}
+	}
+}
+
 - (void)setImage:(UIImage *)image
 {
 	if(_image == image)

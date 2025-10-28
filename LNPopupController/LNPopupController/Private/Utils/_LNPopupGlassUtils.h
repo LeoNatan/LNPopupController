@@ -24,6 +24,7 @@ extern BOOL LNPopupEnvironmentHasGlass(void);
 API_AVAILABLE(ios(26.0))
 @interface _LNPopupGlassEffect: UIGlassEffect
 
++ (instancetype)effectWithStyle:(UIGlassEffectStyle)style NS_SWIFT_NAME(init(style:));
 @property (nonatomic, assign) UIGlassEffectStyle style;
 
 @end

@@ -193,23 +193,25 @@
 			_subtitleLabel = nil;
 		}
 		
-		if(self.popupItem.swiftuiTitleContentView != nil)
+		if(self.popupItem.swiftuiTitleContentViewController != nil || self.popupItem.swiftuiTitleContentView != nil)
 		{
 			[_titleLabel.superview removeFromSuperview];
 			_titleLabel = nil;
 			[_subtitleLabel.superview removeFromSuperview];
 			_subtitleLabel = nil;
 			
-			if(self.popupItem.swiftuiTitleContentView.superview != self.titlesView)
+			UIView* swiftUIViewToUse = self.popupItem.swiftuiTitleContentViewController.view ?: self.popupItem.swiftuiTitleContentView;
+			
+			if(swiftUIViewToUse.superview != self.titlesView)
 			{
-				[self.titlesView addArrangedSubview:self.popupItem.swiftuiTitleContentView];
+				[self.titlesView addArrangedSubview:swiftUIViewToUse];
 				[self.titlesView layoutIfNeeded];
 			}
 			if(ln_unavailable(iOS 17.0, *))
 			{
-				UIView* textView = self.popupItem.swiftuiTitleContentView.subviews.firstObject;
+				UIView* textView = swiftUIViewToUse.subviews.firstObject;
 				[NSLayoutConstraint activateConstraints:@[
-					[self.popupItem.swiftuiTitleContentView.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
+					[swiftUIViewToUse.heightAnchor constraintEqualToAnchor:textView.heightAnchor],
 				]];
 			}
 		}

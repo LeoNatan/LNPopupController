@@ -1358,6 +1358,11 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 
 - (void)setAttributedTitle:(NSAttributedString *)attributedTitle
 {
+	if([_attributedTitle isEqualToAttributedString:attributedTitle])
+	{
+		return;
+	}
+	
 	_attributedTitle = [attributedTitle copy];
 	
 	[self _setNeedsTitleLayoutByRemovingLabels:NO];
@@ -1365,6 +1370,11 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 
 - (void)setAttributedSubtitle:(NSAttributedString *)attributedSubtitle
 {
+	if([_attributedSubtitle isEqualToAttributedString:attributedSubtitle])
+	{
+		return;
+	}
+	
 	_attributedSubtitle = [attributedSubtitle copy];
 	
 	[self _setNeedsTitleLayoutByRemovingLabels:NO];
@@ -1372,6 +1382,11 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 
 - (void)setImage:(UIImage *)image
 {
+	if(_image == image)
+	{
+		return;
+	}
+	
 	_image = image;
 	
 	[self setNeedsLayout];
@@ -1425,6 +1440,30 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 		[_swiftuiTitleContentView _ln_freezeInsets];
 		_swiftuiTitleContentView.backgroundColor = UIColor.clearColor;
 		_swiftuiTitleContentView.translatesAutoresizingMaskIntoConstraints = NO;
+	}
+	
+	[self _setNeedsTitleLayoutByRemovingLabels:YES];
+}
+
+- (void)setSwiftuiTitleContentViewController:(UIViewController *)swiftuiTitleContentViewController
+{
+	if(_swiftuiTitleContentViewController == swiftuiTitleContentViewController)
+	{
+		return;
+	}
+	
+	if(_swiftuiTitleContentViewController.view != nil)
+	{
+		[_swiftuiTitleContentView removeFromSuperview];
+	}
+	
+	_swiftuiTitleContentViewController = swiftuiTitleContentViewController;
+	
+	if(_swiftuiTitleContentViewController != nil)
+	{
+		[_swiftuiTitleContentViewController.view _ln_freezeInsets];
+		_swiftuiTitleContentViewController.view.backgroundColor = UIColor.clearColor;
+		_swiftuiTitleContentViewController.view.translatesAutoresizingMaskIntoConstraints = NO;
 	}
 	
 	[self _setNeedsTitleLayoutByRemovingLabels:YES];

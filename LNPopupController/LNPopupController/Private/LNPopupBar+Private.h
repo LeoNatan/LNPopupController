@@ -146,6 +146,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, strong) UIFont* swiftuiInheritedFont;
 
 @property (nonatomic, strong) UIView* swiftuiTitleContentView;
+@property (nonatomic, strong) UIViewController* swiftuiTitleContentViewController;
 
 @property (nonatomic, strong) UIViewController* swiftuiImageController;
 @property (nonatomic, strong) UIViewController* swiftuiHiddenLeadingController;

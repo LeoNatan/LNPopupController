@@ -49,16 +49,16 @@ class DemoAlbumTableViewController: UITableViewController {
 			galleryBarButton.image = nil
 		}
 		
-		//		let view = ZStack {
-		//			Image("demoAlbum")
-		//				.resizable()
-		//			Color(uiColor: .secondarySystemBackground)
-		//				.opacity(0.35)
-		//		}.compositingGroup().blur(radius: 80, opaque: true)
-		//
-		//		tableView.backgroundView = UIHostingController(rootView: view).view
-		//
-		//		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
+//		let view = ZStack {
+//			Image("demoAlbum")
+//				.resizable()
+//			Color(uiColor: .secondarySystemBackground)
+//				.opacity(0.35)
+//		}.compositingGroup().blur(radius: 80, opaque: true)
+//		
+//		tableView.backgroundView = UIHostingController(rootView: view).view
+//		
+//		tableView.separatorEffect = UIVibrancyEffect(blurEffect: UIBlurEffect(style: .systemThinMaterial))
 		
 		if !LNPopupSettingsHasOS26Glass() {
 #if LNPOPUP
