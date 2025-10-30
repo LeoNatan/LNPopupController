@@ -11,7 +11,7 @@ import UIKit
 import SwiftUI
 import LNPopupController
 
-@available(iOS 17.0, *)
+@available(iOS 18.0, *)
 class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 	var timer : Timer?
@@ -38,7 +38,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		super.init(rootView: playerView)
 		
 		registerForTraitChanges([LNPopupBar.EnvironmentTrait.self]) { (self: Self, previousTraitCollection) in
-			self.updateBarItems(with: self.traitCollection.popupBarEnvironment)
+			self.updateBarItems(with: self.traitCollection.popupBarEnvironment, animated: true)
 		}
 		
 		playerView.playbackState.onPrevSong = { [weak self] in
@@ -74,7 +74,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	func updateBarItemsFromPlayerView() {
 		withObservationTracking {
 			_ = playerView.playbackState.isPlaying
-			self.reloadBarItems(with: self.traitCollection)
+			updateBarItems(with: traitCollection.popupBarEnvironment, animated: true)
 		} onChange: {
 			Task { @MainActor [weak self] in
 				self?.updateBarItemsFromPlayerView()
@@ -102,11 +102,18 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		}, UIAction { [weak self] _ in
 			self?.goNext()
 		})
-		updateBarItems(with: traitCollection.popupBarEnvironment)
+		updateBarItems(with: traitCollection.popupBarEnvironment, animated: false)
 	}
 	
-	fileprivate func updateBarItems(with popupBarEnvironment: LNPopupBar.Environment) {
+	fileprivate func updateBarItems(with popupBarEnvironment: LNPopupBar.Environment, animated: Bool = false) {
 		popupItem.barButtonItems?.forEach { $0.isEnabled = !popupItem.isEmptyPlaybackItem }
+		
+		let playPauseImage = UIImage(systemName: playerView.playbackState.isPlaying ? "pause.fill" : "play.fill")
+		if animated {
+			popupItem.barButtonItems?.first?.setSymbolImage(playPauseImage.unsafelyUnwrapped, contentTransition: .replace)
+		} else {
+			popupItem.barButtonItems?.first?.image = playPauseImage
+		}
 		popupItem.barButtonItems?.last?.isHidden = traitCollection.popupBarEnvironment == .inline
 	}
 	

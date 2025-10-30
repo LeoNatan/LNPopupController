@@ -168,11 +168,11 @@
 			isa = PBXGroup;
 			children = (
 				399415612EA0ED52000C550F /* Utils */,
+				390F59CF2EA3D37D00F935D8 /* Appearance */,
 				399415802EA0EDD5000C550F /* GestureRecognizers */,
 				3994153A2EA0ECD5000C550F /* TransitionAnimators */,
 				399415252EA0ECB3000C550F /* Minimization */,
 				3995DE242EA10AF3001A4C58 /* Swift */,
-				390F59CF2EA3D37D00F935D8 /* Appearance */,
 				390F59C62EA1254700F935D8 /* Titles */,
 				390031672AC06FE10046D3DD /* _LNPopupBackgroundShadowView.h */,
 				390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm */,

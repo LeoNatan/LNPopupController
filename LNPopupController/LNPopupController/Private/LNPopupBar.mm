@@ -926,7 +926,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	else
 	{
-		_progressView.frame = CGRectMake(cornerRadius + offset, height - 2.5, width - 2 * cornerRadius, 1.5);
+		_progressView.frame = CGRectMake(cornerRadius + offset, height - 2.5, width - 2 * (cornerRadius + offset), 1.5);
 	}
 	
 	CGFloat titleSpacing = 1 + (1 / MAX(1, screen.scale));

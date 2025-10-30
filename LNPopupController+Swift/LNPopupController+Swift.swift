@@ -113,10 +113,10 @@ extension LNPopupItem {
 	@available(iOS 15, *)
 	var attributedTitle: AttributedString? {
 		get {
-			return __attributedTitle != nil ? AttributedString(__attributedTitle!) : nil
+			return __attributedTitle != nil ? AttributedString(__attributedTitle.unsafelyUnwrapped) : nil
 		}
 		set {
-			__attributedTitle = newValue == nil ? nil : NSAttributedString(newValue!)
+			__attributedTitle = newValue == nil ? nil : NSAttributedString(newValue.unsafelyUnwrapped)
 		}
 	}
 	
@@ -124,10 +124,10 @@ extension LNPopupItem {
 	@available(iOS 15, *)
 	var attributedSubtitle: AttributedString? {
 		get {
-			return __attributedSubtitle != nil ? AttributedString(__attributedSubtitle!) : nil
+			return __attributedSubtitle != nil ? AttributedString(__attributedSubtitle.unsafelyUnwrapped) : nil
 		}
 		set {
-			__attributedSubtitle = newValue == nil ? nil : NSAttributedString(newValue!)
+			__attributedSubtitle = newValue == nil ? nil : NSAttributedString(newValue.unsafelyUnwrapped)
 		}
 	}
 }
@@ -140,10 +140,10 @@ extension LNPopupBarAppearance {
 	@available(iOS 15, *)
 	var titleTextAttributes: AttributeContainer? {
 		get {
-			return __titleTextAttributes != nil ? AttributeContainer(__titleTextAttributes!) : nil
+			return __titleTextAttributes != nil ? AttributeContainer(__titleTextAttributes.unsafelyUnwrapped) : nil
 		}
 		set {
-			__titleTextAttributes = newValue != nil ? Dictionary(newValue!) : nil
+			__titleTextAttributes = newValue != nil ? Dictionary(newValue.unsafelyUnwrapped) : nil
 		}
 	}
 	
@@ -153,10 +153,10 @@ extension LNPopupBarAppearance {
 	@available(iOS 15, *)
 	var subtitleTextAttributes: AttributeContainer? {
 		get {
-			return __subtitleTextAttributes != nil ? AttributeContainer(__subtitleTextAttributes!) : nil
+			return __subtitleTextAttributes != nil ? AttributeContainer(__subtitleTextAttributes.unsafelyUnwrapped) : nil
 		}
 		set {
-			__subtitleTextAttributes = newValue != nil ? Dictionary(newValue!) : nil
+			__subtitleTextAttributes = newValue != nil ? Dictionary(newValue.unsafelyUnwrapped) : nil
 		}
 	}
 	

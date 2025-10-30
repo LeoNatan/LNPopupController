@@ -25,7 +25,7 @@ extension LNPopupItem {
 }
 #endif
 
-@available(iOS 17.0, *)
+@available(iOS 18.0, *)
 class MusicTabBarController: UITabBarController {
 	override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
 		return .portrait
