@@ -1471,7 +1471,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 
 - (void)setSwiftuiInheritedFont:(UIFont *)swiftuiInheritedFont
 {
-	if([_swiftuiInheritedFont isEqual:swiftuiInheritedFont])
+	if(_swiftuiInheritedFont == swiftuiInheritedFont || [_swiftuiInheritedFont isEqual:swiftuiInheritedFont])
 	{
 		return;
 	}

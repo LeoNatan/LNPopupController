@@ -300,6 +300,16 @@ static void __setupFunction(void)
 	NSHashTable<LNLegacyMarqueeLabel*>* _weakSynchronizedLabels;
 }
 
+- (id)initWithFrame:(CGRect)frame rate:(CGFloat)pixelsPerSec andFadeLength:(CGFloat)aFadeLength
+{
+	self = [super initWithFrame:frame rate:pixelsPerSec andFadeLength:aFadeLength];
+	if(self)
+	{
+		_enabled = YES;
+	}
+	return self;
+}
+
 - (BOOL)isMarqueeScrollEnabled
 {
 	return _enabled;
@@ -307,11 +317,18 @@ static void __setupFunction(void)
 
 -(void)setMarqueeScrollEnabled:(BOOL)marqueeScrollEnabled
 {
+	if(_enabled == marqueeScrollEnabled)
+	{
+		return;
+	}
+	
 	_enabled = marqueeScrollEnabled;
 	if(!_enabled)
 	{
 		[self shutdownLabel];
 	}
+	
+	self.holdScrolling = !_enabled;
 }
 
 - (BOOL)isRunning

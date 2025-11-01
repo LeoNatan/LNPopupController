@@ -306,7 +306,7 @@ CGPoint MLOffsetCGPoint(CGPoint point, CGFloat offset);
 
 - (void)shutdownOnNilWindow
 {
-	if (!self.window)
+	if (self.window)
 	{
 		return;
 	}

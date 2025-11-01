@@ -275,6 +275,11 @@ NSArray* __LNPopupItemObservedKeys;
 	[LNPopupBar setAnimatesItemSetter:NO];
 }
 
+- (void)setTrailingBarButtonItems:(NSArray<UIBarButtonItem *> *)trailingBarButtonItems
+{
+	_trailingBarButtonItems = trailingBarButtonItems;
+}
+
 - (void)setTrailingBarButtonItems:(NSArray<UIBarButtonItem *> *)trailingBarButtonItems animated:(BOOL)animated
 {
 	[LNPopupBar setAnimatesItemSetter:animated];
@@ -286,7 +291,7 @@ NSArray* __LNPopupItemObservedKeys;
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@: %p %@ image: %@", NSStringFromClass(self.class), self, self.swiftuiTitleContentView ? [NSString stringWithFormat:@"titleView: %@", self.swiftuiTitleContentView] : [NSString stringWithFormat:@"title: “%@” subtitle: “%@”", self.title, self.subtitle], self.swiftuiImageController ?: self.image];
+	return [NSString stringWithFormat:@"<%@: %p %@ image: %@", NSStringFromClass(self.class), self, self.swiftuiTitleContentViewController ? [NSString stringWithFormat:@"titleView: %@", self.swiftuiTitleContentViewController] : [NSString stringWithFormat:@"title: “%@” subtitle: “%@”", self.title, self.subtitle], self.swiftuiImageController ?: self.image];
 }
 
 @end

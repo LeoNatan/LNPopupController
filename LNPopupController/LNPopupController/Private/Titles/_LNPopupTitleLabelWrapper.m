@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Léo Natan on 25/10/25.
-//  Copyright © 2025 Léo Natan. All rights reserved.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "_LNPopupTitleLabelWrapper.h"
@@ -21,19 +21,22 @@
 + (instancetype)wrapperForLabel:(UILabel*)wrapped
 {
 	_LNPopupTitleLabelWrapper* rv = [[_LNPopupTitleLabelWrapper alloc] initWithFrame:wrapped.bounds];
+	wrapped.translatesAutoresizingMaskIntoConstraints = NO;
+	
 	rv.wrapped = wrapped;
 	
-	rv.translatesAutoresizingMaskIntoConstraints = wrapped.translatesAutoresizingMaskIntoConstraints;
-	rv.wrapped.translatesAutoresizingMaskIntoConstraints = NO;
+	rv.translatesAutoresizingMaskIntoConstraints = YES;
+	rv.autoresizingMask = UIViewAutoresizingNone;
 	
 	[rv addSubview:wrapped];
 	
 	rv.wrappedWidthConstraint = [wrapped.widthAnchor constraintEqualToConstant:rv.bounds.size.width];
+	rv.wrappedWidthConstraint.constant = rv.bounds.size.width;
 	
 	[NSLayoutConstraint activateConstraints:@[
 		[rv.leadingAnchor constraintEqualToAnchor:wrapped.leadingAnchor],
 		[rv.heightAnchor constraintEqualToAnchor:wrapped.heightAnchor],
-		rv->_wrappedWidthConstraint
+		rv.wrappedWidthConstraint
 	]];
 	
 	return rv;
@@ -41,14 +44,9 @@
 
 - (void)setBounds:(CGRect)bounds
 {
-	if(CGRectEqualToRect(bounds, super.bounds) == YES)
-	{
-		return;
-	}
-	
 	[super setBounds:bounds];
 	
-	if(_wrappedWidthConstraint.constant == bounds.size.width)
+	if(_wrappedWidthConstraint.constant == bounds.size.width || _target == bounds.size.width)
 	{
 		return;
 	}

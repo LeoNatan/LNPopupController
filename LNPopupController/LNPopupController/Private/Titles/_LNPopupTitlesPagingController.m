@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Léo Natan on 16/10/25.
-//  Copyright © 2025 Léo Natan. All rights reserved.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "_LNPopupTitlesPagingController.h"
@@ -119,17 +119,24 @@
 
 - (_LNPopupTitlesController*)pageViewController:(_LNPopupTitlesPagingController*)pageViewController viewControllerBeforeViewController:(_LNPopupTitlesController*)viewController
 {
-	return [self titlesControllerBeforeAfterTitlesController:viewController sel:@selector(popupBar:popupItemBeforePopupItem:)];
+	_LNPopupTitlesController* rv = [self titlesControllerBeforeAfterTitlesController:viewController sel:@selector(popupBar:popupItemBeforePopupItem:)];
+	rv.marqueePaused = YES;
+	return rv;
 }
 
 - (_LNPopupTitlesController*)pageViewController:(_LNPopupTitlesPagingController*)pageViewController viewControllerAfterViewController:(_LNPopupTitlesController*)viewController
 {
-	return [self titlesControllerBeforeAfterTitlesController:viewController sel:@selector(popupBar:popupItemAfterPopupItem:)];
+	_LNPopupTitlesController* rv = [self titlesControllerBeforeAfterTitlesController:viewController sel:@selector(popupBar:popupItemAfterPopupItem:)];
+	rv.marqueePaused = YES;
+	return rv;
 }
 
-- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<UIViewController *> *)previousViewControllers transitionCompleted:(BOOL)completed
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray<_LNPopupTitlesController *> *)previousViewControllers transitionCompleted:(BOOL)completed
 {
-	[_popupBar._barDelegate _popupBar:_popupBar setPagedPopupItem:self.viewControllers.firstObject.popupItem];
+	_LNPopupTitlesController* newCurrent = self.viewControllers.firstObject;
+	_LNPopupTitlesController* old = previousViewControllers.firstObject;
+	newCurrent.marqueePaused = old.marqueePaused;
+	[_popupBar._barDelegate _popupBar:_popupBar setPagedPopupItem:newCurrent.popupItem];
 }
 
 @end

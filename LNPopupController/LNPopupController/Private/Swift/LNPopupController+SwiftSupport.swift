@@ -17,6 +17,10 @@ extension UIView {
 	@objc(_ln_fixUIHostingViewHitTest)
 	static private
 	func __fixUIHostingViewHitTest() {
+		guard #unavailable(iOS 26) else {
+			return
+		}
+		
 		DispatchQueue.main.async {
 			guard let view = UIHostingController(rootView: EmptyView()).view else {
 				return

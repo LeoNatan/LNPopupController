@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Léo Natan on 16/10/25.
-//  Copyright © 2025 Léo Natan. All rights reserved.
+//  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
 #import "_LNPopupTitlesController.h"
@@ -43,6 +43,8 @@
 		_popupItem = popupItem;
 		
 		[self setNeedsTitleLayoutRemovingLabels:NO];
+		
+		_marqueePaused = NO;
 	}
 	return self;
 }
@@ -224,6 +226,7 @@
 				if(_titleLabel == nil)
 				{
 					_titleLabel = [self _labelWithFrame:titleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
+					_titleLabel.marqueeScrollEnabled = self.marqueePaused == NO;
 #if DEBUG
 					if(_LNEnableBarLayoutDebug())
 					{
@@ -264,6 +267,7 @@
 				if(_subtitleLabel == nil)
 				{
 					_subtitleLabel = [self _labelWithFrame:subtitleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
+					_subtitleLabel.marqueeScrollEnabled = self.marqueePaused == NO;
 #if DEBUG
 					if(_LNEnableBarLayoutDebug())
 					{
