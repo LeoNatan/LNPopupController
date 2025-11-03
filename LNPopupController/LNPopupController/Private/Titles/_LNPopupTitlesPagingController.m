@@ -57,7 +57,6 @@
 	_scrollView = [self valueForKey:@"scrollView"];
 	
 	_scrollView.decelerationRate = UIScrollViewDecelerationRateFast;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if(@available(iOS 26.0, *))
 	{
 		_scrollView.topEdgeEffect.hidden = YES;
@@ -65,7 +64,6 @@
 		_scrollView.bottomEdgeEffect.hidden = YES;
 		_scrollView.rightEdgeEffect.hidden = YES;
 	}
-#endif
 	_scrollView.delegate = self;
 }
 

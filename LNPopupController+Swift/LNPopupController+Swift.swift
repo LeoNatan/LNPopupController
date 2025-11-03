@@ -160,7 +160,6 @@ extension LNPopupBarAppearance {
 		}
 	}
 	
-#if compiler(>=6.2)
 	/// A configuration that defines the corners of the floating background view.
 	///
 	/// Set to `nil` to use the system default.
@@ -186,7 +185,6 @@ extension LNPopupBarAppearance {
 			}
 		}
 	}
-#endif
 }
 
 public

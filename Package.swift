@@ -1,4 +1,4 @@
-// swift-tools-version:6.0
+// swift-tools-version:6.2
 // LNPopupController:4.3.7
 
 import PackageDescription

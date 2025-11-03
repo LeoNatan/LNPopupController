@@ -736,13 +736,11 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		if(LNPopupEnvironmentHasGlass())
 		{
 			_contentView.effectView.clipsToBounds = YES;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 			if(@available(iOS 26.0, *))
 			{
 				_contentView.effectView.cornerConfiguration = [self.activeAppearance floatingBackgroundCornerConfigurationForCustomBar:_resolvedIsCustom barHeight:barHeight screen:self.window.screen wantsFullWidth:self.customBarWantsFullBarWidth margins:self.layoutMargins];
 				_floatingBackgroundShadowView.cornerConfiguration = _contentView.effectView.cornerConfiguration;
 			}
-#endif
 		}
 		else
 		{
@@ -885,18 +883,14 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	}
 	
 	CGFloat cornerRadius;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if(@available(iOS 26.0, *))
 	{
 		cornerRadius = [_contentView.effectView effectiveRadiusForCorner:UIRectCornerAllCorners];
 	}
 	else
 	{
-#endif
 		cornerRadius = _contentView.cornerRadius / 2.5;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	}
-#endif
 	CGFloat width = 0;
 	CGFloat height = 0;
 	CGFloat offset = 0;
@@ -1223,7 +1217,6 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 			[_contentView clearEffect];
 		}
 		
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		if(effect.ln_isGlass)
 		{
@@ -1231,17 +1224,14 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 			wrapper.disableForeground = self.activeAppearance.isFloatingBarShineEnabled;
 			effect = wrapper;
 		}
-#endif
 		
 		_contentView.effect = effect;
 		
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		{
 			_resolvedIsGlass = effect.ln_isGlass;
 			_resolvedIsGlassInteractive = _resolvedIsGlass && ((UIGlassEffect*)effect).isInteractive;
 		}
-#endif
 			
 		__auto_type floatingBackgroundColor = self.activeAppearance.floatingBackgroundColor;
 		__auto_type floatingBackgroundImage = self.activeAppearance.floatingBackgroundImage;
@@ -1283,18 +1273,14 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	_toolbar.standardAppearance.buttonAppearance = self.activeAppearance.buttonAppearance ?: _toolbar.standardAppearance.buttonAppearance;
 	
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if(@available(iOS 26.0, *))
 	{
 		_toolbar.standardAppearance.prominentButtonAppearance = self.activeAppearance.prominentButtonAppearance ?: _toolbar.standardAppearance.prominentButtonAppearance;
 	}
 	else
 	{
-#endif
 		_toolbar.standardAppearance.doneButtonAppearance = self.activeAppearance.prominentButtonAppearance ?: _toolbar.standardAppearance.doneButtonAppearance;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	}
-#endif
 	
 	if(!LNPopupEnvironmentHasGlass())
 	{

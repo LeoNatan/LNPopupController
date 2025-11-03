@@ -39,7 +39,6 @@ class CustomTabBar: UIView {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		
-#if compiler(>=6.2)
 		if #available(iOS 26, *) {
 			effectView.cornerConfiguration = .capsule()
 			stackView.cornerConfiguration = .capsule()
@@ -48,15 +47,10 @@ class CustomTabBar: UIView {
 			layer.cornerRadius = 8
 			layer.cornerCurve = .continuous
 		}
-#else
-		clipsToBounds = true
-		layer.cornerRadius = 8
-		layer.cornerCurve = .continuous
-#endif
 		
 		effectView.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(effectView)
-#if compiler(>=6.2)
+
 		if #available(iOS 26, *) {
 			let glass = UIGlassEffect(style: .regular)
 			glass.isInteractive = true
@@ -64,9 +58,6 @@ class CustomTabBar: UIView {
 		} else {
 			effectView.effect = UIBlurEffect(style: .systemChromeMaterial)
 		}
-#else
-		effectView.effect = UIBlurEffect(style: .systemChromeMaterial)
-#endif
 		
 		stackView.translatesAutoresizingMaskIntoConstraints = false
 		effectView.contentView.addSubview(stackView)

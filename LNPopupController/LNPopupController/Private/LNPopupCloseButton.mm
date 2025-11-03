@@ -307,7 +307,6 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (void)_setupForGlassButton API_AVAILABLE(ios(26.0))
 {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	UIButtonConfiguration* glassConfig;
 	switch(self.effectiveStyle)
 	{
@@ -341,7 +340,6 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	glassConfig.image = [UIImage systemImageNamed:@"xmark"];
 	glassConfig.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
 	self.configuration = glassConfig;
-#endif
 }
 
 - (void)_didTouchDown

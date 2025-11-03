@@ -49,10 +49,8 @@ class MusicTabBarController: UITabBarController {
 		
 #endif
 		
-#if compiler(>=6.2)
 		if #available(iOS 26.0, *) {
 			tabBarMinimizeBehavior = .onScrollDown
 		}
-#endif
 	}
 }

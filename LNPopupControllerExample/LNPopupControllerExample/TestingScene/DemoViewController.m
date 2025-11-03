@@ -225,7 +225,6 @@
 	[self updateHideTabBarButtonHiddenStateForTraitCollection:self.traitCollection];
 	
 	UIButtonConfiguration* config;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if(@available(iOS 26.0, *))
 	{
 		if(LNPopupSettingsHasOS26Glass())
@@ -240,12 +239,9 @@
 	}
 	else
 	{
-#endif
 		config = [UIButtonConfiguration borderlessButtonConfiguration];
 		config.baseForegroundColor = self.view.tintColor;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	}
-#endif
 	
 	if(LNPopupSettingsHasOS26Glass())
 	{
@@ -654,7 +650,6 @@
 			break;
 	}
 	
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if(@available(iOS 26.0, *))
 	{
 		if(wantsGlassBackground)
@@ -662,7 +657,6 @@
 			targetVC.popupContentView.backgroundEffect = [UIGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
 		}
 	}
-#endif
 	
 	LNPopupCloseButtonStyle closeButtonStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingCloseButtonStyle] unsignedIntegerValue];
 	if(LNPopupSettingsHasOS26Glass() && closeButtonStyle == LNPopupCloseButtonStyleDefault)
@@ -696,7 +690,6 @@
 	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingVisualEffectViewBlurEffect];
 	if(effectOverride != nil && effectOverride.integerValue != 0xffff && (effectOverride.integerValue >= 0 || LNPopupSettingsHasOS26Glass()))
 	{
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		if(effectOverride.integerValue < 0 && LNPopupSettingsHasOS26Glass())
 		{
@@ -706,7 +699,6 @@
 			//Always floating
 			targetVC.popupBar.standardAppearance.floatingBackgroundEffect = glassEffect;
 		}
-#endif
 		
 		if(effectOverride.integerValue >= 0)
 		{

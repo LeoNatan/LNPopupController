@@ -1672,7 +1672,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		{
 			[UIView performWithoutAnimation:^{
 				self.popupBar.floatingBackgroundShadowView.alpha = 0.0;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 				if(@available(iOS 26.0, *))
 				if(LNPopupEnvironmentHasGlass())
 				{
@@ -1700,7 +1699,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 					self.popupBar.os26TransitionView.transform = CGAffineTransformMakeScale(1.05, 1.05);
 					self.popupBar.os26TransitionView.alpha = 0.0;
 				}
-#endif
 			}];
 		}
 		
@@ -2058,7 +2056,6 @@ id __LNPopupEmptyBlurFilter(void)
 					}];
 				}
 		
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 				if(@available(iOS 26, *))
 				if(animated && LNPopupEnvironmentHasGlass())
 				{
@@ -2070,7 +2067,6 @@ id __LNPopupEmptyBlurFilter(void)
 					[self.popupBar.contentView.contentView.layer setValue:@20 forKeyPath:__LNPopupBlurFilterUpdateKey];
 #endif
 				}
-#endif
 			}];
 			
 			if(animated && LNPopupEnvironmentHasGlass())

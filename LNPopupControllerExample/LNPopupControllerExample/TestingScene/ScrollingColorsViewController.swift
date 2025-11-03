@@ -21,12 +21,10 @@ class ScrollingColorsViewController: UICollectionViewController {
 		
 		collectionView.collectionViewLayout = isVertical ? createVerticalGridLayout() : createHorizontalGridLayout()
 		
-#if compiler(>=6.2)
 		if #available(iOS 26.0, *) {
 			collectionView.topEdgeEffect.isHidden = true
 			collectionView.bottomEdgeEffect.isHidden = true
 		}
-#endif
 		
 		let useCompact = LNBarIsCompact()
 		

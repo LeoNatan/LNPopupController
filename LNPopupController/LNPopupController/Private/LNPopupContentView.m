@@ -330,7 +330,6 @@
 			effectToUse = [appearance floatingBackgroundEffectForPopupBar:nil containerController:nil traitCollection:vc.traitCollection];
 		}
 		
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		if(effectToUse.ln_isGlass)
 		{
@@ -339,7 +338,6 @@
 			wrapper.disableInteractive = _backgroundEffect == nil;
 			effectToUse = wrapper;
 		}
-#endif
 		
 		_effectView.effect = effectToUse;
 	}

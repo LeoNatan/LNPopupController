@@ -95,12 +95,10 @@ NS_SWIFT_UI_ACTOR
 /// The content mode to use when rendering the ``floatingBackgroundImage``. Defaults to `UIViewContentMode.scaleToFill`. `UIViewContentMode.redraw` will be reinterpreted as `UIViewContentMode.scaleToFill`.
 @property (nonatomic, assign) UIViewContentMode floatingBackgroundImageContentMode;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 /// A configuration that defines the corners of the floating background view.
 ///
 /// Set to `nil` to use the system default.
 @property (nonatomic, copy, nullable) UICornerConfiguration* floatingBackgroundCornerConfiguration NS_REFINED_FOR_SWIFT API_AVAILABLE(ios(26.0));
-#endif
 
 /// The shadow displayed underneath the bar floating background.
 ///

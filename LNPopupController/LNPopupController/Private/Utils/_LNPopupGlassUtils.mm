@@ -16,7 +16,6 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 		if(@available(iOS 26.0, *))
 		{
 			rv = ![[NSBundle.mainBundle objectForInfoDictionaryKey:@"UIDesignRequiresCompatibility"] boolValue];
@@ -25,9 +24,6 @@ BOOL LNPopupEnvironmentHasGlass(void)
 		{
 			rv = NO;
 		}
-#else
-		rv = NO;
-#endif
 	});
 	
 	return rv;
@@ -37,20 +33,16 @@ BOOL LNPopupEnvironmentHasGlass(void)
 
 - (BOOL)ln_isGlass
 {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 	if(@available(iOS 26.0, *))
 	if([self isKindOfClass:UIGlassEffect.class])
 	{
 		return YES;
 	}
-#endif
 	
 	return NO;
 }
 
 @end
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
 
 @implementation _LNPopupGlassEffect
 
@@ -161,5 +153,3 @@ BOOL LNPopupEnvironmentHasGlass(void)
 }
 
 @end
-
-#endif

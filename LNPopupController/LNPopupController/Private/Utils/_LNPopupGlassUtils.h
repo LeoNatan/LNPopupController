@@ -19,8 +19,6 @@ extern BOOL LNPopupEnvironmentHasGlass(void);
 
 @end
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_18_5
-
 API_AVAILABLE(ios(26.0))
 @interface _LNPopupGlassEffect: UIGlassEffect
 
@@ -46,8 +44,6 @@ API_AVAILABLE(ios(26.0))
 @property (nonatomic, assign) BOOL disableShadow;
 
 @end
-
-#endif
 
 CF_EXTERN_C_END
 NS_ASSUME_NONNULL_END

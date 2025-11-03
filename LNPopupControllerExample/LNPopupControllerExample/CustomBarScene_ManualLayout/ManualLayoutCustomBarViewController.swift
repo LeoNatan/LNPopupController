@@ -44,15 +44,11 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 		
 		view.autoresizingMask = []
 		
-#if compiler(>=6.2)
 		if #available(iOS 26, *), LNPopupSettingsHasOS26Glass() {
 			// Use system background
 		} else {
 			setupBackgroundView()
 		}
-#else
-		setupBackgroundView()
-#endif
 		
 		centeredButton.setTitle(NSLocalizedString("Centered", comment: ""), for: .normal)
 		centeredButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
