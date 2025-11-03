@@ -1635,9 +1635,31 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 	return itemView;
 }
 
+static NSPredicate* _LNNonSpaceItemsPredicate(BOOL removeHidden)
+{
+	static NSPredicate* nonSpaceFilterPredicate;
+	static NSPredicate* includingHidden;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		nonSpaceFilterPredicate = [NSPredicate predicateWithFormat:@"isSystemItem == NO || !(systemItem IN %@)", @[@(UIBarButtonSystemItemFixedSpace), @(UIBarButtonSystemItemFlexibleSpace)]];
+		
+		if(@available(iOS 16.0, *))
+		{
+			includingHidden = [NSCompoundPredicate andPredicateWithSubpredicates:@[nonSpaceFilterPredicate, [NSPredicate predicateWithFormat:@"isHidden == NO"]]];
+		}
+		else
+		{
+			includingHidden = nonSpaceFilterPredicate;
+		}
+	});
+	
+	return removeHidden ? includingHidden : nonSpaceFilterPredicate;
+}
+
 - (void)_getLeftmostView:(UIView* __strong *)leftmostView rightmostView:(UIView* __strong *)rightmostView fromBarButtonItems:(NSArray<UIBarButtonItem*>*)barButtonItems
 {
-	NSArray<UIBarButtonItem*>* filtered = [barButtonItems filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(isSystemItem == NO || (systemItem != %@ && systemItem != %@)) && isHidden == NO", @(UIBarButtonSystemItemFixedSpace), @(UIBarButtonSystemItemFlexibleSpace)]];
+	
+	NSArray<UIBarButtonItem*>* filtered = [barButtonItems filteredArrayUsingPredicate:_LNNonSpaceItemsPredicate(true)];
 	
 	NSArray<UIBarButtonItem*>* sorted = [filtered sortedArrayWithOptions:0 usingComparator:^NSComparisonResult(UIBarButtonItem*  _Nonnull obj1, UIBarButtonItem*  _Nonnull obj2) {
 		
@@ -2143,7 +2165,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}
 	
 	[_toolbar setItems:items animated:NO];
-	_nonSpacingBarButtonItems = [items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(isSystemItem == NO || (systemItem != %@ && systemItem != %@))", @(UIBarButtonSystemItemFixedSpace), @(UIBarButtonSystemItemFlexibleSpace)]];
+	_nonSpacingBarButtonItems = [items filteredArrayUsingPredicate:_LNNonSpaceItemsPredicate(false)];
 	
 	if(LNPopupEnvironmentHasGlass())
 	{

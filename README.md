@@ -83,19 +83,19 @@ In this mode, your content controller is the source of the popup item to display
 
 ```swift
 class PopupContentViewController: UIViewController {
-	init() {
-		// ...
-		
-		popupItem.title = "Hello Title"
-		popupItem.subtitle = "And a Subtitle!"
-		popupItem.progress = 0.34
-        popupItem.barButtonItems = [/* ... */]
-	}
+  init() {
+    // ...
+    
+    popupItem.title = "Hello Title"
+    popupItem.subtitle = "And a Subtitle!"
+    popupItem.progress = 0.34
+    popupItem.barButtonItems = [/* ... */]
+  }
 }
 
 func presentPopupBar() {
-	let contentVC = PopupContentViewController()
-	tabBarController?.presentPopupBar(with: contentVC)
+  let contentVC = PopupContentViewController()
+  tabBarController?.presentPopupBar(with: contentVC)
 }
 ```
 
@@ -111,28 +111,28 @@ At any point, you can set the popup bar's `popupItem` with a new popup item. Whe
 
 ```swift
 class PopupContentViewController: UIViewController {
-	init() {
-		// ...
-	}
-	
-	override func popupItemDidChange(_ previousPopupItem: LNPopupItem?) {
-		// Handle updating the content view hierarchy with the new popup item
-	}
+  init() {
+    // ...
+  }
+  
+  override func popupItemDidChange(_ previousPopupItem: LNPopupItem?) {
+    // Handle updating the content view hierarchy with the new popup item
+  }
 }
 
 func presentPopupBar() {
-	tabBarController?.popupBar.usesContentControllersAsDataSource = false
-	
-	let initialPopupItem = LNPopupItem()
-	initialPopupItem.title = "Hello Title"
-	initialPopupItem.subtitle = "And a Subtitle!"
-	initialPopupItem.progress = 0.34
-	initialPopupItem.barButtonItems = [/* ... */]
-	
-	tabBarController?.popupBar.popupItem = initialPopupItem
-	
-	let contentVC = PopupContentViewController()
-	tabBarController?.presentPopupBar(with: contentVC)
+  tabBarController?.popupBar.usesContentControllersAsDataSource = false
+  
+  let initialPopupItem = LNPopupItem()
+  initialPopupItem.title = "Hello Title"
+  initialPopupItem.subtitle = "And a Subtitle!"
+  initialPopupItem.progress = 0.34
+  initialPopupItem.barButtonItems = [/* ... */]
+  
+  tabBarController?.popupBar.popupItem = initialPopupItem
+  
+  let contentVC = PopupContentViewController()
+  tabBarController?.presentPopupBar(with: contentVC)
 }
 ```
 
@@ -146,26 +146,26 @@ To implement, you must set the popup bar's data source, and in it, implement **b
 
 ```swift
 func presentPopupBar() {
-	// ...
-	tabBarController?.popupBar.dataSource = self.model
-	tabBarController?.popupBar.delegate = self
-	// ...
+  // ...
+  tabBarController?.popupBar.dataSource = self.model
+  tabBarController?.popupBar.delegate = self
+  // ...
 }
 
 // MARK: LNPopupDataSource
 
 func popupBar(_ popupBar: LNPopupBar, popupItemBefore popupItem: LNPopupItem) -> LNPopupItem? {
-	// Return a popop item representing the content before `popupItem` or `nil`
+  // Return a popop item representing the content before `popupItem` or `nil`
 }
 
 func popupBar(_ popupBar: LNPopupBar, popupItemAfter popupItem: LNPopupItem) -> LNPopupItem? {
-	// Return a popop item representing the content after `popupItem` or `nil`
+  // Return a popop item representing the content after `popupItem` or `nil`
 }
 
 // MARK: LNPopupDelegate
-	
+  
 func popupBar(_ popupBar: LNPopupBar, didDisplay newPopupItem: LNPopupItem, previous previousPopupItem: LNPopupItem?) {
-	// Called when the popup bar's popup item changes (in addition to the content controller's `UIViewController.popupItemDidChange(_:)` call)
+  // Called when the popup bar's popup item changes (in addition to the content controller's `UIViewController.popupItemDidChange(_:)` call)
 }
 ```
 
@@ -338,11 +338,11 @@ Remember to set the `inheritsAppearanceFromDockingView` property to `false`, or 
 ```swift
 let appearance = LNPopupBarAppearance()
 appearance.titleTextAttributes = AttributeContainer()
-    .font(UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!))
-    .foregroundColor(UIColor.yellow)
+  .font(UIFontMetrics(forTextStyle: .headline).scaledFont(for: UIFont(name: "Chalkduster", size: 14)!))
+  .foregroundColor(UIColor.yellow)
 appearance.subtitleTextAttributes = AttributeContainer()
-    .font(UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!))
-    .foregroundColor(UIColor.green)
+  .font(UIFontMetrics(forTextStyle: .subheadline).scaledFont(for: UIFont(name: "Chalkduster", size: 12)!))
+  .foregroundColor(UIColor.green)
 
 let floatingBarBackgroundShadow = NSShadow()
 floatingBarBackgroundShadow.shadowColor = UIColor.red
@@ -382,7 +382,7 @@ To listen to bar environment changes in your popup content controller and update
 
 ```swift
 registerForTraitChanges([LNPopupBar.EnvironmentTrait.self]) { (self: Self, previousTraitCollection) in
-    self.popupItem.barButtonItems?.last?.isHidden = self.traitCollection.popupBarEnvironment == .inline
+  self.popupItem.barButtonItems?.last?.isHidden = self.traitCollection.popupBarEnvironment == .inline
 }
 ```
 
@@ -549,36 +549,36 @@ If your bottom docking view is dependent on the safe area of your custom contain
 
 ```swift
 class MyCustomTabBarController: UITabBarController {
-	override var bottomDockingViewForPopupBar: UIView? {
-		return myCustomTabBar
-	}
-	
-	override var defaultFrameForBottomDockingView: CGRect {
-		myCustomTabBar.frame
-	}
-	
-	override var isBottomDockingViewForPopupBarHidden: Bool {
-		!isMyCustomTabBarVisible
-	}
-	
-	override var bottomDockingViewMarginForPopupBar: CGFloat {
-		8.0
-	}
-	
-	func toggleMyCustomTabBarVisible() {
-		UIView.animate(withDuration: 0.4, 
-                       delay: 0.0, 
-                       usingSpringWithDamping: 1.0, 
-                       initialSpringVelocity: 0.0) {
-			self.isMyCustomTabBarVisible.toggle()
-			
-			// Animate your bar position here according to isMyCustomTabBarVisible.
-            self.updateMyCustomTabBarConstraints()
-			
-			// Trigger a layout pass so that the popup bar animates to the correct position
-			self.view.layoutIfNeeded()
-		}
-	}
+  override var bottomDockingViewForPopupBar: UIView? {
+    return myCustomTabBar
+  }
+
+  override var defaultFrameForBottomDockingView: CGRect {
+    myCustomTabBar.frame
+  }
+
+  override var isBottomDockingViewForPopupBarHidden: Bool {
+    !isMyCustomTabBarVisible
+  }
+
+  override var bottomDockingViewMarginForPopupBar: CGFloat {
+    8.0
+  }
+
+  func toggleMyCustomTabBarVisible() {
+    UIView.animate(withDuration: 0.4, 
+                   delay: 0.0, 
+                   usingSpringWithDamping: 1.0, 
+                   initialSpringVelocity: 0.0) {
+      self.isMyCustomTabBarVisible.toggle()
+      
+      // Animate your bar position here according to isMyCustomTabBarVisible.
+      self.updateMyCustomTabBarConstraints()
+
+      // Trigger a layout pass so that the popup bar animates to the correct position
+      self.view.layoutIfNeeded()
+    }
+  }
 }
 ```
 
