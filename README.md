@@ -105,44 +105,47 @@ Each popup content controller manages its own popup item and is responsible to k
 
 In this mode, you provide a data source to the popup bar, which can provide one or more popup items. This decouples the popup item from the content controller and allows for more advanced scenarios, such as popup item paging. You activate this mode by setting popup bar's `usesContentControllersAsDataSource` to `false`.
 
-Before presenting a content controller, you must either provide an initial popup item or set the popup bar's data source, and implement `initialPopupItem(for:)` optional method. The system will use this popup item for popup bar presentation. Updates to popup items are tracked, and the popup bar is automatically updated with the latest information.
+Before presenting a content controller, you must either provide an initial popup item or set the popup bar's data source and implement the data source protocol's `initialPopupItem(for:)` optional method. The system will use this popup item for popup bar presentation. Updates to popup items are tracked, and the popup bar is automatically updated with the latest information.
 
 At any point, you can set the popup bar's `popupItem` with a new popup item. Whenever a popup bar's popup item changes, the `UIViewController.popupItemDidChange(_:)` method is called to let the content controller know its popup item has changed.
 
 ```swift
 class PopupContentViewController: UIViewController {
-  init() {
-    // ...
-  }
-  
+  // ...
+
   override func popupItemDidChange(_ previousPopupItem: LNPopupItem?) {
     // Handle updating the content view hierarchy with the new popup item
+    // or update self.popupItem as needed.
   }
 }
 
-func presentPopupBar() {
-  tabBarController?.popupBar.usesContentControllersAsDataSource = false
-  
-  let initialPopupItem = LNPopupItem()
-  initialPopupItem.title = "Hello Title"
-  initialPopupItem.subtitle = "And a Subtitle!"
-  initialPopupItem.progress = 0.34
-  initialPopupItem.barButtonItems = [/* ... */]
-  
-  tabBarController?.popupBar.popupItem = initialPopupItem
-  
-  let contentVC = PopupContentViewController()
-  tabBarController?.presentPopupBar(with: contentVC)
+class PopupContainerController: UIViewController {
+  // ...
+
+  func presentPopupBar() {
+    tabBarController?.popupBar.usesContentControllersAsDataSource = false
+    
+    let initialPopupItem = LNPopupItem()
+    initialPopupItem.title = "Hello Title"
+    initialPopupItem.subtitle = "And a Subtitle!"
+    initialPopupItem.progress = 0.34
+    initialPopupItem.barButtonItems = [/* ... */]
+    
+    tabBarController?.popupBar.popupItem = initialPopupItem
+    
+    let contentVC = PopupContentViewController()
+    tabBarController?.presentPopupBar(with: contentVC)
+  }
 }
 ```
 
 #### Popup Item Paging
 
-When implemented, the popup bar allows the user to page between different popup items through swiping on the title views.
+In this mode, the popup bar allows the user to page between different popup items by swiping on the title views.
 
 <p align="center"><img style="border: 1px solid #555555;" src="./Supplements/floating_paging.gif" width="414"/></p>
 
-To implement, you must set the popup bar's data source, and in it, implement **both** `popupBar(_:popupItemBefore:)` and `popupBar(_:popupItemAfter:)`. Optionally, you can also set a popup bar delegate and implement `popupBar(_:didDisplay:previous:)` to be notified when a new popup item is displayed (in addition to the popup content controller's `UIViewController.popupItemDidChange(_:)` call).
+To implement, you must set the popup bar's data source, and in it, implement **both** `popupBar(_:popupItemBefore:)` and `popupBar(_:popupItemAfter:)` data source protocol methods. Optionally, you can also set a popup bar delegate and implement `popupBar(_:didDisplay:previous:)` to be notified when a new popup item is displayed (in addition to the popup content controller's `UIViewController.popupItemDidChange(_:)` call).
 
 ```swift
 func presentPopupBar() {
