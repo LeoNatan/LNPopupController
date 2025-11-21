@@ -73,6 +73,8 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
+	scrollView.userInteractionEnabled = NO;
+
 	if(decelerate == NO)
 	{
 		[_popupBar._barDelegate _generatePagingFeedbackForPopupBar:_popupBar];
@@ -86,6 +88,8 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+	scrollView.userInteractionEnabled = YES;
+
 	//This will allow next swipe to re-query the data source.
 	self.dataSource = nil;
 	if(_pagingEnabled)
