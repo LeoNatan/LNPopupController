@@ -1440,7 +1440,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	if(_swiftuiTitleContentViewController.view != nil)
 	{
-		[_swiftuiTitleContentView removeFromSuperview];
+		[_swiftuiTitleContentViewController.view removeFromSuperview];
 	}
 	
 	_swiftuiTitleContentViewController = swiftuiTitleContentViewController;
