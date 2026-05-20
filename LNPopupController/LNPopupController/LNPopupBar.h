@@ -96,6 +96,13 @@ NS_SWIFT_UI_ACTOR
 /// A popup bar is a view that displays popup information. Content is populated from ``LNPopupItem`` items.
 @interface LNPopupBar : UIView <UIAppearanceContainer>
 
+/// Controls whether non-floating bar styles are automatically converted to floating styles on iOS 26 and later.
+///
+/// Defaults to `true`.
+///
+/// Set this to `false` before presenting a popup bar if you want to keep legacy non-floating style resolution behavior.
+@property (class, nonatomic, assign) BOOL convertsLegacyBarStylesToFloatingOnIOS26;
+
 /// If `true`, the popup bar will automatically inherit its appearance from the bottom docking view.
 ///
 /// Defaults to `true`.

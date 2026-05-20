@@ -122,7 +122,7 @@ LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, BOOL*
 	
 	LNPopupBarStyle rv = style;
 	
-	if(LNPopupEnvironmentHasGlass())
+	if(LNPopupEnvironmentHasGlass() && LNPopupBar.convertsLegacyBarStylesToFloatingOnIOS26)
 	{
 		if(isFloating)
 		{
@@ -233,6 +233,18 @@ __attribute__((objc_direct_members))
 	BOOL _animatesItemSetter;
 	
 	NSArray<UIBarButtonItem*>* _nonSpacingBarButtonItems;
+}
+
+static BOOL __ln_convertsLegacyBarStylesToFloatingOnIOS26 = YES;
+
++ (BOOL)convertsLegacyBarStylesToFloatingOnIOS26
+{
+	return __ln_convertsLegacyBarStylesToFloatingOnIOS26;
+}
+
++ (void)setConvertsLegacyBarStylesToFloatingOnIOS26:(BOOL)convertsLegacyBarStylesToFloatingOnIOS26
+{
+	__ln_convertsLegacyBarStylesToFloatingOnIOS26 = convertsLegacyBarStylesToFloatingOnIOS26;
 }
 
 static BOOL __animatesItemSetter = NO;
