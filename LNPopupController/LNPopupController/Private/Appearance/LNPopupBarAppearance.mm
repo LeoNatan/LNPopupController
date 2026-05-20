@@ -248,19 +248,7 @@ static NSArray* __notifiedProperties = nil;
 	
 	if(isCustomBar)
 	{
-		if(wantsFullWidth)
-		{
-			return [UICornerConfiguration configurationWithUniformRadius:[UICornerRadius fixedRadius:20]];
-		}
-		
-		if(barHeight < 70)
-		{
-			return [UICornerConfiguration capsuleConfiguration];
-		}
-		
-		CGFloat margin = MAX(margins.left, margins.right);
-		CGFloat screenRadius = MAX((screen ?: UIScreen.mainScreen)._ln_cornerRadius, margin + 20);
-		return [UICornerConfiguration configurationWithUniformRadius:[UICornerRadius fixedRadius:screenRadius - margin]];
+		return [UICornerConfiguration configurationWithUniformRadius:[UICornerRadius fixedRadius:6]];
 	}
 	
 	return [UICornerConfiguration capsuleConfiguration];
