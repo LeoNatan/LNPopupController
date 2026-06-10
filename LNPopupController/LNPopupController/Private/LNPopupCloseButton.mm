@@ -99,6 +99,7 @@ __attribute__((objc_direct_members))
 	UIView* _highlightView;
 	
 	LNChevronView* _chevronView;
+	UIView* _grabberView;
 }
 
 @synthesize style=__style;
@@ -188,9 +189,13 @@ __attribute__((objc_direct_members))
 	{
 		[self _setupForCircularButton];
 	}
-	else if(self.effectiveStyle == LNPopupCloseButtonStyleChevron || self.effectiveStyle == LNPopupCloseButtonStyleGrabber)
+	else if(self.effectiveStyle == LNPopupCloseButtonStyleChevron)
 	{
 		[self _setupForChevronButton];
+	}
+	else if(self.effectiveStyle == LNPopupCloseButtonStyleGrabber)
+	{
+		[self _setupForGrabberButton];
 	}
 }
 
@@ -218,6 +223,9 @@ __attribute__((objc_direct_members))
 	
 	[_chevronView removeFromSuperview];
 	_chevronView = nil;
+
+	[_grabberView removeFromSuperview];
+	_grabberView = nil;
 	
 	[_effectView removeFromSuperview];
 	_effectView = nil;
@@ -237,12 +245,31 @@ __attribute__((objc_direct_members))
 
 static CGFloat LNPopupCloseButtonGrabberWidth(void)
 {
-	static CGFloat rv;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		rv = LNPopupEnvironmentHasGlass() ? 70 : 42;
-	});
-	return rv;
+	return 36;
+}
+
+static CGFloat LNPopupCloseButtonGrabberHeight(void)
+{
+	return 5;
+}
+
+- (void)_setupForGrabberButton
+{
+	_grabberView = [[UIView alloc] initWithFrame:CGRectZero];
+	_grabberView.translatesAutoresizingMaskIntoConstraints = NO;
+	_grabberView.userInteractionEnabled = NO;
+	_grabberView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1.0];
+	_grabberView.layer.cornerRadius = LNPopupCloseButtonGrabberHeight() / 2.0;
+	_grabberView.layer.cornerCurve = kCACornerCurveCircular;
+
+	[self addSubview:_grabberView];
+
+	[NSLayoutConstraint activateConstraints:@[
+		[_grabberView.topAnchor constraintEqualToAnchor:self.topAnchor],
+		[_grabberView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
+		[_grabberView.widthAnchor constraintEqualToConstant:LNPopupCloseButtonGrabberWidth()],
+		[_grabberView.heightAnchor constraintEqualToConstant:LNPopupCloseButtonGrabberHeight()],
+	]];
 }
 
 - (void)_setupForChevronButton
@@ -253,7 +280,7 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	_chevronView.translatesAutoresizingMaskIntoConstraints = NO;
 	
 	_chevronView.width = 5.0;
-	[_chevronView setState:self.effectiveStyle == LNPopupCloseButtonStyleGrabber ? LNChevronViewStateFlat : LNChevronViewStateUp animated:NO];
+	[_chevronView setState:LNChevronViewStateUp animated:NO];
 	
 	self.tintColor = [UIColor colorWithWhite:0.5 alpha:1.0];
 	[self addSubview:_chevronView];
@@ -261,8 +288,8 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	[NSLayoutConstraint activateConstraints:@[
 		[_chevronView.topAnchor constraintEqualToAnchor:self.topAnchor],
 		[_chevronView.centerXAnchor constraintEqualToAnchor:self.centerXAnchor],
-		[_chevronView.widthAnchor constraintEqualToConstant:self.effectiveStyle == LNPopupCloseButtonStyleGrabber ? LNPopupCloseButtonGrabberWidth() : 40],
-		[_chevronView.heightAnchor constraintEqualToConstant:self.effectiveStyle == LNPopupCloseButtonStyleGrabber ? 15 : 20],
+		[_chevronView.widthAnchor constraintEqualToConstant:40],
+		[_chevronView.heightAnchor constraintEqualToConstant:20],
 	]];
 }
 
@@ -466,6 +493,7 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	[super setTintColor:tintColor];
 	
 	_chevronView.tintColor = self.tintColor;
+	_grabberView.backgroundColor = self.tintColor;
 }
 
 - (void)tintColorDidChange
