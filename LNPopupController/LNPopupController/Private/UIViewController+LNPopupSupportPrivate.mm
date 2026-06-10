@@ -72,6 +72,28 @@ static NSTimeInterval __ln_tabBarTransitionDuration(UIViewController* vc, NSUInt
 
 #ifndef LNPopupControllerEnforceStrictClean
 static id __accessibilityBundleLoadObserver;
+
+static IMP __LNSwizzleAccessibilitySpeakThisViewController(Class accessibilityClass, Class targetClass)
+{
+	if(accessibilityClass == nil || targetClass == nil)
+	{
+		return nil;
+	}
+
+	static SEL accessibilitySpeakThisViewControllerSelector = NSSelectorFromString(LNPopupHiddenString("_accessibilitySpeakThisViewController"));
+	Method accessibilityMethod = LNSwizzleClassGetInstanceMethod(accessibilityClass, accessibilitySpeakThisViewControllerSelector);
+	Method targetMethod = LNSwizzleClassGetInstanceMethod(targetClass, NSSelectorFromString(@"_aSTVC"));
+
+	if(accessibilityMethod == nil || targetMethod == nil)
+	{
+		return nil;
+	}
+
+	IMP originalImplementation = method_getImplementation(accessibilityMethod);
+	method_exchangeImplementations(accessibilityMethod, targetMethod);
+	return originalImplementation;
+}
+
 __attribute__((constructor))
 static void __accessibilityBundleLoadHandler(void)
 {
@@ -82,27 +104,16 @@ static void __accessibilityBundleLoadHandler(void)
 			return;
 		}
 		
-		NSString* selName = LNPopupHiddenString("_accessibilitySpeakThisViewController");
-		
 		//UIViewControllerAccessibility
 		//_accessibilitySpeakThisViewController
 		NSString* clsName = LNPopupHiddenString("UIViewControllerAccessibility");
-		Method m1 = LNSwizzleClassGetInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
-		__orig_uiVCA_aSTVC = reinterpret_cast<decltype(__orig_uiVCA_aSTVC)>(method_getImplementation(m1));
-		Method m2 = LNSwizzleClassGetInstanceMethod([UIViewController class], NSSelectorFromString(@"_aSTVC"));
-		method_exchangeImplementations(m1, m2);
+		__orig_uiVCA_aSTVC = reinterpret_cast<decltype(__orig_uiVCA_aSTVC)>(__LNSwizzleAccessibilitySpeakThisViewController(NSClassFromString(clsName), [UIViewController class]));
 		
 		clsName = LNPopupHiddenString("UINavigationControllerAccessibility");
-		m1 = LNSwizzleClassGetInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
-		__orig_uiNVCA_aSTVC = reinterpret_cast<decltype(__orig_uiNVCA_aSTVC)>(method_getImplementation(m1));
-		m2 = LNSwizzleClassGetInstanceMethod([UINavigationController class], NSSelectorFromString(@"_aSTVC"));
-		method_exchangeImplementations(m1, m2);
+		__orig_uiNVCA_aSTVC = reinterpret_cast<decltype(__orig_uiNVCA_aSTVC)>(__LNSwizzleAccessibilitySpeakThisViewController(NSClassFromString(clsName), [UINavigationController class]));
 		
 		clsName = LNPopupHiddenString("UITabBarControllerAccessibility");
-		m1 = LNSwizzleClassGetInstanceMethod(NSClassFromString(clsName), NSSelectorFromString(selName));
-		__orig_uiTBCA_aSTVC = reinterpret_cast<decltype(__orig_uiTBCA_aSTVC)>(method_getImplementation(m1));
-		m2 = LNSwizzleClassGetInstanceMethod([UITabBarController class], NSSelectorFromString(@"_aSTVC"));
-		method_exchangeImplementations(m1, m2);
+		__orig_uiTBCA_aSTVC = reinterpret_cast<decltype(__orig_uiTBCA_aSTVC)>(__LNSwizzleAccessibilitySpeakThisViewController(NSClassFromString(clsName), [UITabBarController class]));
 		
 		[[NSNotificationCenter defaultCenter] removeObserver:__accessibilityBundleLoadObserver];
 		__accessibilityBundleLoadObserver = nil;
@@ -510,6 +521,11 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 	}
 	
 	//_accessibilitySpeakThisViewController
+	if(__orig_uiVCA_aSTVC == nil)
+	{
+		return self;
+	}
+
 	return __orig_uiVCA_aSTVC(self, _cmd);
 }
 
@@ -1322,6 +1338,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	
 	//_accessibilitySpeakThisViewController
+	if(__orig_uiTBCA_aSTVC == nil)
+	{
+		return self;
+	}
+
 	return __orig_uiTBCA_aSTVC(self, _cmd);
 }
 
@@ -2241,6 +2262,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	
 	//_accessibilitySpeakThisViewController
+	if(__orig_uiNVCA_aSTVC == nil)
+	{
+		return self;
+	}
+
 	return __orig_uiNVCA_aSTVC(self, _cmd);
 }
 
