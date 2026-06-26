@@ -1970,6 +1970,37 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	return self.toolbar;
 }
 
+- (CGFloat)_ln_toolbarInsetForView:(UIView*)floatingBarContainerView API_AVAILABLE(ios(26.0))
+{
+	[floatingBarContainerView layoutIfNeeded];
+	
+	if(@available(iOS 27.0, *))
+	{
+		UIView* glassView = [floatingBarContainerView _ln_firstSubviewPassingTest:^BOOL(UIView * _Nonnull viewToTest) {
+			return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"];
+		}];
+		
+		if(glassView == nil)
+		{
+			return 0;
+		}
+		
+		CGRect converted = [floatingBarContainerView convertRect:glassView.layer.bounds fromView:glassView];
+		
+		UIView* layerDelegate = (id)glassView.layer.superlayer.delegate;
+		if(!CGRectEqualToRect(layerDelegate.frame, CGRectZero))
+		{
+			//Since there is no way to query the exact frame of the "toolbar" in iOS 27.0, we guess. Here, when animating, the converted rect is slightly off, so we try to compensate.
+			converted.origin.y += 5;
+		}
+		
+		return floatingBarContainerView.bounds.size.height - CGRectGetMinY(converted) + 8;
+	}
+	
+	static auto toolbarOverlayInsetKey = LNPopupHiddenString("toolbarOverlayInset");
+	return [[floatingBarContainerView valueForKey:toolbarOverlayInsetKey] doubleValue];
+}
+
 - (BOOL)_ln_isToolbarHiddenOrSwiftUIBuggyToolbar
 {
 	if(self.isToolbarHidden)
@@ -1982,11 +2013,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		if(LNPopupEnvironmentHasGlass())
 		{
 			static auto floatingBarContainerViewKey = LNPopupHiddenString("floatingBarContainerView");
-			static auto toolbarOverlayInsetKey = LNPopupHiddenString("toolbarOverlayInset");
+			
 			
 			UIView* floatingBarContainerView = [self valueForKey:floatingBarContainerViewKey];
-			[floatingBarContainerView layoutIfNeeded];
-			CGFloat inset = [[floatingBarContainerView valueForKey:toolbarOverlayInsetKey] doubleValue];
+			CGFloat inset = [self _ln_toolbarInsetForView:floatingBarContainerView];
 			
 			if(inset == 0)
 			{
@@ -2022,14 +2052,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		return super.defaultFrameForBottomDockingView_internal;
 	}
 	
+	if(@available(iOS 26.0, *))
 	if(LNPopupEnvironmentHasGlass())
 	{
 		static auto floatingBarContainerViewKey = LNPopupHiddenString("floatingBarContainerView");
-		static auto toolbarOverlayInsetKey = LNPopupHiddenString("toolbarOverlayInset");
 
 		UIView* floatingBarContainerView = [self valueForKey:floatingBarContainerViewKey];
-		[floatingBarContainerView layoutIfNeeded];
-		CGFloat inset = [[floatingBarContainerView valueForKey:toolbarOverlayInsetKey] doubleValue];
+		CGFloat inset = [self _ln_toolbarInsetForView:floatingBarContainerView];
 		
 		if(self._ln_isToolbarHiddenOrSwiftUIBuggyToolbar)
 		{

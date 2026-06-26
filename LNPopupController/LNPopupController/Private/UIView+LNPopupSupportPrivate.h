@@ -38,6 +38,7 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 - (void)_ln_freezeInsets;
 
 - (BOOL)_ln_isAncestorOfView:(UIView *)view;
+- (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test;
 
 @property (nonatomic, readonly) CGFloat _ln_simulatedCornerRadiusFromCorners;
 
