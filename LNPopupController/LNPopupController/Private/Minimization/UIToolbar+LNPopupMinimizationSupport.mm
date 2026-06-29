@@ -26,6 +26,15 @@
 		barInsets.trailing = MAX(margin - (floatingLayoutMargins.trailing - self.view.safeAreaInsets.right), 0);
 	}
 	
+	if(@available(iOS 27.0, *))
+	{
+		if(popupBar.supportsMinimization && self._ln_isToolbarHiddenOrSwiftUIBuggyToolbar == YES && LNPopupEnvironmentHasGlass())
+		{
+			barInsets.leading += 7;
+			barInsets.trailing += 7;
+		}
+	}
+	
 	return barInsets;
 }
 

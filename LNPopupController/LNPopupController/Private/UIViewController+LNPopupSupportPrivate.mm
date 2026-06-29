@@ -1536,7 +1536,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			self._ln_popupController_nocreate.popupBar.bottomShadowView.alpha = 0.0;
 		}
 		
-		[self __repositionPopupBarToClosed_hack];
+		if(ln_unavailable(iOS 27.0, *))
+		{
+			[self __repositionPopupBarToClosed_hack];
+		}
 		
 		if(isFloating)
 		{
@@ -1750,7 +1753,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		}
 		
 		[self _layoutPopupBarOrderForTransition];
-		[self __repositionPopupBarToClosed_hack];
+		if(ln_unavailable(iOS 27.0, *))
+		{
+			[self __repositionPopupBarToClosed_hack];
+		}
 		
 		[self._ln_popupController_nocreate _popupBarMetricsDidChange:self._ln_popupController_nocreate.popupBar shouldLayout:NO];
 		//During the transition, animate the popup bar and content together with the tab bar transition.
