@@ -102,7 +102,7 @@ class DemoAlbumTableViewController: UITableViewController {
 	}
 	
 	var tabIsEven: Bool {
-		(self.tabBarController!.viewControllers?.firstIndex(of: self.navigationController!))! % 2 == 0
+		Int(navigationController!.tab!.identifier)! % 2 == 0
 	}
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
