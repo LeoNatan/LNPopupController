@@ -1517,6 +1517,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	self._ln_bottomBarExtension_nocreate.alpha = 1.0;
 	
 	void (^animations)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self _layoutPopupBarOrderForTransition];
+		
 		[self _setTabBarHiddenDuringTransition:YES];
 		
 		CGFloat barOffset = [self _ln_popupOffsetForPopupBar:self._ln_popupController_nocreate.popupBar];
