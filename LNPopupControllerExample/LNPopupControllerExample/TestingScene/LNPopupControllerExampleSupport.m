@@ -94,10 +94,9 @@
 			
 			UITab* tab;
 			
-			UIImage* image;
 			if(isRegularTab)
 			{
-				image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square", @(idx + 1)]];
+				UIImage* image = [UIImage systemImageNamed:[NSString stringWithFormat:@"%@.square", @(idx + 1)]];
 				
 				tab = [[UITab alloc] initWithTitle:title image:image identifier:[NSString stringWithFormat:@"%@_%@", vc.tabBarItem.title, @(idx)] viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
 					return vc;
@@ -105,8 +104,6 @@
 			}
 			else
 			{
-				image = [UIImage systemImageNamed:@"magnifyingglass"];
-				
 				UISearchTab* searchTab = [[UISearchTab alloc] initWithViewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
 					return vc;
 				}];
@@ -191,6 +188,11 @@
 	{
 		self.tabs = _tabs;
 		self.mode = UITabBarControllerModeTabBar;
+	}
+	
+	if(@available(iOS 27.0, *))
+	{
+		self.prominentTabIdentifier = @"com.apple.UIKit.Search";
 	}
 }
 

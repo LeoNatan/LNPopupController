@@ -24,6 +24,20 @@
 #import "LNPopupControllerExample-Bridging-Header.h"
 @import UIKit;
 
+#if !LNPOPUP
+
+@interface LNTabBarAccessoryView: UIView @end
+@implementation LNTabBarAccessoryView
+
+- (void)setFrame:(CGRect)frame
+{
+	[super setFrame:frame];
+}
+
+@end
+
+#endif
+
 @interface UIImage ()
 
 + (instancetype)_systemImageNamed:(NSString*)name;
@@ -686,6 +700,7 @@
 	targetVC.allowPopupHapticFeedbackGeneration = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHapticFeedbackEnabled];
 	
 	targetVC.popupBar.limitFloatingContentWidth = [NSUserDefaults.settingDefaults boolForKey:PopupSettingLimitFloatingWidth];
+	targetVC.popupBar.supportsMinimization = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMinimizationEnabled];
 
 	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingVisualEffectViewBlurEffect];
 	if(effectOverride != nil && effectOverride.integerValue != 0xffff && (effectOverride.integerValue >= 0 || LNPopupSettingsHasOS26Glass()))
@@ -767,6 +782,19 @@
 	
 	targetVC.popupPresentationDelegate = self;
 	[targetVC presentPopupBarWithContentViewController:demoVC animated:animated completion:nil];
+#else
+	if(@available(iOS 26.0, *))
+	{
+		if(self.tabBarController.bottomAccessory != nil)
+		{
+			return;
+		}
+		
+		UIView* view = [LNTabBarAccessoryView new];
+		view.backgroundColor = UIColor.clearColor;
+		UITabAccessory* accessory = [[UITabAccessory alloc] initWithContentView:view];
+		self.tabBarController.bottomAccessory = accessory;
+	}
 #endif
 }
 

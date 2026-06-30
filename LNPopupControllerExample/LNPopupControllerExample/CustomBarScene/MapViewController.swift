@@ -133,7 +133,9 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			navigationController!.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
 		}
 		
-		navigationController!.popupBar.standardAppearance.isFloatingBarShineEnabled = true
+		if #unavailable(iOS 27.0) {
+			navigationController!.popupBar.standardAppearance.isFloatingBarShineEnabled = true
+		}
 		
 		if #available(iOS 26, *) {
 			navigationController!.popupContentView.popupCloseButtonStyle = .glass

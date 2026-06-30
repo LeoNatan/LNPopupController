@@ -342,6 +342,24 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	return NO;
 }
 
+- (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test
+{
+	if(test(self))
+	{
+		return self;
+	}
+	
+	for (UIView* subview in self.subviews) {
+		UIView* passing = [subview _ln_firstSubviewPassingTest:test];
+		if(passing != nil)
+		{
+			return passing;
+		}
+	}
+	
+	return nil;
+}
+
 - (CGFloat)_ln_simulatedCornerRadiusFromCorners
 {
 	static NSString* cornersName = LNPopupHiddenString("cornerRadii");
