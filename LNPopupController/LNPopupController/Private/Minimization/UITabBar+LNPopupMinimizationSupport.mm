@@ -83,7 +83,9 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 	
 	__weak __typeof(self) weakTabBar = self;
 	void (^handler)(BOOL) = minimizationDelegate == nil ? (id)nil : (id)^(BOOL wasMinimized) {
-		[weakTabBar._ln_minimizationDelegate tabBar:weakTabBar didMinimize:wasMinimized];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[weakTabBar._ln_minimizationDelegate tabBar:weakTabBar didMinimize:wasMinimized];
+		});
 	};
 	
 	[self setValue:handler forKey:__LNMinimizedStateDidChangeHandlerKey];

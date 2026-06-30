@@ -64,8 +64,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 			} else {
 				startTimer()
 			}
-		} onChange: {
-			Task { @MainActor [weak self] in
+		} onChange: { [weak self] in
+			Task { @MainActor in
 				self?.updateTimerFromPlayerView()
 			}
 		}
@@ -75,8 +75,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		withObservationTracking {
 			_ = playerView.playbackState.isPlaying
 			updateBarItems(with: traitCollection.popupBarEnvironment, animated: true)
-		} onChange: {
-			Task { @MainActor [weak self] in
+		} onChange: { [weak self] in
+			Task { @MainActor in
 				self?.updateBarItemsFromPlayerView()
 			}
 		}
@@ -86,8 +86,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		withObservationTracking {
 			let progress = playerView.playbackState.progress
 			popupItem.progress = popupItem.isEmptyPlaybackItem ? 0.0 : progress
-		} onChange: {
-			Task { @MainActor [weak self] in
+		} onChange: { [weak self] in
+			Task { @MainActor in
 				self?.updateItemProgressFromPlayerView()
 			}
 		}

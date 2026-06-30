@@ -1993,16 +1993,13 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			return 0;
 		}
 		
-		CGRect converted = [floatingBarContainerView convertRect:glassView.layer.bounds fromView:glassView];
+		//The toolbar elements might be in a hierarchy with a transform, if there is a running transition.
+		//Instead of relying on the converted rect's size, use the converted center and add half the glass view's (untransformed) height.
 		
-		UIView* layerDelegate = (id)glassView.layer.superlayer.delegate;
-		if(!CGRectEqualToRect(layerDelegate.frame, CGRectZero))
-		{
-			//Since there is no way to query the exact frame of the "toolbar" in iOS 27.0, we guess. Here, when animating, the converted rect is slightly off, so we try to compensate.
-			converted.origin.y += 5;
-		}
-		
-		return floatingBarContainerView.bounds.size.height - CGRectGetMinY(converted) + 8;
+		CGRect converted = [floatingBarContainerView convertRect:glassView.bounds fromView:glassView];
+		auto rv = round(floatingBarContainerView.bounds.size.height - CGRectGetMidY(converted) + CGRectGetHeight(glassView.bounds) / 2.0 + 8);
+				
+		return rv;
 	}
 	
 	static auto toolbarOverlayInsetKey = LNPopupHiddenString("toolbarOverlayInset");
