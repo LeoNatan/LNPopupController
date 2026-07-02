@@ -16,7 +16,12 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		if(@available(iOS 26.0, *))
+		if(@available(iOS 27.0, *))
+		{
+			//iOS 27 does not honor UIDesignRequiresCompatibility.
+			rv = YES;
+		}
+		else if(@available(iOS 26.0, *))
 		{
 			rv = ![[NSBundle.mainBundle objectForInfoDictionaryKey:@"UIDesignRequiresCompatibility"] boolValue];
 		}

@@ -1997,7 +1997,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 		//Instead of relying on the converted rect's size, use the converted center and add half the glass view's (untransformed) height.
 		
 		CGRect converted = [floatingBarContainerView convertRect:glassView.bounds fromView:glassView];
-		auto rv = round(floatingBarContainerView.bounds.size.height - CGRectGetMidY(converted) + CGRectGetHeight(glassView.bounds) / 2.0 + 8);
+		auto rv = round(floatingBarContainerView.bounds.size.height - CGRectGetMidY(converted) + CGRectGetHeight(glassView.bounds) / 2.0 + 10);
 				
 		return rv;
 	}
