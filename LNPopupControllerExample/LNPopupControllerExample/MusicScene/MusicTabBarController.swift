@@ -55,6 +55,8 @@ class MusicTabBarController: UITabBarController {
 		super.awakeFromNib()
 	}
 	
+//	var timer: Timer!
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -72,10 +74,17 @@ class MusicTabBarController: UITabBarController {
 		popupBar.usesContentControllersAsDataSource = false
 		popupBar.popupItem = LNPopupItem.emptyPlayback
 		
+		popupBar.supportsMinimization = UserDefaults.settings.bool(forKey: PopupSetting.minimizationEnabled)
+		
 		let popupContentController = DemoMusicPlayerController()
 		presentPopupBar(with: popupContentController)
 		
 #endif
+		
+//		timer = Timer(timeInterval: 5.0, repeats: true) { [self] _ in
+//			print(view.layer.value(forKey: "recursiveDescription")!)
+//		}
+//		RunLoop.current.add(timer, forMode: .common)
 		
 		if #available(iOS 26.0, *) {
 			tabBarMinimizeBehavior = .onScrollDown

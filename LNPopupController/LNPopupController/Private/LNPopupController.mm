@@ -179,6 +179,9 @@ __attribute__((objc_direct_members))
 	UIViewPropertyAnimator* _runningPopupAnimation;
 	
 	UIWindow* _lockedRotationWindow;
+	
+	__weak UIView* _tabBarContainer;
+	CALayer* _observedTabBarContainerLayer;
 }
 
 @synthesize popupContentView=_popupContentView;
@@ -1452,6 +1455,9 @@ __attribute__((objc_direct_members))
 	{
 		[UIViewController _ln_endTransitioningLockWithWindow:_lockedRotationWindow unlockingRotation:YES];
 	}
+	
+	[self _startObservingTabBarContainerLayer:nil];
+	_tabBarContainer = nil;
 }
 
 static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, void (^block)(UIView* view))
@@ -2276,6 +2282,57 @@ id __LNPopupEmptyBlurFilter(void)
 }
 
 #pragma mark _LNPopupTabBarMinimizationDelegate
+
+- (void)_startObservingTabBarContainerLayer:(CALayer*)containerLayer
+{
+	if(_observedTabBarContainerLayer == containerLayer)
+	{
+		return;
+	}
+	
+	if(_observedTabBarContainerLayer != nil)
+	{
+		[_observedTabBarContainerLayer removeObserver:self forKeyPath:@"sublayerTransform"];
+		_observedTabBarContainerLayer = nil;
+	}
+	
+	if(containerLayer == nil)
+	{
+		_popupBar.layer.sublayerTransform = CATransform3DIdentity;
+		return;
+	}
+	
+	_observedTabBarContainerLayer = containerLayer;
+	[_observedTabBarContainerLayer addObserver:self forKeyPath:@"sublayerTransform" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:NULL];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+	if([keyPath isEqualToString:@"sublayerTransform"] == NO)
+	{
+		return;
+	}
+	
+	if(_popupBar.supportsMinimization)
+	{
+		_popupBar.layer.sublayerTransform = _observedTabBarContainerLayer.sublayerTransform;
+	}
+	else
+	{
+		_popupBar.layer.sublayerTransform = CATransform3DIdentity;
+	}
+}
+
+- (void)_noteTabBarContainer:(UIView*)container
+{
+	if(_tabBarContainer == container && _tabBarContainer.layer == _observedTabBarContainerLayer)
+	{
+		return;
+	}
+	
+	_tabBarContainer = container;
+	[self _startObservingTabBarContainerLayer:_tabBarContainer.layer];
+}
 
 - (void)tabBar:(UITabBar *)tabBar didMinimize:(BOOL)wasMinimized API_AVAILABLE(ios(26.0))
 {

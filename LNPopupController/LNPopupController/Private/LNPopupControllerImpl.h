@@ -60,6 +60,8 @@ CF_EXTERN_C_BEGIN
 
 - (void)_fixupGestureRecognizer:(UIGestureRecognizer*)obj;
 
+- (void)_noteTabBarContainer:(UIView*)container;
+
 @end
 
 CF_EXTERN_C_END

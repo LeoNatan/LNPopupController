@@ -1253,6 +1253,29 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	});
 }
 
+- (UIView*)_ln_extractTabBarContainer
+{
+	UIView* rv = self.tabBar.superview;
+	
+	if(rv == nil)
+	{
+		return rv;
+	}
+	
+	static NSString* TouchPassthrough = LNPopupHiddenString("TouchPassthrough");
+	if([NSStringFromClass(rv.class) containsString:TouchPassthrough])
+	{
+		rv = rv.superview;
+	}
+	
+	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion == 26)
+	{
+		rv = rv.superview;
+	}
+	
+	return rv;
+}
+
 - (void)_ln_popup_viewDidLayoutSubviews_tvc
 {
 	if(self.bottomDockingViewForPopupBar == nil && self._ln_popupController_nocreate.popupControllerInternalState != LNPopupPresentationStateBarHidden)
@@ -1283,6 +1306,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 			}
 		}
 	}
+	
+	[self.ln_popupController _noteTabBarContainer:[self _ln_extractTabBarContainer]];
 	
 	struct objc_super superInfo = {
 		self,
