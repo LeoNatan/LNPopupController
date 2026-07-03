@@ -134,6 +134,16 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		barInsets.trailing = self.tabBar.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;
 		barInsets.leading -= floatingLayoutMargins.leading;
 		barInsets.trailing -= floatingLayoutMargins.trailing;
+		
+		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
+		BOOL isRegular = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		BOOL compactButHasSafeArea = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && popupBar.safeAreaInsets.left > 10;
+		 
+		if(isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && (isRegular || compactButHasSafeArea))
+		{
+			barInsets.leading += 18;
+			barInsets.trailing += 18;
+		}
 	}
 	
 	return barInsets;

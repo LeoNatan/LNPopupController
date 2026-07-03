@@ -26,7 +26,9 @@ UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToS
 		{
 			if(containerView.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 			{
-				return UIEdgeInsetsMake(containerView.safeAreaInsets.top, 20, 20, 20);
+				BOOL isCompactButHasSafeArea = containerView.safeAreaInsets.left > 10;
+				
+				return UIEdgeInsetsMake(isCompactButHasSafeArea ? 20 : containerView.safeAreaInsets.top, isCompactButHasSafeArea ? 38 : 2, 20, isCompactButHasSafeArea ? 38 : 20);
 			}
 			else
 			{
