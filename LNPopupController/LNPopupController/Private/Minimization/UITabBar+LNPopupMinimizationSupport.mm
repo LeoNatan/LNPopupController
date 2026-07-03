@@ -141,8 +141,8 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		 
 		if(isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && (isRegular || compactButHasSafeArea))
 		{
-			barInsets.leading += 18;
-			barInsets.trailing += 18;
+			barInsets.leading += 20;
+			barInsets.trailing += 20;
 		}
 	}
 	

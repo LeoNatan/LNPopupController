@@ -38,8 +38,8 @@
 			}
 			else if(isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && isRegular)
 			{
-				barInsets.leading -= 50;
-				barInsets.trailing -= 50;
+				barInsets.leading -= 52;
+				barInsets.trailing -= 52;
 			}
 		}
 	}

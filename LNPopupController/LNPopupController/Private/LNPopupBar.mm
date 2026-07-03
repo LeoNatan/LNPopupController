@@ -2155,17 +2155,17 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		[items addObject:barButtonItem];
 	}];
 	
-	for(UIBarButtonItem* item in items)
+	if(ln_unavailable(iOS 27.0, *))
 	{
-		UIView* view = [item valueForKey:@"view"];
-		if(view == nil)
+		for(UIBarButtonItem* item in items)
 		{
-			continue;
-		}
-		
-		if([self _needSwiftUIFixesForBarButtonItemView:view])
-		{
-			if(ln_unavailable(iOS 27.0, *))
+			UIView* view = [item valueForKey:@"view"];
+			if(view == nil)
+			{
+				continue;
+			}
+			
+			if([self _needSwiftUIFixesForBarButtonItemView:view])
 			{
 				view.translatesAutoresizingMaskIntoConstraints = NO;
 			}
