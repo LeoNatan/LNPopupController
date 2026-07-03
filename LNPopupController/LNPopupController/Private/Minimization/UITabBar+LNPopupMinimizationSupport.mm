@@ -123,6 +123,11 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 	if(__LNPopupTabBarSupportsMinimizationAPI && popupBar.supportsMinimization && [self _ln_isFloatingTabBar] == NO)
 	{
 		CGRect proposedMinimizedFrame = self.tabBar._ln_proposedFrameForPopupBar;
+		if(proposedMinimizedFrame.size.height == 0)
+		{
+			return NSDirectionalEdgeInsetsZero;
+		}
+		
 		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
 		
 		barInsets.leading = proposedMinimizedFrame.origin.x;

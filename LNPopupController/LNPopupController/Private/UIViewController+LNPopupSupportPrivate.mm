@@ -1152,7 +1152,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	if(LNPopupEnvironmentTabBarSupportsMinimizationAPI() && popupBar.supportsMinimization && self._ln_isFloatingTabBar == NO && (popupBar.resolvedIsCustom == NO || popupBar.customBarWantsFullBarWidth == NO))
 	{
 		CGRect proposedFrame = self.tabBar._ln_proposedFrameForPopupBar;
-		return proposedFrame.origin.y + proposedFrame.size.height;
+		if(proposedFrame.size.height > 0)
+		{
+			return proposedFrame.origin.y + proposedFrame.size.height;
+		}
 	}
 	
 	if(LNPopupEnvironmentHasGlass())
