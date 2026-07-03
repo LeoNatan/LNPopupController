@@ -2044,7 +2044,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	
 	CGFloat glassToolbarOffset = -8.0;
-	if(@available(iOS 26.1, *))
+	if(@available(iOS 27.0, *))
+	{
+		glassToolbarOffset = 2.0;
+	}
+	else if(@available(iOS 26.1, *))
 	{
 		//iOS 26.1 beta 3+, floatingBarContainerView.toolbarOverlayInset contains the 8pt margin, so no need to add it here.
 		glassToolbarOffset = 0.0;
