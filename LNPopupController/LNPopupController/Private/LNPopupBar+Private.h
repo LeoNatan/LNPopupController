@@ -196,6 +196,9 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 - (void)forceLayoutOnButtons;
 
+- (BOOL)_isViewDescendantOfToolbarItem:(UIView*)view;
+- (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem;
+
 @end
 
 @interface _LNPopupBarShadowView : UIImageView @end

@@ -1405,7 +1405,7 @@ __attribute__((objc_direct_members))
 	_popupBar.hidden = YES;
 	_popupBar.barContainingController = _containerController;
 	_popupBar._barDelegate = self;
-	_popupBar.popupOpenGestureRecognizer = [[LNPopupOpenTapGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarTapGestureRecognized:)];
+	_popupBar.popupOpenGestureRecognizer = [[LNPopupOpenTapGestureRecognizer alloc] initWithPopupController:self action:@selector(_popupBarTapGestureRecognized:)];
 	[_popupBar.contentView addGestureRecognizer:_popupBar.popupOpenGestureRecognizer];
 	
 	_popupBar.barHighlightGestureRecognizer = [[LNPopupLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_popupBarLongPressGestureRecognized:)];

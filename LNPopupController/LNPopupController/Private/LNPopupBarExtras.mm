@@ -183,29 +183,74 @@ static void __setupFunction(void)
 	}
 }
 
+- (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem
+{
+	UIView* itemView = [barButtonItem valueForKey:@"view"];
+	
+	static NSString* adaptorView = LNPopupHiddenString("_UITAMICAdaptorView");
+	
+	if([itemView.superview isKindOfClass:NSClassFromString(adaptorView)])
+	{
+		itemView = itemView.superview;
+	}
+	
+	return itemView;
+}
+
+- (BOOL)_isViewDescendantOfToolbarItem:(UIView*)rv
+{
+	if(rv == nil)
+	{
+		return NO;
+	}
+	
+	for(UIBarButtonItem* item in self.items)
+	{
+		UIView* view = [self _viewForBarButtonItem:item];
+		if(view == nil)
+		{
+			continue;
+		}
+		
+		if([rv isDescendantOfView:view])
+		{
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
 	UIView* rv = [super hitTest:point withEvent:event];
 	
-	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 18)
+	if([self _isViewDescendantOfToolbarItem:rv])
 	{
-		if(rv != nil && rv != self)
-		{
-			CGRect frameInBarCoords = [self convertRect:rv.bounds fromView:rv];
-			CGRect instetFrame = CGRectInset(frameInBarCoords, 2, 0);
-			
-			return CGRectContainsPoint(instetFrame, point) ? rv : self;
-		}
-		
 		return rv;
 	}
 	
-	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO && [NSStringFromClass(rv.class) containsString:@"BarItemView"] == NO)
-	{
-		rv = nil;
-	}
+	return nil;
 	
-	return rv;
+//	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 18)
+//	{
+//		if(rv != nil && rv != self)
+//		{
+//			CGRect frameInBarCoords = [self convertRect:rv.bounds fromView:rv];
+//			CGRect instetFrame = CGRectInset(frameInBarCoords, 2, 0);
+//			
+//			return CGRectContainsPoint(instetFrame, point) ? rv : self;
+//		}
+//		
+//		return rv;
+//	}
+//	
+//	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO && [NSStringFromClass(rv.class) containsString:@"BarItemView"] == NO)
+//	{
+//		rv = nil;
+//	}
+//	
+//	return rv;
 }
 
 - (void)setItemSpacing:(CGFloat)itemSpacing

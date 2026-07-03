@@ -86,6 +86,7 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 
 + (void)_ln_fixUIHostingViewHitTest;
 + (void)_ln_animateUsingSwiftUIWithDuration:(NSTimeInterval)duration animations:(void(^)(void))animations completion:(void(^ __nullable)(void))completion;
++ (void)_ln_animateUsingSwiftUIWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay animations:(void(^)(void))animations completion:(void(^ __nullable)(void))completion;
 + (void)_ln_animateInteractiveUsingSwiftUIWithDuration:(NSTimeInterval)duration animations:(void(^)(void))animations completion:(void(^ __nullable)(void))completion;
 
 @end

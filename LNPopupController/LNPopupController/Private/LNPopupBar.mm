@@ -503,6 +503,27 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 
 #if DEBUG
 
+- (NSString *)description
+{
+	NSMutableString* rv = super.description.mutableCopy;
+	
+	[rv appendFormat:@" title: %@", _titlesController.popupItem.title];
+	if(_leadingBarButtonItems)
+	{
+		[rv appendFormat:@" leadingBarButtonItems: <%@: %p>", _leadingBarButtonItems.class, _leadingBarButtonItems];
+	}
+	if(_trailingBarButtonItems)
+	{
+		[rv appendFormat:@" trailingBarButtonItems: <%@: %p>", _trailingBarButtonItems.class, _trailingBarButtonItems];
+	}
+	return rv;
+}
+
+- (NSString *)debugDescription
+{
+	return [self description];
+}
+
 - (void)setFrame:(CGRect)frame
 {
 	if(CGRectEqualToRect(frame, super.frame) == YES)
@@ -1484,23 +1505,30 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	[self _resetToolbarItemSpacing];
 	
-	if(_swiftHacksWindow1 != nil)
-	{
-		_swiftHacksWindow1.hidden = YES;
-		_swiftHacksWindow1 = nil;
-	}
-	
 	if(_swiftuiHiddenLeadingController != nil)
 	{
-		[UIView performWithoutAnimation:^{
-			_swiftHacksWindow1 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
-			_swiftHacksWindow1.frame = CGRectMake(-4000, 0, 400, 400);
-			_swiftHacksWindow1.rootViewController = _swiftuiHiddenLeadingController;
-			_swiftHacksWindow1.hidden = NO;
-			_swiftHacksWindow1.alpha = 0.0;
-			[_swiftHacksWindow1 layoutSubviews];
-		}];
+		_swiftuiHiddenLeadingController.view.frame = CGRectMake(-4000, 0, 400, 400);
+		[self.window addSubview:_swiftuiHiddenLeadingController.view];
+		[_swiftuiHiddenLeadingController.view layoutSubviews];
 	}
+	
+//	if(_swiftHacksWindow1 != nil)
+//	{
+//		_swiftHacksWindow1.hidden = YES;
+//		_swiftHacksWindow1 = nil;
+//	}
+//	
+//	if(_swiftuiHiddenLeadingController != nil)
+//	{
+//		[UIView performWithoutAnimation:^{
+//			_swiftHacksWindow1 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
+//			_swiftHacksWindow1.frame = CGRectMake(-4000, 0, 400, 400);
+//			_swiftHacksWindow1.rootViewController = _swiftuiHiddenLeadingController;
+//			_swiftHacksWindow1.hidden = NO;
+//			_swiftHacksWindow1.alpha = 0.0;
+//			[_swiftHacksWindow1 layoutSubviews];
+//		}];
+//	}
 	
 	[self _fixupSwiftUIControllersWithBarStyle];
 }
@@ -1522,23 +1550,30 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	[self _resetToolbarItemSpacing];
 	
-	if(_swiftHacksWindow2 != nil)
-	{
-		_swiftHacksWindow2.hidden = YES;
-		_swiftHacksWindow2 = nil;
-	}
-	
 	if(_swiftuiHiddenTrailingController != nil)
 	{
-		[UIView performWithoutAnimation:^{
-			_swiftHacksWindow2 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
-			_swiftHacksWindow2.frame = CGRectMake(-4000, 0, 400, 400);
-			_swiftHacksWindow2.rootViewController = _swiftuiHiddenTrailingController;
-			_swiftHacksWindow2.hidden = NO;
-			_swiftHacksWindow2.alpha = 0.0;
-			[_swiftHacksWindow2 layoutSubviews];
-		}];
+		_swiftuiHiddenTrailingController.view.frame = CGRectMake(4000, 0, 400, 400);
+		[self.window addSubview:_swiftuiHiddenTrailingController.view];
+		[_swiftuiHiddenTrailingController.view layoutSubviews];
 	}
+	
+//	if(_swiftHacksWindow2 != nil)
+//	{
+//		_swiftHacksWindow2.hidden = YES;
+//		_swiftHacksWindow2 = nil;
+//	}
+//	
+//	if(_swiftuiHiddenTrailingController != nil)
+//	{
+//		[UIView performWithoutAnimation:^{
+//			_swiftHacksWindow2 = [[UIWindow alloc] initWithWindowScene:self.window.windowScene];
+//			_swiftHacksWindow2.frame = CGRectMake(-4000, 0, 400, 400);
+//			_swiftHacksWindow2.rootViewController = _swiftuiHiddenTrailingController;
+//			_swiftHacksWindow2.hidden = NO;
+//			_swiftHacksWindow2.alpha = 0.0;
+//			[_swiftHacksWindow2 layoutSubviews];
+//		}];
+//	}
 	
 	[self _fixupSwiftUIControllersWithBarStyle];
 }
@@ -1607,20 +1642,6 @@ BOOL __LNPopupUseSystemMarqueeLabel(void)
 }
 #endif
 
-- (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem
-{
-	UIView* itemView = [barButtonItem valueForKey:@"view"];
-	
-	static NSString* adaptorView = LNPopupHiddenString("_UITAMICAdaptorView");
-	
-	if([itemView.superview isKindOfClass:NSClassFromString(adaptorView)])
-	{
-		itemView = itemView.superview;
-	}
-	
-	return itemView;
-}
-
 static NSPredicate* _LNNonSpaceItemsPredicate(BOOL removeHidden)
 {
 	static NSPredicate* nonSpaceFilterPredicate;
@@ -1649,19 +1670,19 @@ static NSPredicate* _LNNonSpaceItemsPredicate(BOOL removeHidden)
 	
 	NSArray<UIBarButtonItem*>* sorted = [filtered sortedArrayWithOptions:0 usingComparator:^NSComparisonResult(UIBarButtonItem*  _Nonnull obj1, UIBarButtonItem*  _Nonnull obj2) {
 		
-		UIView* v1 = [self _viewForBarButtonItem:obj1];
-		UIView* v2 = [self _viewForBarButtonItem:obj2];
+		UIView* v1 = [_toolbar _viewForBarButtonItem:obj1];
+		UIView* v2 = [_toolbar _viewForBarButtonItem:obj2];
 		
 		return [@(v1.frame.origin.x) compare:@(v2.frame.origin.x)];
 	}];
 	
-	if(leftmostView != NULL) { *leftmostView = [self _viewForBarButtonItem:sorted.firstObject]; }
-	if(rightmostView != NULL) { *rightmostView = [self _viewForBarButtonItem:sorted.lastObject]; }
+	if(leftmostView != NULL) { *leftmostView = [_toolbar _viewForBarButtonItem:sorted.firstObject]; }
+	if(rightmostView != NULL) { *rightmostView = [_toolbar _viewForBarButtonItem:sorted.lastObject]; }
 }
 
 - (BOOL)_needSwiftUIFixesForBarButtonItemView:(UIView*)view
 {
-	return [view _ln_isObjectFromSwiftUI];
+	return [view _ln_isObjectFromSwiftUI] || [view.subviews.firstObject _ln_isObjectFromSwiftUI];
 }
 
 - (void)_updateTitleInsetsForCompactBar:(UIEdgeInsets*)titleInsets
@@ -2106,8 +2127,6 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 
 - (void)_layoutBarButtonItems
 {
-	_needsBarButtonItemLayout = NO;
-	
 	UIUserInterfaceLayoutDirection barItemsLayoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:_barItemsSemanticContentAttribute];
 	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
 
@@ -2146,7 +2165,10 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		
 		if([self _needSwiftUIFixesForBarButtonItemView:view])
 		{
-			view.translatesAutoresizingMaskIntoConstraints = NO;
+			if(ln_unavailable(iOS 27.0, *))
+			{
+				view.translatesAutoresizingMaskIntoConstraints = NO;
+			}
 		}
 	}
 	
@@ -2160,6 +2182,8 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}
 	
 	[self _setNeedsTitleLayoutByRemovingLabels:NO];
+	
+	_needsBarButtonItemLayout = NO;
 }
 
 - (void)_updateViewsAfterCustomBarViewControllerUpdate

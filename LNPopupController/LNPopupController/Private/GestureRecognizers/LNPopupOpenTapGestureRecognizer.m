@@ -8,16 +8,30 @@
 
 #import "LNPopupOpenTapGestureRecognizer.h"
 #import "LNForwardingDelegate.h"
+#import "LNPopupControllerImpl.h"
 
 @interface LNPopupOpenTapGestureRecognizerForwardingDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate>
 
 @end
 
 @implementation LNPopupOpenTapGestureRecognizerForwardingDelegate
+{
+	__weak LNPopupController* _popupController;
+}
+
+- (instancetype)initWithPopupController:(LNPopupController*)popupController
+{
+	self = [super init];
+	if(self)
+	{
+		_popupController = popupController;
+	}
+	return self;
+}
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-	if([touch.view isKindOfClass:[UIControl class]])
+	if([_popupController.popupBar.toolbar _isViewDescendantOfToolbarItem:touch.view])
 	{
 		return NO;
 	}
@@ -35,15 +49,17 @@
 @implementation LNPopupOpenTapGestureRecognizer
 {
 	LNPopupOpenTapGestureRecognizerForwardingDelegate* _actualDelegate;
+	__weak LNPopupController* _popupController;
 }
 
-- (instancetype)initWithTarget:(id)target action:(SEL)action
+- (instancetype)initWithPopupController:(LNPopupController*)popupController action:(SEL)action
 {
-	self = [super initWithTarget:target action:action];
+	self = [super initWithTarget:popupController action:action];
 	
 	if(self)
 	{
-		_actualDelegate = [LNPopupOpenTapGestureRecognizerForwardingDelegate new];
+		_popupController = popupController;
+		_actualDelegate = [[LNPopupOpenTapGestureRecognizerForwardingDelegate alloc] initWithPopupController:popupController];
 		[super setDelegate:_actualDelegate];
 	}
 	
@@ -57,7 +73,7 @@
 
 - (void)setDelegate:(id<UIGestureRecognizerDelegate>)delegate
 {
-	_actualDelegate = [LNPopupOpenTapGestureRecognizerForwardingDelegate new];
+	_actualDelegate = [[LNPopupOpenTapGestureRecognizerForwardingDelegate alloc] initWithPopupController:_popupController];
 	_actualDelegate.forwardedDelegate = delegate;
 	[super setDelegate:_actualDelegate];
 }
