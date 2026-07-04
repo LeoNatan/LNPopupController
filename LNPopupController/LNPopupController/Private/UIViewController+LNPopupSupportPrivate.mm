@@ -54,11 +54,6 @@ static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
 
 static NSTimeInterval __ln_tabBarTransitionDuration(UIViewController* vc, NSUInteger transition)
 {
-	if(LNPopupEnvironmentHasGlass())
-	{
-		return 0.1;
-	}
-	
 #ifndef LNPopupControllerEnforceStrictClean
 	//durationForTransition:
 	static SEL dFT = NSSelectorFromString(LNPopupHiddenString("durationForTransition:"));
@@ -66,7 +61,7 @@ static NSTimeInterval __ln_tabBarTransitionDuration(UIViewController* vc, NSUInt
 	
 	return specialized_objc_msgSend(vc, dFT, transition);
 #else
-	return 0.5;
+	return 0.35;
 #endif
 }
 
@@ -768,6 +763,11 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
 
 - (void)_ln_layoutPopupBarAndContent
 {
+	if(__ln_alreadyInHideShowBar)
+	{
+		return;
+	}
+	
 	if(self._ln_popupController_nocreate.popupControllerInternalState > LNPopupPresentationStateBarHidden)
 	{
 		if(self.bottomDockingViewForPopup_nocreateOrDeveloper == self._ln_bottomBarSupport_nocreate)
@@ -1008,9 +1008,17 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	else
 	{
 		UIView* tabBarContainer = [self.view.subviews objectAtIndex:idx];
+		if(@available(iOS 27.0, *))
+		{
+			[self.view insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:tabBarContainer];
+			[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:self._ln_popupController_nocreate.popupBar];
+		}
+		else
+		{
+			[self.view insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:tabBarContainer];
+			[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:tabBarContainer];
+		}
 		
-		[self.view insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:tabBarContainer];
-		[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:tabBarContainer];
 		if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
 		{
 			[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
@@ -1396,17 +1404,34 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 				duration = __ln_tabBarTransitionDuration(self, transition);
 			}
 			
-			[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionLayoutSubviews animations:^{
-				if(animations != nil)
-				{
-					animations((id)ctx);
-				}
-			} completion:^(BOOL finished) {
-				if(completion != nil)
-				{
-					completion((id)ctx);
-				}
-			}];
+			if(LNPopupEnvironmentHasGlass())
+			{
+				[UIView animateWithDuration:duration delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionLayoutSubviews animations:^{
+					if(animations != nil)
+					{
+						animations((id)ctx);
+					}
+				} completion:^(BOOL finished) {
+					if(completion != nil)
+					{
+						completion((id)ctx);
+					}
+				}];
+			}
+			else
+			{
+				[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionLayoutSubviews animations:^{
+					if(animations != nil)
+					{
+						animations((id)ctx);
+					}
+				} completion:^(BOOL finished) {
+					if(completion != nil)
+					{
+						completion((id)ctx);
+					}
+				}];
+			}
 		}
 		else
 		{
@@ -1493,6 +1518,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	[self._ln_bottomBarExtension layoutIfNeeded];
 	
+	if(@available(iOS 27.0, *))
+	{
+		[self _setTabBarHiddenDuringTransition:YES];
+	}
+	
 	__ln_alreadyInHideShowBar = YES;
 	superCall();
 	__ln_alreadyInHideShowBar = NO;
@@ -1538,7 +1568,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	CGFloat bottomSafeArea = self.view.superview.safeAreaInsets.bottom;
 	
-	[self _layoutPopupBarOrderForTransition];
+//	[self _layoutPopupBarOrderForTransition];
 	
 	CGRect backgroundViewFrame = self._ln_popupController_nocreate.popupBar.backgroundView.frame;
 	
@@ -1547,7 +1577,10 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	void (^animations)(id<UIViewControllerTransitionCoordinatorContext>) = ^ (id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
 		[self _layoutPopupBarOrderForTransition];
 		
-		[self _setTabBarHiddenDuringTransition:YES];
+		if(ln_unavailable(iOS 27.0, *))
+		{
+			[self _setTabBarHiddenDuringTransition:YES];
+		}
 		
 		CGFloat barOffset = [self _ln_popupOffsetForPopupBar:self._ln_popupController_nocreate.popupBar];
 		
@@ -1887,11 +1920,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	
 	if(hidden)
 	{
-		[self _ln_hideLogicWithTransition: animated ? 7 : 0 isExplicit:YES duration:-1 superCall:superCall];
+		[self _ln_hideLogicWithTransition:animated ? 7 : 0 isExplicit:YES duration:-1 superCall:superCall];
 	}
 	else
 	{
-		[self _ln_showLogicWithTransition: animated ? 3 : 0 isExplicit:YES duration:-1 superCall:superCall];
+		[self _ln_showLogicWithTransition:animated ? 3 : 0 isExplicit:YES duration:-1 superCall:superCall];
 	}
 }
 
