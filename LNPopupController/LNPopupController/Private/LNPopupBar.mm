@@ -501,27 +501,18 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	return self;
 }
 
-#if DEBUG
-
 - (NSString *)description
 {
 	NSMutableString* rv = super.description.mutableCopy;
 	
-	[rv appendFormat:@" title: %@", _titlesController.popupItem.title];
-	if(_leadingBarButtonItems)
-	{
-		[rv appendFormat:@" leadingBarButtonItems: <%@: %p>", _leadingBarButtonItems.class, _leadingBarButtonItems];
-	}
-	if(_trailingBarButtonItems)
-	{
-		[rv appendFormat:@" trailingBarButtonItems: <%@: %p>", _trailingBarButtonItems.class, _trailingBarButtonItems];
-	}
+	[rv appendFormat:@" popupItem: %@", self.popupItem.description];
+	
 	return rv;
 }
 
 - (NSString *)debugDescription
 {
-	return [self description];
+	return self.description;
 }
 
 - (void)setFrame:(CGRect)frame
@@ -533,8 +524,6 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	[super setFrame:frame];
 }
-
-#endif
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {

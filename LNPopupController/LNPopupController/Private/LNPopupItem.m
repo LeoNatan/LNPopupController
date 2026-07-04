@@ -289,9 +289,39 @@ NSArray* __LNPopupItemObservedKeys;
 	[LNPopupBar setAnimatesItemSetter:NO];
 }
 
+- (NSString*)_titleDescription
+{
+	if(self.swiftuiTitleContentViewController != nil)
+	{
+		return [NSString stringWithFormat:@"titleView: %@", self.swiftuiTitleContentViewController];
+	}
+	
+	return [NSString stringWithFormat:@"title: “%@” subtitle: “%@”", self.title, self.subtitle];
+}
+
+- (NSString*)_barItemDescription
+{
+	if(self.leadingBarButtonItems)
+	{
+		return [NSString stringWithFormat:@"leadingButtons: %@ trailingButtons: %@", [NSString stringWithFormat:@"<%@: %p>", _leadingBarButtonItems.class, _leadingBarButtonItems], _trailingBarButtonItems != nil ? [NSString stringWithFormat:@"<%@: %p>", _trailingBarButtonItems.class, _trailingBarButtonItems] : @"<none>"];
+	}
+	
+	return [NSString stringWithFormat:@"buttons: %@", _trailingBarButtonItems != nil ? [NSString stringWithFormat:@"<%@: %p>", _trailingBarButtonItems.class, _trailingBarButtonItems] : @"<none>"];
+}
+
+- (NSString*)_imageDescription
+{
+	return [(self.swiftuiImageController ?: self.image) description];
+}
+
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@: %p %@ image: %@", NSStringFromClass(self.class), self, self.swiftuiTitleContentViewController ? [NSString stringWithFormat:@"titleView: %@", self.swiftuiTitleContentViewController] : [NSString stringWithFormat:@"title: “%@” subtitle: “%@”", self.title, self.subtitle], self.swiftuiImageController ?: self.image];
+	return [NSString stringWithFormat:@"<%@: %p %@ %@ image: %@>", NSStringFromClass(self.class), self, self._titleDescription, self._barItemDescription, self._imageDescription];
+}
+
+- (NSString *)debugDescription
+{
+	return self.description;
 }
 
 @end
