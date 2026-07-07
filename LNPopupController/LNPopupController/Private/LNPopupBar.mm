@@ -16,6 +16,7 @@
 #import "_LNPopupGlassUtils.h"
 #import "_LNPopupTitlesController.h"
 #import "_LNPopupTitlesPagingController.h"
+#import "_LNTouchPassthroughView.h"
 #if __has_include(<LNSystemMarqueeLabel.h>)
 #import <LNSystemMarqueeLabel.h>
 #endif
@@ -349,6 +350,8 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 	
 	if(self)
 	{
+		LNDynamicSubclass(self, _LNTouchPassthroughView.class);
+		
 		self.preservesSuperviewLayoutMargins = YES;
 		self.clipsToBounds = NO;
 		
@@ -369,7 +372,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 			[self addSubview:_backgroundView];
 		}
 		
-		_layoutContainer = [UIView new];
+		_layoutContainer = [_LNTouchPassthroughView new];
 		[self addSubview:_layoutContainer];
 		
 		_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];

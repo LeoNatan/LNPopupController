@@ -112,6 +112,13 @@
 	
 	[self.navigationController.popupBar addInteraction:[LNPopupDemoContextMenuInteraction new]];
 #endif
+	
+	if (@available(iOS 27.0, *))
+	{
+		UIBarMinimization* minimization = [UIBarMinimization new];
+		minimization.minimizationBehavior = UIBarMinimizationBehaviorOnScrollDown;
+		self.navigationItem.navigationBarMinimization = minimization;
+	}
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender

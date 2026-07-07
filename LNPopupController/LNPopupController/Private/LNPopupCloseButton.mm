@@ -337,8 +337,14 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 			return;
 			break;
 	}
+	
+	UIFont* fontToUse = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+	fontToUse = [UIFont fontWithDescriptor:[fontToUse.fontDescriptor fontDescriptorByAddingAttributes:@{
+		UIFontDescriptorTraitsAttribute: @{ UIFontWeightTrait: @(UIFontWeightMedium) }
+	}] size:fontToUse.pointSize];
+	
 	glassConfig.image = [UIImage systemImageNamed:@"xmark"];
-	glassConfig.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
+	glassConfig.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithFont:fontToUse scale:UIImageSymbolScaleLarge];
 	self.configuration = glassConfig;
 }
 

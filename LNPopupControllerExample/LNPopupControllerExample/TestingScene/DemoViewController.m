@@ -265,7 +265,12 @@
 	{
 		config.attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Gallery", @"") attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]}];
 	}
-	config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
+	
+	UIFont* fontToUse = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+	fontToUse = [UIFont fontWithDescriptor:[fontToUse.fontDescriptor fontDescriptorByAddingAttributes:@{
+		UIFontDescriptorTraitsAttribute: @{ UIFontWeightTrait: @(UIFontWeightMedium) }
+	}] size:fontToUse.pointSize];
+	config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithFont:fontToUse scale:UIImageSymbolScaleLarge];
 	
 	_galleryButton = [UIButton buttonWithConfiguration:config primaryAction:[UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
 		[self performSegueWithIdentifier:@"UnwindSegue" sender:nil];

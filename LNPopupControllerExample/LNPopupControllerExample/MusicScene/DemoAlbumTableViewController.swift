@@ -49,6 +49,12 @@ class DemoAlbumTableViewController: UITableViewController {
 			galleryBarButton.image = nil
 		}
 		
+		if #available(iOS 27.0, *) {
+			var minimization = UIBarMinimization()
+			minimization.minimizationBehavior = .onScrollDown
+			navigationItem.navigationBarMinimization = minimization
+		}
+		
 //		let view = ZStack {
 //			Image("demoAlbum")
 //				.resizable()
