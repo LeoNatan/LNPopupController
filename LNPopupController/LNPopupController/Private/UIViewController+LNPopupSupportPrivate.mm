@@ -1007,8 +1007,14 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 	}
 	else
 	{
-		UIView* tabBarContainer = [self.view.subviews objectAtIndex:idx];
+		BOOL placeAboveTabBar = NO;
 		if(@available(iOS 27.0, *))
+		{
+			placeAboveTabBar = self._ln_isFloatingTabBar == NO;
+		}
+		
+		UIView* tabBarContainer = [self.view.subviews objectAtIndex:idx];
+		if(placeAboveTabBar)
 		{
 			[self.view insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:tabBarContainer];
 			[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:self._ln_popupController_nocreate.popupBar];
