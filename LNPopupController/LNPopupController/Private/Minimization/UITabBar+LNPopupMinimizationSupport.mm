@@ -129,9 +129,22 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		}
 		
 		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
+				
+		CGFloat ltrLeading = proposedMinimizedFrame.origin.x;
+		CGFloat ltrTrailing = self.tabBar.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;
 		
-		barInsets.leading = proposedMinimizedFrame.origin.x;
-		barInsets.trailing = self.tabBar.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;
+		UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:popupBar.semanticContentAttribute];
+		if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+		{
+			barInsets.leading = ltrLeading;
+			barInsets.trailing = ltrTrailing;
+		}
+		else
+		{
+			barInsets.leading = ltrTrailing;
+			barInsets.trailing = ltrLeading;
+		}
+		
 		barInsets.leading -= floatingLayoutMargins.leading;
 		barInsets.trailing -= floatingLayoutMargins.trailing;
 		
