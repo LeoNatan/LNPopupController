@@ -394,7 +394,7 @@ You can also handle changes in `traitCollectionDidChange(_:)`.
 > [!TIP]
 > When handling environment trait changes, for optimal transition animation, it is preferred to set bar button items as visible/hidden instead of adding and removing button objects.
 
-Popup bar minimization is enabled by default, and is supported for system and custom popup bars, with the exception of custom bars with `LNPopupBar.customBarWantsFullBarWidth = true`. To disable popup bar minimization, set `LNPopupBar.supportsMinimization` to `false`.
+Popup bar minimization is enabled by default, and is supported for system and custom popup bars, with the exception of custom bars with `LNPopupBar.customBarWantsFullBarWidth = true`. To disable popup bar minimization, set `LNPopupBar.inheritsBottomBarMetrics` to `false`.
 
 #### Bar Transitions
 

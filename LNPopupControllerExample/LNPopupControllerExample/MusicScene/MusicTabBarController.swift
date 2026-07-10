@@ -34,11 +34,11 @@ class MusicTabBarController: UITabBarController {
 	}
 	
 	var disableSearchTab: Bool {
-#if LNPOPUP
 		UserDefaults.settings.bool(forKey: .disableSearchTab)
-#else
-		true
-#endif
+	}
+	
+	var isProminentSearchTab: Bool {
+		UserDefaults.settings.bool(forKey: .enableProminentSearchTab)
 	}
 	
 	override func awakeFromNib() {
@@ -109,7 +109,7 @@ class MusicTabBarController: UITabBarController {
 		
 #if compiler(>=6.4)
 		if #available(iOS 27.0, *) {
-			if disableSearchTab == false {
+			if !disableSearchTab && isProminentSearchTab {
 				prominentTabIdentifier = "com.apple.UIKit.Search"
 			}
 		}

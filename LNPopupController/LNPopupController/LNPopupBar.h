@@ -166,6 +166,7 @@ NS_SWIFT_UI_ACTOR
 ///
 /// Defaults to `true`.
 @property (nonatomic, assign) BOOL inheritsBottomBarMetrics;
+
 /// Describes the appearance attributes for the popup bar to use when in standard environment.
 @property (nonatomic, copy, null_resettable) LNPopupBarAppearance* standardAppearance UI_APPEARANCE_SELECTOR;
 

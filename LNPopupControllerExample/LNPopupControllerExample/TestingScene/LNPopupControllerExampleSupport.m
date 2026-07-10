@@ -193,7 +193,10 @@
 #if defined(__IPHONE_27_0)
 	if(@available(iOS 27.0, *))
 	{
-		self.prominentTabIdentifier = @"com.apple.UIKit.Search";
+		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableProminentSearchTab])
+		{
+			self.prominentTabIdentifier = @"com.apple.UIKit.Search";
+		}
 	}
 #endif
 }
