@@ -29,15 +29,24 @@
 		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
 		if(@available(iOS 27.0, *))
 		{
-			BOOL isRegular = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
-			BOOL isCompact = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
+			BOOL isRegular = self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+			BOOL isCompact = self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
 			BOOL compactButHasSafeArea = isCompact && popupBar.safeAreaInsets.left > 10;
 			BOOL isLandscape = UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation);
+			
+			auto windowInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(self.view.window, self.view.window.safeAreaInsets);
+			auto viewInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(self.view, self.view.safeAreaInsets);
 
 			if(isPhone && compactButHasSafeArea)
 			{
-				barInsets.leading -= 35;
-				barInsets.trailing -= 35;
+				if(windowInsets.leading == viewInsets.leading)
+				{
+					barInsets.leading -= 35;
+				}
+				if(windowInsets.trailing == viewInsets.trailing)
+				{
+					barInsets.trailing -= 35;
+				}
 			}
 			else if(isPhone && isCompact && isLandscape)
 			{
@@ -46,9 +55,6 @@
 			}
 			else if(isPhone && isRegular)
 			{
-				auto windowInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(self.view.window, self.view.window.safeAreaInsets);
-				auto viewInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(self.view, self.view.safeAreaInsets);
-				
 				if(windowInsets.leading == viewInsets.leading)
 				{
 					barInsets.leading -= 52;
@@ -56,6 +62,10 @@
 				if(windowInsets.trailing == viewInsets.trailing)
 				{
 					barInsets.trailing -= 52;
+				}
+				else if(self.splitViewController != nil)
+				{
+					barInsets.trailing -= 18;
 				}
 			}
 		}

@@ -1988,7 +1988,21 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 		{
 			self._ln_popupController_nocreate.popupContentView.systemUserInterfaceStyleTraitModifier = self.view.traitCollection.userInterfaceStyle;
 		}
-		[self.view.superview addSubview:self._ln_popupController_nocreate.popupContentView];
+		
+		UIView* target = self.view.superview;
+		if(@available(iOS 27.0, *))
+		if(self.splitViewController != nil)
+		{
+			NSUInteger idx = [self.splitViewController.viewControllers indexOfObjectPassingTest:^BOOL(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+				return [self.view isDescendantOfView:obj.view];
+			}];
+			if(idx != NSNotFound && [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary] == self.splitViewController.viewControllers[idx])
+			{
+				target = target.superview;
+			}
+		}
+		
+		[target addSubview:self._ln_popupController_nocreate.popupContentView];
 	}
 	else
 	{
@@ -2048,16 +2062,29 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 	return self.toolbar;
 }
 
+- (UIView*)_ln_glassViewFromFloatingBarContainerView:(UIView*)floatingBarContainerView
+{
+	auto test = ^BOOL(UIView * _Nonnull viewToTest) {
+		return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"];
+	};
+	
+	UIView* glassView = [floatingBarContainerView _ln_firstSubviewPassingTest:test];
+	
+	if(glassView != nil)
+	{
+		return glassView;
+	}
+	
+	return [self.view _ln_firstSubviewPassingTest:test];
+}
+
 - (CGFloat)_ln_toolbarInsetForView:(UIView*)floatingBarContainerView API_AVAILABLE(ios(26.0))
 {
 	[floatingBarContainerView layoutIfNeeded];
 	
 	if(@available(iOS 27.0, *))
 	{
-		UIView* glassView = [floatingBarContainerView _ln_firstSubviewPassingTest:^BOOL(UIView * _Nonnull viewToTest) {
-			return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"];
-		}];
-		
+		UIView* glassView = [self _ln_glassViewFromFloatingBarContainerView:floatingBarContainerView];
 		if(glassView == nil)
 		{
 			return 0;
@@ -2067,7 +2094,16 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 		//Instead of relying on the converted rect's size, use the converted center and add half the glass view's (untransformed) height.
 		
 		CGRect converted = [floatingBarContainerView convertRect:glassView.bounds fromView:glassView];
-		auto rv = round(floatingBarContainerView.bounds.size.height - CGRectGetMidY(converted) + CGRectGetHeight(glassView.bounds) / 2.0 + 10);
+		
+		CGFloat rv;
+		if([glassView isDescendantOfView:floatingBarContainerView])
+		{
+			rv = round(floatingBarContainerView.bounds.size.height - CGRectGetMidY(converted) + CGRectGetHeight(glassView.bounds) / 2.0 + 10);
+		}
+		else
+		{
+			rv = round(CGRectGetMidY(converted) + CGRectGetHeight(glassView.bounds) / 2.0 + 10);
+		}
 				
 		return rv;
 	}
