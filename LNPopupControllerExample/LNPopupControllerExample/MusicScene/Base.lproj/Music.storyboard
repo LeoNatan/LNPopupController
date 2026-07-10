@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24411" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25087" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24404.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25063.1"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -228,7 +228,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2NV-0K-12s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="415" y="1433"/>
+            <point key="canvasLocation" x="540" y="1444"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Scr-u1-MCI">
@@ -246,7 +246,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PWF-64-SDp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5" y="2287"/>
+            <point key="canvasLocation" x="-2065" y="2287"/>
         </scene>
         <!--Demo Music Search Controller-->
         <scene sceneID="149-M0-tEt">
@@ -263,34 +263,78 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wwm-p6-Tff" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="847" y="2287"/>
+            <point key="canvasLocation" x="-1022" y="2287"/>
+        </scene>
+        <!--Radio-->
+        <scene sceneID="nug-bB-5X3">
+            <objects>
+                <navigationController id="7UK-cK-wvr" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Radio" image="dot.radiowaves.left.and.right" catalog="system" id="Kgs-lX-gIj"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6fy-O7-UnG">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="1lI-95-UbP" kind="relationship" relationship="rootViewController" id="n6T-CX-Idj"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eaM-q9-KiC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="540" y="2139"/>
+        </scene>
+        <!--Music Tab Bar Controller-->
+        <scene sceneID="ccA-Ur-Kxa">
+            <objects>
+                <tabBarController storyboardIdentifier="NonSearch" modalPresentationStyle="fullScreen" id="uSv-Ci-Z5R" customClass="MusicTabBarController" customModule="LNPopupControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="rba-r8-LUO" customClass="DemoTabBar">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" systemColor="systemTealColor"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="yVZ-Nv-QXJ" kind="relationship" relationship="viewControllers" id="C30-bO-bO0"/>
+                        <segue destination="fst-JL-nMD" kind="relationship" relationship="viewControllers" id="XTr-Or-9q9"/>
+                        <segue destination="FDh-R3-2kK" kind="relationship" relationship="viewControllers" id="SAh-8y-SBN"/>
+                        <segue destination="AxQ-vF-9zl" kind="relationship" relationship="viewControllers" id="VY8-WP-o4Q"/>
+                        <segue destination="7UK-cK-wvr" kind="relationship" relationship="viewControllers" id="LsC-6y-9m6"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2r4-0Z-wZh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-344" y="3284"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="v0s-BZ-lGy"/>
+        <segue reference="SAh-8y-SBN"/>
+        <segue reference="VY8-WP-o4Q"/>
+        <segue reference="XTr-Or-9q9"/>
+        <segue reference="n6T-CX-Idj"/>
+        <segue reference="C30-bO-bO0"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
         <image name="demoAlbum" width="2048" height="2048"/>
-        <image name="ellipsis" catalog="system" width="128" height="37"/>
+        <image name="dot.radiowaves.left.and.right" catalog="system" width="128" height="94"/>
+        <image name="ellipsis" catalog="system" width="128" height="41"/>
         <image name="genre1" width="88" height="88"/>
-        <image name="music.note.house.fill" catalog="system" width="128" height="104"/>
-        <image name="music.note.square.stack.fill" catalog="system" width="105" height="128"/>
-        <image name="play.fill" catalog="system" width="120" height="128"/>
-        <image name="shuffle" catalog="system" width="128" height="95"/>
-        <image name="square.grid.2x2.fill" catalog="system" width="128" height="114"/>
-        <image name="xmark" catalog="system" width="128" height="113"/>
+        <image name="music.note.house.fill" catalog="system" width="128" height="108"/>
+        <image name="music.note.square.stack.fill" catalog="system" width="102" height="128"/>
+        <image name="play.fill" catalog="system" width="115" height="128"/>
+        <image name="shuffle" catalog="system" width="128" height="98"/>
+        <image name="square.grid.2x2.fill" catalog="system" width="128" height="119"/>
+        <image name="xmark" catalog="system" width="128" height="118"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.0" green="0.76470588235294112" blue="0.81568627450980391" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.76470588240000004" blue="0.81568627449999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -113,12 +113,14 @@
 	[self.navigationController.popupBar addInteraction:[LNPopupDemoContextMenuInteraction new]];
 #endif
 	
+#if defined(__IPHONE_27_0)
 	if (@available(iOS 27.0, *))
 	{
 		UIBarMinimization* minimization = [UIBarMinimization new];
 		minimization.minimizationBehavior = UIBarMinimizationBehaviorOnScrollDown;
 		self.navigationItem.navigationBarMinimization = minimization;
 	}
+#endif
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
@@ -163,6 +165,21 @@
 			segue.destinationViewController.popoverPresentationController.barButtonItem = sender;
 		}
 	}
+}
+
+@end
+
+@interface LNMusicStoryboardSegue: UIStoryboardSegue @end
+@implementation LNMusicStoryboardSegue
+
+- (instancetype)initWithIdentifier:(NSString *)identifier source:(UIViewController *)source destination:(UIViewController *)destination
+{
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableSearchTab])
+	{
+		destination = [[UIStoryboard storyboardWithName:@"Music" bundle:nil] instantiateViewControllerWithIdentifier:@"NonSearch"];
+	}
+	
+	return [super initWithIdentifier:identifier source:source destination:destination];
 }
 
 @end

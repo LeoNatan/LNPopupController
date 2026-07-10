@@ -114,7 +114,11 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		} else {
 			popupItem.barButtonItems?.first?.image = playPauseImage
 		}
-		popupItem.barButtonItems?.last?.isHidden = traitCollection.popupBarEnvironment == .inline
+		if UserDefaults.settings.bool(forKey: .disableSearchTab) == false {
+			popupItem.barButtonItems?.last?.isHidden = traitCollection.popupBarEnvironment == .inline
+		} else {
+			popupItem.barButtonItems?.last?.isHidden = false
+		}
 	}
 	
 	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {

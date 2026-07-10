@@ -38,12 +38,23 @@ class MusicTabBarController: UITabBarController {
 			for enumed in viewControllers.enumerated() {
 				let vc = enumed.element
 				
-				if vc.tabBarItem?.value(forKey: "systemItem") as? Int == UITabBarItem.SystemItem.search.rawValue {
+				let systemItem = vc.tabBarItem?.value(forKey: "systemItem") as? Int
+				if systemItem == UITabBarItem.SystemItem.search.rawValue && UserDefaults.settings.bool(forKey: .disableSearchTab) == false {
 					convertedTabs.append(UISearchTab(viewControllerProvider: { _ in
 						vc
 					}))
 				} else {
-					convertedTabs.append(UITab(title: vc.tabBarItem?.title ?? "Tab", image: vc.tabBarItem?.image, identifier: enumed.offset.formatted(), viewControllerProvider: { _ in
+					let title: String
+					let image: UIImage?
+					if systemItem == UITabBarItem.SystemItem.search.rawValue {
+						title = "Not Search"
+						image = UIImage(systemName: "loupe")
+					} else {
+						title = vc.tabBarItem?.title ?? "Tab"
+						image = vc.tabBarItem?.image
+					}
+					
+					convertedTabs.append(UITab(title: title, image: image, identifier: enumed.offset.formatted(), viewControllerProvider: { _ in
 						vc
 					}))
 				}
@@ -54,8 +65,6 @@ class MusicTabBarController: UITabBarController {
 		
 		super.awakeFromNib()
 	}
-	
-//	var timer: Timer!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -81,18 +90,15 @@ class MusicTabBarController: UITabBarController {
 		
 #endif
 		
-//		timer = Timer(timeInterval: 5.0, repeats: true) { [self] _ in
-//			print(view.layer.value(forKey: "recursiveDescription")!)
-//		}
-//		RunLoop.current.add(timer, forMode: .common)
-		
 		if #available(iOS 26.0, *) {
 			tabBarMinimizeBehavior = .onScrollDown
 		}
 		
 #if compiler(>=6.4)
 		if #available(iOS 27.0, *) {
-			prominentTabIdentifier = "com.apple.UIKit.Search"
+			if UserDefaults.settings.bool(forKey: .disableSearchTab) == false {
+				prominentTabIdentifier = "com.apple.UIKit.Search"
+			}
 		}
 #endif
 	}
