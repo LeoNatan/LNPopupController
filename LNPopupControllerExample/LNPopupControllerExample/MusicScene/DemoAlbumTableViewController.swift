@@ -87,8 +87,10 @@ class DemoAlbumTableViewController: UITableViewController {
 		demoAlbumImageView.layer.masksToBounds = true
 		
 		for idx in 0..<Int.random(in: 20...50) {
-			let title = LoremIpsum.words(withNumber: UInt.random(in: 2...3)).capitalized
-			var subtitle = tabIsEven ? LoremIpsum.words(withNumber: UInt.random(in: 2...4)) : LoremIpsum.sentences(withNumber: UInt.random(in: 1...3))
+			let title = NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: 2...3)).capitalized, comment: "")
+			var subtitle = tabIsEven ?
+			NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: 2...4)), comment: "") :
+			NSLocalizedString(LoremIpsum.sentences(withNumber: UInt.random(in: 1...3)), comment: "")
 			if tabIsEven {
 				subtitle = subtitle.capitalized
 			}

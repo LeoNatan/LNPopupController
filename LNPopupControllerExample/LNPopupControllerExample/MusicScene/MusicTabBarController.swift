@@ -33,13 +33,21 @@ class MusicTabBarController: UITabBarController {
 		return .portrait
 	}
 	
+	var disableSearchTab: Bool {
+#if LNPOPUP
+		UserDefaults.settings.bool(forKey: .disableSearchTab)
+#else
+		true
+#endif
+	}
+	
 	override func awakeFromNib() {
 		if let viewControllers {
 			for enumed in viewControllers.enumerated() {
 				let vc = enumed.element
 				
 				let systemItem = vc.tabBarItem?.value(forKey: "systemItem") as? Int
-				if systemItem == UITabBarItem.SystemItem.search.rawValue && UserDefaults.settings.bool(forKey: .disableSearchTab) == false {
+				if systemItem == UITabBarItem.SystemItem.search.rawValue && disableSearchTab == false {
 					convertedTabs.append(UISearchTab(viewControllerProvider: { _ in
 						vc
 					}))
@@ -47,7 +55,7 @@ class MusicTabBarController: UITabBarController {
 					let title: String
 					let image: UIImage?
 					if systemItem == UITabBarItem.SystemItem.search.rawValue {
-						title = "Not Search"
+						title = NSLocalizedString("Not Search", comment: "")
 						image = UIImage(systemName: "loupe")
 					} else {
 						title = vc.tabBarItem?.title ?? "Tab"
@@ -87,7 +95,12 @@ class MusicTabBarController: UITabBarController {
 		
 		let popupContentController = DemoMusicPlayerController()
 		presentPopupBar(with: popupContentController)
-		
+#else
+		if #available(iOS 26.0, *) {
+			let view = UIView()
+			let accessory = UITabAccessory(contentView: view)
+			bottomAccessory = accessory
+		}
 #endif
 		
 		if #available(iOS 26.0, *) {
@@ -96,7 +109,7 @@ class MusicTabBarController: UITabBarController {
 		
 #if compiler(>=6.4)
 		if #available(iOS 27.0, *) {
-			if UserDefaults.settings.bool(forKey: .disableSearchTab) == false {
+			if disableSearchTab == false {
 				prominentTabIdentifier = "com.apple.UIKit.Search"
 			}
 		}

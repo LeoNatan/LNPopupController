@@ -174,7 +174,15 @@
 
 - (instancetype)initWithIdentifier:(NSString *)identifier source:(UIViewController *)source destination:(UIViewController *)destination
 {
-	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableSearchTab])
+	BOOL disableSearchTab =
+#if LNPOPUP
+	[NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableSearchTab]
+#else
+	YES
+#endif
+	;
+	
+	if(disableSearchTab)
 	{
 		destination = [[UIStoryboard storyboardWithName:@"Music" bundle:nil] instantiateViewControllerWithIdentifier:@"NonSearch"];
 	}
