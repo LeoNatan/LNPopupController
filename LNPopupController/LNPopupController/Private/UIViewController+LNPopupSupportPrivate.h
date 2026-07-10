@@ -8,6 +8,7 @@
 
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import "_LNPopupBarBackgroundView.h"
+#import "_LNPopupSwizzlingUtils.h"
 
 CF_EXTERN_C_BEGIN
 
@@ -16,7 +17,8 @@ CF_EXTERN_C_BEGIN
 
 NS_ASSUME_NONNULL_BEGIN
 
-static inline __attribute__((always_inline)) UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
+LNAlwaysInline
+UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
 {
 	UIEdgeInsets final = userEdgeInsets;
 	final.bottom += popupUserEdgeInsets.bottom;
@@ -30,7 +32,7 @@ static inline __attribute__((always_inline)) UIEdgeInsets __LNEdgeInsetsSum(UIEd
 extern BOOL __ln_popup_suppressViewControllerLifecycle;
 
 UIEdgeInsets _LNPopupSafeAreaInsets(id self);
-void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller, BOOL layout, UIEdgeInsets popupEdgeInsets);
+void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* controller, LNPopupBar* popupBar, BOOL layout, UIEdgeInsets popupEdgeInsets);
 
 @interface NSObject (SwiftUISupport)
 
@@ -88,7 +90,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(UIViewController* controller
 
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
 
-- (BOOL)_ignoringLayoutDuringTransition;
+- (BOOL)_ln_ignoringLayoutDuringTransition;
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate;
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension;

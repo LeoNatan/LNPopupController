@@ -51,6 +51,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 - (void)_popupBar:(LNPopupBar*)bar setPagedPopupItem:(LNPopupItem*)newItem;
 - (void)_generatePagingFeedbackForPopupBar:(LNPopupBar*)bar;
 
+- (void)_popupBarInheritsBottomBarMetricsDidChange:(LNPopupBar*)popupBar;
+
 @end
 
 @protocol _LNPopupBarSupport <NSObject>

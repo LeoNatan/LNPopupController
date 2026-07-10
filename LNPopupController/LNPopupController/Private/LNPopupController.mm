@@ -41,6 +41,8 @@ static BOOL _LNEnableSlowTransitionsDebug(void)
 }
 #endif
 
+static NSString* hostedElementKey = LNPopupHiddenString("visualProvider.hostedElements");
+
 CF_EXTERN_C_BEGIN
 
 static const NSTimeInterval LNPopupBarTransitionDuration = 0.5;
@@ -64,8 +66,8 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	return rv;
 }
 
-OS_ALWAYS_INLINE
-static BOOL _LNCallDelegateObjectObjectBool(UIViewController* controller, UIViewController* content, SEL selector, BOOL animated)
+LNAlwaysInline
+BOOL _LNCallDelegateObjectObjectBool(UIViewController* controller, UIViewController* content, SEL selector, BOOL animated)
 {
 	if([controller.popupPresentationDelegate respondsToSelector:selector])
 	{
@@ -76,8 +78,8 @@ static BOOL _LNCallDelegateObjectObjectBool(UIViewController* controller, UIView
 	return NO;
 }
 
-OS_ALWAYS_INLINE
-static BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector, BOOL animated)
+LNAlwaysInline
+BOOL _LNCallDelegateObjectBool(UIViewController* controller, SEL selector, BOOL animated)
 {
 	if([controller.popupPresentationDelegate respondsToSelector:selector])
 	{
@@ -350,7 +352,7 @@ __attribute__((objc_direct_members))
 		[_containerController setNeedsUpdateOfHomeIndicatorAutoHidden];
 	}
 	
-	[self _repositionPopupContentMovingBottomBar:_containerController._ignoringLayoutDuringTransition == NO animated:animated];
+	[self _repositionPopupContentMovingBottomBar:_containerController._ln_ignoringLayoutDuringTransition == NO animated:animated];
 }
 
 - (void)_addContentControllerSubview:(UIViewController*)currentContentController
@@ -1623,7 +1625,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			UITabBar* bar = [_containerController tabBar];
 			bar.minimizationDelegate = self;
 			
-			value = self.popupBar.supportsMinimization && bar._ln_wantsMinimizedPopupBar ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
+			value = self.popupBar.inheritsBottomBarMetrics && bar._ln_wantsMinimizedPopupBar ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
 		}
 	}
 
@@ -1712,6 +1714,14 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
 			[self.popupBar.customBarViewController _userFacing_viewWillAppear:animated];
 			
+			if(@available(iOS 27.0, *))
+			if([_containerController isKindOfClass:UITabBarController.class] && self.popupBar.inheritsBottomBarMetrics)
+			{
+				[[_containerController tabBar] setValue:@4 forKeyPath:hostedElementKey];
+				[_containerController.view setNeedsLayout];
+				[_containerController.view layoutIfNeeded];
+			}
+			
 			[_bottomBar _ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:YES];
 			_containerController._ln_bottomBarExtension_nocreate.alpha = 1.0;
 			
@@ -1736,7 +1746,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
 			
-			_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height - [_containerController _ln_popupOffsetForPopupBar:self.popupBar], 0));
+			_LNPopupSupportSetPopupInsetsForViewController(_containerController, self.popupBar, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height - [_containerController _ln_popupOffsetForPopupBar:self.popupBar], 0));
 			
 			if(open)
 			{
@@ -2046,7 +2056,7 @@ id __LNPopupEmptyBlurFilter(void)
 				self.popupBar.floatingBackgroundShadowView.alpha = 0.0;
 				
 				self.popupBar.shadowView.alpha = 0.0;
-				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
+				_LNPopupSupportSetPopupInsetsForViewController(_containerController, self.popupBar, YES, UIEdgeInsetsZero);
 				
 				CGFloat currentBarAlpha = self.popupBar.alpha;
 				if(!LNPopupEnvironmentHasGlass() && animated)
@@ -2072,6 +2082,14 @@ id __LNPopupEmptyBlurFilter(void)
 #ifndef LNPopupControllerEnforceStrictClean
 					[self.popupBar.contentView.contentView.layer setValue:@20 forKeyPath:__LNPopupBlurFilterUpdateKey];
 #endif
+				}
+				
+				if(@available(iOS 27.0, *))
+				if([_containerController isKindOfClass:UITabBarController.class] && self.popupBar.inheritsBottomBarMetrics)
+				{
+					[[_containerController tabBar] setValue:@0 forKeyPath:hostedElementKey];
+					[_containerController.view setNeedsLayout];
+					[_containerController.view layoutIfNeeded];
 				}
 			}];
 			
@@ -2129,7 +2147,7 @@ id __LNPopupEmptyBlurFilter(void)
 				self.popupContentView.popupInteractionGestureRecognizer = nil;
 				_popupContentView = nil;
 				
-				_LNPopupSupportSetPopupInsetsForViewController(_containerController, YES, UIEdgeInsetsZero);
+				_LNPopupSupportSetPopupInsetsForViewController(_containerController, self.popupBar, YES, UIEdgeInsetsZero);
 				
 				_currentContentController = nil;
 				
@@ -2273,6 +2291,18 @@ id __LNPopupEmptyBlurFilter(void)
 	[self _popupBar:bar setUserPopupItem:newItem];
 }
 
+- (void)_popupBarInheritsBottomBarMetricsDidChange:(LNPopupBar*)popupBar
+{
+	if(self.popupControllerPublicState == LNPopupPresentationStateBarHidden || [_containerController isKindOfClass:UITabBarController.class] == NO)
+	{
+		return;
+	}
+	
+	[[_containerController tabBar] setValue:@(popupBar.inheritsBottomBarMetrics ? 4 : 0) forKeyPath:hostedElementKey];
+	[_containerController.view setNeedsLayout];
+	[_containerController.view layoutIfNeeded];
+}
+
 - (void)_generatePagingFeedbackForPopupBar:(LNPopupBar*)bar
 {
 	if(bar.allowHapticFeedbackGenerationOnItemPaging)
@@ -2313,7 +2343,7 @@ id __LNPopupEmptyBlurFilter(void)
 		return;
 	}
 	
-	if(_popupBar.supportsMinimization)
+	if(_popupBar.inheritsBottomBarMetrics)
 	{
 		_popupBar.layer.sublayerTransform = _observedTabBarContainerLayer.sublayerTransform;
 	}
@@ -2336,7 +2366,7 @@ id __LNPopupEmptyBlurFilter(void)
 
 - (void)tabBar:(UITabBar *)tabBar didMinimize:(BOOL)wasMinimized API_AVAILABLE(ios(26.0))
 {
-	NSInteger newValue = self.popupBar.supportsMinimization && wasMinimized ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
+	NSInteger newValue = self.popupBar.inheritsBottomBarMetrics && wasMinimized ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
 	
 	void (^updateMargins)(void) = ^{
 		[_containerController.popupContentViewController.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];

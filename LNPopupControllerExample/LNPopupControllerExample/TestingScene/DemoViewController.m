@@ -705,7 +705,7 @@
 	targetVC.allowPopupHapticFeedbackGeneration = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHapticFeedbackEnabled];
 	
 	targetVC.popupBar.limitFloatingContentWidth = [NSUserDefaults.settingDefaults boolForKey:PopupSettingLimitFloatingWidth];
-	targetVC.popupBar.supportsMinimization = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMinimizationEnabled];
+	targetVC.popupBar.inheritsBottomBarMetrics = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMinimizationEnabled];
 
 	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingVisualEffectViewBlurEffect];
 	if(effectOverride != nil && effectOverride.integerValue != 0xffff && (effectOverride.integerValue >= 0 || LNPopupSettingsHasOS26Glass()))

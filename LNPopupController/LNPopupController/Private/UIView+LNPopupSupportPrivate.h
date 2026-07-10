@@ -25,6 +25,7 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 @end
 
 UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirectionalEdgeInsets edgeInsets);
+NSDirectionalEdgeInsets _LNDirectionalEdgeInsetsFromEdgeInsets(UIView* forView, UIEdgeInsets edgeInsets);
 
 @interface UIView (LNPopupSupportPrivate)
 
@@ -52,7 +53,7 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirection
 
 @interface UITabBar ()
 
-@property (nonatomic, getter=_ignoringLayoutDuringTransition, setter=_setIgnoringLayoutDuringTransition:) BOOL ignoringLayoutDuringTransition;
+@property (nonatomic, getter=_ln_ignoringLayoutDuringTransition, setter=_ln_setIgnoringLayoutDuringTransition:) BOOL _ln_ignoringLayoutDuringTransition;
 
 @end
 

@@ -264,10 +264,10 @@
 	}
 	
 	UIEdgeInsets layoutMargins = LNPopupEnvironmentLayoutInsets(self.currentPopupContentViewController.view, false);
-	
 	CGFloat topConstant = layoutMargins.top;
 	
-	topConstant = MAX(self.effectivePopupCloseButtonStyle == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
+	CGFloat glassMin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 20 : 0;
+	topConstant = MAX(_LNPopupCloseButtonStyleIsGlass(self.effectivePopupCloseButtonStyle) ? glassMin : self.effectivePopupCloseButtonStyle == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
 	
 #if TARGET_OS_MACCATALYST
 	topConstant += 20;

@@ -158,6 +158,14 @@ NS_SWIFT_UI_ACTOR
 /// Defaults to `true`.
 @property (nonatomic, assign) BOOL limitFloatingContentWidth;
 
+/// Enables or disables inheriting bottom docking view metrics for the popup bar, including minimization into tab bars.
+///
+/// When enabled, floating popup bars will inherit certain metrics from their bottom docking views, such as toolbars and tab bars. This also enables popup bar minimization into tab bars.
+///
+/// Supported on iOS 26.0 and later.
+///
+/// Defaults to `true`.
+@property (nonatomic, assign) BOOL inheritsBottomBarMetrics;
 /// Describes the appearance attributes for the popup bar to use when in standard environment.
 @property (nonatomic, copy, null_resettable) LNPopupBarAppearance* standardAppearance UI_APPEARANCE_SELECTOR;
 
@@ -195,12 +203,6 @@ NS_SWIFT_UI_ACTOR
 /// This only has effect on iOS 26.0 and later.
 @property (nonatomic, assign) BOOL customBarWantsFullBarWidth;
 
-/// Enables or disables minimization into the bottom docking view.
-///
-/// Supported on iOS 26.0 and later, for tab bar container controllers.
-///
-/// Defaults to `true`.
-@property (nonatomic, assign) BOOL supportsMinimization;
 
 /// Controls whether paging popup items generates haptic feedback to the user.
 ///
@@ -232,6 +234,17 @@ NS_REFINED_FOR_SWIFT
 
 /// The popup bar environment represents whether a given trait collection is from a popup bar, a view in a custom popup bar or a popup content view controller.
 @property (nonatomic, readonly) LNPopupBarEnvironment popupBarEnvironment NS_REFINED_FOR_SWIFT;
+
+@end
+
+@interface LNPopupBar (Deprecations)
+
+/// Enables or disables minimization into the bottom docking view.
+///
+/// Supported on iOS 26.0 and later, for tab bar container controllers.
+///
+/// Defaults to `true`.
+@property (nonatomic, assign) BOOL supportsMinimization LN_DEPRECATED_API_OS("Use inheritsBottomBarMetrics instead.", ios(2.0, 10000.0));
 
 @end
 

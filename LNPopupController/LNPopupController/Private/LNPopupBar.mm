@@ -253,7 +253,8 @@ static BOOL __animatesItemSetter = NO;
 	return (LNPopupBarAppearance*)self.activeAppearanceChain;
 }
 
-static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyle(LNPopupBarProgressViewStyle style)
+LNAlwaysInline
+LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyle(LNPopupBarProgressViewStyle style)
 {
 	LNPopupBarProgressViewStyle rv = style;
 	if(rv == LNPopupBarProgressViewStyleDefault)
@@ -359,7 +360,7 @@ static inline __attribute__((always_inline)) LNPopupBarProgressViewStyle _LNPopu
 		self.allowHapticFeedbackGenerationOnItemPaging = YES;
 		
 		self.limitFloatingContentWidth = YES;
-		self.supportsMinimization = YES;
+		self.inheritsBottomBarMetrics = YES;
 		
 		_inheritsAppearanceFromDockingView = YES;
 		_standardAppearance = [LNPopupBarAppearance new];
@@ -2485,3 +2486,18 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 
 @end
 
+#pragma mark Deprecations
+
+@implementation LNPopupBar (Deprecations)
+
+- (BOOL)supportsMinimization
+{
+	return self.inheritsBottomBarMetrics;
+}
+
+- (void)setSupportsMinimization:(BOOL)supportsMinimization
+{
+	self.inheritsBottomBarMetrics = supportsMinimization;
+}
+
+@end

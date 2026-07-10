@@ -10,6 +10,7 @@
 #import "LNPopupBar+Private.h"
 #import "_LNPopupBase64Utils.hh"
 #import "UIViewController+LNPopupSupportPrivate.h"
+#import "UIView+LNPopupSupportPrivate.h"
 
 @implementation UINavigationController (LNPopupMinimizationSupport)
 
@@ -17,7 +18,7 @@
 {
 	NSDirectionalEdgeInsets barInsets = NSDirectionalEdgeInsetsZero;
 	
-	if(popupBar.supportsMinimization && self._ln_isToolbarHiddenOrSwiftUIBuggyToolbar == NO && LNPopupEnvironmentHasGlass())
+	if(popupBar.inheritsBottomBarMetrics && LNPopupEnvironmentHasGlass())
 	{
 		static CGFloat margin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 28 : 8;
 		
@@ -29,27 +30,34 @@
 		if(@available(iOS 27.0, *))
 		{
 			BOOL isRegular = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
-			BOOL compactButHasSafeArea = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && popupBar.safeAreaInsets.left > 10;
-			
-			if(isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && compactButHasSafeArea)
+			BOOL isCompact = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
+			BOOL compactButHasSafeArea = isCompact && popupBar.safeAreaInsets.left > 10;
+			BOOL isLandscape = UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation);
+
+			if(isPhone && compactButHasSafeArea)
 			{
 				barInsets.leading -= 35;
 				barInsets.trailing -= 35;
 			}
-			else if(isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && isRegular)
+			else if(isPhone && isCompact && isLandscape)
 			{
-				barInsets.leading -= 52;
-				barInsets.trailing -= 52;
+				barInsets.leading += 10;
+				barInsets.trailing += 10;
 			}
-		}
-	}
-	
-	if(@available(iOS 27.0, *))
-	{
-		if(popupBar.supportsMinimization && self._ln_isToolbarHiddenOrSwiftUIBuggyToolbar == YES && LNPopupEnvironmentHasGlass())
-		{
-			barInsets.leading += 7;
-			barInsets.trailing += 7;
+			else if(isPhone && isRegular)
+			{
+				auto windowInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(self.view.window, self.view.window.safeAreaInsets);
+				auto viewInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(self.view, self.view.safeAreaInsets);
+				
+				if(windowInsets.leading == viewInsets.leading)
+				{
+					barInsets.leading -= 52;
+				}
+				if(windowInsets.trailing == viewInsets.trailing)
+				{
+					barInsets.trailing -= 52;
+				}
+			}
 		}
 	}
 	

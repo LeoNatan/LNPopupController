@@ -120,7 +120,7 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		}
 	}
 	
-	if(__LNPopupTabBarSupportsMinimizationAPI && popupBar.supportsMinimization && [self _ln_isFloatingTabBar] == NO)
+	if(__LNPopupTabBarSupportsMinimizationAPI && popupBar.inheritsBottomBarMetrics && [self _ln_isFloatingTabBar] == NO)
 	{
 		CGRect proposedMinimizedFrame = self.tabBar._ln_proposedFrameForPopupBar;
 		if(proposedMinimizedFrame.size.height == 0)
@@ -148,15 +148,16 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		barInsets.leading -= floatingLayoutMargins.leading;
 		barInsets.trailing -= floatingLayoutMargins.trailing;
 		
-		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
-		BOOL isRegular = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
-		BOOL compactButHasSafeArea = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && popupBar.safeAreaInsets.left > 10;
-		 
-		if(isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && (isRegular || compactButHasSafeArea))
-		{
-			barInsets.leading += 20;
-			barInsets.trailing += 20;
-		}
+//		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
+//		BOOL isPad = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+//		BOOL isRegular = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+//		BOOL compactButHasSafeArea = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && popupBar.safeAreaInsets.left > 10;
+//		 
+//		if(isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && (isRegular || compactButHasSafeArea) && !isPad)
+//		{
+//			barInsets.leading += 20;
+//			barInsets.trailing += 20;
+//		}
 	}
 	
 	return barInsets;

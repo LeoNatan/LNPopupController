@@ -803,12 +803,12 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 @interface UITabBar (ScrollEdgeSupport) @end
 @implementation UITabBar (ScrollEdgeSupport)
 
-- (BOOL)_ignoringLayoutDuringTransition
+- (BOOL)_ln_ignoringLayoutDuringTransition
 {
 	return [objc_getAssociatedObject(self, LNPopupIgnoringLayoutDuringTransition) boolValue];
 }
 
-- (void)_setIgnoringLayoutDuringTransition:(BOOL)ignoringLayoutDuringTransition
+- (void)_ln_setIgnoringLayoutDuringTransition:(BOOL)ignoringLayoutDuringTransition
 {
 	objc_setAssociatedObject(self, LNPopupIgnoringLayoutDuringTransition, @(ignoringLayoutDuringTransition), OBJC_ASSOCIATION_RETAIN);
 }
@@ -863,7 +863,7 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 
 - (void)_ln_setFrame:(CGRect)frame
 {
-	if(self._ignoringLayoutDuringTransition == NO)
+	if(self._ln_ignoringLayoutDuringTransition == NO)
 	{
 		[self _ln_setFrame:frame];
 	}
@@ -1044,6 +1044,18 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* view, NSDirectionalE
 	else
 	{
 		return UIEdgeInsetsMake(edgeInsets.top, edgeInsets.trailing, edgeInsets.bottom, edgeInsets.leading);
+	}
+}
+
+NSDirectionalEdgeInsets _LNDirectionalEdgeInsetsFromEdgeInsets(UIView* view, UIEdgeInsets edgeInsets)
+{
+	if(view.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		return NSDirectionalEdgeInsetsMake(edgeInsets.top, edgeInsets.left, edgeInsets.bottom, edgeInsets.right);
+	}
+	else
+	{
+		return NSDirectionalEdgeInsetsMake(edgeInsets.top, edgeInsets.right, edgeInsets.bottom, edgeInsets.left);
 	}
 }
 
