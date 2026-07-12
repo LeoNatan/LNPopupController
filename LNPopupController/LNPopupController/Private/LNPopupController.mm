@@ -1714,13 +1714,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			_LNCallDelegateObjectBool(_containerController, @selector(popupPresentationControllerWillPresentPopupBar:animated:), animated);
 			[self.popupBar.customBarViewController _userFacing_viewWillAppear:animated];
 			
-			if(@available(iOS 27.0, *))
-			if([_containerController isKindOfClass:UITabBarController.class] && self.popupBar.inheritsBottomBarMetrics)
-			{
-				[[_containerController tabBar] setValue:@4 forKeyPath:hostedElementKey];
-				[_containerController.view setNeedsLayout];
-				[_containerController.view layoutIfNeeded];
-			}
+			[self _updateTabBarWithState:LNPopupPresentationStateBarPresented];
 			
 			[_bottomBar _ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:YES];
 			_containerController._ln_bottomBarExtension_nocreate.alpha = 1.0;
@@ -1977,6 +1971,74 @@ id __LNPopupEmptyBlurFilter(void)
 }
 #endif
 
+- (void)_updateTabBarWithState:(LNPopupPresentationState)state
+{
+	if(@available(iOS 27.0, *))
+	{
+		if([_containerController isKindOfClass:UITabBarController.class] == NO)
+		{
+			return;
+		}
+		
+		UITabBar* tabBar = [_containerController tabBar];
+		NSUInteger hosted = [[tabBar valueForKeyPath:hostedElementKey] unsignedIntegerValue];
+		
+		auto layout = ^{
+			[_containerController.view setNeedsLayout];
+			[_containerController.view layoutIfNeeded];
+		};
+		
+		if(hosted == 0 && (self.popupBar.inheritsBottomBarMetrics == YES && state != LNPopupPresentationStateBarHidden))
+		{
+			[tabBar setValue:@4 forKeyPath:hostedElementKey];
+			layout();
+		}
+		else if(hosted == 2 && (self.popupBar.inheritsBottomBarMetrics == YES && state != LNPopupPresentationStateBarHidden))
+		{
+			[tabBar setValue:@6 forKeyPath:hostedElementKey];
+			layout();
+		}
+		else if(hosted == 4 && (self.popupBar.inheritsBottomBarMetrics == NO || state == LNPopupPresentationStateBarHidden))
+		{
+			[tabBar setValue:@0 forKeyPath:hostedElementKey];
+			layout();
+		}
+		else if(hosted == 6 && (self.popupBar.inheritsBottomBarMetrics == NO || state == LNPopupPresentationStateBarHidden))
+		{
+			[tabBar setValue:@2 forKeyPath:hostedElementKey];
+			layout();
+		}
+	}
+	
+//	if(@available(iOS 27.0, *))
+//		if([_containerController isKindOfClass:UITabBarController.class] && self.popupBar.inheritsBottomBarMetrics)
+//		{
+//			[[_containerController tabBar] setValue:@4 forKeyPath:hostedElementKey];
+//			[_containerController.view setNeedsLayout];
+//			[_containerController.view layoutIfNeeded];
+//		}
+//	
+//	if(@available(iOS 27.0, *))
+//		if([_containerController isKindOfClass:UITabBarController.class] && self.popupBar.inheritsBottomBarMetrics)
+//		{
+//			NSUInteger currentValue = [[[_containerController tabBar] valueForKeyPath:hostedElementKey] unsignedIntegerValue];
+//			
+//			if(currentValue == 4)
+//			{
+//				[[_containerController tabBar] setValue:@0 forKeyPath:hostedElementKey];
+//				[_containerController.view setNeedsLayout];
+//				[_containerController.view layoutIfNeeded];
+//			}
+//		}
+//	
+//	if(@available(iOS 27.0, *))
+//	{
+//		[[_containerController tabBar] setValue:@(popupBar.inheritsBottomBarMetrics ? 4 : 0) forKeyPath:hostedElementKey];
+//		[_containerController.view setNeedsLayout];
+//		[_containerController.view layoutIfNeeded];
+//	}
+}
+
 - (void)_dismissPopupBarAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
 	[self _start120HzHack];
@@ -2084,13 +2146,7 @@ id __LNPopupEmptyBlurFilter(void)
 #endif
 				}
 				
-				if(@available(iOS 27.0, *))
-				if([_containerController isKindOfClass:UITabBarController.class] && self.popupBar.inheritsBottomBarMetrics)
-				{
-					[[_containerController tabBar] setValue:@0 forKeyPath:hostedElementKey];
-					[_containerController.view setNeedsLayout];
-					[_containerController.view layoutIfNeeded];
-				}
+				[self _updateTabBarWithState:LNPopupPresentationStateBarHidden];
 			}];
 			
 			if(animated && LNPopupEnvironmentHasGlass())
@@ -2298,9 +2354,7 @@ id __LNPopupEmptyBlurFilter(void)
 		return;
 	}
 	
-	[[_containerController tabBar] setValue:@(popupBar.inheritsBottomBarMetrics ? 4 : 0) forKeyPath:hostedElementKey];
-	[_containerController.view setNeedsLayout];
-	[_containerController.view layoutIfNeeded];
+	[self _updateTabBarWithState:self.popupControllerPublicState];
 }
 
 - (void)_generatePagingFeedbackForPopupBar:(LNPopupBar*)bar

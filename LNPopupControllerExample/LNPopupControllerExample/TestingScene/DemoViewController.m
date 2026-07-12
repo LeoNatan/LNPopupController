@@ -298,6 +298,8 @@
 		]];
 	}
 	
+//	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingColors"];
+//	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"VerticalPagedScrollingColors"];
 //	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings"];
 //	[self addChildViewController:settings];
 //	[self.view insertSubview:settings.view atIndex:0];
@@ -798,7 +800,7 @@
 		UIView* view = [LNTabBarAccessoryView new];
 		view.backgroundColor = UIColor.clearColor;
 		UITabAccessory* accessory = [[UITabAccessory alloc] initWithContentView:view];
-		self.tabBarController.bottomAccessory = accessory;
+		[self.tabBarController setBottomAccessory:accessory animated:YES];
 	}
 #endif
 }
@@ -808,6 +810,16 @@
 #if LNPOPUP
 	__kindof UIViewController* targetVC = [self _targetVCForPopup];
 	[targetVC dismissPopupBarAnimated:YES completion:nil];
+#else
+	if(@available(iOS 26.0, *))
+	{
+		if(self.tabBarController.bottomAccessory == nil)
+		{
+			return;
+		}
+		
+		[self.tabBarController setBottomAccessory:nil animated:YES];
+	}
 #endif
 }
 
