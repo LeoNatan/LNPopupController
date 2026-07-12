@@ -291,7 +291,7 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 }
 
 LNAlwaysInline
-void _LNUpdateUserSafeAreaInsets(id self, UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
+void _LNUpdateUserSafeAreaInsets(__kindof UIViewController* self, UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUserEdgeInsets)
 {
 	UIEdgeInsets final = __LNEdgeInsetsSum(userEdgeInsets, popupUserEdgeInsets);
 	
@@ -299,7 +299,7 @@ void _LNUpdateUserSafeAreaInsets(id self, UIEdgeInsets userEdgeInsets, UIEdgeIns
 }
 
 LNAlwaysInline
-void _LNSetPopupSafeAreaInsets(id self, UIEdgeInsets additionalSafeAreaInsets)
+void _LNSetPopupSafeAreaInsets(__kindof UIViewController* self, UIEdgeInsets additionalSafeAreaInsets)
 {
 	objc_setAssociatedObject(self, LNPopupAdditionalSafeAreaInsets, [NSValue valueWithUIEdgeInsets:additionalSafeAreaInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
@@ -322,18 +322,18 @@ void _LNSetPopupSafeAreaInsets(id self, UIEdgeInsets additionalSafeAreaInsets)
 	objc_setAssociatedObject(self, LNPopupChildAdditiveSafeAreaInsets, [NSValue valueWithUIEdgeInsets:childAdditiveSafeAreaInsets], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-UIEdgeInsets _LNPopupSafeAreaInsets(id self)
+UIEdgeInsets _LNPopupSafeAreaInsets(__kindof UIViewController* self)
 {
 	return [objc_getAssociatedObject(self, LNPopupAdditionalSafeAreaInsets) UIEdgeInsetsValue];
 }
 
 LNAlwaysInline
-UIEdgeInsets _LNUserSafeAreaInsets(id self)
+UIEdgeInsets _LNUserSafeAreaInsets(__kindof UIViewController* self)
 {
 	return [objc_getAssociatedObject(self, LNUserAdditionalSafeAreaInsets) UIEdgeInsetsValue];
 }
 
-UIEdgeInsets _LNPopupChildAdditiveSafeAreas(id self)
+UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 {
 	return [objc_getAssociatedObject(self, LNPopupChildAdditiveSafeAreaInsets) UIEdgeInsetsValue];
 }

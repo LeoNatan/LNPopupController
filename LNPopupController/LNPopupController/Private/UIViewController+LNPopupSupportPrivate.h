@@ -31,7 +31,7 @@ UIEdgeInsets __LNEdgeInsetsSum(UIEdgeInsets userEdgeInsets, UIEdgeInsets popupUs
 
 extern BOOL __ln_popup_suppressViewControllerLifecycle;
 
-UIEdgeInsets _LNPopupSafeAreaInsets(id self);
+UIEdgeInsets _LNPopupSafeAreaInsets(__kindof UIViewController* self);
 void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* controller, LNPopupBar* popupBar, BOOL layout, UIEdgeInsets popupEdgeInsets);
 
 @interface NSObject (SwiftUISupport)

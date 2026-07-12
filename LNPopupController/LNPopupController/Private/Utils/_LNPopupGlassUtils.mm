@@ -128,17 +128,22 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	
 	if(self.disableForeground)
 	{
-		[rv setValue:@YES forKey:@"excludingForeground"];
+		[rv setValue:@YES forKey:LNPopupHiddenString("excludingForeground")];
 	}
 	
 	if(self.disableInteractive)
 	{
-		[rv setValue:@NO forKey:@"flexible"];
+		[rv setValue:@NO forKey:LNPopupHiddenString("flexible")];
 	}
 	
 	if(self.disableShadow)
 	{
-		[rv setValue:@YES forKey:@"excludingShadow"];
+		[rv setValue:@YES forKey:LNPopupHiddenString("excludingShadow")];
+	}
+	
+	if(self.disableBackground)
+	{
+		[rv setValue:@YES forKey:LNPopupHiddenString("excludingPlatter")];
 	}
 	
 	return rv;

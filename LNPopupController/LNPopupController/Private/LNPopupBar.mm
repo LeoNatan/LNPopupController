@@ -376,9 +376,12 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		_layoutContainer = [_LNTouchPassthroughView new];
 		[self addSubview:_layoutContainer];
 		
-		_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
-		_floatingBackgroundShadowView.userInteractionEnabled = NO;
-		[_layoutContainer addSubview:_floatingBackgroundShadowView];
+		if(ln_unavailable(iOS 27.0, *))
+		{
+			_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
+			_floatingBackgroundShadowView.userInteractionEnabled = NO;
+			[_layoutContainer addSubview:_floatingBackgroundShadowView];
+		}
 		
 		_contentView = [[_LNPopupBarContentView alloc] initWithEffect:nil];
 		_contentView.clipsToBounds = NO;

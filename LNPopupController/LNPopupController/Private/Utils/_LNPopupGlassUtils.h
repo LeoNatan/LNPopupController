@@ -42,6 +42,7 @@ API_AVAILABLE(ios(26.0))
 @property (nonatomic, assign) BOOL disableForeground;
 @property (nonatomic, assign) BOOL disableInteractive;
 @property (nonatomic, assign) BOOL disableShadow;
+@property (nonatomic, assign) BOOL disableBackground;
 
 @end
 
