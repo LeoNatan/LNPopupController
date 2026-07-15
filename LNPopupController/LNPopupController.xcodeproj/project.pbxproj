@@ -11,7 +11,7 @@
 		3900316A2AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm */; };
 		39052F192DABC46C003CED10 /* LNPopupPresentationContainerSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 39052F172DABC46C003CED10 /* LNPopupPresentationContainerSupport.h */; };
 		39052F1A2DABC46C003CED10 /* LNPopupPresentationContainerSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 39052F182DABC46C003CED10 /* LNPopupPresentationContainerSupport.m */; };
-		3907CDB824D9BD6E007C9300 /* LNPopupContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */; };
+		3907CDB824D9BD6E007C9300 /* LNPopupContentView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3907CDB624D9BD6E007C9300 /* LNPopupContentView.mm */; };
 		390DD0111BB2EAC30064DB4A /* LNPopupContentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		393E4EAA2670F2D000929E47 /* LNPopupBarAppearance.h in Headers */ = {isa = PBXBuildFile; fileRef = 393E4EA82670F2D000929E47 /* LNPopupBarAppearance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		394005FC2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h in Headers */ = {isa = PBXBuildFile; fileRef = 394005FA2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.h */; };
@@ -59,7 +59,7 @@
 		390031682AC06FE10046D3DD /* _LNPopupBackgroundShadowView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = _LNPopupBackgroundShadowView.mm; sourceTree = "<group>"; };
 		39052F172DABC46C003CED10 /* LNPopupPresentationContainerSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupPresentationContainerSupport.h; sourceTree = "<group>"; };
 		39052F182DABC46C003CED10 /* LNPopupPresentationContainerSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupPresentationContainerSupport.m; sourceTree = "<group>"; };
-		3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupContentView.m; sourceTree = "<group>"; };
+		3907CDB624D9BD6E007C9300 /* LNPopupContentView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = LNPopupContentView.mm; sourceTree = "<group>"; };
 		3907CDB924D9BD8A007C9300 /* LNPopupContentView+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupContentView+Private.h"; sourceTree = "<group>"; };
 		390DD0101BB2EAC30064DB4A /* LNPopupContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNPopupContentView.h; sourceTree = "<group>"; };
 		39109DA11DD8A305004B5FAB /* LNPopupCloseButton+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupCloseButton+Private.h"; sourceTree = "<group>"; };
@@ -188,7 +188,7 @@
 				39109DA11DD8A305004B5FAB /* LNPopupCloseButton+Private.h */,
 				3947E1A81B61CDA40001178B /* LNPopupCloseButton.mm */,
 				3907CDB924D9BD8A007C9300 /* LNPopupContentView+Private.h */,
-				3907CDB624D9BD6E007C9300 /* LNPopupContentView.m */,
+				3907CDB624D9BD6E007C9300 /* LNPopupContentView.mm */,
 				3947E1B01B61CE4A0001178B /* LNPopupControllerImpl.h */,
 				3947E1B11B61CE4A0001178B /* LNPopupController.mm */,
 				39599BAC1E02CDF4008EE386 /* LNPopupCustomBarViewController+Private.h */,
@@ -374,7 +374,7 @@
 				39B3EB0E24D4ECC40034B81D /* UIView+LNPopupSupportPrivate.mm in Sources */,
 				394A85BA1B6304F5004FFC61 /* LNPopupItem.m in Sources */,
 				3947E1B31B61CE4A0001178B /* LNPopupController.mm in Sources */,
-				3907CDB824D9BD6E007C9300 /* LNPopupContentView.m in Sources */,
+				3907CDB824D9BD6E007C9300 /* LNPopupContentView.mm in Sources */,
 				394005FD2AC3C60900291421 /* _LNPopupBarBackgroundMaskView.mm in Sources */,
 				397D9A182687474E005164AB /* _LNPopupBarBackgroundView.m in Sources */,
 				3947E1A61B61CD650001178B /* LNPopupBar.mm in Sources */,

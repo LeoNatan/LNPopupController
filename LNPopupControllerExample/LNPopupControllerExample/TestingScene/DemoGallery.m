@@ -114,7 +114,7 @@
 #endif
 	
 #if defined(__IPHONE_27_0)
-	if (@available(iOS 27.0, *))
+	if(@available(iOS 27.0, *))
 	{
 		UIBarMinimization* minimization = [UIBarMinimization new];
 		minimization.minimizationBehavior = UIBarMinimizationBehaviorOnScrollDown;

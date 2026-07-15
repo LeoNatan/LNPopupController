@@ -362,10 +362,24 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	return nil;
 }
 
+static NSString* cornersName = LNPopupHiddenString("cornerRadii");
+
+- (LNPopupViewCorners)_ln_corners
+{
+	NSValue* cornersValue = [self.layer valueForKey:cornersName];
+	LNPopupViewCorners rv;
+	[cornersValue getValue:&rv size:sizeof(LNPopupViewCorners)];
+	return rv;
+}
+
+- (void)_ln_setCorners:(LNPopupViewCorners)corners
+{
+	NSValue* cornersValue = [NSValue valueWithBytes:&corners objCType:@encode(LNPopupViewCorners)];
+	[self.layer setValue:cornersValue forKey:cornersName];
+}
+
 - (CGFloat)_ln_simulatedCornerRadiusFromCorners
 {
-	static NSString* cornersName = LNPopupHiddenString("cornerRadii");
-	
 	NSValue* corners = [self.layer valueForKey:cornersName];
 	CGSize asArray[4];
 	[corners getValue:asArray size:sizeof(asArray)];

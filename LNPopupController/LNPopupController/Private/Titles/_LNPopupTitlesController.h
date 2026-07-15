@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setNeedsTitleLayoutRemovingLabels:(BOOL)remove;
 - (void)updateAccessibility;
 
+@property (nonatomic, readonly) BOOL hasSwiftUITitles;
+
 @end
 
 NS_ASSUME_NONNULL_END

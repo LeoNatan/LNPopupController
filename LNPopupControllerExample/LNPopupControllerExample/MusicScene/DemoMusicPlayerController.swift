@@ -146,26 +146,6 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		view.tintColor = .white
 	}
 	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-		UIView.performWithoutAnimation {
-			view.alpha = 0.0
-		}
-		
-		view.alpha = 1.0
-	}
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		
-		UIView.performWithoutAnimation {
-			view.alpha = 1.0
-		}
-		
-		view.alpha = 0.0
-	}
-	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		

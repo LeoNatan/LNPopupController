@@ -14,8 +14,6 @@
 #import "LNPopupImageView+Private.h"
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupGlassUtils.h"
-#import "_LNPopupTitlesController.h"
-#import "_LNPopupTitlesPagingController.h"
 #import "_LNTouchPassthroughView.h"
 #if __has_include(<LNSystemMarqueeLabel.h>)
 #import <LNSystemMarqueeLabel.h>
@@ -214,9 +212,6 @@ __attribute__((objc_direct_members))
 {
 	LNPopupImageView* _imageView;
 	
-	_LNPopupTitlesPagingController* _titlePagingController;
-	_LNPopupTitlesController* _titlesController;
-	
 	BOOL _needsLabelsLayout;
 	BOOL _needsLabelsLayoutRemove;
 	BOOL _needsAppearanceProxyRefresh;
@@ -264,10 +259,14 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	return rv;
 }
 
+#if DEBUG
+
 - (void)setHidden:(BOOL)hidden
 {
 	[super setHidden:hidden];
 }
+
+#endif
 
 - (void)_fixupSwiftUIControllersWithBarStyle
 {

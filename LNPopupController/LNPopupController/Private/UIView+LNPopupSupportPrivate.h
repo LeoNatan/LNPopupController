@@ -14,6 +14,13 @@
 CF_EXTERN_C_BEGIN
 NS_ASSUME_NONNULL_BEGIN
 
+typedef struct {
+	CGSize leftBottom;
+	CGSize rightBottom;
+	CGSize rightTop;
+	CGSize leftTop;
+} LNPopupViewCorners;
+
 extern UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas);
 
 typedef void (^LNInWindowBlock)(dispatch_block_t);
@@ -41,6 +48,7 @@ NSDirectionalEdgeInsets _LNDirectionalEdgeInsetsFromEdgeInsets(UIView* forView, 
 - (BOOL)_ln_isAncestorOfView:(UIView *)view;
 - (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test;
 
+@property (nonatomic, getter=_ln_corners, setter=_ln_setCorners:) LNPopupViewCorners corners;
 @property (nonatomic, readonly) CGFloat _ln_simulatedCornerRadiusFromCorners;
 
 @end

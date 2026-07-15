@@ -423,6 +423,11 @@
 	self.titlesView.frame = currentFrame;
 }
 
+- (BOOL)hasSwiftUITitles
+{
+	return self.popupItem.swiftuiTitleContentViewController != nil || self.popupItem.swiftuiTitleContentView != nil;
+}
+
 - (NSString *)description
 {
 	return [NSString stringWithFormat:@"<%@: %p title: “%@” subtitle: “%@”>", self.class, self, _titleLabel.text, _subtitleLabel.text];

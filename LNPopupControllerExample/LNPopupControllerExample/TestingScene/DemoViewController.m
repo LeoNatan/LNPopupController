@@ -169,11 +169,11 @@
 #if LNPOPUP
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
 	{
-		self._targetVCForPopup.popupContentView.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+		self._targetVCForPopup.popupContentViewController.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
 	}
 	else
 	{
-		self._targetVCForPopup.popupContentView.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
+		self._targetVCForPopup.popupContentViewController.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
 	}
 #endif
 }
@@ -669,6 +669,15 @@
 			wantsGlassBackground = NO;
 			demoVC = [DemoPopupContentViewController new];
 			break;
+	}
+	
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
+	{
+		demoVC.overrideUserInterfaceStyle = self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+	}
+	else
+	{
+		demoVC.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
 	}
 	
 	if(@available(iOS 26.0, *))

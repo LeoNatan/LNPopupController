@@ -100,15 +100,15 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 		}
 	}
 	
-	public
-	override var wantsDefaultTapGestureRecognizer: Bool {
-		return false
-	}
-	
-	public
-	override var wantsDefaultPanGestureRecognizer: Bool {
-		return false
-	}
+//	public
+//	override var wantsDefaultTapGestureRecognizer: Bool {
+//		return false
+//	}
+//	
+//	public
+//	override var wantsDefaultPanGestureRecognizer: Bool {
+//		return false
+//	}
 	
 	public
 	override var wantsDefaultHighlightGestureRecognizer: Bool {

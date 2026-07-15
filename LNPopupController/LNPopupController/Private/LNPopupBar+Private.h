@@ -14,6 +14,8 @@
 #import "_LNPopupBarBackgroundMaskView.h"
 #import "_LNPopupGlassUtils.h"
 #import "_LNPopupTransitionView.h"
+#import "_LNPopupTitlesController.h"
+#import "_LNPopupTitlesPagingController.h"
 
 #import "MarqueeLabel.h"
 #if __has_include(<LNSystemMarqueeLabel.h>)
@@ -142,6 +144,9 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 - (void)_cancelGestureRecognizers;
 
 @property (nonatomic) BOOL acceptsSizing;
+
+@property (nonatomic, strong) _LNPopupTitlesPagingController* titlePagingController;
+@property (nonatomic, strong) _LNPopupTitlesController* titlesController;
 
 @property (nonatomic) BOOL _applySwiftUILayoutFixes;
 

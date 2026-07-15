@@ -8,8 +8,6 @@
 
 #import "_LNPopupTransitionCloseAnimator.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
-#import "LNPopupBar+Private.h"
-#import "LNPopupContentView+Private.h"
 
 @implementation _LNPopupTransitionCloseAnimator
 {
@@ -18,7 +16,7 @@
 
 - (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView currentContentController:(UIViewController *)currentContentController containerController:(UIViewController *)containerController
 {
-	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView];
+	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView effectiveInteractionStyle:containerController.effectivePopupInteractionStyle];
 	
 	if(self)
 	{
@@ -56,12 +54,57 @@
 	return LNPopupPresentationStateBarPresented;
 }
 
+- (UIVisualEffect *)sourceContentTransitionEffect
+{
+	return self.popupContentView.effectView.effect;
+}
+
+- (UIVisualEffect *)targetContentTransitionEffect
+{
+	return self.popupBarEffect;
+}
+
+- (CGRect)sourceContentFrame
+{
+	return [self.popupContentView.superview convertRect:self.popupContentView.bounds fromView:self.popupContentView];
+}
+
+- (CGRect)targetContentFrame
+{
+	return [self.popupContentView.superview convertRect:self.popupBar.contentView.bounds fromView:self.popupBar.contentView];
+}
+
+- (LNPopupViewCorners)sourceContentCornerRadius
+{
+	return [LNPopupContentView cornersForContentView:self.popupContentView];
+}
+
+- (LNPopupViewCorners)targetContentCornerRadius
+{
+	return self.popupBar.contentView.effectView.corners;
+}
+
+- (CGFloat)sourceContentAlpha
+{
+	return 1.0;
+}
+
+- (CGFloat)targetContentAlpha
+{
+	return 0.0;
+}
+
 - (void)beforeAnyAnimation
 {
 	[super beforeAnyAnimation];
 	
 	self.crossfadeView.alpha = 0.0;
 	self.crossfadeView.cornerRadius = self.transitionView.cornerRadius;
+	
+	if(@available(iOS 26.0, *))
+	{
+		self.popupBarTransitionView.alpha = 0.0;
+	}
 }
 
 - (void)performAdditionalAnimations
@@ -87,26 +130,52 @@
 	[super performAdditional04Delayed015Animations];
 	
 	self.crossfadeView.alpha = 1.0;
-	
-	if(self.containerController._ln_shouldPopupContentAnyFadeForTransition)
+	if(@available(iOS 26.0, *))
 	{
-		if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
+		self.contentViewTransitionView.alpha = self.targetContentAlpha;
+	}
+	else
+	{
+		if(self.containerController._ln_shouldPopupContentAnyFadeForTransition)
 		{
-			if(_wasGlass)
+			if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
 			{
-				self.currentContentController.view.alpha = 0.0;
-				//An effect view with glass effect has its layer contained in a _UIMultiLayer
-				self.popupContentView.effectView.layer.superlayer.opacity = 0.0;
+				if(_wasGlass)
+				{
+					self.currentContentController.view.alpha = 0.0;
+					//An effect view with glass effect has its layer contained in a _UIMultiLayer
+					self.popupContentView.effectView.layer.superlayer.opacity = 0.0;
+				}
+				else
+				{
+					self.popupContentView.alpha = 0.0;
+				}
 			}
 			else
 			{
-				self.popupContentView.alpha = 0.0;
+				self.currentContentController.view.alpha = 0.0;
 			}
 		}
-		else
-		{
-			self.currentContentController.view.alpha = 0.0;
-		}
+	}
+}
+
+- (void)performAdditional075Delayed015Animations
+{
+	[super performAdditional075Delayed015Animations];
+	
+	if(@available(iOS 26.0, *))
+	{
+		self.popupBarTransitionView.alpha = 1.0;
+	}
+}
+
+- (void)performAdditional025Delayed060Animations
+{
+	[super performAdditional025Delayed060Animations];
+	
+	if(@available(iOS 26.0, *))
+	{
+		self.contentTransitionEffectView.effect = nil;
 	}
 }
 
@@ -114,11 +183,14 @@
 {
 	[super performAdditionalCompletion];
 	
-	self.popupContentView.alpha = 1.0;
-	self.currentContentController.view.alpha = 1.0;
-	if(_wasGlass)
+	if(ln_unavailable(iOS 26.0, *))
 	{
-		self.popupContentView.effectView.layer.superlayer.opacity = 1.0;
+		self.popupContentView.alpha = 1.0;
+		self.currentContentController.view.alpha = 1.0;
+		if(_wasGlass)
+		{
+			self.popupContentView.effectView.layer.superlayer.opacity = 1.0;
+		}
 	}
 }
 

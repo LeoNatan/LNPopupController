@@ -1,5 +1,5 @@
 //
-//  LNPopupContentView.m
+//  LNPopupContentView.mm
 //  LNPopupController
 //
 //  Created by Léo Natan on 2020-08-04.
@@ -10,8 +10,7 @@
 #import "LNPopupContentView+Private.h"
 #import "LNPopupCloseButton+Private.h"
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
-#import "UIView+LNPopupSupportPrivate.h"
-#import "_LNUITraitOverridesWrapper.h"
+#import "UIScreen+LNPopupSupportPrivate.h"
 
 @implementation LNPopupContentView
 {
@@ -22,28 +21,45 @@
 	NSLayoutConstraint* _popupCloseButtonTrailingConstraint;
 }
 
-- (id<UITraitOverrides>)traitOverrides
++ (LNPopupViewCorners)cornersForContentView:(LNPopupContentView*)contentView
 {
-	return [[_LNUITraitOverridesWrapper alloc] initWithTraitOverrides:super.traitOverrides contentView:self];
-}
-
-- (void)setUserUserInterfaceStyleTraitModifier:(UIUserInterfaceStyle)userUserInterfaceStyleTraitModifier
-{
-	_userUserInterfaceStyleTraitModifier = userUserInterfaceStyleTraitModifier;
-	
-	[self _updateTraitOverrides];
-}
-
-- (void)setSystemUserInterfaceStyleTraitModifier:(UIUserInterfaceStyle)systemUserInterfaceStyleTraitModifier
-{
-	_systemUserInterfaceStyleTraitModifier = systemUserInterfaceStyleTraitModifier;
-	
-	[self _updateTraitOverrides];
-}
-
-- (void)_updateTraitOverrides API_AVAILABLE(ios(17.0))
-{
-	super.traitOverrides.userInterfaceStyle = self.userUserInterfaceStyleTraitModifier != UIUserInterfaceStyleUnspecified ? self.userUserInterfaceStyleTraitModifier : self.systemUserInterfaceStyleTraitModifier;
+	if(contentView.window != nil)
+	{
+		CGRect frameInWindow = [contentView.window convertRect:contentView.bounds fromView:contentView];
+		CGRect superFrameInWindow = [contentView.window convertRect:contentView.superview.bounds fromView:contentView.superview];
+		
+		LNPopupViewCorners corners = {};
+		CGSize corner = CGSizeMake(contentView.window.screen._ln_cornerRadius, contentView.window.screen._ln_cornerRadius);
+		if(frameInWindow.origin.x == 0)
+		{
+			if(superFrameInWindow.origin.y == 0)
+			{
+				corners.leftTop = corner;
+			}
+			if(superFrameInWindow.origin.y + superFrameInWindow.size.height == contentView.window.bounds.size.height)
+			{
+				corners.leftBottom = corner;
+			}
+		}
+		
+		if(frameInWindow.origin.x + frameInWindow.size.width == contentView.window.bounds.size.width)
+		{
+			if(superFrameInWindow.origin.y == 0)
+			{
+				corners.rightTop = corner;
+			}
+			if(superFrameInWindow.origin.y + superFrameInWindow.size.height == contentView.window.bounds.size.height)
+			{
+				corners.rightBottom = corner;
+			}
+		}
+		
+		return corners;
+	}
+	else
+	{
+		return {};
+	}
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -64,6 +80,7 @@
 		
 		_translucent = YES;
 		_backgroundEffect = nil;
+		_allowsContentTransition = YES;
 		
 		_popupCloseButton = [[LNPopupCloseButton alloc] initWithContainingContentView:self];
 		[self _setStyle:LNPopupCloseButtonStyleDefault positioning:LNPopupCloseButtonPositioningDefault];
@@ -103,12 +120,38 @@
 	return self;
 }
 
+- (void)_setApplyScreenCorners:(BOOL)applyScreenCorners
+{
+	if(_applyScreenCorners == applyScreenCorners)
+	{
+		return;
+	}
+	
+	_applyScreenCorners = applyScreenCorners;
+	
+	[self setNeedsLayout];
+}
+
 - (void)layoutSubviews
 {
+	if(@available(iOS 26.0, *))
+	{
+		self.layer.masksToBounds = YES;
+		self.layer.cornerCurve = kCACornerCurveCircular;
+	
+		if(_applyScreenCorners)
+		{
+			self.corners = [LNPopupContentView cornersForContentView:self];
+		}
+		else
+		{
+			self.corners = {};
+		}
+	}
+	
 	[super layoutSubviews];
 	
 	_effectView.frame = self.bounds;
-	_contentView.frame = self.bounds;
 }
 
 - (void)setCurrentPopupContentViewController:(UIViewController *)currentPopupContentViewController

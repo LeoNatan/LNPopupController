@@ -535,6 +535,22 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	static void (*setContentMarginFunc)(id, SEL, CGFloat) = reinterpret_cast<decltype(setContentMarginFunc)>(objc_msgSend);
 	static void (*_setContentOverlayInsets_andLeftMargin_rightMarginFunc)(id, SEL, UIEdgeInsets, CGFloat, CGFloat) = reinterpret_cast<decltype(_setContentOverlayInsets_andLeftMargin_rightMarginFunc)>(objc_msgSend);
 	
+	if(self.popupPresentationContainerViewController != nil)
+	{
+		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
+		
+		UIEdgeInsets insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
+		
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
+		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
+		
+		self.view.insetsLayoutMarginsFromSafeArea = YES;
+		self.viewRespectsSystemMinimumLayoutMargins = NO;
+		self.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
+		
+		return;
+	}
+	
 	if([self respondsToSelector:@selector(_ln_popupUIRequiresZeroInsets)] && self._ln_popupUIRequiresZeroInsets == YES)
 	{
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, UIEdgeInsetsZero, 0, 0);
@@ -559,29 +575,15 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	if(LNPopupEnvironmentHasGlass())
 	{
 		//Trigger an update for the popup content view controller.
-		if(self.popupContentViewController != nil)
-		{
-			CGFloat contentMargin = contentMarginFunc(self, contentMarginSEL);
-			
-			UIEdgeInsets insets = __LNEdgeInsetsSum(self.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self).bottom, 0));
-			
-			_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self.popupContentViewController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
-			setContentMarginFunc(self.popupContentViewController, setContentMarginSEL, contentMargin);
-		}
-	}
-		
-	if(self.popupPresentationContainerViewController != nil)
-	{
-		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
-		
-		UIEdgeInsets insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
-		
-		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
-		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
-		
-		self.view.insetsLayoutMarginsFromSafeArea = YES;
-		self.viewRespectsSystemMinimumLayoutMargins = NO;
-		self.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
+//		if(self.popupContentViewController != nil)
+//		{
+//			CGFloat contentMargin = contentMarginFunc(self, contentMarginSEL);
+//			
+//			UIEdgeInsets insets = __LNEdgeInsetsSum(self.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self).bottom, 0));
+//			
+//			_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self.popupContentViewController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
+//			setContentMarginFunc(self.popupContentViewController, setContentMarginSEL, contentMargin);
+//		}
 	}
 	
 	if([self.parentViewController isKindOfClass:UIPageViewController.class] && self.parentViewController._isContainedInPopupController)
@@ -661,6 +663,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	if(popupBar.os26TransitionView != nil)
 	{
 		[parentForPopupBar insertSubview:popupBar.os26TransitionView aboveSubview:popupBar];
+	}
+	if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
+	{
+		[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView.transitionView aboveSubview:self._ln_popupController_nocreate.popupContentView];
 	}
 }
 
@@ -1031,6 +1037,11 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 		if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
 		{
 			[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
+		}
+		
+		if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
+		{
+			[self.view insertSubview:self._ln_popupController_nocreate.popupContentView.transitionView aboveSubview:self._ln_popupController_nocreate.popupContentView];
 		}
 	}
 	
@@ -1984,11 +1995,6 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 	[self.view insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:floatingBarContainer];
 	if(LNPopupEnvironmentHasGlass() && self.view.superview != nil)
 	{
-		if (@available(iOS 17.0, *))
-		{
-			self._ln_popupController_nocreate.popupContentView.systemUserInterfaceStyleTraitModifier = self.view.traitCollection.userInterfaceStyle;
-		}
-		
 		UIView* target = self.view.superview;
 		if(@available(iOS 27.0, *))
 		if(self.splitViewController != nil)
@@ -2006,13 +2012,18 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 	}
 	else
 	{
-		if (@available(iOS 17.0, *))
-		{
-			self._ln_popupController_nocreate.popupContentView.systemUserInterfaceStyleTraitModifier = UIUserInterfaceStyleUnspecified;
-		}
 		[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:floatingBarContainer];
 	}
-	[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
+	
+	if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
+	{
+		[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
+	}
+	
+	if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
+	{
+		[self._ln_popupController_nocreate.popupContentView.superview insertSubview:self._ln_popupController_nocreate.popupContentView.transitionView aboveSubview:self._ln_popupController_nocreate.popupContentView];
+	}
 	
 	self._ln_popupController_nocreate.popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
 }

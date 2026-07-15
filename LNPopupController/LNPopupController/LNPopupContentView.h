@@ -28,17 +28,17 @@ NS_SWIFT_UI_ACTOR
 /// Defaults to ``LNPopupCloseButton/Style/default``.
 @property (nonatomic, assign) LNPopupCloseButtonStyle popupCloseButtonStyle UI_APPEARANCE_SELECTOR;
 
+/// The effective popup close button style used by the system. (read-only)
+///
+/// Use this property's value to determine, at runtime, what the result of `LNPopupCloseButtonStyle.default` is.
+@property (nonatomic, assign, readonly) LNPopupCloseButtonStyle effectivePopupCloseButtonStyle;
+
 /// The popup close button positioning.
 ///
 /// Defaults to ``LNPopupCloseButton/Positioning/default``.
 ///
 /// The value of this property only has effect if the system positions the popup close button.
 @property (nonatomic, assign) LNPopupCloseButtonPositioning popupCloseButtonPositioning UI_APPEARANCE_SELECTOR;
-
-/// The effective popup close button style used by the system. (read-only)
-///
-/// Use this property's value to determine, at runtime, what the result of `LNPopupCloseButtonStyle.default` is.
-@property (nonatomic, assign, readonly) LNPopupCloseButtonStyle effectivePopupCloseButtonStyle;
 
 /// The effective popup close button positioning used by the system. (read-only)
 ///
@@ -61,6 +61,17 @@ NS_SWIFT_UI_ACTOR
 ///
 /// Defaults to `true`.
 @property(nonatomic, assign, getter=isTranslucent) BOOL translucent UI_APPEARANCE_SELECTOR;
+
+/// A Boolean value indicating if content transition is allowed with this popup content view.
+///
+/// Disable this in cases where the transition introduces unwanted layout issues.
+///
+/// Supported on iOS 26.0 and later.
+///
+///	Defaults to `true`.
+///
+/// - Note: This does not disable popup image transitions.
+@property(nonatomic, assign) BOOL allowsContentTransition;
 
 @end
 

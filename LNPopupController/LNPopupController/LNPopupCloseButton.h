@@ -51,6 +51,9 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 	/// No close button.
 	LNPopupCloseButtonStyleNone = 0xFFFF,
 	
+	/// Flat close button style.
+	///
+	/// Deprecated. Use LNPopupCloseButtonStyle.grabber instead.
 	LNPopupCloseButtonStyleFlat LN_DEPRECATED_API("Use LNPopupCloseButtonStyle.grabber instead.") = LNPopupCloseButtonStyleGrabber
 } NS_SWIFT_NAME(LNPopupCloseButton.Style);
 

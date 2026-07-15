@@ -10,21 +10,65 @@
 #import "LNPopupBar+Private.h"
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import <objc/runtime.h>
+#import "LNPopupContentView+Private.h"
+#import "LNPopupControllerImpl.h"
 
 static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransitionViewKey;
 
 @implementation _LNPopupTransitionAnimator
+{
+	CGFloat _alphaBefore;
+}
 
-- (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView
+- (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView effectiveInteractionStyle:(LNPopupInteractionStyle)interactionStyle
 {
 	self = [super init];
 	
 	if(self)
 	{
+		if(popupBar.customBarViewController != nil || popupBar.imageView.isHidden)
+		{
+			transitionView = nil;
+			view = nil;
+		}
+		
 		_transitionView = transitionView;
 		_view = view;
 		_popupBar = popupBar;
 		_popupContentView = popupContentView;
+		
+		if(@available(iOS 26.0, *))
+		{
+			_wantsContentTransition = popupContentView.allowsContentTransition && interactionStyle == LNPopupInteractionStyleSnap;
+			
+			if(_wantsContentTransition)
+			{
+				_contentViewTransitionView = [_LNPopupTransitionView transitionViewWithSourceView:popupContentView.contentView];
+				_contentViewTransitionView.matchesAlpha = NO;
+				_contentViewTransitionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+				
+				_contentTransitionEffectView = [[UIVisualEffectView alloc] initWithEffect:self.sourceContentTransitionEffect];
+				_contentTransitionEffectView.frame = popupContentView.frame;
+				[_contentTransitionEffectView.contentView addSubview:_contentViewTransitionView];
+				_contentViewTransitionView.frame = self.popupContentView.currentPopupContentViewController.view.bounds;
+				_contentTransitionEffectView.clipsToBounds = YES;
+				_contentTransitionEffectView.layer.cornerCurve = kCACornerCurveCircular;
+				
+				_popupBarTransitionView = [_LNPopupTransitionView transitionViewWithSourceView:popupBar.contentView.effectView];
+				_popupBarTransitionView.matchesAlpha = NO;
+				_popupBarTransitionView.allowsEffects = YES;
+				_popupBarTransitionView.frame = popupBar.contentView.frame;
+				_popupBarTransitionView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+				
+				_contentTransitionWrapperView = [[UIView alloc] initWithFrame:popupContentView.frame];
+				_contentTransitionEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+				[_contentTransitionWrapperView addSubview:_contentTransitionEffectView];
+				_contentTransitionEffectView.frame = _contentTransitionWrapperView.bounds;
+				[_contentTransitionWrapperView addSubview:_popupBarTransitionView];
+				
+				self.popupContentView.transitionView = _contentTransitionWrapperView;
+			}
+		}
 	}
 	
 	return self;
@@ -41,6 +85,17 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		if(self.transitionView == nil && self.view != nil)
 		{
 			_transitionView = [[_LNPopupTransitionView alloc] initWithSourceView:self.view];
+		}
+		
+		if(@available(iOS 26.0, *))
+		if(_wantsContentTransition)
+		{
+			_transitionView.matchesAlpha = NO;
+			_transitionView.alpha = self.view.alpha;
+			_alphaBefore = self.view.alpha;
+			self.view.alpha = 0.0;
+			
+			_popupBarEffect = self.popupBar.contentView.effectView.effect;
 		}
 		
 		if(_transitionView != nil)
@@ -76,24 +131,44 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			_transitionView.frame = self.sourceFrame;
 		}
 		
+		if(@available(iOS 26.0, *))
+		if(_wantsContentTransition)
+		{
+			self.popupContentView.effectView.alpha = 0.0;
+			_contentTransitionWrapperView.frame = self.sourceContentFrame;
+			_contentTransitionEffectView.corners = self.sourceContentCornerRadius;
+			_contentViewTransitionView.alpha = self.sourceContentAlpha;
+			_contentTransitionEffectView.effect = self.targetContentTransitionEffect;
+		}
+		
 		[self beforeAnyAnimation];
 		
 		if(_transitionView != nil)
 		{
 			objc_setAssociatedObject(self.transitionView.sourceLayer, _LNPopupOpenCloseTransitionViewKey, _transitionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 		}
+		
+		if(@available(iOS 26.0, *))
+		if(_wantsContentTransition)
+		{
+			[self.popupContentView.superview addSubview:_contentTransitionWrapperView];
+		}
+		if(_transitionView != nil)
+		{
+			[self.popupContentView.window addSubview:_transitionView];
+		}
+		[self performBeforeAdditionalAnimations];
 	}];
 	
 	[animator addAnimations:otherAnimations];
 	
 	[animator addAnimations:^{
-		[UIView performWithoutAnimation:^{
-			if(_transitionView != nil)
-			{
-				[self.popupContentView.window addSubview:_transitionView];
-			}
-			[self performBeforeAdditionalAnimations];
-		}];
+		if(@available(iOS 26.0, *))
+		if(_wantsContentTransition)
+		{
+			_contentTransitionWrapperView.frame = self.targetContentFrame;
+			_contentTransitionEffectView.corners = self.targetContentCornerRadius;
+		}
 		
 		[self performAdditionalAnimations];
 		
@@ -153,6 +228,14 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		} completion:nil];
 	} delayFactor:0.0];
 	
+	[animator addAnimations:^{
+		[UIView animateKeyframesWithDuration:0.0 delay:0.0 options:0 animations:^{
+			[UIView addKeyframeWithRelativeStartTime:0.55 relativeDuration:0.35 animations:^{
+				[self performAdditional025Delayed060Animations];
+			}];
+		} completion:nil];
+	} delayFactor:0.0];
+	
 	[animator addCompletion:^(UIViewAnimatingPosition finalPosition) {
 		if([self.view respondsToSelector:transitionDidEnd])
 		{
@@ -196,6 +279,46 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	return (LNPopupPresentationState)-1;
 }
 
+- (UIVisualEffect *)sourceContentTransitionEffect
+{
+	return nil;
+}
+
+- (UIVisualEffect *)targetContentTransitionEffect
+{
+	return nil;
+}
+
+- (CGRect)sourceContentFrame
+{
+	return CGRectZero;
+}
+
+- (CGRect)targetContentFrame
+{
+	return CGRectZero;
+}
+
+- (LNPopupViewCorners)sourceContentCornerRadius
+{
+	return {0};
+}
+
+- (LNPopupViewCorners)targetContentCornerRadius
+{
+	return {0};
+}
+
+- (CGFloat)sourceContentAlpha
+{
+	return 1.0;
+}
+
+- (CGFloat)targetContentAlpha
+{
+	return 1.0;
+}
+
 - (void)beforeAnyAnimation {}
 - (void)performBeforeAdditionalAnimations {}
 - (void)performAdditionalAnimations {}
@@ -205,11 +328,21 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 - (void)performAdditional075Animations {}
 - (void)performAdditional04Delayed015Animations {}
 - (void)performAdditional075Delayed015Animations {}
+- (void)performAdditional025Delayed060Animations {}
 - (void)performAdditionalCompletion {}
 
 - (void)completeTransition
 {
 	[UIView performWithoutAnimation:^{
+		if(@available(iOS 26.0, *))
+		if(_wantsContentTransition)
+		{
+			self.view.alpha = _alphaBefore;
+			self.popupContentView.effectView.alpha = 1.0;
+			self.popupBar.contentView.effectView.effect = _popupBarEffect;
+			[_contentTransitionWrapperView removeFromSuperview];
+			self.popupContentView.transitionView = nil;
+		}
 		UIView* transitionView = objc_getAssociatedObject(self.transitionView.sourceLayer, _LNPopupOpenCloseTransitionViewKey);
 		[transitionView removeFromSuperview];
 		objc_setAssociatedObject(self.transitionView.sourceLayer, _LNPopupOpenCloseTransitionViewKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);

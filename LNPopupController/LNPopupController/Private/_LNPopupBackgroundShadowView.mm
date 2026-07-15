@@ -13,13 +13,6 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupSwizzlingUtils.h"
 
-typedef struct {
-	CGSize x1;
-	CGSize x2;
-	CGSize x3;
-	CGSize x4;
-} LNPopupCorners;
-
 @interface _LNPopupBackgroundShadowLayer: CALayer @end
 @implementation _LNPopupBackgroundShadowLayer
 
@@ -34,13 +27,13 @@ typedef struct {
 	}
 }
 
-- (void)_ln_setCorners:(LNPopupCorners)corners
+- (void)_ln_setCorners:(LNPopupViewCorners)corners
 {
 	struct objc_super super = {
 		.receiver = self,
 		.super_class = self.class.superclass
 	};
-	static void (*superFunc)(struct objc_super*, SEL, LNPopupCorners) = reinterpret_cast<decltype(superFunc)>(objc_msgSendSuper);
+	static void (*superFunc)(struct objc_super*, SEL, LNPopupViewCorners) = reinterpret_cast<decltype(superFunc)>(objc_msgSendSuper);
 	
 	superFunc(&super, _cmd, corners);
 	
