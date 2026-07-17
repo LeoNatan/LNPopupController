@@ -1069,9 +1069,11 @@ __attribute__((objc_direct_members))
 			_popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 			_popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			
-			[self closePopupAnimated:YES completion:^ {
-				[_popupContentView.popupCloseButton _setButtonContainerStationary];
-			}];
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self closePopupAnimated:YES completion:^ {
+					[_popupContentView.popupCloseButton _setButtonContainerStationary];
+				}];
+			});
 		}
 		
 		CGFloat statusBarHeightThreshold = [LNPopupController _statusBarHeightForView:_containerController.view] / 2.0;

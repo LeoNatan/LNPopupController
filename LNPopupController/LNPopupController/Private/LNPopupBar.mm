@@ -531,6 +531,16 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	[super setFrame:frame];
 }
 
+- (void)setCenter:(CGPoint)center
+{
+	if(CGPointEqualToPoint(center, super.center) == YES)
+	{
+		return;
+	}
+	
+	[super setCenter:center];
+}
+
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
 	[super traitCollectionDidChange:previousTraitCollection];
