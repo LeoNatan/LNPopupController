@@ -671,6 +671,8 @@
 			break;
 	}
 	
+	self.tabBarController.adjustsTabBarLayoutForPopupBar = [NSUserDefaults.settingDefaults boolForKey:PopupSettingAdjustsTabBarLayout];
+	
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
 	{
 		demoVC.overrideUserInterfaceStyle = self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
