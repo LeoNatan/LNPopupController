@@ -2010,6 +2010,7 @@ id __LNPopupEmptyBlurFilter(void)
 			return;
 		}
 		
+		BOOL wantsLayoutAdjustment = [_containerController adjustsTabBarLayoutForPopupBar];
 		UITabBar* tabBar = [_containerController tabBar];
 		NSUInteger hosted = [[tabBar valueForKeyPath:hostedElementKey] unsignedIntegerValue];
 		
@@ -2018,22 +2019,22 @@ id __LNPopupEmptyBlurFilter(void)
 			[_containerController.view layoutIfNeeded];
 		};
 		
-		if(hosted == 0 && (self.popupBar.inheritsBottomBarMetrics == YES && state != LNPopupPresentationStateBarHidden))
+		if(hosted == 0 && (self.popupBar.inheritsBottomBarMetrics == YES && wantsLayoutAdjustment && state != LNPopupPresentationStateBarHidden))
 		{
 			[tabBar setValue:@4 forKeyPath:hostedElementKey];
 			layout();
 		}
-		else if(hosted == 2 && (self.popupBar.inheritsBottomBarMetrics == YES && state != LNPopupPresentationStateBarHidden))
+		else if(hosted == 2 && (self.popupBar.inheritsBottomBarMetrics == YES && wantsLayoutAdjustment && state != LNPopupPresentationStateBarHidden))
 		{
 			[tabBar setValue:@6 forKeyPath:hostedElementKey];
 			layout();
 		}
-		else if(hosted == 4 && (self.popupBar.inheritsBottomBarMetrics == NO || state == LNPopupPresentationStateBarHidden))
+		else if(hosted == 4 && (self.popupBar.inheritsBottomBarMetrics == NO || wantsLayoutAdjustment == NO || state == LNPopupPresentationStateBarHidden))
 		{
 			[tabBar setValue:@0 forKeyPath:hostedElementKey];
 			layout();
 		}
-		else if(hosted == 6 && (self.popupBar.inheritsBottomBarMetrics == NO || state == LNPopupPresentationStateBarHidden))
+		else if(hosted == 6 && (self.popupBar.inheritsBottomBarMetrics == NO || wantsLayoutAdjustment == NO || state == LNPopupPresentationStateBarHidden))
 		{
 			[tabBar setValue:@2 forKeyPath:hostedElementKey];
 			layout();

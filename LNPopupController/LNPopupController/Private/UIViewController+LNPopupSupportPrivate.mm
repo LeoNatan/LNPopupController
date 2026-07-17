@@ -999,7 +999,27 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 
 #pragma mark - UITabBarController
 
+static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
+
 @implementation UITabBarController (LNPopupSupportPrivate)
+
+- (BOOL)adjustsTabBarLayoutForPopupBar
+{
+	NSNumber* value = objc_getAssociatedObject(self, LNTabBarControllerAdjustsLayout);
+	if(value == nil)
+	{
+		return YES;
+	}
+	else
+	{
+		return [value boolValue];
+	}
+}
+
+- (void)setAdjustsTabBarLayoutForPopupBar:(BOOL)adjustsTabBarLayoutForPopupBar
+{
+	objc_setAssociatedObject(self, LNTabBarControllerAdjustsLayout, @(adjustsTabBarLayoutForPopupBar), OBJC_ASSOCIATION_RETAIN);
+}
 
 - (void)_layoutModernTabBarControllerFloatingPopupWithSuperFallback:(void(^)(void))superFallback API_AVAILABLE(ios(26.0))
 {

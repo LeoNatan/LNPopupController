@@ -148,16 +148,16 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		barInsets.leading -= floatingLayoutMargins.leading;
 		barInsets.trailing -= floatingLayoutMargins.trailing;
 		
-//		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
-//		BOOL isPad = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad;
-//		BOOL isRegular = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
-//		BOOL compactButHasSafeArea = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && popupBar.safeAreaInsets.left > 10;
-//		 
-//		if(isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && (isRegular || compactButHasSafeArea) && !isPad)
-//		{
-//			barInsets.leading += 20;
-//			barInsets.trailing += 20;
-//		}
+		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
+		BOOL isPad = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+		BOOL isRegular = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		BOOL compactButHasSafeArea = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && popupBar.safeAreaInsets.left > 10;
+		
+		if(self.adjustsTabBarLayoutForPopupBar == NO && isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && (isRegular || compactButHasSafeArea) && !isPad)
+		{
+			barInsets.leading += 20;
+			barInsets.trailing += 20;
+		}
 	}
 	
 	return barInsets;

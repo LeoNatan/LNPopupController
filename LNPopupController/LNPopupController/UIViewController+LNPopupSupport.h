@@ -330,6 +330,19 @@ NS_SWIFT_UI_ACTOR
 
 @end
 
+@interface UITabBarController (LNPopupPresentation)
+
+/// Enables or disables adjusting the tab bar layout to accommodate for a presented popup bar.
+///
+/// This property has no effect if ``LNPopupBar/inheritsBottomBarMetrics`` is set to `false`.
+///
+/// Supported on iOS 27.0 and later.
+///
+/// Defaults to `true`.
+@property (nonatomic, assign) BOOL adjustsTabBarLayoutForPopupBar;
+
+@end
+
 @interface UIViewController (LNPopupCustomContainerDeprecated)
 
 /// The insets for the bottom docking view from bottom of the container controller's view. By default, this returns ` UIEdgeInsets.zero`. Currently, only the bottom inset is respected.
