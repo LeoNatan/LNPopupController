@@ -45,16 +45,28 @@
 - (nullable UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location
 {
 	return [UIContextMenuConfiguration configurationWithIdentifier:nil previewProvider:nil actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
+		UIAction* link = [UIAction actionWithTitle:NSLocalizedString(@"Visit GitHub Page", @"") image:[UIImage systemImageNamed:@"safari"] identifier:nil handler:^(__kindof UIAction * _Nonnull action)
+						  {
+			[UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"] options:@{} completionHandler:nil];
+		}];
+		if(@available(iOS 27.0, *))
+		{
+			link.preferredImageVisibility = UIMenuElementImageVisibilityVisible;
+		}
+		
+		UIAction* report = [UIAction actionWithTitle:NSLocalizedString(@"Report an Issue…", @"") image:[UIImage systemImageNamed:@"ladybug.fill"] identifier:nil handler:^(__kindof UIAction * _Nonnull action)
+							{
+			[UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController/issues/new/choose"] options:@{} completionHandler:nil];
+		}];
+		if(@available(iOS 27.0, *))
+		{
+			report.preferredImageVisibility = UIMenuElementImageVisibilityVisible;
+		}
+		
 		return [UIMenu menuWithTitle: self->_includeTitle ? @"LNPopupController" : @"" children:@[
 			[UIMenu menuWithTitle:@"" image:nil identifier:nil options:UIMenuOptionsDisplayInline children:@[
-				[UIAction actionWithTitle:NSLocalizedString(@"Visit GitHub Page", @"") image:[UIImage systemImageNamed:@"safari"] identifier:nil handler:^(__kindof UIAction * _Nonnull action)
-				 {
-					[UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"] options:@{} completionHandler:nil];
-				}],
-				[UIAction actionWithTitle:NSLocalizedString(@"Report an Issue…", @"") image:[UIImage systemImageNamed:@"ant.fill"] identifier:nil handler:^(__kindof UIAction * _Nonnull action)
-				 {
-					[UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController/issues/new/choose"] options:@{} completionHandler:nil];
-				}]
+				link,
+				report
 			]],
 			[UIAction actionWithTitle:NSLocalizedString(@"Share…", @"") image:[UIImage systemImageNamed:@"square.and.arrow.up"] identifier:nil handler:^(__kindof UIAction * _Nonnull action)
 			 {

@@ -1,4 +1,9 @@
 #import "SceneDelegate.h"
+#if LNPOPUP
+#import "LNPopupControllerExample-Swift.h"
+#else
+#import "LNPopupControllerExampleNoPopup-Swift.h"
+#endif
 
 @interface DemoWindow : UIWindow @end
 @implementation DemoWindow
@@ -22,7 +27,7 @@
 	
 	if(self)
 	{
-		self.window = [DemoWindow new];
+		
 	}
 	
 	return self;
@@ -30,21 +35,18 @@
 
 - (void)scene:(UIWindowScene *)scene willConnectToSession:(UISceneSession *)session options:(UISceneConnectionOptions *)connectionOptions 
 {
+	self.window = [[DemoWindow alloc] initWithWindowScene:scene];
 	self.window.windowScene = scene;
 	self.windowScene = scene;
 	
-	[self.window makeKeyAndVisible];
-	
 #if TARGET_OS_MACCATALYST
-	scene.sizeRestrictions.maximumSize = CGSizeMake(DBL_MAX, DBL_MAX);
-	scene.titlebar.toolbar = nil;
-	
-	if([self.window.rootViewController isKindOfClass:UISplitViewController.class])
-	{
-		UISplitViewController* split = (id)self.window.rootViewController;
-		split.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
-	}
+		scene.titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
+		self.window.rootViewController = [LNCatalystLandingViewController new];
+#else
+		self.window.rootViewController = [UIStoryboard storyboardWithName:@"Main" bundle:nil].instantiateInitialViewController;
 #endif
+	
+	[self.window makeKeyAndVisible];
 }
 
 - (void)sceneDidDisconnect:(UIScene *)scene 

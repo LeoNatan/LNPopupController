@@ -65,12 +65,26 @@
 	
 	NSString* title = NSLocalizedString(@"Welcome to LNPopupController!", @"");
 	
+	UIFont* font;
+	UIFont* emphasizedFont;
+	
+	if(self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac)
+	{
+		font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+		emphasizedFont = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+	}
+	else
+	{
+		font = [[UIFontMetrics metricsForTextStyle:UIFontTextStyleBody] scaledFontForFont:[UIFont systemFontOfSize:15 weight:UIFontWeightMedium]];
+		emphasizedFont = [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont systemFontOfSize:16 weight:UIFontWeightHeavy]];
+	}
+	
 	NSMutableAttributedString* attribTitle = [[NSMutableAttributedString alloc] initWithString:title];
 	[attribTitle addAttributes:@{
-		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleBody] scaledFontForFont:[UIFont systemFontOfSize:15 weight:UIFontWeightMedium]],
+		NSFontAttributeName: font,
 	} range:NSMakeRange(0, attribTitle.length)];
 	[attribTitle addAttributes: @{
-		NSFontAttributeName: [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont systemFontOfSize:16 weight:UIFontWeightHeavy]],
+		NSFontAttributeName: emphasizedFont,
 	} range:[title rangeOfString:NSLocalizedString(@"LNPopupController", @"")]];
 	
 	self.popupItem.attributedTitle = attribTitle;
