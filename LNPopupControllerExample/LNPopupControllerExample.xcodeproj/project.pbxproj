@@ -35,6 +35,8 @@
 		39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 39988C752AA1557F00C3BB04 /* SafeSystemImages.m */; };
 		39988C772AA1557F00C3BB04 /* SafeSystemImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 39988C752AA1557F00C3BB04 /* SafeSystemImages.m */; };
 		39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* LNSplitViewController.m */; };
+		39A8BE90300B4358001B1E10 /* LNPopupController.icon in Resources */ = {isa = PBXBuildFile; fileRef = 39A8BE8F300B4358001B1E10 /* LNPopupController.icon */; };
+		39A8BE91300B4358001B1E10 /* LNPopupController.icon in Resources */ = {isa = PBXBuildFile; fileRef = 39A8BE8F300B4358001B1E10 /* LNPopupController.icon */; };
 		39B0DFE62B1819A9008CCF36 /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFE92B1819A9008CCF36 /* MapScene.storyboard */; };
 		39B0DFE72B1819A9008CCF36 /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFE92B1819A9008CCF36 /* MapScene.storyboard */; };
 		39B0DFEA2B1819BC008CCF36 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFED2B1819BC008CCF36 /* Settings.storyboard */; };
@@ -183,6 +185,7 @@
 		39A134DA1B73FFC0003AB4C5 /* LNPopupControllerExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LNPopupControllerExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		39A3B589230D400B00E10425 /* LNSplitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNSplitViewController.h; sourceTree = "<group>"; };
 		39A3B58A230D400B00E10425 /* LNSplitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNSplitViewController.m; sourceTree = "<group>"; };
+		39A8BE8F300B4358001B1E10 /* LNPopupController.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = LNPopupController.icon; sourceTree = "<group>"; };
 		39B0DFE82B1819A9008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MapScene.storyboard; sourceTree = "<group>"; };
 		39B0DFEC2B1819BC008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
 		39B0DFF02B1819C2008CCF36 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ManualLayoutScene.storyboard; sourceTree = "<group>"; };
@@ -252,6 +255,7 @@
 		392779FB1B58228000293F95 = {
 			isa = PBXGroup;
 			children = (
+				39A8BE8F300B4358001B1E10 /* LNPopupController.icon */,
 				39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */,
 				39277A061B58228000293F95 /* LNPopupControllerExample */,
 				39277A051B58228000293F95 /* Products */,
@@ -572,6 +576,7 @@
 			files = (
 				39B0DFF22B1819EF008CCF36 /* Music.storyboard in Resources */,
 				39B0DFEE2B1819C2008CCF36 /* ManualLayoutScene.storyboard in Resources */,
+				39A8BE90300B4358001B1E10 /* LNPopupController.icon in Resources */,
 				39B0DFE62B1819A9008CCF36 /* MapScene.storyboard in Resources */,
 				39B0DFEA2B1819BC008CCF36 /* Settings.storyboard in Resources */,
 				392E2AC52AD5CAB600944CB2 /* LaunchScreen.storyboard in Resources */,
@@ -592,6 +597,7 @@
 				39FAFC4F24E71A6C008BBC2D /* Assets.xcassets in Resources */,
 				39F031B12E8FC0DD0079F2FD /* CustomContainer.storyboard in Resources */,
 				39FAFC5024E71A6C008BBC2D /* Main.storyboard in Resources */,
+				39A8BE91300B4358001B1E10 /* LNPopupController.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -839,7 +845,7 @@
 		39277A1F1B58228000293F95 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = LNPopupController;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
@@ -878,7 +884,7 @@
 		39277A201B58228000293F95 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = LNPopupController;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
