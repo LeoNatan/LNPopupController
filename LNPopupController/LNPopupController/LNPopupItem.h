@@ -55,6 +55,26 @@ NS_SWIFT_UI_ACTOR
 /// For compact popup bars, this is equivalent to ``setTrailingBarButtonItems:animated:``.
 - (void)setBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)barButtonItems animated:(BOOL)animated;
 
+/// An array of custom bar button items to display on the leading side of the popup bar.
+///
+/// For prominent popup bars, these buttons are positioned on the trailing side, before items in ``trailingBarButtonItems``.
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leadingBarButtonItems;
+
+/// Sets the leading bar button items of the popup bar, optionally animating the transition to the new items.
+///
+/// For prominent popup bars, these buttons are positioned on the trailing side, before items in ``trailingBarButtonItems``.
+- (void)setLeadingBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)leadingBarButtonItems animated:(BOOL)animated;
+
+/// An array of custom bar button items to display on the trailing side of the popup bar.
+///
+/// For prominent popup bars, this property is equivalent to ``barButtonItems``.
+@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
+
+/// Sets the trailing bar button items of the popup bar, optionally animating the transition to the new items.
+///
+/// For prominent popup bars, this property is equivalent to ``setBarButtonItems:animated:``.
+- (void)setTrailingBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)trailingBarButtonItems animated:(BOOL)animated;
+
 /// The user information dictionary associated with the popup item.
 @property (nullable, nonatomic, copy) NSDictionary* userInfo;
 
@@ -92,26 +112,6 @@ NS_SWIFT_UI_ACTOR
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leftBarButtonItems LN_UNAVAILABLE_API("Use leadingBarButtonItems instead.");
 
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* rightBarButtonItems LN_UNAVAILABLE_API("Use barButtonItems or trailingBarButtonItems instead.");
-
-/// An array of custom bar button items to display on the leading side of the popup bar.
-///
-/// For prominent popup bars, these buttons are positioned on the trailing side, before items in ``trailingBarButtonItems``.
-@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leadingBarButtonItems LN_DEPRECATED_API_OS("Non-floating bars are no longer supported on iOS 26.0 and later.", ios(2.0, 26.0));
-
-/// Sets the leading bar button items of the popup bar, optionally animating the transition to the new items.
-///
-/// For prominent popup bars, these buttons are positioned on the trailing side, before items in ``trailingBarButtonItems``.
-- (void)setLeadingBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)leadingBarButtonItems animated:(BOOL)animated LN_DEPRECATED_API_OS("Non-floating bars are no longer supported on iOS 26.0 and later.", ios(2.0, 26.0));
-
-/// An array of custom bar button items to display on the trailing side of the popup bar.
-///
-/// For prominent popup bars, this property is equivalent to ``barButtonItems``.
-@property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* trailingBarButtonItems LN_DEPRECATED_API_OS("Non-floating bars are no longer supported on iOS 26.0 and later.", ios(2.0, 26.0));
-
-/// Sets the trailing bar button items of the popup bar, optionally animating the transition to the new items.
-///
-/// For prominent popup bars, this property is equivalent to ``setBarButtonItems:animated:``.
-- (void)setTrailingBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)trailingBarButtonItems animated:(BOOL)animated  LN_DEPRECATED_API_OS("Non-floating bars are no longer supported on iOS 26.0 and later.", ios(2.0, 26.0));
 
 @end
 

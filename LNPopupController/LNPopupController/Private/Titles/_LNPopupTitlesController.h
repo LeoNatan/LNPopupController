@@ -11,6 +11,12 @@
 @class LNPopupBar;
 @class LNPopupItem;
 
+#if DEBUG
+CF_EXTERN_C_BEGIN
+BOOL _LNEnableBarTitleLayoutDebug(void);
+CF_EXTERN_C_END
+#endif
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupTitlesController : UIViewController

@@ -24,10 +24,6 @@
 
 CF_EXTERN_C_BEGIN
 
-#ifdef DEBUG
-extern BOOL _LNEnableBarLayoutDebug(void);
-#endif
-
 #if __has_include(<LNSystemMarqueeLabel.h>)
 extern BOOL __LNPopupUseSystemMarqueeLabel(void);
 #endif

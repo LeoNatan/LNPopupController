@@ -137,10 +137,10 @@ NS_SWIFT_UI_ACTOR
 @property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* barButtonItems;
 
 /// An array of custom bar button items to display on the leading side. (read-only)
-@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* leadingBarButtonItems LN_DEPRECATED_API("Non-floating bars are no longer supported on iOS 26.0 and later.");
+@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* leadingBarButtonItems;
 
 /// An array of custom bar button items to display on the trailing side. (read-only)
-@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* trailingBarButtonItems LN_DEPRECATED_API("Non-floating bars are no longer supported on iOS 26.0 and later.");
+@property (nullable, nonatomic, copy, readonly) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
 
 /// An image view displayed when the bar style is prominent. (read-only)
 @property (nonatomic, strong, readonly) LNPopupImageView* imageView;

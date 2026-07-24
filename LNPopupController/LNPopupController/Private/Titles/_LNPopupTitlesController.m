@@ -14,6 +14,14 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupTitleLabelWrapper.h"
 
+#ifdef DEBUG
+#import "LNPopupDebug.h"
+BOOL _LNEnableBarTitleLayoutDebug(void)
+{
+	return [__LNDebugUserDefaults() boolForKey:@"__PopupSettingBarEnableTitleLayoutDebug"];
+}
+#endif
+
 @interface _LNPopupBarTitlesView : UIStackView @end
 @implementation _LNPopupBarTitlesView @end
 
@@ -228,7 +236,7 @@
 					_titleLabel = [self _labelWithFrame:titleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
 					_titleLabel.marqueeScrollEnabled = self.marqueePaused == NO;
 #if DEBUG
-					if(_LNEnableBarLayoutDebug())
+					if(_LNEnableBarTitleLayoutDebug())
 					{
 						_titleLabel.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.5];
 					}
@@ -269,7 +277,7 @@
 					_subtitleLabel = [self _labelWithFrame:subtitleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
 					_subtitleLabel.marqueeScrollEnabled = self.marqueePaused == NO;
 #if DEBUG
-					if(_LNEnableBarLayoutDebug())
+					if(_LNEnableBarTitleLayoutDebug())
 					{
 						_subtitleLabel.backgroundColor = [UIColor.cyanColor colorWithAlphaComponent:0.5];
 					}
