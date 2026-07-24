@@ -674,13 +674,14 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	}
 	
 	UIViewController* primary = [split viewControllerForColumn:UISplitViewControllerColumnPrimary];
-	while(primary != nil)
+	UIViewController* tested = self;
+	while(tested != nil)
 	{
-		if(primary == self)
+		if(primary == tested)
 		{
 			return YES;
 		}
-		primary = primary.parentViewController;
+		tested = tested.parentViewController;
 	}
 	
 	return NO;
