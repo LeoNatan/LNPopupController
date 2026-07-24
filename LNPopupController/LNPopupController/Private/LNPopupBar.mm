@@ -907,6 +907,8 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		_needsLabelsLayout = YES;
 	}
 	
+	[self.swiftuiHiddenLeadingController.view layoutIfNeeded];
+	[self.swiftuiHiddenTrailingController.view layoutIfNeeded];
 	if(_needsBarButtonItemLayout)
 	{
 		_needsLabelsLayout = YES;
@@ -950,8 +952,13 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	}
 	BOOL firstCustomAndUnhidden = leftFirstItem != nil && !isFirstHidden && leftFirst != nil && [self _isBarButtonViewStandardItem:leftFirst] == NO;
 	BOOL lastCustomAndUnhidden = rightLastItem != nil && !isLastHidden && rightLast != nil && [self _isBarButtonViewStandardItem:rightLast] == NO;
-	BOOL needsLeftPadding = firstCustomAndUnhidden == NO && leftViewFirst && [self _isBarButtonViewPadded:leftViewFirst inEdge:UIRectEdgeLeft] == NO;
-	BOOL needsRightPadding = lastCustomAndUnhidden == NO && rightViewLast && [self _isBarButtonViewPadded:rightViewLast inEdge:UIRectEdgeRight] == NO;
+	
+	CGFloat leadingSpace = [_toolbar convertRect:leftViewFirst.bounds fromView:leftViewFirst].origin.x;
+	CGRect convertedTrailing = [_toolbar convertRect:rightViewLast.bounds fromView:rightViewLast];
+	CGFloat trailingSpace = _toolbar.bounds.size.width - (convertedTrailing.origin.y + convertedTrailing.size.height);
+	
+	BOOL needsLeftPadding = leadingSpace < 15 && firstCustomAndUnhidden == NO && leftViewFirst && [self _isBarButtonViewPadded:leftViewFirst inEdge:UIRectEdgeLeft] == NO;
+	BOOL needsRightPadding = trailingSpace < 15 && lastCustomAndUnhidden == NO && rightViewLast && [self _isBarButtonViewPadded:rightViewLast inEdge:UIRectEdgeRight] == NO;
 	
 	static constexpr CGFloat padding = 16;
 	
@@ -1782,7 +1789,7 @@ static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenStr
 
 - (BOOL)_isBarButtonViewStandardItem:(UIView*)barButtonView
 {
-	return [barButtonView isKindOfClass:systemBarButtonItemButtonClass] || [barButtonView isKindOfClass:adaptorView];
+	return [barButtonView isKindOfClass:systemBarButtonItemButtonClass];
 }
 
 - (BOOL)_isBarButtonViewPadded:(UIView*)barButtonView inEdge:(UIRectEdge)edge
@@ -1909,8 +1916,8 @@ static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenStr
 	}
 	BOOL lastLeftLastSystemAndUnhidden = leftLast != nil && isLeftHidden == NO && [self _isBarButtonViewStandardItem:leftLast] && rightViewFirst == nil;
 	BOOL firstRightFirstSystemAndUnhidden = rightFirst != nil && isRightHidden == NO && [self _isBarButtonViewStandardItem:rightFirst] && leftViewLast == nil;
-	CGFloat extraLeftPadding = lastLeftLastSystemAndUnhidden ? 12 : leftViewLast && [self _isBarButtonViewPadded:leftViewLast inEdge:UIRectEdgeRight] == NO ? -8 : 0;
-	CGFloat extraRightPadding = firstRightFirstSystemAndUnhidden ? 12 : rightViewFirst && [self _isBarButtonViewPadded:rightViewFirst inEdge:UIRectEdgeLeft] == NO ? -8 : 0;
+	CGFloat extraLeftPadding = lastLeftLastSystemAndUnhidden ? 8 : leftViewLast && [self _isBarButtonViewPadded:leftViewLast inEdge:UIRectEdgeRight] == NO ? -8 : 0;
+	CGFloat extraRightPadding = firstRightFirstSystemAndUnhidden ? 8 : rightViewFirst && [self _isBarButtonViewPadded:rightViewFirst inEdge:UIRectEdgeLeft] == NO ? -8 : 0;
 	
 	CGRect leftViewFrame = CGRectZero;
 	if(leftViewLast != nil)

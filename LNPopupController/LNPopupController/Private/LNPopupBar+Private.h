@@ -18,8 +18,6 @@
 #import "_LNPopupTitlesPagingController.h"
 
 CF_EXTERN_C_BEGIN
-extern const Class adaptorView;
-
 extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
 extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, LNPopupBar* popupBar, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom);
