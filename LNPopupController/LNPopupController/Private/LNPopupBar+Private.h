@@ -38,7 +38,7 @@ extern const CGFloat LNPopupBarHeightFloating;
 
 extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
-extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom);
+extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, LNPopupBar* popupBar, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom);
 
 @protocol _LNPopupBarDelegate <NSObject>
 

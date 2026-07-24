@@ -66,7 +66,7 @@ CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar)
 	
 	if(popupBar.resolvedIsFloating && popupBar.resolvedIsCompact == NO && popupBar.isWidePad)
 	{
-		additionalHeight += 8;
+		additionalHeight += 6;
 	}
 	
 	if(popupBar.resolvedIsFloating && LNPopupEnvironmentHasGlass() == NO)
@@ -89,7 +89,7 @@ CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar)
 	}
 }
 
-LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom)
+LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, LNPopupBar* popupBar, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom)
 {
 	//Support the legacy floating style value.
 	if(style == (LNPopupBarStyle)3)
@@ -131,7 +131,7 @@ LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, BOOL*
 		
 		if(rv == LNPopupBarStyleDefault)
 		{
-			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
+			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone || popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 			{
 				rv = LNPopupBarStyleFloatingCompact;
 			}
@@ -292,11 +292,13 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		barStyle = LNPopupBarStyleCustom;
 	}
 	
-	if(_barStyle != barStyle)
-	{
-		_barStyle = barStyle;
+	_barStyle = barStyle;
 		
-		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle, &_resolvedIsFloating, &_resolvedIsCompact, &_resolvedIsCustom);
+	LNPopupBarStyle resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle, self, &_resolvedIsFloating, &_resolvedIsCompact, &_resolvedIsCustom);
+	
+	if(_resolvedStyle != resolvedStyle)
+	{
+		_resolvedStyle = resolvedStyle;
 		
 		[self _setNeedsBarButtonItemLayout];
 		[self _setNeedsTitleLayoutByRemovingLabels:NO];
@@ -410,7 +412,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		
 		self.effectGroupingIdentifier = nil;
 		
-		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle, &_resolvedIsFloating, &_resolvedIsCompact, &_resolvedIsCustom);
+		_resolvedStyle = _LNPopupResolveBarStyleFromBarStyle(_barStyle, self, &_resolvedIsFloating, &_resolvedIsCompact, &_resolvedIsCustom);
 		
 		_toolbar = [[_LNPopupToolbar alloc] initWithFrame:CGRectMake(0, 0, 400, 44)];
 		_toolbar._layoutDelegate = self;
@@ -548,6 +550,13 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	[self _setNeedsTitleLayoutByRemovingLabels:NO];
 	
 	[self._barDelegate _traitCollectionForPopupBarDidChange:self];
+	
+	if(previousTraitCollection.horizontalSizeClass != self.traitCollection.horizontalSizeClass && self.barStyle == LNPopupBarStyleDefault)
+	{
+		//Trigger a refresh to the default style.
+		self.barStyle = self.barStyle;
+	}
+	
 	if(previousTraitCollection.userInterfaceStyle != self.traitCollection.userInterfaceStyle)
 	{
 		[self _setNeedsAppearanceUpdate];
@@ -2404,15 +2413,22 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	{
 		return nil;
 	}
-	
-	UIPointerHoverEffect* effect = [UIPointerHoverEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:interaction.view]];
-	effect.prefersScaledContent = YES;
-	effect.prefersShadow = NO;
-	effect.preferredTintMode = UIPointerEffectTintModeNone;
-	
-	UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
-	
-	return [UIPointerStyle styleWithEffect:effect shape:shape];
+
+	if(@available(iOS 27.0, *))
+	{
+		return nil;
+	}
+	else
+	{
+		UIPointerHoverEffect* effect = [UIPointerHoverEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:interaction.view]];
+		effect.prefersScaledContent = YES;
+		effect.prefersShadow = NO;
+		effect.preferredTintMode = UIPointerEffectTintModeNone;
+		
+		UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
+		
+		return [UIPointerStyle styleWithEffect:effect shape:shape];
+	}
 }
 
 - (void)pointerInteraction:(UIPointerInteraction *)interaction willEnterRegion:(UIPointerRegion *)region animator:(id<UIPointerInteractionAnimating>)animator  API_AVAILABLE(ios(13.4))

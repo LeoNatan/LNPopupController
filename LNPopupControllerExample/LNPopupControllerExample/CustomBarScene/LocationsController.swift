@@ -57,11 +57,13 @@ class LocationsController: UITableViewController, UISearchBarDelegate {
 		popupItem.title = searchText
 #endif
 	}
-	
+
+#if LNPOPUP
 	override func viewWillMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
 		super.viewWillMove(toPopupContainerContentView: popupContentView)
 		popupContentView?.allowsContentTransition = false
 	}
+#endif
 	
 #if LNPOPUP
 	override func positionPopupCloseButton(_ popupCloseButton: LNPopupCloseButton) -> Bool {
