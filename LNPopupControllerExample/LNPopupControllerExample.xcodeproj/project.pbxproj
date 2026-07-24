@@ -96,13 +96,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		39C3DD5B300AA2E800D2288A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 39C3DCD9300AA2E800D2288A /* LNPopupController.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 39DB52E51B5823330061C589;
-			remoteInfo = LNPopupController;
-		};
 		39C3E088300AA37C00D2288A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */;
@@ -194,8 +187,6 @@
 		39B645EC2CA5AA1300AB038B /* PageCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageCardViewController.swift; sourceTree = "<group>"; };
 		39B645EF2CA61B0200AB038B /* ScrollingMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingMapViewController.swift; sourceTree = "<group>"; };
 		39BBA86824FEC32F00D9712A /* ManualLayoutCustomBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualLayoutCustomBarViewController.swift; sourceTree = "<group>"; };
-		39C3DCD9300AA2E800D2288A /* LNPopupController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LNPopupController.xcodeproj; sourceTree = "<group>"; };
-		39C3DD57300AA2E800D2288A /* LNPopupControllerExample.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LNPopupControllerExample.xcodeproj; sourceTree = "<group>"; };
 		39C4026D2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollingColorsViewController.swift; sourceTree = "<group>"; };
 		39D6C8992B2CC3A100F53E70 /* LNPopupControllerExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LNPopupControllerExample.entitlements; sourceTree = "<group>"; };
 		39D6C8B82B2D02B500F53E70 /* SettingKeys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingKeys.h; path = ../../../LNPopupSettings/SettingKeys.h; sourceTree = "<group>"; };
@@ -260,7 +251,6 @@
 				39A8BE8F300B4358001B1E10 /* LNPopupController.icon */,
 				39277A051B58228000293F95 /* Products */,
 				39DDA0AC230D5F63007DCCD8 /* Frameworks */,
-				39C3DF71300AA31D00D2288A /* Recovered References */,
 			);
 			sourceTree = "<group>";
 			tabWidth = 4;
@@ -392,28 +382,6 @@
 			path = CustomBarScene_ManualLayout;
 			sourceTree = "<group>";
 		};
-		39C3DCDD300AA2E800D2288A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				39C3DD5C300AA2E800D2288A /* LNPopupController.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		39C3DD58300AA2E800D2288A /* Products */ = {
-			isa = PBXGroup;
-			name = Products;
-			sourceTree = "<group>";
-		};
-		39C3DF71300AA31D00D2288A /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				39C3DCD9300AA2E800D2288A /* LNPopupController.xcodeproj */,
-				39C3DD57300AA2E800D2288A /* LNPopupControllerExample.xcodeproj */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		39DB52F11B5823480061C589 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -535,14 +503,6 @@
 					ProductGroup = 39DB52F11B5823480061C589 /* Products */;
 					ProjectRef = 39DB52F01B5823480061C589 /* LNPopupController.xcodeproj */;
 				},
-				{
-					ProductGroup = 39C3DCDD300AA2E800D2288A /* Products */;
-					ProjectRef = 39C3DCD9300AA2E800D2288A /* LNPopupController.xcodeproj */;
-				},
-				{
-					ProductGroup = 39C3DD58300AA2E800D2288A /* Products */;
-					ProjectRef = 39C3DD57300AA2E800D2288A /* LNPopupControllerExample.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -553,13 +513,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		39C3DD5C300AA2E800D2288A /* LNPopupController.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = LNPopupController.framework;
-			remoteRef = 39C3DD5B300AA2E800D2288A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		39DB52F51B5823490061C589 /* LNPopupController.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
