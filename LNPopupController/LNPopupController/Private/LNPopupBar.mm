@@ -28,6 +28,7 @@ const CGFloat LNPopupBarHeightFloatingCompactCatalyst = 68.0;
 const CGFloat LNPopupBarFloatingPadImageWidth = 44.0;
 const CGFloat LNPopupBarFloatingPadWidthLimitLegacy = 954.0;
 const CGFloat LNPopupBarFloatingPadWidthLimitModern = 700;
+const CGFloat LNPopupBarFloatingPadWidthLimitCatalyst = 910;
 
 #ifdef DEBUG
 #import "LNPopupDebug.h"
@@ -340,6 +341,11 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 
 - (void)_setHackyMargins:(NSDirectionalEdgeInsets)_hackyMargins
 {
+	if(NSDirectionalEdgeInsetsEqualToDirectionalEdgeInsets(__hackyMargins, _hackyMargins))
+	{
+		return;
+	}
+	
 	__hackyMargins = _hackyMargins;
 	
 	[self _setNeedsTitleLayoutByRemovingLabels:NO];
@@ -777,7 +783,11 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		}
 		
 		CGFloat limitToUse;
-		if(LNPopupEnvironmentHasGlass())
+		if(LNPopupBar.isCatalystApp)
+		{
+			limitToUse = __LNPopupScaledFloat(LNPopupBarFloatingPadWidthLimitCatalyst, self.traitCollection);
+		}
+		else if(LNPopupEnvironmentHasGlass())
 		{
 			limitToUse = LNPopupBarFloatingPadWidthLimitModern;
 		}
