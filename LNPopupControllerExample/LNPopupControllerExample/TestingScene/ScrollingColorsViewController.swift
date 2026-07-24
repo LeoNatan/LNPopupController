@@ -26,17 +26,27 @@ class ScrollingColorsViewController: UICollectionViewController {
 			collectionView.bottomEdgeEffect.isHidden = true
 		}
 		
-		let useCompact = LNBarIsCompact()
-		
-		let gridBarButtonItem = UIBarButtonItem()
-		gridBarButtonItem.image = LNSystemImage(isVertical ? "square.grid.3x3.fill" : "rectangle.portrait.fill", scale: useCompact ? .compact : .normal)
-		popupItem.barButtonItems = [gridBarButtonItem]
-		
 		LNApplyTitleWithSettings(to: self)
 		
 //		collectionView.contentInsetAdjustmentBehavior = .always
 //		collectionView.isDirectionalLockEnabled = true
 	}
+	
+#if LNPOPUP
+	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
+		super.viewDidMove(toPopupContainerContentView: popupContentView)
+		
+		guard let popupBar = popupPresentationContainer?.popupBar else {
+			return
+		}
+		
+		let useCompact = LNBarIsClassicCompact(popupBar)
+		
+		let gridBarButtonItem = UIBarButtonItem()
+		gridBarButtonItem.image = LNSystemImage(isVertical ? "square.grid.3x3.fill" : "rectangle.portrait.fill", scale: useCompact ? .compact : .normal)
+		popupItem.barButtonItems = [gridBarButtonItem]
+	}
+#endif
 	
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()

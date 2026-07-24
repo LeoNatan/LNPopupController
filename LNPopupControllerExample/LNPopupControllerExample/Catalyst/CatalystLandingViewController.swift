@@ -15,6 +15,12 @@ class CatalystLandingViewController: UISplitViewController {
 	init() {
 		super.init(style: .doubleColumn)
 		
+		minimumPrimaryColumnWidth = 250
+		maximumPrimaryColumnWidth = 400
+		
+		preferredSplitBehavior = .tile
+		preferredDisplayMode = .oneBesideSecondary
+		
 		primaryBackgroundStyle = .sidebar
 		let sidebar = SidebarViewController()
 		setViewController(sidebar, for: .primary)

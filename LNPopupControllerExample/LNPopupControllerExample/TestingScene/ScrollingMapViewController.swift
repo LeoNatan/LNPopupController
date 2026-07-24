@@ -13,13 +13,23 @@ class ScrollingMapViewController: UIViewController {
         super.viewDidLoad()
 
 #if LNPOPUP
-		let useCompact = LNBarIsCompact()
+		LNApplyTitleWithSettings(to: self)
+#endif
+    }
+
+#if LNPOPUP
+	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
+		super.viewDidMove(toPopupContainerContentView: popupContentView)
+		
+		guard let popupBar = popupPresentationContainer?.popupBar else {
+			return
+		}
+		
+		let useCompact = LNBarIsClassicCompact(popupBar)
 		
 		let gridBarButtonItem = UIBarButtonItem()
 		gridBarButtonItem.image = LNSystemImage("map.fill", scale: useCompact ? .compact : .normal)
 		popupItem.barButtonItems = [gridBarButtonItem]
-		
-		LNApplyTitleWithSettings(to: self)
+	}
 #endif
-    }
 }

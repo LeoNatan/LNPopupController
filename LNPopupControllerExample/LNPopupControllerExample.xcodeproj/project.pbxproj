@@ -60,7 +60,7 @@
 		39C3E086300AA36E00D2288A /* LNPopupController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; };
 		39C3E087300AA36E00D2288A /* LNPopupController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 39DB52F51B5823490061C589 /* LNPopupController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		39C4026E2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C4026D2CA4ED9F00F1C743 /* ScrollingColorsViewController.swift */; };
-		39D6C8B32B2D01E600F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; };
+		39D6C8B32B2D01E600F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; };
 		39D6C8B42B2D01F600F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		39D6C8B62B2D020000F53E70 /* LNTouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */; };
 		39D6C8B72B2D020000F53E70 /* LNTouchVisualizer in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 39D6C8B52B2D020000F53E70 /* LNTouchVisualizer */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -678,7 +678,6 @@
 /* Begin PBXTargetDependency section */
 		39114EDD26E2BF8B004FC75B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
 			productRef = 39114EDC26E2BF8B004FC75B /* LNTouchVisualizer */;
 		};
 		39114EDF26E2BF8B004FC75B /* PBXTargetDependency */ = {

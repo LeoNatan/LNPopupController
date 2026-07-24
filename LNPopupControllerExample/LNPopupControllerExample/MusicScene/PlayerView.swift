@@ -78,8 +78,6 @@ struct PlayerView: View {
 			})
 			.padding([.bottom], geometry.size.height * 30.0 / 896.0)
 		
-		slider
-		
 #if targetEnvironment(macCatalyst)
 		slider
 #else

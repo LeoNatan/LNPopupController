@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LNPopupDemoContextMenuInteraction : UIContextMenuInteraction
 
++ (UIMenu*)menuWithTitle:(BOOL)includeTitle sourceItemForShare:(id<UIPopoverPresentationControllerSourceItem>)sourceItemForShare;
+
 - (instancetype)init;
 - (instancetype)initWithTitle:(BOOL)title;
 + (instancetype)new;

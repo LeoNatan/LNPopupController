@@ -131,6 +131,7 @@ class SidebarViewController: UICollectionViewController {
 	var cleanSnapshots: Array<(SidebarSection, NSDiffableDataSourceSectionSnapshot<SidebarItem>)> {
 		let viewControllerCreator: () -> UIViewController = {
 			let vc = UIViewController()
+			vc.preferredContentSize = CGSize(width: 1000, height: -1)
 			vc.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), primaryAction: UIAction { [weak vc] action in
 				guard let vc else {
 					return

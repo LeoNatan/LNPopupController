@@ -95,7 +95,11 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	}
 	
 	fileprivate func reloadBarItems(with traitCollection: UITraitCollection, animated: Bool = false) {
-		LNPopupItemSetStandardMusicControls(popupItem, popupItem.isEmptyPlaybackItem || !playerView.playbackState.isPlaying, animated, traitCollection, UIAction { [weak self] _ in
+		guard let popupBar = popupPresentationContainer?.popupBar else {
+			return
+		}
+		
+		LNPopupItemSetStandardMusicControls(popupItem, popupBar, popupItem.isEmptyPlaybackItem || !playerView.playbackState.isPlaying, animated, traitCollection, UIAction { [weak self] _ in
 			self?.goPrev()
 		}, UIAction { [weak self] _ in
 			self?.playerView.playbackState.isPlaying.toggle()
@@ -164,11 +168,21 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		}
 	}
 	
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		super.traitCollectionDidChange(previousTraitCollection)
+	override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
 		
-		if previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass {
-			reloadBarItems(with: traitCollection, animated: true)
+		coordinator.animate { context in
+			self.reloadBarItems(with: self.traitCollection, animated: context.isAnimated)
+		}
+	}
+	
+	override func willTransition(to newCollection: UITraitCollection, with coordinator: any UIViewControllerTransitionCoordinator) {
+		super.willTransition(to: newCollection, with: coordinator)
+		
+		if traitCollection.horizontalSizeClass != newCollection.horizontalSizeClass {
+			coordinator.animate { context in
+				self.reloadBarItems(with: newCollection, animated: context.isAnimated)
+			}
 		}
 	}
 	

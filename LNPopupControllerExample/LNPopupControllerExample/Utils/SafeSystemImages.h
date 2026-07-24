@@ -7,10 +7,14 @@
 //
 
 @import UIKit;
+#if LNPOPUP
+@import LNPopupController;
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSUInteger, LNSystemImageScale) {
+	LNSystemImageScaleExtraCompact,
 	LNSystemImageScaleCompact,
 	LNSystemImageScaleNormal,
 	LNSystemImageScaleLarge,
@@ -20,9 +24,9 @@ typedef NS_ENUM(NSUInteger, LNSystemImageScale) {
 #if LNPOPUP
 @class LNPopupItem;
 
-extern BOOL LNBarIsCompact(void);
-extern BOOL LNBarIsFloatingCompact(void);
-extern void LNPopupItemSetStandardMusicControls(LNPopupItem* item, BOOL play, BOOL animated, UITraitCollection* traitCollection, UIAction* prevAction, UIAction* playPauseAction, UIAction* nextAction);
+extern BOOL LNBarIsClassicCompact(LNPopupBar*);
+extern BOOL LNBarIsFloatingCompact(LNPopupBar*);
+extern void LNPopupItemSetStandardMusicControls(LNPopupItem* item, LNPopupBar* targetBar, BOOL play, BOOL animated, UITraitCollection* traitCollection, UIAction* __nullable prevAction, UIAction* __nullable playPauseAction, UIAction* __nullable nextAction);
 #endif
 
 extern UIImage* LNSystemImage(NSString* named, LNSystemImageScale scale) NS_SWIFT_NAME(LNSystemImage(_:scale:));

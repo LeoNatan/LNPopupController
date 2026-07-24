@@ -82,7 +82,6 @@ void LNApplyTitleWithSettings(UIViewController* self)
 {
 	[super viewDidLoad];
 	
-	[self _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:NO];
 	[self updateTransitionViewShadowColor];
 	
 	if(@available(iOS 17.0, *))
@@ -112,11 +111,16 @@ void LNApplyTitleWithSettings(UIViewController* self)
 
 - (void)_setPopupItemButtonsWithTraitCollection:(UITraitCollection*)collection animated:(BOOL)animated
 {
+	if(self.popupPresentationContainerViewController == nil)
+	{
+		return;
+	}
+	
 	UIAction* action = [UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
 		NSLog(@"✓");
 	}];
 	
-	LNPopupItemSetStandardMusicControls(self.popupItem, false, animated, collection, action, action, action);
+	LNPopupItemSetStandardMusicControls(self.popupItem, self.popupPresentationContainerViewController.popupBar, true, animated, collection, action, action, action);
 }
 
 - (BOOL)prefersStatusBarHidden
@@ -160,6 +164,10 @@ void LNApplyTitleWithSettings(UIViewController* self)
 - (void)viewDidMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
 {
 	[super viewDidMoveToPopupContainerContentView:popupContentView];
+	
+	[self _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:NO];
+	
+	popupContentView.popupInteractionGestureRecognizer.allowsIndirectPointerInteraction = [NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableIndirectPointerInteraction];
 	
 	if(popupContentView == nil)
 	{
@@ -370,6 +378,14 @@ void LNApplyTitleWithSettings(UIViewController* self)
 //		[self.view.safeAreaLayoutGuide.centerXAnchor constraintEqualToAnchor:customCloseButton.centerXAnchor],
 //		[self.view.safeAreaLayoutGuide.centerYAnchor constraintEqualToAnchor:customCloseButton.centerYAnchor],
 //	]];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self _setPopupItemButtonsWithTraitCollection:self.traitCollection animated:context.isAnimated];
+	} completion:nil];
 }
 
 - (nullable UIView*)viewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState

@@ -11,73 +11,98 @@
 #if LNPOPUP
 #import "SettingKeys.h"
 #import <LNPopupController/LNPopupController.h>
+#import "LNPopupDemoContextMenuInteraction.h"
+@import AVKit;
 
-BOOL LNBarIsCompact(void)
+extern BOOL LNPopupSettingsIsCatalyst(void);
+
+BOOL LNBarIsClassicCompact(LNPopupBar* bar)
 {
-	BOOL isCompact = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleCompact ||
-	[[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleFloatingCompact ||
-	([[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleDefault &&
-	 LNPopupSettingsHasOS26Glass() &&
-	 UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad);
-	
-	return isCompact;
+	return bar.effectiveBarStyle == LNPopupBarStyleCompact;
 }
 
-BOOL LNBarIsFloatingCompact(void)
+BOOL LNBarIsFloatingCompact(LNPopupBar* bar)
 {
-	BOOL isFloatingCompact = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleFloatingCompact ||
-	([[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue] == LNPopupBarStyleDefault &&
-	 LNPopupSettingsHasOS26Glass() &&
-	 UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPad);
-	
-	return isFloatingCompact;
+	return bar.effectiveBarStyle == LNPopupBarStyleFloatingCompact && !LNPopupSettingsIsCatalyst();
 }
 
-void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, BOOL isPlay, BOOL animated, UITraitCollection* traitCollection, UIAction* prevAction, UIAction* playPauseAction, UIAction* nextAction)
+void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, LNPopupBar* popupBar, BOOL isPlay, BOOL animated, UITraitCollection* traitCollection, UIAction* prevAction, UIAction* playPauseAction, UIAction* nextAction)
 {
-	LNSystemImageScale scale;
-	LNSystemImageScale backForwardScale;
+	LNSystemImageScale playPauseScale;
+	LNSystemImageScale otherScale;
 	
-	BOOL isCompact = LNBarIsCompact();
-	BOOL isFloatingCompact = LNBarIsFloatingCompact();
+	BOOL isClassicCompact = LNBarIsClassicCompact(popupBar);
+	BOOL isFloatingCompact = LNBarIsFloatingCompact(popupBar);
+	BOOL isLargeEnvironment = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad || LNPopupSettingsIsCatalyst();
 	
-	if(isCompact && !isFloatingCompact)
+	if(isClassicCompact)
 	{
-		scale = LNSystemImageScaleCompact;
-		backForwardScale = LNSystemImageScaleCompact;
+		playPauseScale = LNSystemImageScaleCompact;
+		otherScale = LNSystemImageScaleCompact;
 	}
-	else if(traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+	else if(traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular || isFloatingCompact == NO)
 	{
-		scale = isFloatingCompact ? LNSystemImageScaleLarge : LNSystemImageScaleLarger;
-		backForwardScale = LNSystemImageScaleNormal;
+		playPauseScale = traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact || isFloatingCompact ? LNSystemImageScaleLarge : LNSystemImageScaleLarger;
+		otherScale = LNSystemImageScaleNormal;
 	}
 	else
 	{
-		scale = LNSystemImageScaleNormal;
-		backForwardScale = LNSystemImageScaleNormal;
+		playPauseScale = LNSystemImageScaleNormal;
+		otherScale = LNSystemImageScaleNormal;
 	}
 	
-	UIBarButtonItem* playPause = LNSystemBarButtonItemAction(isPlay ? @"play.fill" : @"pause.fill", scale, playPauseAction);
+	UIBarButtonItem* shuffle = LNSystemBarButtonItemAction(@"shuffle", LNSystemImageScaleExtraCompact, nil);
+#if TARGET_OS_MACCATALYST
+	shuffle.tintColor = UIColor.tertiaryLabelColor;
+#endif
+	shuffle.accessibilityLabel = NSLocalizedString(@"Shuffle", @"");
+	shuffle.accessibilityIdentifier = @"Shuffle";
+	shuffle.accessibilityTraits = UIAccessibilityTraitButton;
+	
+	UIBarButtonItem* repeat = LNSystemBarButtonItemAction(@"repeat", LNSystemImageScaleExtraCompact, nil);
+#if TARGET_OS_MACCATALYST
+	repeat.tintColor = UIColor.tertiaryLabelColor;
+#endif
+	repeat.accessibilityLabel = NSLocalizedString(@"Repeat", @"");
+	repeat.accessibilityIdentifier = @"Repeat";
+	repeat.accessibilityTraits = UIAccessibilityTraitButton;
+	
+	UIBarButtonItem* playPause = LNSystemBarButtonItemAction(isPlay ? @"play.fill" : @"pause.fill", playPauseScale, playPauseAction);
 	playPause.accessibilityLabel = NSLocalizedString(isPlay ? @"Play" : @"Pause", @"");
 	playPause.accessibilityIdentifier = @"PlayPauseButton";
 	playPause.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* next = LNSystemBarButtonItemAction(@"forward.fill", backForwardScale, nextAction);
+	UIBarButtonItem* next = LNSystemBarButtonItemAction(@"forward.fill", otherScale, nextAction);
 	next.accessibilityLabel = NSLocalizedString(@"Next Track", @"");
 	next.accessibilityIdentifier = @"NextButton";
 	next.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* prev = LNSystemBarButtonItemAction(@"backward.fill", backForwardScale, prevAction);
+	UIBarButtonItem* prev = LNSystemBarButtonItemAction(@"backward.fill", otherScale, prevAction);
 	prev.accessibilityLabel = NSLocalizedString(@"Previous Track", @"");
 	prev.accessibilityIdentifier = @"PrevButton";
 	prev.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	UIBarButtonItem* more = LNSystemBarButtonItemAction(@"ellipsis", LNSystemImageScaleNormal, nil);
+	UIBarButtonItem* more = LNSystemBarButtonItemAction(@"ellipsis", otherScale, nil);
+	more.menu = [LNPopupDemoContextMenuInteraction menuWithTitle:NO sourceItemForShare:more];
 	more.accessibilityLabel = NSLocalizedString(@"More", @"");
-	more.accessibilityIdentifier = @"MoreButton";
+	more.accessibilityIdentifier = @"More";
 	more.accessibilityTraits = UIAccessibilityTraitButton;
 	
-	if(isCompact && !isFloatingCompact)
+	AVRoutePickerView* routePickerView = [AVRoutePickerView new];
+#if TARGET_OS_MACCATALYST
+	routePickerView.tintColor = UIColor.labelColor;
+#endif
+	UIBarButtonItem* airplay = [[UIBarButtonItem alloc] initWithCustomView:routePickerView];
+	airplay.accessibilityLabel = NSLocalizedString(@"Airplay", @"");
+	airplay.accessibilityIdentifier = @"Airplay";
+	airplay.accessibilityTraits = UIAccessibilityTraitButton;
+	
+	UIBarButtonItem* volume = LNSystemBarButtonItemAction(@"speaker.wave.2.fill", otherScale, nil);
+	volume.accessibilityLabel = NSLocalizedString(@"Volume", @"");
+	volume.accessibilityIdentifier = @"Volume";
+	volume.accessibilityTraits = UIAccessibilityTraitButton;
+	
+	if(isClassicCompact)
 	{
 		if(traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
@@ -94,11 +119,18 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, BOOL isPlay, BO
 	{
 		if(traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 		{
-			[popupItem setBarButtonItems:@[ playPause, next ] animated:animated];
+			[popupItem setLeadingBarButtonItems:@[] animated:animated];
+			[popupItem setTrailingBarButtonItems:@[ playPause, next ] animated:animated];
+		}
+		else if(isLargeEnvironment)
+		{
+			[popupItem setLeadingBarButtonItems:@[ shuffle, prev, playPause, next, repeat ] animated:animated];
+			[popupItem setTrailingBarButtonItems:@[ more, airplay, volume ] animated:animated];
 		}
 		else
 		{
-			[popupItem setBarButtonItems:@[ prev, playPause, next ] animated:animated];
+			[popupItem setLeadingBarButtonItems:@[] animated:animated];
+			[popupItem setTrailingBarButtonItems:@[ prev, playPause, next ] animated:animated];
 		}
 	}
 }
@@ -112,9 +144,10 @@ UIImage* LNSystemImage(NSString* named, LNSystemImageScale scale)
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		configMap = @{
+			@(LNSystemImageScaleExtraCompact): [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleSmall],
 			@(LNSystemImageScaleCompact): [UIImageSymbolConfiguration configurationWithScale:UIImageSymbolScaleMedium],
 			@(LNSystemImageScaleNormal): [UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleHeadline scale:UIImageSymbolScaleLarge],
-			@(LNSystemImageScaleLarge): [UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleTitle3 scale:UIImageSymbolScaleLarge],
+			@(LNSystemImageScaleLarge): [UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleTitle2 scale:UIImageSymbolScaleLarge],
 			@(LNSystemImageScaleLarger): [UIImageSymbolConfiguration configurationWithTextStyle:UIFontTextStyleTitle1 scale:UIImageSymbolScaleLarge],
 		};
 	});
@@ -130,35 +163,12 @@ CGFloat _LNWidthForScale(LNSystemImageScale scale)
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		widthMap = @{
-			@(LNSystemImageScaleCompact): @(44),
-			@(LNSystemImageScaleNormal): @(44),
-			@(LNSystemImageScaleLarge): @(44),
-			@(LNSystemImageScaleLarger): @(44),
+			@(LNSystemImageScaleLarge): @(28),
+			@(LNSystemImageScaleLarger): @(30),
 		};
 	});
 	
 	return [widthMap[@(scale)] doubleValue];
-}
-
-UIBarButtonItem* LNSystemBarButtonItem(NSString* name, LNSystemImageScale scale, id target, SEL action)
-{
-	UIBarButtonItem* rv;
-	if(scale > LNSystemImageScaleNormal)
-	{
-		UIButton* button = [UIButton systemButtonWithImage:LNSystemImage(name, scale) target:target action:action];
-		
-		button.translatesAutoresizingMaskIntoConstraints = NO;
-		[NSLayoutConstraint activateConstraints:@[
-			[button.widthAnchor constraintEqualToConstant:_LNWidthForScale(scale)]
-		]];
-		
-		rv = [[UIBarButtonItem alloc] initWithCustomView:button];
-	}
-	else{
-		rv = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(name, scale) style:UIBarButtonItemStylePlain target:target action:action];
-//		rv.width = _LNWidthForScale(scale);
-	}
-	return rv;
 }
 
 @interface LNLargeButtonItem: UIBarButtonItem @end
@@ -166,15 +176,6 @@ UIBarButtonItem* LNSystemBarButtonItem(NSString* name, LNSystemImageScale scale,
 {
 	UIButton* _button;
 	LNSystemImageScale _scale;
-}
-
-+ (UIButtonConfiguration*)buttonConfiguration
-{
-	UIButtonConfiguration* config = [UIButtonConfiguration tintedButtonConfiguration];
-	UIBackgroundConfiguration* background = [UIBackgroundConfiguration clearConfiguration];
-	background.backgroundColor = UIColor.clearColor;
-	config.background = background;
-	return config;
 }
 
 - (instancetype)initWithButton:(UIButton*)button scale:(LNSystemImageScale)scale
@@ -185,43 +186,67 @@ UIBarButtonItem* LNSystemBarButtonItem(NSString* name, LNSystemImageScale scale,
 	{
 		_button = button;
 		_scale = scale;
+		
+		_button.preferredBehavioralStyle = UIBehavioralStylePad;
 	}
 	
 	return self;
 }
 
-- (void)_updateConfig:(UIButtonConfiguration*)config fromImage:(UIImage*)image
+- (void)setImage:(UIImage *)image
 {
 	if(image.isSymbolImage)
 	{
 		NSString* name = [image valueForKeyPath:@"imageAsset.assetName"];
-		config.image = LNSystemImage(name, _scale);
+		
+		[_button setImage:LNSystemImage(name, _scale) forState:UIControlStateNormal];
 	}
 	else
 	{
-		config.image = image;
+		[_button setImage:image forState:UIControlStateNormal];
 	}
-}
-
-- (void)setImage:(UIImage *)image
-{
-	UIButtonConfiguration* config = [LNLargeButtonItem buttonConfiguration];
-	[self _updateConfig:config fromImage:image];
-	_button.configuration = config;
 }
 
 - (void)setSymbolImage:(UIImage *)symbolImage withContentTransition:(NSSymbolContentTransition *)transition options:(nonnull NSSymbolEffectOptions *)options
 {
-	UIButtonConfiguration* config = [LNLargeButtonItem buttonConfiguration];
-	[self _updateConfig:config fromImage:symbolImage];
-	if(@available(iOS 26.0, *))
+	if(symbolImage.isSymbolImage)
 	{
-		config.symbolContentTransition = [UISymbolContentTransition transitionWithContentTransition:transition options:options];
+		NSString* name = [symbolImage valueForKeyPath:@"imageAsset.assetName"];
+		symbolImage = LNSystemImage(name, _scale);
+		
+		[_button.imageView setSymbolImage:symbolImage withContentTransition:transition options:options];
 	}
-	_button.configuration = config;
+	
+	[_button setImage:symbolImage forState:UIControlStateNormal];
 }
 
 @end
+
+UIBarButtonItem* LNSystemBarButtonItem(NSString* name, LNSystemImageScale scale, id target, SEL action)
+{
+	UIBarButtonItem* rv;
+	if(scale > LNSystemImageScaleNormal)
+	{
+		UIButton* button = [UIButton systemButtonWithImage:LNSystemImage(name, scale) target:target action:action];
+#if TARGET_OS_MACCATALYST
+		button.tintColor = UIColor.labelColor;
+#endif
+		
+		button.translatesAutoresizingMaskIntoConstraints = NO;
+		[NSLayoutConstraint activateConstraints:@[
+			[button.widthAnchor constraintEqualToConstant:_LNWidthForScale(scale)]
+		]];
+		
+		rv = [[LNLargeButtonItem alloc] initWithButton:button scale:scale];
+	}
+	else{
+		rv = [[UIBarButtonItem alloc] initWithImage:LNSystemImage(name, scale) style:UIBarButtonItemStylePlain target:target action:action];
+#if TARGET_OS_MACCATALYST
+		rv.tintColor = UIColor.labelColor;
+#endif
+	}
+	return rv;
+}
 
 UIBarButtonItem* LNSystemBarButtonItemAction(NSString* name, LNSystemImageScale scale, UIAction* primaryAction)
 {
@@ -229,9 +254,10 @@ UIBarButtonItem* LNSystemBarButtonItemAction(NSString* name, LNSystemImageScale 
 	if(scale > LNSystemImageScaleNormal)
 	{
 		UIButton* button = [UIButton systemButtonWithPrimaryAction:primaryAction];
-		UIButtonConfiguration* config = [LNLargeButtonItem buttonConfiguration];
-		config.image = LNSystemImage(name, scale);
-		button.configuration = config;
+		[button setImage:LNSystemImage(name, scale) forState:UIControlStateNormal];
+#if TARGET_OS_MACCATALYST
+		button.tintColor = UIColor.labelColor;
+#endif
 		
 		button.translatesAutoresizingMaskIntoConstraints = NO;
 		[NSLayoutConstraint activateConstraints:@[
@@ -243,7 +269,9 @@ UIBarButtonItem* LNSystemBarButtonItemAction(NSString* name, LNSystemImageScale 
 	else{
 		rv = [[UIBarButtonItem alloc] initWithPrimaryAction:primaryAction];
 		rv.image = LNSystemImage(name, scale);
-//		rv.width = _LNWidthForScale(scale);
+#if TARGET_OS_MACCATALYST
+		rv.tintColor = UIColor.labelColor;
+#endif
 	}
 	return rv;
 }

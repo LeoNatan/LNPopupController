@@ -595,6 +595,10 @@
 		DemoViewController* primary = [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary];
 		block(primary, NSLocalizedString(@"Sidebar", @""));
 		primary.view.backgroundColor = UIColor.clearColor;
+		
+#if LNPOPUP
+		self.splitViewController.popupBarAvoidsPrimaryColumn = [NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableAvoidPrimaryColumn];
+#endif
 		return self.splitViewController;
 	}
 	
@@ -609,6 +613,10 @@
 			targetVC = self;
 		}
 	}
+
+#if LNPOPUP
+	targetVC.popupOpensOverSplitViewController = [NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableOpenOverSplitView];
+#endif
 	
 	return targetVC;
 }
@@ -648,6 +656,8 @@
 		return;
 	}
 	
+	targetVC.popupBar.barStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue];
+	
 	UIViewController* demoVC;
 	BOOL wantsGlassBackground = YES;
 	switch([NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent])
@@ -677,7 +687,7 @@
 		case 200:
 			demoVC = [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateInitialViewController];
 			demoVC.popupItem.barButtonItems = @[
-				[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"gear", LNBarIsCompact() ? LNSystemImageScaleCompact : LNSystemImageScaleNormal) landscapeImagePhone:nil style:UIBarButtonItemStylePlain target:nil action:nil]
+				[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"gear", LNBarIsClassicCompact(targetVC.popupBar) ? LNSystemImageScaleCompact : LNSystemImageScaleNormal) landscapeImagePhone:nil style:UIBarButtonItemStylePlain target:nil action:nil]
 			];
 			LNApplyTitleWithSettings(demoVC);
 			break;
@@ -719,7 +729,6 @@
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
 	targetVC.popupBar.progressViewStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingProgressViewStyle] unsignedIntegerValue];
-	targetVC.popupBar.barStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue];
 	
 	targetVC.popupInteractionStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingInteractionStyle] unsignedIntegerValue];
 

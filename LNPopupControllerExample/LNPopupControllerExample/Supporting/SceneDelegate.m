@@ -40,6 +40,8 @@
 	self.windowScene = scene;
 	
 #if TARGET_OS_MACCATALYST
+	self.windowScene.sizeRestrictions.minimumSize = CGSizeMake(700, 525);
+	
 	scene.titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
 	self.window.rootViewController = [LNCatalystLandingViewController new];
 #else

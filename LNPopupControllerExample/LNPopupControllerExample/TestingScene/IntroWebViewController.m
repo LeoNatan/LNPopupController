@@ -15,7 +15,9 @@
 @interface IntroWebViewController ()
 {
 	WKWebView* _webView;
+#if !TARGET_OS_MACCATALYST
 	UIView* _topColorView;
+#endif
 }
 
 @end
@@ -39,12 +41,14 @@
 	_webView.scrollView.automaticallyAdjustsScrollIndicatorInsets = NO;
 	[self.view addSubview:_webView];
 	
+#if !TARGET_OS_MACCATALYST
 //	UIBlurEffectStyle style = UIBlurEffectStyleSystemThinMaterial;
 //	_effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:style]];
 	_topColorView = [UIView new];
 	_topColorView.backgroundColor = [UIColor colorWithRed:0.12 green:0.14 blue:0.15 alpha:1.0];
 	_topColorView.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.view addSubview:_topColorView];
+#endif
 	
 	[NSLayoutConstraint activateConstraints:@[
 		[self.view.topAnchor constraintEqualToAnchor:_webView.topAnchor],
@@ -52,16 +56,20 @@
 		[self.view.leadingAnchor constraintEqualToAnchor:_webView.leadingAnchor],
 		[self.view.trailingAnchor constraintEqualToAnchor:_webView.trailingAnchor],
 		
+#if !TARGET_OS_MACCATALYST
 		[self.view.topAnchor constraintEqualToAnchor:_topColorView.topAnchor],
 		[self.view.safeAreaLayoutGuide.topAnchor constraintEqualToAnchor:_topColorView.bottomAnchor],
 		[self.view.leadingAnchor constraintEqualToAnchor:_topColorView.leadingAnchor],
 		[self.view.trailingAnchor constraintEqualToAnchor:_topColorView.trailingAnchor],
+#endif
 	]];
 	
 	self.popupItem.image = [UIImage imageNamed:@"AppIconPopupBar"];
+#if !TARGET_OS_MACCATALYST
 	self.popupItem.barButtonItems = @[
 		[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"suit.heart.fill", LNSystemImageScaleNormal) style:UIBarButtonItemStylePlain target:self action:@selector(_navigate:)],
 	];
+#endif
 	
 	NSString* title = NSLocalizedString(@"Welcome to LNPopupController!", @"");
 	
@@ -92,17 +100,59 @@
 	[_webView addObserver:self forKeyPath:@"themeColor" options:NSKeyValueObservingOptionNew context:NULL];
 	[_webView addObserver:self forKeyPath:@"underPageBackgroundColor" options:NSKeyValueObservingOptionNew context:NULL];
 	
+#if !TARGET_OS_MACCATALYST
 	if(@available(iOS 26.0, *))
 	{
 		_webView.scrollView.topEdgeEffect.hidden = YES;
 		_webView.scrollView.bottomEdgeEffect.hidden = YES;
 	}
+#endif
 }
+
+#if TARGET_OS_MACCATALYST
+- (void)viewDidMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
+{
+	[super viewDidMoveToPopupContainerContentView:popupContentView];
+	
+	LNPopupItemSetStandardMusicControls(self.popupItem, self.popupPresentationContainerViewController.popupBar, YES, NO, self.traitCollection, nil, nil, nil);
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self updatePopupItemButtonsAnimated:NO];
+	});
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+	
+	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+		[self updatePopupItemButtonsAnimated:context.isAnimated];
+	} completion:nil];
+}
+
+- (void)updatePopupItemButtonsAnimated:(BOOL)animated
+{
+	[self.popupItem.leadingBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		if([obj.accessibilityIdentifier isEqualToString:@"Shuffle"] || [obj.accessibilityIdentifier isEqualToString:@"Repeat"])
+		{
+			obj.hidden = self.popupPresentationContainerViewController.popupBar.bounds.size.width < 840;
+		}
+	}];
+	
+	[self.popupItem.trailingBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		if([obj.accessibilityIdentifier isEqualToString:@"Airplay"] || [obj.accessibilityIdentifier isEqualToString:@"Volume"])
+		{
+			obj.hidden = self.popupPresentationContainerViewController.popupBar.bounds.size.width < 800;
+		}
+	}];
+}
+#endif
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
 //	_effectView.effect = nil;
+#if !TARGET_OS_MACCATALYST
 	_topColorView.backgroundColor = _webView.themeColor;
+#endif
 }
 
 - (IBAction)_navigate:(id)sender
