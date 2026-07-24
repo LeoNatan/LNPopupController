@@ -18,7 +18,14 @@
 		return YES;
 	}
 	
-	return [self.forwardedDelegate respondsToSelector:aSelector];
+	BOOL rv = [self.forwardedDelegate respondsToSelector:aSelector];
+	
+	if(rv)
+	{
+		return YES;
+	}
+	
+	return rv;
 }
 
 - (void)forwardInvocation:(NSInvocation *)anInvocation

@@ -11,9 +11,11 @@
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
 #import "UIView+LNPopupSupportPrivate.h"
-#import "UITabBar+LNPopupMinimizationSupport.h"
-#import "UIToolbar+LNPopupMinimizationSupport.h"
+#import "UITabBar+LNPopupInheritedBarMetricsSupport.h"
+#import "UIToolbar+LNPopupInheritedBarMetricsSupport.h"
+#import "UISplitView+LNPopupInheritedBarMetricsSupport.h"
 #import "_LNPopupTitlesPagingController.h"
+#import "LNForwardingDelegate.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -26,7 +28,7 @@ static const void* LNPopupChildAdditiveSafeAreaInsets = &LNPopupChildAdditiveSaf
 static const void* LNPopupIgnorePrepareTabBar = &LNPopupIgnorePrepareTabBar;
 static const void* LNPopupBarExtensionView = &LNPopupBarExtensionView;
 
-static void __LNPopupUpdateChildInsets(UIViewController* controller);
+static void __LNPopupUpdateChildInsets(__kindof UIViewController* controller);
 
 BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 
@@ -938,12 +940,21 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 
 @end
 
-static void __LNPopupUpdateChildInsets(UIViewController* controller)
+static void __LNPopupUpdateChildInsets(__kindof UIViewController* controller)
 {
+	BOOL should = controller._ln_popupController_nocreate.popupBar.inheritsBottomBarMetrics && controller._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateBarHidden;
+	
 	if(controller.requiresIndirectSafeAreaManagement == YES)
 	{
+		BOOL foundPrimary = NO;
 		for (__kindof UIViewController* obj in controller.childViewControllers)
 		{
+			if(!foundPrimary && should && [controller isKindOfClass:UISplitViewController.class] && obj._ln_isPartOfPrimarySplit)
+			{
+				foundPrimary = YES;
+				continue;
+			}
+			
 			__LNPopupUpdateChildInsets(obj);
 		}
 		
@@ -1496,7 +1507,7 @@ static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
 		return NO;
 	}
 	
-	if(self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular)
+	if(self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && (self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad || LNPopupBar.isCatalystApp))
 	{
 		return YES;
 	}
@@ -2654,8 +2665,60 @@ static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
 
 #pragma mark - UISplitViewController
 
+@interface _LNPopupSplitViewDelegateWrapper: LNForwardingDelegate <UISplitViewControllerDelegate> @end
+@implementation _LNPopupSplitViewDelegateWrapper
+
+- (void)splitViewController:(UISplitViewController *)svc willShowColumn:(UISplitViewControllerColumn)column
+{
+	void (^todo)(id) = ^ (id context) {
+		[svc.view setNeedsLayout];
+		[svc.view layoutIfNeeded];
+	};
+	
+	if(svc.transitionCoordinator)
+	{
+		[svc.transitionCoordinator animateAlongsideTransition:todo completion:nil];
+	}
+	else
+	{
+		todo(nil);
+	}
+	
+	if([self.forwardedDelegate respondsToSelector:_cmd])
+	{
+		return [self.forwardedDelegate splitViewController:svc willShowColumn:column];
+	}
+}
+
+- (void)splitViewController:(UISplitViewController *)svc willHideColumn:(UISplitViewControllerColumn)column
+{
+	void (^todo)(id) = ^ (id context) {
+		[svc.view setNeedsLayout];
+		[svc.view layoutIfNeeded];
+	};
+	
+	if(svc.transitionCoordinator)
+	{
+		[svc.transitionCoordinator animateAlongsideTransition:todo completion:nil];
+	}
+	else
+	{
+		todo(nil);
+	}
+	
+	if([self.forwardedDelegate respondsToSelector:_cmd])
+	{
+		return [self.forwardedDelegate splitViewController:svc willHideColumn:column];
+	}
+}
+
+@end
+
 @interface UISplitViewController (LNPopupSupportPrivate) @end
 @implementation UISplitViewController (LNPopupSupportPrivate)
+
+static id<UISplitViewControllerDelegate>(*orig_delegateGetter)(id, SEL);
+static void* wrapperDelegateKey = &wrapperDelegateKey;
 
 + (void)load
 {
@@ -2663,16 +2726,37 @@ static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
 	dispatch_once(&onceToken, ^{
 		LNSwizzleMethod(self,
 						@selector(viewDidLayoutSubviews),
-						@selector(_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple));
+						@selector(_ln_popup_viewDidLayoutSubviews_SplitViewRottenApple));
+		
+		{
+			Method delegateGetter = class_getInstanceMethod(UISplitViewController.class, @selector(delegate));
+			orig_delegateGetter = reinterpret_cast<decltype(orig_delegateGetter)>(method_getImplementation(delegateGetter));
+			
+			LNSwizzleMethod(self,
+							@selector(delegate),
+							@selector(_ln_popup_delegate));
+			
+			LNSwizzleMethod(self,
+							@selector(setDelegate:),
+							@selector(_ln_popup_setDelegate:));
+		}
 	});
 }
 
-- (void)_ln_popup_viewDidLayoutSubviews_SplitViewNastyApple
+- (void)_ln_popup_viewDidLayoutSubviews_SplitViewRottenApple
 {
-	[self _ln_popup_viewDidLayoutSubviews_SplitViewNastyApple];
+	[self _ln_popup_viewDidLayoutSubviews_SplitViewRottenApple];
 	
+	_LNPopupSplitViewDelegateWrapper* wrapper = (id)orig_delegateGetter(self, @selector(delegate));
+	if(wrapper == nil || [wrapper isKindOfClass:_LNPopupSplitViewDelegateWrapper.class] == NO)
+	{
+		[self setDelegate:nil];
+	}
+		
 	if(self._ln_popupController_nocreate.popupControllerInternalState > LNPopupPresentationStateBarHidden)
 	{
+		self._ln_popupController_nocreate.popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
+		
 		//Apple forgot to call the super implementation of viewDidLayoutSubviews, but we need that to layout the popup bar correctly.
 		struct objc_super superInfo = {
 			self,
@@ -2681,6 +2765,25 @@ static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
 		void (*super_call)(struct objc_super*, SEL) = (void (*)(struct objc_super*, SEL))objc_msgSendSuper;
 		super_call(&superInfo, @selector(viewDidLayoutSubviews));
 	}
+}
+
+- (id)_ln_popup_delegate
+{
+	_LNPopupSplitViewDelegateWrapper* wrapper = (id)orig_delegateGetter(self, @selector(delegate));
+	if([wrapper isKindOfClass:_LNPopupSplitViewDelegateWrapper.class] == NO)
+	{
+		return wrapper;
+	}
+	
+	return wrapper.forwardedDelegate;
+}
+
+- (void)_ln_popup_setDelegate:(id<UISplitViewControllerDelegate>)delegate
+{
+	_LNPopupSplitViewDelegateWrapper* wrapper = [_LNPopupSplitViewDelegateWrapper new];
+	wrapper.forwardedDelegate = delegate;
+	objc_setAssociatedObject(self, wrapperDelegateKey, wrapper, OBJC_ASSOCIATION_RETAIN);
+	[self _ln_popup_setDelegate:wrapper];
 }
 
 - (BOOL)requiresIndirectSafeAreaManagement

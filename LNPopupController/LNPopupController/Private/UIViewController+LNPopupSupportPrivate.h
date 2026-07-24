@@ -78,6 +78,8 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 + (void)_ln_beginTransitioningLockWithWindow:(UIWindow*)window userInteractionsEnabled:(BOOL)userInteractionEnabled allowedViews:(NSArray* __nullable)allowedViews lockRotation:(BOOL)lockRotation;
 + (void)_ln_endTransitioningLockWithWindow:(UIWindow*)window unlockingRotation:(BOOL)unlockRotation;
 
+- (BOOL)_ln_isPartOfPrimarySplit;
+
 @end
 
 @interface UIViewController (LNPopupLayout)

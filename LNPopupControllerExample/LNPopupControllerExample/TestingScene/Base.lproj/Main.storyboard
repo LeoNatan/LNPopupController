@@ -121,7 +121,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="51"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Split View Controller (Sidebar)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="rpx-bu-B1q">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Split View Controller (Secondary)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="rpx-bu-B1q">
                                                     <rect key="frame" x="16" y="0.0" width="321" height="51"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -473,11 +473,10 @@
         <!--Split View Controller Global Popup-->
         <scene sceneID="iRx-bt-bfy">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" preferredDisplayMode="twoDisplace" behavior="displace" id="F0W-R7-jVc" customClass="LNSplitViewControllerGlobalPopup" sceneMemberID="viewController">
+                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="twoDisplace" behavior="displace" id="F0W-R7-jVc" customClass="LNSplitViewControllerGlobalPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="kZv-eg-X5o"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="masterViewController" id="Qc4-nZ-cyX"/>
-                        <segue destination="l54-z5-xcG" kind="relationship" relationship="supplementaryViewController" id="Mbz-D5-iDc"/>
                     </connections>
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V4D-TM-hrC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -767,14 +766,14 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Te4-2y-lMK"/>
+        <segue reference="8mZ-rN-tfh"/>
         <segue reference="vYe-8f-bz7"/>
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
         <segue reference="7qJ-pK-ibQ"/>
         <segue reference="1U6-NV-9t4"/>
-        <segue reference="cRg-Ru-N9x"/>
+        <segue reference="gSl-m3-ZVG"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>

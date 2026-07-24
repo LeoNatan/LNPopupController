@@ -573,6 +573,16 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	[super setCenter:center];
 }
 
+- (BOOL)inheritsBottomBarMetrics
+{
+	if(@available(iOS 26.0, *))
+	{
+		return _inheritsBottomBarMetrics;
+	}
+	
+	return NO;
+}
+
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
 {
 	[super traitCollectionDidChange:previousTraitCollection];

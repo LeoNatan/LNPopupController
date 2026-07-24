@@ -1,18 +1,18 @@
 //
-//  UIToolbar+LNPopupMinimizationSupport.mm
+//  UIToolbar+LNPopupInheritedBarMetricsSupport.mm
 //  LNPopupController
 //
 //  Created by Léo Natan on 13/10/25.
 //  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
-#import "UIToolbar+LNPopupMinimizationSupport.h"
+#import "UIToolbar+LNPopupInheritedBarMetricsSupport.h"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupBase64Utils.hh"
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "UIView+LNPopupSupportPrivate.h"
 
-@implementation UINavigationController (LNPopupMinimizationSupport)
+@implementation UINavigationController (LNPopupInheritedBarMetricsSupport)
 
 - (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar
 {

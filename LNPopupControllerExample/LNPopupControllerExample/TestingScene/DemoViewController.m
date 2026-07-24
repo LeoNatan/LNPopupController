@@ -538,7 +538,7 @@
 
 - (UIViewController*)_targetVCForPopup
 {
-	void (^block)(NSString*) = ^ (NSString* title) {
+	void (^block)(DemoViewController* ,NSString*) = ^ (DemoViewController* self, NSString* title) {
 		self->_hideTabBarButton.enabled = NO;
 		if(@available(iOS 16.0, *))
 		{
@@ -559,7 +559,7 @@
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerPrimaryPopup.class] && self.navigationController != [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary])
 	{
 		self.view.backgroundColor = UIColor.systemBackgroundColor;
-		block(NSLocalizedString(@"Secondary", @""));
+		block(self, NSLocalizedString(@"Secondary", @""));
 		return nil;
 	}
 	
@@ -570,14 +570,19 @@
 	}
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary]])
 	{
-		self.view.backgroundColor = UIColor.secondarySystemBackgroundColor;
-		block(NSLocalizedString(@"Sidebar", @""));
+		self.splitViewController.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
+		self.view.backgroundColor = UIColor.clearColor;
+		block(self, NSLocalizedString(@"Sidebar", @""));
 		
 		return nil;
 	}
 	
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerGlobalPopup.class])
 	{
+		self.splitViewController.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
+		DemoViewController* primary = [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary];
+		block(primary, NSLocalizedString(@"Sidebar", @""));
+		primary.view.backgroundColor = UIColor.clearColor;
 		return self.splitViewController;
 	}
 	

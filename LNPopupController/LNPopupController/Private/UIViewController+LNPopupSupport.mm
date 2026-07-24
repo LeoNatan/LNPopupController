@@ -635,6 +635,27 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	[window _ln_setLockedForPopupTransition:NO];
 }
 
+- (BOOL)_ln_isPartOfPrimarySplit
+{
+	UISplitViewController* split = self.splitViewController;
+	if(split == nil || split.style == UISplitViewControllerStyleUnspecified)
+	{
+		return NO;
+	}
+	
+	UIViewController* primary = [split viewControllerForColumn:UISplitViewControllerColumnPrimary];
+	while(primary != nil)
+	{
+		if(primary == self)
+		{
+			return YES;
+		}
+		primary = primary.parentViewController;
+	}
+	
+	return NO;
+}
+
 @end
 
 @implementation UINavigationController (LNPopupSupport)

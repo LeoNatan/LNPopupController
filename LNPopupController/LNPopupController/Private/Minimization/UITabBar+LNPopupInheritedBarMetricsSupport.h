@@ -1,5 +1,5 @@
 //
-//  UITabBar+LNPopupMinimizationSupport.h
+//  UITabBar+LNPopupInheritedBarMetricsSupport.h
 //  LNPopupController
 //
 //  Created by Léo Natan on 26/9/25.
@@ -20,7 +20,7 @@ extern BOOL LNPopupEnvironmentTabBarSupportsMinimizationAPI(void);
 
 @end
 
-@interface UITabBar (LNPopupMinimizationSupport)
+@interface UITabBar (LNPopupInheritedBarMetricsSupport)
 
 @property (nonatomic, readonly, getter=_ln_wantsMinimizedPopupBar) BOOL requiresMinimizedPopupBar;
 @property (nonatomic, readonly, getter =_ln_proposedFrameForPopupBar) CGRect proposedFrameForPopupBar;
@@ -29,7 +29,7 @@ extern BOOL LNPopupEnvironmentTabBarSupportsMinimizationAPI(void);
 
 @end
 
-@interface UITabBarController (LNPopupMinimizationSupport)
+@interface UITabBarController (LNPopupInheritedBarMetricsSupport)
 
 - (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar;
 

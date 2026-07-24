@@ -1,12 +1,12 @@
 //
-//  UITabBar+LNPopupMinimizationSupport.mm
+//  UITabBar+LNPopupInheritedBarMetricsSupport.mm
 //  LNPopupController
 //
 //  Created by Léo Natan on 26/9/25.
 //  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
-#import "UITabBar+LNPopupMinimizationSupport.h"
+#import "UITabBar+LNPopupInheritedBarMetricsSupport.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupGlassUtils.h"
@@ -30,7 +30,7 @@ BOOL LNPopupEnvironmentTabBarSupportsMinimizationAPI(void)
 	return __LNPopupTabBarSupportsMinimizationAPI;
 }
 
-@implementation UITabBar (LNPopupMinimizationSupport)
+@implementation UITabBar (LNPopupInheritedBarMetricsSupport)
 
 + (void)load
 {
@@ -93,7 +93,7 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 
 @end
 
-@implementation UITabBarController (LNPopupMinimizationSupport)
+@implementation UITabBarController (LNPopupInheritedBarMetricsSupport)
 
 - (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar
 {
@@ -115,7 +115,11 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 			
 			if(sidebarLayout == 0)
 			{
-				barInsets.leading = self.sidebar.isHidden ? 0 : outlineView.bounds.size.width + 8;
+				CGFloat extra = 0.0;
+				if(ln_unavailable(iOS 27.0, *)) {
+					extra = 8.0;
+				}
+				barInsets.leading = self.sidebar.isHidden ? 0 : outlineView.bounds.size.width + extra;
 			}
 		}
 	}

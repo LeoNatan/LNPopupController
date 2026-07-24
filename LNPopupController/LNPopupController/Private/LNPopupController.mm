@@ -22,7 +22,7 @@
 #import "_LNPopupTransitionGenericCloseAnimator.h"
 #import "_LNPopupTransitionPreferredCloseAnimator.h"
 #import "LNPopupPresentationContainerSupport.h"
-#import "UITabBar+LNPopupMinimizationSupport.h"
+#import "UITabBar+LNPopupInheritedBarMetricsSupport.h"
 #import "LNMath.h"
 
 #import <objc/runtime.h>
