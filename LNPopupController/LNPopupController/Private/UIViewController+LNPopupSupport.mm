@@ -725,3 +725,39 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 }
 
 @end
+
+@implementation UIViewController (LNPopupKeyPressHandling)
+
+static
+BOOL _LNPopupPressesContainEscape(NSSet<UIPress*>* presses)
+{
+	NSSet<UIKey*>* keys = [presses valueForKey:@"key"];
+	return [keys objectsPassingTest:^BOOL(UIKey * _Nonnull obj, BOOL * _Nonnull stop) {
+		return obj.keyCode == UIKeyboardHIDUsageKeyboardEscape;
+	}].count != 0;
+}
+
+- (void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event
+{
+	if(self.popupPresentationState == LNPopupPresentationStateOpen && _LNPopupPressesContainEscape(presses))
+	{
+		//Wait for pressesEnded:
+		return;
+	}
+	
+	[super pressesBegan:presses withEvent:event];
+}
+
+- (void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event
+{
+	if(self.popupPresentationState == LNPopupPresentationStateOpen && _LNPopupPressesContainEscape(presses))
+	{
+		[self closePopupAnimated:YES completion:nil];
+		
+		return;
+	}
+	
+	[super pressesEnded:presses withEvent:event];
+}
+
+@end
