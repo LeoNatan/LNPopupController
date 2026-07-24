@@ -9,8 +9,7 @@
 #import "LNPopupLongPressGestureRecognizer.h"
 #import "LNForwardingDelegate.h"
 
-@interface LNPopupControllerLongPressGestureDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate>
-@end
+@interface LNPopupControllerLongPressGestureDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate> @end
 
 @implementation LNPopupControllerLongPressGestureDelegate
 
