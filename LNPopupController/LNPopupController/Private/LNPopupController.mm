@@ -2115,7 +2115,7 @@ id __LNPopupEmptyBlurFilter(void)
 					UIView* target;
 					if(self.popupBar.activeAppearance.floatingBackgroundEffect.ln_isGlass)
 					{
-						target = self.popupBar.contentView;
+						target = self.popupBar.layoutContainer;
 					}
 					else
 					{
