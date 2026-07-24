@@ -597,7 +597,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
 	}
 	
-	if(LNPopupBar.isCatalystApp && self.popupContentViewController)
+	if(self.popupContentViewController && LNPopupBar.isCatalystApp)
 	{
 		[self.popupContentViewController _uLFSBAIO];
 		[self._ln_popupController_nocreate.popupContentView _repositionPopupCloseButton];

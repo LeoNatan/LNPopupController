@@ -306,15 +306,25 @@
 		return;
 	}
 	
-	UIEdgeInsets layoutMargins = LNPopupEnvironmentLayoutInsets(self.currentPopupContentViewController.view, false);
-	CGFloat topConstant = layoutMargins.top;
-	
-	CGFloat glassMin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 20 : 0;
-	topConstant = MAX(_LNPopupCloseButtonStyleIsGlass(self.effectivePopupCloseButtonStyle) ? glassMin : self.effectivePopupCloseButtonStyle == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
-	
+	UIEdgeInsets layoutMargins = __LNPopupEnvironmentLayoutInsets(self.currentPopupContentViewController.view, false);
+	CGFloat topConstant = 0.0;
 #if TARGET_OS_MACCATALYST
-	topConstant += 20;
+		topConstant = 30.0;
+#else
+		topConstant = layoutMargins.top;
 #endif
+	
+	CGFloat glassMin = 0.0;
+	if(LNPopupBar.isCatalystApp)
+	{
+		glassMin = 0.0;
+	}
+	else
+	{
+		glassMin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 20 : 0;
+	}
+		
+	topConstant = MAX(_LNPopupCloseButtonStyleIsGlass(self.effectivePopupCloseButtonStyle) ? glassMin : self.effectivePopupCloseButtonStyle == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
 	
 	if(topConstant != _popupCloseButtonTopConstraint.constant || layoutMargins.left != _popupCloseButtonLeadingConstraint.constant || -layoutMargins.right != _popupCloseButtonTrailingConstraint.constant)
 	{

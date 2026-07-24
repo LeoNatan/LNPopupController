@@ -40,6 +40,26 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	return self;
 }
 
+- (BOOL)gestureRecognizer:(LNPopupInteractionPanGestureRecognizer *)gestureRecognizer shouldReceiveEvent:(UIEvent *)event
+{
+	if([self.forwardedDelegate respondsToSelector:_cmd])
+	{
+		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldReceiveEvent:event];
+	}
+	
+	BOOL rv = YES;
+	
+	if(LNPopupBar.isCatalystApp && event.type == UIEventTypeTouches)
+	{
+		if(event.allTouches.anyObject.type == UITouchTypeIndirectPointer && gestureRecognizer.allowsIndirectPointerInteraction == NO)
+		{
+			return NO;
+		}
+	}
+	
+	return rv;
+}
+
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_popupController.containerController.popupInteractionStyle);

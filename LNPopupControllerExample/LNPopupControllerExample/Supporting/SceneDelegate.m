@@ -40,10 +40,10 @@
 	self.windowScene = scene;
 	
 #if TARGET_OS_MACCATALYST
-		scene.titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
-		self.window.rootViewController = [LNCatalystLandingViewController new];
+	scene.titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
+	self.window.rootViewController = [LNCatalystLandingViewController new];
 #else
-		self.window.rootViewController = [UIStoryboard storyboardWithName:@"Main" bundle:nil].instantiateInitialViewController;
+	self.window.rootViewController = [UIStoryboard storyboardWithName:@"Main" bundle:nil].instantiateInitialViewController;
 #endif
 	
 	[self.window makeKeyAndVisible];

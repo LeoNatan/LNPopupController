@@ -221,7 +221,10 @@ static NSArray* __notifiedProperties = nil;
 			UIGlassEffectStyle style = UIGlassEffectStyleRegular;
 			
 			UIGlassEffect* effect = [_LNPopupGlassEffect effectWithStyle:style];
-			effect.interactive = YES;
+			if(LNPopupBar.isCatalystApp == NO)
+			{
+				effect.interactive = YES;
+			}
 			return effect;
 		}
 	}
@@ -402,7 +405,10 @@ static NSArray* __notifiedProperties = nil;
 		if(LNPopupEnvironmentHasGlass())
 		{
 			_LNPopupGlassEffect* glassEffect = [_LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleRegular];
-			glassEffect.interactive = YES;
+			if(LNPopupBar.isCatalystApp == NO)
+			{
+				glassEffect.interactive = YES;
+			}
 			effect = glassEffect;
 		}
 		else

@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <LNPopupController/LNPopupContentView.h>
 
 @class LNPopupController;
 
-@interface LNPopupInteractionPanGestureRecognizer : UIPanGestureRecognizer
+@interface LNPopupInteractionPanGestureRecognizer ()
 
 - (instancetype)initWithTarget:(id)target action:(SEL)action popupController:(LNPopupController*)popupController;
 

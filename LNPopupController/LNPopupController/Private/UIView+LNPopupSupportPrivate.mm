@@ -16,7 +16,7 @@
 #import "_LNWeakRef.h"
 #import <objc/runtime.h>
 
-UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas)
+UIEdgeInsets __LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas)
 {
 	if(@available(iOS 26.0, *))
 	if(LNPopupEnvironmentHasGlass() && !limitToSafeAreas)
@@ -63,6 +63,16 @@ UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToS
 	}
 
 	return containerView.layoutMargins;
+}
+
+CGFloat __LNPopupScaledFloat(CGFloat value, UITraitCollection* traitCollection)
+{
+	if(traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac)
+	{
+		return value * 0.77;
+	}
+	
+	return value;
 }
 
 @implementation _LNPopupBarBackgroundGroupNameOverride

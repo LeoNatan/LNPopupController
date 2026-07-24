@@ -24,10 +24,6 @@ class CatalystLandingViewController: UISplitViewController {
 #if LNPOPUP
 		let demoPopupApplier: (UIViewController) -> Void = { viewController in
 			let demo = IntroWebViewController()
-			
-			viewController.popupBar.barStyle = .floatingCompact
-			viewController.popupBar.standardAppearance.marqueeScrollEnabled = true
-			viewController.popupBar.inheritsBottomBarMetrics = true
 			viewController.presentPopupBar(with: demo, animated: false)
 			viewController.popupBar.addInteraction(LNPopupDemoContextMenuInteraction())
 		}

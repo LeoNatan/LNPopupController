@@ -23,6 +23,8 @@ const CGFloat LNPopupBarHeightCompact = 40.0;
 const CGFloat LNPopupBarHeightProminent = 64.0;
 const CGFloat LNPopupBarHeightFloating = 58.0;
 const CGFloat LNPopupBarHeightFloatingCompact = 48.0;
+const CGFloat LNPopupBarHeightFloatingCatalyst = 80.0;
+const CGFloat LNPopupBarHeightFloatingCompactCatalyst = 68.0;
 const CGFloat LNPopupBarFloatingPadImageWidth = 44.0;
 const CGFloat LNPopupBarFloatingPadWidthLimitLegacy = 954.0;
 const CGFloat LNPopupBarFloatingPadWidthLimitModern = 700;
@@ -74,19 +76,41 @@ CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar)
 		additionalHeight += 6;
 	}
 	
+	CGFloat rv;
+	
 	switch(popupBar.resolvedStyle)
 	{
 		case LNPopupBarStyleCompact:
-			return LNPopupBarHeightCompact + additionalHeight;
+			rv = LNPopupBarHeightCompact + additionalHeight;
+			break;
 		case LNPopupBarStyleProminent:
-			return LNPopupBarHeightProminent + additionalHeight;
+			rv = LNPopupBarHeightProminent + additionalHeight;
+			break;
 		case LNPopupBarStyleFloating:
-			return LNPopupBarHeightFloating + additionalHeight;
+			if(popupBar.resolvedIsFloating && LNPopupBar.isCatalystApp && LNPopupEnvironmentHasGlass())
+			{
+				rv = LNPopupBarHeightFloatingCatalyst;
+			}
+			else
+			{
+				rv = LNPopupBarHeightFloating + additionalHeight;
+			}
+			break;
 		case LNPopupBarStyleFloatingCompact:
-			return LNPopupBarHeightFloatingCompact + additionalHeight;
+			if(popupBar.resolvedIsFloating && LNPopupBar.isCatalystApp && LNPopupEnvironmentHasGlass())
+			{
+				rv = LNPopupBarHeightFloatingCompactCatalyst;
+			}
+			else
+			{
+				rv = LNPopupBarHeightFloatingCompact + additionalHeight;
+			}
+			break;
 		default:
 			abort();
 	}
+	
+	return __LNPopupScaledFloat(rv, popupBar.traitCollection);
 }
 
 LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, LNPopupBar* popupBar, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom)
@@ -131,7 +155,7 @@ LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, LNPop
 		
 		if(rv == LNPopupBarStyleDefault)
 		{
-			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone || popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
+			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone || LNPopupBar.isCatalystApp || popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 			{
 				rv = LNPopupBarStyleFloatingCompact;
 			}
@@ -628,7 +652,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 
 - (NSDirectionalEdgeInsets)floatingLayoutMargins
 {
-	UIEdgeInsets layoutMargins = LNPopupEnvironmentLayoutInsets(self, UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone);
+	UIEdgeInsets layoutMargins = __LNPopupEnvironmentLayoutInsets(self, UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone);
 	CGFloat extra = 0;
 	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 	{
@@ -762,7 +786,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 			limitToUse = LNPopupBarFloatingPadWidthLimitLegacy;
 		}
 		
-		if(self.limitFloatingContentWidth == YES && contentFrame.size.width > limitToUse && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		if(self.limitFloatingContentWidth == YES && contentFrame.size.width > limitToUse && self.isWidePad)
 		{
 			CGFloat d = (contentFrame.size.width - limitToUse) / 2;
 			contentFrame = UIEdgeInsetsInsetRect(contentFrame, UIEdgeInsetsMake(0, d, 0, d));
@@ -1878,6 +1902,12 @@ static NSPredicate* _LNNonSpaceItemsPredicate(BOOL removeHidden)
 		return _swiftuiInheritedFont;
 	}
 	
+	if(LNPopupBar.isCatalystApp)
+	{
+		UIFont* headline = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+		return [[UIFontMetrics metricsForTextStyle:UIFontTextStyleHeadline] scaledFontForFont:[UIFont systemFontOfSize:headline.pointSize weight:UIFontWeightMedium]];
+	}
+	
 	CGFloat fontSize = 15;
 	UIFontWeight fontWeight = UIFontWeightSemibold;
 	UIFontTextStyle textStyle = UIFontTextStyleHeadline;
@@ -1908,7 +1938,7 @@ static NSPredicate* _LNNonSpaceItemsPredicate(BOOL removeHidden)
 			break;
 	}
 	
-	return [[UIFontMetrics metricsForTextStyle:textStyle] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
+	return [[UIFontMetrics metricsForTextStyle:textStyle] scaledFontForFont:[UIFont systemFontOfSize:__LNPopupScaledFloat(fontSize, self.traitCollection) weight:fontWeight]];
 }
 
 //DO NOT CHANGE NAME! Used by LNPopupUI
@@ -1922,7 +1952,13 @@ static NSPredicate* _LNNonSpaceItemsPredicate(BOOL removeHidden)
 {
 	if(_swiftuiInheritedFont)
 	{
-		return [UIFont fontWithDescriptor:_swiftuiInheritedFont.fontDescriptor size:_swiftuiInheritedFont.pointSize - 2.5];
+		return [UIFont fontWithDescriptor:_swiftuiInheritedFont.fontDescriptor size:_swiftuiInheritedFont.pointSize - __LNPopupScaledFloat(2.5, self.traitCollection)];
+	}
+	
+	if(LNPopupBar.isCatalystApp)
+	{
+		UIFont* callout = [UIFont preferredFontForTextStyle:UIFontTextStyleCallout];
+		return [[UIFontMetrics metricsForTextStyle:UIFontTextStyleCallout] scaledFontForFont:[UIFont systemFontOfSize:callout.pointSize weight:UIFontWeightRegular]];
 	}
 	
 	CGFloat fontSize = 15;
@@ -1951,7 +1987,7 @@ static NSPredicate* _LNNonSpaceItemsPredicate(BOOL removeHidden)
 			break;
 	}
 	
-	return [[UIFontMetrics metricsForTextStyle:textStyle] scaledFontForFont:[UIFont systemFontOfSize:fontSize weight:fontWeight]];
+	return [[UIFontMetrics metricsForTextStyle:textStyle] scaledFontForFont:[UIFont systemFontOfSize:__LNPopupScaledFloat(fontSize, self.traitCollection) weight:fontWeight]];
 }
 
 //DO NOT CHANGE NAME! Used by LNPopupUI
@@ -2094,17 +2130,17 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	
 	if(LNPopupEnvironmentHasGlass())
 	{
-		safeLeading = _resolvedIsCompact || self.traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline ? 16 : 20;
+		safeLeading = (_resolvedIsCompact && !LNPopupBar.isCatalystApp) || self.traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline ? 16 : 20;
 	}
 	else
 	{
 		safeLeading = _resolvedIsFloating ? 8 : 20;
 	}
 	
-	if(_resolvedIsFloating && _resolvedIsCompact == NO && self.isWidePad == YES)
+	if(_resolvedIsFloating && (_resolvedIsCompact == NO || LNPopupBar.isCatalystApp) && self.isWidePad == YES)
 	{
 		safeLeading += 2;
-		maxImageDimension = LNPopupBarFloatingPadImageWidth;
+		maxImageDimension = __LNPopupScaledFloat(LNPopupBarFloatingPadImageWidth, self.traitCollection);
 	}
 	
 	CGSize imageViewSize = [self _imageViewSizeWithMaxWidth:maxImageDimension maxHeight:maxImageDimension];
@@ -2350,13 +2386,21 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 
 + (BOOL)isCatalystApp
 {
-	BOOL isCatalystApp = NSProcessInfo.processInfo.isMacCatalystApp;
-	if(@available(iOS 14.0, *))
-	{
-		isCatalystApp = isCatalystApp || NSProcessInfo.processInfo.iOSAppOnMac;
-	}
+#if TARGET_OS_MACCATALYST
+	return YES;
+#else
+	static BOOL isCatalystApp;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		isCatalystApp = NSProcessInfo.processInfo.isMacCatalystApp;
+		if(@available(iOS 14.0, *))
+		{
+			isCatalystApp = isCatalystApp || NSProcessInfo.processInfo.iOSAppOnMac;
+		}
+	});
 	
 	return isCatalystApp;
+#endif
 }
 
 - (BOOL)isWidePad

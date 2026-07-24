@@ -128,6 +128,8 @@ __attribute__((objc_direct_members))
 	
 	if(self)
 	{
+		self.preferredBehavioralStyle = UIBehavioralStylePad;
+		
 		_popupContentView = contentView;
 		
 		self.accessibilityLabel = NSLocalizedString(@"Close", @"");
@@ -424,22 +426,28 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
+	CGSize rv;
 	if(_LNPopupCloseButtonStyleIsGlass(self.effectiveStyle))
 	{
-		return CGSizeMake(44, 44);
+		rv = CGSizeMake(44, 44);
 	}
 	else if(self.effectiveStyle == LNPopupCloseButtonStyleRound)
 	{
-		return CGSizeMake(24, 24);
+		rv = CGSizeMake(24, 24);
 	}
 	else if(self.effectiveStyle == LNPopupCloseButtonStyleChevron)
 	{
-		return CGSizeMake(42, 25);
+		rv = CGSizeMake(42, 25);
 	}
 	else
 	{
-		return CGSizeMake(LNPopupCloseButtonGrabberWidth(), 25);
+		rv = CGSizeMake(LNPopupCloseButtonGrabberWidth(), 25);
 	}
+	
+	rv.width = __LNPopupScaledFloat(rv.width, self.traitCollection);
+	rv.height = __LNPopupScaledFloat(rv.height, self.traitCollection);
+	
+	return rv;
 }
 
 - (CGSize)intrinsicContentSize

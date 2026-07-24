@@ -494,6 +494,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	
 	if(LNPopupBar.isCatalystApp)
 	{
+		if(LNPopupEnvironmentHasGlass())
+		{
+			return -18;
+		}
+		
 		return -7.0;
 	}
 	

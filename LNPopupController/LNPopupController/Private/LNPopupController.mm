@@ -29,7 +29,7 @@
 #import <os/log.h>
 
 #if TARGET_OS_MACCATALYST
-#import <AppKit/AppKit.h>
+#import "_LNPopupCatalystHelper.h"
 #endif
 
 #ifdef DEBUG
@@ -54,14 +54,7 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	LNPopupInteractionStyle rv = style;
 	if(rv == LNPopupInteractionStyleDefault)
 	{
-		if([LNPopupBar isCatalystApp])
-		{
-			rv = LNPopupInteractionStyleScroll;
-		}
-		else
-		{
-			rv = LNPopupInteractionStyleSnap;
-		}
+		rv = LNPopupInteractionStyleSnap;
 	}
 	return rv;
 }
@@ -184,6 +177,10 @@ __attribute__((objc_direct_members))
 	
 	__weak UIView* _tabBarContainer;
 	CALayer* _observedTabBarContainerLayer;
+	
+#if TARGET_OS_MACCATALYST
+	_LNPopupCatalystHelper* _catalystHelper;
+#endif
 }
 
 @synthesize popupContentView=_popupContentView;
@@ -207,6 +204,10 @@ __attribute__((objc_direct_members))
 		_wantsFeedbackGeneration = YES;
 		_softFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleSoft];
 		_rigidFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleRigid];
+		
+#if TARGET_OS_MACCATALYST
+		_catalystHelper = [_LNPopupCatalystHelper new];
+#endif
 	}
 	
 	return self;
@@ -947,7 +948,7 @@ __attribute__((objc_direct_members))
 	if(pgr != _popupContentView.popupInteractionGestureRecognizer)
 	{
 		UIScrollView* possibleScrollView = (id)pgr.view;
-		if([possibleScrollView isKindOfClass:[UIScrollView class]] && [NSStringFromClass(pgr.class) hasPrefix:@"UIScrollView"])
+		if([possibleScrollView isKindOfClass:[UIScrollView class]] && [NSStringFromClass(pgr.class) hasPrefix:@"UIScrollView"] && !LNPopupBar.isCatalystApp)
 		{
 			//If not scrolling only vertically, ignore the scroll view's pan gesture recognizer.
 			if(possibleScrollView._ln_scrollingOnlyVertically == NO)
@@ -1916,6 +1917,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 {
 	[self _start120HzHack];
 	
+#if TARGET_OS_MACCATALYST
+	[_catalystHelper startHidingToolbarWithScene:self.popupBar.window.windowScene];
+#endif
+	
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 	self.popupContentView.applyScreenCorners = resolvedStyle == LNPopupInteractionStyleSnap;
 	
@@ -1952,6 +1957,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)_closePopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
 {
+#if TARGET_OS_MACCATALYST
+	[_catalystHelper restore];
+#endif
+	
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 	self.popupContentView.applyScreenCorners = resolvedStyle == LNPopupInteractionStyleSnap;
 	

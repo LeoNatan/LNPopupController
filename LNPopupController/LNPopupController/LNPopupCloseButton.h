@@ -14,9 +14,6 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 	/// The default close button style for the current environment.
 	LNPopupCloseButtonStyleDefault,
 	
-	/// Round close button style.
-	LNPopupCloseButtonStyleRound,
-	
 	/// Chevron close button style.
 	LNPopupCloseButtonStyleChevron,
 	
@@ -50,6 +47,11 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 	
 	/// No close button.
 	LNPopupCloseButtonStyleNone = 0xFFFF,
+	
+	/// Round close button style.
+	///
+	/// Deprecated. Use one of the glass buttons instead.
+	LNPopupCloseButtonStyleRound LN_DEPRECATED_API_OS("Use one of the glass buttons instead.", ios(2.0, 26.0)),
 	
 	/// Flat close button style.
 	///

@@ -21,7 +21,9 @@ typedef struct {
 	CGSize leftTop;
 } LNPopupViewCorners;
 
-extern UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas);
+extern UIEdgeInsets __LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas);
+
+extern CGFloat __LNPopupScaledFloat(CGFloat value, UITraitCollection* traitCollection);
 
 typedef void (^LNInWindowBlock)(dispatch_block_t);
 
