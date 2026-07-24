@@ -28,6 +28,8 @@ CF_EXTERN_C_BEGIN
 extern BOOL __LNPopupUseSystemMarqueeLabel(void);
 #endif
 
+extern const Class adaptorView;
+
 extern const CGFloat LNPopupBarHeightCompact;
 extern const CGFloat LNPopupBarHeightProminent;
 extern const CGFloat LNPopupBarHeightFloating;

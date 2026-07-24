@@ -258,8 +258,6 @@ __attribute__((objc_direct_members))
 	UIWindow* _swiftHacksWindow2;
 	
 	BOOL _animatesItemSetter;
-	
-	NSArray<UIBarButtonItem*>* _nonSpacingBarButtonItems;
 }
 
 static BOOL __animatesItemSetter = NO;
@@ -413,12 +411,9 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		_layoutContainer = [_LNTouchPassthroughView new];
 		[self addSubview:_layoutContainer];
 		
-		if(ln_unavailable(iOS 27.0, *))
-		{
-			_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
-			_floatingBackgroundShadowView.userInteractionEnabled = NO;
-			[_layoutContainer addSubview:_floatingBackgroundShadowView];
-		}
+		_floatingBackgroundShadowView = [_LNPopupBackgroundShadowView new];
+		_floatingBackgroundShadowView.userInteractionEnabled = NO;
+		[_layoutContainer addSubview:_floatingBackgroundShadowView];
 		
 		_contentView = [[_LNPopupBarContentView alloc] initWithEffect:nil];
 		_contentView.clipsToBounds = NO;
@@ -586,7 +581,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 
 - (BOOL)inheritsBottomBarMetrics
 {
-	if(@available(iOS 26.0, *))
+	if(LNPopupEnvironmentHasGlass())
 	{
 		return _inheritsBottomBarMetrics;
 	}
@@ -708,29 +703,13 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	return rv;
 }
 
-- (BOOL)_toolbarHasHiddenFirstItem
-{
-	if(@available(iOS 16.0, *))
-	{
-		return _nonSpacingBarButtonItems.firstObject.isHidden;
-	}
-	
-	return NO;
-}
-
-- (BOOL)_toolbarHasHiddenLastItem
-{
-	if(@available(iOS 16.0, *))
-	{
-		return _nonSpacingBarButtonItems.lastObject.isHidden;
-	}
-	
-	return NO;
-}
-
 - (void)_resetToolbarItemSpacing
 {
+#if TARGET_OS_MACCATALYST
+	CGFloat spacing = 4.0;
+#else
 	CGFloat spacing = 8.0;
+#endif
 	BOOL hasSwiftUI = _swiftuiHiddenLeadingController != nil || _swiftuiHiddenTrailingController != nil;
 	
 	if(hasSwiftUI)
@@ -745,6 +724,11 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		}
 	}
 	_toolbar.itemSpacing = spacing;
+}
+
+- (void)setNeedsLayout
+{
+	[super setNeedsLayout];
 }
 
 - (void)layoutSubviews
@@ -943,11 +927,64 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		_animatesItemSetter = NO;
 	}
 	
-	BOOL hasHiddenLastItem = self._toolbarHasHiddenLastItem;
-	static constexpr CGFloat padding = 8;
+	BOOL isLTR = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionLeftToRight;
 	
-	_toolbar.bounds = CGRectMake(0, 0, _contentView.bounds.size.width - (hasHiddenLastItem ? padding * 2 : 0), 44);
-	_toolbar.center = CGPointMake(CGRectGetMidX(_contentView.bounds) - (isRTL ? -1 : 1) * (hasHiddenLastItem ? padding : 0), CGRectGetMidY(_contentView.bounds));
+	UIBarButtonItem* leftFirstItem;
+	UIBarButtonItem* rightLastItem;
+	UIView* leftFirst;
+	UIView* rightLast;
+	UIView* leftViewFirst;
+	UIView* leftViewLast;
+	UIView* rightViewFirst;
+	UIView* rightViewLast;
+	if(isLTR)
+	{
+		[self _getLeftmostView:&leftViewFirst rightmostView:&leftViewLast fromBarButtonItems:self.leadingBarButtonItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:&rightViewLast fromBarButtonItems:self.trailingBarButtonItems];
+		leftFirstItem = self.leadingBarButtonItems.firstObject;
+		rightLastItem = self.trailingBarButtonItems.lastObject;
+	}
+	else
+	{
+		[self _getLeftmostView:&leftViewFirst rightmostView:&leftViewLast fromBarButtonItems:self.trailingBarButtonItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:&rightViewLast fromBarButtonItems:self.leadingBarButtonItems];
+		leftFirstItem = self.trailingBarButtonItems.firstObject;
+		rightLastItem = self.leadingBarButtonItems.lastObject;
+	}
+	leftFirst = [_toolbar _viewForBarButtonItem:leftFirstItem];
+	rightLast = [_toolbar _viewForBarButtonItem:rightLastItem];
+	
+	BOOL isFirstHidden = NO;
+	BOOL isLastHidden = NO;
+	if(@available(iOS 16, *))
+	{
+		isFirstHidden = leftFirstItem.isHidden;
+		isLastHidden = rightLastItem.isHidden;
+	}
+	BOOL firstCustomAndUnhidden = leftFirstItem != nil /*&& !isFirstHidden*/ && leftFirst != nil && [self _isBarButtonViewStandardItem:leftFirst] == NO;
+	BOOL lastCustomAndUnhidden = rightLastItem != nil /*&& !isLastHidden*/ && rightLast != nil && [self _isBarButtonViewStandardItem:rightLast] == NO;
+	BOOL needsLeftPadding = firstCustomAndUnhidden == NO && leftViewFirst && [self _isBarButtonViewPadded:leftViewFirst inEdge:UIRectEdgeLeft] == NO;
+	BOOL needsRightPadding = lastCustomAndUnhidden == NO && rightViewLast && [self _isBarButtonViewPadded:rightViewLast inEdge:UIRectEdgeRight] == NO;
+	
+	static constexpr CGFloat padding = 16;
+	
+	CGRect bounds = CGRectMake(0, 0, _contentView.bounds.size.width, 44);
+	CGPoint center = CGPointMake(CGRectGetMidX(_contentView.bounds), CGRectGetMidY(_contentView.bounds));
+	
+	if(needsLeftPadding)
+	{
+		bounds.size.width -= padding;
+		center.x += padding / 2;
+	}
+	
+	if(needsRightPadding)
+	{
+		bounds.size.width -= padding;
+		center.x -= padding / 2;
+	}
+	
+	_toolbar.bounds = bounds;
+	_toolbar.center = center;
 	[_toolbar layoutIfNeeded];
 	
 	if(_resolvedIsGlassInteractive)
@@ -1702,19 +1739,21 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	_barItemsSemanticContentAttribute = barItemsSemanticContentAttribute;
 	
 	[self _setNeedsBarButtonItemLayout];
-	
-	[self setNeedsLayout];
 }
 
 #if __has_include(<LNSystemMarqueeLabel.h>)
 BOOL __LNPopupUseSystemMarqueeLabel(void)
 {
+#if TARGET_OS_MACCATALYST
+	return YES;
+#else
 	static BOOL bundleRequest;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		bundleRequest = [[NSBundle.mainBundle objectForInfoDictionaryKey:@"LNPopupUseSystemMarqueeLabel"] boolValue];
 	});
 	return bundleRequest || [NSUserDefaults.standardUserDefaults boolForKey:@"LNPopupUseSystemMarqueeLabel"];
+#endif
 }
 #endif
 
@@ -1739,9 +1778,46 @@ static NSPredicate* _LNNonSpaceAndNonHiddenItemsPredicate(BOOL removeHidden)
 	return removeHidden ? includingHidden : nonSpaceFilterPredicate;
 }
 
+static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
+
+- (BOOL)_isBarButtonViewStandardItem:(UIView*)barButtonView
+{
+	return [barButtonView isKindOfClass:systemBarButtonItemButtonClass] || [barButtonView isKindOfClass:adaptorView];
+}
+
+- (BOOL)_isBarButtonViewPadded:(UIView*)barButtonView inEdge:(UIRectEdge)edge
+{
+	if([self _isBarButtonViewStandardItem:barButtonView] == NO)
+	{
+		return NO;
+	}
+
+	static const CGFloat paddingThreshold = 10;
+	
+	UIView* subview = barButtonView.subviews.firstObject;
+	CGPoint subviewCenter = subview.center;
+	CGPoint barButtonCenter = CGPointMake(CGRectGetMidX(barButtonView.bounds), CGRectGetMidY(barButtonView.bounds));
+	CGFloat widthDelta = barButtonView.bounds.size.width - subview.bounds.size.width;
+
+	if(subviewCenter.x == barButtonCenter.x)
+	{
+		return widthDelta > 25;
+	}
+	else
+	{
+		if(edge == UIRectEdgeLeft)
+		{
+			return subviewCenter.x > barButtonCenter.x;
+		}
+		else
+		{
+			return subviewCenter.x < barButtonCenter.x;
+		}
+	}
+}
+
 - (void)_getLeftmostView:(UIView* __strong *)leftmostView rightmostView:(UIView* __strong *)rightmostView fromBarButtonItems:(NSArray<UIBarButtonItem*>*)barButtonItems
 {
-	
 	NSArray<UIBarButtonItem*>* filtered = [barButtonItems filteredArrayUsingPredicate:_LNNonSpaceAndNonHiddenItemsPredicate(true)];
 	
 	NSArray<UIBarButtonItem*>* sorted = [filtered sortedArrayWithOptions:0 usingComparator:^NSComparisonResult(UIBarButtonItem*  _Nonnull obj1, UIBarButtonItem*  _Nonnull obj2) {
@@ -1761,199 +1837,36 @@ static NSPredicate* _LNNonSpaceAndNonHiddenItemsPredicate(BOOL removeHidden)
 	return [view _ln_isObjectFromSwiftUI] || [view.subviews.firstObject _ln_isObjectFromSwiftUI];
 }
 
-- (void)_updateTitleInsetsForCompactBar:(UIEdgeInsets*)titleInsets
-{
-	UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute];
-	
-	UIView* leftViewLast;
-	UIView* rightViewFirst;
-	
-	[_toolbar layoutIfNeeded];
-	
-	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
-	{
-		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.leadingBarButtonItems];
-		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.trailingBarButtonItems];
-	}
-	else
-	{
-		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.trailingBarButtonItems];
-		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.leadingBarButtonItems];
-	}
-	
-#if DEBUG
-	if(_LNEnableBarButtonLayoutDebug())
-	{
-		leftViewLast.backgroundColor = UIColor.brownColor;
-		rightViewFirst.backgroundColor = UIColor.purpleColor;
-	}
-#endif
-	
-	[leftViewLast.superview layoutIfNeeded];
-	[rightViewFirst.superview layoutIfNeeded];
-	
-	CGRect leftViewLastFrame = CGRectZero;
-	if(leftViewLast != nil)
-	{
-		leftViewLastFrame = [_toolbar convertRect:leftViewLast.bounds fromView:leftViewLast];
-	}
-	
-	CGRect rightViewFirstFrame = CGRectMake(_toolbar.bounds.size.width, 0, 0, 0);
-	if(rightViewFirst != nil)
-	{
-		rightViewFirstFrame = [_toolbar convertRect:rightViewFirst.bounds fromView:rightViewFirst];
-	}
-	
-	CGFloat widthLeft = 0;
-	CGFloat widthRight = 0;
-	
-	widthLeft = leftViewLastFrame.origin.x + leftViewLastFrame.size.width;
-	widthRight = _contentView.bounds.size.width - rightViewFirstFrame.origin.x;
-	
-//	widthLeft = MAX(widthLeft, self.layoutMargins.left);
-//	widthRight = MAX(widthRight, self.layoutMargins.right);
-	
-//	titleInsets->left = MAX(widthLeft + 8, widthRight + 8);
-//	titleInsets->right = MAX(widthLeft + 8, widthRight + 8);
-	titleInsets->left = widthLeft + 8;
-	titleInsets->right = widthRight + 8;
-}
-
-static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
-
-- (void)_updateTitleInsetsForProminentBar:(UIEdgeInsets*)titleInsets
-{
-	BOOL isRTL = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionRightToLeft;
-	
-	UIView* leftViewLast;
-	UIView* rightViewFirst;
-	
-	[_toolbar layoutIfNeeded];
-	
-	NSArray* allItems = _toolbar.items;
-
-	BOOL isTrailingSystem;
-	
-	if(isRTL == NO)
-	{
-		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:allItems];
-		leftViewLast = _imageView.hidden ? nil : _imageView;
-		isTrailingSystem = [rightViewFirst isKindOfClass:systemBarButtonItemButtonClass];
-	}
-	else
-	{
-		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:allItems];
-		rightViewFirst = _imageView.hidden ? nil : _imageView;
-		isTrailingSystem = [leftViewLast isKindOfClass:systemBarButtonItemButtonClass];
-	}
-	
-#if DEBUG
-	if(_LNEnableBarButtonLayoutDebug())
-	{
-		leftViewLast.layer.borderWidth = 2.0;
-		leftViewLast.layer.borderColor = UIColor.brownColor.CGColor;
-		leftViewLast.backgroundColor = [UIColor.brownColor colorWithAlphaComponent:0.5];
-		
-		rightViewFirst.layer.borderWidth = 2.0;
-		rightViewFirst.layer.borderColor = UIColor.purpleColor.CGColor;
-		rightViewFirst.backgroundColor = [UIColor.purpleColor colorWithAlphaComponent:0.5];
-	}
-	else
-	{
-		leftViewLast.layer.borderWidth = 0.0;
-		leftViewLast.layer.borderColor = nil;
-		leftViewLast.backgroundColor = nil;
-		rightViewFirst.layer.borderWidth = 0.0;
-		rightViewFirst.layer.borderColor = nil;
-		rightViewFirst.backgroundColor = nil;
-	}
-#endif
-	
-	if(isRTL == YES)
-	{
-		[leftViewLast.superview layoutIfNeeded];
-	}
-	else
-	{
-		[rightViewFirst.superview layoutIfNeeded];
-	}
-	
-	CGFloat imageToTitlePadding = _resolvedIsFloating && (!LNPopupEnvironmentHasGlass() || _resolvedIsCompact) ? 8 : 16;
-	
-	CGRect leftViewLastFrame = CGRectZero;
-	if(leftViewLast != nil)
-	{
-		leftViewLastFrame = [_contentView convertRect:leftViewLast.bounds fromView:leftViewLast];
-		
-		if(leftViewLast == _imageView)
-		{
-			leftViewLastFrame.size.width += imageToTitlePadding;
-		}
-		else
-		{
-			leftViewLastFrame.size.width -= (self._toolbarHasHiddenFirstItem || [self _needSwiftUIFixesForBarButtonItemView:leftViewLast] ? -8 : isTrailingSystem ? 8 : 0);
-		}
-	}
-	else
-	{
-		leftViewLastFrame.size.width += _resolvedIsFloating ? 20 : 8;
-	}
-	
-	CGRect rightViewFirstFrame = CGRectMake(_contentView.bounds.size.width, 0, 0, 0);
-	if(rightViewFirst != nil)
-	{
-		rightViewFirstFrame = [_contentView convertRect:rightViewFirst.bounds fromView:rightViewFirst];
-		
-		if(rightViewFirst == _imageView)
-		{
-			rightViewFirstFrame.origin.x -= imageToTitlePadding;
-		}
-		else
-		{
-			rightViewFirstFrame.origin.x += ([self _needSwiftUIFixesForBarButtonItemView:rightViewFirst] ? -8 : isTrailingSystem ? 8 : 0);
-		}
-	}
-	else
-	{
-		rightViewFirstFrame.origin.x -= _resolvedIsFloating ? 20 : 8;
-	}
-	
-	CGFloat widthLeft = 0;
-	CGFloat widthRight = 0;
-	
-	widthLeft = leftViewLastFrame.origin.x + leftViewLastFrame.size.width;
-	widthRight = _contentView.bounds.size.width - rightViewFirstFrame.origin.x;
-	
-	if(_resolvedIsFloating == NO)
-	{
-		widthLeft = MAX(widthLeft, _contentView.layoutMargins.left);
-		widthRight = MAX(widthRight, _contentView.layoutMargins.right);
-	}
-	
-	titleInsets->left = widthLeft;
-	titleInsets->right = widthRight;
-}
-
 - (UIEdgeInsets)contentInsetsIncludingImage:(BOOL)includeImage
 {
 	BOOL isLTR = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:self.semanticContentAttribute] == UIUserInterfaceLayoutDirectionLeftToRight;
 		
 	[_toolbar layoutIfNeeded];
 	
+	UIBarButtonItem* leftLastItem;
+	UIBarButtonItem* rightFirstItem;
+	UIView* leftLast;
+	UIView* rightFirst;
+	UIView* leftViewFirst;
 	UIView* leftViewLast;
 	UIView* rightViewFirst;
+	UIView* rightViewLast;
 	if(isLTR)
 	{
-		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.trailingBarButtonItems];
-		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.leadingBarButtonItems];
+		[self _getLeftmostView:&leftViewFirst rightmostView:&leftViewLast fromBarButtonItems:self.leadingBarButtonItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:&rightViewLast fromBarButtonItems:self.trailingBarButtonItems];
+		leftLastItem = self.leadingBarButtonItems.lastObject;
+		rightFirstItem = self.trailingBarButtonItems.firstObject;
 	}
 	else
 	{
-		[self _getLeftmostView:&rightViewFirst rightmostView:NULL fromBarButtonItems:self.leadingBarButtonItems];
-		[self _getLeftmostView:NULL rightmostView:&leftViewLast fromBarButtonItems:self.trailingBarButtonItems];
+		[self _getLeftmostView:&leftViewFirst rightmostView:&leftViewLast fromBarButtonItems:self.trailingBarButtonItems];
+		[self _getLeftmostView:&rightViewFirst rightmostView:&rightViewLast fromBarButtonItems:self.leadingBarButtonItems];
+		leftLastItem = self.trailingBarButtonItems.lastObject;
+		rightFirstItem = self.leadingBarButtonItems.firstObject;
 	}
-	BOOL isLeftSystem = [leftViewLast isKindOfClass:systemBarButtonItemButtonClass];
-	BOOL isRightSystem = [rightViewFirst isKindOfClass:systemBarButtonItemButtonClass];
+	leftLast = [_toolbar _viewForBarButtonItem:leftLastItem];
+	rightFirst = [_toolbar _viewForBarButtonItem:rightFirstItem];
 	
 #if DEBUG
 	if(_LNEnableBarButtonLayoutDebug())
@@ -1981,38 +1894,41 @@ static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenStr
 	[leftViewLast.superview layoutIfNeeded];
 	[rightViewFirst.superview layoutIfNeeded];
 	
-	//If there is a spacer in the middle (so both leading and trailing items exist), we need to add additional spacing.
-	CGFloat leftSpacerFix = (leftViewLast && rightViewFirst) || [self _needSwiftUIFixesForBarButtonItemView:leftViewLast] ? -8 : isLeftSystem ? 8 : 0;
-	CGFloat rightSpacerFix = (leftViewLast && rightViewFirst) || [self _needSwiftUIFixesForBarButtonItemView:rightViewFirst] ? -8 : isRightSystem ? 8 : 0;
+	BOOL isLeftHidden = NO;
+	BOOL isRightHidden = NO;
+	if(@available(iOS 16, *))
+	{
+		isLeftHidden = leftLastItem.isHidden;
+		isRightHidden = rightFirstItem.isHidden;
+	}
+	BOOL lastLeftLastSystemAndUnhidden = leftLast != nil && isLeftHidden == NO && [self _isBarButtonViewStandardItem:leftLast] && rightViewFirst == nil;
+	BOOL firstRightFirstSystemAndUnhidden = rightFirst != nil && isRightHidden == NO && [self _isBarButtonViewStandardItem:rightFirst] && leftViewLast == nil;
+	CGFloat extraLeftPadding = lastLeftLastSystemAndUnhidden ? 12 : leftViewLast && [self _isBarButtonViewPadded:leftViewLast inEdge:UIRectEdgeRight] == NO ? -8 : 0;
+	CGFloat extraRightPadding = firstRightFirstSystemAndUnhidden ? 12 : rightViewFirst && [self _isBarButtonViewPadded:rightViewFirst inEdge:UIRectEdgeLeft] == NO ? -8 : 0;
 	
 	CGRect leftViewFrame = CGRectZero;
 	if(leftViewLast != nil)
 	{
-		leftViewFrame = CGRectInset([_contentView convertRect:leftViewLast.bounds fromView:leftViewLast], leftSpacerFix, 0);
+		leftViewFrame = CGRectInset([_contentView convertRect:leftViewLast.bounds fromView:leftViewLast], extraLeftPadding, 0);
 	}
 	
-	CGRect rightViewFrame = CGRectMake(_toolbar.bounds.size.width, 0, 0, 0);
+	CGRect rightViewFrame = CGRectMake(_contentView.bounds.size.width, 0, 0, 0);
 	if(rightViewFirst != nil)
 	{
-		rightViewFrame = CGRectInset([_toolbar convertRect:rightViewFirst.bounds fromView:rightViewFirst], rightSpacerFix, 0);
+		rightViewFrame = CGRectInset([_contentView convertRect:rightViewFirst.bounds fromView:rightViewFirst], extraRightPadding, 0);
 	}
 	
 	CGFloat emptyPadding = 0.0;
 	
 	if(LNPopupEnvironmentHasGlass())
 	{
-		emptyPadding = (_resolvedIsCompact && !LNPopupBar.isCatalystApp) || self.traitCollection.popupBarEnvironment == LNPopupBarEnvironmentInline ? 16 : 20;
+		emptyPadding = 16;
 	}
 	else
 	{
 		emptyPadding = _resolvedIsFloating ? 8 : 20;
 	}
 	
-	if(_resolvedIsFloating && (_resolvedIsCompact == NO || LNPopupBar.isCatalystApp) && self.isWidePad == YES)
-	{
-		emptyPadding += 2;
-	}
-		
 	UIEdgeInsets rv = UIEdgeInsetsMake(0,
 									   MAX(leftViewFrame.origin.x + leftViewFrame.size.width, emptyPadding),
 									   0,
@@ -2218,7 +2134,10 @@ BOOL _LNRectEqualToRectWithinTolerance(CGRect rect1, CGRect rect2, CGFloat toler
 		_needsLabelsLayoutRemove = YES;
 	}
 	
-	[self setNeedsLayout];
+	if(_inLayout == NO)
+	{
+		[self setNeedsLayout];
+	}
 }
 
 static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize size)
@@ -2319,7 +2238,10 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	_animatesItemSetter = __animatesItemSetter;
 	_needsBarButtonItemLayout = YES;
 	
-	[self setNeedsLayout];
+	if(_inLayout == NO)
+	{
+		[self setNeedsLayout];
+	}
 }
 
 - (void)_layoutBarButtonItems
@@ -2363,7 +2285,6 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}
 	
 	[_toolbar setItems:items animated:NO];
-	_nonSpacingBarButtonItems = [items filteredArrayUsingPredicate:_LNNonSpaceAndNonHiddenItemsPredicate(false)];
 	
 	if(LNPopupEnvironmentHasGlass())
 	{
@@ -2658,8 +2579,8 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		return;
 	}
 	
-	[self _layoutImageView];
-	[self _layoutTitles];
+	[self setNeedsLayout];
+	[self layoutIfNeeded];
 }
 
 @end

@@ -16,6 +16,8 @@
 static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
 static id(*_effectWithStyle_tintColor_invertAutomaticStyle)(id, SEL, NSUInteger, UIColor*, BOOL);
 
+const Class adaptorView = NSClassFromString(LNPopupHiddenString("_UITAMICAdaptorView"));
+
 __attribute__((constructor))
 static void __setupFunction(void)
 {
@@ -187,9 +189,7 @@ static void __setupFunction(void)
 {
 	UIView* itemView = [barButtonItem valueForKey:@"view"];
 	
-	static NSString* adaptorView = LNPopupHiddenString("_UITAMICAdaptorView");
-	
-	if([itemView.superview isKindOfClass:NSClassFromString(adaptorView)])
+	if([itemView.superview isKindOfClass:adaptorView])
 	{
 		itemView = itemView.superview;
 	}
@@ -264,7 +264,7 @@ static void __setupFunction(void)
 {
 	[super layoutSubviews];
 	
-	//On iOS 11 and above reset the semantic content attribute to make sure it propagades to all subviews.
+	//On iOS 11 and above reset the semantic content attribute to make sure it propagates to all subviews.
 	[self setSemanticContentAttribute:self.semanticContentAttribute];
 	
 	static NSString* stackViewKeyPath = LNPopupHiddenString("_visualProvider.contentView.buttonBar.stackView");
