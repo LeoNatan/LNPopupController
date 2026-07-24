@@ -18,13 +18,66 @@
 
 @end
 
+static SEL updateTitleVisibilityBehavior;
+static SEL updateFromNavigationBarProxy;
+static const void* _LNPopupApplyWindowFixes = &_LNPopupApplyWindowFixes;
+static BOOL _LNPopupShouldApplyWindowsFixes(UITitlebar* titlebar)
+{
+	return [objc_getAssociatedObject(titlebar, _LNPopupApplyWindowFixes) boolValue];
+}
+static void _LNPopupSetShouldApplyWindowsFixes(UITitlebar* titlebar, BOOL should)
+{
+	objc_setAssociatedObject(titlebar, _LNPopupApplyWindowFixes, @(should), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	[titlebar performSelector:updateFromNavigationBarProxy];
+}
+
+@interface LNPopupWindowToolbar: NSToolbar @end
+@implementation LNPopupWindowToolbar @end
+
+@interface NSObject /*UITitlebar*/ (LNPopupCatalystTitlebarSupport) @end
+@implementation NSObject /*UITitlebar*/ (LNPopupCatalystTitlebarSupport)
+
+- (id)_ln_titlebarWindow
+{
+	static NSString* keyPath = LNPopupHiddenString("hostWindow.attachedWindow");
+	return [self valueForKeyPath:keyPath];
+}
+
++ (void)load
+{
+	@autoreleasepool
+	{
+		updateTitleVisibilityBehavior = NSSelectorFromString(LNPopupHiddenString("_updateTitleVisibilityBehavior"));
+		updateFromNavigationBarProxy = NSSelectorFromString(LNPopupHiddenString("_updateFromNavigationBarProxy"));
+		
+		Class cls = NSClassFromString(@"UITitlebar");
+		Method m = class_getInstanceMethod(cls, updateFromNavigationBarProxy);
+		void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+		method_setImplementation(m, imp_implementationWithBlock(^(UITitlebar* self) {
+			id window = self._ln_titlebarWindow;
+			if(_LNPopupShouldApplyWindowsFixes((id)self))
+			{
+				[window setValue:@YES forKey:@"titlebarAppearsTransparent"];
+				[window setValue:@1 forKey:@"titleVisibility"];
+				[window setValue:@1 forKey:@"titlebarSeparatorStyle"];
+				[window setValue:@3 forKey:@"toolbarStyle"];
+				
+				return;
+			}
+			orig(self, updateFromNavigationBarProxy);
+		}));
+	}
+}
+
+@end
+
+@interface _LNPopupCatalystHelper () <NSToolbarDelegate> @end
+
 @implementation _LNPopupCatalystHelper
 {
 	UIWindowScene* _currentScene;
-	UITitlebarTitleVisibility _previousVisibility;
-	UITitlebarSeparatorStyle _previousSeparatorStyle;
-	id _toolbarView;
-	BOOL _toolbarWasHidden;
+	
+	NSToolbar* _existingToolbar;
 }
 
 - (void)startHidingToolbarWithScene:(UIWindowScene*)scene
@@ -34,6 +87,8 @@
 		[self restore];
 	}
 	
+	_currentScene = scene;
+		
 	static auto NSAnimationContext = LNPopupHiddenString("NSAnimationContext");
 	static auto allowsImplicitAnimation = LNPopupHiddenString("allowsImplicitAnimation");
 	
@@ -48,29 +103,21 @@
 		}
 #endif
 		[context setValue:@(duration) forKey:@"duration"];
-		
-		_currentScene = scene;
-		_previousVisibility = scene.titlebar.titleVisibility;
-		scene.titlebar.titleVisibility = UITitlebarTitleVisibilityHidden;
-		_previousSeparatorStyle = scene.titlebar.separatorStyle;
-		scene.titlebar.separatorStyle = UITitlebarSeparatorStyleNone;
-		
-		static auto NSApplication = LNPopupHiddenString("NSApplication");
-		static auto keyPath = LNPopupHiddenString("sharedApplication.mainWindow.toolbar.toolbarView");
-		
-		_toolbarView = [NSClassFromString(NSApplication) valueForKeyPath:keyPath];
-		_toolbarWasHidden = [_toolbarView isHidden];
-		[_toolbarView setHidden:YES];
+
+		id window = _currentScene.titlebar._ln_titlebarWindow;
+		_currentScene.titlebar.autoHidesToolbarInFullScreen = YES;
+		[window setValue:@YES forKeyPath:@"toolbar.toolbarView.hidden"];
+		_LNPopupSetShouldApplyWindowsFixes(_currentScene.titlebar, YES);
 	}];
 }
 
 - (void)restore
 {
-	_currentScene.titlebar.titleVisibility = _previousVisibility;
-	_currentScene.titlebar.separatorStyle = _previousSeparatorStyle;
-	[_toolbarView setHidden:_toolbarWasHidden];
+	id window = _currentScene.titlebar._ln_titlebarWindow;
+	[window setValue:@NO forKeyPath:@"toolbar.toolbarView.hidden"];
+	_LNPopupSetShouldApplyWindowsFixes(_currentScene.titlebar, NO);
+	
 	_currentScene = nil;
-	_toolbarView = nil;
 }
 
 - (void)dealloc
