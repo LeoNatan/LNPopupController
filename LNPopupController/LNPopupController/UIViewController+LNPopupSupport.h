@@ -343,6 +343,21 @@ NS_SWIFT_UI_ACTOR
 
 @end
 
+@interface UISplitViewController (LNPopupPresentation)
+
+/// Enables or disables adjusting the popup bar's frame to avoid the primary column.
+///
+/// In certain cases, where a split view controller is a popup presentation container, it is beneficial to avoid the primary column when in `UISplitViewController.DisplayMode.OneBesideSecondary` or `UISplitViewController.DisplayMode.TwoBesideSecondary` display modes. When enabled, the popup bar will avoid the primary column. Opening the popup, it will present across the entire split view controller's bounds.
+///
+/// This property has no effect if ``LNPopupBar/inheritsBottomBarMetrics`` is set to `false`.
+///
+/// Supported on iOS 26.0 and later, with modern split views (`init(style:)`).
+///
+/// Defaults to `true`.
+@property (nonatomic, assign) BOOL popupBarAvoidsPrimaryColumn;
+
+@end
+
 @interface UIViewController (LNPopupCustomContainerDeprecated)
 
 /// The insets for the bottom docking view from bottom of the container controller's view. By default, this returns ` UIEdgeInsets.zero`. Currently, only the bottom inset is respected.

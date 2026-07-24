@@ -77,7 +77,7 @@ extension UIView {
 		if #available(iOS 18.0, *) {
 			UIView.animate(.interactiveSpring(duration: duration), changes: changes, completion: completion)
 		} else {
-			UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 500, initialSpringVelocity: 0.0, animations: changes) { _ in
+			UIView.animate(withDuration: duration, delay: 0.0, usingSpringWithDamping: 500, initialSpringVelocity: 0.0, options: [.beginFromCurrentState], animations: changes) { _ in
 				completion?()
 			}
 		}

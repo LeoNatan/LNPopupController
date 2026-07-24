@@ -17,6 +17,10 @@ CF_EXTERN_C_BEGIN
 
 #define _LNPopupPresentationStateTransitioning ((LNPopupPresentationState)2)
 
+#if DEBUG
+extern BOOL __LNEnableSlowTransitionsDebug(void);
+#endif
+
 @interface LNPopupController : NSObject <_LNPopupBarDelegate>
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController;

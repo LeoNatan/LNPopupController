@@ -8,8 +8,15 @@
 
 #import "_LNPopupCatalystHelper.h"
 #import "_LNPopupBase64Utils.hh"
+#import "LNPopupControllerImpl.h"
 
 #if TARGET_OS_MACCATALYST
+
+@interface NSObject ()
+
++ (void)runAnimationGroup:(void (NS_NOESCAPE ^)(id context))changes;
+
+@end
 
 @implementation _LNPopupCatalystHelper
 {
@@ -27,15 +34,34 @@
 		[self restore];
 	}
 	
-	_currentScene = scene;
-	_previousVisibility = scene.titlebar.titleVisibility;
-	scene.titlebar.titleVisibility = UITitlebarTitleVisibilityHidden;
-	_previousSeparatorStyle = scene.titlebar.separatorStyle;
-	scene.titlebar.separatorStyle = UITitlebarSeparatorStyleNone;
+	static auto NSAnimationContext = LNPopupHiddenString("NSAnimationContext");
+	static auto allowsImplicitAnimation = LNPopupHiddenString("allowsImplicitAnimation");
 	
-	_toolbarView = [NSClassFromString(@"NSApplication") valueForKeyPath:LNPopupHiddenString("sharedApplication.mainWindow.toolbar.toolbarView")];
-	_toolbarWasHidden = [_toolbarView isHidden];
-	[_toolbarView setHidden:YES];
+	[NSClassFromString(NSAnimationContext) runAnimationGroup:^(id context) {
+		[context setValue:@YES forKey:allowsImplicitAnimation];
+		
+		NSTimeInterval duration = 0.2;
+#if DEBUG
+		if(__LNEnableSlowTransitionsDebug())
+		{
+			duration = 2.0;
+		}
+#endif
+		[context setValue:@(duration) forKey:@"duration"];
+		
+		_currentScene = scene;
+		_previousVisibility = scene.titlebar.titleVisibility;
+		scene.titlebar.titleVisibility = UITitlebarTitleVisibilityHidden;
+		_previousSeparatorStyle = scene.titlebar.separatorStyle;
+		scene.titlebar.separatorStyle = UITitlebarSeparatorStyleNone;
+		
+		static auto NSApplication = LNPopupHiddenString("NSApplication");
+		static auto keyPath = LNPopupHiddenString("sharedApplication.mainWindow.toolbar.toolbarView");
+		
+		_toolbarView = [NSClassFromString(NSApplication) valueForKeyPath:keyPath];
+		_toolbarWasHidden = [_toolbarView isHidden];
+		[_toolbarView setHidden:YES];
+	}];
 }
 
 - (void)restore

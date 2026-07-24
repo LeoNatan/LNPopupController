@@ -35,7 +35,7 @@
 #ifdef DEBUG
 #import "LNPopupDebug.h"
 
-static BOOL _LNEnableSlowTransitionsDebug(void)
+BOOL __LNEnableSlowTransitionsDebug(void)
 {
 	return [__LNDebugUserDefaults() boolForKey:@"__LNPopupEnableSlowTransitionsDebug"];
 }
@@ -722,7 +722,7 @@ __attribute__((objc_direct_members))
 	
 	CGFloat animationDuration = resolvedStyle == LNPopupInteractionStyleSnap ? 0.5 : 0.5;
 #if DEBUG
-	if(_LNEnableSlowTransitionsDebug())
+	if(__LNEnableSlowTransitionsDebug())
 	{
 		animationDuration = 4.0;
 	}
@@ -1768,7 +1768,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		
 		CGFloat animationDuration = LNPopupBarTransitionDuration;
 #if DEBUG
-		if(_LNEnableSlowTransitionsDebug())
+		if(__LNEnableSlowTransitionsDebug())
 		{
 			animationDuration = 4.0;
 		}
@@ -2132,7 +2132,7 @@ id __LNPopupEmptyBlurFilter(void)
 			
 			CGFloat animationDuration = LNPopupBarTransitionDuration;
 #if DEBUG
-			if(_LNEnableSlowTransitionsDebug())
+			if(__LNEnableSlowTransitionsDebug())
 			{
 				animationDuration = 4.0;
 			}

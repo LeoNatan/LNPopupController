@@ -14,7 +14,7 @@
 
 @implementation UINavigationController (LNPopupInheritedBarMetricsSupport)
 
-- (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar
++ (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar inController:(UIViewController*)controller
 {
 	NSDirectionalEdgeInsets barInsets = NSDirectionalEdgeInsetsZero;
 	
@@ -22,20 +22,20 @@
 	{
 		static CGFloat margin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 28 : 8;
 		
-		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
-		barInsets.leading = MAX(margin - (floatingLayoutMargins.leading - self.view.safeAreaInsets.left), 0);
-		barInsets.trailing = MAX(margin - (floatingLayoutMargins.trailing - self.view.safeAreaInsets.right), 0);
+		NSDirectionalEdgeInsets floatingLayoutMargins = popupBar.floatingLayoutMargins;
+		barInsets.leading = MAX(margin - (floatingLayoutMargins.leading - controller.view.safeAreaInsets.left), 0);
+		barInsets.trailing = MAX(margin - (floatingLayoutMargins.trailing - controller.view.safeAreaInsets.right), 0);
 		
 		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
 		if(@available(iOS 27.0, *))
 		{
-			BOOL isRegular = self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
-			BOOL isCompact = self.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
+			BOOL isRegular = controller.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+			BOOL isCompact = controller.view.window.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact;
 			BOOL compactButHasSafeArea = isCompact && popupBar.safeAreaInsets.left > 10;
 			BOOL isLandscape = UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation);
 			
-			auto windowInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(self.view.window, self.view.window.safeAreaInsets);
-			auto viewInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(self.view, self.view.safeAreaInsets);
+			auto windowInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(controller.view.window, controller.view.window.safeAreaInsets);
+			auto viewInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(controller.view, controller.view.safeAreaInsets);
 
 			if(isPhone && compactButHasSafeArea)
 			{
@@ -63,7 +63,7 @@
 				{
 					barInsets.trailing -= 52;
 				}
-				else if(self.splitViewController != nil)
+				else if(controller.splitViewController != nil)
 				{
 					barInsets.trailing -= 18;
 				}
@@ -72,6 +72,11 @@
 	}
 	
 	return barInsets;
+}
+
+- (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar
+{
+	return [UINavigationController _ln_popupBarMarginsForPopupBar:popupBar inController:self];
 }
 
 @end

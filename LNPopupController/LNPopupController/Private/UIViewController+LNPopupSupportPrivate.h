@@ -33,6 +33,7 @@ extern BOOL __ln_popup_suppressViewControllerLifecycle;
 
 UIEdgeInsets _LNPopupSafeAreaInsets(__kindof UIViewController* self);
 void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* controller, LNPopupBar* popupBar, BOOL layout, UIEdgeInsets popupEdgeInsets);
+void __LNPopupUpdateChildInsets(__kindof UIViewController* controller);
 
 @interface NSObject (SwiftUISupport)
 

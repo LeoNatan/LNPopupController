@@ -48,7 +48,9 @@ NSDirectionalEdgeInsets _LNDirectionalEdgeInsetsFromEdgeInsets(UIView* forView, 
 - (void)_ln_freezeInsets;
 
 - (BOOL)_ln_isAncestorOfView:(UIView *)view;
-- (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test;
+- (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf;
+- (nullable UIView*)_ln_lastSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf;
+- (nullable UIView*)_ln_firstDescendantPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf;
 
 @property (nonatomic, getter=_ln_corners, setter=_ln_setCorners:) LNPopupViewCorners corners;
 @property (nonatomic, readonly) CGFloat _ln_simulatedCornerRadiusFromCorners;

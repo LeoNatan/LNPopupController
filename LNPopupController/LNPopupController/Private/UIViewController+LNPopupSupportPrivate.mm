@@ -28,8 +28,6 @@ static const void* LNPopupChildAdditiveSafeAreaInsets = &LNPopupChildAdditiveSaf
 static const void* LNPopupIgnorePrepareTabBar = &LNPopupIgnorePrepareTabBar;
 static const void* LNPopupBarExtensionView = &LNPopupBarExtensionView;
 
-static void __LNPopupUpdateChildInsets(__kindof UIViewController* controller);
-
 BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 
 @interface __LNFakeContext: NSObject
@@ -245,6 +243,18 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 	
 	objc_msgSend_uCOIFSAC(self, sel);
 #endif
+}
+
+- (BOOL)_ln_shouldIgnorePopupBarInsets
+{
+	if(self.splitViewController != nil &&
+	   (self.splitViewController._ln_shouldAvoidPrimaryColumn || self.splitViewController._ln_frozenAvoidPrimaryColumnValue.boolValue) &&
+	   self._ln_isPartOfPrimarySplit)
+	{
+		return YES;
+	}
+	
+	return NO;
 }
 
 - (BOOL)_ln_isModalInPresentation
@@ -812,6 +822,8 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 		{
 			[self _ln_updatePopupBarContainerInsets];
 		}
+		
+		[self._ln_popupController_nocreate.currentContentController _ln_updateSafeAreaInsets];
 	}
 	
 	UIView* extensionView = self._ln_bottomBarExtension_nocreate;
@@ -940,21 +952,12 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 
 @end
 
-static void __LNPopupUpdateChildInsets(__kindof UIViewController* controller)
+void __LNPopupUpdateChildInsets(__kindof UIViewController* controller)
 {
-	BOOL should = controller._ln_popupController_nocreate.popupBar.inheritsBottomBarMetrics && controller._ln_popupController_nocreate.popupControllerTargetState > LNPopupPresentationStateBarHidden;
-	
 	if(controller.requiresIndirectSafeAreaManagement == YES)
 	{
-		BOOL foundPrimary = NO;
 		for (__kindof UIViewController* obj in controller.childViewControllers)
 		{
-			if(!foundPrimary && should && [controller isKindOfClass:UISplitViewController.class] && obj._ln_isPartOfPrimarySplit)
-			{
-				foundPrimary = YES;
-				continue;
-			}
-			
 			__LNPopupUpdateChildInsets(obj);
 		}
 		
@@ -963,12 +966,15 @@ static void __LNPopupUpdateChildInsets(__kindof UIViewController* controller)
 	
 	UIEdgeInsets popupSafeAreaInsets = UIEdgeInsetsZero;
 	
-	UIViewController* parentViewController = controller.parentViewController;
-	
-	while(parentViewController != nil && parentViewController.requiresIndirectSafeAreaManagement == YES)
+	if(controller._ln_shouldIgnorePopupBarInsets == NO)
 	{
-		popupSafeAreaInsets = __LNEdgeInsetsSum(popupSafeAreaInsets, _LNPopupChildAdditiveSafeAreas(parentViewController));
-		parentViewController = parentViewController.parentViewController;
+		UIViewController* parentViewController = controller.parentViewController;
+		
+		while(parentViewController != nil && parentViewController.requiresIndirectSafeAreaManagement == YES)
+		{
+			popupSafeAreaInsets = __LNEdgeInsetsSum(popupSafeAreaInsets, _LNPopupChildAdditiveSafeAreas(parentViewController));
+			parentViewController = parentViewController.parentViewController;
+		}
 	}
 	
 	_LNSetPopupSafeAreaInsets(controller, popupSafeAreaInsets);
@@ -1011,6 +1017,7 @@ void _LNPopupSupportSetPopupInsetsForViewController(__kindof UIViewController* c
 #pragma mark - UITabBarController
 
 static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
+static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsLayout;
 
 @implementation UITabBarController (LNPopupSupportPrivate)
 
@@ -2110,14 +2117,30 @@ static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
 		return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"];
 	};
 	
-	UIView* glassView = [floatingBarContainerView _ln_firstSubviewPassingTest:test];
+	UIView* glassView = [floatingBarContainerView _ln_firstSubviewPassingTest:test includingSelf:YES];
 	
 	if(glassView != nil)
 	{
 		return glassView;
 	}
 	
-	return [self.view _ln_firstSubviewPassingTest:test];
+	return [self.view _ln_firstSubviewPassingTest:test includingSelf:YES];
+}
+
+- (UIView*)_ln_buttonRepresentationFromFloatingBarContainerView:(UIView*)floatingBarContainerView
+{
+	auto test = ^BOOL(UIView * _Nonnull viewToTest) {
+		return [NSStringFromClass(viewToTest.class) containsString:@"ButtonRepresentation"];
+	};
+	
+	UIView* buttonRepresentation = [floatingBarContainerView _ln_firstSubviewPassingTest:test includingSelf:YES];
+	
+	if(buttonRepresentation != nil)
+	{
+		return buttonRepresentation;
+	}
+	
+	return [self.view _ln_firstSubviewPassingTest:test includingSelf:YES];
 }
 
 - (CGFloat)_ln_toolbarInsetForView:(UIView*)floatingBarContainerView API_AVAILABLE(ios(26.0))
@@ -2126,10 +2149,22 @@ static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
 	
 	if(@available(iOS 27.0, *))
 	{
-		UIView* glassView = [self _ln_glassViewFromFloatingBarContainerView:floatingBarContainerView];
-		if(glassView == nil)
+		UIView* glassView;
+		if(LNPopupBar.isCatalystApp)
 		{
-			return 0;
+			glassView = [self _ln_buttonRepresentationFromFloatingBarContainerView:floatingBarContainerView];
+			if(glassView == nil)
+			{
+				return 0;
+			}
+		}
+		else
+		{
+			glassView = [self _ln_glassViewFromFloatingBarContainerView:floatingBarContainerView];
+			if(glassView == nil)
+			{
+				return 0;
+			}
 		}
 		
 		//The toolbar elements might be in a hierarchy with a transform, if there is a running transition.
@@ -2146,7 +2181,12 @@ static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
 		{
 			rv = round(CGRectGetMidY(converted) + CGRectGetHeight(glassView.bounds) / 2.0 + 10);
 		}
-				
+		
+		if(LNPopupBar.isCatalystApp)
+		{
+			rv += 4;
+		}
+		
 		return rv;
 	}
 	
@@ -2665,55 +2705,6 @@ static void* LNTabBarControllerAdjustsLayout = &LNTabBarControllerAdjustsLayout;
 
 #pragma mark - UISplitViewController
 
-@interface _LNPopupSplitViewDelegateWrapper: LNForwardingDelegate <UISplitViewControllerDelegate> @end
-@implementation _LNPopupSplitViewDelegateWrapper
-
-- (void)splitViewController:(UISplitViewController *)svc willShowColumn:(UISplitViewControllerColumn)column
-{
-	void (^todo)(id) = ^ (id context) {
-		[svc.view setNeedsLayout];
-		[svc.view layoutIfNeeded];
-	};
-	
-	if(svc.transitionCoordinator)
-	{
-		[svc.transitionCoordinator animateAlongsideTransition:todo completion:nil];
-	}
-	else
-	{
-		todo(nil);
-	}
-	
-	if([self.forwardedDelegate respondsToSelector:_cmd])
-	{
-		return [self.forwardedDelegate splitViewController:svc willShowColumn:column];
-	}
-}
-
-- (void)splitViewController:(UISplitViewController *)svc willHideColumn:(UISplitViewControllerColumn)column
-{
-	void (^todo)(id) = ^ (id context) {
-		[svc.view setNeedsLayout];
-		[svc.view layoutIfNeeded];
-	};
-	
-	if(svc.transitionCoordinator)
-	{
-		[svc.transitionCoordinator animateAlongsideTransition:todo completion:nil];
-	}
-	else
-	{
-		todo(nil);
-	}
-	
-	if([self.forwardedDelegate respondsToSelector:_cmd])
-	{
-		return [self.forwardedDelegate splitViewController:svc willHideColumn:column];
-	}
-}
-
-@end
-
 @interface UISplitViewController (LNPopupSupportPrivate) @end
 @implementation UISplitViewController (LNPopupSupportPrivate)
 
@@ -2726,7 +2717,7 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 	dispatch_once(&onceToken, ^{
 		LNSwizzleMethod(self,
 						@selector(viewDidLayoutSubviews),
-						@selector(_ln_popup_viewDidLayoutSubviews_SplitViewRottenApple));
+						@selector(_ln_popup_viewDidLayoutSubviews_svc));
 		
 		{
 			Method delegateGetter = class_getInstanceMethod(UISplitViewController.class, @selector(delegate));
@@ -2743,27 +2734,71 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 	});
 }
 
-- (void)_ln_popup_viewDidLayoutSubviews_SplitViewRottenApple
+- (BOOL)popupBarAvoidsPrimaryColumn
 {
-	[self _ln_popup_viewDidLayoutSubviews_SplitViewRottenApple];
+	NSNumber* value = objc_getAssociatedObject(self, LNSplitViewControllerAdjustsLayout);
+	if(value == nil)
+	{
+		return YES;
+	}
+	else
+	{
+		return [value boolValue];
+	}
+}
+
+- (void)setPopupBarAvoidsPrimaryColumn:(BOOL)popupBarAvoidsPrimaryColumn
+{
+	objc_setAssociatedObject(self, LNSplitViewControllerAdjustsLayout, @(popupBarAvoidsPrimaryColumn), OBJC_ASSOCIATION_RETAIN);
+}
+
+- (void)_ln_layoutModernSplitViewControllerFloatingPopup
+{
+	if(self.style == UISplitViewControllerStyleUnspecified)
+	{
+		//Only modern split views are supported.
+		return;
+	}
+	
+	self._ln_popupController_nocreate.popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
+}
+
+- (void)_layoutPopupBarOrderForUse
+{
+	[super _layoutPopupBarOrderForUse];
+	
+	[self _ln_layoutModernSplitViewControllerFloatingPopup];
+}
+
+- (void)_layoutPopupBarOrderForTransition
+{
+	[super _layoutPopupBarOrderForTransition];
+	
+	[self _ln_layoutModernSplitViewControllerFloatingPopup];
+}
+
+- (void)_ln_popup_viewDidLayoutSubviews_svc
+{
+	[self _ln_popup_viewDidLayoutSubviews_svc];
 	
 	_LNPopupSplitViewDelegateWrapper* wrapper = (id)orig_delegateGetter(self, @selector(delegate));
 	if(wrapper == nil || [wrapper isKindOfClass:_LNPopupSplitViewDelegateWrapper.class] == NO)
 	{
 		[self setDelegate:nil];
 	}
-		
+	
 	if(self._ln_popupController_nocreate.popupControllerInternalState > LNPopupPresentationStateBarHidden)
 	{
-		self._ln_popupController_nocreate.popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
-		
-		//Apple forgot to call the super implementation of viewDidLayoutSubviews, but we need that to layout the popup bar correctly.
-		struct objc_super superInfo = {
-			self,
-			[UIViewController class]
-		};
-		void (*super_call)(struct objc_super*, SEL) = (void (*)(struct objc_super*, SEL))objc_msgSendSuper;
-		super_call(&superInfo, @selector(viewDidLayoutSubviews));
+		if(ln_unavailable(iOS 27.0, *))
+		{
+			//Apple forgot to call the super implementation of viewDidLayoutSubviews, but we need that to layout the popup bar correctly.
+			struct objc_super superInfo = {
+				self,
+				[UIViewController class]
+			};
+			void (*super_call)(struct objc_super*, SEL) = (void (*)(struct objc_super*, SEL))objc_msgSendSuper;
+			super_call(&superInfo, @selector(viewDidLayoutSubviews));
+		}
 	}
 }
 

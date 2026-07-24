@@ -354,21 +354,58 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	return NO;
 }
 
-- (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test
+- (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf
 {
-	if(test(self))
+	if(test(self) && includeSelf)
 	{
 		return self;
 	}
 	
 	for (UIView* subview in self.subviews) {
-		UIView* passing = [subview _ln_firstSubviewPassingTest:test];
+		UIView* passing = [subview _ln_firstSubviewPassingTest:test includingSelf:YES];
 		if(passing != nil)
 		{
 			return passing;
 		}
 	}
 	
+	return nil;
+}
+
+- (nullable UIView*)_ln_lastSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf
+{
+	if(test(self) && includeSelf)
+	{
+		return self;
+	}
+	
+	for (UIView* subview in self.subviews.reverseObjectEnumerator) {
+		UIView* passing = [subview _ln_firstSubviewPassingTest:test includingSelf:YES];
+		if(passing != nil)
+		{
+			return passing;
+		}
+	}
+	
+	return nil;
+}
+
+- (nullable UIView*)_ln_firstDescendantPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf
+{
+	if(test(self) && includeSelf)
+	{
+		return self;
+	}
+	
+	UIView* viewToTest = self.superview;
+	while(viewToTest != nil)
+	{
+		if(test(viewToTest))
+		{
+			return viewToTest;
+		}
+		viewToTest = viewToTest.superview;
+	}
 	return nil;
 }
 
