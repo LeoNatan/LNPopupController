@@ -13,6 +13,23 @@
 #import "NSAttributedString+LNPopupSupport.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupTitleLabelWrapper.h"
+#import "LNMarqueeLabelUtils.h"
+
+#if LN_HAS_SYSTEM_MARQUEE_LABEL
+static BOOL __LNPopupUseSystemMarqueeLabel(void)
+{
+#if TARGET_OS_MACCATALYST
+	return YES;
+#else
+	static BOOL bundleRequest;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		bundleRequest = [[NSBundle.mainBundle objectForInfoDictionaryKey:@"LNPopupUseSystemMarqueeLabel"] boolValue];
+	});
+	return bundleRequest || [NSUserDefaults.standardUserDefaults boolForKey:@"LNPopupUseSystemMarqueeLabel"];
+#endif
+}
+#endif
 
 #ifdef DEBUG
 #import "LNPopupDebug.h"
@@ -130,7 +147,7 @@ BOOL _LNEnableBarTitleLayoutDebug(void)
 	}
 	else
 	{
-#if __has_include(<LNSystemMarqueeLabel.h>)
+#if LN_HAS_SYSTEM_MARQUEE_LABEL
 		if(__LNPopupUseSystemMarqueeLabel())
 		{
 			LNSystemMarqueeLabel* rv = [[LNSystemMarqueeLabel alloc] initWithFrame:frame];
@@ -145,7 +162,7 @@ BOOL _LNEnableBarTitleLayoutDebug(void)
 			rv.animationDelay = _popupBar.activeAppearance.marqueeScrollDelay;
 			rv.marqueeType = MLContinuous;
 			_rv = rv;
-#if __has_include(<LNSystemMarqueeLabel.h>)
+#if LN_HAS_SYSTEM_MARQUEE_LABEL
 		}
 #endif
 	}

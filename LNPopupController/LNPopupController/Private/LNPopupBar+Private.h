@@ -17,17 +17,7 @@
 #import "_LNPopupTitlesController.h"
 #import "_LNPopupTitlesPagingController.h"
 
-#import "MarqueeLabel.h"
-#if __has_include(<LNSystemMarqueeLabel.h>)
-#import <LNSystemMarqueeLabel.h>
-#endif
-
 CF_EXTERN_C_BEGIN
-
-#if __has_include(<LNSystemMarqueeLabel.h>)
-extern BOOL __LNPopupUseSystemMarqueeLabel(void);
-#endif
-
 extern const Class adaptorView;
 
 extern const CGFloat LNPopupBarHeightCompact;
@@ -207,23 +197,6 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @end
 
 @interface _LNPopupBarShadowView : UIImageView @end
-
-@protocol LNMarqueeLabel <NSObject>
-
-@property (nonatomic, getter=isMarqueeScrollEnabled) BOOL marqueeScrollEnabled;
-@property (nonatomic, getter=isRunning) BOOL running;
-
-@property (nonatomic, copy) NSArray<id<LNMarqueeLabel>>* synchronizedLabels;
-
-- (void)reset;
-
-@end
-
-@interface LNNonMarqueeLabel : UILabel <LNMarqueeLabel> @end
-@interface LNLegacyMarqueeLabel: LNMarqueeLabel <LNMarqueeLabel> @end
-#if __has_include(<LNSystemMarqueeLabel.h>)
-@interface LNSystemMarqueeLabel () <LNMarqueeLabel> @end
-#endif
 
 @interface _LNPopupBottomBarSupport : UIView @end
 

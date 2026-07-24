@@ -15,9 +15,6 @@
 #import "UIView+LNPopupSupportPrivate.h"
 #import "_LNPopupGlassUtils.h"
 #import "_LNTouchPassthroughView.h"
-#if __has_include(<LNSystemMarqueeLabel.h>)
-#import <LNSystemMarqueeLabel.h>
-#endif
 
 const CGFloat LNPopupBarHeightCompact = 40.0;
 const CGFloat LNPopupBarHeightProminent = 64.0;
@@ -1740,22 +1737,6 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 	
 	[self _setNeedsBarButtonItemLayout];
 }
-
-#if __has_include(<LNSystemMarqueeLabel.h>)
-BOOL __LNPopupUseSystemMarqueeLabel(void)
-{
-#if TARGET_OS_MACCATALYST
-	return YES;
-#else
-	static BOOL bundleRequest;
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		bundleRequest = [[NSBundle.mainBundle objectForInfoDictionaryKey:@"LNPopupUseSystemMarqueeLabel"] boolValue];
-	});
-	return bundleRequest || [NSUserDefaults.standardUserDefaults boolForKey:@"LNPopupUseSystemMarqueeLabel"];
-#endif
-}
-#endif
 
 static NSPredicate* _LNNonSpaceAndNonHiddenItemsPredicate(BOOL removeHidden)
 {

@@ -49,11 +49,15 @@ let package = Package(
 			type: .static,
 			targets: ["LNPopupController", "LNPopupController-ObjC", "LNPopupController-SwiftPrivate"]),
 	],
-	dependencies: [],
+	dependencies: [
+		.package(url: "https://github.com/LeoNatan/LNSystemMarqueeLabel", revision: "916ef69a71db627498d007896a0508901d9f9fa3")
+	],
 	targets: [
 		.target(
 			name: "LNPopupController-ObjC",
-			dependencies: [],
+			dependencies: [
+				.product(name: "LNSystemMarqueeLabel", package: "LNSystemMarqueeLabel"),
+			],
 			path: "LNPopupController",
 			exclude: ["Info.plist", "LNPopupController.xcodeproj", "LNPopupController/Private/Swift"],
 			publicHeadersPath: "include",

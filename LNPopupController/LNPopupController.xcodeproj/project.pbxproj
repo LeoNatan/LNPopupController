@@ -49,7 +49,6 @@
 		39C39F422DA3DB96007630FD /* LNPopupBarExtras.mm in Sources */ = {isa = PBXBuildFile; fileRef = 39C39F412DA3DB90007630FD /* LNPopupBarExtras.mm */; };
 		39C553E32D91925300F8D8B2 /* LNPopupImageView+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 39C553E22D91924900F8D8B2 /* LNPopupImageView+Private.h */; };
 		39C7D1A52E6E70C3001C7D62 /* LNSystemMarqueeLabel in Frameworks */ = {isa = PBXBuildFile; productRef = 39C7D1A42E6E70C3001C7D62 /* LNSystemMarqueeLabel */; };
-		39C7D1A92E6EB18E001C7D62 /* LNSystemMarqueeLabel in Frameworks */ = {isa = PBXBuildFile; productRef = 39C7D1A82E6EB18E001C7D62 /* LNSystemMarqueeLabel */; };
 		39C81A321B642DDD00D3B645 /* LNPopupItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 394A85B71B6304F5004FFC61 /* LNPopupItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		39E9FE11275B984B00A47D61 /* LNPopupDefinitions.h in Headers */ = {isa = PBXBuildFile; fileRef = 39E9FE10275B97CC00A47D61 /* LNPopupDefinitions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -144,8 +143,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39C7D1A52E6E70C3001C7D62 /* LNSystemMarqueeLabel in Frameworks */,
-				39C7D1A92E6EB18E001C7D62 /* LNSystemMarqueeLabel in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,12 +196,20 @@
 			path = Private;
 			sourceTree = "<group>";
 		};
+		3994A1B23011DA200085874C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		39DB52DB1B5823330061C589 = {
 			isa = PBXGroup;
 			children = (
 				39DB52E71B5823330061C589 /* LNPopupController */,
 				39A924991B5852ED003C1C19 /* LNPopupController.h */,
 				39DB52E61B5823330061C589 /* Products */,
+				3994A1B23011DA200085874C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -285,6 +290,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3994A1B43011DA2B0085874C /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				390F59C62EA1254700F935D8 /* Titles */,
@@ -376,6 +382,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3994A1B43011DA2B0085874C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 3994A1B33011DA2B0085874C /* LNSystemMarqueeLabel */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		39DB52EB1B5823330061C589 /* Debug */ = {
@@ -596,13 +609,18 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/LeoNatan/LNSystemMarqueeLabel";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = revision;
+				revision = 916ef69a71db627498d007896a0508901d9f9fa3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3994A1B33011DA2B0085874C /* LNSystemMarqueeLabel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39C7D1A72E6EB18E001C7D62 /* XCRemoteSwiftPackageReference "LNSystemMarqueeLabel" */;
+			productName = LNSystemMarqueeLabel;
+		};
 		39C7D1A42E6E70C3001C7D62 /* LNSystemMarqueeLabel */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LNSystemMarqueeLabel;

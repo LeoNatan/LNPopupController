@@ -66,3 +66,4 @@ swiftpm
 _tmp_release_notes.md
 /.build
 /.DocDerivedData
+Package.resolved

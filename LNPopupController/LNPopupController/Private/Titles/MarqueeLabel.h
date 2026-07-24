@@ -6,7 +6,7 @@
 //  Copyright (c) 2011-2015 Charles Powell. All rights reserved.
 //
 
-#define MarqueeLabel LNMarqueeLabel
+#define MarqueeLabel _LNMarqueeLabelImpl
 #define MarqueeType LNMarqueeType
 #define MLLeftRight LNMLLeftRight
 #define MLRightLeft LNMLRightLeft
