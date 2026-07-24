@@ -35,7 +35,7 @@ UIEdgeInsets __LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitT
 				return UIEdgeInsetsMake(20, 38, 20, 38);
 			}
 		}
-		else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad || LNPopupBar.isCatalystApp)
 		{
 			UIEdgeInsets safeArea = [containerView edgeInsetsForLayoutRegion:[UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:UIViewLayoutRegionAdaptivityAxisHorizontal]];
 			

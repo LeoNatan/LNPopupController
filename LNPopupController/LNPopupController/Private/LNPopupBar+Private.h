@@ -20,10 +20,6 @@
 CF_EXTERN_C_BEGIN
 extern const Class adaptorView;
 
-extern const CGFloat LNPopupBarHeightCompact;
-extern const CGFloat LNPopupBarHeightProminent;
-extern const CGFloat LNPopupBarHeightFloating;
-
 extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
 extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, LNPopupBar* popupBar, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom);
@@ -57,6 +53,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, assign, getter=isShiny) BOOL shiny;
 
 @end
+
+@interface _LNPopupBarProgressView: UIProgressView @end
 
 @class _LNPopupToolbar;
 
@@ -94,7 +92,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, copy) NSAttributedString* attributedSubtitle;
 
 @property (nonatomic, readonly) NSDirectionalEdgeInsets floatingLayoutMargins;
-@property (nonatomic, setter=_setHackyMargins:) NSDirectionalEdgeInsets _hackyMargins;
+@property (nonatomic, setter=_setHackyMarginsInSuperviewSemanticContext:) NSDirectionalEdgeInsets _hackyMarginsInSuperviewSemanticContext;
 
 @property (nonatomic, strong) UIImage* image;
 

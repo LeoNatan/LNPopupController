@@ -99,6 +99,8 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			_popupBarEffect = self.popupBar.contentView.effectView.effect;
 		}
 		
+		_popupBarImageAlphaBeforeAnimation = self.popupBar.imageView.alpha;
+		
 		if(_transitionView != nil)
 		{
 			self.popupBar.imageView.alpha = 0.0;
@@ -130,6 +132,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			[_transitionView addSubview:_crossfadeView];
 			
 			_transitionView.frame = self.sourceFrame;
+			_transitionView.alpha = self.sourceImageAlpha;
 		}
 		
 		if(@available(iOS 26.0, *))
@@ -170,6 +173,8 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			_contentTransitionWrapperView.frame = self.targetContentFrame;
 			_contentTransitionEffectView.corners = self.targetContentCornerRadius;
 		}
+		
+		_transitionView.alpha = self.targetImageAlpha;
 		
 		[self performAdditionalAnimations];
 		
@@ -347,7 +352,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		UIView* transitionView = objc_getAssociatedObject(self.transitionView.sourceLayer, _LNPopupOpenCloseTransitionViewKey);
 		[transitionView removeFromSuperview];
 		objc_setAssociatedObject(self.transitionView.sourceLayer, _LNPopupOpenCloseTransitionViewKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-		self.popupBar.imageView.alpha = 1.0;
+		self.popupBar.imageView.alpha = _popupBarImageAlphaBeforeAnimation;
 		[self performAdditionalCompletion];
 	}];
 }

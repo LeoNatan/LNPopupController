@@ -174,9 +174,9 @@ static void __setupFunction(void)
 
 + (void)load
 {
-	if(@available(iOS 26.0, *))
+	@autoreleasepool
 	{
-		@autoreleasepool
+		if(@available(iOS 26.0, *))
 		{
 			Method m = LNSwizzleClassGetClassMethod(self, @selector(_ln_vPFT:));
 			Class metaclass = object_getClass(self);
@@ -231,26 +231,6 @@ static void __setupFunction(void)
 	}
 	
 	return nil;
-	
-//	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 18)
-//	{
-//		if(rv != nil && rv != self)
-//		{
-//			CGRect frameInBarCoords = [self convertRect:rv.bounds fromView:rv];
-//			CGRect instetFrame = CGRectInset(frameInBarCoords, 2, 0);
-//			
-//			return CGRectContainsPoint(instetFrame, point) ? rv : self;
-//		}
-//		
-//		return rv;
-//	}
-//	
-//	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO && [NSStringFromClass(rv.class) containsString:@"BarItemView"] == NO)
-//	{
-//		rv = nil;
-//	}
-//	
-//	return rv;
 }
 
 - (void)setItemSpacing:(CGFloat)itemSpacing
@@ -276,6 +256,20 @@ static void __setupFunction(void)
 	@try {
 		[self setValue:@(_itemSpacing) forKeyPath:minimumInterItemSpaceKeyPath];
 	} @catch(NSException*) {}
+	
+	static Class systemClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
+	for(UIView* arrangedSubview in stackView.arrangedSubviews)
+	{
+		if([arrangedSubview isKindOfClass:systemClass] == NO)
+		{
+			continue;
+		}
+		
+		for(UIView* subview in arrangedSubview.subviews)
+		{
+			subview.center = CGPointMake(subview.center.x, CGRectGetMidY(self.bounds));
+		}
+	}
 	
 	[self._layoutDelegate _toolbarDidLayoutSubviews];
 }
@@ -379,6 +373,24 @@ static void __setupFunction(void)
 }
 
 #endif
+
+@end
+
+@implementation _LNPopupBarProgressView
+
+- (UITraitCollection *)traitCollection
+{
+	UITraitCollection* rv = [super traitCollection];
+	
+#if TARGET_OS_MACCATALYST
+	//Force the use of the Pad visual provider for the progress view.
+	rv = [rv traitCollectionByModifyingTraits:^(id<UIMutableTraits>  _Nonnull mutableTraits) {
+		mutableTraits.userInterfaceIdiom = UIUserInterfaceIdiomPad;
+	}];
+#endif
+	
+	return rv;
+}
 
 @end
 

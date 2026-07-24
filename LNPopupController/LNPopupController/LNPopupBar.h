@@ -210,6 +210,11 @@ NS_SWIFT_UI_ACTOR
 /// Defaults to `true`.
 @property (nonatomic, assign) BOOL allowHapticFeedbackGenerationOnItemPaging;
 
+/// Returns the effect size of the popup content.
+///
+/// Use this property if you need to modify the popup content, such as buttons, depending on the width of the popup bar.
+@property (nonatomic, readonly) CGSize effectiveContentSize;
+
 @end
 
 typedef NS_ENUM(NSInteger, LNPopupBarEnvironment) {

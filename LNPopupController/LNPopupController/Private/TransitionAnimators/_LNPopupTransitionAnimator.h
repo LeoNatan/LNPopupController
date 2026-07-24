@@ -28,8 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly, nullable) _LNPopupTransitionView* transitionView;
 @property (nonatomic, strong, readonly, nullable) UIView<LNPopupTransitionView>* crossfadeView;
+@property (nonatomic, readonly) CGFloat popupBarImageAlphaBeforeAnimation;
 @property (nonatomic, readonly) CGRect sourceFrame;
 @property (nonatomic, readonly) CGRect targetFrame;
+@property (nonatomic, readonly) CGFloat sourceImageAlpha;
+@property (nonatomic, readonly) CGFloat targetImageAlpha;
 @property (nonatomic, readonly) CGAffineTransform transform;
 
 @property (nonatomic, readonly) BOOL wantsContentTransition;

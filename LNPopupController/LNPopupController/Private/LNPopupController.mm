@@ -2493,34 +2493,39 @@ id __LNPopupEmptyBlurFilter(void)
 
 - (void)tabBar:(UITabBar *)tabBar didMinimize:(BOOL)wasMinimized API_AVAILABLE(ios(26.0))
 {
-	NSInteger newValue = self.popupBar.inheritsBottomBarMetrics && wasMinimized ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
+	[_containerController _ln_setIgnoringLayoutDuringTransition:YES];
 	
-	void (^updateMargins)(void) = ^{
-		[_containerController.popupContentViewController.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
-		[self.popupBar.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
-		self.popupBar._hackyMargins = [self.containerController _ln_popupBarMarginsForPopupBar:self.popupBar];
-		[self.popupBar layoutIfNeeded];
-		[self.popupBar.toolbar forceLayoutOnButtons];
-	};
-	void (^layoutVerticalBarPosition)(void) = ^{
-		[self.containerController _ln_layoutPopupBarAndContent];
-	};
-	
-	if(self.popupBar.traitCollection.popupBarEnvironment == newValue)
-	{
-		[UIView _ln_animateUsingSwiftUIWithDuration:0.4 animations:^{
-			updateMargins();
-			layoutVerticalBarPosition();
-		} completion:nil];
-	}
-	else
-	{
-		auto animator = [[UIViewPropertyAnimator alloc] initWithDuration:0.4 dampingRatio:1.0 animations:nil];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSInteger newValue = self.popupBar.inheritsBottomBarMetrics && wasMinimized ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
 		
-		[animator addAnimations:updateMargins delayFactor: wasMinimized ? 0.0 : 0.2];
-		[animator ln_addAnimations:layoutVerticalBarPosition delayFactor:wasMinimized ? 0.2 : 0.0 durationFactor:wasMinimized ? 0.8 : 0.35];
-		[animator startAnimation];
-	}
+		void (^updateMargins)(void) = ^{
+			[_containerController _ln_setIgnoringLayoutDuringTransition:NO];
+			[_containerController.popupContentViewController.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
+			[self.popupBar.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
+			self.popupBar._hackyMarginsInSuperviewSemanticContext = [self.containerController _ln_popupBarMarginsForPopupBar:self.popupBar];
+			[self.popupBar layoutIfNeeded];
+			//		[self.popupBar.toolbar forceLayoutOnButtons];
+		};
+		void (^layoutVerticalBarPosition)(void) = ^{
+			[self.containerController _ln_layoutPopupBarAndContent];
+		};
+		
+		if(self.popupBar.traitCollection.popupBarEnvironment == newValue)
+		{
+			[UIView _ln_animateUsingSwiftUIWithDuration:0.4 animations:^{
+				updateMargins();
+				layoutVerticalBarPosition();
+			} completion:nil];
+		}
+		else
+		{
+			auto animator = [[UIViewPropertyAnimator alloc] initWithDuration:0.4 dampingRatio:1.0 animations:nil];
+			
+			[animator addAnimations:updateMargins delayFactor: wasMinimized ? 0.0 : 0.2];
+			[animator ln_addAnimations:layoutVerticalBarPosition delayFactor:wasMinimized ? 0.2 : 0.0 durationFactor:wasMinimized ? 0.8 : 0.35];
+			[animator startAnimation];
+		}
+	});
 }
 
 #pragma mark Utils

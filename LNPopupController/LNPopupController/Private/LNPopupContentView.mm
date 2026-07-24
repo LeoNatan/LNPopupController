@@ -120,6 +120,11 @@
 	return self;
 }
 
+- (void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event
+{
+	[super pressesEnded:presses withEvent:event];
+}
+
 - (void)_setApplyScreenCorners:(BOOL)applyScreenCorners
 {
 	if(_applyScreenCorners == applyScreenCorners)
@@ -309,7 +314,7 @@
 	UIEdgeInsets layoutMargins = __LNPopupEnvironmentLayoutInsets(self.currentPopupContentViewController.view, false);
 	CGFloat topConstant = 0.0;
 #if TARGET_OS_MACCATALYST
-		topConstant = 30.0;
+		topConstant = 9;
 #else
 		topConstant = layoutMargins.top;
 #endif
@@ -329,7 +334,11 @@
 	if(topConstant != _popupCloseButtonTopConstraint.constant || layoutMargins.left != _popupCloseButtonLeadingConstraint.constant || -layoutMargins.right != _popupCloseButtonTrailingConstraint.constant)
 	{
 		_popupCloseButtonTopConstraint.constant = topConstant;
+#if TARGET_OS_MACCATALYST
+		_popupCloseButtonLeadingConstraint.constant = 97;
+#else
 		_popupCloseButtonLeadingConstraint.constant = layoutMargins.left;
+#endif
 		_popupCloseButtonTrailingConstraint.constant = -layoutMargins.right;
 		
 		if(self.window == nil)

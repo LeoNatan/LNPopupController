@@ -21,6 +21,16 @@
 	return [self.popupContentView.window.layer convertRect:self.transitionView.sourceLayer.bounds fromLayer:self.transitionView.sourceLayer];;
 }
 
+- (CGFloat)sourceImageAlpha
+{
+	return self.popupBarImageAlphaBeforeAnimation;
+}
+
+- (CGFloat)targetImageAlpha
+{
+	return 1.0;
+}
+
 - (UIVisualEffect *)sourceContentTransitionEffect
 {
 	return self.popupBarEffect;

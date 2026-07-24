@@ -94,6 +94,7 @@ void __LNPopupUpdateChildInsets(__kindof UIViewController* controller);
 - (void)_ln_setPopupPresentationState:(LNPopupPresentationState)newState;
 
 - (BOOL)_ln_ignoringLayoutDuringTransition;
+- (void)_ln_setIgnoringLayoutDuringTransition:(BOOL)ignoringLayoutDuringTransition;
 
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension_nocreate;
 - (_LNPopupBarBackgroundView*)_ln_bottomBarExtension;

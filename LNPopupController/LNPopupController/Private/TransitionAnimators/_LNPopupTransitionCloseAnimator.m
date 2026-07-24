@@ -37,6 +37,16 @@
 	return [self.popupBar.imageView.window convertRect:self.popupBar.imageView.bounds fromView:self.popupBar.imageView];
 }
 
+- (CGFloat)sourceImageAlpha
+{
+	return 1.0;
+}
+
+- (CGFloat)targetImageAlpha
+{
+	return self.popupBarImageAlphaBeforeAnimation;
+}
+
 - (CGFloat)scaledBarImageViewCornerRadius
 {
 	return MAX(self.popupBar.imageView.cornerRadius * self.sourceFrame.size.width / self.popupBar.imageView.bounds.size.width, self.popupBar.imageView.cornerRadius * self.sourceFrame.size.height / self.popupBar.imageView.bounds.size.height);

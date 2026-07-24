@@ -1128,7 +1128,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		}
 	}
 	
-	popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:popupBar];
+	popupBar._hackyMarginsInSuperviewSemanticContext = [self _ln_popupBarMarginsForPopupBar:popupBar];
 	[popupBar layoutIfNeeded];
 }
 
@@ -1167,7 +1167,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		if(@available(iOS 18.0, *))
 		{
 			LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
-			popupBar._hackyMargins = NSDirectionalEdgeInsetsZero;
+			popupBar._hackyMarginsInSuperviewSemanticContext = NSDirectionalEdgeInsetsZero;
 			
 			static NSString* outlineViewKey = LNPopupHiddenString("_outlineView");
 			UIView* outlineView = [self.sidebar valueForKey:outlineViewKey];
@@ -1179,8 +1179,8 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 				return;
 			}
 			
-			popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:popupBar];
-			if(popupBar._hackyMargins.leading > 0)
+			popupBar._hackyMarginsInSuperviewSemanticContext = [self _ln_popupBarMarginsForPopupBar:popupBar];
+			if(popupBar._hackyMarginsInSuperviewSemanticContext.leading > 0)
 			{
 				[super _layoutPopupBarOrderForUse];
 				[popupBar layoutIfNeeded];
@@ -1431,7 +1431,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	{
 		CGFloat bottomSafeArea = self.view.superview.safeAreaInsets.bottom;
 		CGRect frame = CGRectMake(0, self.view.bounds.size.height - bottomSafeArea, self.view.bounds.size.width, bottomSafeArea);
-		UIEdgeInsets hackyInsets = _LNEdgeInsetsFromDirectionalEdgeInsets(self._ln_popupController_nocreate.popupBar, self._ln_popupController_nocreate.popupBar._hackyMargins);
+		UIEdgeInsets hackyInsets = _LNEdgeInsetsFromDirectionalEdgeInsets(self._ln_popupController_nocreate.popupBar, self._ln_popupController_nocreate.popupBar._hackyMarginsInSuperviewSemanticContext);
 		self._ln_bottomBarExtension_nocreate.frame = UIEdgeInsetsInsetRect(frame, hackyInsets);
 	}
 }
@@ -2111,7 +2111,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		[self._ln_popupController_nocreate.popupContentView.superview insertSubview:self._ln_popupController_nocreate.popupContentView.transitionView aboveSubview:self._ln_popupController_nocreate.popupContentView];
 	}
 	
-	self._ln_popupController_nocreate.popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
+	self._ln_popupController_nocreate.popupBar._hackyMarginsInSuperviewSemanticContext = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
 }
 
 - (void)_layoutPopupBarOrderForTransition
@@ -2823,7 +2823,7 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 		return;
 	}
 	
-	self._ln_popupController_nocreate.popupBar._hackyMargins = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
+	self._ln_popupController_nocreate.popupBar._hackyMarginsInSuperviewSemanticContext = [self _ln_popupBarMarginsForPopupBar:self._ln_popupController_nocreate.popupBar];
 }
 
 - (void)_layoutPopupBarOrderForUse

@@ -28,14 +28,11 @@ void _LNPopupResolveCloseButtonStyleAndPositioning(LNPopupCloseButtonStyle style
 	{
 		if(LNPopupEnvironmentHasGlass())
 		{
-			if([LNPopupBar isCatalystApp])
-			{
-				*resolvedStyle = LNPopupCloseButtonStyleProminentGlass;
-			}
-			else
-			{
-				*resolvedStyle = LNPopupCloseButtonStyleGrabber;
-			}
+#if TARGET_OS_MACCATALYST
+			*resolvedStyle = LNPopupCloseButtonStyleGlass;
+#else
+			*resolvedStyle = LNPopupCloseButtonStyleProminentGlass;
+#endif
 		}
 		else
 		{

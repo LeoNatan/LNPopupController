@@ -23,8 +23,9 @@
 		static CGFloat margin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 28 : 8;
 		
 		NSDirectionalEdgeInsets floatingLayoutMargins = popupBar.floatingLayoutMargins;
-		barInsets.leading = MAX(margin - (floatingLayoutMargins.leading - controller.view.safeAreaInsets.left), 0);
-		barInsets.trailing = MAX(margin - (floatingLayoutMargins.trailing - controller.view.safeAreaInsets.right), 0);
+		auto viewInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(controller.view, controller.view.safeAreaInsets);
+		barInsets.leading = MAX(margin - (floatingLayoutMargins.leading - viewInsets.leading), 0);
+		barInsets.trailing = MAX(margin - (floatingLayoutMargins.trailing - viewInsets.trailing), 0);
 		
 		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
 		if(@available(iOS 27.0, *))
@@ -35,7 +36,6 @@
 			BOOL isLandscape = UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation);
 			
 			auto windowInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(controller.view.window, controller.view.window.safeAreaInsets);
-			auto viewInsets = _LNDirectionalEdgeInsetsFromEdgeInsets(controller.view, controller.view.safeAreaInsets);
 
 			if(isPhone && compactButHasSafeArea)
 			{
