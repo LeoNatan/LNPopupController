@@ -145,12 +145,6 @@ __attribute__((objc_direct_members))
 		if(@available(iOS 13.4, *))
 		{
 			self.pointerInteractionEnabled = YES;
-			self.pointerStyleProvider = ^UIPointerStyle * _Nullable(UIButton * _Nonnull button, UIPointerEffect * _Nonnull proposedEffect, UIPointerShape * _Nonnull proposedShape) {
-				UIPointerLiftEffect* effect = [UIPointerLiftEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:button]];
-				UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
-				
-				return [UIPointerStyle styleWithEffect:effect shape:shape];
-			};
 		}
 	}
 	
@@ -490,6 +484,14 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	{
 		[self setTitleColor:self.tintColor forState:UIControlStateNormal];
 	}
+}
+
+- (nullable UIPointerStyle *)pointerInteraction:(UIPointerInteraction *)interaction styleForRegion:(UIPointerRegion *)region
+{
+	UIPointerLiftEffect* effect = [UIPointerLiftEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:self]];
+	UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
+	
+	return [UIPointerStyle styleWithEffect:effect shape:shape];
 }
 
 @end

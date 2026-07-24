@@ -561,6 +561,11 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 
 - (void)setFrame:(CGRect)frame
 {
+	if(frame.origin.y == -0)
+	{
+		frame.origin.y = 0;
+	}
+	
 	if(CGRectEqualToRect(frame, super.frame) == YES)
 	{
 		return;
@@ -2184,7 +2189,7 @@ BOOL _LNRectEqualToRectWithinTolerance(CGRect rect1, CGRect rect2, CGFloat toler
 	if(_LNRectEqualToRectWithinTolerance(frameBefore, frame, 1) == NO)
 #endif
 	{
-		_titlePagingController.view.alpha = frame.size.width < 10 ? 0.0 : 1.0;
+		_titlePagingController.view.alpha = frame.size.width < 44 ? 0.0 : 1.0;
 		_titlePagingController.view.frame = frame;
 		
 		BOOL hasSwiftUI = _swiftuiHiddenLeadingController != nil || _swiftuiHiddenTrailingController != nil;

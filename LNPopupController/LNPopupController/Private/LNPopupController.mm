@@ -178,6 +178,7 @@ __attribute__((objc_direct_members))
 	__weak UIView* _tabBarContainer;
 	CALayer* _observedTabBarContainerLayer;
 	
+	BOOL _gesturesIgnored;
 #if TARGET_OS_MACCATALYST
 	_LNPopupCatalystHelper* _catalystHelper;
 #endif
@@ -819,7 +820,10 @@ __attribute__((objc_direct_members))
 		{
 			[_containerController.view setNeedsLayout];
 			[_containerController.view layoutIfNeeded];
-			[self openPopupAnimated:YES completion:nil];
+			_gesturesIgnored = YES;
+			[self openPopupAnimated:YES completion:^{
+				_gesturesIgnored = NO;
+			}];
 		}	break;
 		default:
 			break;
@@ -872,8 +876,11 @@ __attribute__((objc_direct_members))
 			pgr.enabled = NO;
 			pgr.enabled = YES;
 			
+			_gesturesIgnored = YES;
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-				[self openPopupAnimated:YES completion:nil];
+				[self openPopupAnimated:YES completion:^{
+					_gesturesIgnored = NO;
+				}];
 			});
 		}
 		else if((_popupControllerInternalState == LNPopupPresentationStateBarPresented && [pgr velocityInView:self.popupBar].y > 0))
@@ -1070,11 +1077,11 @@ __attribute__((objc_direct_members))
 			_popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 			_popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[self closePopupAnimated:YES completion:^ {
-					[_popupContentView.popupCloseButton _setButtonContainerStationary];
-				}];
-			});
+			_gesturesIgnored = YES;
+			[self closePopupAnimated:YES completion:^ {
+				[_popupContentView.popupCloseButton _setButtonContainerStationary];
+				_gesturesIgnored = NO;
+			}];
 		}
 		
 		CGFloat statusBarHeightThreshold = [LNPopupController _statusBarHeightForView:_containerController.view] / 2.0;
@@ -1134,16 +1141,19 @@ __attribute__((objc_direct_members))
 		}
 		
 		[_popupContentView.popupCloseButton _setButtonContainerStationary];
+		_gesturesIgnored = YES;
 		if(targetState == LNPopupPresentationStateOpen)
 		{
 			[self openPopupAnimated:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap trollState:resolvedStyle == LNPopupInteractionStyleSnap completion:^{
 				self.popupContentView.applyScreenCorners = NO;
+				_gesturesIgnored = NO;
 			}];
 		}
 		else
 		{
 			[self closePopupAnimated:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap completion:^{
 				self.popupContentView.applyScreenCorners = NO;
+				_gesturesIgnored = NO;
 			}];
 		}
 	}
@@ -1153,7 +1163,7 @@ __attribute__((objc_direct_members))
 
 - (void)_popupBarPresentationByUserPanGestureHandler:(UIPanGestureRecognizer*)pgr
 {
-	if(_dismissalOverride)
+	if(_dismissalOverride || _gesturesIgnored)
 	{
 		return;
 	}
@@ -1903,6 +1913,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)openPopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart trollState:(BOOL)trollState completion:(void(^)(void))completionBlock
 {
+//	NSLog(@"Open\n%@", NSThread.callStackSymbols);
+	
 	[self _enqueueEvent:[_LNPopupControllerEvent openEventWithOperation:^{
 		if(trollState)
 		{
@@ -2335,10 +2347,13 @@ id __LNPopupEmptyBlurFilter(void)
 	}
 	
 	CGRect barFrame = self.popupBar.frame;
-	CGFloat currentHeight = barFrame.size.height;
-	barFrame.size.height = _LNPopupBarHeightForPopupBar(self.popupBar);
-	barFrame.origin.y -= (barFrame.size.height - currentHeight);
-	self.popupBar.frame = barFrame;
+	if(barFrame.size.height > 0)
+	{
+		CGFloat currentHeight = barFrame.size.height;
+		barFrame.size.height = _LNPopupBarHeightForPopupBar(self.popupBar);
+		barFrame.origin.y -= (barFrame.size.height - currentHeight);
+		self.popupBar.frame = barFrame;
+	}
 	
 	[_containerController _ln_updatePopupBarContainerInsets];
 }
@@ -2577,6 +2592,38 @@ static os_log_t __LNPopupFrameworkLogger(const char* category)
 }
 
 - (void)_120HzTick {}
+
+- (NSString*)_stateDescription:(LNPopupPresentationState)state
+{
+	switch (state) {
+		case LNPopupPresentationStateBarHidden:
+			return @"barHidden";
+		case LNPopupPresentationStateBarPresented:
+			return @"barPresented";
+		case LNPopupPresentationStateOpen:
+			return @"popupOpen";
+		case _LNPopupPresentationStateTransitioning:
+			return @"transitioning";
+		default:
+			return [NSString stringWithFormat:@"Unknown: %@", @(state)];
+			break;
+	}
+}
+
+- (NSString *)description
+{
+	/*
+	 @property (nonatomic) LNPopupPresentationState popupControllerPublicState;
+	 @property (nonatomic) LNPopupPresentationState popupControllerInternalState;
+	 @property (nonatomic) LNPopupPresentationState popupControllerTargetState;
+	 */
+	return [NSString stringWithFormat:@"<%@: %p> publicState: %@ internalState: %@ targetState: %@", self.class, self, [self _stateDescription:self.popupControllerPublicState], [self _stateDescription:self.popupControllerInternalState], [self _stateDescription:self.popupControllerTargetState]];
+}
+
+- (NSString *)debugDescription
+{
+	return self.description;
+}
 
 @end
 
