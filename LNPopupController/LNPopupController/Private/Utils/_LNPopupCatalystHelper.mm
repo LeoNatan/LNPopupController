@@ -43,6 +43,8 @@ static void _LNPopupSetShouldApplyWindowsFixes(UITitlebar* titlebar, BOOL should
 	return [self valueForKeyPath:keyPath];
 }
 
+static NSString* const toolbarToolbarViewWindow = LNPopupHiddenString("toolbar.toolbarView.window");
+
 + (void)load
 {
 	@autoreleasepool
@@ -54,13 +56,22 @@ static void _LNPopupSetShouldApplyWindowsFixes(UITitlebar* titlebar, BOOL should
 		Method m = class_getInstanceMethod(cls, updateFromNavigationBarProxy);
 		void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 		method_setImplementation(m, imp_implementationWithBlock(^(UITitlebar* self) {
-			id window = self._ln_titlebarWindow;
 			if(_LNPopupShouldApplyWindowsFixes((id)self))
 			{
+				NSObject* window = self._ln_titlebarWindow;
+				
 				[window setValue:@YES forKey:@"titlebarAppearsTransparent"];
 				[window setValue:@1 forKey:@"titleVisibility"];
 				[window setValue:@1 forKey:@"titlebarSeparatorStyle"];
 				[window setValue:@3 forKey:@"toolbarStyle"];
+				
+				window = [window valueForKeyPath:toolbarToolbarViewWindow];
+				
+				if([NSStringFromClass(window.class) containsString:@"FullScreen"])
+				{
+					static NSString* const alphaValue = LNPopupHiddenString("alphaValue");
+					[window setValue:@0.0 forKey:alphaValue];
+				}
 				
 				return;
 			}
@@ -105,7 +116,6 @@ static void _LNPopupSetShouldApplyWindowsFixes(UITitlebar* titlebar, BOOL should
 		[context setValue:@(duration) forKey:@"duration"];
 
 		id window = _currentScene.titlebar._ln_titlebarWindow;
-		_currentScene.titlebar.autoHidesToolbarInFullScreen = YES;
 		[window setValue:@YES forKeyPath:@"toolbar.toolbarView.hidden"];
 		_LNPopupSetShouldApplyWindowsFixes(_currentScene.titlebar, YES);
 	}];
@@ -113,8 +123,18 @@ static void _LNPopupSetShouldApplyWindowsFixes(UITitlebar* titlebar, BOOL should
 
 - (void)restore
 {
-	id window = _currentScene.titlebar._ln_titlebarWindow;
+	NSObject* window = _currentScene.titlebar._ln_titlebarWindow;
+	
 	[window setValue:@NO forKeyPath:@"toolbar.toolbarView.hidden"];
+	
+	window = [window valueForKeyPath:toolbarToolbarViewWindow];
+	
+	if([NSStringFromClass(window.class) containsString:@"FullScreen"])
+	{
+		static NSString* const alphaValue = LNPopupHiddenString("alphaValue");
+		[window setValue:@1.0 forKey:alphaValue];
+	}
+	
 	_LNPopupSetShouldApplyWindowsFixes(_currentScene.titlebar, NO);
 	
 	_currentScene = nil;

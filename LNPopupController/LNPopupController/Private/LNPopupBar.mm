@@ -955,7 +955,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	
 	CGFloat leadingSpace = [_toolbar convertRect:leftViewFirst.bounds fromView:leftViewFirst].origin.x;
 	CGRect convertedTrailing = [_toolbar convertRect:rightViewLast.bounds fromView:rightViewLast];
-	CGFloat trailingSpace = _toolbar.bounds.size.width - (convertedTrailing.origin.y + convertedTrailing.size.height);
+	CGFloat trailingSpace = _toolbar.bounds.size.width - (convertedTrailing.origin.x + convertedTrailing.size.width);
 	
 	BOOL needsLeftPadding = leadingSpace < 15 && firstCustomAndUnhidden == NO && leftViewFirst && [self _isBarButtonViewPadded:leftViewFirst inEdge:UIRectEdgeLeft] == NO;
 	BOOL needsRightPadding = trailingSpace < 15 && lastCustomAndUnhidden == NO && rightViewLast && [self _isBarButtonViewPadded:rightViewLast inEdge:UIRectEdgeRight] == NO;
