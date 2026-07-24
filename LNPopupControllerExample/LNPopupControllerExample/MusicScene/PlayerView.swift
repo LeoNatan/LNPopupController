@@ -15,7 +15,14 @@ import LNPopupController
 class PlaybackState {
 	var popupItem: LNPopupItem? = nil
 	
-	var isPlaying: Bool = false
+	var isPlaying: Bool = false {
+		didSet {
+			if(isPlaying)
+			{
+				print("play")
+			}
+		}
+	}
 	
 	var progress: Float = 0.0
 	var isUserScrubbing: Bool = false
@@ -71,11 +78,17 @@ struct PlayerView: View {
 			})
 			.padding([.bottom], geometry.size.height * 30.0 / 896.0)
 		
+		slider
+		
+#if targetEnvironment(macCatalyst)
+		slider
+#else
 		if #available(iOS 26.0, *) {
 			slider.sliderThumbVisibility(.hidden)
 		} else {
 			slider
 		}
+#endif
 	}
 	
 	@ViewBuilder

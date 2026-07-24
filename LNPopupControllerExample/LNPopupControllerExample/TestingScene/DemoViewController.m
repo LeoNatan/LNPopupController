@@ -182,6 +182,12 @@
 {
 	[super viewDidLoad];
 	
+	if(@available(iOS 18.0, *))
+	if(NSProcessInfo.processInfo.isMacCatalystApp || NSProcessInfo.processInfo.isiOSAppOnMac)
+	{
+		self.tabBarController.tabBarHidden = YES;
+	}
+	
 	if(@available(iOS 17.0, *))
 	{
 		[self registerForTraitChanges:@[UITraitUserInterfaceStyle.class] withHandler:^(__kindof id<UITraitEnvironment>  _Nonnull traitEnvironment, UITraitCollection * _Nonnull previousCollection) {
@@ -399,6 +405,12 @@
 
 - (void)updateHideTabBarButtonHiddenStateForTraitCollection:(UITraitCollection*)traitCollection;
 {
+	if(self.tabBarController != nil && (NSProcessInfo.processInfo.isMacCatalystApp || NSProcessInfo.processInfo.isiOSAppOnMac))
+	{
+		_hideTabBarButton.hidden = YES;
+		return;
+	}
+	
 	if(@available(iOS 18.0, *))
 	{
 		if(traitCollection == nil)

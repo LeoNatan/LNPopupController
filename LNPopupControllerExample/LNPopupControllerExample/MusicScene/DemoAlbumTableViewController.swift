@@ -35,6 +35,10 @@ class DemoAlbumTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+#if targetEnvironment(macCatalyst)
+		navigationItem.rightBarButtonItem?.isHidden = true
+#endif
+		
 		tabBarController?.view.tintColor = view.tintColor
 		
 		let footer = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 4))
@@ -86,8 +90,10 @@ class DemoAlbumTableViewController: UITableViewController {
 		demoAlbumImageView.layer.cornerRadius = 8
 		demoAlbumImageView.layer.masksToBounds = true
 		
+		let isLonger = UserDefaults.settings.bool(forKey: .longerLoremIpsumTitles)
+		
 		for idx in 0..<Int.random(in: 20...50) {
-			let title = NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: 2...3)).capitalized, comment: "")
+			let title = NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: (isLonger ? 4 : 2)...(isLonger ? 7 : 3))).capitalized, comment: "")
 			var subtitle = tabIsEven ?
 			NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: 2...4)), comment: "") :
 			NSLocalizedString(LoremIpsum.sentences(withNumber: UInt.random(in: 1...3)), comment: "")
@@ -112,7 +118,11 @@ class DemoAlbumTableViewController: UITableViewController {
 	}
 	
 	var tabIsEven: Bool {
-		Int(navigationController!.tab!.identifier)! % 2 == 0
+		guard let navigationController, let tab = navigationController.tab else {
+			return true
+		}
+		
+		return Int(tab.identifier)! % 2 == 0
 	}
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -160,7 +170,17 @@ class DemoAlbumTableViewController: UITableViewController {
 		let item = playlist[indexPath.row]
 		item.progress = 0.0
 		
-		guard let popupBar = tabBarController?.popupBar else {
+		var popupBar: LNPopupBar? = tabBarController?.popupBar
+		#if targetEnvironment(macCatalyst)
+		if popupBar == nil {
+			splitViewController?.presentPopupBar(with: DemoMusicPlayerController())
+			popupBar = splitViewController?.popupBar
+		}
+		#else
+		
+		#endif
+		
+		guard let popupBar else {
 			return
 		}
 		

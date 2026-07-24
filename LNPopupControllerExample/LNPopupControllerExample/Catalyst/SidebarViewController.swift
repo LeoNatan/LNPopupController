@@ -20,8 +20,8 @@ enum SidebarSection {
 }
 
 enum SidebarItem: Hashable {
-	case header(title: String)
-	case item(tab: UITab)
+	case header(String)
+	case item(UITab)
 }
 
 class SidebarCell: UICollectionViewListCell {
@@ -63,6 +63,11 @@ class SidebarViewController: UICollectionViewController {
 				second.foregroundColor = UIColor.red.withAlphaComponent(0.0)
 				content.attributedText = NSAttributedString(first + second)
 				content.image = tab.image
+				if content.image?.isSymbolImage == false {
+					content.imageProperties.maximumSize = CGSizeMake(23, 23)
+					content.imageProperties.reservedLayoutSize = CGSizeMake(28, 23)
+					content.imageProperties.cornerRadius = 5
+				}
 				
 				background = UIBackgroundConfiguration.listCell()
 				
@@ -116,7 +121,7 @@ class SidebarViewController: UICollectionViewController {
 			if section == 0 {
 				configuration.headerMode = .none
 			} else {
-				configuration.headerMode = .supplementary
+				configuration.headerMode = .firstItemInSection
 			}
 			let section = NSCollectionLayoutSection.list(using: configuration, layoutEnvironment: layoutEnvironment)
 			return section
@@ -124,98 +129,53 @@ class SidebarViewController: UICollectionViewController {
 	}
 	
 	var cleanSnapshots: Array<(SidebarSection, NSDiffableDataSourceSectionSnapshot<SidebarItem>)> {
+		let viewControllerCreator: () -> UIViewController = {
+			let vc = UIViewController()
+			vc.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), primaryAction: UIAction { [weak vc] action in
+				guard let vc else {
+					return
+				}
+				
+				let settings = UINavigationController(rootViewController: SettingsViewController())
+				settings.modalPresentationStyle = .popover
+				settings.popoverPresentationController?.sourceItem = action.sender as? UIPopoverPresentationControllerSourceItem
+				vc.present(settings, animated: true)
+			})
+			return vc
+		}
+		
 		var mainSection = NSDiffableDataSourceSectionSnapshot<SidebarItem>()
 		mainSection.append([
-			.item(tab: UITab(title: "Search", image: UIImage(systemName: "magnifyingglass"), identifier: "search", viewControllerProvider: { _ in
-				UIViewController()
+			.item(UITab(title: NSLocalizedString("Search", comment: ""), image: UIImage(systemName: "magnifyingglass"), identifier: "search", viewControllerProvider: { _ in
+				viewControllerCreator()
 			})),
-			.item(tab: UITab(title: "Home", image: UIImage(systemName: "house"), identifier: "home", viewControllerProvider: { _ in
-				UIViewController()
+			.item(UITab(title: NSLocalizedString("Home", comment: ""), image: UIImage(systemName: "house"), identifier: "home", viewControllerProvider: { _ in
+				viewControllerCreator()
 			})),
-			.item(tab: UITab(title: "New", image: UIImage(systemName: "square.grid.2x2"), identifier: "new", viewControllerProvider: { _ in
-				UIViewController()
+			.item(UITab(title: NSLocalizedString("New", comment: ""), image: UIImage(systemName: "square.grid.2x2"), identifier: "new", viewControllerProvider: { _ in
+				viewControllerCreator()
 			})),
-			.item(tab: UITab(title: "Radio", image: UIImage(systemName: "dot.radiowaves.left.and.right"), identifier: "radio", viewControllerProvider: { _ in
-				UIViewController()
+			.item(UITab(title: NSLocalizedString("Radio", comment: ""), image: UIImage(systemName: "dot.radiowaves.left.and.right"), identifier: "radio", viewControllerProvider: { _ in
+				viewControllerCreator()
 			})),
 		], to: nil)
 		
-//		if let systemAlbumsHeader {
-//			systemAlbumsSection.append([systemAlbumsHeader])
-//		}
-//		
-//		if hasTabBarController == false || isPickerStyle {
-//			systemAlbumsSection.append([.library], to: systemAlbumsHeader)
-//		}
-//		
-//		if displaysPlaces {
-//			systemAlbumsSection.append([.places], to: systemAlbumsHeader)
-//		}
-//		
-//		func filterFromDelegate(_ collection: inout [PHAssetCollection]) {
-//			guard let delegate else {
-//				return
-//			}
-//			
-//			collection = collection.filter { delegate.sidebarViewController(self, shouldDisplay: $0) }
-//		}
-//		
-//		var systemFetchedCollections = systemFetchResult.objects(at: IndexSet(0..<systemFetchResult.count)).sorted { SidebarItem.systemAlbumSort.firstIndex(of: $0.assetCollectionSubtype.rawValue)! < SidebarItem.systemAlbumSort.firstIndex(of: $1.assetCollectionSubtype.rawValue)! }
-//		filterFromDelegate(&systemFetchedCollections)
-//		systemAlbumsSection.append(systemFetchedCollections.map { .album($0) }, to: systemAlbumsHeader)
-//		
-//		if !isPickerStyle {
-//			systemAlbumsSection.append([.widgetCurrent], to: systemAlbumsHeader)
-//			systemAlbumsSection.append([.widgetHidden], to: systemAlbumsHeader)
-//		}
-//		
-//		if !isPickerStyle, PhotoDB.shared.allRequiredScales().count > 0 {
-//			systemAlbumsSection.append([.widgetErrors], to: systemAlbumsHeader)
-//		}
-//		
-//		if let systemAlbumsHeader {
-//			systemAlbumsSection.expand([systemAlbumsHeader])
-//		}
-//		
-//		let mediaTypeHeader = SidebarItem.headerTitle(String(localized: "Media Types"))
-//		var mediaTypeSection = NSDiffableDataSourceSectionSnapshot<SidebarItem>()
-//		mediaTypeSection.append([mediaTypeHeader])
-//		var mediaTypeFetchedCollections = mediaTypeFetchResult.objects(at: IndexSet(0..<mediaTypeFetchResult.count)).sorted { SidebarItem.mediaTypeAlbumSort.firstIndex(of: $0.assetCollectionSubtype.rawValue)! < SidebarItem.mediaTypeAlbumSort.firstIndex(of: $1.assetCollectionSubtype.rawValue)! }
-//		filterFromDelegate(&mediaTypeFetchedCollections)
-//		mediaTypeSection.append(mediaTypeFetchedCollections.map { .album($0) }, to: mediaTypeHeader)
-//		mediaTypeSection.expand([mediaTypeHeader])
-//		
-//		let userAlbumsHeader: SidebarItem?
-//		
-//		if !hasTabBarController || isPickerStyle {
-//			userAlbumsHeader = SidebarItem.headerTitle(String(localized: "Albums"))
-//		} else {
-//			userAlbumsHeader = nil
-//		}
-//		
-//		var userAlbumsSection = NSDiffableDataSourceSectionSnapshot<SidebarItem>()
-//		
-//		if let userAlbumsHeader {
-//			userAlbumsSection.append([userAlbumsHeader])
-//		}
-//		
-//		if append(parse(fetchResult), to: userAlbumsHeader, in: &userAlbumsSection) == 0 {
-//			if let userAlbumsHeader {
-//				userAlbumsSection.delete([userAlbumsHeader])
-//			}
-//		} else {
-//			if let userAlbumsHeader {
-//				userAlbumsSection.expand([userAlbumsHeader])
-//			}
-//		}
-//		
-//		if hasTabBarController && !isPickerStyle {
-//			return [(.userAlbum, userAlbumsSection), (.systemAlbum, systemAlbumsSection), (.mediaTypeAlbum, mediaTypeSection)]
-//		} else {
-//			return [(.systemAlbum, systemAlbumsSection), (.mediaTypeAlbum, mediaTypeSection), (.userAlbum, userAlbumsSection)]
-//		}
+		let playlistsHeader = SidebarItem.header(NSLocalizedString("Playlists", comment: ""))
+		var playlistsSection = NSDiffableDataSourceSectionSnapshot<SidebarItem>()
+		playlistsSection.append([playlistsHeader])
 		
-		return [(.main, mainSection)]
+		var playlists = [SidebarItem]()
+		for idx in 1...30 {
+			let playlist = SidebarItem.item(UITab(title: NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: 2...4)).capitalized, comment: ""), image: UIImage(named: "genre\(idx)"), identifier: "playlist\(idx)", viewControllerProvider: { _ in
+				UIStoryboard(name: "Music", bundle: nil).instantiateViewController(withIdentifier: "Album")
+			}))
+			playlists.append(playlist)
+		}
+		
+		playlistsSection.append(playlists, to: playlistsHeader)
+		playlistsSection.expand([playlistsHeader])
+		
+		return [(.main, mainSection), (.playlists, playlistsSection)]
 	}
 	
 	required init?(coder: NSCoder) {

@@ -108,12 +108,15 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	fileprivate func updateBarItems(with popupBarEnvironment: LNPopupBar.Environment, animated: Bool = false) {
 		popupItem.barButtonItems?.forEach { $0.isEnabled = !popupItem.isEmptyPlaybackItem }
 		
-		let playPauseImage = UIImage(systemName: playerView.playbackState.isPlaying ? "pause.fill" : "play.fill")
-		if animated {
-			popupItem.barButtonItems?.first?.setSymbolImage(playPauseImage.unsafelyUnwrapped, contentTransition: .replace)
-		} else {
-			popupItem.barButtonItems?.first?.image = playPauseImage
+		if let playPauseItem = popupItem.barButtonItems?.first(where: { $0.accessibilityIdentifier == "PlayPauseButton" }) {
+			let playPauseImage = UIImage(systemName: playerView.playbackState.isPlaying ? "pause.fill" : "play.fill")
+			if animated {
+				playPauseItem.setSymbolImage(playPauseImage.unsafelyUnwrapped, contentTransition: .replace)
+			} else {
+				playPauseItem.image = playPauseImage
+			}
 		}
+
 		if UserDefaults.settings.bool(forKey: .disableSearchTab) == false {
 			popupItem.barButtonItems?.last?.isHidden = traitCollection.popupBarEnvironment == .inline
 		} else {
@@ -225,6 +228,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	func play() {
 		playerView.playbackState.progress = 0.0
 		playerView.playbackState.isPlaying = true
+		updateBarItems(with: self.traitCollection.popupBarEnvironment, animated: true)
 	}
 	
 	var nextSong: ((LNPopupItem) -> Bool)? = nil

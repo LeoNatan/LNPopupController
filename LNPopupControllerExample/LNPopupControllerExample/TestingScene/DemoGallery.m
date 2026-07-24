@@ -96,7 +96,10 @@
 #if LNPOPUP
 	_demoVC = [IntroWebViewController new];
 	
-	self.navigationController.popupBar.barStyle = LNPopupBarStyleFloating;
+	if(NSProcessInfo.processInfo.isMacCatalystApp == NO && NSProcessInfo.processInfo.isiOSAppOnMac == NO)
+	{
+		self.navigationController.popupBar.barStyle = LNPopupBarStyleFloating;
+	}
 	self.navigationController.popupBar.standardAppearance.marqueeScrollEnabled = YES;
 	self.navigationController.popupBar.inheritsBottomBarMetrics = NO;
 	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27.0)
