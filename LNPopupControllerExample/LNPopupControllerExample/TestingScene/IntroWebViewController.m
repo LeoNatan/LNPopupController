@@ -115,36 +115,27 @@
 	[super viewDidMoveToPopupContainerContentView:popupContentView];
 	
 	LNPopupItemSetStandardMusicControls(self.popupItem, self.popupPresentationContainerViewController.popupBar, YES, NO, self.traitCollection, nil, nil, nil);
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self updatePopupItemButtonsAnimated:NO];
-	});
+	[self setNeedsPopupButtonsUpdateAnimated:NO];
+	self.popupItem.progress = (float) arc4random() / UINT32_MAX;
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-	[super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-	
-	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-		[self updatePopupItemButtonsAnimated:context.isAnimated];
-	} completion:nil];
-}
-
-- (void)updatePopupItemButtonsAnimated:(BOOL)animated
+- (void)setNeedsPopupButtonsUpdateAnimated:(BOOL)animated
 {
 	[self.popupItem.leadingBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		if([obj.accessibilityIdentifier isEqualToString:@"Shuffle"] || [obj.accessibilityIdentifier isEqualToString:@"Repeat"])
 		{
-			obj.hidden = self.popupPresentationContainerViewController.popupBar.bounds.size.width < 840;
+			obj.hidden = self.popupPresentationContainerViewController.popupBar.effectiveContentSize.width < 600;
 		}
 	}];
 	
 	[self.popupItem.trailingBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		if([obj.accessibilityIdentifier isEqualToString:@"Airplay"] || [obj.accessibilityIdentifier isEqualToString:@"Volume"])
 		{
-			obj.hidden = self.popupPresentationContainerViewController.popupBar.bounds.size.width < 800;
+			obj.hidden = self.popupPresentationContainerViewController.popupBar.effectiveContentSize.width < 500;
 		}
 	}];
 }
+
 #endif
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -158,6 +149,11 @@
 - (IBAction)_navigate:(id)sender
 {
 	[UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"] options:@{} completionHandler:nil];
+}
+
+- (void)viewDidLayoutSubviews
+{
+	[super viewDidLayoutSubviews];
 }
 
 - (void)viewSafeAreaInsetsDidChange

@@ -43,6 +43,7 @@
 	self.windowScene.sizeRestrictions.minimumSize = CGSizeMake(700, 525);
 	
 	scene.titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
+	scene.titlebar.separatorStyle = UITitlebarSeparatorStyleLine;
 	self.window.rootViewController = [LNCatalystLandingViewController new];
 #else
 	self.window.rootViewController = [UIStoryboard storyboardWithName:@"Main" bundle:nil].instantiateInitialViewController;

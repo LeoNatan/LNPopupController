@@ -38,7 +38,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		super.init(rootView: playerView)
 		
 		registerForTraitChanges([LNPopupBar.EnvironmentTrait.self]) { (self: Self, previousTraitCollection) in
-			self.updateBarItems(with: self.traitCollection.popupBarEnvironment, animated: true)
+			self.reloadBarItems(with: self.traitCollection, animated: true)
 		}
 		
 		playerView.playbackState.onPrevSong = { [weak self] in
@@ -120,16 +120,12 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 				playPauseItem.image = playPauseImage
 			}
 		}
-
-		if UserDefaults.settings.bool(forKey: .disableSearchTab) == false {
-			popupItem.barButtonItems?.last?.isHidden = traitCollection.popupBarEnvironment == .inline
-		} else {
-			popupItem.barButtonItems?.last?.isHidden = false
-		}
 	}
 	
 	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
 		super.viewDidMove(toPopupContainerContentView: popupContentView)
+		
+		popupContentView?.popupCloseButtonStyle = .grabber
 		
 		if popupContentView == nil {
 			stopTimer()

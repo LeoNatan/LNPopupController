@@ -102,6 +102,7 @@
 	}
 	self.navigationController.popupBar.standardAppearance.marqueeScrollEnabled = YES;
 	self.navigationController.popupBar.inheritsBottomBarMetrics = NO;
+	self.navigationController.popupBar.progressViewStyle = LNPopupBarProgressViewStyleBottom;
 	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27.0)
 	{
 		self.navigationController.popupBar.standardAppearance.floatingBarShineEnabled = YES;

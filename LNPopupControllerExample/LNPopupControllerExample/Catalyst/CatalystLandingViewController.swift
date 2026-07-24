@@ -12,6 +12,10 @@ import UIKit
 
 @objc(LNCatalystLandingViewController)
 class CatalystLandingViewController: UISplitViewController {
+#if LNPOPUP
+	let popupContentController = IntroWebViewController()
+#endif
+	
 	init() {
 		super.init(style: .doubleColumn)
 		
@@ -26,22 +30,27 @@ class CatalystLandingViewController: UISplitViewController {
 		setViewController(sidebar, for: .primary)
 		
 		let contentNavigationController = UINavigationController()
+		setViewController(contentNavigationController, for: .secondary)
 		
 #if LNPOPUP
-		let demoPopupApplier: (UIViewController) -> Void = { viewController in
-			let demo = IntroWebViewController()
-			viewController.presentPopupBar(with: demo, animated: false)
-			viewController.popupBar.addInteraction(LNPopupDemoContextMenuInteraction())
-		}
-		
-		demoPopupApplier(self)
+		presentPopupBar(with: popupContentController, animated: false)
+		popupBar.addInteraction(LNPopupDemoContextMenuInteraction())
+		popupBar.inheritsAppearanceFromDockingView = false
+		popupBar.tintColor = .label
+		popupBar.progressViewStyle = .bottom
+		popupBar.semanticContentAttribute = .forceLeftToRight
+		popupContentView.popupCloseButtonPositioning = .leading
 #endif
-		
-		setViewController(contentNavigationController, for: .secondary)
 	}
 
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+	
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		
+		popupContentController.setNeedsPopupButtonsUpdate(animated: false)
 	}
 }
 
