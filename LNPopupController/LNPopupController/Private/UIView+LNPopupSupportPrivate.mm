@@ -19,7 +19,7 @@
 UIEdgeInsets __LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas)
 {
 	if(@available(iOS 26.0, *))
-	if(LNPopupEnvironmentHasGlass() && !limitToSafeAreas)
+	if(LNPopupEnvironmentHasGlass() && limitToSafeAreas == NO)
 	{
 		//TODO: Find out where to get these constants from the system.
 		if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
@@ -61,7 +61,12 @@ UIEdgeInsets __LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitT
 			}
 		}
 	}
-
+	
+	if(LNPopupEnvironmentHasGlass() && UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPhone)
+	{
+		return UIEdgeInsetsMake(0, 10, 0, 10);
+	}
+	
 	return containerView.layoutMargins;
 }
 

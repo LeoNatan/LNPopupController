@@ -279,24 +279,42 @@ __attribute__((objc_direct_members))
 	[self.popupBar layoutIfNeeded];
 	self.popupBar.contentView.contentView.alpha = 1.0 - percent;
 	
-	CGRect contentFrame = _containerController.view.bounds;
-	contentFrame.origin.x = self.popupBar.frame.origin.x;
-	contentFrame.origin.y = self.popupBar.frame.origin.y + self.popupBar.frame.size.height;
+	UIViewController* controllerForContent;
+	CGRect contentFrame;
+	CGRect contentControllerFrame;
+	
+	if(_containerController.popupOpensOverSplitViewController && _containerController.splitViewController != nil)
+	{
+		controllerForContent = _containerController.splitViewController;
+		contentFrame = controllerForContent.view.bounds;
+		contentControllerFrame = contentFrame;
+		
+		CGRect barFrame = [controllerForContent.view convertRect:self.popupBar.bounds fromView:self.popupBar];
+		contentFrame.origin.y = barFrame.origin.y + barFrame.size.height;
+	}
+	else
+	{
+		controllerForContent = _containerController;
+		contentFrame = controllerForContent.view.bounds;
+		contentControllerFrame = contentFrame;
+		contentFrame.origin.x = self.popupBar.frame.origin.x;
+		contentFrame.origin.y = self.popupBar.frame.origin.y + self.popupBar.frame.size.height;
+	}
 	
 	CGFloat fractionalHeight = heightForContent;// MAX(heightForContent - (self.popupBar.frame.origin.y + self.popupBar.frame.size.height), 0);
 	contentFrame.size.height = ceil(fractionalHeight);
 	
 	if(self.popupControllerTargetState <= LNPopupPresentationStateBarPresented)
 	{
-		CGFloat offset = [_containerController _ln_popupOffsetForPopupBar:self.popupBar];
+		CGFloat offset = [controllerForContent _ln_popupOffsetForPopupBar:self.popupBar];
 		contentFrame.size.height = 0;
 		contentFrame.origin.y -= offset;
 	}
 	
 	self.popupContentView.frame = contentFrame;
 	
-	_containerController.popupContentViewController.view.frame = _containerController.view.bounds;
-	self.popupContentView.contentView.frame = _containerController.view.bounds;
+	_containerController.popupContentViewController.view.frame = contentControllerFrame;
+	self.popupContentView.contentView.frame = contentControllerFrame;
 	
 	[self.popupContentView _repositionPopupCloseButtonAnimated:animated];
 }

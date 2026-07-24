@@ -134,7 +134,7 @@
 
 - (void)layoutSubviews
 {
-	if(@available(iOS 26.0, *))
+	if(LNPopupEnvironmentHasGlass())
 	{
 		self.layer.masksToBounds = YES;
 		self.layer.cornerCurve = kCACornerCurveCircular;

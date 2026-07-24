@@ -679,7 +679,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 
 - (NSDirectionalEdgeInsets)floatingLayoutMargins
 {
-	UIEdgeInsets layoutMargins = __LNPopupEnvironmentLayoutInsets(self, UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone);
+	UIEdgeInsets layoutMargins = __LNPopupEnvironmentLayoutInsets(self, YES);
 	CGFloat extra = 0;
 	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 	{

@@ -549,10 +549,19 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	
 	if(self.popupPresentationContainerViewController != nil)
 	{
-		CGFloat contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
+		CGFloat contentMargin;
+		UIEdgeInsets insets;
 		
-		UIEdgeInsets insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
-		
+		if(self.popupPresentationContainerViewController.popupOpensOverSplitViewController && self.popupPresentationContainerViewController.splitViewController != nil)
+		{
+			contentMargin = contentMarginFunc(self.popupPresentationContainerViewController.splitViewController, contentMarginSEL);
+			insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.splitViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController.splitViewController).bottom, 0));
+		}
+		else
+		{
+			contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
+			insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
+		}
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
 		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
 		
@@ -653,7 +662,10 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 {
 	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
 	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:self.bottomDockingViewForPopup_internalOrDeveloper];
-	[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	
+	[self _ln_promoteToSplitViewOrElse:^{
+		[self._ln_popupController_nocreate.popupBar.superview insertSubview:self._ln_popupController_nocreate.popupContentView belowSubview:self._ln_popupController_nocreate.popupBar];
+	}];
 }
 
 - (void)_layoutPopupBarOrderForUse
@@ -661,6 +673,11 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	UIView* bottomBar = self.bottomDockingViewForPopup_internalOrDeveloper;
 	LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
 	UIView* parentForPopupBar = bottomBar.superview != nil ? bottomBar.superview : self.view;
+	
+	__block BOOL didPromote = YES;
+	[self _ln_promoteToSplitViewOrElse:^{
+		didPromote = NO;
+	}];
 	
 	if(!LNPopupEnvironmentHasGlass() && popupBar.resolvedIsFloating)
 	{
@@ -671,14 +688,31 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 		[parentForPopupBar insertSubview:popupBar belowSubview:bottomBar];
 	}
 	[parentForPopupBar insertSubview:self._ln_bottomBarExtension_nocreate belowSubview:popupBar];
-	[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:bottomBar];
+	if(!didPromote)
+	{
+		[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:bottomBar];
+	}
+	
 	if(popupBar.os26TransitionView != nil)
 	{
 		[parentForPopupBar insertSubview:popupBar.os26TransitionView aboveSubview:popupBar];
 	}
+	
 	if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
 	{
-		[parentForPopupBar insertSubview:self._ln_popupController_nocreate.popupContentView.transitionView aboveSubview:self._ln_popupController_nocreate.popupContentView];
+		[self._ln_popupController_nocreate.popupContentView.superview insertSubview:self._ln_popupController_nocreate.popupContentView.transitionView aboveSubview:self._ln_popupController_nocreate.popupContentView];
+	}
+}
+
+- (void)_ln_promoteToSplitViewOrElse:(void(^)(void))somethingElse
+{
+	if(self.popupOpensOverSplitViewController && self.splitViewController != nil)
+	{
+		[self.splitViewController.view addSubview:self._ln_popupController_nocreate.popupContentView];
+	}
+	else
+	{
+		somethingElse();
 	}
 }
 
@@ -1054,6 +1088,11 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	}
 	else
 	{
+		__block BOOL didPromote = YES;
+		[self _ln_promoteToSplitViewOrElse:^{
+			didPromote = NO;
+		}];
+		
 		BOOL placeAboveTabBar = NO;
 		if(@available(iOS 27.0, *))
 		{
@@ -1064,12 +1103,18 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		if(placeAboveTabBar)
 		{
 			[self.view insertSubview:self._ln_popupController_nocreate.popupBar aboveSubview:tabBarContainer];
-			[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:self._ln_popupController_nocreate.popupBar];
+			if(!didPromote)
+			{
+				[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:self._ln_popupController_nocreate.popupBar];
+			}
 		}
 		else
 		{
 			[self.view insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:tabBarContainer];
-			[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:tabBarContainer];
+			if(!didPromote)
+			{
+				[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:tabBarContainer];
+			}
 		}
 		
 		if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
@@ -1079,7 +1124,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		
 		if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
 		{
-			[self.view insertSubview:self._ln_popupController_nocreate.popupContentView.transitionView aboveSubview:self._ln_popupController_nocreate.popupContentView];
+			[self._ln_popupController_nocreate.popupContentView.transitionView.superview insertSubview:self._ln_popupController_nocreate.popupContentView.transitionView aboveSubview:self._ln_popupController_nocreate.popupContentView];
 		}
 	}
 	
@@ -2031,27 +2076,30 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	}
 	
 	[self.view insertSubview:self._ln_popupController_nocreate.popupBar belowSubview:floatingBarContainer];
-	if(LNPopupEnvironmentHasGlass() && self.view.superview != nil)
-	{
-		UIView* target = self.view.superview;
-		if(@available(iOS 27.0, *))
-		if(self.splitViewController != nil)
+	
+	[self _ln_promoteToSplitViewOrElse:^{
+		if(LNPopupEnvironmentHasGlass() && self.view.superview != nil)
 		{
-			NSUInteger idx = [self.splitViewController.viewControllers indexOfObjectPassingTest:^BOOL(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-				return [self.view isDescendantOfView:obj.view];
-			}];
-			if(idx != NSNotFound && [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary] == self.splitViewController.viewControllers[idx])
-			{
-				target = target.superview;
-			}
+			UIView* target = self.view.superview;
+			if(@available(iOS 27.0, *))
+				if(self.splitViewController != nil)
+				{
+					NSUInteger idx = [self.splitViewController.viewControllers indexOfObjectPassingTest:^BOOL(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+						return [self.view isDescendantOfView:obj.view];
+					}];
+					if(idx != NSNotFound && [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary] == self.splitViewController.viewControllers[idx])
+					{
+						target = target.superview;
+					}
+				}
+			
+			[target addSubview:self._ln_popupController_nocreate.popupContentView];
 		}
-		
-		[target addSubview:self._ln_popupController_nocreate.popupContentView];
-	}
-	else
-	{
-		[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:floatingBarContainer];
-	}
+		else
+		{
+			[self.view insertSubview:self._ln_popupController_nocreate.popupContentView aboveSubview:floatingBarContainer];
+		}
+	}];
 	
 	if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
 	{
@@ -2736,10 +2784,20 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 
 - (BOOL)popupBarAvoidsPrimaryColumn
 {
+	if(ln_unavailable(iOS 26.0, *))
+	{
+		return NO;
+	}
+	
+	if(LNPopupEnvironmentHasGlass() == NO)
+	{
+		return NO;
+	}
+	
 	NSNumber* value = objc_getAssociatedObject(self, LNSplitViewControllerAdjustsLayout);
 	if(value == nil)
 	{
-		return YES;
+		return LNPopupBar.isCatalystApp;
 	}
 	else
 	{
@@ -2754,6 +2812,11 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 
 - (void)_ln_layoutModernSplitViewControllerFloatingPopup
 {
+	if(LNPopupEnvironmentHasGlass() == NO)
+	{
+		return;
+	}
+	
 	if(self.style == UISplitViewControllerStyleUnspecified)
 	{
 		//Only modern split views are supported.
@@ -2781,15 +2844,18 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 {
 	[self _ln_popup_viewDidLayoutSubviews_svc];
 	
-	_LNPopupSplitViewDelegateWrapper* wrapper = (id)orig_delegateGetter(self, @selector(delegate));
-	if(wrapper == nil || [wrapper isKindOfClass:_LNPopupSplitViewDelegateWrapper.class] == NO)
+	if(LNPopupEnvironmentHasGlass())
 	{
-		[self setDelegate:nil];
+		_LNPopupSplitViewDelegateWrapper* wrapper = (id)orig_delegateGetter(self, @selector(delegate));
+		if(wrapper == nil || [wrapper isKindOfClass:_LNPopupSplitViewDelegateWrapper.class] == NO)
+		{
+			[self setDelegate:nil];
+		}
 	}
 	
 	if(self._ln_popupController_nocreate.popupControllerInternalState > LNPopupPresentationStateBarHidden)
 	{
-		if(ln_unavailable(iOS 27.0, *))
+		if(LNPopupEnvironmentHasGlass() == NO)
 		{
 			//Apple forgot to call the super implementation of viewDidLayoutSubviews, but we need that to layout the popup bar correctly.
 			struct objc_super superInfo = {
@@ -2815,10 +2881,15 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 
 - (void)_ln_popup_setDelegate:(id<UISplitViewControllerDelegate>)delegate
 {
-	_LNPopupSplitViewDelegateWrapper* wrapper = [_LNPopupSplitViewDelegateWrapper new];
-	wrapper.forwardedDelegate = delegate;
-	objc_setAssociatedObject(self, wrapperDelegateKey, wrapper, OBJC_ASSOCIATION_RETAIN);
-	[self _ln_popup_setDelegate:wrapper];
+	if(LNPopupEnvironmentHasGlass())
+	{
+		_LNPopupSplitViewDelegateWrapper* wrapper = [_LNPopupSplitViewDelegateWrapper new];
+		wrapper.forwardedDelegate = delegate;
+		objc_setAssociatedObject(self, wrapperDelegateKey, wrapper, OBJC_ASSOCIATION_RETAIN);
+		delegate = wrapper;
+	}
+	
+	[self _ln_popup_setDelegate:delegate];
 }
 
 - (BOOL)requiresIndirectSafeAreaManagement

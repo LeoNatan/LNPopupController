@@ -39,7 +39,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		
 		if(@available(iOS 26.0, *))
 		{
-			_wantsContentTransition = popupContentView.allowsContentTransition && interactionStyle == LNPopupInteractionStyleSnap;
+			_wantsContentTransition = LNPopupEnvironmentHasGlass() && popupContentView.allowsContentTransition && interactionStyle == LNPopupInteractionStyleSnap;
 			
 			if(_wantsContentTransition)
 			{
@@ -57,6 +57,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 				_popupBarTransitionView = [_LNPopupTransitionView transitionViewWithSourceView:popupBar.contentView.effectView];
 				_popupBarTransitionView.matchesAlpha = NO;
 				_popupBarTransitionView.allowsEffects = YES;
+				_popupBarTransitionView.matchesPosition = NO;
 				_popupBarTransitionView.frame = popupBar.contentView.frame;
 				_popupBarTransitionView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
 				

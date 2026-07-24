@@ -365,6 +365,36 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	self._ln_popupController.wantsFeedbackGeneration = allowPopupHapticFeedbackGeneration;
 }
 
+static void* LNViewControllerPromotesOverSplitView = &LNViewControllerPromotesOverSplitView;
+
+- (BOOL)popupOpensOverSplitViewController
+{
+	if(ln_unavailable(iOS 26.0, *))
+	{
+		return NO;
+	}
+	
+	if(LNPopupEnvironmentHasGlass() == NO)
+	{
+		return NO;
+	}
+	
+	NSNumber* value = objc_getAssociatedObject(self, LNViewControllerPromotesOverSplitView);
+	if(value == nil)
+	{
+		return LNPopupBar.isCatalystApp;
+	}
+	else
+	{
+		return [value boolValue];
+	}
+}
+
+- (void)setPopupOpensOverSplitViewController:(BOOL)popupOpensOverSplitViewController
+{
+	objc_setAssociatedObject(self, LNViewControllerPromotesOverSplitView, @(popupOpensOverSplitViewController), OBJC_ASSOCIATION_RETAIN);
+}
+
 static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopupContentControllerDiscoveredTransitionView;
 
 - (void)_ln_setDiscoveredTransitionView:(LNPopupImageView *)ln_discoveredShadowedImageView
