@@ -1487,7 +1487,7 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 
 - (UIColor *)tintColor
 {
-	return _userTintColor;
+	return _userTintColor ?: _systemTintColor ?: self.superview.tintColor ?: UIColor.tintColor;
 }
 
 - (void)setTintColor:(UIColor *)tintColor

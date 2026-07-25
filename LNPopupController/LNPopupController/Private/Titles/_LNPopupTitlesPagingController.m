@@ -107,7 +107,10 @@
 		return nil;
 	}
 	
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 	LNPopupItem* prevNextItem = [dataSource performSelector:sel withObject:_popupBar withObject:_popupBar.popupItem];
+#pragma clang diagnostic pop
 	if(prevNextItem == nil)
 	{
 		return nil;
