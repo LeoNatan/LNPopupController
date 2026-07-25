@@ -484,16 +484,6 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		[_contentView.contentView addSubview:_titlePagingController.view];
 
 		_progressView = [[_LNPopupBarProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleBar];
-#if TARGET_OS_MACCATALYST
-		if(@available(iOS 26.0, *))
-		{
-			_progressView.clipsToBounds = YES;
-			_progressView.cornerConfiguration = [UICornerConfiguration capsuleConfiguration];
-		}
-		_progressView.trackTintColor = UIColor.tertiaryLabelColor;
-#else
-		_progressView.trackImage = [UIImage new];
-#endif
 		[_contentView.contentView addSubview:_progressView];
 		[self _updateProgressViewWithStyle:self.progressViewStyle];
 		
@@ -1023,65 +1013,78 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		cornerRadius = _contentView.cornerRadius / 2.5;
 	}
 	
-#if !TARGET_OS_MACCATALYST
 	CGFloat width = 0;
 	CGFloat height = 0;
 	CGFloat offset = 0;
 	CGFloat offsetAfter = 0;
-#endif
 	if(_resolvedIsFloating)
 	{
 		[_contentView.contentView insertSubview:_progressView aboveSubview:_toolbar];
 		
-#if !TARGET_OS_MACCATALYST
 		if(LNPopupEnvironmentHasGlass())
 		{
 			offset = -10;
 		}
 		width = _contentView.bounds.size.width;
 		height = _contentView.bounds.size.height;
-#endif
 	}
 	else
 	{
 		[self insertSubview:_progressView aboveSubview:_contentView];
 
-#if !TARGET_OS_MACCATALYST
 		offset = self.safeAreaInsets.left;
 		width = self.bounds.size.width - self.safeAreaInsets.left - self.safeAreaInsets.right;
 		height = self.bounds.size.height;
-#endif
 	}
 	
 	CGFloat progressViewHeight = [_progressView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-#if TARGET_OS_MACCATALYST
 	UIEdgeInsets titleInsets = [self contentInsetsIncludingImage:NO];
-	CGRect progressViewFrame = UIEdgeInsetsInsetRect(_contentView.bounds, titleInsets);
 	
-	CGFloat position = 4;
-	if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+	if(self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac && titleInsets.left >= 20 && titleInsets.right >= 20)
 	{
-		progressViewFrame.origin.y = position;
+		CGRect progressViewFrame = UIEdgeInsetsInsetRect(_contentView.bounds, titleInsets);
+		static const CGFloat position = 4;
+		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+		{
+			progressViewFrame.origin.y = position;
+			
+		}
+		else
+		{
+			progressViewFrame.origin.y = progressViewFrame.size.height - position - progressViewHeight;
+		}
+		progressViewFrame.size.height = progressViewHeight;
 		
+		_progressView.frame = progressViewFrame;
+		_progressView.alpha = progressViewFrame.size.width >= __LNPopupScaledFloat(LNPopupBarFloatingPadImageWidth, self.traitCollection);
+		
+		if(@available(iOS 26.0, *))
+		{
+			_progressView.clipsToBounds = YES;
+			_progressView.cornerConfiguration = [UICornerConfiguration capsuleConfiguration];
+		}
+		
+		_progressView.trackTintColor = UIColor.tertiaryLabelColor;
+		_progressView.trackImage = nil;
 	}
 	else
 	{
-		progressViewFrame.origin.y = progressViewFrame.size.height - position - progressViewHeight;
+		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+		{
+			_progressView.frame = CGRectMake(cornerRadius + offset, 0, width - 2 * (cornerRadius + offset), progressViewHeight);
+		}
+		else
+		{
+			_progressView.frame = CGRectMake(cornerRadius + offset, height - progressViewHeight, width - 2 * (cornerRadius + offset), progressViewHeight);
+		}
+		
+		if(@available(iOS 26.0, *))
+		{
+			_progressView.cornerConfiguration = [UICornerConfiguration configurationWithRadius:[UICornerRadius fixedRadius:0.0]];
+		}
+		
+		_progressView.trackImage = [UIImage new];
 	}
-	progressViewFrame.size.height = progressViewHeight;
-	
-	_progressView.frame = progressViewFrame;
-	_progressView.alpha = progressViewFrame.size.width >= __LNPopupScaledFloat(LNPopupBarFloatingPadImageWidth, self.traitCollection);
-#else
-	if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
-	{
-		_progressView.frame = CGRectMake(cornerRadius + offset, 0, width - 2 * (cornerRadius + offset), progressViewHeight);
-	}
-	else
-	{
-		_progressView.frame = CGRectMake(cornerRadius + offset, height - progressViewHeight, width - 2 * (cornerRadius + offset), progressViewHeight);
-	}
-#endif
 	
 	CGFloat titleSpacing = 1 + (1 / MAX(1, screen.scale));
 	if(_resolvedIsCompact)
