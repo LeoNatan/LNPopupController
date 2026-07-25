@@ -28,7 +28,10 @@ static BOOL _LNPopupShouldApplyWindowsFixes(UITitlebar* titlebar)
 static void _LNPopupSetShouldApplyWindowsFixes(UITitlebar* titlebar, BOOL should)
 {
 	objc_setAssociatedObject(titlebar, _LNPopupApplyWindowFixes, @(should), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 	[titlebar performSelector:updateFromNavigationBarProxy];
+#pragma clang diagnostic pop
 }
 
 @interface LNPopupWindowToolbar: NSToolbar @end
@@ -123,6 +126,11 @@ static NSString* const toolbarToolbarViewWindow = LNPopupHiddenString("toolbar.t
 
 - (void)restore
 {
+	if(_currentScene == nil)
+	{
+		return;
+	}
+	
 	NSObject* window = _currentScene.titlebar._ln_titlebarWindow;
 	
 	[window setValue:@NO forKeyPath:@"toolbar.toolbarView.hidden"];

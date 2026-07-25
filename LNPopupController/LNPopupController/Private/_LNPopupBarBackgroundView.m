@@ -89,8 +89,6 @@
 
 - (void)setEffectOverride:(UIVisualEffect *)effectOverride
 {
-	NSLog(@"%@", effectOverride);
-	
 	_effectOverride = effectOverride;
 	if(_effectOverride != nil)
 	{

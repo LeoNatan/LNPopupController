@@ -763,6 +763,8 @@ __attribute__((objc_direct_members))
 		[_runningPopupAnimation addAnimations:animationBlock];
 	}
 	
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-retain-cycles"
 	[_runningPopupAnimation addCompletion:completionBlock];
 	[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
 		_runningPopupAnimation = nil;
@@ -771,6 +773,7 @@ __attribute__((objc_direct_members))
 			[self _endTransitioningLock];
 		}
 	}];
+#pragma clang diagnostic pop
 	[self _addEventQueueResumptionStep:_runningPopupAnimation];
 	
 	if(animated)
