@@ -8,7 +8,7 @@ For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPop
 
 [![GitHub issues](https://img.shields.io/github/issues-raw/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/issues) [![GitHub contributors](https://img.shields.io/github/contributors/LeoNatan/LNPopupController.svg)](https://github.com/LeoNatan/LNPopupController/graphs/contributors) [![Swift Package Manager compatible](https://img.shields.io/badge/swift%20package%20manager-compatible-green)](https://swift.org/package-manager/) [![Carthage compatible](https://img.shields.io/badge/carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-<p align="center"><img style="border: 1px solid #555555;" src="./Supplements/intro.gif"/></p>
+<p align="center"><table><tr><td rowspan="2"><img style="border: 1px solid #555555; width: 400px" src="./Supplements/intro.gif"/></td><td height="450"><p align="center"><img style="border: 1px solid #555555; width: 500px" src="./Supplements/intro-mac.png"/></p></td></tr><td height="450"><p align="center"><img style="border: 1px solid #555555; width: 500px" src="./Supplements/intro-ipad.png"/></p></td></table></p>
 
 Once a popup bar is presented with a content view controller, the user can swipe or tap the popup bar present the popup, interact with the popup content and dismiss the popup by either swiping down or tapping the popup close button.
 
@@ -30,9 +30,10 @@ Check the demo project for many common use cases of the framework in various sce
 
 ### Features
 
-* Supports iOS 26 glass design, while maintaining an appropriate look and feel on previous iOS versions
+* Supports iOS 27 & iOS 26 glass design, while maintaining an appropriate look and feel on previous iOS versions
+* Full support for iOS, iPadOS and Mac Catalyst (*Mac Catalyst* with *Optimize for Mac* or *Scaled to Match iPad*,  and *Designed for iPad*)
 * Available for iOS 13 and later, as an SPM package for Swift and Objective C
-* Good citizen in modern UIKit world
+* Good citizen in a modern UIKit world
 * For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI)
 
 ## Adding to Your Project and Using the Framework

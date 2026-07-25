@@ -101,7 +101,9 @@ class SidebarViewController: UICollectionViewController {
 			return
 		}
 		
-		viewController.navigationItem.title = tab.title
+		if viewController.navigationItem.title == nil {
+			viewController.navigationItem.title = tab.title
+		}
 		
 		guard let navigationController = splitViewController?.viewController(for: .secondary) as? UINavigationController else {
 			fatalError()
@@ -167,8 +169,12 @@ class SidebarViewController: UICollectionViewController {
 		
 		var playlists = [SidebarItem]()
 		for idx in 1...30 {
-			let playlist = SidebarItem.item(UITab(title: NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: 2...4)).capitalized, comment: ""), image: UIImage(named: "genre\(idx)"), identifier: "playlist\(idx)", viewControllerProvider: { _ in
-				UIStoryboard(name: "Music", bundle: nil).instantiateViewController(withIdentifier: "Album")
+			let title = NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: 2...4)).capitalized, comment: "")
+			let playlist = SidebarItem.item(UITab(title: title, image: UIImage(named: "genre\(idx)"), identifier: "playlist\(idx)", viewControllerProvider: { _ in
+				let controller = UIStoryboard(name: "Music", bundle: nil).instantiateViewController(withIdentifier: "Album")
+				controller.navigationItem.title = NSLocalizedString("Playlists", comment: "")
+				controller.navigationItem.subtitle = title
+				return controller
 			}))
 			playlists.append(playlist)
 		}
