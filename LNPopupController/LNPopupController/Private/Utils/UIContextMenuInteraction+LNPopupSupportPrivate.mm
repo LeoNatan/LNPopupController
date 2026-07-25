@@ -7,7 +7,6 @@
 //
 
 #import "UIViewController+LNPopupSupportPrivate.h"
-#import "UIContextMenuInteraction+LNPopupSupportPrivate.h"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
@@ -15,6 +14,7 @@
 
 #ifndef LNPopupControllerEnforceStrictClean
 
+@interface UIContextMenuInteraction (LNPopupSupportPrivate) @end
 @implementation UIContextMenuInteraction (LNPopupSupportPrivate)
 
 + (void)load
@@ -25,6 +25,11 @@
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_ln_d_pFHFC:));
+		
+		selName = LNPopupHiddenString("_delegate_previewForDismissingForConfiguration:clientReturnedPreview:");
+		LNSwizzleMethod(self,
+						NSSelectorFromString(selName),
+						@selector(_ln_d_pFDFC:cRP:));
 		
 		selName = LNPopupHiddenString("_delegate_contextMenuInteractionWillEndForConfiguration:presentation:");
 		LNSwizzleMethod(self,
@@ -38,10 +43,75 @@
 	}
 }
 
+//_delegate_previewForDismissingForConfiguration:clientReturnedPreview:
+- (id)_ln_d_pFDFC:(id)arg1 cRP:(BOOL*)arg2
+{
+	if([self.view isKindOfClass:__ln_systemButtonBarButtonClass] && [self.view _ln_firstDescendantPassingTest:^BOOL(UIView * _Nonnull viewToTest) {
+		return [viewToTest isKindOfClass:_LNPopupToolbar.class];
+	} includingSelf:YES])
+	{
+		if(arg2 != NULL)
+		{
+			*arg2 = YES;
+		}
+		return [[UITargetedPreview alloc] initWithView:self.view.subviews.firstObject];
+	}
+	
+	return [self _ln_d_pFDFC:arg1 cRP:arg2];
+}
+
 //_delegate_previewForHighlightingForConfiguration:
 - (id)_ln_d_pFHFC:(id)arg1
 {
+	if([self.view isKindOfClass:__ln_systemButtonBarButtonClass] && [self.view _ln_firstDescendantPassingTest:^BOOL(UIView * _Nonnull viewToTest) {
+		return [viewToTest isKindOfClass:_LNPopupToolbar.class];
+	} includingSelf:YES])
+	{
+		return [[UITargetedPreview alloc] initWithView:self.view.subviews.firstObject];
+	}
+	
 	UITargetedPreview* rv = [self _ln_d_pFHFC:arg1];
+	
+	if([self.view isKindOfClass:LNPopupBar.class] && rv == nil)
+	{
+		LNPopupBar* bar = (LNPopupBar*)self.view;
+		if(LNPopupEnvironmentHasGlass())
+		{
+			rv = [[UITargetedPreview alloc] initWithView:bar.contentView.effectView];
+		}
+		else
+		{
+			UIView* view = bar.resolvedIsFloating ? bar.contentView : bar;
+			UIView* targetView = bar.resolvedIsFloating ? bar : bar.superview.superview;
+			UIPreviewTarget* target = [[UIPreviewTarget alloc] initWithContainer:targetView center:[targetView convertPoint:CGPointMake(CGRectGetMidX(view.bounds), CGRectGetMidY(view.bounds)) fromView:view]];
+			
+			UIPreviewParameters* params = [UIPreviewParameters new];
+			params.backgroundColor = [UIColor.systemBackgroundColor colorWithAlphaComponent:0.0];
+			rv = [[UITargetedPreview alloc] initWithView:view parameters:params target:target];
+		}
+	}
+	else if([self.view isKindOfClass:LNPopupBar.class] && rv.view == self.view)
+	{
+		LNPopupBar* bar = (LNPopupBar*)self.view;
+		if(LNPopupEnvironmentHasGlass())
+		{
+			rv = [[UITargetedPreview alloc] initWithView:bar.contentView.effectView];
+		}
+		else
+		{
+			UIView* view = bar.resolvedIsFloating ? bar.contentView : bar;
+			
+			rv = [[UITargetedPreview alloc] initWithView:view parameters:rv.parameters target:rv.target];
+		}
+	}
+	
+	if([self.view isKindOfClass:LNPopupBar.class])
+	{
+		LNPopupBar* popupBar = self.view;
+		[popupBar setHighlighted:NO animated:YES];
+		[popupBar _cancelAnyUserInteraction];
+		[popupBar setWantsBackgroundCutout:NO allowImplicitAnimations:NO];
+	}
 	
 	if([self.view isKindOfClass:LNPopupBar.class] && rv == nil)
 	{

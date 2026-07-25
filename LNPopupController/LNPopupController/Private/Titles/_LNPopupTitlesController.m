@@ -167,6 +167,10 @@ BOOL _LNEnableBarTitleLayoutDebug(void)
 #endif
 	}
 	
+	if (@available(iOS 17.0, *))
+	{
+		_rv.preferredVibrancy = UILabelVibrancyAutomatic;
+	}
 	_rv.numberOfLines = 1;
 	_rv.adjustsFontForContentSizeCategory = YES;
 	_rv.translatesAutoresizingMaskIntoConstraints = NO;

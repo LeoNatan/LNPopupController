@@ -98,9 +98,6 @@
 @end
 
 @implementation LNPopupImageView
-{
-	__weak LNPopupBar* _containingBar;
-}
 
 + (Class)layerClass
 {
@@ -141,18 +138,6 @@
 	id<CAAction> rv = [super actionForLayer:layer forKey:event];
 	
 	return rv;
-}
-
-- (instancetype)initWithContainingPopupBar:(LNPopupBar *)popupBar
-{
-	self = [self initWithFrame:CGRectZero];
-	
-	if(self)
-	{
-		_containingBar = popupBar;
-	}
-	
-	return self;
 }
 
 - (void)_commonInit
@@ -213,6 +198,64 @@
 	[(_LNPopupBarShadowedImageViewLayer*)self.layer setSuperCornerRadius:cornerRadius];
 }
 
+- (void)didMoveToWindow
+{
+	if(self.window == nil)
+	{
+		return;
+	}
+	
+	static NSString* vCFA = LNPopupHiddenString("_viewControllerForAncestor");
+	
+	UIViewController* candidate = [self valueForKey:vCFA];
+	candidate.ln_discoveredTransitionView = self;
+}
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%@ cornerRadius: %@ shadow: %@", super.description, @(self.cornerRadius), self.shadow];
+}
+
+@end
+
+@implementation LNPopupImageView (TransitionSupport) @end
+
+@implementation LNPopupBarImageView
+{
+	__weak LNPopupBar* _containingBar;
+	CGFloat _alpha;
+}
+
+- (instancetype)initWithContainingPopupBar:(LNPopupBar *)popupBar
+{
+	self = [self initWithFrame:CGRectZero];
+	
+	if(self)
+	{
+		_alpha = 1.0;
+		_containingBar = popupBar;
+	}
+	
+	return self;
+}
+
+- (void)setAlpha:(CGFloat)alpha
+{
+	_alpha = alpha;
+	if(alpha > 0.0)
+	{
+		alpha = MIN(alpha, self.allowedAlpha);
+	}
+	
+	[super setAlpha:alpha];
+}
+
+- (void)setAllowedAlpha:(CGFloat)allowedAlpha
+{
+	_allowedAlpha = allowedAlpha;
+	[self setAlpha:_alpha];
+}
+
 - (void)setContentMode:(UIViewContentMode)contentMode
 {
 	if(self.contentMode != contentMode)
@@ -235,22 +278,7 @@
 
 - (void)didMoveToWindow
 {
-	if(self.window == nil || _containingBar != nil)
-	{
-		return;
-	}
-	
-	static NSString* vCFA = LNPopupHiddenString("_viewControllerForAncestor");
-	
-	UIViewController* candidate = [self valueForKey:vCFA];
-	candidate.ln_discoveredTransitionView = self;
-}
-
-- (NSString *)description
-{
-	return [NSString stringWithFormat:@"%@ cornerRadius: %@ shadow: %@", super.description, @(self.cornerRadius), self.shadow];
+	//Do not call super.
 }
 
 @end
-
-@implementation LNPopupImageView (TransitionSupport) @end

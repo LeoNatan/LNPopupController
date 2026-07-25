@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_UI_ACTOR
 @interface LNPopupInteractionPanGestureRecognizer : UIPanGestureRecognizer
 
+/// Enables or disables indirect pointer (e.g. mouse pointer) interactions with the popup content view.
 @property (nonatomic, assign) BOOL allowsIndirectPointerInteraction;
 
 @end

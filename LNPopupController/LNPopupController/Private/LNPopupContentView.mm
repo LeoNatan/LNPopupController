@@ -115,6 +115,11 @@
 		[_popupCloseButton setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 		[_popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
 		[_popupCloseButton setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+		
+		if(@available(iOS 17.0, *))
+		{
+			self.traitOverrides.userInterfaceLevel = UIUserInterfaceLevelElevated;
+		}
 	}
 	
 	return self;
@@ -371,14 +376,26 @@
 	[self _repositionPopupCloseButtonAnimated:NO];
 }
 
+- (UIVisualEffect*)_currentEffect
+{
+	return self.translucent && _backgroundEffect != nil ? _backgroundEffect : _effectView.effect;
+}
+
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc activeAppearance:(LNPopupBarAppearance*)appearance
 {
 	if(self.translucent == NO)
 	{
-		//This is so glass effect get's really removed. 🤦‍♂️
-		_effectView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-		_effectView.effect = nil;
-		_effectView.backgroundColor = UIColor.systemBackgroundColor;
+		if(@available(iOS 26.1, *))
+		{
+			_effectView.effect = [UIColorEffect effectWithColor:UIColor.systemBackgroundColor];
+		}
+		else
+		{
+			//This is so glass effect get's really removed. 🤦‍♂️
+			_effectView.effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+			_effectView.effect = nil;
+			_effectView.backgroundColor = UIColor.systemBackgroundColor;
+		}
 	}
 	else
 	{

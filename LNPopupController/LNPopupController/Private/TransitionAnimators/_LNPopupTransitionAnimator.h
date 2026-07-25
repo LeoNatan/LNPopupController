@@ -36,19 +36,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) CGAffineTransform transform;
 
 @property (nonatomic, readonly) BOOL wantsContentTransition;
-@property (nonatomic, strong, readonly) UIView* contentTransitionWrapperView API_AVAILABLE(ios(26.0));
-@property (nonatomic, strong, readonly) _LNPopupTransitionView* contentViewTransitionView API_AVAILABLE(ios(26.0));
-@property (nonatomic, strong, readonly) UIVisualEffectView* contentTransitionEffectView API_AVAILABLE(ios(26.0));
+@property (nonatomic, strong, readonly) UIView* contentTransitionWrapperView;
+@property (nonatomic, strong, readonly) _LNPopupTransitionView* contentViewTransitionView;
+@property (nonatomic, strong, readonly) UIVisualEffectView* contentTransitionEffectView;
 @property (nonatomic, strong, readonly) UIVisualEffect* popupBarEffect;
-@property (nonatomic, strong, readonly) UIVisualEffect* sourceContentTransitionEffect API_AVAILABLE(ios(26.0));
-@property (nonatomic, strong, readonly) UIVisualEffect* targetContentTransitionEffect API_AVAILABLE(ios(26.0));
-@property (nonatomic, readonly) CGRect sourceContentFrame API_AVAILABLE(ios(26.0));
-@property (nonatomic, readonly) CGRect targetContentFrame API_AVAILABLE(ios(26.0));
-@property (nonatomic, readonly) LNPopupViewCorners sourceContentCornerRadius API_AVAILABLE(ios(26.0));
-@property (nonatomic, readonly) LNPopupViewCorners targetContentCornerRadius API_AVAILABLE(ios(26.0));
-@property (nonatomic, readonly) CGFloat sourceContentAlpha API_AVAILABLE(ios(26.0));
-@property (nonatomic, readonly) CGFloat targetContentAlpha API_AVAILABLE(ios(26.0));
-@property (nonatomic, strong, readonly) _LNPopupTransitionView* popupBarTransitionView API_AVAILABLE(ios(26.0));
+@property (nonatomic, strong, readonly) UIVisualEffect* sourceContentTransitionEffect;
+@property (nonatomic, strong, readonly) UIVisualEffect* targetContentTransitionEffect;
+@property (nonatomic, readonly) CGRect sourceContentFrame;
+@property (nonatomic, readonly) CGRect targetContentFrame;
+@property (nonatomic, readonly) LNPopupViewCorners sourceContentCornerRadius;
+@property (nonatomic, readonly) LNPopupViewCorners targetContentCornerRadius;
+@property (nonatomic, readonly) CGFloat sourceContentAlpha;
+@property (nonatomic, readonly) CGFloat targetContentAlpha;
+@property (nonatomic, strong, readonly) _LNPopupTransitionView* popupBarTransitionView;
 
 @property (nonatomic, readonly) CGFloat scaledBarImageViewCornerRadius;
 @property (nonatomic, strong, readonly) NSShadow* scaledBarImageViewShadow;

@@ -270,22 +270,31 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	{
 		UILabel* topLabel = [UILabel new];
 		topLabel.text = NSLocalizedString(@"Top", @"");
-		topLabel.textColor = [UIColor systemBackgroundColor];
+		topLabel.textColor = UIColor.labelColor;
 		topLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		topLabel.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.view addSubview:topLabel];
 		
-		NSLayoutConstraint* center = [topLabel.centerXAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.centerXAnchor];
-		center.priority = 500;
+		NSLayoutConstraint* topCenterConstraint = [topLabel.centerXAnchor constraintEqualToAnchor:self.view.layoutMarginsGuide.centerXAnchor];
+		NSLayoutConstraint* topCenterButtonAvoidingConstraint = [popupContentView.popupCloseButton.leadingAnchor constraintEqualToAnchor:topLabel.trailingAnchor constant:12];
+		NSLayoutConstraint* constraintToActivate;
+		if(popupContentView.effectivePopupCloseButtonPositioning == LNPopupCloseButtonPositioningCenter)
+		{
+			constraintToActivate = topCenterButtonAvoidingConstraint;
+		}
+		else
+		{
+			constraintToActivate = topCenterConstraint;
+		}
+		
 		[NSLayoutConstraint activateConstraints:@[
 			[topLabel.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor],
-			center,
-			[topLabel.leadingAnchor constraintGreaterThanOrEqualToAnchor:popupContentView.popupCloseButton.trailingAnchor constant:8],
+			constraintToActivate
 		]];
 		
 		UILabel* bottomLabel = [UILabel new];
 		bottomLabel.text = NSLocalizedString(@"Bottom", @"");
-		bottomLabel.textColor = [UIColor systemBackgroundColor];
+		bottomLabel.textColor = UIColor.labelColor;
 		bottomLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		bottomLabel.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.view addSubview:bottomLabel];
@@ -297,10 +306,10 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		UILabel* leadingMarginLabel = [UILabel new];
 		leadingMarginLabel.text = NSLocalizedString(@"|-Leading (Margin)", @"");
 		leadingMarginLabel.textAlignment = NSTextAlignmentLeft;
-		leadingMarginLabel.textColor = [UIColor systemBackgroundColor];
+		leadingMarginLabel.textColor = UIColor.labelColor;
 		leadingMarginLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		leadingMarginLabel.adjustsFontForContentSizeCategory = YES;
-		//	leadingMarginLabel.adjustsFontSizeToFitWidth = YES;
+//		leadingMarginLabel.adjustsFontSizeToFitWidth = YES;
 		leadingMarginLabel.numberOfLines = 0;
 		leadingMarginLabel.lineBreakMode = NSLineBreakByWordWrapping;
 		leadingMarginLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -313,10 +322,10 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		UILabel* trailingMarginLabel = [UILabel new];
 		trailingMarginLabel.text = NSLocalizedString(@"Trailing (Margin)-|", @"");
 		trailingMarginLabel.textAlignment = NSTextAlignmentRight;
-		trailingMarginLabel.textColor = [UIColor systemBackgroundColor];
+		trailingMarginLabel.textColor = UIColor.labelColor;
 		trailingMarginLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		trailingMarginLabel.adjustsFontForContentSizeCategory = YES;
-		//	trailingMarginLabel.adjustsFontSizeToFitWidth = YES;
+//		trailingMarginLabel.adjustsFontSizeToFitWidth = YES;
 		trailingMarginLabel.numberOfLines = 0;
 		trailingMarginLabel.lineBreakMode = NSLineBreakByWordWrapping;
 		trailingMarginLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -331,10 +340,10 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		UILabel* leadingSafeAreaLabel = [UILabel new];
 		leadingSafeAreaLabel.text = NSLocalizedString(@"|-Leading (Safe Area)", @"");
 		leadingSafeAreaLabel.textAlignment = NSTextAlignmentLeft;
-		leadingSafeAreaLabel.textColor = [UIColor systemBackgroundColor];
+		leadingSafeAreaLabel.textColor = UIColor.labelColor;
 		leadingSafeAreaLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		leadingSafeAreaLabel.adjustsFontForContentSizeCategory = YES;
-		//	leadingSafeAreaLabel.adjustsFontSizeToFitWidth = YES;
+//		leadingSafeAreaLabel.adjustsFontSizeToFitWidth = YES;
 		leadingSafeAreaLabel.numberOfLines = 0;
 		leadingSafeAreaLabel.lineBreakMode = NSLineBreakByWordWrapping;
 		leadingSafeAreaLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -347,10 +356,10 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		UILabel* trailingSafeAreaLabel = [UILabel new];
 		trailingSafeAreaLabel.text = NSLocalizedString(@"Trailing (Safe Area)-|", @"");
 		trailingSafeAreaLabel.textAlignment = NSTextAlignmentRight;
-		trailingSafeAreaLabel.textColor = [UIColor systemBackgroundColor];
+		trailingSafeAreaLabel.textColor = UIColor.labelColor;
 		trailingSafeAreaLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		trailingSafeAreaLabel.adjustsFontForContentSizeCategory = YES;
-		//	trailingSafeAreaLabel.adjustsFontSizeToFitWidth = YES;
+//		trailingSafeAreaLabel.adjustsFontSizeToFitWidth = YES;
 		trailingSafeAreaLabel.numberOfLines = 0;
 		trailingSafeAreaLabel.lineBreakMode = NSLineBreakByWordWrapping;
 		trailingSafeAreaLabel.translatesAutoresizingMaskIntoConstraints = NO;

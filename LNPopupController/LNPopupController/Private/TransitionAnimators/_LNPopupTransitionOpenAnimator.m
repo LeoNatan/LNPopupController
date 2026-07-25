@@ -38,7 +38,7 @@
 
 - (UIVisualEffect *)targetContentTransitionEffect
 {
-	return self.popupContentView.effectView.effect;
+	return self.popupContentView._currentEffect;
 }
 
 - (CGRect)sourceContentFrame
@@ -101,11 +101,6 @@
 	
 	self.crossfadeView.alpha = 1.0;
 	self.crossfadeView.cornerRadius = self.popupBar.imageView.cornerRadius;
-	
-	if(self.wantsContentTransition)
-	{
-		[self.popupBar.contentView clearEffect];
-	}
 }
 
 - (void)performBeforeAdditionalAnimations
@@ -123,10 +118,7 @@
 	self.transitionView.sourceViewTransform = CGAffineTransformIdentity;
 	self.crossfadeView.cornerRadius = self.transitionView.cornerRadius;
 	
-	if(@available(iOS 26.0, *))
-	{
-		self.contentViewTransitionView.alpha = self.targetContentAlpha;
-	}
+	self.contentViewTransitionView.alpha = self.targetContentAlpha;
 }
 
 - (void)performAdditional01Animations
@@ -135,10 +127,7 @@
 	
 	self.crossfadeView.alpha = 0.0;
 	
-	if(@available(iOS 26.0, *))
-	{
-		self.popupBarTransitionView.alpha = 0.0;
-	}
+	self.popupBarTransitionView.alpha = 0.0;
 }
 
 @end

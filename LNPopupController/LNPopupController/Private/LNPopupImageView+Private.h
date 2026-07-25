@@ -11,7 +11,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface LNPopupImageView ()
+@interface LNPopupBarImageView: LNPopupImageView
+
+@property (nonatomic) CGFloat allowedAlpha;
 
 - (instancetype)initWithContainingPopupBar:(LNPopupBar*)popupBar;
 

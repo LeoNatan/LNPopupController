@@ -66,7 +66,7 @@
 
 - (UIVisualEffect *)sourceContentTransitionEffect
 {
-	return self.popupContentView.effectView.effect;
+	return self.popupContentView._currentEffect;
 }
 
 - (UIVisualEffect *)targetContentTransitionEffect
@@ -111,10 +111,7 @@
 	self.crossfadeView.alpha = 0.0;
 	self.crossfadeView.cornerRadius = self.transitionView.cornerRadius;
 	
-	if(@available(iOS 26.0, *))
-	{
-		self.popupBarTransitionView.alpha = 0.0;
-	}
+	self.popupBarTransitionView.alpha = 0.0;
 }
 
 - (void)performAdditionalAnimations
@@ -124,7 +121,7 @@
 	[self.transitionView setTargetFrameUpdatingTransform:self.targetFrame];
 	self.crossfadeView.cornerRadius = self.popupBar.imageView.cornerRadius;
 	
-	if(self.popupContentView.effectView.effect.ln_isGlass)
+	if(self.popupContentView._currentEffect.ln_isGlass)
 	{
 		_wasGlass = YES;
 	}
@@ -133,6 +130,9 @@
 - (void)performAdditionalDelayed015Animations
 {
 	[super performAdditionalDelayed015Animations];
+	
+	self.popupBarTransitionView.alpha = 1.0;
+	self.contentViewTransitionView.alpha = 0.0;
 }
 
 - (void)performAdditional04Delayed015Animations
@@ -140,11 +140,8 @@
 	[super performAdditional04Delayed015Animations];
 	
 	self.crossfadeView.alpha = 1.0;
-	if(@available(iOS 26.0, *))
-	{
-		self.contentViewTransitionView.alpha = self.targetContentAlpha;
-	}
-	else
+	
+	if(self.wantsContentTransition == NO)
 	{
 		if(self.containerController._ln_shouldPopupContentAnyFadeForTransition)
 		{
@@ -169,31 +166,11 @@
 	}
 }
 
-- (void)performAdditional075Delayed015Animations
-{
-	[super performAdditional075Delayed015Animations];
-	
-	if(@available(iOS 26.0, *))
-	{
-		self.popupBarTransitionView.alpha = 1.0;
-	}
-}
-
-- (void)performAdditional025Delayed060Animations
-{
-	[super performAdditional025Delayed060Animations];
-	
-	if(@available(iOS 26.0, *))
-	{
-		self.contentTransitionEffectView.effect = nil;
-	}
-}
-
 - (void)performAdditionalCompletion
 {
 	[super performAdditionalCompletion];
 	
-	if(ln_unavailable(iOS 26.0, *))
+	if(self.wantsContentTransition == NO)
 	{
 		self.popupContentView.alpha = 1.0;
 		self.currentContentController.view.alpha = 1.0;

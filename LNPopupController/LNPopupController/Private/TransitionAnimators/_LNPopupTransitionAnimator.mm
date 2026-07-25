@@ -47,14 +47,14 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 				_contentViewTransitionView.matchesAlpha = NO;
 				_contentViewTransitionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
 				
-				_contentTransitionEffectView = [[UIVisualEffectView alloc] initWithEffect:self.sourceContentTransitionEffect];
+				_contentTransitionEffectView = [UIVisualEffectView new];
 				_contentTransitionEffectView.frame = popupContentView.frame;
 				[_contentTransitionEffectView.contentView addSubview:_contentViewTransitionView];
 				_contentViewTransitionView.frame = self.popupContentView.currentPopupContentViewController.view.bounds;
 				_contentTransitionEffectView.clipsToBounds = YES;
 				_contentTransitionEffectView.layer.cornerCurve = kCACornerCurveCircular;
 				
-				_popupBarTransitionView = [_LNPopupTransitionView transitionViewWithSourceView:popupBar.contentView.effectView];
+				_popupBarTransitionView = [_LNPopupTransitionView transitionViewWithSourceView:popupBar.contentView];
 				_popupBarTransitionView.matchesAlpha = NO;
 				_popupBarTransitionView.allowsEffects = YES;
 				_popupBarTransitionView.matchesPosition = NO;
@@ -88,7 +88,6 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			_transitionView = [[_LNPopupTransitionView alloc] initWithSourceView:self.view];
 		}
 		
-		if(@available(iOS 26.0, *))
 		if(_wantsContentTransition)
 		{
 			_transitionView.matchesAlpha = NO;
@@ -96,7 +95,14 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			_alphaBefore = self.view.alpha;
 			self.view.alpha = 0.0;
 			
-			_popupBarEffect = self.popupBar.contentView.effectView.effect;
+			_popupBarEffect = self.popupBar.contentView.effect;
+			if(@available(iOS 26.0, *))
+			{
+				//We don't really want another glass here, but to have vibrancy in the labels and buttons, we need a visual effect view with a "clear" effect that still provides a vibrancy environment. So we strip a glass effect from all of its elements.
+				self.popupBar.contentView.effectOverride = _LNPopupGlassWrapperEffect.vibrancyOnlyEffect;
+			} else {
+				abort();
+			}
 		}
 		
 		_popupBarImageAlphaBeforeAnimation = self.popupBar.imageView.alpha;
@@ -135,10 +141,10 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			_transitionView.alpha = self.sourceImageAlpha;
 		}
 		
-		if(@available(iOS 26.0, *))
 		if(_wantsContentTransition)
 		{
 			self.popupContentView.effectView.alpha = 0.0;
+			_contentTransitionEffectView.effect = self.sourceContentTransitionEffect;
 			_contentTransitionWrapperView.frame = self.sourceContentFrame;
 			_contentTransitionEffectView.corners = self.sourceContentCornerRadius;
 			_contentViewTransitionView.alpha = self.sourceContentAlpha;
@@ -152,7 +158,6 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 			objc_setAssociatedObject(self.transitionView.sourceLayer, _LNPopupOpenCloseTransitionViewKey, _transitionView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 		}
 		
-		if(@available(iOS 26.0, *))
 		if(_wantsContentTransition)
 		{
 			[self.popupContentView.superview addSubview:_contentTransitionWrapperView];
@@ -167,7 +172,6 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	[animator addAnimations:otherAnimations];
 	
 	[animator addAnimations:^{
-		if(@available(iOS 26.0, *))
 		if(_wantsContentTransition)
 		{
 			_contentTransitionWrapperView.frame = self.targetContentFrame;
@@ -191,12 +195,8 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	}];
 	
 	[animator addAnimations:^{
-		[UIView animateKeyframesWithDuration:0.0 delay:0.0 options:0 animations:^{
-			[UIView addKeyframeWithRelativeStartTime:0.15 relativeDuration:0.85 animations:^{
-				[self performAdditionalDelayed015Animations];
-			}];
-		} completion:nil];
-	}];
+		[self performAdditionalDelayed015Animations];
+	} delayFactor:0.15];
 	
 	[animator addAnimations:^{
 		[UIView animateKeyframesWithDuration:0.0 delay:0.0 options:0 animations:^{
@@ -340,12 +340,11 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 - (void)completeTransition
 {
 	[UIView performWithoutAnimation:^{
-		if(@available(iOS 26.0, *))
 		if(_wantsContentTransition)
 		{
 			self.view.alpha = _alphaBefore;
 			self.popupContentView.effectView.alpha = 1.0;
-			self.popupBar.contentView.effectView.effect = _popupBarEffect;
+			self.popupBar.contentView.effectOverride = nil;
 			[_contentTransitionWrapperView removeFromSuperview];
 			self.popupContentView.transitionView = nil;
 		}

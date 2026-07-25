@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) _LNPopupBarBackgroundEffectView* effectView;
 
 @property (nonatomic, copy, nullable) UIVisualEffect* effect;
+@property (nonatomic, copy, nullable) UIVisualEffect* effectOverride;
 - (void)clearEffect;
 
 @property (nonatomic, strong, readonly) UIView* contentView;
