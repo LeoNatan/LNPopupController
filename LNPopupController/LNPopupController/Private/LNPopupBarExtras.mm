@@ -16,6 +16,9 @@
 static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
 static id(*_effectWithStyle_tintColor_invertAutomaticStyle)(id, SEL, NSUInteger, UIColor*, BOOL);
 
+static const Class adaptorView = NSClassFromString(LNPopupHiddenString("_UITAMICAdaptorView"));
+const Class __ln_systemButtonBarButtonClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
+
 __attribute__((constructor))
 static void __setupFunction(void)
 {
@@ -172,9 +175,9 @@ static void __setupFunction(void)
 
 + (void)load
 {
-	if(@available(iOS 26.0, *))
+	@autoreleasepool
 	{
-		@autoreleasepool
+		if(@available(iOS 26.0, *))
 		{
 			Method m = LNSwizzleClassGetClassMethod(self, @selector(_ln_vPFT:));
 			Class metaclass = object_getClass(self);
@@ -183,29 +186,52 @@ static void __setupFunction(void)
 	}
 }
 
+- (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem
+{
+	UIView* itemView = [barButtonItem valueForKey:@"view"];
+	
+	if([itemView.superview isKindOfClass:adaptorView])
+	{
+		itemView = itemView.superview;
+	}
+	
+	return itemView;
+}
+
+- (BOOL)_isViewDescendantOfToolbarItem:(UIView*)rv
+{
+	if(rv == nil)
+	{
+		return NO;
+	}
+	
+	for(UIBarButtonItem* item in self.items)
+	{
+		UIView* view = [self _viewForBarButtonItem:item];
+		if(view == nil)
+		{
+			continue;
+		}
+		
+		if([rv isDescendantOfView:view])
+		{
+			return YES;
+		}
+	}
+	
+	return NO;
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
 	UIView* rv = [super hitTest:point withEvent:event];
 	
-	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 18)
+	if([self _isViewDescendantOfToolbarItem:rv])
 	{
-		if(rv != nil && rv != self)
-		{
-			CGRect frameInBarCoords = [self convertRect:rv.bounds fromView:rv];
-			CGRect instetFrame = CGRectInset(frameInBarCoords, 2, 0);
-			
-			return CGRectContainsPoint(instetFrame, point) ? rv : self;
-		}
-		
 		return rv;
 	}
 	
-	if(rv != nil && [rv isKindOfClass:UIControl.class] == NO && [NSStringFromClass(rv.class) containsString:@"BarItemView"] == NO)
-	{
-		rv = nil;
-	}
-	
-	return rv;
+	return nil;
 }
 
 - (void)setItemSpacing:(CGFloat)itemSpacing
@@ -219,7 +245,7 @@ static void __setupFunction(void)
 {
 	[super layoutSubviews];
 	
-	//On iOS 11 and above reset the semantic content attribute to make sure it propagades to all subviews.
+	//On iOS 11 and above reset the semantic content attribute to make sure it propagates to all subviews.
 	[self setSemanticContentAttribute:self.semanticContentAttribute];
 	
 	static NSString* stackViewKeyPath = LNPopupHiddenString("_visualProvider.contentView.buttonBar.stackView");
@@ -231,6 +257,19 @@ static void __setupFunction(void)
 	@try {
 		[self setValue:@(_itemSpacing) forKeyPath:minimumInterItemSpaceKeyPath];
 	} @catch(NSException*) {}
+	
+	for(UIView* arrangedSubview in stackView.arrangedSubviews)
+	{
+		if([arrangedSubview isKindOfClass:__ln_systemButtonBarButtonClass] == NO)
+		{
+			continue;
+		}
+		
+		for(UIView* subview in arrangedSubview.subviews)
+		{
+			subview.center = CGPointMake(subview.center.x, CGRectGetMidY(self.bounds));
+		}
+	}
 	
 	[self._layoutDelegate _toolbarDidLayoutSubviews];
 }
@@ -276,110 +315,6 @@ static void __setupFunction(void)
 		UIView* view = [button valueForKey:viewKey];
 		[view setNeedsLayout];
 		[view layoutIfNeeded];
-	}
-}
-
-@end
-
-@implementation LNNonMarqueeLabel
-
-@synthesize marqueeScrollEnabled, running, synchronizedLabels;
-
-- (void)reset {}
-
-@end
-
-@implementation LNLegacyMarqueeLabel
-{
-	BOOL _enabled;
-	NSHashTable<LNLegacyMarqueeLabel*>* _weakSynchronizedLabels;
-}
-
-- (id)initWithFrame:(CGRect)frame rate:(CGFloat)pixelsPerSec andFadeLength:(CGFloat)aFadeLength
-{
-	self = [super initWithFrame:frame rate:pixelsPerSec andFadeLength:aFadeLength];
-	if(self)
-	{
-		_enabled = YES;
-	}
-	return self;
-}
-
-- (BOOL)isMarqueeScrollEnabled
-{
-	return _enabled;
-}
-
--(void)setMarqueeScrollEnabled:(BOOL)marqueeScrollEnabled
-{
-	if(_enabled == marqueeScrollEnabled)
-	{
-		return;
-	}
-	
-	_enabled = marqueeScrollEnabled;
-	if(!_enabled)
-	{
-		[self shutdownLabel];
-	}
-	
-	self.holdScrolling = !_enabled;
-}
-
-- (BOOL)isRunning
-{
-	return self.awayFromHome;
-}
-
-- (void)setRunning:(BOOL)running
-{
-	if(running)
-	{
-		[self triggerScrollStart];
-	}
-	else
-	{
-		[self shutdownLabel];
-	}
-}
-
-- (NSArray<id<LNMarqueeLabel>> *)synchronizedLabels
-{
-	return _weakSynchronizedLabels.allObjects;
-}
-
-- (void)setSynchronizedLabels:(NSArray<id<LNMarqueeLabel>> *)synchronizedLabels
-{
-	_weakSynchronizedLabels = [NSHashTable weakObjectsHashTable];
-	for (id object in synchronizedLabels)
-	{
-		[_weakSynchronizedLabels addObject:object];
-	}
-}
-
-- (void)reset
-{
-	[self shutdownLabel];
-}
-
-- (void)labelReturnedToHome:(BOOL)finished
-{
-	NSIndexSet* stillRunning = [self.synchronizedLabels indexesOfObjectsPassingTest:^BOOL(id<LNMarqueeLabel> _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-		return obj.isMarqueeScrollEnabled && obj.isRunning;
-	}];
-	
-	if(stillRunning.count > 0)
-	{
-		self.holdScrolling = YES;
-		return;
-	}
-	
-	for(LNLegacyMarqueeLabel* label in _weakSynchronizedLabels)
-	{
-		if(label.isMarqueeScrollEnabled)
-		{
-			label.holdScrolling = NO;
-		}
 	}
 }
 
@@ -438,6 +373,24 @@ static void __setupFunction(void)
 }
 
 #endif
+
+@end
+
+@implementation _LNPopupBarProgressView
+
+- (UITraitCollection *)traitCollection
+{
+	UITraitCollection* rv = [super traitCollection];
+	
+#if TARGET_OS_MACCATALYST
+	//Force the use of the Pad visual provider for the progress view.
+	rv = [rv traitCollectionByModifyingTraits:^(id<UIMutableTraits>  _Nonnull mutableTraits) {
+		mutableTraits.userInterfaceIdiom = UIUserInterfaceIdiomPad;
+	}];
+#endif
+	
+	return rv;
+}
 
 @end
 

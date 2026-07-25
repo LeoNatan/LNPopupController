@@ -1,5 +1,5 @@
 //
-//  UIToolbar+LNPopupMinimizationSupport.h
+//  UIToolbar+LNPopupInheritedBarMetricsSupport.h
 //  LNPopupController
 //
 //  Created by Léo Natan on 13/10/25.
@@ -12,8 +12,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UINavigationController (LNPopupMinimizationSupport)
+@interface UINavigationController (LNPopupInheritedBarMetricsSupport)
 
++ (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar inController:(UIViewController*)controller;
 - (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar;
 
 @end

@@ -96,11 +96,15 @@
 #if LNPOPUP
 	_demoVC = [IntroWebViewController new];
 	
-	self.navigationController.popupBar.barStyle = LNPopupBarStyleFloating;
+	if(NSProcessInfo.processInfo.isMacCatalystApp == NO && NSProcessInfo.processInfo.isiOSAppOnMac == NO)
+	{
+		self.navigationController.popupBar.barStyle = LNPopupBarStyleFloating;
+	}
 	self.navigationController.popupBar.standardAppearance.marqueeScrollEnabled = YES;
+	self.navigationController.popupBar.inheritsBottomBarMetrics = NO;
+	self.navigationController.popupBar.progressViewStyle = LNPopupBarProgressViewStyleBottom;
 	if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27.0)
 	{
-		self.navigationController.popupBar.supportsMinimization = NO;
 		self.navigationController.popupBar.standardAppearance.floatingBarShineEnabled = YES;
 	}
 
@@ -111,6 +115,15 @@
 	[self.navigationController presentPopupBarWithContentViewController:_demoVC animated:NO completion:nil];
 	
 	[self.navigationController.popupBar addInteraction:[LNPopupDemoContextMenuInteraction new]];
+#endif
+	
+#if defined(__IPHONE_27_0)
+	if(@available(iOS 27.0, *))
+	{
+		UIBarMinimization* minimization = [UIBarMinimization new];
+		minimization.minimizationBehavior = UIBarMinimizationBehaviorOnScrollDown;
+		self.navigationItem.navigationBarMinimization = minimization;
+	}
 #endif
 }
 
@@ -156,6 +169,29 @@
 			segue.destinationViewController.popoverPresentationController.barButtonItem = sender;
 		}
 	}
+}
+
+@end
+
+@interface LNMusicStoryboardSegue: UIStoryboardSegue @end
+@implementation LNMusicStoryboardSegue
+
+- (instancetype)initWithIdentifier:(NSString *)identifier source:(UIViewController *)source destination:(UIViewController *)destination
+{
+	BOOL disableSearchTab =
+#if LNPOPUP
+	[NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableSearchTab]
+#else
+	YES
+#endif
+	;
+	
+	if(disableSearchTab)
+	{
+		destination = [[UIStoryboard storyboardWithName:@"Music" bundle:nil] instantiateViewControllerWithIdentifier:@"NonSearch"];
+	}
+	
+	return [super initWithIdentifier:identifier source:source destination:destination];
 }
 
 @end

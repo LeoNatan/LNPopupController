@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "icon_1024.png",
+      "filename" : "LNPopupController-iOS-Default-60x60@3x.png",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Icon-dark.png",
+      "filename" : "LNPopupController-iOS-Dark-60x60@3x.png",
       "idiom" : "universal"
     }
   ],

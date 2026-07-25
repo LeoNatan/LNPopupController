@@ -13,6 +13,31 @@
 #import "NSAttributedString+LNPopupSupport.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupTitleLabelWrapper.h"
+#import "LNMarqueeLabelUtils.h"
+
+#if LN_HAS_SYSTEM_MARQUEE_LABEL
+static BOOL __LNPopupUseSystemMarqueeLabel(void)
+{
+#if TARGET_OS_MACCATALYST
+	return YES;
+#else
+	static BOOL bundleRequest;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		bundleRequest = [[NSBundle.mainBundle objectForInfoDictionaryKey:@"LNPopupUseSystemMarqueeLabel"] boolValue];
+	});
+	return bundleRequest || [NSUserDefaults.standardUserDefaults boolForKey:@"LNPopupUseSystemMarqueeLabel"];
+#endif
+}
+#endif
+
+#ifdef DEBUG
+#import "LNPopupDebug.h"
+BOOL _LNEnableBarTitleLayoutDebug(void)
+{
+	return [__LNDebugUserDefaults() boolForKey:@"__PopupSettingBarEnableTitleLayoutDebug"];
+}
+#endif
 
 @interface _LNPopupBarTitlesView : UIStackView @end
 @implementation _LNPopupBarTitlesView @end
@@ -122,7 +147,7 @@
 	}
 	else
 	{
-#if __has_include(<LNSystemMarqueeLabel.h>)
+#if LN_HAS_SYSTEM_MARQUEE_LABEL
 		if(__LNPopupUseSystemMarqueeLabel())
 		{
 			LNSystemMarqueeLabel* rv = [[LNSystemMarqueeLabel alloc] initWithFrame:frame];
@@ -137,11 +162,15 @@
 			rv.animationDelay = _popupBar.activeAppearance.marqueeScrollDelay;
 			rv.marqueeType = MLContinuous;
 			_rv = rv;
-#if __has_include(<LNSystemMarqueeLabel.h>)
+#if LN_HAS_SYSTEM_MARQUEE_LABEL
 		}
 #endif
 	}
 	
+	if (@available(iOS 17.0, *))
+	{
+		_rv.preferredVibrancy = UILabelVibrancyAutomatic;
+	}
 	_rv.numberOfLines = 1;
 	_rv.adjustsFontForContentSizeCategory = YES;
 	_rv.translatesAutoresizingMaskIntoConstraints = NO;
@@ -228,7 +257,7 @@
 					_titleLabel = [self _labelWithFrame:titleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
 					_titleLabel.marqueeScrollEnabled = self.marqueePaused == NO;
 #if DEBUG
-					if(_LNEnableBarLayoutDebug())
+					if(_LNEnableBarTitleLayoutDebug())
 					{
 						_titleLabel.backgroundColor = [UIColor.redColor colorWithAlphaComponent:0.5];
 					}
@@ -269,7 +298,7 @@
 					_subtitleLabel = [self _labelWithFrame:subtitleFrameToUse marqueeEnabled:_popupBar.activeAppearance.marqueeScrollEnabled];
 					_subtitleLabel.marqueeScrollEnabled = self.marqueePaused == NO;
 #if DEBUG
-					if(_LNEnableBarLayoutDebug())
+					if(_LNEnableBarTitleLayoutDebug())
 					{
 						_subtitleLabel.backgroundColor = [UIColor.cyanColor colorWithAlphaComponent:0.5];
 					}
@@ -421,6 +450,11 @@
 	currentFrame.origin.x = targetFrame.origin.x;
 	
 	self.titlesView.frame = currentFrame;
+}
+
+- (BOOL)hasSwiftUITitles
+{
+	return self.popupItem.swiftuiTitleContentViewController != nil || self.popupItem.swiftuiTitleContentView != nil;
 }
 
 - (NSString *)description

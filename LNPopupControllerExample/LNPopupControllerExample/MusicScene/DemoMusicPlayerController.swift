@@ -38,7 +38,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		super.init(rootView: playerView)
 		
 		registerForTraitChanges([LNPopupBar.EnvironmentTrait.self]) { (self: Self, previousTraitCollection) in
-			self.updateBarItems(with: self.traitCollection.popupBarEnvironment, animated: true)
+			self.reloadBarItems(with: self.traitCollection, animated: true)
 		}
 		
 		playerView.playbackState.onPrevSong = { [weak self] in
@@ -64,8 +64,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 			} else {
 				startTimer()
 			}
-		} onChange: {
-			Task { @MainActor [weak self] in
+		} onChange: { [weak self] in
+			Task { @MainActor in
 				self?.updateTimerFromPlayerView()
 			}
 		}
@@ -75,8 +75,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		withObservationTracking {
 			_ = playerView.playbackState.isPlaying
 			updateBarItems(with: traitCollection.popupBarEnvironment, animated: true)
-		} onChange: {
-			Task { @MainActor [weak self] in
+		} onChange: { [weak self] in
+			Task { @MainActor in
 				self?.updateBarItemsFromPlayerView()
 			}
 		}
@@ -86,8 +86,8 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		withObservationTracking {
 			let progress = playerView.playbackState.progress
 			popupItem.progress = popupItem.isEmptyPlaybackItem ? 0.0 : progress
-		} onChange: {
-			Task { @MainActor [weak self] in
+		} onChange: { [weak self] in
+			Task { @MainActor in
 				self?.updateItemProgressFromPlayerView()
 			}
 		}
@@ -95,7 +95,11 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	}
 	
 	fileprivate func reloadBarItems(with traitCollection: UITraitCollection, animated: Bool = false) {
-		LNPopupItemSetStandardMusicControls(popupItem, popupItem.isEmptyPlaybackItem || !playerView.playbackState.isPlaying, animated, traitCollection, UIAction { [weak self] _ in
+		guard let popupBar = popupPresentationContainer?.popupBar else {
+			return
+		}
+		
+		LNPopupItemSetStandardMusicControls(popupItem, popupBar, popupItem.isEmptyPlaybackItem || !playerView.playbackState.isPlaying, animated, traitCollection, UIAction { [weak self] _ in
 			self?.goPrev()
 		}, UIAction { [weak self] _ in
 			self?.playerView.playbackState.isPlaying.toggle()
@@ -108,17 +112,20 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	fileprivate func updateBarItems(with popupBarEnvironment: LNPopupBar.Environment, animated: Bool = false) {
 		popupItem.barButtonItems?.forEach { $0.isEnabled = !popupItem.isEmptyPlaybackItem }
 		
-		let playPauseImage = UIImage(systemName: playerView.playbackState.isPlaying ? "pause.fill" : "play.fill")
-		if animated {
-			popupItem.barButtonItems?.first?.setSymbolImage(playPauseImage.unsafelyUnwrapped, contentTransition: .replace)
-		} else {
-			popupItem.barButtonItems?.first?.image = playPauseImage
+		if let playPauseItem = popupItem.barButtonItems?.first(where: { $0.accessibilityIdentifier == "PlayPauseButton" }) {
+			let playPauseImage = UIImage(systemName: playerView.playbackState.isPlaying ? "pause.fill" : "play.fill")
+			if animated {
+				playPauseItem.setSymbolImage(playPauseImage.unsafelyUnwrapped, contentTransition: .replace)
+			} else {
+				playPauseItem.image = playPauseImage
+			}
 		}
-		popupItem.barButtonItems?.last?.isHidden = traitCollection.popupBarEnvironment == .inline
 	}
 	
 	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
 		super.viewDidMove(toPopupContainerContentView: popupContentView)
+		
+		popupContentView?.popupCloseButtonStyle = .grabber
 		
 		if popupContentView == nil {
 			stopTimer()
@@ -142,26 +149,6 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		view.tintColor = .white
 	}
 	
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		
-		UIView.performWithoutAnimation {
-			view.alpha = 0.0
-		}
-		
-		view.alpha = 1.0
-	}
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-		
-		UIView.performWithoutAnimation {
-			view.alpha = 1.0
-		}
-		
-		view.alpha = 0.0
-	}
-	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
@@ -177,11 +164,21 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		}
 	}
 	
-	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-		super.traitCollectionDidChange(previousTraitCollection)
+	override func viewWillTransition(to size: CGSize, with coordinator: any UIViewControllerTransitionCoordinator) {
+		super.viewWillTransition(to: size, with: coordinator)
 		
-		if previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass {
-			reloadBarItems(with: traitCollection, animated: true)
+		coordinator.animate { context in
+			self.reloadBarItems(with: self.traitCollection, animated: context.isAnimated)
+		}
+	}
+	
+	override func willTransition(to newCollection: UITraitCollection, with coordinator: any UIViewControllerTransitionCoordinator) {
+		super.willTransition(to: newCollection, with: coordinator)
+		
+		if traitCollection.horizontalSizeClass != newCollection.horizontalSizeClass {
+			coordinator.animate { context in
+				self.reloadBarItems(with: newCollection, animated: context.isAnimated)
+			}
 		}
 	}
 	
@@ -241,6 +238,7 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	func play() {
 		playerView.playbackState.progress = 0.0
 		playerView.playbackState.isPlaying = true
+		updateBarItems(with: self.traitCollection.popupBarEnvironment, animated: true)
 	}
 	
 	var nextSong: ((LNPopupItem) -> Bool)? = nil

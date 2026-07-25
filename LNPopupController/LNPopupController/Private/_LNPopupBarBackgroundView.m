@@ -14,10 +14,19 @@
 
 @implementation _LNPopupBarBackgroundEffectView
 
+#if DEBUG
+
+- (void)setEffect:(UIVisualEffect *)effect
+{
+	[super setEffect:effect];
+}
+
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
 }
+
+#endif
 
 @end
 
@@ -27,6 +36,7 @@
 	UIView* _transitionShadingView;
 	
 	UIViewContentMode _cachedImageMode;
+	UIVisualEffect* _actualEffect;
 }
 
 - (instancetype)initWithEffect:(UIVisualEffect *)effect
@@ -66,16 +76,35 @@
 
 - (UIVisualEffect *)effect
 {
-	return _effectView.effect;
+	return _actualEffect;
 }
 
 - (void)setEffect:(UIVisualEffect *)effect
 {
-	_effectView.effect = effect;
+	_actualEffect = effect;
+
+	UIVisualEffect* effectToUse = _effectOverride ?: _actualEffect;
+	_effectView.effect = effectToUse;
+}
+
+- (void)setEffectOverride:(UIVisualEffect *)effectOverride
+{
+	_effectOverride = effectOverride;
+	if(_effectOverride != nil)
+	{
+		_effectView.effect = nil;
+	}
+	[self setEffect:_actualEffect];
 }
 
 - (void)clearEffect
 {
+	_actualEffect = nil;
+	if(_effectOverride != nil)
+	{
+		return;
+	}
+	
 	//iOS 26.0 is retarded, and wont `nil` a glass effect, so set it to a blur first, then nil 🤦‍♂️
 	_effectView.effect = [UIVisualEffect new];
 	_effectView.effect = nil;

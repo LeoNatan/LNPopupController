@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class LNPopupController;
+
 @interface LNPopupOpenTapGestureRecognizer : UITapGestureRecognizer
+
+- (instancetype)initWithPopupController:(LNPopupController*)popupController action:(SEL)action;
 
 @end

@@ -16,24 +16,26 @@
 #import "_LNWeakRef.h"
 #import <objc/runtime.h>
 
-UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas)
+UIEdgeInsets __LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas)
 {
 	if(@available(iOS 26.0, *))
-	if(LNPopupEnvironmentHasGlass() && !limitToSafeAreas)
+	if(LNPopupEnvironmentHasGlass() && limitToSafeAreas == NO)
 	{
 		//TODO: Find out where to get these constants from the system.
 		if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone)
 		{
 			if(containerView.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 			{
-				return UIEdgeInsetsMake(containerView.safeAreaInsets.top, 20, 20, 20);
+				BOOL isCompactButHasSafeArea = containerView.safeAreaInsets.left > 10;
+				
+				return UIEdgeInsetsMake(isCompactButHasSafeArea ? 20 : containerView.safeAreaInsets.top, isCompactButHasSafeArea ? 38 : 2, 20, isCompactButHasSafeArea ? 38 : 20);
 			}
 			else
 			{
 				return UIEdgeInsetsMake(20, 38, 20, 38);
 			}
 		}
-		else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+		else if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad || LNPopupBar.isCatalystApp)
 		{
 			UIEdgeInsets safeArea = [containerView edgeInsetsForLayoutRegion:[UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:UIViewLayoutRegionAdaptivityAxisHorizontal]];
 			
@@ -59,8 +61,23 @@ UIEdgeInsets LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToS
 			}
 		}
 	}
-
+	
+	if(LNPopupEnvironmentHasGlass() && UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPhone)
+	{
+		return UIEdgeInsetsMake(0, 10, 0, 10);
+	}
+	
 	return containerView.layoutMargins;
+}
+
+CGFloat __LNPopupScaledFloat(CGFloat value, UITraitCollection* traitCollection)
+{
+	if(traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac)
+	{
+		return value * 0.77;
+	}
+	
+	return value;
 }
 
 @implementation _LNPopupBarBackgroundGroupNameOverride
@@ -342,15 +359,15 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	return NO;
 }
 
-- (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test
+- (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf
 {
-	if(test(self))
+	if(test(self) && includeSelf)
 	{
 		return self;
 	}
 	
 	for (UIView* subview in self.subviews) {
-		UIView* passing = [subview _ln_firstSubviewPassingTest:test];
+		UIView* passing = [subview _ln_firstSubviewPassingTest:test includingSelf:YES];
 		if(passing != nil)
 		{
 			return passing;
@@ -360,10 +377,61 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 	return nil;
 }
 
+- (nullable UIView*)_ln_lastSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf
+{
+	if(test(self) && includeSelf)
+	{
+		return self;
+	}
+	
+	for (UIView* subview in self.subviews.reverseObjectEnumerator) {
+		UIView* passing = [subview _ln_firstSubviewPassingTest:test includingSelf:YES];
+		if(passing != nil)
+		{
+			return passing;
+		}
+	}
+	
+	return nil;
+}
+
+- (nullable UIView*)_ln_firstDescendantPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf
+{
+	if(test(self) && includeSelf)
+	{
+		return self;
+	}
+	
+	UIView* viewToTest = self.superview;
+	while(viewToTest != nil)
+	{
+		if(test(viewToTest))
+		{
+			return viewToTest;
+		}
+		viewToTest = viewToTest.superview;
+	}
+	return nil;
+}
+
+static NSString* cornersName = LNPopupHiddenString("cornerRadii");
+
+- (LNPopupViewCorners)_ln_corners
+{
+	NSValue* cornersValue = [self.layer valueForKey:cornersName];
+	LNPopupViewCorners rv;
+	[cornersValue getValue:&rv size:sizeof(LNPopupViewCorners)];
+	return rv;
+}
+
+- (void)_ln_setCorners:(LNPopupViewCorners)corners
+{
+	NSValue* cornersValue = [NSValue valueWithBytes:&corners objCType:@encode(LNPopupViewCorners)];
+	[self.layer setValue:cornersValue forKey:cornersName];
+}
+
 - (CGFloat)_ln_simulatedCornerRadiusFromCorners
 {
-	static NSString* cornersName = LNPopupHiddenString("cornerRadii");
-	
 	NSValue* corners = [self.layer valueForKey:cornersName];
 	CGSize asArray[4];
 	[corners getValue:asArray size:sizeof(asArray)];
@@ -801,12 +869,12 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 @interface UITabBar (ScrollEdgeSupport) @end
 @implementation UITabBar (ScrollEdgeSupport)
 
-- (BOOL)_ignoringLayoutDuringTransition
+- (BOOL)_ln_ignoringLayoutDuringTransition
 {
 	return [objc_getAssociatedObject(self, LNPopupIgnoringLayoutDuringTransition) boolValue];
 }
 
-- (void)_setIgnoringLayoutDuringTransition:(BOOL)ignoringLayoutDuringTransition
+- (void)_ln_setIgnoringLayoutDuringTransition:(BOOL)ignoringLayoutDuringTransition
 {
 	objc_setAssociatedObject(self, LNPopupIgnoringLayoutDuringTransition, @(ignoringLayoutDuringTransition), OBJC_ASSOCIATION_RETAIN);
 }
@@ -861,7 +929,7 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 
 - (void)_ln_setFrame:(CGRect)frame
 {
-	if(self._ignoringLayoutDuringTransition == NO)
+	if(self._ln_ignoringLayoutDuringTransition == NO)
 	{
 		[self _ln_setFrame:frame];
 	}
@@ -1042,6 +1110,18 @@ UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* view, NSDirectionalE
 	else
 	{
 		return UIEdgeInsetsMake(edgeInsets.top, edgeInsets.trailing, edgeInsets.bottom, edgeInsets.leading);
+	}
+}
+
+NSDirectionalEdgeInsets _LNDirectionalEdgeInsetsFromEdgeInsets(UIView* view, UIEdgeInsets edgeInsets)
+{
+	if(view.effectiveUserInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+	{
+		return NSDirectionalEdgeInsetsMake(edgeInsets.top, edgeInsets.left, edgeInsets.bottom, edgeInsets.right);
+	}
+	else
+	{
+		return NSDirectionalEdgeInsetsMake(edgeInsets.top, edgeInsets.right, edgeInsets.bottom, edgeInsets.left);
 	}
 }
 

@@ -44,6 +44,7 @@ static NSString* const HidesInOtherPortalsKey = LNPopupHiddenString("hidesSource
 static NSString* const MatchesAlphaKey = LNPopupHiddenString("matchesAlpha");
 static NSString* const MatchesPositionKey = LNPopupHiddenString("matchesPosition");
 static NSString* const ForwardHitTestingKey = LNPopupHiddenString("forwardsClientHitTestingToSourceView");
+static NSString* const AllowsBackdropGroupsKey = LNPopupHiddenString("allowsBackdropGroups");
 
 - (instancetype)_initWithSourceView:(UIView*)sourceView orLayer:(CALayer *)sourceLayer
 {
@@ -78,7 +79,7 @@ static NSString* const ForwardHitTestingKey = LNPopupHiddenString("forwardsClien
 		{
 			[_portalView setValue:@NO forKey:HidesInOtherPortalsKey];
 		}
-		_portalView.layer.contentsGravity = kCAGravityResize;
+//		_portalView.layer.contentsGravity = kCAGravityResize;
 		
 		_radiusContainerView = [[UIView alloc] initWithFrame:CGRectZero];
 		_radiusContainerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -124,6 +125,16 @@ static NSString* const ForwardHitTestingKey = LNPopupHiddenString("forwardsClien
 - (void)setMatchesPosition:(BOOL)matchesPosition
 {
 	[_portalView setValue:@(matchesPosition) forKey:MatchesPositionKey];
+}
+
+- (BOOL)allowsEffects
+{
+	return [[_portalView valueForKey:AllowsBackdropGroupsKey] boolValue];
+}
+
+- (void)setAllowsEffects:(BOOL)allowsEffects
+{
+	[_portalView setValue:@(allowsEffects) forKey:AllowsBackdropGroupsKey];
 }
 
 - (CGFloat)cornerRadius

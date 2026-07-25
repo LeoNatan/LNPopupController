@@ -14,11 +14,11 @@
 {
 	[super viewDidLoad];
 	
+	self.minimumPrimaryColumnWidth = 370;
+	self.maximumPrimaryColumnWidth = 500;
+	
 	if([self isKindOfClass:LNSplitViewControllerSecondaryPopup.class] == NO)
 	{
-		self.minimumPrimaryColumnWidth = 370;
-		self.maximumPrimaryColumnWidth = 500;
-		
 		if(self.style == UISplitViewControllerStyleTripleColumn)
 		{
 			self.minimumSupplementaryColumnWidth = 370;

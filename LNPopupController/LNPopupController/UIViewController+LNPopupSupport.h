@@ -199,8 +199,19 @@ NS_SWIFT_UI_ACTOR
 
 /// Controls whether interaction with the popup generates haptic feedback to the user.
 ///
-/// Defaults to `true`.
+/// Defaults to `false`.
 @property (nonatomic, assign) BOOL allowPopupHapticFeedbackGeneration;
+
+/// Enables or disables opening the popup over the containing split view controller, if any.
+///
+/// By default, when a popup presentation container controller is part of a split view controller scene, the popup will open within the bounds of the container controller. Set this property to `true` to open the popup over the entire containing split view controller. The popup bar will remain within the container's bounds.
+///
+/// This is different from `UISplitViewController.popupBarAvoidsPrimaryColumn`, which targets scenes where the split view controller itself is the popup presentation container.
+///
+/// Supported on iOS 26.0 and later.
+///
+/// Defaults to `false` on iOS and `true` on macOS Catalyst.
+@property (nonatomic, assign) BOOL popupOpensOverSplitViewController;
 
 @end
 
@@ -327,6 +338,34 @@ NS_SWIFT_UI_ACTOR
 ///
 /// - Note: Starting with iOS 26.0, this property is only supported for custom bars.
 @property (nonatomic, assign, readonly) BOOL shouldFadePopupBarOnDismiss;
+
+@end
+
+@interface UITabBarController (LNPopupPresentation)
+
+/// Enables or disables adjusting the tab bar layout to accommodate for a presented popup bar.
+///
+/// This property has no effect if ``LNPopupBar/inheritsBottomBarMetrics`` is set to `false`.
+///
+/// Supported on iOS 27.0 and later.
+///
+/// Defaults to `true`.
+@property (nonatomic, assign) BOOL adjustsTabBarLayoutForPopupBar;
+
+@end
+
+@interface UISplitViewController (LNPopupPresentation)
+
+/// Enables or disables adjusting the popup bar's frame to avoid the primary column.
+///
+/// By default, a popup bar is presented within the bounds of the entire popup presentation container controller. In certain cases, where a split view controller is the popup presentation container, it can be beneficial to avoid the primary column when in `UISplitViewController.DisplayMode.OneBesideSecondary` or `UISplitViewController.DisplayMode.TwoBesideSecondary` display modes. When enabled, the popup bar will avoid the primary column. The popup will open over the entire split view controller's bounds.
+///
+/// This is different from `UIViewController.popupOpensOverSplitViewController`, which is intended for scenes where the popup presentation container is contained within a split view controller.
+///
+/// Supported on iOS 26.0 and later, with modern split views (`init(style:)`).
+///
+/// Defaults to `false` on iOS and `true` on macOS Catalyst.
+@property (nonatomic, assign) BOOL popupBarAvoidsPrimaryColumn;
 
 @end
 

@@ -11,7 +11,6 @@ import UIKit
 
 class CustomMapBarViewController: LNPopupCustomBarViewController {
 	@IBOutlet weak var searchBar: UISearchBar!
-	@IBOutlet var heightConstraint: NSLayoutConstraint!
 
 	override var wantsDefaultTapGestureRecognizer: Bool {
 		return false
@@ -22,7 +21,6 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 	}
 	
 	fileprivate func updateConstraint() {
-		heightConstraint.constant = 65
 		self.preferredContentSize = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
 	}
 	
@@ -58,7 +56,7 @@ class CustomMapBarViewController: LNPopupCustomBarViewController {
 	@available(iOS 26.0, *)
 	func updateFromUserInterfaceStyle() {
 		containingPopupBar?.standardAppearance.configureWithOpaqueFloatingBackground()
-		if containingPopupBar?.traitCollection.userInterfaceStyle == .dark {
+		if containingPopupBar?.traitCollection.userInterfaceStyle == .dark && ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27 {
 			searchBar.searchTextField.backgroundColor = .clear
 			let glass = UIGlassEffect(style: .clear)
 			glass.isInteractive = true

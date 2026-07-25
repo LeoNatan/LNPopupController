@@ -1,12 +1,12 @@
 //
-//  UITabBar+LNPopupMinimizationSupport.mm
+//  UITabBar+LNPopupInheritedBarMetricsSupport.mm
 //  LNPopupController
 //
 //  Created by Léo Natan on 26/9/25.
 //  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
-#import "UITabBar+LNPopupMinimizationSupport.h"
+#import "UITabBar+LNPopupInheritedBarMetricsSupport.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
 #import "LNPopupBar+Private.h"
 #import "_LNPopupGlassUtils.h"
@@ -30,7 +30,7 @@ BOOL LNPopupEnvironmentTabBarSupportsMinimizationAPI(void)
 	return __LNPopupTabBarSupportsMinimizationAPI;
 }
 
-@implementation UITabBar (LNPopupMinimizationSupport)
+@implementation UITabBar (LNPopupInheritedBarMetricsSupport)
 
 + (void)load
 {
@@ -91,7 +91,7 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 
 @end
 
-@implementation UITabBarController (LNPopupMinimizationSupport)
+@implementation UITabBarController (LNPopupInheritedBarMetricsSupport)
 
 - (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar
 {
@@ -113,20 +113,53 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 			
 			if(sidebarLayout == 0)
 			{
-				barInsets.leading = self.sidebar.isHidden ? 0 : outlineView.bounds.size.width + 8;
+				CGFloat extra = 0.0;
+				if(ln_unavailable(iOS 27.0, *)) {
+					extra = 8.0;
+				}
+				barInsets.leading = self.sidebar.isHidden ? 0 : outlineView.bounds.size.width + extra;
 			}
 		}
 	}
 	
-	if(__LNPopupTabBarSupportsMinimizationAPI && popupBar.supportsMinimization && [self _ln_isFloatingTabBar] == NO)
+	if(__LNPopupTabBarSupportsMinimizationAPI && popupBar.inheritsBottomBarMetrics && [self _ln_isFloatingTabBar] == NO)
 	{
 		CGRect proposedMinimizedFrame = self.tabBar._ln_proposedFrameForPopupBar;
-		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
+		if(proposedMinimizedFrame.size.height == 0)
+		{
+			return NSDirectionalEdgeInsetsZero;
+		}
 		
-		barInsets.leading = proposedMinimizedFrame.origin.x;
-		barInsets.trailing = self.tabBar.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;
+		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
+				
+		CGFloat ltrLeading = proposedMinimizedFrame.origin.x;
+		CGFloat ltrTrailing = self.tabBar.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;
+		
+		UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:popupBar.semanticContentAttribute];
+		if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
+		{
+			barInsets.leading = ltrLeading;
+			barInsets.trailing = ltrTrailing;
+		}
+		else
+		{
+			barInsets.leading = ltrTrailing;
+			barInsets.trailing = ltrLeading;
+		}
+		
 		barInsets.leading -= floatingLayoutMargins.leading;
 		barInsets.trailing -= floatingLayoutMargins.trailing;
+		
+		BOOL isPhone = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone;
+		BOOL isPad = popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad;
+		BOOL isRegular = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
+		BOOL compactButHasSafeArea = popupBar.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && popupBar.safeAreaInsets.left > 10;
+		
+		if(self.adjustsTabBarLayoutForPopupBar == NO && isPhone && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion > 26 && (isRegular || compactButHasSafeArea) && !isPad)
+		{
+			barInsets.leading += 20;
+			barInsets.trailing += 20;
+		}
 	}
 	
 	return barInsets;

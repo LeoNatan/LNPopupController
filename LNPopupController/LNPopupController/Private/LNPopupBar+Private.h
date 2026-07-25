@@ -14,29 +14,15 @@
 #import "_LNPopupBarBackgroundMaskView.h"
 #import "_LNPopupGlassUtils.h"
 #import "_LNPopupTransitionView.h"
-
-#import "MarqueeLabel.h"
-#if __has_include(<LNSystemMarqueeLabel.h>)
-#import <LNSystemMarqueeLabel.h>
-#endif
+#import "_LNPopupTitlesController.h"
+#import "_LNPopupTitlesPagingController.h"
 
 CF_EXTERN_C_BEGIN
-
-#ifdef DEBUG
-extern BOOL _LNEnableBarLayoutDebug(void);
-#endif
-
-#if __has_include(<LNSystemMarqueeLabel.h>)
-extern BOOL __LNPopupUseSystemMarqueeLabel(void);
-#endif
-
-extern const CGFloat LNPopupBarHeightCompact;
-extern const CGFloat LNPopupBarHeightProminent;
-extern const CGFloat LNPopupBarHeightFloating;
+extern const Class __ln_systemButtonBarButtonClass;
 
 extern CGFloat _LNPopupBarHeightForPopupBar(LNPopupBar* popupBar);
 
-extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom);
+extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style, LNPopupBar* popupBar, BOOL* isFloating, BOOL* isCompact, BOOL* isCustom);
 
 @protocol _LNPopupBarDelegate <NSObject>
 
@@ -50,6 +36,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 - (void)_popupBar:(LNPopupBar*)bar setUserPopupItem:(LNPopupItem*)newItem;
 - (void)_popupBar:(LNPopupBar*)bar setPagedPopupItem:(LNPopupItem*)newItem;
 - (void)_generatePagingFeedbackForPopupBar:(LNPopupBar*)bar;
+
+- (void)_popupBarInheritsBottomBarMetricsDidChange:(LNPopupBar*)popupBar;
 
 @end
 
@@ -65,6 +53,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, assign, getter=isShiny) BOOL shiny;
 
 @end
+
+@interface _LNPopupBarProgressView: UIProgressView @end
 
 @class _LNPopupToolbar;
 
@@ -102,7 +92,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 @property (nonatomic, copy) NSAttributedString* attributedSubtitle;
 
 @property (nonatomic, readonly) NSDirectionalEdgeInsets floatingLayoutMargins;
-@property (nonatomic, setter=_setHackyMargins:) NSDirectionalEdgeInsets _hackyMargins;
+@property (nonatomic, setter=_setHackyMarginsInSuperviewSemanticContext:) NSDirectionalEdgeInsets _hackyMarginsInSuperviewSemanticContext;
 
 @property (nonatomic, strong) UIImage* image;
 
@@ -140,6 +130,9 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 - (void)_cancelGestureRecognizers;
 
 @property (nonatomic) BOOL acceptsSizing;
+
+@property (nonatomic, strong) _LNPopupTitlesPagingController* titlePagingController;
+@property (nonatomic, strong) _LNPopupTitlesController* titlesController;
 
 @property (nonatomic) BOOL _applySwiftUILayoutFixes;
 
@@ -196,26 +189,12 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 - (void)forceLayoutOnButtons;
 
+- (BOOL)_isViewDescendantOfToolbarItem:(UIView*)view;
+- (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem;
+
 @end
 
 @interface _LNPopupBarShadowView : UIImageView @end
-
-@protocol LNMarqueeLabel <NSObject>
-
-@property (nonatomic, getter=isMarqueeScrollEnabled) BOOL marqueeScrollEnabled;
-@property (nonatomic, getter=isRunning) BOOL running;
-
-@property (nonatomic, copy) NSArray<id<LNMarqueeLabel>>* synchronizedLabels;
-
-- (void)reset;
-
-@end
-
-@interface LNNonMarqueeLabel : UILabel <LNMarqueeLabel> @end
-@interface LNLegacyMarqueeLabel: LNMarqueeLabel <LNMarqueeLabel> @end
-#if __has_include(<LNSystemMarqueeLabel.h>)
-@interface LNSystemMarqueeLabel () <LNMarqueeLabel> @end
-#endif
 
 @interface _LNPopupBottomBarSupport : UIView @end
 

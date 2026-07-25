@@ -365,6 +365,36 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	self._ln_popupController.wantsFeedbackGeneration = allowPopupHapticFeedbackGeneration;
 }
 
+static void* LNViewControllerPromotesOverSplitView = &LNViewControllerPromotesOverSplitView;
+
+- (BOOL)popupOpensOverSplitViewController
+{
+	if(ln_unavailable(iOS 26.0, *))
+	{
+		return NO;
+	}
+	
+	if(LNPopupEnvironmentHasGlass() == NO)
+	{
+		return NO;
+	}
+	
+	NSNumber* value = objc_getAssociatedObject(self, LNViewControllerPromotesOverSplitView);
+	if(value == nil)
+	{
+		return LNPopupBar.isCatalystApp;
+	}
+	else
+	{
+		return [value boolValue];
+	}
+}
+
+- (void)setPopupOpensOverSplitViewController:(BOOL)popupOpensOverSplitViewController
+{
+	objc_setAssociatedObject(self, LNViewControllerPromotesOverSplitView, @(popupOpensOverSplitViewController), OBJC_ASSOCIATION_RETAIN);
+}
+
 static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopupContentControllerDiscoveredTransitionView;
 
 - (void)_ln_setDiscoveredTransitionView:(LNPopupImageView *)ln_discoveredShadowedImageView
@@ -494,6 +524,11 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	
 	if(LNPopupBar.isCatalystApp)
 	{
+		if(LNPopupEnvironmentHasGlass())
+		{
+			return -18;
+		}
+		
 		return -7.0;
 	}
 	
@@ -513,7 +548,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	BOOL isPad = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPad;
 	BOOL isRegular = self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular;
 	
-	return isPad || isRegular ? 0.0 : LNPopupEnvironmentHasGlass() ? 12.0 : 0.0;
+	return isPad || isRegular ? 0.0 : LNPopupEnvironmentHasGlass() ? 6.0 : 0.0;
 #endif
 }
 
@@ -630,6 +665,28 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	[window _ln_setLockedForPopupTransition:NO];
 }
 
+- (BOOL)_ln_isPartOfPrimarySplit
+{
+	UISplitViewController* split = self.splitViewController;
+	if(split == nil || split.style == UISplitViewControllerStyleUnspecified)
+	{
+		return NO;
+	}
+	
+	UIViewController* primary = [split viewControllerForColumn:UISplitViewControllerColumnPrimary];
+	UIViewController* tested = self;
+	while(tested != nil)
+	{
+		if(primary == tested)
+		{
+			return YES;
+		}
+		tested = tested.parentViewController;
+	}
+	
+	return NO;
+}
+
 @end
 
 @implementation UINavigationController (LNPopupSupport)
@@ -666,6 +723,42 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 - (nullable UIView*)_ln_transitionViewForPopupTransitionFromPresentationState:(LNPopupPresentationState)fromState toPresentationState:(LNPopupPresentationState)toState view:(out id<LNPopupTransitionView> _Nonnull __strong * _Nonnull)outView
 {
 	return [self.selectedViewController _ln_transitionViewForPopupTransitionFromPresentationState:fromState toPresentationState:toState view:outView];
+}
+
+@end
+
+@implementation UIViewController (LNPopupKeyPressHandling)
+
+static
+BOOL _LNPopupPressesContainEscape(NSSet<UIPress*>* presses)
+{
+	NSSet<UIKey*>* keys = [presses valueForKey:@"key"];
+	return [keys objectsPassingTest:^BOOL(UIKey * _Nonnull obj, BOOL * _Nonnull stop) {
+		return obj.keyCode == UIKeyboardHIDUsageKeyboardEscape;
+	}].count != 0;
+}
+
+- (void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event
+{
+	if(self.popupPresentationState == LNPopupPresentationStateOpen && _LNPopupPressesContainEscape(presses))
+	{
+		//Wait for pressesEnded:
+		return;
+	}
+	
+	[super pressesBegan:presses withEvent:event];
+}
+
+- (void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event
+{
+	if(self.popupPresentationState == LNPopupPresentationStateOpen && _LNPopupPressesContainEscape(presses))
+	{
+		[self closePopupAnimated:YES completion:nil];
+		
+		return;
+	}
+	
+	[super pressesEnded:presses withEvent:event];
 }
 
 @end

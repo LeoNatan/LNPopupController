@@ -12,6 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface IntroWebViewController : UIViewController
 
+#if TARGET_OS_MACCATALYST
+- (void)setNeedsPopupButtonsUpdateAnimated:(BOOL)animated;
+#endif
+
 @end
 
 NS_ASSUME_NONNULL_END

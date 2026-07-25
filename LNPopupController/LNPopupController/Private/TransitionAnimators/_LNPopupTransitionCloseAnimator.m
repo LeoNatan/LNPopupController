@@ -8,8 +8,6 @@
 
 #import "_LNPopupTransitionCloseAnimator.h"
 #import "UIViewController+LNPopupSupportPrivate.h"
-#import "LNPopupBar+Private.h"
-#import "LNPopupContentView+Private.h"
 
 @implementation _LNPopupTransitionCloseAnimator
 {
@@ -18,7 +16,7 @@
 
 - (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView currentContentController:(UIViewController *)currentContentController containerController:(UIViewController *)containerController
 {
-	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView];
+	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView effectiveInteractionStyle:containerController.effectivePopupInteractionStyle];
 	
 	if(self)
 	{
@@ -39,6 +37,16 @@
 	return [self.popupBar.imageView.window convertRect:self.popupBar.imageView.bounds fromView:self.popupBar.imageView];
 }
 
+- (CGFloat)sourceImageAlpha
+{
+	return 1.0;
+}
+
+- (CGFloat)targetImageAlpha
+{
+	return self.popupBarImageAlphaBeforeAnimation;
+}
+
 - (CGFloat)scaledBarImageViewCornerRadius
 {
 	return MAX(self.popupBar.imageView.cornerRadius * self.sourceFrame.size.width / self.popupBar.imageView.bounds.size.width, self.popupBar.imageView.cornerRadius * self.sourceFrame.size.height / self.popupBar.imageView.bounds.size.height);
@@ -56,12 +64,54 @@
 	return LNPopupPresentationStateBarPresented;
 }
 
+- (UIVisualEffect *)sourceContentTransitionEffect
+{
+	return self.popupContentView._currentEffect;
+}
+
+- (UIVisualEffect *)targetContentTransitionEffect
+{
+	return self.popupBarEffect;
+}
+
+- (CGRect)sourceContentFrame
+{
+	return [self.popupContentView.superview convertRect:self.popupContentView.bounds fromView:self.popupContentView];
+}
+
+- (CGRect)targetContentFrame
+{
+	return [self.popupContentView.superview convertRect:self.popupBar.contentView.bounds fromView:self.popupBar.contentView];
+}
+
+- (LNPopupViewCorners)sourceContentCornerRadius
+{
+	return [LNPopupContentView cornersForContentView:self.popupContentView];
+}
+
+- (LNPopupViewCorners)targetContentCornerRadius
+{
+	return self.popupBar.contentView.effectView.corners;
+}
+
+- (CGFloat)sourceContentAlpha
+{
+	return 1.0;
+}
+
+- (CGFloat)targetContentAlpha
+{
+	return 0.0;
+}
+
 - (void)beforeAnyAnimation
 {
 	[super beforeAnyAnimation];
 	
 	self.crossfadeView.alpha = 0.0;
 	self.crossfadeView.cornerRadius = self.transitionView.cornerRadius;
+	
+	self.popupBarTransitionView.alpha = 0.0;
 }
 
 - (void)performAdditionalAnimations
@@ -71,7 +121,7 @@
 	[self.transitionView setTargetFrameUpdatingTransform:self.targetFrame];
 	self.crossfadeView.cornerRadius = self.popupBar.imageView.cornerRadius;
 	
-	if(self.popupContentView.effectView.effect.ln_isGlass)
+	if(self.popupContentView._currentEffect.ln_isGlass)
 	{
 		_wasGlass = YES;
 	}
@@ -80,6 +130,9 @@
 - (void)performAdditionalDelayed015Animations
 {
 	[super performAdditionalDelayed015Animations];
+	
+	self.popupBarTransitionView.alpha = 1.0;
+	self.contentViewTransitionView.alpha = 0.0;
 }
 
 - (void)performAdditional04Delayed015Animations
@@ -88,24 +141,27 @@
 	
 	self.crossfadeView.alpha = 1.0;
 	
-	if(self.containerController._ln_shouldPopupContentAnyFadeForTransition)
+	if(self.wantsContentTransition == NO)
 	{
-		if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
+		if(self.containerController._ln_shouldPopupContentAnyFadeForTransition)
 		{
-			if(_wasGlass)
+			if(self.containerController._ln_shouldPopupContentViewFadeForTransition)
 			{
-				self.currentContentController.view.alpha = 0.0;
-				//An effect view with glass effect has its layer contained in a _UIMultiLayer
-				self.popupContentView.effectView.layer.superlayer.opacity = 0.0;
+				if(_wasGlass)
+				{
+					self.currentContentController.view.alpha = 0.0;
+					//An effect view with glass effect has its layer contained in a _UIMultiLayer
+					self.popupContentView.effectView.layer.superlayer.opacity = 0.0;
+				}
+				else
+				{
+					self.popupContentView.alpha = 0.0;
+				}
 			}
 			else
 			{
-				self.popupContentView.alpha = 0.0;
+				self.currentContentController.view.alpha = 0.0;
 			}
-		}
-		else
-		{
-			self.currentContentController.view.alpha = 0.0;
 		}
 	}
 }
@@ -114,11 +170,14 @@
 {
 	[super performAdditionalCompletion];
 	
-	self.popupContentView.alpha = 1.0;
-	self.currentContentController.view.alpha = 1.0;
-	if(_wasGlass)
+	if(self.wantsContentTransition == NO)
 	{
-		self.popupContentView.effectView.layer.superlayer.opacity = 1.0;
+		self.popupContentView.alpha = 1.0;
+		self.currentContentController.view.alpha = 1.0;
+		if(_wasGlass)
+		{
+			self.popupContentView.effectView.layer.superlayer.opacity = 1.0;
+		}
 	}
 }
 

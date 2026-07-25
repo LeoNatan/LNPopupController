@@ -190,10 +190,15 @@
 		self.mode = UITabBarControllerModeTabBar;
 	}
 	
+#if defined(__IPHONE_27_0)
 	if(@available(iOS 27.0, *))
 	{
-		self.prominentTabIdentifier = @"com.apple.UIKit.Search";
+		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableProminentSearchTab])
+		{
+			self.prominentTabIdentifier = @"com.apple.UIKit.Search";
+		}
 	}
+#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -233,6 +238,11 @@
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
 	[super willMoveToSuperview:newSuperview];
+}
+
+- (void)setTransform:(CGAffineTransform)transform
+{
+	[super setTransform:transform];
 }
 
 - (void)setFrame:(CGRect)frame

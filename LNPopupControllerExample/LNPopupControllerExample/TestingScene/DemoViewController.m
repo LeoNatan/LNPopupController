@@ -169,11 +169,11 @@
 #if LNPOPUP
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
 	{
-		self._targetVCForPopup.popupContentView.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+		self._targetVCForPopup.popupContentViewController.overrideUserInterfaceStyle = traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
 	}
 	else
 	{
-		self._targetVCForPopup.popupContentView.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
+		self._targetVCForPopup.popupContentViewController.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
 	}
 #endif
 }
@@ -181,6 +181,12 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
+	
+	if(@available(iOS 18.0, *))
+	if(NSProcessInfo.processInfo.isMacCatalystApp || NSProcessInfo.processInfo.isiOSAppOnMac)
+	{
+		self.tabBarController.tabBarHidden = YES;
+	}
 	
 	if(@available(iOS 17.0, *))
 	{
@@ -265,7 +271,12 @@
 	{
 		config.attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Gallery", @"") attributes:@{NSFontAttributeName: [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]}];
 	}
-	config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithPointSize:17];
+	
+	UIFont* fontToUse = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+	fontToUse = [UIFont fontWithDescriptor:[fontToUse.fontDescriptor fontDescriptorByAddingAttributes:@{
+		UIFontDescriptorTraitsAttribute: @{ UIFontWeightTrait: @(UIFontWeightMedium) }
+	}] size:fontToUse.pointSize];
+	config.preferredSymbolConfigurationForImage = [UIImageSymbolConfiguration configurationWithFont:fontToUse scale:UIImageSymbolScaleLarge];
 	
 	_galleryButton = [UIButton buttonWithConfiguration:config primaryAction:[UIAction actionWithHandler:^(__kindof UIAction * _Nonnull action) {
 		[self performSegueWithIdentifier:@"UnwindSegue" sender:nil];
@@ -293,6 +304,8 @@
 		]];
 	}
 	
+//	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingColors"];
+//	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"VerticalPagedScrollingColors"];
 //	UIViewController* settings = [self.storyboard instantiateViewControllerWithIdentifier:@"Settings"];
 //	[self addChildViewController:settings];
 //	[self.view insertSubview:settings.view atIndex:0];
@@ -392,6 +405,12 @@
 
 - (void)updateHideTabBarButtonHiddenStateForTraitCollection:(UITraitCollection*)traitCollection;
 {
+	if(self.tabBarController != nil && (NSProcessInfo.processInfo.isMacCatalystApp || NSProcessInfo.processInfo.isiOSAppOnMac))
+	{
+		_hideTabBarButton.hidden = YES;
+		return;
+	}
+	
 	if(@available(iOS 18.0, *))
 	{
 		if(traitCollection == nil)
@@ -531,7 +550,7 @@
 
 - (UIViewController*)_targetVCForPopup
 {
-	void (^block)(NSString*) = ^ (NSString* title) {
+	void (^block)(DemoViewController* ,NSString*) = ^ (DemoViewController* self, NSString* title) {
 		self->_hideTabBarButton.enabled = NO;
 		if(@available(iOS 16.0, *))
 		{
@@ -552,7 +571,7 @@
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerPrimaryPopup.class] && self.navigationController != [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary])
 	{
 		self.view.backgroundColor = UIColor.systemBackgroundColor;
-		block(NSLocalizedString(@"Secondary", @""));
+		block(self, NSLocalizedString(@"Secondary", @""));
 		return nil;
 	}
 	
@@ -563,14 +582,23 @@
 	}
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerSecondaryPopup.class] && [vcs containsObject:[self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary]])
 	{
-		self.view.backgroundColor = UIColor.secondarySystemBackgroundColor;
-		block(NSLocalizedString(@"Sidebar", @""));
+		self.splitViewController.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
+		self.view.backgroundColor = UIColor.clearColor;
+		block(self, NSLocalizedString(@"Sidebar", @""));
 		
 		return nil;
 	}
 	
 	if([self.splitViewController isKindOfClass:LNSplitViewControllerGlobalPopup.class])
 	{
+		self.splitViewController.primaryBackgroundStyle = UISplitViewControllerBackgroundStyleSidebar;
+		DemoViewController* primary = [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary];
+		block(primary, NSLocalizedString(@"Sidebar", @""));
+		primary.view.backgroundColor = UIColor.clearColor;
+		
+#if LNPOPUP
+		self.splitViewController.popupBarAvoidsPrimaryColumn = [NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableAvoidPrimaryColumn];
+#endif
 		return self.splitViewController;
 	}
 	
@@ -585,6 +613,10 @@
 			targetVC = self;
 		}
 	}
+
+#if LNPOPUP
+	targetVC.popupOpensOverSplitViewController = [NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableOpenOverSplitView];
+#endif
 	
 	return targetVC;
 }
@@ -624,6 +656,8 @@
 		return;
 	}
 	
+	targetVC.popupBar.barStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue];
+	
 	UIViewController* demoVC;
 	BOOL wantsGlassBackground = YES;
 	switch([NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent])
@@ -653,7 +687,7 @@
 		case 200:
 			demoVC = [[UIStoryboard storyboardWithName:@"Settings" bundle:nil] instantiateInitialViewController];
 			demoVC.popupItem.barButtonItems = @[
-				[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"gear", LNBarIsCompact() ? LNSystemImageScaleCompact : LNSystemImageScaleNormal) landscapeImagePhone:nil style:UIBarButtonItemStylePlain target:nil action:nil]
+				[[UIBarButtonItem alloc] initWithImage:LNSystemImage(@"gear", LNBarIsClassicCompact(targetVC.popupBar) ? LNSystemImageScaleCompact : LNSystemImageScaleNormal) landscapeImagePhone:nil style:UIBarButtonItemStylePlain target:nil action:nil]
 			];
 			LNApplyTitleWithSettings(demoVC);
 			break;
@@ -662,6 +696,17 @@
 			wantsGlassBackground = NO;
 			demoVC = [DemoPopupContentViewController new];
 			break;
+	}
+	
+	self.tabBarController.adjustsTabBarLayoutForPopupBar = [NSUserDefaults.settingDefaults boolForKey:PopupSettingAdjustsTabBarLayout];
+	
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])
+	{
+		demoVC.overrideUserInterfaceStyle = self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIUserInterfaceStyleDark : UIUserInterfaceStyleLight;
+	}
+	else
+	{
+		demoVC.overrideUserInterfaceStyle = UIUserInterfaceStyleUnspecified;
 	}
 	
 	if(@available(iOS 26.0, *))
@@ -684,7 +729,6 @@
 	targetVC.popupContentView.popupCloseButton.accessibilityHint = NSLocalizedString(@"Custom popup button accessibility hint", @"");
 	
 	targetVC.popupBar.progressViewStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingProgressViewStyle] unsignedIntegerValue];
-	targetVC.popupBar.barStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingBarStyle] unsignedIntegerValue];
 	
 	targetVC.popupInteractionStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingInteractionStyle] unsignedIntegerValue];
 
@@ -700,7 +744,7 @@
 	targetVC.allowPopupHapticFeedbackGeneration = [NSUserDefaults.settingDefaults boolForKey:PopupSettingHapticFeedbackEnabled];
 	
 	targetVC.popupBar.limitFloatingContentWidth = [NSUserDefaults.settingDefaults boolForKey:PopupSettingLimitFloatingWidth];
-	targetVC.popupBar.supportsMinimization = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMinimizationEnabled];
+	targetVC.popupBar.inheritsBottomBarMetrics = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMinimizationEnabled];
 
 	NSNumber* effectOverride = [NSUserDefaults.settingDefaults objectForKey:PopupSettingVisualEffectViewBlurEffect];
 	if(effectOverride != nil && effectOverride.integerValue != 0xffff && (effectOverride.integerValue >= 0 || LNPopupSettingsHasOS26Glass()))
@@ -793,7 +837,7 @@
 		UIView* view = [LNTabBarAccessoryView new];
 		view.backgroundColor = UIColor.clearColor;
 		UITabAccessory* accessory = [[UITabAccessory alloc] initWithContentView:view];
-		self.tabBarController.bottomAccessory = accessory;
+		[self.tabBarController setBottomAccessory:accessory animated:YES];
 	}
 #endif
 }
@@ -803,6 +847,16 @@
 #if LNPOPUP
 	__kindof UIViewController* targetVC = [self _targetVCForPopup];
 	[targetVC dismissPopupBarAnimated:YES completion:nil];
+#else
+	if(@available(iOS 26.0, *))
+	{
+		if(self.tabBarController.bottomAccessory == nil)
+		{
+			return;
+		}
+		
+		[self.tabBarController setBottomAccessory:nil animated:YES];
+	}
 #endif
 }
 

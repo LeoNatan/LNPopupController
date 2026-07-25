@@ -44,6 +44,8 @@ sed -i '' "s|// LNPopupController:[0-9.]*|// LNPopupController:$NEXT_VERSION|g" 
 
 echo -e "\033[1;34mCommitting all changes to Git for release $NEXT_VERSION\033[0m"
 
+rm -f .git/index.lock
+
 git add -A
 git commit -m "$NEXT_VERSION"
 git tag "$NEXT_VERSION"

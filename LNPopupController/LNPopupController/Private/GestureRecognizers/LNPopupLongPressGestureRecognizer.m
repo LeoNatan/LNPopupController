@@ -9,23 +9,12 @@
 #import "LNPopupLongPressGestureRecognizer.h"
 #import "LNForwardingDelegate.h"
 
-@interface LNPopupControllerLongPressGestureDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate>
-@end
+@interface LNPopupControllerLongPressGestureDelegate : LNForwardingDelegate <UIGestureRecognizerDelegate> @end
 
 @implementation LNPopupControllerLongPressGestureDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-#if ! TARGET_OS_MACCATALYST
-	if(@available(iOS 13.4, *))
-	{
-		if(touch.type == UITouchTypeIndirectPointer)
-		{
-			return NO;
-		}
-	}
-#endif
-	
 	if([touch.view isKindOfClass:[UIControl class]])
 	{
 		return NO;

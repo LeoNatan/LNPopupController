@@ -21,6 +21,56 @@
 	return [self.popupContentView.window.layer convertRect:self.transitionView.sourceLayer.bounds fromLayer:self.transitionView.sourceLayer];;
 }
 
+- (CGFloat)sourceImageAlpha
+{
+	return self.popupBarImageAlphaBeforeAnimation;
+}
+
+- (CGFloat)targetImageAlpha
+{
+	return 1.0;
+}
+
+- (UIVisualEffect *)sourceContentTransitionEffect
+{
+	return self.popupBarEffect;
+}
+
+- (UIVisualEffect *)targetContentTransitionEffect
+{
+	return self.popupContentView._currentEffect;
+}
+
+- (CGRect)sourceContentFrame
+{
+	return [self.popupContentView.superview convertRect:self.popupBar.contentView.bounds fromView:self.popupBar.contentView];
+}
+
+- (CGRect)targetContentFrame
+{
+	return [self.popupContentView.superview convertRect:self.popupContentView.bounds fromView:self.popupContentView];
+}
+
+- (LNPopupViewCorners)sourceContentCornerRadius
+{
+	return self.popupBar.contentView.effectView.corners;
+}
+
+- (LNPopupViewCorners)targetContentCornerRadius
+{
+	return [LNPopupContentView cornersForContentView:self.popupContentView];
+}
+
+- (CGFloat)sourceContentAlpha
+{
+	return 0.0;
+}
+
+- (CGFloat)targetContentAlpha
+{
+	return 1.0;
+}
+
 - (CGAffineTransform)transform
 {
 	CGFloat ratioX = self.sourceFrame.size.width / self.targetFrame.size.width;
@@ -67,6 +117,8 @@
 	self.transitionView.frame = self.targetFrame;
 	self.transitionView.sourceViewTransform = CGAffineTransformIdentity;
 	self.crossfadeView.cornerRadius = self.transitionView.cornerRadius;
+	
+	self.contentViewTransitionView.alpha = self.targetContentAlpha;
 }
 
 - (void)performAdditional01Animations
@@ -74,6 +126,8 @@
 	[super performAdditional01Animations];
 	
 	self.crossfadeView.alpha = 0.0;
+	
+	self.popupBarTransitionView.alpha = 0.0;
 }
 
 @end

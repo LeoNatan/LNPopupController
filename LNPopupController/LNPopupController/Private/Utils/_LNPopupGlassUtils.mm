@@ -16,7 +16,15 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		if(@available(iOS 26.0, *))
+#if defined(__IPHONE_27_0)
+		if(@available(iOS 27.0, *))
+		{
+			//iOS 27 does not honor UIDesignRequiresCompatibility.
+			rv = YES;
+		}
+		else
+#endif
+			if(@available(iOS 26.0, *))
 		{
 			rv = ![[NSBundle.mainBundle objectForInfoDictionaryKey:@"UIDesignRequiresCompatibility"] boolValue];
 		}
@@ -107,6 +115,45 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	class_addMethod(self, to, method_getImplementation(from), method_getTypeEncoding(from));
 }
 
++ (instancetype)vibrancyOnlyEffect
+{
+	//We don't really want another glass here, but to have vibrancy in the labels and buttons, we need a visual effect view with a "clear" effect that still provides a vibrancy environment. So we strip a glass effect from all of its elements.
+	_LNPopupGlassWrapperEffect* wrapper = [_LNPopupGlassWrapperEffect wrapperWithEffect:[UIGlassEffect effectWithStyle:UIGlassEffectStyleRegular]];
+	wrapper.disableBackground = YES;
+	wrapper.disableForeground = YES;
+	wrapper.disableShadow = YES;
+	wrapper.disableInteractive = YES;
+	return wrapper;
+}
+
+- (NSString*)description
+{
+	NSMutableString* rv = [super description].mutableCopy;
+	
+	[rv appendFormat:@" wrapped: %@", _proxied];
+	if(self.disableForeground)
+	{
+		[rv appendString:@" excludingForeground"];
+	}
+	
+	if(self.disableInteractive)
+	{
+		[rv appendString:@" disableInteractive"];
+	}
+	
+	if(self.disableShadow)
+	{
+		[rv appendString:@" disableShadow"];
+	}
+	
+	if(self.disableBackground)
+	{
+		[rv appendString:@" disableBackground"];
+	}
+	
+	return rv;
+}
+
 + (instancetype)wrapperWithEffect:(UIVisualEffect *)effect
 {
 	_LNPopupGlassWrapperEffect* rv = (id)[super effectWithStyle:UIGlassEffectStyleClear];
@@ -120,17 +167,22 @@ BOOL LNPopupEnvironmentHasGlass(void)
 	
 	if(self.disableForeground)
 	{
-		[rv setValue:@YES forKey:@"excludingForeground"];
+		[rv setValue:@YES forKey:LNPopupHiddenString("excludingForeground")];
 	}
 	
 	if(self.disableInteractive)
 	{
-		[rv setValue:@NO forKey:@"flexible"];
+		[rv setValue:@NO forKey:LNPopupHiddenString("flexible")];
 	}
 	
 	if(self.disableShadow)
 	{
-		[rv setValue:@YES forKey:@"excludingShadow"];
+		[rv setValue:@YES forKey:LNPopupHiddenString("excludingShadow")];
+	}
+	
+	if(self.disableBackground)
+	{
+		[rv setValue:@YES forKey:LNPopupHiddenString("excludingPlatter")];
 	}
 	
 	return rv;

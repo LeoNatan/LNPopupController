@@ -40,6 +40,27 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	return self;
 }
 
+- (BOOL)gestureRecognizer:(LNPopupInteractionPanGestureRecognizer *)gestureRecognizer shouldReceiveEvent:(UIEvent *)event
+{
+	if([self.forwardedDelegate respondsToSelector:_cmd])
+	{
+		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldReceiveEvent:event];
+	}
+	
+	BOOL rv = YES;
+	
+	if(event.type == UIEventTypeTouches)
+	{
+		UITouch* touch = event.allTouches.anyObject;
+		if(touch.type == UITouchTypeIndirectPointer && gestureRecognizer.allowsIndirectPointerInteraction == NO && [touch.view isDescendantOfView:_popupController.popupBar] == NO)
+		{
+			return NO;
+		}
+	}
+	
+	return rv;
+}
+
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_popupController.containerController.popupInteractionStyle);
@@ -64,11 +85,6 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	
 	return rv;
 }
-
-//- (BOOL)_panGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer shouldTryToBeginHorizontallyWithEvent:(UIEvent*)event
-//{
-//	return NO;
-//}
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
