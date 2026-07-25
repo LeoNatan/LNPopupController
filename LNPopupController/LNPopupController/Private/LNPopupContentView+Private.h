@@ -21,6 +21,8 @@
 @property (nonatomic, strong) UIVisualEffectView* effectView;
 @property (nonatomic, strong, readonly) UIView* contentView;
 
+- (UIVisualEffect*)_currentEffect;
+
 @property (nonatomic, weak) UIViewController* currentPopupContentViewController;
 
 @property (nonatomic, strong) UIView* transitionView;

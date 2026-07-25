@@ -16,7 +16,8 @@
 static SEL _effectWithStyle_tintColor_invertAutomaticStyle_SEL;
 static id(*_effectWithStyle_tintColor_invertAutomaticStyle)(id, SEL, NSUInteger, UIColor*, BOOL);
 
-const Class adaptorView = NSClassFromString(LNPopupHiddenString("_UITAMICAdaptorView"));
+static const Class adaptorView = NSClassFromString(LNPopupHiddenString("_UITAMICAdaptorView"));
+const Class __ln_systemButtonBarButtonClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
 
 __attribute__((constructor))
 static void __setupFunction(void)
@@ -257,10 +258,9 @@ static void __setupFunction(void)
 		[self setValue:@(_itemSpacing) forKeyPath:minimumInterItemSpaceKeyPath];
 	} @catch(NSException*) {}
 	
-	static Class systemClass = NSClassFromString(LNPopupHiddenString("_UIButtonBarButton"));
 	for(UIView* arrangedSubview in stackView.arrangedSubviews)
 	{
-		if([arrangedSubview isKindOfClass:systemClass] == NO)
+		if([arrangedSubview isKindOfClass:__ln_systemButtonBarButtonClass] == NO)
 		{
 			continue;
 		}

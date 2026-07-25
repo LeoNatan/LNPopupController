@@ -86,11 +86,6 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	return rv;
 }
 
-//- (BOOL)_panGestureRecognizer:(UIPanGestureRecognizer *)gestureRecognizer shouldTryToBeginHorizontallyWithEvent:(UIEvent*)event
-//{
-//	return NO;
-//}
-
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
 	if([NSStringFromClass(otherGestureRecognizer.view.class) containsString:@"DropShadow"])

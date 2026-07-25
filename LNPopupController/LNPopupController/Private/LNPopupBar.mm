@@ -499,7 +499,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		
 		_needsLabelsLayout = YES;
 		
-		_imageView = [[LNPopupImageView alloc] initWithContainingPopupBar:self];;
+		_imageView = [[LNPopupBarImageView alloc] initWithContainingPopupBar:self];;
 		_imageView.autoresizingMask = UIViewAutoresizingNone;
 		_imageView.contentMode = UIViewContentModeScaleAspectFit;
 		_imageView.accessibilityTraits = UIAccessibilityTraitImage;
@@ -733,13 +733,19 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	_toolbar.itemSpacing = spacing;
 }
 
+#if DEBUG
+
 - (void)setNeedsLayout
 {
 	[super setNeedsLayout];
 }
 
+#endif
+
 - (void)layoutSubviews
 {
+	_inLayout = YES;
+	
 	if(_needsAppearanceProxyRefresh)
 	{
 		[self _recalcActiveAppearanceChain];
@@ -751,8 +757,6 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	}
 	
 	[super layoutSubviews];
-	
-	_inLayout = YES;
 
 	CGRect frame = self.bounds;
 	
@@ -1067,6 +1071,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	progressViewFrame.size.height = progressViewHeight;
 	
 	_progressView.frame = progressViewFrame;
+	_progressView.alpha = progressViewFrame.size.width >= __LNPopupScaledFloat(LNPopupBarFloatingPadImageWidth, self.traitCollection);
 #else
 	if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
 	{
@@ -2222,7 +2227,7 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	UIEdgeInsets buttonInsets = [self contentInsetsIncludingImage:NO];
 	
 	CGRect frame = UIEdgeInsetsInsetRect(_contentView.bounds, buttonInsets);
-	_imageView.alpha = frame.size.width < imageViewSize.width ? 0.0 : 1.0;
+	((LNPopupBarImageView*)_imageView).allowedAlpha = frame.size.width < imageViewSize.width ? 0.0 : 1.0;
 	
 	if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
 	{
@@ -2518,6 +2523,11 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		return [_customBarViewController pointerInteraction:interaction regionForRequest:request defaultRegion:defaultRegion];
 	}
 	
+	if(@available(iOS 27.0, *))
+	{
+		return nil;
+	}
+	
 	return defaultRegion;
 }
 
@@ -2533,21 +2543,14 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 		return nil;
 	}
 
-	if(@available(iOS 27.0, *))
-	{
-		return nil;
-	}
-	else
-	{
-		UIPointerHoverEffect* effect = [UIPointerHoverEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:interaction.view]];
-		effect.prefersScaledContent = YES;
-		effect.prefersShadow = NO;
-		effect.preferredTintMode = UIPointerEffectTintModeNone;
-		
-		UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
-		
-		return [UIPointerStyle styleWithEffect:effect shape:shape];
-	}
+	UIPointerHoverEffect* effect = [UIPointerHoverEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:interaction.view]];
+	effect.prefersScaledContent = YES;
+	effect.prefersShadow = NO;
+	effect.preferredTintMode = UIPointerEffectTintModeNone;
+	
+	UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];
+	
+	return [UIPointerStyle styleWithEffect:effect shape:shape];
 }
 
 - (void)pointerInteraction:(UIPointerInteraction *)interaction willEnterRegion:(UIPointerRegion *)region animator:(id<UIPointerInteractionAnimating>)animator  API_AVAILABLE(ios(13.4))
@@ -2594,7 +2597,6 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}
 	
 	[self setNeedsLayout];
-	[self layoutIfNeeded];
 }
 
 @end

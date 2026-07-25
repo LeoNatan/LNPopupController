@@ -1096,7 +1096,7 @@ __attribute__((objc_direct_members))
 			_popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			
 			_gesturesIgnored = YES;
-			[self closePopupAnimated:YES completion:^ {
+			[self closePopupAnimated:YES triggeredByGesture:YES allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:^ {
 				[_popupContentView.popupCloseButton _setButtonContainerStationary];
 				_gesturesIgnored = NO;
 			}];
@@ -1169,7 +1169,7 @@ __attribute__((objc_direct_members))
 		}
 		else
 		{
-			[self closePopupAnimated:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap completion:^{
+			[self closePopupAnimated:YES triggeredByGesture:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap completion:^{
 				self.popupContentView.applyScreenCorners = NO;
 				_gesturesIgnored = NO;
 			}];
@@ -1806,7 +1806,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 		{
 			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(animationDuration * 0.75 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 				[UIView animateWithDuration:animationDuration * 0.25 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0 options:UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations:^{
-					self.popupBar.contentView.effectView.contentView.alpha = 1.0;
+					self.popupBar.contentView.contentView.alpha = 1.0;
 				} completion:nil];
 			});
 			
@@ -1975,17 +1975,17 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self closePopupAnimated:animated allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:completionBlock];
+	[self closePopupAnimated:animated triggeredByGesture:NO allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:completionBlock];
 }
 
-- (void)closePopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
+- (void)closePopupAnimated:(BOOL)animated triggeredByGesture:(BOOL)triggeredByGesture allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
 {
 	[self _enqueueEvent:[_LNPopupControllerEvent closeEventWithOperation:^{
-		[self _closePopupAnimated:animated allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
+		[self _closePopupAnimated:animated triggeredByGesture:triggeredByGesture allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
 	}]];
 }
 
-- (void)_closePopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
+- (void)_closePopupAnimated:(BOOL)animated triggeredByGesture:(BOOL)triggeredByGesture allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
 {
 #if TARGET_OS_MACCATALYST
 	[_catalystHelper restore];
@@ -1998,7 +1998,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	{
 		LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
 		
-		[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap ? YES : NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:^{
+		[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:triggeredByGesture allowPopupBarAlphaModification:YES allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:^{
 			self.popupContentView.applyScreenCorners = NO;
 			
 			if(completionBlock)
@@ -2143,7 +2143,7 @@ id __LNPopupEmptyBlurFilter(void)
 					CGRect frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
 					
 					UIView* target;
-					if(self.popupBar.activeAppearance.floatingBackgroundEffect.ln_isGlass)
+					if(self.popupBar.contentView.effect.ln_isGlass)
 					{
 						target = self.popupBar.layoutContainer;
 					}

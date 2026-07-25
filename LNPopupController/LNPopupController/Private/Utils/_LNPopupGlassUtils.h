@@ -37,6 +37,7 @@ API_AVAILABLE(ios(26.0))
 API_AVAILABLE(ios(26.0))
 @interface _LNPopupGlassWrapperEffect: UIGlassEffect
 
++ (instancetype)vibrancyOnlyEffect;
 + (instancetype)wrapperWithEffect:(UIVisualEffect*)effect;
 
 @property (nonatomic, assign) BOOL disableForeground;
