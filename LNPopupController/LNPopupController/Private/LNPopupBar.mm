@@ -1134,6 +1134,8 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	}
 	
 	_effectiveContentSize = _contentView.bounds.size;
+	[__barLayoutDelegate _popupBarDidLayout:self];
+	
 	_inLayout = NO;
 }
 

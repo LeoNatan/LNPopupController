@@ -41,6 +41,12 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @end
 
+@protocol _LNPopupBarLayoutDelegate <NSObject>
+
+- (void)_popupBarDidLayout:(LNPopupBar*)popupBar;
+
+@end
+
 @protocol _LNPopupBarSupport <NSObject>
 
 @property (nonatomic, strong) UIColor *barTintColor;
@@ -87,6 +93,7 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @property (nonatomic, weak) __kindof UIViewController* barContainingController;
 @property (nonatomic, weak) id<_LNPopupBarDelegate> _barDelegate;
+@property (nonatomic, weak) id<_LNPopupBarLayoutDelegate> _barLayoutDelegate;
 
 @property (nonatomic, copy) NSAttributedString* attributedTitle;
 @property (nonatomic, copy) NSAttributedString* attributedSubtitle;
