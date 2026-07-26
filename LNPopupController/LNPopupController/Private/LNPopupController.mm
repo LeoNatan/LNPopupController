@@ -202,7 +202,7 @@ __attribute__((objc_direct_members))
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 		
-		_wantsFeedbackGeneration = YES;
+		_wantsFeedbackGeneration = NO;
 		_softFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleSoft];
 		_rigidFeedbackGenerator = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleRigid];
 		
@@ -420,9 +420,9 @@ __attribute__((objc_direct_members))
 	[_softFeedbackGenerator impactOccurredWithIntensity:intensity];
 }
 
-- (void)_generateRigidFeedbackWithIntensity:(CGFloat)intensity
+- (void)_generateRigidFeedbackWithIntensity:(CGFloat)intensity force:(BOOL)force
 {
-	if(_wantsFeedbackGeneration == NO)
+	if(force == NO && _wantsFeedbackGeneration == NO)
 	{
 		return;
 	}
@@ -599,7 +599,7 @@ __attribute__((objc_direct_members))
 		{
 			if(allowFeedbackGeneration == YES && (forceFeedbackAtStart || resolvedStyle == LNPopupInteractionStyleSnap))
 			{
-				[self _generateRigidFeedbackWithIntensity:0.9];
+				[self _generateRigidFeedbackWithIntensity:0.9 force:NO];
 			}
 			
 			if(_LNCallDelegateObjectObjectBool(_containerController, _currentContentController, @selector(popupPresentationController:willClosePopupWithContentController:animated:), animated) == NO)
@@ -2437,7 +2437,7 @@ id __LNPopupEmptyBlurFilter(void)
 {
 	if(bar.allowHapticFeedbackGenerationOnItemPaging)
 	{
-		[self _generateRigidFeedbackWithIntensity:1.0];
+		[self _generateRigidFeedbackWithIntensity:1.0 force:YES];
 	}
 }
 
