@@ -2197,6 +2197,13 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	
 	if(@available(iOS 27.0, *))
 	{
+		if(self.splitViewController != nil && self._ln_isPartOfPrimarySplit)
+		{
+			//For whatever reason, Apple places the "toolbar" somewhere in the split view controller's view hierarchy, rather than the navigation controller's. So we do best effort here, by using the system's safe area.
+			auto safeArea = self.topViewController.view.safeAreaInsets.bottom - _LNPopupSafeAreaInsets(self.topViewController).bottom;
+			return safeArea;
+		}
+		
 		UIView* glassView;
 		if(LNPopupBar.isCatalystApp)
 		{
