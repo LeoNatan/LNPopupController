@@ -23,7 +23,11 @@ typedef struct {
 
 extern UIEdgeInsets __LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitToSafeAreas);
 
-extern CGFloat __LNPopupScaledFloat(CGFloat value, UITraitCollection* traitCollection);
+#if TARGET_OS_MACCATALYST
+#define __LNPopupScaledFloat(value, t) (value * 0.77)
+#else
+#define __LNPopupScaledFloat(value, t) (value)
+#endif
 
 typedef void (^LNInWindowBlock)(dispatch_block_t);
 

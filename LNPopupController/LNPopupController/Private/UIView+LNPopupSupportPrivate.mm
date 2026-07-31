@@ -70,16 +70,6 @@ UIEdgeInsets __LNPopupEnvironmentLayoutInsets(UIView* containerView, BOOL limitT
 	return containerView.layoutMargins;
 }
 
-CGFloat __LNPopupScaledFloat(CGFloat value, UITraitCollection* traitCollection)
-{
-	if(traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac)
-	{
-		return value * 0.77;
-	}
-	
-	return value;
-}
-
 @implementation _LNPopupBarBackgroundGroupNameOverride
 
 + (__kindof id<NSObject>)defaultValue

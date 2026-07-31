@@ -257,6 +257,8 @@ __attribute__((objc_direct_members))
 	UIWindow* _swiftHacksWindow2;
 	
 	BOOL _animatesItemSetter;
+	
+	UINavigationBar* _layoutBar;
 }
 
 static BOOL __animatesItemSetter = NO;
@@ -385,6 +387,24 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	
 	if(self)
 	{
+		if(@available(iOS 27.0, *))
+		{
+			auto item = [UINavigationItem new];
+			auto leftView = [UIView new];
+			leftView.frame = CGRectMake(0, 0, 44, 44);
+			item.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftView];
+			auto rightView = [UIView new];
+			rightView.frame = CGRectMake(0, 0, 44, 44);
+			item.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightView];
+			
+			_layoutBar = [UINavigationBar new];
+			_layoutBar.userInteractionEnabled = NO;
+			_layoutBar.hidden = YES;
+			[_layoutBar setItems:@[item]];
+			
+			[self addSubview:_layoutBar];
+		}
+		
 		LNDynamicSubclass(self, _LNTouchPassthroughView.class);
 		
 		self.preservesSuperviewLayoutMargins = YES;
@@ -671,6 +691,18 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 
 - (NSDirectionalEdgeInsets)floatingLayoutMargins
 {
+	if(@available(iOS 27.0, *))
+	{
+		[UIView performWithoutAnimation:^{
+			[_layoutBar setValue:@(self.safeAreaInsets) forKey:@"safeAreaInsets"];
+			[_layoutBar layoutIfNeeded];
+		}];
+		CGRect leftFrame = [self convertRect:_layoutBar.topItem.leftBarButtonItem.customView.bounds fromView:_layoutBar.topItem.leftBarButtonItem.customView];
+		CGRect rightFrame = [self convertRect:_layoutBar.topItem.rightBarButtonItem.customView.bounds fromView:_layoutBar.topItem.rightBarButtonItem.customView];
+		
+		return NSDirectionalEdgeInsetsMake(0, leftFrame.origin.x - 4, 0, self.bounds.size.width - rightFrame.origin.x - rightFrame.size.width - 4);
+	}
+	
 	UIEdgeInsets layoutMargins = __LNPopupEnvironmentLayoutInsets(self, YES);
 	CGFloat extra = 0;
 	if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
@@ -747,6 +779,12 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	}
 	
 	[super layoutSubviews];
+	
+	if(@available(iOS 27.0, *))
+	{
+		//The offset is to compensate for iPad's close buttons.
+		_layoutBar.frame = CGRectMake(0, 100, self.bounds.size.width, 54);
+	}
 
 	CGRect frame = self.bounds;
 	

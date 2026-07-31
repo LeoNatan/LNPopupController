@@ -211,23 +211,26 @@ static const void* frozenAvoidPrimaryColumnValueKey = &frozenAvoidPrimaryColumnV
 
 - (NSDirectionalEdgeInsets)_ln_popupBarMarginsForPopupBar:(LNPopupBar*)popupBar
 {
-	NSDirectionalEdgeInsets barInsets = NSDirectionalEdgeInsetsZero;
-	
-	barInsets = [UINavigationController _ln_popupBarMarginsForPopupBar:popupBar inController:self];
+	NSDirectionalEdgeInsets margins = popupBar.floatingLayoutMargins;
+	NSDirectionalEdgeInsets barInsets = [UINavigationController _ln_popupBarMarginsForPopupBar:popupBar inController:self];
 	
 	CGFloat width = 0.0;
 	if(self._ln_shouldAvoidPrimaryColumn)
 	{
 		width = self.primaryColumnWidth;
+		if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27 && popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone && UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation))
+		{
+			width -= 22;
+		}
 	}
 	
 	if(self.primaryEdge == UISplitViewControllerPrimaryEdgeLeading)
 	{
-		barInsets.leading += (width - (barInsets.leading != 0 ? 10 : 0));
+		barInsets.leading += width;
 	}
 	else
 	{
-		barInsets.trailing += (width - (barInsets.trailing != 0 ? 10 : 0));
+		barInsets.trailing += width;
 	}
 	
 	return barInsets;
