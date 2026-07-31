@@ -747,7 +747,7 @@ __attribute__((objc_direct_members))
 	}
 #endif
 
-	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring ? 0.85 : 1.0 animations:nil];
+	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring ? 0.87 : 1.0 animations:nil];
 	_runningPopupAnimation.userInteractionEnabled = state == LNPopupPresentationStateOpen;
 	
 	if(stateAtStart == LNPopupPresentationStateBarPresented)
