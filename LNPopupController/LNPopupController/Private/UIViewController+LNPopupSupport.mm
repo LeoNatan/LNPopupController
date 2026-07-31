@@ -382,7 +382,7 @@ static void* LNViewControllerPromotesOverSplitView = &LNViewControllerPromotesOv
 	NSNumber* value = objc_getAssociatedObject(self, LNViewControllerPromotesOverSplitView);
 	if(value == nil)
 	{
-		return LNPopupBar.isCatalystApp;
+		return YES;
 	}
 	else
 	{

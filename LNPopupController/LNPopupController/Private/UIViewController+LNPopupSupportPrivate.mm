@@ -2797,7 +2797,7 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 	NSNumber* value = objc_getAssociatedObject(self, LNSplitViewControllerAdjustsLayout);
 	if(value == nil)
 	{
-		return LNPopupBar.isCatalystApp;
+		return YES;
 	}
 	else
 	{
