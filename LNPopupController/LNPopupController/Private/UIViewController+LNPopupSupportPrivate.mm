@@ -2798,16 +2798,6 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 
 - (BOOL)popupBarAvoidsPrimaryColumn
 {
-	if(ln_unavailable(iOS 26.0, *))
-	{
-		return NO;
-	}
-	
-	if(LNPopupEnvironmentHasGlass() == NO)
-	{
-		return NO;
-	}
-	
 	NSNumber* value = objc_getAssociatedObject(self, LNSplitViewControllerAdjustsLayout);
 	if(value == nil)
 	{
@@ -2826,11 +2816,6 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 
 - (void)_ln_layoutModernSplitViewControllerFloatingPopup
 {
-	if(LNPopupEnvironmentHasGlass() == NO)
-	{
-		return;
-	}
-	
 	if(self.style == UISplitViewControllerStyleUnspecified)
 	{
 		//Only modern split views are supported.

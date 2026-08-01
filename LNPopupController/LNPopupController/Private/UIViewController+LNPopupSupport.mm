@@ -369,16 +369,6 @@ static void* LNViewControllerPromotesOverSplitView = &LNViewControllerPromotesOv
 
 - (BOOL)popupOpensOverSplitViewController
 {
-	if(ln_unavailable(iOS 26.0, *))
-	{
-		return NO;
-	}
-	
-	if(LNPopupEnvironmentHasGlass() == NO)
-	{
-		return NO;
-	}
-	
 	NSNumber* value = objc_getAssociatedObject(self, LNViewControllerPromotesOverSplitView);
 	if(value == nil)
 	{
