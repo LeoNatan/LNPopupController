@@ -123,17 +123,6 @@ static const void* frozenAvoidPrimaryColumnValueKey = &frozenAvoidPrimaryColumnV
 
 - (void)splitViewController:(UISplitViewController *)svc willChangeToDisplayMode:(UISplitViewControllerDisplayMode)displayMode
 {
-//	BOOL avoidedBefore = [svc _ln_shouldAvoidPrimaryColumnWithVisible:svc._ln_isPrimaryShown forDisplayMode:svc.displayMode];
-//	BOOL avoidedAfter = [svc _ln_shouldAvoidPrimaryColumnWithVisible:svc._ln_isPrimaryShown forDisplayMode:displayMode];
-//	
-//	if(avoidedBefore == YES && avoidedAfter != avoidedBefore)
-//	{
-//		[svc _ln_setFrozenAvoidPrimaryColumnValue:@(avoidedBefore)];
-//	}
-//	
-//	[svc _ln_setFrozenAvoidPrimaryColumnValue:nil];
-//	__LNPopupUpdateChildInsets(svc);
-	
 	_targetDisplayMode = @(displayMode);
 	
 	void (^todo)(id) = ^ (id context) {

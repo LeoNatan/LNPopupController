@@ -311,6 +311,11 @@ __attribute__((objc_direct_members))
 		contentFrame.origin.y -= offset;
 	}
 	
+	if([self.popupContentView isDescendantOfView:controllerForContent.view] == NO)
+	{
+		contentFrame = [self.popupContentView.superview convertRect:contentFrame fromView:controllerForContent.view];
+	}
+	
 	self.popupContentView.frame = contentFrame;
 	
 	_containerController.popupContentViewController.view.frame = contentControllerFrame;
@@ -521,7 +526,7 @@ __attribute__((objc_direct_members))
 				[_currentContentController _userFacing_viewWillAppear:NO];
 			}
 			
-			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController activeAppearance:self.popupBar.activeAppearance];
+			[self.popupContentView _applyBackgroundEffectWithContentViewController:_currentContentController popupBar:self.popupBar];
 			
 			self.popupContentView.currentPopupContentViewController = _currentContentController;
 			[self.popupContentView.contentView sendSubviewToBack:_currentContentController.view];

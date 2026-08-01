@@ -11,6 +11,9 @@
 #import "LNPopupCloseButton+Private.h"
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import "UIScreen+LNPopupSupportPrivate.h"
+#import "_LNPopupBase64Utils.hh"
+
+@implementation _LNPopupContentViewLayoutController @end
 
 @implementation LNPopupContentView
 {
@@ -19,6 +22,12 @@
 	NSLayoutConstraint* _popupCloseButtonCenterConstraint;
 	NSLayoutConstraint* _popupCloseButtonLeadingConstraint;
 	NSLayoutConstraint* _popupCloseButtonTrailingConstraint;
+	
+#if !TARGET_OS_MACCATALYST
+	UIView* _leadingLayoutView;
+	UIView* _trailingLayoutView;
+	UINavigationController* _layoutController;
+#endif
 }
 
 + (LNPopupViewCorners)cornersForContentView:(LNPopupContentView*)contentView
@@ -56,9 +65,16 @@
 		
 		return corners;
 	}
-	else
+	
+	return {};
+}
+
++ (void)load
+{
+	@autoreleasepool
 	{
-		return {};
+		Method m = class_getInstanceMethod(self, @selector(safeAreaInsetsDidChange));
+		class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("_updateSafeAreaInsets")), imp_implementationWithBlock(^{}), method_getTypeEncoding(m));
 	}
 }
 
@@ -120,6 +136,24 @@
 		{
 			self.traitOverrides.userInterfaceLevel = UIUserInterfaceLevelElevated;
 		}
+		
+#if !TARGET_OS_MACCATALYST
+		if(LNPopupEnvironmentHasGlass())
+		{
+			auto vc = [UIViewController new];
+			_leadingLayoutView = [UIView new];
+			_leadingLayoutView.frame = CGRectMake(0, 0, 44, 44);
+			vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_leadingLayoutView];
+			_trailingLayoutView = [UIView new];
+			_trailingLayoutView.frame = CGRectMake(0, 0, 44, 44);
+			vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_trailingLayoutView];
+			
+			_layoutController = [[_LNPopupContentViewLayoutController alloc] initWithRootViewController:vc];
+			_layoutController.view.userInteractionEnabled = NO;
+			_layoutController.view.hidden = YES;
+			[self addSubview:_layoutController.view];
+		}
+#endif
 	}
 	
 	return self;
@@ -162,6 +196,14 @@
 	[super layoutSubviews];
 	
 	_effectView.frame = self.bounds;
+	
+#if !TARGET_OS_MACCATALYST
+	if(LNPopupEnvironmentHasGlass())
+	{
+		_layoutController.view.frame = self.bounds;
+		[_layoutController.navigationBar _ln_removeInteractionsFromSubviewTree];
+	}
+#endif
 }
 
 - (void)setCurrentPopupContentViewController:(UIViewController *)currentPopupContentViewController
@@ -236,7 +278,7 @@
 			
 			if(_popupCloseButtonTrailingConstraint == nil)
 			{
-				_popupCloseButtonTrailingConstraint = [self.popupCloseButton.trailingAnchor constraintEqualToAnchor:self.contentView.trailingAnchor];
+				_popupCloseButtonTrailingConstraint = [self.contentView.trailingAnchor constraintEqualToAnchor:self.popupCloseButton.trailingAnchor];
 			}
 			
 			if(_popupCloseButtonCenterConstraint == nil)
@@ -287,10 +329,6 @@
 		return;
 	}
 	
-	_popupCloseButtonTopConstraint.constant = _LNPopupCloseButtonStyleIsGlass(self.effectivePopupCloseButtonStyle) ? 20 : self.effectivePopupCloseButtonStyle == LNPopupCloseButtonStyleRound ? 12 : 8;
-	_popupCloseButtonLeadingConstraint.constant = _LNPopupCloseButtonStyleIsGlass(self.effectivePopupCloseButtonStyle) ? 20 : 12;
-	_popupCloseButtonTrailingConstraint.constant = _LNPopupCloseButtonStyleIsGlass(self.effectivePopupCloseButtonStyle) ? -20 : -12;
-	
 	switch(self.effectivePopupCloseButtonPositioning)
 	{
 		default:
@@ -315,36 +353,85 @@
 	{
 		return;
 	}
-	
-	UIEdgeInsets layoutMargins = __LNPopupEnvironmentLayoutInsets(self.currentPopupContentViewController.view, false);
+		
+	NSDirectionalEdgeInsets layoutMargins = self.currentPopupContentViewController.view.directionalLayoutMargins;
 	CGFloat topConstant = 0.0;
+	CGFloat leadingConstant = 0.0;
+	CGFloat trailingConstant = 0.0;
 #if TARGET_OS_MACCATALYST
-		topConstant = 9;
+	topConstant = 9;
+	leadingConstant = 97;
+	trailingConstant = 9;
 #else
-		topConstant = layoutMargins.top;
-#endif
-	
-	CGFloat glassMin = 0.0;
-	if(LNPopupBar.isCatalystApp)
+	if(LNPopupEnvironmentHasGlass())
 	{
-		glassMin = 0.0;
+		[UIView performWithoutAnimation:^{
+			_layoutController.popupPresentationContainerViewController = _currentPopupContentViewController.popupPresentationContainerViewController;
+			[_layoutController.view layoutIfNeeded];
+		}];
+		
+		CGRect leadingFrame = [self convertRect:_leadingLayoutView.bounds fromView:_leadingLayoutView];
+		CGRect trailingFrame = [self convertRect:_trailingLayoutView.bounds fromView:_trailingLayoutView];
+	
+		NSDirectionalEdgeInsets cornerAdaptionMargin = NSDirectionalEdgeInsetsZero;
+		if(@available(iOS 26.0, *))
+		{
+			UIEdgeInsets insets = [self.window edgeInsetsForLayoutRegion:[UIViewLayoutRegion marginsLayoutRegionWithCornerAdaptation:UIViewLayoutRegionAdaptivityAxisHorizontal]];
+			
+			BOOL hasWindowControls = insets.left != insets.right;
+			if(insets.left > 30 && hasWindowControls)
+			{
+				insets.left += 10;
+			}
+			else
+			{
+				insets.left = 0;
+			}
+			
+			if(insets.right > 30 && hasWindowControls)
+			{
+				insets.right += 10;
+			}
+			else
+			{
+				insets.right = 0;
+			}
+			
+			CGRect frameInWindow = [self.window convertRect:self.bounds fromView:self];
+			
+			insets.left -= frameInWindow.origin.x;
+			
+			cornerAdaptionMargin = _LNDirectionalEdgeInsetsFromEdgeInsets(self, insets);
+		}
+		
+		if(leadingFrame.origin.x < trailingFrame.origin.x)
+		{
+			//LTR
+			leadingConstant = MAX(cornerAdaptionMargin.leading, leadingFrame.origin.x);
+			trailingConstant = MAX(cornerAdaptionMargin.trailing, self.bounds.size.width - trailingFrame.origin.x - trailingFrame.size.width);
+		}
+		else
+		{
+			//RTL
+			trailingConstant = MAX(cornerAdaptionMargin.trailing, trailingFrame.origin.x);
+			leadingConstant = MAX(cornerAdaptionMargin.leading, self.bounds.size.width - leadingFrame.origin.x - leadingFrame.size.width);
+		}
+		
+		topConstant = leadingFrame.origin.y - 4;
 	}
 	else
 	{
-		glassMin = UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone ? 20 : 0;
+		topConstant = MAX(12, layoutMargins.top);
+		leadingConstant = layoutMargins.leading;
+		trailingConstant = layoutMargins.trailing;
 	}
-		
-	topConstant = MAX(_LNPopupCloseButtonStyleIsGlass(self.effectivePopupCloseButtonStyle) ? glassMin : self.effectivePopupCloseButtonStyle == LNPopupCloseButtonStyleRound ? 12 : 0, topConstant);
+#endif
 	
-	if(topConstant != _popupCloseButtonTopConstraint.constant || layoutMargins.left != _popupCloseButtonLeadingConstraint.constant || -layoutMargins.right != _popupCloseButtonTrailingConstraint.constant)
+	if(topConstant != _popupCloseButtonTopConstraint.constant || leadingConstant != _popupCloseButtonLeadingConstraint.constant || trailingConstant != _popupCloseButtonTrailingConstraint.constant)
 	{
 		_popupCloseButtonTopConstraint.constant = topConstant;
-#if TARGET_OS_MACCATALYST
-		_popupCloseButtonLeadingConstraint.constant = 97;
-#else
-		_popupCloseButtonLeadingConstraint.constant = layoutMargins.left;
-#endif
-		_popupCloseButtonTrailingConstraint.constant = -layoutMargins.right;
+		_popupCloseButtonLeadingConstraint.constant = leadingConstant;
+		_popupCloseButtonTrailingConstraint.constant = trailingConstant;
 		
 		if(self.window == nil)
 		{
@@ -364,10 +451,24 @@
 	}
 }
 
+#if DEBUG
+
+- (void)setFrame:(CGRect)frame
+{
+	if(CGRectEqualToRect(frame, super.frame))
+	{
+		return;
+	}
+	
+	[super setFrame:frame];
+}
+
 - (void)willMoveToSuperview:(UIView *)newSuperview
 {
 	[super willMoveToSuperview:newSuperview];
 }
+
+#endif
 
 - (void)safeAreaInsetsDidChange
 {
@@ -381,7 +482,7 @@
 	return self.translucent && _backgroundEffect != nil ? _backgroundEffect : _effectView.effect;
 }
 
-- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc activeAppearance:(LNPopupBarAppearance*)appearance
+- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc popupBar:(LNPopupBar*)popupBar
 {
 	if(self.translucent == NO)
 	{
@@ -406,7 +507,14 @@
 		}
 		else
 		{
-			effectToUse = [appearance floatingBackgroundEffectForPopupBar:nil containerController:nil traitCollection:vc.traitCollection];
+			if(LNPopupEnvironmentHasGlass())
+			{
+				effectToUse = popupBar.contentView.effect;
+			}
+			else
+			{
+				effectToUse = popupBar.backgroundView.effect;
+			}
 		}
 		
 		if(@available(iOS 26.0, *))

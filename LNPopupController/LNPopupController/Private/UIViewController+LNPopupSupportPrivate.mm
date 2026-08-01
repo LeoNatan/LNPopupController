@@ -16,6 +16,7 @@
 #import "UISplitView+LNPopupInheritedBarMetricsSupport.h"
 #import "_LNPopupTitlesPagingController.h"
 #import "LNForwardingDelegate.h"
+#import "LNPopupContentView+Private.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -568,6 +569,12 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 		self.view.insetsLayoutMarginsFromSafeArea = YES;
 		self.viewRespectsSystemMinimumLayoutMargins = NO;
 		self.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
+		
+		if([self isKindOfClass:_LNPopupContentViewLayoutController.class] == NO)
+		{
+			LNPopupContentView* containingContentView = self.popupPresentationContainerViewController.popupContentView;
+			[containingContentView _ln_updateSafeAreaInsets:insets];
+		}
 		
 		return;
 	}

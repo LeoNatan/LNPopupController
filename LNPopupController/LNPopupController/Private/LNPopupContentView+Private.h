@@ -10,6 +10,8 @@
 #import <LNPopupController/LNPopupBarAppearance.h>
 #import "UIView+LNPopupSupportPrivate.h"
 
+@interface _LNPopupContentViewLayoutController : UINavigationController @end
+
 @interface LNPopupContentView ()
 
 + (LNPopupViewCorners)cornersForContentView:(LNPopupContentView*)contentView;
@@ -27,7 +29,7 @@
 
 @property (nonatomic, strong) UIView* transitionView;
 
-- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc activeAppearance:(LNPopupBarAppearance*)appearance;
+- (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc popupBar:(LNPopupBar*)popupBar;
 
 - (void)_repositionPopupCloseButton;
 - (void)_repositionPopupCloseButtonAnimated:(BOOL)animated;
