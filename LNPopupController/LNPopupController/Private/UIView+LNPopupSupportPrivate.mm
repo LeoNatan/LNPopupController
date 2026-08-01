@@ -206,6 +206,11 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 			method_setImplementation(m, imp_implementationWithBlock(trampoline(orig)));
 		}
 		
+		{
+			Method m = class_getInstanceMethod(self, NSSelectorFromString(LNPopupHiddenString("setSafeAreaInsets:")));
+			class_addMethod(self, @selector(_ln_updateSafeAreaInsets:), method_getImplementation(m), method_getTypeEncoding(m));
+		}
+		
 		NSString* sel = LNPopupHiddenString("_didMoveFromWindow:toWindow:");
 		LNSwizzleMethod(self,
 						NSSelectorFromString(sel),
@@ -216,6 +221,12 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 						@selector(_ln_didMoveToWindow));
 #endif
 	}
+}
+
+- (UIViewController*)_ln_closestController
+{
+	static NSString* const key = LNPopupHiddenString("_viewControllerForAncestor");
+	return [self valueForKey:key];
 }
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout
@@ -402,6 +413,18 @@ void _LNNotify(UIView* self, NSMutableArray<LNInWindowBlock>* waiting)
 		viewToTest = viewToTest.superview;
 	}
 	return nil;
+}
+
+- (void)_ln_removeInteractionsFromSubviewTree
+{
+	NSArray<id<UIInteraction>>* interactions = self.interactions.copy;
+	for (id<UIInteraction> interaction in interactions) {
+		[self removeInteraction:interaction];
+	}
+	
+	for (UIView* subview in self.subviews) {
+		[subview _ln_removeInteractionsFromSubviewTree];
+	}
 }
 
 static NSString* cornersName = LNPopupHiddenString("cornerRadii");

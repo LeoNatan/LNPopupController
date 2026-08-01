@@ -40,7 +40,15 @@ typedef void (^LNInWindowBlock)(dispatch_block_t);
 UIEdgeInsets _LNEdgeInsetsFromDirectionalEdgeInsets(UIView* forView, NSDirectionalEdgeInsets edgeInsets);
 NSDirectionalEdgeInsets _LNDirectionalEdgeInsetsFromEdgeInsets(UIView* forView, UIEdgeInsets edgeInsets);
 
+@interface UIView ()
+
+- (void)_ln_updateSafeAreaInsets:(UIEdgeInsets)newSafeAreaInsets;
+
+@end
+
 @interface UIView (LNPopupSupportPrivate)
+
+@property (nonatomic, readonly, nullable) UIViewController* _ln_closestController;
 
 - (void)_ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:(BOOL)layout;
 - (BOOL)_ln_scrollEdgeAppearanceRequiresFadeForPopupBar:(LNPopupBar*)popupBar;
@@ -55,6 +63,8 @@ NSDirectionalEdgeInsets _LNDirectionalEdgeInsetsFromEdgeInsets(UIView* forView, 
 - (nullable UIView*)_ln_firstSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf;
 - (nullable UIView*)_ln_lastSubviewPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf;
 - (nullable UIView*)_ln_firstDescendantPassingTest:(BOOL(^)(UIView* viewToTest))test includingSelf:(BOOL)includeSelf;
+
+- (void)_ln_removeInteractionsFromSubviewTree;
 
 @property (nonatomic, getter=_ln_corners, setter=_ln_setCorners:) LNPopupViewCorners corners;
 @property (nonatomic, readonly) CGFloat _ln_simulatedCornerRadiusFromCorners;

@@ -692,15 +692,31 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 - (NSDirectionalEdgeInsets)floatingLayoutMargins
 {
 	if(@available(iOS 27.0, *))
+	if(self.inheritsBottomBarMetrics)
 	{
 		[UIView performWithoutAnimation:^{
-			[_layoutBar setValue:@(self.safeAreaInsets) forKey:@"safeAreaInsets"];
+			[_layoutBar _ln_updateSafeAreaInsets:self.safeAreaInsets];
 			[_layoutBar layoutIfNeeded];
 		}];
-		CGRect leftFrame = [self convertRect:_layoutBar.topItem.leftBarButtonItem.customView.bounds fromView:_layoutBar.topItem.leftBarButtonItem.customView];
-		CGRect rightFrame = [self convertRect:_layoutBar.topItem.rightBarButtonItem.customView.bounds fromView:_layoutBar.topItem.rightBarButtonItem.customView];
+		CGRect leadingFrame = [self convertRect:_layoutBar.topItem.leftBarButtonItem.customView.bounds fromView:_layoutBar.topItem.leftBarButtonItem.customView];
+		CGRect trailingFrame = [self convertRect:_layoutBar.topItem.rightBarButtonItem.customView.bounds fromView:_layoutBar.topItem.rightBarButtonItem.customView];
 		
-		return NSDirectionalEdgeInsetsMake(0, leftFrame.origin.x - 4, 0, self.bounds.size.width - rightFrame.origin.x - rightFrame.size.width - 4);
+		CGFloat leading;
+		CGFloat trailing;
+		if(leadingFrame.origin.x < trailingFrame.origin.x)
+		{
+			//LTR
+			leading = leadingFrame.origin.x;
+			trailing = self.bounds.size.width - trailingFrame.origin.x - trailingFrame.size.width;
+		}
+		else
+		{
+			//RTL
+			trailing = trailingFrame.origin.x;
+			leading = self.bounds.size.width - leadingFrame.origin.x - leadingFrame.size.width;
+		}
+		
+		return NSDirectionalEdgeInsetsMake(0, leading - 4, 0, trailing - 4);
 	}
 	
 	UIEdgeInsets layoutMargins = __LNPopupEnvironmentLayoutInsets(self, YES);
@@ -784,6 +800,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	{
 		//The offset is to compensate for iPad's close buttons.
 		_layoutBar.frame = CGRectMake(0, 100, self.bounds.size.width, 54);
+		[_layoutBar _ln_removeInteractionsFromSubviewTree];
 	}
 
 	CGRect frame = self.bounds;
