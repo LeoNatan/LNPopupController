@@ -1068,13 +1068,15 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		cornerRadius = _contentView.cornerRadius / 2.5;
 	}
 	
+	[_contentView.contentView insertSubview:_progressView aboveSubview:_toolbar];
+	
 	CGFloat width = 0;
 	CGFloat height = 0;
 	CGFloat offset = 0;
 	CGFloat offsetAfter = 0;
 	if(_resolvedIsFloating)
 	{
-		[_contentView.contentView insertSubview:_progressView aboveSubview:_toolbar];
+		
 		
 		if(LNPopupEnvironmentHasGlass())
 		{
@@ -1085,17 +1087,14 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	}
 	else
 	{
-		[self insertSubview:_progressView aboveSubview:_contentView];
-
-		offset = self.safeAreaInsets.left;
-		width = self.bounds.size.width - self.safeAreaInsets.left - self.safeAreaInsets.right;
+		offset = 0;
+		width = self.contentView.bounds.size.width;
 		height = self.bounds.size.height;
 	}
 	
 	CGFloat progressViewHeight = [_progressView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
 	UIEdgeInsets titleInsets = [self contentInsetsIncludingImage:NO];
-	
-	if(self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac && titleInsets.left >= 20 && titleInsets.right >= 20)
+	if(LNPopupEnvironmentHasGlass() && self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac && titleInsets.left >= 20 && titleInsets.right >= 20)
 	{
 		CGRect progressViewFrame = UIEdgeInsetsInsetRect(_contentView.bounds, titleInsets);
 		static const CGFloat position = 4;
