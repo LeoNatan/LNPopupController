@@ -657,21 +657,24 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 
 - (BOOL)_ln_isPartOfPrimarySplit
 {
-	UISplitViewController* split = self.splitViewController;
-	if(split == nil || split.style == UISplitViewControllerStyleUnspecified)
+	if(@available(iOS 14.0, *))
 	{
-		return NO;
-	}
-	
-	UIViewController* primary = [split viewControllerForColumn:UISplitViewControllerColumnPrimary];
-	UIViewController* tested = self;
-	while(tested != nil)
-	{
-		if(primary == tested)
+		UISplitViewController* split = self.splitViewController;
+		if(split == nil || split.style == UISplitViewControllerStyleUnspecified)
 		{
-			return YES;
+			return NO;
 		}
-		tested = tested.parentViewController;
+		
+		UIViewController* primary = [split viewControllerForColumn:UISplitViewControllerColumnPrimary];
+		UIViewController* tested = self;
+		while(tested != nil)
+		{
+			if(primary == tested)
+			{
+				return YES;
+			}
+			tested = tested.parentViewController;
+		}
 	}
 	
 	return NO;
@@ -720,7 +723,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 @implementation UIViewController (LNPopupKeyPressHandling)
 
 static
-BOOL _LNPopupPressesContainEscape(NSSet<UIPress*>* presses)
+BOOL _LNPopupPressesContainEscape(NSSet<UIPress*>* presses) API_AVAILABLE(ios(13.4))
 {
 	NSSet<UIKey*>* keys = [presses valueForKey:@"key"];
 	return [keys objectsPassingTest:^BOOL(UIKey * _Nonnull obj, BOOL * _Nonnull stop) {
@@ -730,6 +733,7 @@ BOOL _LNPopupPressesContainEscape(NSSet<UIPress*>* presses)
 
 - (void)pressesBegan:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event
 {
+	if(@available(iOS 13.4, *))
 	if(self.popupPresentationState == LNPopupPresentationStateOpen && _LNPopupPressesContainEscape(presses))
 	{
 		//Wait for pressesEnded:
@@ -741,6 +745,7 @@ BOOL _LNPopupPressesContainEscape(NSSet<UIPress*>* presses)
 
 - (void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event
 {
+	if(@available(iOS 13.4, *))
 	if(self.popupPresentationState == LNPopupPresentationStateOpen && _LNPopupPressesContainEscape(presses))
 	{
 		[self closePopupAnimated:YES completion:nil];

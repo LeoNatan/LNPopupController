@@ -31,7 +31,7 @@ static const void* frozenAvoidPrimaryColumnValueKey = &frozenAvoidPrimaryColumnV
 	return svc.displayMode;
 }
 
-- (void)splitViewController:(UISplitViewController *)svc willShowColumn:(UISplitViewControllerColumn)column
+- (void)splitViewController:(UISplitViewController *)svc willShowColumn:(UISplitViewControllerColumn)column API_AVAILABLE(ios(14.0))
 {
 	if(column != UISplitViewControllerColumnPrimary)
 	{
@@ -73,7 +73,7 @@ static const void* frozenAvoidPrimaryColumnValueKey = &frozenAvoidPrimaryColumnV
 	}
 }
 
-- (void)splitViewController:(UISplitViewController *)svc willHideColumn:(UISplitViewControllerColumn)column
+- (void)splitViewController:(UISplitViewController *)svc willHideColumn:(UISplitViewControllerColumn)column API_AVAILABLE(ios(14.0))
 {
 	if(column != UISplitViewControllerColumnPrimary)
 	{
@@ -123,6 +123,11 @@ static const void* frozenAvoidPrimaryColumnValueKey = &frozenAvoidPrimaryColumnV
 
 - (void)splitViewController:(UISplitViewController *)svc willChangeToDisplayMode:(UISplitViewControllerDisplayMode)displayMode
 {
+	if(ln_unavailable(iOS 14.0, *))
+	{
+		return;;
+	}
+	
 	_targetDisplayMode = @(displayMode);
 	
 	void (^todo)(id) = ^ (id context) {
@@ -186,7 +191,7 @@ static const void* frozenAvoidPrimaryColumnValueKey = &frozenAvoidPrimaryColumnV
 	return [self _ln_shouldAvoidPrimaryColumnWithVisible:self._ln_isPrimaryShown forDisplayMode:self.displayMode];
 }
 
-- (BOOL)_ln_shouldAvoidPrimaryColumnWithVisible:(BOOL)visible forDisplayMode:(UISplitViewControllerDisplayMode)displayMode
+- (BOOL)_ln_shouldAvoidPrimaryColumnWithVisible:(BOOL)visible forDisplayMode:(UISplitViewControllerDisplayMode)displayMode API_AVAILABLE(ios(14.0))
 {
 	if(self.popupBarAvoidsPrimaryColumn == NO || self._ln_popupController_nocreate.popupControllerTargetState == LNPopupPresentationStateBarHidden)
 	{

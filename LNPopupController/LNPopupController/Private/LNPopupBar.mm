@@ -739,6 +739,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		rv.trailing = layoutMargins.right + extra;
 	}
 	
+	if(@available(iOS 14.0, *))
 	if(LNPopupBar.isCatalystApp && self.traitCollection.userInterfaceIdiom != UIUserInterfaceIdiomMac)
 	{
 		rv.leading += 10;
@@ -1094,7 +1095,14 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	
 	CGFloat progressViewHeight = [_progressView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
 	UIEdgeInsets titleInsets = [self contentInsetsIncludingImage:NO];
-	if(LNPopupEnvironmentHasGlass() && self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac && titleInsets.left >= 20 && titleInsets.right >= 20)
+	
+	BOOL isMacIdiom = NO;
+	if(@available(iOS 14.0, *))
+	{
+		isMacIdiom = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac;
+	}
+	
+	if(LNPopupEnvironmentHasGlass() && isMacIdiom && titleInsets.left >= 20 && titleInsets.right >= 20)
 	{
 		CGRect progressViewFrame = UIEdgeInsetsInsetRect(_contentView.bounds, titleInsets);
 		static const CGFloat position = 4;
@@ -1546,7 +1554,12 @@ static NSString* __ln_effectGroupingIdentifierKey = LNPopupHiddenString("groupNa
 
 - (UIColor *)tintColor
 {
-	return _userTintColor ?: _systemTintColor ?: self.superview.tintColor ?: UIColor.tintColor;
+	UIColor* fallestbackColor = nil;
+	if(@available(iOS 15.0, *))
+	{
+		fallestbackColor = UIColor.tintColor;
+	}
+	return _userTintColor ?: _systemTintColor ?: self.superview.tintColor ?: fallestbackColor;
 }
 
 - (void)setTintColor:(UIColor *)tintColor

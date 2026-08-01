@@ -40,7 +40,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	return self;
 }
 
-- (BOOL)gestureRecognizer:(LNPopupInteractionPanGestureRecognizer *)gestureRecognizer shouldReceiveEvent:(UIEvent *)event
+- (BOOL)gestureRecognizer:(LNPopupInteractionPanGestureRecognizer *)gestureRecognizer shouldReceiveEvent:(UIEvent *)event API_AVAILABLE(ios(13.4))
 {
 	if([self.forwardedDelegate respondsToSelector:_cmd])
 	{

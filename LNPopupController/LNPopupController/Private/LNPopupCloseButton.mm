@@ -125,7 +125,10 @@ __attribute__((objc_direct_members))
 	
 	if(self)
 	{
-		self.preferredBehavioralStyle = UIBehavioralStylePad;
+		if(@available(iOS 15.0, *))
+		{
+			self.preferredBehavioralStyle = UIBehavioralStylePad;
+		}
 		
 		_popupContentView = contentView;
 		
@@ -483,7 +486,7 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	}
 }
 
-- (nullable UIPointerStyle *)pointerInteraction:(UIPointerInteraction *)interaction styleForRegion:(UIPointerRegion *)region
+- (nullable UIPointerStyle *)pointerInteraction:(UIPointerInteraction *)interaction styleForRegion:(UIPointerRegion *)region  API_AVAILABLE(ios(13.4))
 {
 	UIPointerLiftEffect* effect = [UIPointerLiftEffect effectWithPreview:[[UITargetedPreview alloc] initWithView:self]];
 	UIPointerShape* shape = nil;//[UIPointerShape shapeWithRoundedRect:interaction.view.frame];

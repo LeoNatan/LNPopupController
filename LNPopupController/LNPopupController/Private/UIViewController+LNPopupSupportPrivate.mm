@@ -2814,7 +2814,7 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 	objc_setAssociatedObject(self, LNSplitViewControllerAdjustsLayout, @(popupBarAvoidsPrimaryColumn), OBJC_ASSOCIATION_RETAIN);
 }
 
-- (void)_ln_layoutModernSplitViewControllerFloatingPopup
+- (void)_ln_layoutModernSplitViewControllerFloatingPopup API_AVAILABLE(ios(14.0))
 {
 	if(self.style == UISplitViewControllerStyleUnspecified)
 	{
@@ -2829,14 +2829,20 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 {
 	[super _layoutPopupBarOrderForUse];
 	
-	[self _ln_layoutModernSplitViewControllerFloatingPopup];
+	if(@available(iOS 14.0, *))
+	{
+		[self _ln_layoutModernSplitViewControllerFloatingPopup];
+	}
 }
 
 - (void)_layoutPopupBarOrderForTransition
 {
 	[super _layoutPopupBarOrderForTransition];
 	
-	[self _ln_layoutModernSplitViewControllerFloatingPopup];
+	if(@available(iOS 14.0, *))
+	{
+		[self _ln_layoutModernSplitViewControllerFloatingPopup];
+	}
 }
 
 - (void)_ln_popup_viewDidLayoutSubviews_svc
