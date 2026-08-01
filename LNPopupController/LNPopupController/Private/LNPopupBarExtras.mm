@@ -378,19 +378,19 @@ static void __setupFunction(void)
 
 @implementation _LNPopupBarProgressView
 
+#if TARGET_OS_MACCATALYST
 - (UITraitCollection *)traitCollection
 {
 	UITraitCollection* rv = [super traitCollection];
 	
-#if TARGET_OS_MACCATALYST
 	//Force the use of the Pad visual provider for the progress view.
 	rv = [rv traitCollectionByModifyingTraits:^(id<UIMutableTraits>  _Nonnull mutableTraits) {
 		mutableTraits.userInterfaceIdiom = UIUserInterfaceIdiomPad;
 	}];
-#endif
 	
 	return rv;
 }
+#endif
 
 @end
 

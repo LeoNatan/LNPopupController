@@ -2087,18 +2087,18 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	[self _ln_promoteToSplitViewOrElse:^{
 		if(LNPopupEnvironmentHasGlass() && self.view.superview != nil)
 		{
-			UIView* target = self.view.superview;
+			UIView* target = self.view;
 			if(@available(iOS 27.0, *))
-				if(self.splitViewController != nil)
-				{
-					NSUInteger idx = [self.splitViewController.viewControllers indexOfObjectPassingTest:^BOOL(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-						return [self.view isDescendantOfView:obj.view];
-					}];
-					if(idx != NSNotFound && [self.splitViewController viewControllerForColumn:UISplitViewControllerColumnPrimary] == self.splitViewController.viewControllers[idx])
-					{
-						target = target.superview;
-					}
-				}
+			if(self.splitViewController != nil && self._ln_isPartOfPrimarySplit)
+			{
+				static NSString* const columnContainerView = LNPopupHiddenString("ColumnContainerView");
+				
+				//iOS 27 places the "toolbar" as a subview of the split view controller's internal hierarchy instead of the navigation controller's.
+				UIView* newTarget = [target _ln_firstDescendantPassingTest:^BOOL(UIView * _Nonnull viewToTest) {
+					return [NSStringFromClass(viewToTest.class) hasSuffix:columnContainerView];
+				} includingSelf:YES];
+				target = newTarget;
+			}
 			
 			[target addSubview:self._ln_popupController_nocreate.popupContentView];
 		}

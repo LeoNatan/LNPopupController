@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25087" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25063.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25068"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -473,7 +473,7 @@
         <!--Split View Controller Global Popup-->
         <scene sceneID="iRx-bt-bfy">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="twoDisplace" behavior="displace" id="F0W-R7-jVc" customClass="LNSplitViewControllerGlobalPopup" sceneMemberID="viewController">
+                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="twoDisplace" behavior="displace" primaryBackgroundStyle="sidebar" id="F0W-R7-jVc" customClass="LNSplitViewControllerGlobalPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="kZv-eg-X5o"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="masterViewController" id="Qc4-nZ-cyX"/>
@@ -486,7 +486,7 @@
         <!--Split View Controller Primary Popup-->
         <scene sceneID="0aA-gd-S0Z">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" id="NWj-M1-Csm" customClass="LNSplitViewControllerPrimaryPopup" sceneMemberID="viewController">
+                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="over" behavior="overlay" primaryEdge="trailing" primaryBackgroundStyle="sidebar" id="NWj-M1-Csm" customClass="LNSplitViewControllerPrimaryPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="GHH-ob-Ng8" kind="relationship" relationship="masterViewController" id="IDA-Po-Fia"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="04d-1K-Lzo"/>
@@ -771,9 +771,9 @@
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
-        <segue reference="7qJ-pK-ibQ"/>
+        <segue reference="04d-1K-Lzo"/>
         <segue reference="1U6-NV-9t4"/>
-        <segue reference="gSl-m3-ZVG"/>
+        <segue reference="IDA-Po-Fia"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemPinkColor"/>
     <resources>
