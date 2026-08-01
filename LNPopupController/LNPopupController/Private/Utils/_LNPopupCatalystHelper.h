@@ -12,8 +12,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface _LNPopupCatalystMetrics: NSObject
+
+@property (nonatomic) CGSize glassButtonSize;
+@property (nonatomic) CGFloat topConstant;
+@property (nonatomic) CGFloat leadingConstant;
+@property (nonatomic) CGFloat trailingConstant;
+
+@end
+
 @interface _LNPopupCatalystHelper : NSObject
 
++ (_LNPopupCatalystMetrics*)metricsForScene:(UIWindowScene*)scene;
 - (void)startHidingToolbarWithScene:(UIWindowScene*)scene;
 - (void)restore;
 

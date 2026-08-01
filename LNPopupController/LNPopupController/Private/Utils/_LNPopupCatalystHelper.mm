@@ -18,6 +18,8 @@
 
 @end
 
+@implementation _LNPopupCatalystMetrics @end
+
 static SEL updateTitleVisibilityBehavior;
 static SEL updateFromNavigationBarProxy;
 static const void* _LNPopupApplyWindowFixes = &_LNPopupApplyWindowFixes;
@@ -66,7 +68,6 @@ static NSString* const toolbarToolbarViewWindow = LNPopupHiddenString("toolbar.t
 				[window setValue:@YES forKey:@"titlebarAppearsTransparent"];
 				[window setValue:@1 forKey:@"titleVisibility"];
 				[window setValue:@1 forKey:@"titlebarSeparatorStyle"];
-				[window setValue:@3 forKey:@"toolbarStyle"];
 				
 				window = [window valueForKeyPath:toolbarToolbarViewWindow];
 				
@@ -92,6 +93,35 @@ static NSString* const toolbarToolbarViewWindow = LNPopupHiddenString("toolbar.t
 	UIWindowScene* _currentScene;
 	
 	NSToolbar* _existingToolbar;
+}
+
++ (_LNPopupCatalystMetrics*)metricsForScene:(UIWindowScene*)scene
+{
+	_LNPopupCatalystMetrics* metrics = [_LNPopupCatalystMetrics new];
+	
+	BOOL needsSmall = NO;
+	
+	if(@available(iOS 14.0, *))
+	if(scene.titlebar.toolbarStyle == UITitlebarToolbarStyleUnifiedCompact)
+	{
+		needsSmall = YES;
+	}
+	
+	
+	metrics.glassButtonSize = needsSmall ? CGSizeMake(37, 30) : CGSizeMake(44, 44);
+	metrics.topConstant = LNPopupEnvironmentHasGlass() ? 9 : needsSmall ? 8 : 15;
+	if(LNPopupEnvironmentHasGlass())
+	{
+		metrics.leadingConstant = needsSmall ? 92 : 97;
+	}
+	else
+	{
+		metrics.leadingConstant = needsSmall ? 84 : 92;
+	}
+	
+	metrics.trailingConstant = LNPopupEnvironmentHasGlass() ? 9 : 20;
+	
+	return metrics;
 }
 
 - (void)startHidingToolbarWithScene:(UIWindowScene*)scene

@@ -12,6 +12,7 @@
 #import <LNPopupController/UIViewController+LNPopupSupport.h>
 #import "UIScreen+LNPopupSupportPrivate.h"
 #import "_LNPopupBase64Utils.hh"
+#import "_LNPopupCatalystHelper.h"
 
 @implementation _LNPopupContentViewLayoutController @end
 
@@ -359,9 +360,10 @@
 	CGFloat leadingConstant = 0.0;
 	CGFloat trailingConstant = 0.0;
 #if TARGET_OS_MACCATALYST
-	topConstant = 9;
-	leadingConstant = 97;
-	trailingConstant = 9;
+	_LNPopupCatalystMetrics* metrics = [_LNPopupCatalystHelper metricsForScene:self.window.windowScene];
+	topConstant = metrics.topConstant;
+	leadingConstant = metrics.leadingConstant;
+	trailingConstant = metrics.trailingConstant;
 #else
 	if(LNPopupEnvironmentHasGlass())
 	{
