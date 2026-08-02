@@ -52,7 +52,11 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 	if(event.type == UIEventTypeTouches)
 	{
 		UITouch* touch = event.allTouches.anyObject;
-		if(touch.type == UITouchTypeIndirectPointer && gestureRecognizer.allowsIndirectPointerInteraction == NO && [touch.view isDescendantOfView:_popupController.popupBar] == NO)
+		if(touch.type == UITouchTypeIndirectPointer && gestureRecognizer.allowsIndirectPointerInteraction == NO
+#if !TARGET_OS_MACCATALYST
+		   && [touch.view isDescendantOfView:_popupController.popupBar] == NO
+#endif
+		   )
 		{
 			return NO;
 		}

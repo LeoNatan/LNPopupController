@@ -20,7 +20,8 @@ class CatalystLandingViewController: UISplitViewController {
 		super.init(style: .doubleColumn)
 		
 		minimumPrimaryColumnWidth = 250
-		maximumPrimaryColumnWidth = 400
+		preferredPrimaryColumnWidth = 335
+		maximumPrimaryColumnWidth = 420
 		
 		preferredSplitBehavior = .tile
 		preferredDisplayMode = .oneBesideSecondary

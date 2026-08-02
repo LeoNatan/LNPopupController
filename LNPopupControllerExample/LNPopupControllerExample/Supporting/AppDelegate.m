@@ -28,6 +28,9 @@
 {
 	UISceneConfiguration* config = [[UISceneConfiguration alloc] initWithName:@"LNPopupExample" sessionRole:connectingSceneSession.role];
 	
+#if TARGET_OS_MACCATALYST
+	connectingSceneSession.userInfo = @{@"isNewlyCreated": @YES};
+#endif
 	
 	return config;
 }

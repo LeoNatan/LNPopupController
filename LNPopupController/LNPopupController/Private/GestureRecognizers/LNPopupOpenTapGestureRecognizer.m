@@ -36,6 +36,16 @@
 		return NO;
 	}
 	
+#if TARGET_OS_MACCATALYST
+	UIEdgeInsets contentInsets = [_popupController.popupBar contentInsetsIncludingImage:NO];
+	CGPoint pointInContentView = [touch locationInView:_popupController.popupBar.contentView];
+	CGRect insetContentBounds = UIEdgeInsetsInsetRect(_popupController.popupBar.contentView.bounds, contentInsets);
+	if(CGRectContainsPoint(insetContentBounds, pointInContentView) == NO)
+	{
+		return NO;
+	}
+#endif
+	
 	if([self.forwardedDelegate respondsToSelector:_cmd])
 	{
 		return [self.forwardedDelegate gestureRecognizer:gestureRecognizer shouldReceiveTouch:touch];

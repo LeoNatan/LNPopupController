@@ -57,20 +57,16 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, LNPopupBar* pop
 	}
 	
 	UIBarButtonItem* shuffle = LNSystemBarButtonItemAction(@"shuffle", LNSystemImageScaleExtraCompact, nil);
-#if TARGET_OS_MACCATALYST
-	shuffle.tintColor = UIColor.tertiaryLabelColor;
-#endif
 	shuffle.accessibilityLabel = NSLocalizedString(@"Shuffle", @"");
 	shuffle.accessibilityIdentifier = @"Shuffle";
 	shuffle.accessibilityTraits = UIAccessibilityTraitButton;
+	shuffle.enabled = NO;
 	
 	UIBarButtonItem* repeat = LNSystemBarButtonItemAction(@"repeat", LNSystemImageScaleExtraCompact, nil);
-#if TARGET_OS_MACCATALYST
-	repeat.tintColor = UIColor.tertiaryLabelColor;
-#endif
 	repeat.accessibilityLabel = NSLocalizedString(@"Repeat", @"");
 	repeat.accessibilityIdentifier = @"Repeat";
 	repeat.accessibilityTraits = UIAccessibilityTraitButton;
+	repeat.enabled = NO;
 	
 	UIBarButtonItem* playPause = LNSystemBarButtonItemAction(isPlay ? @"play.fill" : @"pause.fill", playPauseScale, playPauseAction);
 	playPause.accessibilityLabel = NSLocalizedString(isPlay ? @"Play" : @"Pause", @"");

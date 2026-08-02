@@ -751,23 +751,12 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 
 - (void)_resetToolbarItemSpacing
 {
-#if TARGET_OS_MACCATALYST
-	CGFloat spacing = 4.0;
-#else
 	CGFloat spacing = 8.0;
-#endif
 	BOOL hasSwiftUI = _swiftuiHiddenLeadingController != nil || _swiftuiHiddenTrailingController != nil;
 	
-	if(hasSwiftUI)
+	if(hasSwiftUI && NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 18)
 	{
-		if(LNPopupEnvironmentHasGlass())
-		{
-			spacing = 12.0;
-		}
-		else if(NSProcessInfo.processInfo.operatingSystemVersion.majorVersion < 18)
-		{
-			spacing = 0.0;
-		}
+		spacing = 0.0;
 	}
 	_toolbar.itemSpacing = spacing;
 }

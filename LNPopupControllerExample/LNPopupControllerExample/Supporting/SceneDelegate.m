@@ -44,6 +44,16 @@
 	
 	scene.titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
 	self.window.rootViewController = [LNCatalystLandingViewController new];
+	
+	NSMutableDictionary* userInfo = [session.userInfo ?: @{} mutableCopy];
+	if([userInfo[@"isNewlyCreated"] boolValue] == YES)
+	{
+		CGRect frame = CGRectInset(_windowScene.screen.bounds, 250, 120);
+		
+		[_windowScene requestGeometryUpdateWithPreferences:[[UIWindowSceneGeometryPreferencesMac alloc] initWithSystemFrame:frame] errorHandler:nil];
+	}
+	userInfo[@"isNewlyCreated"] = @NO;
+	session.userInfo = userInfo;
 #else
 	self.window.rootViewController = [UIStoryboard storyboardWithName:@"Main" bundle:nil].instantiateInitialViewController;
 #endif
