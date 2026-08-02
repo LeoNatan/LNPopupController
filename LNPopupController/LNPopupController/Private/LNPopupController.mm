@@ -49,13 +49,38 @@ static const NSTimeInterval LNPopupBarTransitionDuration = 0.5;
 
 static const CGFloat LNPopupBarGestureHeightPercentThreshold = 0.2;
 
-LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style)
+LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style, LNPopupPresentationState publicState, BOOL* isAutomatic)
 {
 	LNPopupInteractionStyle rv = style;
+	
+	if(isAutomatic)
+	{
+		*isAutomatic = NO;
+	}
+	
 	if(rv == LNPopupInteractionStyleDefault)
 	{
 		rv = LNPopupInteractionStyleSnap;
 	}
+	
+	if(rv == LNPopupInteractionStyleAutomatic)
+	{
+		if(publicState == LNPopupPresentationStateBarPresented)
+		{
+//			NSLog(@"SNAP");
+			rv = LNPopupInteractionStyleSnap;
+		}
+		else
+		{
+//			NSLog(@"DRAG");
+			rv = LNPopupInteractionStyleDrag;
+		}
+		if(isAutomatic)
+		{
+			*isAutomatic = YES;
+		}
+	}
+	
 	return rv;
 }
 
@@ -478,7 +503,7 @@ __attribute__((objc_direct_members))
 
 - (void)animateOpenTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator customTransitionView:(_LNPopupTransitionView*)customTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle, _popupControllerPublicState, nullptr);
 	
 	_LNPopupTransitionOpenAnimator* handler;
 	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
@@ -509,7 +534,7 @@ __attribute__((objc_direct_members))
 	[handler animateWithAnimator:animator otherAnimations:otherAnimations];
 }
 
-- (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated useSpringAnimation:(BOOL)spring allowPopupBarAlphaModification:(BOOL)allowBarAlpha allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completion
+- (void)_transitionToState:(LNPopupPresentationState)state notifyDelegate:(BOOL)notifyDelegate animated:(BOOL)animated triggeredByGesture:(BOOL)triggeredByGesture velocity:(CGPoint)velocity allowPopupBarAlphaModification:(BOOL)allowBarAlpha allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completion
 {
 	if(state == _popupControllerInternalState)
 	{
@@ -569,10 +594,11 @@ __attribute__((objc_direct_members))
 	_popupControllerInternalState = _LNPopupPresentationStateTransitioning;
 	_popupControllerTargetState = state;
 	
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	BOOL resolvedIsAutomatic = NO;
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle, _popupControllerPublicState, &resolvedIsAutomatic);
 	
 	void (^updatePopupBarAlpha)(void) = ^ {
-		if(allowBarAlpha && resolvedStyle == LNPopupInteractionStyleSnap)
+		if(allowBarAlpha)
 		{
 			CGRect frame = self.popupBar.frame;
 			frame.size.height = state < _LNPopupPresentationStateTransitioning ? _LNPopupBarHeightForPopupBar(self.popupBar) : 0.0;
@@ -734,7 +760,7 @@ __attribute__((objc_direct_members))
 	_LNPopupTransitionView* transitionView;
 	UIView<LNPopupTransitionView>* userView;
 	if((self.popupBar.resolvedIsCompact == NO || self.popupBar.resolvedIsFloating) &&
-	   resolvedStyle == LNPopupInteractionStyleSnap &&
+	   (resolvedStyle == LNPopupInteractionStyleSnap || resolvedIsAutomatic == YES) &&
 	   ((stateAtStart == LNPopupPresentationStateBarPresented && state == LNPopupPresentationStateOpen) ||
 		(state == LNPopupPresentationStateBarPresented)))
 	{
@@ -755,47 +781,58 @@ __attribute__((objc_direct_members))
 	}
 #endif
 
-	_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration dampingRatio:spring ? 0.87 : 1.0 animations:nil];
-	_runningPopupAnimation.userInteractionEnabled = state == LNPopupPresentationStateOpen;
-	
-	if(stateAtStart == LNPopupPresentationStateBarPresented)
+	if(state != _LNPopupPresentationStateTransitioning)
 	{
-		[self animateOpenTransitionIfNeededWithAnimator:_runningPopupAnimation customTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
-	}
-	else if(state == LNPopupPresentationStateBarPresented)
-	{
-		[self animateCloseTransitionIfNeededWithAnimator:_runningPopupAnimation customTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
-	}
-	else
-	{
-		[_runningPopupAnimation addAnimations:animationBlock];
-	}
-	
+		auto vector = CGVectorMake(0.0, triggeredByGesture ? velocity.y / (3 * self.popupContentView.bounds.size.height) : 0.0);
+//		NSLog(@"ANIM %@ %@", @(velocity), @(vector.dy));
+		id<UITimingCurveProvider> parameters = [[UISpringTimingParameters alloc] initWithDampingRatio:triggeredByGesture ? 0.87 : 1.0 initialVelocity:{}];
+		
+		if(triggeredByGesture && vector.dy != 0.0)
+		{
+			parameters = [[UISpringTimingParameters alloc] initWithDampingRatio:0.9 initialVelocity:vector];
+		}
+		_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration timingParameters:parameters];
+		_runningPopupAnimation.userInteractionEnabled = state == LNPopupPresentationStateOpen;
+		
+		if(stateAtStart == LNPopupPresentationStateBarPresented)
+		{
+			[self animateOpenTransitionIfNeededWithAnimator:_runningPopupAnimation customTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
+		}
+		else if(state == LNPopupPresentationStateBarPresented)
+		{
+			[self animateCloseTransitionIfNeededWithAnimator:_runningPopupAnimation customTransitionView:transitionView userViewForTransition:userView otherAnimations:animationBlock];
+		}
+		else
+		{
+			[_runningPopupAnimation addAnimations:animationBlock];
+		}
+		
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-retain-cycles"
-	[_runningPopupAnimation addCompletion:completionBlock];
-	[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
-		_runningPopupAnimation = nil;
+		[_runningPopupAnimation addCompletion:completionBlock];
+		[_runningPopupAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
+			_runningPopupAnimation = nil;
+			if(animated)
+			{
+				[self _endTransitioningLock];
+			}
+		}];
+#pragma clang diagnostic pop
+		[self _addEventQueueResumptionStep:_runningPopupAnimation];
+		
 		if(animated)
 		{
-			[self _endTransitioningLock];
+			[self _beginTransitionLockWithUserInteractionEnabled:state == LNPopupPresentationStateOpen];
 		}
-	}];
-#pragma clang diagnostic pop
-	[self _addEventQueueResumptionStep:_runningPopupAnimation];
-	
-	if(animated)
-	{
-		[self _beginTransitionLockWithUserInteractionEnabled:state == LNPopupPresentationStateOpen];
-	}
-	
-	[_runningPopupAnimation startAnimation];
-	
-	if(animated == NO)
-	{
-		UIViewPropertyAnimator* retained = _runningPopupAnimation;
-		[retained stopAnimation:NO];
-		[retained finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+		
+		[_runningPopupAnimation startAnimation];
+		
+		if(animated == NO)
+		{
+			UIViewPropertyAnimator* retained = _runningPopupAnimation;
+			[retained stopAnimation:NO];
+			[retained finishAnimationAtPosition:UIViewAnimatingPositionEnd];
+		}
 	}
 }
 
@@ -875,8 +912,8 @@ __attribute__((objc_direct_members))
 		return;
 	}
 	
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
-	self.popupContentView.applyScreenCorners = resolvedStyle == LNPopupInteractionStyleSnap;
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle, _popupControllerPublicState, nullptr);
+	self.popupContentView.applyScreenCorners = YES;
 	
 	if(resolvedStyle == LNPopupInteractionStyleNone)
 	{
@@ -959,7 +996,7 @@ __attribute__((objc_direct_members))
 		return;
 	}
 	
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle, _popupControllerPublicState, nullptr);
 	
 	if(resolvedStyle == LNPopupInteractionStyleNone)
 	{
@@ -1047,7 +1084,7 @@ __attribute__((objc_direct_members))
 		
 		_stateBeforeDismissStarted = _popupControllerInternalState;
 		
-		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:NO useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:NO forceFeedbackGenerationAtStart:NO completion:nil];
+		[self _transitionToState:_LNPopupPresentationStateTransitioning notifyDelegate:YES animated:NO triggeredByGesture:NO velocity:CGPointZero allowPopupBarAlphaModification:YES allowFeedbackGeneration:NO forceFeedbackGenerationAtStart:NO completion:nil];
 		
 		_cachedDefaultFrame = [_containerController _defaultFrameForBottomDockingViewForPopupBar:_popupBar];
 		if(LNPopupEnvironmentHasGlass())
@@ -1107,7 +1144,7 @@ __attribute__((objc_direct_members))
 			_popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			
 			_gesturesIgnored = YES;
-			[self closePopupAnimated:YES triggeredByGesture:YES allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:^ {
+			[self closePopupAnimated:YES triggeredByGesture:YES velocity:[pgr velocityInView:pgr.view] allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:^ {
 				[_popupContentView.popupCloseButton _setButtonContainerStationary];
 				_gesturesIgnored = NO;
 			}];
@@ -1137,7 +1174,7 @@ __attribute__((objc_direct_members))
 	}
 	else
 	{
-		LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
+		LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle, _popupControllerPublicState, nullptr);
 		
 		LNPopupPresentationState targetState;
 		if(resolvedStyle == LNPopupInteractionStyleSnap)
@@ -1180,7 +1217,7 @@ __attribute__((objc_direct_members))
 		}
 		else
 		{
-			[self closePopupAnimated:YES triggeredByGesture:YES allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap completion:^{
+			[self closePopupAnimated:YES triggeredByGesture:YES velocity:[pgr velocityInView:pgr.view] allowFeedbackGeneration:targetState != _stateBeforeDismissStarted forceFeedbackGenerationAtStart:resolvedStyle == LNPopupInteractionStyleSnap completion:^{
 				self.popupContentView.applyScreenCorners = NO;
 				_gesturesIgnored = NO;
 			}];
@@ -1955,14 +1992,14 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	[_catalystHelper startHidingToolbarWithScene:self.popupBar.window.windowScene];
 #endif
 	
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
-	self.popupContentView.applyScreenCorners = resolvedStyle == LNPopupInteractionStyleSnap;
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle, _popupControllerPublicState, nullptr);
+	self.popupContentView.applyScreenCorners = YES;
 	
 	if(_popupControllerTargetState != LNPopupPresentationStateOpen)
 	{
 		[_containerController.view setNeedsLayout];
 		[_containerController.view layoutIfNeeded];
-		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated useSpringAnimation:NO allowPopupBarAlphaModification:YES allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:^{
+		[self _transitionToState:LNPopupPresentationStateOpen notifyDelegate:YES animated:animated triggeredByGesture:NO velocity:CGPointZero allowPopupBarAlphaModification:YES allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:^{
 			self.popupContentView.applyScreenCorners = NO;
 			
 			if(completionBlock)
@@ -1979,30 +2016,27 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)closePopupAnimated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
-	[self closePopupAnimated:animated triggeredByGesture:NO allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:completionBlock];
+	[self closePopupAnimated:animated triggeredByGesture:NO velocity:CGPointZero allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:completionBlock];
 }
 
-- (void)closePopupAnimated:(BOOL)animated triggeredByGesture:(BOOL)triggeredByGesture allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
+- (void)closePopupAnimated:(BOOL)animated triggeredByGesture:(BOOL)triggeredByGesture velocity:(CGPoint)velocity allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
 {
 	[self _enqueueEvent:[_LNPopupControllerEvent closeEventWithOperation:^{
-		[self _closePopupAnimated:animated triggeredByGesture:triggeredByGesture allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
+		[self _closePopupAnimated:animated triggeredByGesture:triggeredByGesture velocity:velocity allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:completionBlock];
 	}]];
 }
 
-- (void)_closePopupAnimated:(BOOL)animated triggeredByGesture:(BOOL)triggeredByGesture allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
+- (void)_closePopupAnimated:(BOOL)animated triggeredByGesture:(BOOL)triggeredByGesture velocity:(CGPoint)velocity allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
 {
 #if TARGET_OS_MACCATALYST
 	[_catalystHelper restore];
 #endif
 	
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
-	self.popupContentView.applyScreenCorners = resolvedStyle == LNPopupInteractionStyleSnap;
+	self.popupContentView.applyScreenCorners = YES;
 	
 	if(_popupControllerTargetState != LNPopupPresentationStateBarPresented)
 	{
-		LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
-		
-		[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:triggeredByGesture allowPopupBarAlphaModification:YES allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:^{
+		[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated triggeredByGesture:triggeredByGesture velocity:velocity allowPopupBarAlphaModification:YES allowFeedbackGeneration:allowFeedbackGeneration forceFeedbackGenerationAtStart:forceFeedbackAtStart completion:^{
 			self.popupContentView.applyScreenCorners = NO;
 			
 			if(completionBlock)
@@ -2311,9 +2345,7 @@ id __LNPopupEmptyBlurFilter(void)
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = NO;
 			self.popupContentView.popupInteractionGestureRecognizer.enabled = YES;
 			
-			LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle);
-			
-			[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated useSpringAnimation:resolvedStyle == LNPopupInteractionStyleSnap allowPopupBarAlphaModification:YES allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:dismissalAnimationCompletionBlock];
+			[self _transitionToState:LNPopupPresentationStateBarPresented notifyDelegate:YES animated:animated triggeredByGesture:NO velocity:CGPointZero allowPopupBarAlphaModification:YES allowFeedbackGeneration:YES forceFeedbackGenerationAtStart:YES completion:dismissalAnimationCompletionBlock];
 		}
 		else
 		{

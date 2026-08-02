@@ -16,7 +16,9 @@
 
 - (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView currentContentController:(UIViewController *)currentContentController containerController:(UIViewController *)containerController
 {
-	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView effectiveInteractionStyle:containerController.effectivePopupInteractionStyle];
+	BOOL isAutomatic = NO;
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(containerController.popupInteractionStyle, containerController.popupPresentationState, &isAutomatic);
+	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView effectiveInteractionStyle:isAutomatic ? LNPopupInteractionStyleAutomatic : resolvedStyle];
 	
 	if(self)
 	{

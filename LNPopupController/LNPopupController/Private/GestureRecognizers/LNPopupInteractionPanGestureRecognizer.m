@@ -12,8 +12,6 @@
 #import "LNPopupControllerImpl.h"
 #import "UIView+LNPopupSupportPrivate.h"
 
-extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style);
-
 @interface UIViewController ()
 
 - (CGRect)_ln_interactionLimitRect;
@@ -67,7 +65,7 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
-	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_popupController.containerController.popupInteractionStyle);
+	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_popupController.containerController.popupInteractionStyle, _popupController.popupControllerPublicState, NULL);
 	
 	BOOL rv = resolvedStyle != LNPopupInteractionStyleNone;
 	

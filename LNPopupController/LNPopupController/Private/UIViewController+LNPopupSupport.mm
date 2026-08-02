@@ -29,10 +29,6 @@ static const void* _LNPopupShouldExtendUnderSafeAreaKey = &_LNPopupShouldExtendU
 
 const double LNSnapPercentDefault = 0.32;
 
-extern "C" {
-extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPopupInteractionStyle style);
-}
-
 @implementation UIViewController (LNPopupSupportPrivate)
 
 @end
@@ -316,7 +312,15 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (LNPopupInteractionStyle)effectivePopupInteractionStyle
 {
-	return _LNPopupResolveInteractionStyleFromInteractionStyle((LNPopupInteractionStyle)[objc_getAssociatedObject(self, _LNPopupInteractionStyleKey) unsignedIntegerValue]);
+	BOOL isAutomatic = NO;
+	LNPopupInteractionStyle resolved = _LNPopupResolveInteractionStyleFromInteractionStyle((LNPopupInteractionStyle)[objc_getAssociatedObject(self, _LNPopupInteractionStyleKey) unsignedIntegerValue], self.popupPresentationState, &isAutomatic);
+	
+	if(isAutomatic)
+	{
+		return LNPopupInteractionStyleAutomatic;
+	}
+	
+	return resolved;
 }
 
 - (void)setPopupInteractionStyle:(LNPopupInteractionStyle)popupInteractionStyle

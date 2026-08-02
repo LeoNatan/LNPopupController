@@ -35,6 +35,12 @@ extension UIViewController {
 		case customizedSnap(percent: Double)
 		/// Scroll interaction style.
 		case scroll
+		/// Automatic interaction style.
+		///
+		/// Use this to let the system manage popup interactions.
+		///
+		/// The system may choose different interaction styles for opening and closing the popup.
+		case automatic
 		/// No interaction.
 		case none
 	}
@@ -45,15 +51,17 @@ extension UIViewController {
 		get {
 			switch __popupInteractionStyle {
 			case .default:
-				return .default
+				.default
 			case .drag:
-				return .drag
+				.drag
 			case .snap:
-				return __popupSnapPercent == .defaultPopupSnapPercent ? .snap : .customizedSnap(percent: __popupSnapPercent)
+				__popupSnapPercent == .defaultPopupSnapPercent ? .snap : .customizedSnap(percent: __popupSnapPercent)
 			case .scroll:
-				return .scroll
+				.scroll
+			case .automatic:
+				.automatic
 			case .none:
-				return .none
+				.none
 			@unknown default:
 				fatalError("Please open an issue here: https://github.com/LeoNatan/LNPopupController/issues/new/choose")
 			}
@@ -77,6 +85,8 @@ extension UIViewController {
 			case .scroll:
 				__popupInteractionStyle = .scroll
 				return
+			case .automatic:
+				__popupInteractionStyle = .automatic
 			case .none:
 				__popupInteractionStyle = .none
 				return
@@ -87,16 +97,20 @@ extension UIViewController {
 	/// The effective popup interaction style. (read-only)
 	///
 	/// Use this property's value to determine, at runtime, what interaction style the system has chosen to use.
+	///
+	/// - Note: This property does not resolve the automatic interaction style.
 	var effectivePopupInteractionStyle: PopupInteractionStyle {
 		switch __effectivePopupInteractionStyle {
 		case .drag:
-			return .drag
+			.drag
 		case .snap:
-			return __popupSnapPercent == .defaultPopupSnapPercent ? .snap : .customizedSnap(percent: __popupSnapPercent)
+			__popupSnapPercent == .defaultPopupSnapPercent ? .snap : .customizedSnap(percent: __popupSnapPercent)
 		case .scroll:
-			return .scroll
+			.scroll
+		case .automatic:
+			.automatic
 		case .none:
-			return .none
+			.none
 		case .default:
 			fallthrough
 		@unknown default:

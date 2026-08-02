@@ -39,7 +39,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		
 		if(@available(iOS 26.0, *))
 		{
-			_wantsContentTransition = LNPopupEnvironmentHasGlass() && popupContentView.allowsContentTransition && interactionStyle == LNPopupInteractionStyleSnap;
+			_wantsContentTransition = LNPopupEnvironmentHasGlass() && popupContentView.allowsContentTransition;
 			
 			if(_wantsContentTransition)
 			{

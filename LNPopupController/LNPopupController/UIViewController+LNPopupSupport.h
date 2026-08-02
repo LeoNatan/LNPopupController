@@ -34,6 +34,13 @@ typedef NS_ENUM(NSInteger, LNPopupInteractionStyle) {
 	/// Scroll interaction style.
 	LNPopupInteractionStyleScroll,
 	
+	/// Automatic interaction style.
+	///
+	/// Use this to let the system manage popup interactions.
+	///
+	/// The system may choose different interaction styles for opening and closing the popup.
+	LNPopupInteractionStyleAutomatic = 0xAAAA,
+	
 	/// No interaction
 	LNPopupInteractionStyleNone = 0xFFFF
 } NS_REFINED_FOR_SWIFT NS_SWIFT_NAME(UIViewController.__PopupInteractionStyle);
@@ -155,6 +162,8 @@ NS_SWIFT_UI_ACTOR
 /// The effective popup interaction style. (read-only)
 ///
 /// Use this property's value to determine, at runtime, what interaction style the system has chosen to use.
+///
+/// - Note: This property does not resolve the automatic interaction style.
 @property (nonatomic, assign, readonly) LNPopupInteractionStyle effectivePopupInteractionStyle NS_REFINED_FOR_SWIFT;
 
 /// The percent of the container controller's view height to drag before closing the popup.

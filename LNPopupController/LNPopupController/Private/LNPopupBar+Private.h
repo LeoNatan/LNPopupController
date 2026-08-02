@@ -176,6 +176,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 - (void)_toolbarDidLayoutSubviews;
 
+- (UIEdgeInsets)contentInsetsIncludingImage:(BOOL)includeImage;
+
 @end
 
 @interface LNPopupBar () <_LNPopupToolbarLayoutDelegate>
