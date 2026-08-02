@@ -2026,7 +2026,7 @@ static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenStr
 	
 	if(includeImage && self.imageView.isHidden == NO)
 	{
-		CGFloat imageToTitlePadding = _resolvedIsFloating && (!LNPopupEnvironmentHasGlass() || _resolvedIsCompact) ? 8 : 16;
+		CGFloat imageToTitlePadding = _resolvedIsFloating && (!LNPopupEnvironmentHasGlass() || _resolvedIsCompact || LNPopupBar.isCatalystApp) ? 8 : 16;
 		
 		if(isLTR)
 		{

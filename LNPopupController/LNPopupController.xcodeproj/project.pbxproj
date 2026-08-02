@@ -604,8 +604,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/LeoNatan/LNSystemMarqueeLabel";
 			requirement = {
-				kind = revision;
-				revision = 916ef69a71db627498d007896a0508901d9f9fa3;
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.1.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

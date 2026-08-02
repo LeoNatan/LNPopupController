@@ -50,7 +50,8 @@ let package = Package(
 			targets: ["LNPopupController", "LNPopupController-ObjC", "LNPopupController-SwiftPrivate"]),
 	],
 	dependencies: [
-		.package(url: "https://github.com/LeoNatan/LNSystemMarqueeLabel", from: Version(stringLiteral: "0.1.0"))
+//		.package(path: "../LNSystemMarqueeLabel"),
+		.package(url: "https://github.com/LeoNatan/LNSystemMarqueeLabel", from: Version(stringLiteral: "0.1.2"))
 	],
 	targets: [
 		.target(

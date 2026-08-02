@@ -151,6 +151,7 @@ BOOL _LNEnableBarTitleLayoutDebug(void)
 		if(__LNPopupUseSystemMarqueeLabel())
 		{
 			LNSystemMarqueeLabel* rv = [[LNSystemMarqueeLabel alloc] initWithFrame:frame];
+			rv.lockDrawCalls = YES;
 			_rv = rv;
 		}
 		else

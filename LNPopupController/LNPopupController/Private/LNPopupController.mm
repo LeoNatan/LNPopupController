@@ -585,6 +585,11 @@ __attribute__((objc_direct_members))
 		}
 	};
 	
+	if(state == LNPopupPresentationStateBarPresented)
+	{
+		[self.popupBar _setTitleViewMarqueesPaused:NO];
+	}
+	
 	void (^animationBlock)(void) = ^
 	{
 		if(shouldNotifyDelegateWillOpen == YES)
@@ -663,8 +668,6 @@ __attribute__((objc_direct_members))
 			
 			[_currentContentController.viewForPopupInteractionGestureRecognizer removeGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
 			[self.popupBar.contentView addGestureRecognizer:self.popupContentView.popupInteractionGestureRecognizer];
-			
-			[self.popupBar _setTitleViewMarqueesPaused:NO];
 			
 			_popupContentView.accessibilityViewIsModal = NO;
 			UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, nil);
