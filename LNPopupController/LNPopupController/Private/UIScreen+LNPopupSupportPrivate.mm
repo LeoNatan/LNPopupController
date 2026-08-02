@@ -13,15 +13,13 @@
 
 - (CGFloat)_ln_cornerRadius
 {
-#ifndef LNPopupControllerEnforceStrictClean
 	static NSString* const key = LNPopupHiddenString("_displayCornerRadius");
 	if([self respondsToSelector:NSSelectorFromString(key)])
 	{
 		return [[self valueForKey:key] doubleValue];
 	}
-#endif
 	
-	return 0;
+	return 0.0;
 }
 
 @end

@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#if ! LNPopupControllerEnforceStrictClean
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupUIBarAppearanceProxy : NSObject
@@ -19,5 +17,3 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
-
-#endif

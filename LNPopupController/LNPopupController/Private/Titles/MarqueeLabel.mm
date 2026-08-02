@@ -47,7 +47,7 @@ typedef void(^MLAnimationCompletionBlock)(BOOL finished);
 {
 	@autoreleasepool {
 		static SEL fuckOffApple = NSSelectorFromString(LNPopupHiddenString("mt_setContentEffects:"));
-		Method someMethod = class_getInstanceMethod(self, @selector(setFont:));
+		Method someMethod = LNSwizzleClassGetInstanceMethod(self, @selector(setFont:));
 		class_addMethod(self, fuckOffApple, imp_implementationWithBlock(^(id, id) {}), method_getTypeEncoding(someMethod));
 	}
 }

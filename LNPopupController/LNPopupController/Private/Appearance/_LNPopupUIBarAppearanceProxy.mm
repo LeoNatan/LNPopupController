@@ -6,8 +6,6 @@
 //  Copyright © 2015-2025 Léo Natan. All rights reserved.
 //
 
-#if ! LNPopupControllerEnforceStrictClean
-
 #import "_LNPopupUIBarAppearanceProxy.h"
 #import "_LNPopupSwizzlingUtils.h"
 #import "_LNPopupBase64Utils.hh"
@@ -166,4 +164,3 @@ return super_class(&super, _cmd); \
 
 @end
 
-#endif

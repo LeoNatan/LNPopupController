@@ -41,19 +41,10 @@ extern LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionSty
 
 - (UIPresentationController*)nonMemoryLeakingPresentationController
 {
-#if ! LNPopupControllerEnforceStrictClean
 	static NSString* sel = LNPopupHiddenString("_existingPresentationControllerImmediate:effective:");;
 	static id (*nonLeakingPresentationController)(id, SEL, BOOL, BOOL) = reinterpret_cast<decltype(nonLeakingPresentationController)>(objc_msgSend);
 
 	return nonLeakingPresentationController(self, NSSelectorFromString(sel), NO, NO);
-#else
-	NSString* selector = [NSString stringWithFormat:@"_%@", NSStringFromSelector(@selector(presentationController))];
-	
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-	return [self performSelector:NSSelectorFromString(selector)];
-#pragma clang diagnostic pop
-#endif
 }
 
 - (void)presentPopupBarWithContentViewController:(UIViewController*)controller openPopup:(BOOL)openPopup animated:(BOOL)animated completion:(nullable void(^)(void))completionBlock;
@@ -621,16 +612,23 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 		window.userInteractionEnabled = NO;
 	}
 	
-#if ! LNPopupControllerEnforceStrictClean
-	static SEL sel = NSSelectorFromString(LNPopupHiddenString("beginDisablingInterfaceAutorotation"));
-	if(lockRotation && [window respondsToSelector:sel])
+	static void(^beginDisablingInterfaceAutorotation)(UIWindow*) = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		SEL sel = NSSelectorFromString(LNPopupHiddenString("beginDisablingInterfaceAutorotation"));
+		Method m = LNSwizzleClassGetInstanceMethod(UIWindow.class, sel);
+		void(*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+		beginDisablingInterfaceAutorotation = ^(UIWindow* window)
+		{
+			orig(window, sel);
+		};
+	});
+	
+	
+	if(lockRotation)
 	{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-		[window performSelector:sel];
-#pragma clang diagnostic pop
+		beginDisablingInterfaceAutorotation(window);
 	}
-#endif
 }
 
 + (void)_ln_endTransitioningLockWithWindow:(UIWindow*)window unlockingRotation:(BOOL)unlockRotation
@@ -640,17 +638,22 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	[window _ln_setPopupInteractionOnly:nil];
 	window.userInteractionEnabled = YES;
 	
-#if ! LNPopupControllerEnforceStrictClean
-	static SEL sel = NSSelectorFromString(LNPopupHiddenString("endDisablingInterfaceAutorotationAnimated:"));
+	static void(^endDisablingInterfaceAutorotationAnimated)(UIWindow*, BOOL) = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		SEL sel = NSSelectorFromString(LNPopupHiddenString("endDisablingInterfaceAutorotationAnimated:"));
+		Method m = LNSwizzleClassGetInstanceMethod(UIWindow.class, sel);
+		void(*orig)(id, SEL, BOOL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+		endDisablingInterfaceAutorotationAnimated = ^(UIWindow* window, BOOL animated)
+		{
+			orig(window, sel, animated);
+		};
+	});
 	
-	if(unlockRotation && [window respondsToSelector:sel])
+	if(unlockRotation)
 	{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-		[window performSelector:sel];
-#pragma clang diagnostic pop
+		endDisablingInterfaceAutorotationAnimated(window, YES);
 	}
-#endif
 	
 	[window _ln_setLockedForPopupTransition:NO];
 }

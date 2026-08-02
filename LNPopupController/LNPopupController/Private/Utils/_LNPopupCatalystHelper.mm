@@ -58,7 +58,7 @@ static NSString* const toolbarToolbarViewWindow = LNPopupHiddenString("toolbar.t
 		updateFromNavigationBarProxy = NSSelectorFromString(LNPopupHiddenString("_updateFromNavigationBarProxy"));
 		
 		Class cls = NSClassFromString(@"UITitlebar");
-		Method m = class_getInstanceMethod(cls, updateFromNavigationBarProxy);
+		Method m = LNSwizzleClassGetInstanceMethod(cls, updateFromNavigationBarProxy);
 		void (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 		method_setImplementation(m, imp_implementationWithBlock(^(UITitlebar* self) {
 			if(_LNPopupShouldApplyWindowsFixes((id)self))

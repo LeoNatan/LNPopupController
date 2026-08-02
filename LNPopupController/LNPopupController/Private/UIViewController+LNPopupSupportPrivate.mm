@@ -2782,7 +2782,7 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 						@selector(_ln_popup_viewDidLayoutSubviews_svc));
 		
 		{
-			Method delegateGetter = class_getInstanceMethod(UISplitViewController.class, @selector(delegate));
+			Method delegateGetter = LNSwizzleClassGetInstanceMethod(UISplitViewController.class, @selector(delegate));
 			orig_delegateGetter = reinterpret_cast<decltype(orig_delegateGetter)>(method_getImplementation(delegateGetter));
 			
 			LNSwizzleMethod(self,

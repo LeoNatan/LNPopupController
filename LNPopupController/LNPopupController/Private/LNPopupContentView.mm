@@ -74,7 +74,7 @@
 {
 	@autoreleasepool
 	{
-		Method m = class_getInstanceMethod(self, @selector(safeAreaInsetsDidChange));
+		Method m = LNSwizzleClassGetInstanceMethod(self, @selector(safeAreaInsetsDidChange));
 		class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("_updateSafeAreaInsets")), imp_implementationWithBlock(^{}), method_getTypeEncoding(m));
 	}
 }

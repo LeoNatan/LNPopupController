@@ -70,7 +70,7 @@ BOOL LNPopupEnvironmentHasGlass(void)
 
 + (void)load
 {
-	Method from = __LNSwizzleClassGetInstanceMethod(self, @selector(shineSause));
+	Method from = LNSwizzleClassGetInstanceMethod(self, @selector(shineSause));
 	SEL to = NSSelectorFromString(LNPopupHiddenString("glass"));
 	class_addMethod(self, to, method_getImplementation(from), method_getTypeEncoding(from));
 }
@@ -110,7 +110,7 @@ BOOL LNPopupEnvironmentHasGlass(void)
 
 + (void)load
 {
-	Method from = __LNSwizzleClassGetInstanceMethod(self, @selector(proxiedValue));
+	Method from = LNSwizzleClassGetInstanceMethod(self, @selector(proxiedValue));
 	SEL to = NSSelectorFromString(LNPopupHiddenString("glass"));
 	class_addMethod(self, to, method_getImplementation(from), method_getTypeEncoding(from));
 }

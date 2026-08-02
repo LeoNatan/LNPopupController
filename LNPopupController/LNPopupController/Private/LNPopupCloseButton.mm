@@ -101,8 +101,6 @@ __attribute__((objc_direct_members))
 
 @synthesize style=__style;
 
-#ifndef LNPopupControllerEnforceStrictClean
-
 + (void)load
 {
 	@autoreleasepool
@@ -117,8 +115,6 @@ __attribute__((objc_direct_members))
 {
 	return _popupContentView.currentPopupContentViewController.view;
 }
-
-#endif
 
 - (instancetype)initWithContainingContentView:(LNPopupContentView*)contentView
 {

@@ -12,8 +12,6 @@
 #import "_LNPopupBase64Utils.hh"
 #import "UIView+LNPopupSupportPrivate.h"
 
-#ifndef LNPopupControllerEnforceStrictClean
-
 @interface UIContextMenuInteraction (LNPopupSupportPrivate) @end
 @implementation UIContextMenuInteraction (LNPopupSupportPrivate)
 
@@ -227,4 +225,3 @@
 }
 
 @end
-#endif

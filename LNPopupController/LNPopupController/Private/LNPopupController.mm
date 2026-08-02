@@ -1391,7 +1391,6 @@ __attribute__((objc_direct_members))
 	
 	UIBarAppearance* appearanceToUse = nil;
 	
-#ifndef LNPopupControllerEnforceStrictClean
 	static NSString* vPTIS = LNPopupHiddenString("visualProvider.toolbarIsSmall");
 	
 	//visualProvider.toolbarIsSmall
@@ -1406,8 +1405,6 @@ __attribute__((objc_direct_members))
 		UITabBar* tabBar = (UITabBar*)_bottomBar;
 		appearanceToUse = tabBar.selectedItem.standardAppearance ?: tabBar.standardAppearance;
 	}
-	
-#endif
 	
 	if(appearanceToUse == nil && [_bottomBar respondsToSelector:@selector(standardAppearance)])
 	{
@@ -1733,10 +1730,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 					CGRect frame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
 					self.popupBar.contentView.effect = [_LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
 					self.popupBar.contentView.contentView.alpha = 0.0;
-#ifndef LNPopupControllerEnforceStrictClean
 					self.popupBar.contentView.contentView.layer.filters = @[__LNPopupEmptyBlurFilter()];
 					[self.popupBar.contentView.contentView.layer setValue:@5 forKeyPath:__LNPopupBlurFilterUpdateKey];
-#endif
 					
 					UIView* target;
 					if(self.popupBar.activeAppearance.floatingBackgroundEffect.ln_isGlass)
@@ -1780,9 +1775,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 				self.popupBar.os26TransitionView.transform = CGAffineTransformIdentity;
 				self.popupBar.os26TransitionView.alpha = 1.0;
 				self.popupBar.floatingBackgroundShadowView.alpha = 1.0;
-#ifndef LNPopupControllerEnforceStrictClean
 				[self.popupBar.contentView.contentView.layer setValue:@0 forKeyPath:__LNPopupBlurFilterUpdateKey];
-#endif
 			}
 			
 			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
@@ -2028,7 +2021,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	}]];
 }
 
-#ifndef LNPopupControllerEnforceStrictClean
 static NSString* __LNPopupBlurFilterInputRadius = LNPopupHiddenString("inputRadius");
 static NSString* __LNPopupBlurFilterName = LNPopupHiddenString("gaussianBlur");
 static NSString* __LNPopupBlurFilterUpdateKey = [NSString stringWithFormat:@"filters.%@.%@", __LNPopupBlurFilterName, __LNPopupBlurFilterInputRadius];
@@ -2046,7 +2038,6 @@ id __LNPopupEmptyBlurFilter(void)
 	
 	return rv;
 }
-#endif
 
 - (void)_updateTabBarWithState:(LNPopupPresentationState)state
 {
@@ -2162,9 +2153,7 @@ id __LNPopupEmptyBlurFilter(void)
 					self.popupBar.os26TransitionView = [_LNPopupTransitionView transitionViewWithSourceView:target];
 					self.popupBar.os26TransitionView.matchesTransform = NO;
 					self.popupBar.os26TransitionView.frame = frame;
-#ifndef LNPopupControllerEnforceStrictClean
 					self.popupBar.contentView.contentView.layer.filters = @[__LNPopupEmptyBlurFilter()];
-#endif
 				}];
 			}
 			
@@ -2218,10 +2207,7 @@ id __LNPopupEmptyBlurFilter(void)
 					self.popupBar.contentView.effect = [_LNPopupGlassEffect effectWithStyle:UIGlassEffectStyleClear];
 					self.popupBar.os26TransitionView.transform = CGAffineTransformMakeScale(1.05, 1.05);
 					self.popupBar.os26TransitionView.alpha = 0.0;
-					
-#ifndef LNPopupControllerEnforceStrictClean
 					[self.popupBar.contentView.contentView.layer setValue:@20 forKeyPath:__LNPopupBlurFilterUpdateKey];
-#endif
 				}
 				
 				[self _updateTabBarWithState:LNPopupPresentationStateBarHidden];

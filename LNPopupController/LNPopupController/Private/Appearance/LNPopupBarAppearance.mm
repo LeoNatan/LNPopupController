@@ -32,10 +32,8 @@ static NSArray* __notifiedProperties = nil;
 		dispatch_once(&onceToken, ^{
 			__notifiedProperties = LNPopupGetPropertyNames(self, nil, NO);
 			
-#ifndef LNPopupControllerEnforceStrictClean
 			Method m1 = LNSwizzleClassGetInstanceMethod(self, @selector(a:cC:));
 			class_addMethod(self, NSSelectorFromString(LNPopupHiddenString("appearance:categoriesChanged:")), method_getImplementation(m1), method_getTypeEncoding(m1));
-#endif
 		});
 	}
 }
@@ -45,21 +43,17 @@ static NSArray* __notifiedProperties = nil;
 	[self.delegate popupBarAppearanceDidChange:self];
 }
 
-#ifndef LNPopupControllerEnforceStrictClean
 //appearance:categoriesChanged:
 - (void)a:(UIBarAppearance *)arg1 cC:(NSUInteger)arg2
 {
 	[self _notify];
 }
-#endif
 
 - (void)_commonInit
 {
 	static NSString* changeObserver = LNPopupHiddenString("changeObserver");
 	
-#ifndef LNPopupControllerEnforceStrictClean
 	[self setValue:self forKey:changeObserver];
-#endif
 	
 	for(NSString* key in __notifiedProperties)
 	{
