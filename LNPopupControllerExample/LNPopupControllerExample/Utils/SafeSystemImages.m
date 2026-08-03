@@ -90,6 +90,7 @@ void LNPopupItemSetStandardMusicControls(LNPopupItem* popupItem, LNPopupBar* pop
 	more.accessibilityTraits = UIAccessibilityTraitButton;
 	
 	AVRoutePickerView* routePickerView = [AVRoutePickerView new];
+	routePickerView.activeTintColor = UIColor.tintColor;
 	UIBarButtonItem* airplay = [[UIBarButtonItem alloc] initWithCustomView:routePickerView];
 	airplay.accessibilityLabel = NSLocalizedString(@"Airplay", @"");
 	airplay.accessibilityIdentifier = @"Airplay";
