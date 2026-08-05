@@ -313,9 +313,19 @@ __attribute__((objc_direct_members))
 		controllerForContent = _containerController.splitViewController;
 		contentFrame = controllerForContent.view.bounds;
 		contentControllerFrame = contentFrame;
+		heightForContent = controllerForContent.view.bounds.size.height;
 		
-		CGRect barFrame = [controllerForContent.view convertRect:self.popupBar.bounds fromView:self.popupBar];
-		contentFrame.origin.y = barFrame.origin.y + barFrame.size.height;
+		if(self.popupControllerPublicState == LNPopupPresentationStateBarPresented && self.popupControllerTargetState == _LNPopupPresentationStateTransitioning)
+		{
+			//If the user is dragging to open, the content frame should be relative to popup bar's frame in the popup bar's container.
+			CGRect barFrame = [controllerForContent.view convertRect:self.popupBar.bounds fromView:self.popupBar];
+			contentFrame.origin.y = barFrame.origin.y + barFrame.size.height;
+		}
+		else
+		{
+			//In all other cases, we want the content frame should be over full split view controller's view..
+			contentFrame.origin.y = self.popupBar.frame.origin.y + self.popupBar.frame.size.height;
+		}
 	}
 	else
 	{
