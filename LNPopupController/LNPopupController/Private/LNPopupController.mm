@@ -346,7 +346,7 @@ __attribute__((objc_direct_members))
 	_containerController.popupContentViewController.view.frame = contentControllerFrame;
 	self.popupContentView.contentView.frame = contentControllerFrame;
 	
-	[self.popupContentView _repositionPopupCloseButtonAnimated:animated];
+	[self.popupContentView _repositionPopupCloseButtonAnimated:YES];
 }
 
 - (CGFloat)_percentFromPopupBar

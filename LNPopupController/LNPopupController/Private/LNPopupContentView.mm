@@ -14,7 +14,9 @@
 #import "_LNPopupBase64Utils.hh"
 #import "_LNPopupCatalystHelper.h"
 
+#if !TARGET_OS_MACCATALYST
 @implementation _LNPopupContentViewLayoutController @end
+#endif
 
 @implementation LNPopupContentView
 {
@@ -27,7 +29,6 @@
 #if !TARGET_OS_MACCATALYST
 	UIView* _leadingLayoutView;
 	UIView* _trailingLayoutView;
-	UINavigationController* _layoutController;
 #endif
 }
 
@@ -151,6 +152,7 @@
 			
 			_layoutController = [[_LNPopupContentViewLayoutController alloc] initWithRootViewController:vc];
 			_layoutController.view.userInteractionEnabled = NO;
+//			_layoutController.view.alpha = 0.3;
 			_layoutController.view.hidden = YES;
 			[self addSubview:_layoutController.view];
 		}
@@ -368,7 +370,6 @@
 	if(LNPopupEnvironmentHasGlass())
 	{
 		[UIView performWithoutAnimation:^{
-			_layoutController.popupPresentationContainerViewController = _currentPopupContentViewController.popupPresentationContainerViewController;
 			[_layoutController.view layoutIfNeeded];
 		}];
 		
@@ -409,14 +410,14 @@
 		if(leadingFrame.origin.x < trailingFrame.origin.x)
 		{
 			//LTR
-			leadingConstant = MAX(cornerAdaptionMargin.leading, leadingFrame.origin.x);
-			trailingConstant = MAX(cornerAdaptionMargin.trailing, self.bounds.size.width - trailingFrame.origin.x - trailingFrame.size.width);
+			leadingConstant = MAX(cornerAdaptionMargin.leading, leadingFrame.origin.x - 4);
+			trailingConstant = MAX(cornerAdaptionMargin.trailing, self.bounds.size.width - trailingFrame.origin.x - trailingFrame.size.width - 4);
 		}
 		else
 		{
 			//RTL
-			trailingConstant = MAX(cornerAdaptionMargin.trailing, trailingFrame.origin.x);
-			leadingConstant = MAX(cornerAdaptionMargin.leading, self.bounds.size.width - leadingFrame.origin.x - leadingFrame.size.width);
+			trailingConstant = MAX(cornerAdaptionMargin.trailing, trailingFrame.origin.x - 4);
+			leadingConstant = MAX(cornerAdaptionMargin.leading, self.bounds.size.width - leadingFrame.origin.x - leadingFrame.size.width - 4);
 		}
 		
 		topConstant = leadingFrame.origin.y - 4;

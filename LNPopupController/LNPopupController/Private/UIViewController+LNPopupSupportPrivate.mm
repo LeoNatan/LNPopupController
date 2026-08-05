@@ -540,6 +540,13 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 //_updateContentOverlayInsetsFromParentIfNecessary (iOS 15 and above)
 - (void)_uCOIFPIN
 {
+#if !TARGET_OS_MACCATALYST
+	if([self isKindOfClass:_LNPopupContentViewLayoutController.class])
+	{
+		return;
+	}
+#endif
+	
 	static SEL contentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_contentMargin"));
 	static SEL setContentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentMargin:"));
 	static SEL _setContentOverlayInsets_andLeftMargin_rightMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentOverlayInsets:andLeftMargin:rightMargin:"));
@@ -570,11 +577,17 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 		self.viewRespectsSystemMinimumLayoutMargins = NO;
 		self.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
 		
-		if([self isKindOfClass:_LNPopupContentViewLayoutController.class] == NO)
-		{
-			LNPopupContentView* containingContentView = self.popupPresentationContainerViewController.popupContentView;
-			[containingContentView _ln_updateSafeAreaInsets:insets];
-		}
+		LNPopupContentView* containingContentView = self.popupPresentationContainerViewController.popupContentView;
+#if !TARGET_OS_MACCATALYST
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(containingContentView.layoutController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
+		setContentMarginFunc(containingContentView.layoutController, setContentMarginSEL, contentMargin);
+		
+		containingContentView.layoutController.view.insetsLayoutMarginsFromSafeArea = YES;
+		containingContentView.layoutController.viewRespectsSystemMinimumLayoutMargins = NO;
+		containingContentView.layoutController.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
+#endif
+		
+		[containingContentView _ln_updateSafeAreaInsets:insets];
 		
 		return;
 	}

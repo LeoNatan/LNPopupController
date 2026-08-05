@@ -29,6 +29,11 @@
 
 - (void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
+	if(newCollection.userInterfaceIdiom != UIUserInterfaceIdiomPhone)
+	{
+		return;
+	}
+	
 	[super willTransitionToTraitCollection:newCollection withTransitionCoordinator:coordinator];
 	
 	if(newCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)

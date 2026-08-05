@@ -52,7 +52,7 @@
 {
 	[super traitCollectionDidChange:previousTraitCollection];
 	
-	[self setEnabled:self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular];
+	[self setEnabled:self.traitCollection.userInterfaceIdiom != UIUserInterfaceIdiomPhone || self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular];
 }
 
 @end
@@ -131,6 +131,11 @@
 {
 	if([identifier hasPrefix:@"split"] && self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact)
 	{
+		if(self.traitCollection.userInterfaceIdiom != UIUserInterfaceIdiomPhone)
+		{
+			return YES;
+		}
+		
 		[self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:NO];
 		
 		return NO;

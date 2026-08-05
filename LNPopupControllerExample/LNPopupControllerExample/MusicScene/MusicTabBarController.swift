@@ -94,6 +94,8 @@ class MusicTabBarController: UITabBarController {
 		popupBar.supportsMinimization = UserDefaults.settings.bool(forKey: PopupSetting.minimizationEnabled)
 		popupBar.tintColor = .label
 		
+		popupInteractionStyle = .automatic
+		
 		let popupContentController = DemoMusicPlayerController()
 		presentPopupBar(with: popupContentController)
 #else

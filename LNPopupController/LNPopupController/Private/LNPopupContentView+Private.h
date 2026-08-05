@@ -10,7 +10,9 @@
 #import <LNPopupController/LNPopupBarAppearance.h>
 #import "UIView+LNPopupSupportPrivate.h"
 
+#if !TARGET_OS_MACCATALYST
 @interface _LNPopupContentViewLayoutController : UINavigationController @end
+#endif
 
 @interface LNPopupContentView ()
 
@@ -22,6 +24,9 @@
 @property (nonatomic, strong, readwrite) LNPopupCloseButton* popupCloseButton;
 @property (nonatomic, strong) UIVisualEffectView* effectView;
 @property (nonatomic, strong, readonly) UIView* contentView;
+#if !TARGET_OS_MACCATALYST
+@property (nonatomic, strong, readonly, getter=_layoutController) UINavigationController* layoutController;
+#endif
 
 - (UIVisualEffect*)_currentEffect;
 
