@@ -13,14 +13,26 @@
 #import "_LNPopupBase64Utils.hh"
 #import "_LNWeakRef.h"
 #import <objc/runtime.h>
+#import "_LNPopupAddressInfo.h"
 
-/*
- @property (nonatomic, getter=_isMinimized, setter=_setMinimized:) BOOL _minimized;
- @property (copy, nonatomic, setter=_setMinimizedStateDidChangeHandler:) void(^_minimizedStateDidChangeHandler)(BOOL);
- @property (readonly, nonatomic) struct CGRect _frameForHostedAccessoryView;
- */
+static BOOL __LNEnableOS27MinimizationHack(void)
+{
+	if(@available(iOS 27.0, *))
+	{
+		static BOOL disableHack = NO;
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			disableHack = [[NSBundle.mainBundle objectForInfoDictionaryKey:@"LNPopupDisableMinimizationHack"] boolValue];
+		});
+		
+		return disableHack == NO;
+	}
+	
+	return YES;
+}
 
-static BOOL __LNPopupTabBarSupportsMinimizationAPI = YES;
+
+static BOOL __LNPopupTabBarSupportsMinimizationAPI = NO;
 static NSString* __LNFrameForHostedAccessoryViewKey;
 static NSString* __LNMinimizedStateDidChangeHandlerKey;
 static NSString* __LNIsMinimizedKey;
@@ -31,6 +43,8 @@ BOOL LNPopupEnvironmentTabBarSupportsMinimizationAPI(void)
 }
 
 @implementation UITabBar (LNPopupInheritedBarMetricsSupport)
+
+static BOOL __ln_hackApplied = NO;
 
 + (void)load
 {
@@ -45,7 +59,40 @@ BOOL LNPopupEnvironmentTabBarSupportsMinimizationAPI(void)
 		BOOL m2 = [self instancesRespondToSelector:NSSelectorFromString(__LNMinimizedStateDidChangeHandlerKey)];
 		BOOL m3 = [self instancesRespondToSelector:NSSelectorFromString(__LNIsMinimizedKey)];
 		
-		__LNPopupTabBarSupportsMinimizationAPI = glass && m1 && m2 && m3;
+		__LNPopupTabBarSupportsMinimizationAPI = __LNEnableOS27MinimizationHack() && glass && m1 && m2 && m3;
+		
+		if(glass && __LNEnableOS27MinimizationHack())
+		{
+			if(@available(iOS 27, *))
+			{
+				SEL sel = @selector(bundleIdentifier);
+				Method m = LNSwizzleClassGetInstanceMethod(NSBundle.class, sel);
+				NSString* (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+				method_setImplementation(m, imp_implementationWithBlock(^NSString*(NSBundle* self) {
+					if(__ln_hackApplied == NO)
+					{
+						auto callStackReturnAddresses = NSThread.callStackReturnAddresses;
+						NSUInteger addr = [callStackReturnAddresses[1] unsignedIntegerValue];
+						_LNPopupAddressInfo* addrInfo = [[_LNPopupAddressInfo alloc] initWithAddress:addr];
+						
+						if([addrInfo.image hasPrefix:@"UIKit"])
+						{
+							__ln_hackApplied = YES;
+							return LNPopupHiddenString("com.apple.mobileslideshow");
+						}
+					}
+					
+					return orig(self, sel);
+				}));
+			}
+			else
+			{
+				Method m = LNSwizzleClassGetInstanceMethod(UITabBar.class, NSSelectorFromString(LNPopupHiddenString("_isPhotosApp")));
+				method_setImplementation(m, imp_implementationWithBlock(^ BOOL (id _self) {
+					return YES;
+				}));
+			}
+		}
 	}
 }
 
@@ -86,7 +133,10 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		[weakTabBar._ln_minimizationDelegate tabBar:weakTabBar didMinimize:wasMinimized];
 	};
 	
-	[self setValue:handler forKey:__LNMinimizedStateDidChangeHandlerKey];
+	if(__LNPopupTabBarSupportsMinimizationAPI)
+	{
+		[self setValue:handler forKey:__LNMinimizedStateDidChangeHandlerKey];
+	}
 }
 
 @end

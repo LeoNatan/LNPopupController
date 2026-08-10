@@ -885,14 +885,6 @@ static const void* LNPopupIgnoringLayoutDuringTransition = &LNPopupIgnoringLayou
 				orig(_self, sel, animated);
 			}));
 		}
-		
-		if(LNPopupEnvironmentHasGlass())
-		{
-			Method m = LNSwizzleClassGetInstanceMethod(self, NSSelectorFromString(LNPopupHiddenString("_isPhotosApp")));
-			method_setImplementation(m, imp_implementationWithBlock(^ BOOL (id _self) {
-				return YES;
-			}));
-		}
 	}
 }
 
