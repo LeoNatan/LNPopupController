@@ -65,24 +65,12 @@ static BOOL __ln_hackApplied = NO;
 		{
 			if(@available(iOS 27, *))
 			{
-				SEL sel = @selector(bundleIdentifier);
-				Method m = LNSwizzleClassGetInstanceMethod(NSBundle.class, sel);
-				NSString* (*orig)(id, SEL) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
-				method_setImplementation(m, imp_implementationWithBlock(^NSString*(NSBundle* self) {
-					if(__ln_hackApplied == NO)
-					{
-						auto callStackReturnAddresses = NSThread.callStackReturnAddresses;
-						NSUInteger addr = [callStackReturnAddresses[1] unsignedIntegerValue];
-						_LNPopupAddressInfo* addrInfo = [[_LNPopupAddressInfo alloc] initWithAddress:addr];
-						
-						if([addrInfo.image hasPrefix:@"UIKit"])
-						{
-							__ln_hackApplied = YES;
-							return LNPopupHiddenString("com.apple.mobileslideshow");
-						}
-					}
-					
-					return orig(self, sel);
+				Class cls = UITabBar.class;
+				SEL sel = NSSelectorFromString(__LNIsMinimizedKey);
+				Method m = LNSwizzleClassGetInstanceMethod(cls, sel);
+				method_setImplementation(m, imp_implementationWithBlock(^BOOL(NSObject* self) {
+					NSInteger currentMorphTarget = [[self valueForKeyPath:LNPopupHiddenString("visualProvider.currentMorphTarget")] integerValue];
+					return currentMorphTarget == 2;
 				}));
 			}
 			else
@@ -108,6 +96,12 @@ static BOOL __ln_hackApplied = NO;
 
 - (CGRect)_ln_proposedFrameForPopupBar
 {
+	if(@available(iOS 27, *))
+	{
+		CGRect (^hostedElementLayoutResolver)(NSInteger element) = [self valueForKey:LNPopupHiddenString("_hostedElementLayoutResolver")];
+		return hostedElementLayoutResolver(2);
+	}
+	
 	return [[self valueForKey:__LNFrameForHostedAccessoryViewKey] CGRectValue];
 }
 
