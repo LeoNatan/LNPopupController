@@ -793,14 +793,14 @@ __attribute__((objc_direct_members))
 
 	if(state != _LNPopupPresentationStateTransitioning)
 	{
-		auto vector = CGVectorMake(0.0, triggeredByGesture ? velocity.y / (3 * self.popupContentView.bounds.size.height) : 0.0);
+//		auto vector = CGVectorMake(0.0, triggeredByGesture ? velocity.y / (3 * self.popupContentView.bounds.size.height) : 0.0);
 //		NSLog(@"ANIM %@ %@", @(velocity), @(vector.dy));
 		id<UITimingCurveProvider> parameters = [[UISpringTimingParameters alloc] initWithDampingRatio:triggeredByGesture ? 0.87 : 1.0 initialVelocity:{}];
 		
-		if(triggeredByGesture && vector.dy != 0.0)
-		{
-			parameters = [[UISpringTimingParameters alloc] initWithDampingRatio:0.9 initialVelocity:vector];
-		}
+//		if(triggeredByGesture && vector.dy != 0.0)
+//		{
+//			parameters = [[UISpringTimingParameters alloc] initWithDampingRatio:0.9 initialVelocity:vector];
+//		}
 		_runningPopupAnimation = [[UIViewPropertyAnimator alloc] initWithDuration:animationDuration timingParameters:parameters];
 		_runningPopupAnimation.userInteractionEnabled = state == LNPopupPresentationStateOpen;
 		
@@ -1204,7 +1204,14 @@ __attribute__((objc_direct_members))
 			
 			if(panVelocity < 0)
 			{
-				targetState = LNPopupPresentationStateOpen;
+				if(_stateBeforeDismissStarted == LNPopupPresentationStateOpen && barTransitionPercent < 0.5)
+				{
+					targetState = LNPopupPresentationStateBarPresented;
+				}
+				else
+				{
+					targetState = LNPopupPresentationStateOpen;
+				}
 			}
 			else if(panVelocity > 0)
 			{
