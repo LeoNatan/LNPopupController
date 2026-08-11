@@ -607,10 +607,10 @@ Additionally, the demo project uses:
 
 ## Star History
 
-<a href="https://www.star-history.com/#LeoNatan/LNPopupController&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=LeoNatan%2FLNPopupController&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=LeoNatan/LNPopupController&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=LeoNatan/LNPopupController&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=LeoNatan/LNPopupController&type=date&legend=top-left" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=LeoNatan/LNPopupController&type=date&theme=dark&legend=top-left&sealed_token=gg64FHQ7hYu7wgjQooyleBuffEKGaFzIIjcZfZkf7Fz4TvBE4n-FvrsRramXlHb-XxC34z94RENtHvCh0t0Fx8otximCMjiAUq44wtxzjxBF7oXYuoKo2ZTMFC1Id5-rmtRD9GMafGabvqGYqTdPV7kEjz_D1tK4lMBIYqbvSkbkkc_gDUQamYSyvZxT" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=LeoNatan/LNPopupController&type=date&legend=top-left&sealed_token=gg64FHQ7hYu7wgjQooyleBuffEKGaFzIIjcZfZkf7Fz4TvBE4n-FvrsRramXlHb-XxC34z94RENtHvCh0t0Fx8otximCMjiAUq44wtxzjxBF7oXYuoKo2ZTMFC1Id5-rmtRD9GMafGabvqGYqTdPV7kEjz_D1tK4lMBIYqbvSkbkkc_gDUQamYSyvZxT" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=LeoNatan/LNPopupController&type=date&legend=top-left&sealed_token=gg64FHQ7hYu7wgjQooyleBuffEKGaFzIIjcZfZkf7Fz4TvBE4n-FvrsRramXlHb-XxC34z94RENtHvCh0t0Fx8otximCMjiAUq44wtxzjxBF7oXYuoKo2ZTMFC1Id5-rmtRD9GMafGabvqGYqTdPV7kEjz_D1tK4lMBIYqbvSkbkkc_gDUQamYSyvZxT" />
  </picture>
 </a>
