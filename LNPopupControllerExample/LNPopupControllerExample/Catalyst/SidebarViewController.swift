@@ -171,10 +171,7 @@ class SidebarViewController: UICollectionViewController {
 		for idx in 1...30 {
 			let title = NSLocalizedString(LoremIpsum.words(withNumber: UInt.random(in: 2...4)).capitalized, comment: "")
 			let playlist = SidebarItem.item(UITab(title: title, image: UIImage(named: "genre\(idx)"), identifier: "playlist\(idx)", viewControllerProvider: { _ in
-				let controller = UIStoryboard(name: "Music", bundle: nil).instantiateViewController(withIdentifier: "Album")
-				controller.navigationItem.title = NSLocalizedString("Playlists", comment: "")
-				controller.navigationItem.subtitle = title
-				return controller
+				viewControllerCreator()
 			}))
 			playlists.append(playlist)
 		}

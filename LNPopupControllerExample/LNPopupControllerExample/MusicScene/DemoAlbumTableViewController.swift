@@ -173,11 +173,10 @@ class DemoAlbumTableViewController: UITableViewController {
 		var popupBar: LNPopupBar? = tabBarController?.popupBar
 		#if targetEnvironment(macCatalyst)
 		if popupBar == nil {
-			splitViewController?.presentPopupBar(with: DemoMusicPlayerController())
+			splitViewController?.popupBar.usesContentControllersAsDataSource = false
+			splitViewController?.presentPopupBar(with: DemoMusicPlayerController<PlayerViewMac>())
 			popupBar = splitViewController?.popupBar
 		}
-		#else
-		
 		#endif
 		
 		guard let popupBar else {
@@ -195,7 +194,7 @@ class DemoAlbumTableViewController: UITableViewController {
 			popupBar.popupItem = item
 		}
 		
-		if let popupContent = tabBarController?.popupContent as? DemoMusicPlayerController {
+		if let popupContent = tabBarController?.popupContent as? MusicPlayerController {
 			popupContent.nextSong = { [weak self] item in
 				guard let self else {
 					return false

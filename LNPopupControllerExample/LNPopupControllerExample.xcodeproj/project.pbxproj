@@ -13,6 +13,8 @@
 		39277A151B58228000293F95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
 		39277A171B58228000293F95 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39277A161B58228000293F95 /* Assets.xcassets */; };
 		392E2AC52AD5CAB600944CB2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */; };
+		393C9BD0302D03FB00156261 /* PlayerViewMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393C9BCF302D03FB00156261 /* PlayerViewMac.swift */; };
+		393C9BD1302D03FB00156261 /* PlayerViewMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393C9BCF302D03FB00156261 /* PlayerViewMac.swift */; };
 		393F23251E16C04A000E969D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23241E16C04A000E969D /* MapViewController.swift */; };
 		393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23261E16C192000E969D /* CustomMapBarViewController.swift */; };
 		393F23291E16CF90000E969D /* LocationsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 393F23281E16CF90000E969D /* LocationsController.swift */; };
@@ -152,6 +154,7 @@
 		39277A161B58228000293F95 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		39277A1B1B58228000293F95 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		392E2AC42AD5CAB600944CB2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		393C9BCF302D03FB00156261 /* PlayerViewMac.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewMac.swift; sourceTree = "<group>"; };
 		393F23241E16C04A000E969D /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		393F23261E16C192000E969D /* CustomMapBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMapBarViewController.swift; sourceTree = "<group>"; };
 		393F23281E16CF90000E969D /* LocationsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsController.swift; sourceTree = "<group>"; };
@@ -350,6 +353,7 @@
 			isa = PBXGroup;
 			children = (
 				39F5ACD42EA583F2002EF1E6 /* PlayerView.swift */,
+				393C9BCF302D03FB00156261 /* PlayerViewMac.swift */,
 				39B0DFF52B1819EF008CCF36 /* Music.storyboard */,
 				397C56271B7538A5007A67F0 /* DemoAlbumTableViewController.swift */,
 				39837A231B758541004D2DA9 /* DemoMusicPlayerController.swift */,
@@ -568,6 +572,7 @@
 				39837A241B758541004D2DA9 /* DemoMusicPlayerController.swift in Sources */,
 				39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
+				393C9BD1302D03FB00156261 /* PlayerViewMac.swift in Sources */,
 				39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */,
 				39F031B42E8FC2770079F2FD /* CustomContainerController.swift in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
@@ -619,6 +624,7 @@
 				39B645EE2CA5AA1300AB038B /* PageCardViewController.swift in Sources */,
 				39FAFC4424E71A6C008BBC2D /* MusicTabBarController.swift in Sources */,
 				39F5ACD62EA583F8002EF1E6 /* PlayerView.swift in Sources */,
+				393C9BD0302D03FB00156261 /* PlayerViewMac.swift in Sources */,
 				39B645F12CA61B0200AB038B /* ScrollingMapViewController.swift in Sources */,
 				39988C772AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				39FAFC4524E71A6C008BBC2D /* SceneDelegate.m in Sources */,

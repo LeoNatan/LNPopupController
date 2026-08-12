@@ -40,10 +40,11 @@
 	self.windowScene = scene;
 	
 #if TARGET_OS_MACCATALYST
-	self.windowScene.sizeRestrictions.minimumSize = CGSizeMake(700, 525);
+	self.windowScene.sizeRestrictions.minimumSize = CGSizeMake(800, 500);
 	
 	scene.titlebar.toolbarStyle = UITitlebarToolbarStyleUnified;
 	self.window.rootViewController = [LNCatalystLandingViewController new];
+//	self.window.rootViewController = [UIStoryboard storyboardWithName:@"Music" bundle:nil].instantiateInitialViewController;
 	
 	NSMutableDictionary* userInfo = [session.userInfo ?: @{} mutableCopy];
 	if([userInfo[@"isNewlyCreated"] boolValue] == YES)

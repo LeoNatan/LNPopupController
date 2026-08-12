@@ -11,6 +11,13 @@ import SwiftUI
 import LNPopupController
 
 @available(iOS 17.0, *)
+protocol PlaybackStateContainer {
+	init()
+	
+	var playbackState: PlaybackState { get }
+}
+
+@available(iOS 17.0, *)
 @Observable
 class PlaybackState {
 	var popupItem: LNPopupItem? = nil
@@ -33,7 +40,7 @@ class PlaybackState {
 }
 
 @available(iOS 17.0, *)
-struct PlayerView: View {
+struct PlayerView: View, PlaybackStateContainer {
 	@State var playbackState = PlaybackState()
 	
 	func imageToUse() -> UIImage {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25087" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25095" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTg-sL-qRq">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25063.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25070"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -35,7 +35,7 @@
         <scene sceneID="38q-Kc-L0T">
             <objects>
                 <navigationController storyboardIdentifier="AAAA" modalPresentationStyle="fullScreen" id="yVZ-Nv-QXJ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" image="music.note.house.fill" catalog="system" id="vBw-QA-u4Y"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="music.note.house" catalog="system" id="vBw-QA-u4Y"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Gmu-0O-wzk">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -199,7 +199,7 @@
         <scene sceneID="2du-v5-87H">
             <objects>
                 <navigationController id="fst-JL-nMD" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="New" image="square.grid.2x2.fill" catalog="system" id="wmG-jF-o9a"/>
+                    <tabBarItem key="tabBarItem" title="New" image="square.grid.2x2" catalog="system" id="wmG-jF-o9a"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DVk-h5-a3S">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -216,7 +216,7 @@
         <scene sceneID="C6e-rq-0IG">
             <objects>
                 <navigationController id="AxQ-vF-9zl" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Library" image="music.note.square.stack.fill" catalog="system" id="2hs-ep-FyF"/>
+                    <tabBarItem key="tabBarItem" title="Library" image="music.note.square.stack" catalog="system" id="2hs-ep-FyF"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uG5-sG-lf4">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -317,11 +317,11 @@
         <image name="dot.radiowaves.left.and.right" catalog="system" width="128" height="94"/>
         <image name="ellipsis" catalog="system" width="128" height="41"/>
         <image name="genre1" width="88" height="88"/>
-        <image name="music.note.house.fill" catalog="system" width="128" height="108"/>
-        <image name="music.note.square.stack.fill" catalog="system" width="102" height="128"/>
+        <image name="music.note.house" catalog="system" width="128" height="108"/>
+        <image name="music.note.square.stack" catalog="system" width="102" height="128"/>
         <image name="play.fill" catalog="system" width="115" height="128"/>
         <image name="shuffle" catalog="system" width="128" height="98"/>
-        <image name="square.grid.2x2.fill" catalog="system" width="128" height="119"/>
+        <image name="square.grid.2x2" catalog="system" width="128" height="119"/>
         <image name="xmark" catalog="system" width="128" height="118"/>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>

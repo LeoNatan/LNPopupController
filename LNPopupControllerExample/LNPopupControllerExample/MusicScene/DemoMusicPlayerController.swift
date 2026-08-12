@@ -10,9 +10,24 @@
 import UIKit
 import SwiftUI
 import LNPopupController
+import ObjectiveC
+
+#if targetEnvironment(macCatalyst)
+@_cdecl("LNDemoMusicPlayerController") public
+func _DemoMusicPlayerController() -> UIViewController {
+	DemoMusicPlayerController<PlayerViewMac>()
+}
+#endif
+
+protocol MusicPlayerController: AnyObject {
+	var nextSong: ((LNPopupItem) -> Bool)? { get set }
+	var prevSong: ((LNPopupItem) -> Void)? { get set }
+	
+	func play()
+}
 
 @available(iOS 18.0, *)
-class DemoMusicPlayerController: UIHostingController<PlayerView> {
+class DemoMusicPlayerController<PlatformPlayerView: View & PlaybackStateContainer>: UIHostingController<PlatformPlayerView>, MusicPlayerController {
 	let accessibilityDateComponentsFormatter = DateComponentsFormatter()
 	var timer : Timer?
 	var popupCloseButton: LNPopupCloseButton?
@@ -32,8 +47,9 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 		return rv
 	}()
 	
-	let playerView = PlayerView()
+	let playerView = PlatformPlayerView()
 	
+	@objc
 	required init() {
 		super.init(rootView: playerView)
 		
@@ -125,26 +141,30 @@ class DemoMusicPlayerController: UIHostingController<PlayerView> {
 	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
 		super.viewDidMove(toPopupContainerContentView: popupContentView)
 		
+#if targetEnvironment(macCatalyst)
+		popupContentView?.popupCloseButtonStyle = .clearGlass
+		popupContentView?.popupCloseButtonPositioning = .leading
+		popupContentView?.popupCloseButton.traitOverrides.userInterfaceStyle = .dark
+#else
 		popupContentView?.popupCloseButtonStyle = .grabber
+#endif
 		
 		if popupContentView == nil {
 			stopTimer()
 		}
 	}
 	
+#if !targetEnvironment(macCatalyst)
 	override func positionPopupCloseButton(_ popupCloseButton: LNPopupCloseButton) -> Bool {
-		#if targetEnvironment(macCatalyst)
-		return false
-		#else
 		self.popupCloseButton = popupCloseButton
 		self.view.setNeedsLayout()
 		return true
-		#endif
 	}
+#endif
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
+
 		overrideUserInterfaceStyle = .dark
 		view.tintColor = .white
 	}

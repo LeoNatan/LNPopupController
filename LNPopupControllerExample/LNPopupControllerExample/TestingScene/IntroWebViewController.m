@@ -12,6 +12,12 @@
 @import WebKit;
 @import LNPopupController;
 
+#if LNPOPUP
+#import "LNPopupControllerExample-Swift.h"
+#else
+#import "LNPopupControllerExampleNoPopup-Swift.h"
+#endif
+
 @interface IntroWebViewController ()
 {
 	WKWebView* _webView;
@@ -31,8 +37,23 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
+	[super viewDidLoad];
+	
+#if TARGET_OS_MACCATALYST
+	UIViewController* music = LNDemoMusicPlayerController();
+	[self addChildViewController:music];
+	music.view.translatesAutoresizingMaskIntoConstraints = NO;
+	[self.view addSubview:music.view];
+	
+	[NSLayoutConstraint activateConstraints:@[
+		[self.view.topAnchor constraintEqualToAnchor:music.view.topAnchor],
+		[self.view.bottomAnchor constraintEqualToAnchor:music.view.bottomAnchor],
+		[self.view.leadingAnchor constraintEqualToAnchor:music.view.leadingAnchor],
+		[self.view.trailingAnchor constraintEqualToAnchor:music.view.trailingAnchor],
+	]];
+	
+	[music didMoveToParentViewController:self];
+#else
 	_webView = [WKWebView new];
 	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://github.com/LeoNatan/LNPopupController"]]];
 	_webView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -63,6 +84,7 @@
 		[self.view.trailingAnchor constraintEqualToAnchor:_topColorView.trailingAnchor],
 #endif
 	]];
+#endif
 	
 	self.popupItem.image = [UIImage imageNamed:@"AppIconPopupBar"];
 #if !TARGET_OS_MACCATALYST

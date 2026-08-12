@@ -41,6 +41,7 @@ class CatalystLandingViewController: UISplitViewController {
 		popupBar.progressViewStyle = .bottom
 		popupBar.semanticContentAttribute = .forceLeftToRight
 		popupContentView.popupCloseButtonPositioning = .leading
+		popupContentView.popupCloseButton.traitOverrides.userInterfaceStyle = .dark
 #endif
 	}
 
