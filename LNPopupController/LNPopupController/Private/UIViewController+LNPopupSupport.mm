@@ -399,6 +399,19 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 	{
 		[self _ln_setDiscoveredTransitionView:nil];
 	}
+	
+	if(rv.object == nil)
+	{
+		for(UIViewController* child in self.childViewControllers)
+		{
+			LNPopupImageView* childTransitionView = child._ln_discoveredTransitionView;
+			if(childTransitionView != nil)
+			{
+				return childTransitionView;
+			}
+		}
+	}
+	
 	return rv.object;
 }
 
