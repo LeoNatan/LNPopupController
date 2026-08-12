@@ -770,6 +770,93 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 
 #endif
 
+- (void)_layoutProgressView
+{
+	CGFloat width = 0;
+	CGFloat height = 0;
+	CGFloat offset = 0;
+	CGFloat offsetAfter = 0;
+	if(_resolvedIsFloating)
+	{
+		if(LNPopupEnvironmentHasGlass())
+		{
+			offset = -10;
+		}
+		width = _contentView.bounds.size.width;
+		height = _contentView.bounds.size.height;
+	}
+	else
+	{
+		offset = 0;
+		width = self.contentView.bounds.size.width;
+		height = self.bounds.size.height;
+	}
+	
+	CGFloat cornerRadius;
+	if(@available(iOS 26.0, *))
+	{
+		cornerRadius = [_contentView.effectView effectiveRadiusForCorner:UIRectCornerAllCorners];
+	}
+	else
+	{
+		cornerRadius = _contentView.cornerRadius / 2.5;
+	}
+	
+	CGFloat progressViewHeight = [_progressView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+	UIEdgeInsets titleInsets = [self contentInsetsIncludingImage:NO];
+	
+	BOOL isMacIdiom = NO;
+	if(@available(iOS 14.0, *))
+	{
+		isMacIdiom = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac;
+	}
+	
+	CGRect potentialProgressViewFrame = UIEdgeInsetsInsetRect(_contentView.bounds, titleInsets);
+	if(isMacIdiom && titleInsets.left >= 25 && titleInsets.right >= 25 && potentialProgressViewFrame.size.width > 2 * __LNPopupScaledFloat(LNPopupBarFloatingPadImageWidth, self.traitCollection) && LNPopupEnvironmentHasGlass())
+	{
+		static const CGFloat position = 4;
+		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+		{
+			potentialProgressViewFrame.origin.y = position;
+		}
+		else
+		{
+			potentialProgressViewFrame.origin.y = potentialProgressViewFrame.size.height - position - progressViewHeight;
+		}
+		potentialProgressViewFrame.size.height = progressViewHeight;
+		
+		_progressView.frame = potentialProgressViewFrame;
+		_progressView.alpha = potentialProgressViewFrame.size.width >= __LNPopupScaledFloat(LNPopupBarFloatingPadImageWidth, self.traitCollection);
+		
+		if(@available(iOS 26.0, *))
+		{
+			_progressView.clipsToBounds = YES;
+			_progressView.cornerConfiguration = [UICornerConfiguration capsuleConfiguration];
+		}
+		
+		_progressView.trackTintColor = UIColor.tertiaryLabelColor;
+		_progressView.trackImage = nil;
+	}
+	else
+	{
+		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
+		{
+			_progressView.frame = CGRectMake(cornerRadius + offset, 0, width - 2 * (cornerRadius + offset), progressViewHeight);
+		}
+		else
+		{
+			_progressView.frame = CGRectMake(cornerRadius + offset, height - progressViewHeight, width - 2 * (cornerRadius + offset), progressViewHeight);
+		}
+		
+		if(@available(iOS 26.0, *))
+		{
+			_progressView.cornerConfiguration = [UICornerConfiguration configurationWithRadius:[UICornerRadius fixedRadius:0.0]];
+		}
+		
+		_progressView.trackImage = [UIImage new];
+	}
+}
+
 - (void)layoutSubviews
 {
 	_inLayout = YES;
@@ -1048,94 +1135,9 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		_bottomShadowView.frame = CGRectMake(0, _backgroundView.bounds.size.height - h, _backgroundView.bounds.size.width, h);
 	}
 	
-	CGFloat cornerRadius;
-	if(@available(iOS 26.0, *))
-	{
-		cornerRadius = [_contentView.effectView effectiveRadiusForCorner:UIRectCornerAllCorners];
-	}
-	else
-	{
-		cornerRadius = _contentView.cornerRadius / 2.5;
-	}
-	
 	[_contentView.contentView insertSubview:_progressView aboveSubview:_toolbar];
 	
-	CGFloat width = 0;
-	CGFloat height = 0;
-	CGFloat offset = 0;
-	CGFloat offsetAfter = 0;
-	if(_resolvedIsFloating)
-	{
-		
-		
-		if(LNPopupEnvironmentHasGlass())
-		{
-			offset = -10;
-		}
-		width = _contentView.bounds.size.width;
-		height = _contentView.bounds.size.height;
-	}
-	else
-	{
-		offset = 0;
-		width = self.contentView.bounds.size.width;
-		height = self.bounds.size.height;
-	}
-	
-	CGFloat progressViewHeight = [_progressView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-	UIEdgeInsets titleInsets = [self contentInsetsIncludingImage:NO];
-	
-	BOOL isMacIdiom = NO;
-	if(@available(iOS 14.0, *))
-	{
-		isMacIdiom = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomMac;
-	}
-	
-	if(LNPopupEnvironmentHasGlass() && isMacIdiom && titleInsets.left >= 20 && titleInsets.right >= 20)
-	{
-		CGRect progressViewFrame = UIEdgeInsetsInsetRect(_contentView.bounds, titleInsets);
-		static const CGFloat position = 4;
-		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
-		{
-			progressViewFrame.origin.y = position;
-			
-		}
-		else
-		{
-			progressViewFrame.origin.y = progressViewFrame.size.height - position - progressViewHeight;
-		}
-		progressViewFrame.size.height = progressViewHeight;
-		
-		_progressView.frame = progressViewFrame;
-		_progressView.alpha = progressViewFrame.size.width >= __LNPopupScaledFloat(LNPopupBarFloatingPadImageWidth, self.traitCollection);
-		
-		if(@available(iOS 26.0, *))
-		{
-			_progressView.clipsToBounds = YES;
-			_progressView.cornerConfiguration = [UICornerConfiguration capsuleConfiguration];
-		}
-		
-		_progressView.trackTintColor = UIColor.tertiaryLabelColor;
-		_progressView.trackImage = nil;
-	}
-	else
-	{
-		if(self.progressViewStyle == LNPopupBarProgressViewStyleTop)
-		{
-			_progressView.frame = CGRectMake(cornerRadius + offset, 0, width - 2 * (cornerRadius + offset), progressViewHeight);
-		}
-		else
-		{
-			_progressView.frame = CGRectMake(cornerRadius + offset, height - progressViewHeight, width - 2 * (cornerRadius + offset), progressViewHeight);
-		}
-		
-		if(@available(iOS 26.0, *))
-		{
-			_progressView.cornerConfiguration = [UICornerConfiguration configurationWithRadius:[UICornerRadius fixedRadius:0.0]];
-		}
-		
-		_progressView.trackImage = [UIImage new];
-	}
+	[self _layoutProgressView];
 	
 	CGFloat titleSpacing = 1 + (1 / MAX(1, screen.scale));
 	if(_resolvedIsCompact)
@@ -2001,7 +2003,14 @@ static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenStr
 	
 	if(LNPopupEnvironmentHasGlass())
 	{
-		emptyPadding = 16;
+		if(LNPopupBar.isCatalystApp)
+		{
+			emptyPadding = 20;
+		}
+		else
+		{
+			emptyPadding = 16;
+		}
 	}
 	else
 	{
