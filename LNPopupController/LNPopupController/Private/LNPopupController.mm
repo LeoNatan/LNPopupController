@@ -60,7 +60,7 @@ LNPopupInteractionStyle _LNPopupResolveInteractionStyleFromInteractionStyle(LNPo
 	
 	if(rv == LNPopupInteractionStyleDefault)
 	{
-		rv = LNPopupInteractionStyleSnap;
+		rv = LNPopupInteractionStyleAutomatic;
 	}
 	
 	if(rv == LNPopupInteractionStyleAutomatic)
@@ -2550,7 +2550,7 @@ id __LNPopupEmptyBlurFilter(void)
 			[self.popupBar.traitOverrides setNSIntegerValue:newValue forTrait:LNPopupBarEnvironmentTrait.class];
 			self.popupBar._hackyMarginsInSuperviewSemanticContext = [self.containerController _ln_popupBarMarginsForPopupBar:self.popupBar];
 			[self.popupBar layoutIfNeeded];
-			//		[self.popupBar.toolbar forceLayoutOnButtons];
+//			[self.popupBar.toolbar forceLayoutOnButtons];
 		};
 		void (^layoutVerticalBarPosition)(void) = ^{
 			[self.containerController _ln_layoutPopupBarAndContent];
@@ -2567,7 +2567,7 @@ id __LNPopupEmptyBlurFilter(void)
 		{
 			auto animator = [[UIViewPropertyAnimator alloc] initWithDuration:0.4 dampingRatio:1.0 animations:nil];
 			
-			[animator addAnimations:updateMargins delayFactor: wasMinimized ? 0.0 : 0.2];
+			[animator addAnimations:updateMargins delayFactor:wasMinimized ? 0.0 : 0.2];
 			[animator ln_addAnimations:layoutVerticalBarPosition delayFactor:wasMinimized ? 0.2 : 0.0 durationFactor:wasMinimized ? 0.8 : 0.35];
 			[animator startAnimation];
 		}

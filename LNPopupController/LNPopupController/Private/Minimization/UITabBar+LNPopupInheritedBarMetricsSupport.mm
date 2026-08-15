@@ -15,23 +15,6 @@
 #import <objc/runtime.h>
 #import "_LNPopupAddressInfo.h"
 
-static BOOL __LNEnableOS27MinimizationHack(void)
-{
-	if(@available(iOS 27.0, *))
-	{
-		static BOOL disableHack = NO;
-		static dispatch_once_t onceToken;
-		dispatch_once(&onceToken, ^{
-			disableHack = [[NSBundle.mainBundle objectForInfoDictionaryKey:@"LNPopupDisableMinimizationHack"] boolValue];
-		});
-		
-		return disableHack == NO;
-	}
-	
-	return YES;
-}
-
-
 static BOOL __LNPopupTabBarSupportsMinimizationAPI = NO;
 static NSString* __LNFrameForHostedAccessoryViewKey;
 static NSString* __LNMinimizedStateDidChangeHandlerKey;
@@ -59,9 +42,9 @@ static BOOL __ln_hackApplied = NO;
 		BOOL m2 = [self instancesRespondToSelector:NSSelectorFromString(__LNMinimizedStateDidChangeHandlerKey)];
 		BOOL m3 = [self instancesRespondToSelector:NSSelectorFromString(__LNIsMinimizedKey)];
 		
-		__LNPopupTabBarSupportsMinimizationAPI = __LNEnableOS27MinimizationHack() && glass && m1 && m2 && m3;
+		__LNPopupTabBarSupportsMinimizationAPI = glass && m1 && m2 && m3;
 		
-		if(glass && __LNEnableOS27MinimizationHack())
+		if(glass)
 		{
 			if(@available(iOS 27, *))
 			{
@@ -69,7 +52,8 @@ static BOOL __ln_hackApplied = NO;
 				SEL sel = NSSelectorFromString(__LNIsMinimizedKey);
 				Method m = LNSwizzleClassGetInstanceMethod(cls, sel);
 				method_setImplementation(m, imp_implementationWithBlock(^BOOL(NSObject* self) {
-					NSInteger currentMorphTarget = [[self valueForKeyPath:LNPopupHiddenString("visualProvider.currentMorphTarget")] integerValue];
+					static NSString* key = LNPopupHiddenString("visualProvider.currentMorphTarget");
+					NSInteger currentMorphTarget = [[self valueForKeyPath:key] integerValue];
 					return currentMorphTarget == 2;
 				}));
 			}
@@ -122,9 +106,10 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 	_LNWeakRef* ref = [_LNWeakRef refWithObject:minimizationDelegate];
 	objc_setAssociatedObject(self, __LNPopupTabBarMinimizationDelegateKey, ref, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 	
-	__weak __typeof(self) weakTabBar = self;
+	__weak auto weakTabBar = self;
 	void (^handler)(BOOL) = minimizationDelegate == nil ? (id)nil : (id)^(BOOL wasMinimized) {
-		[weakTabBar._ln_minimizationDelegate tabBar:weakTabBar didMinimize:wasMinimized];
+		__strong auto tabBar = weakTabBar;
+		[tabBar._ln_minimizationDelegate tabBar:tabBar didMinimize:wasMinimized];
 	};
 	
 	if(__LNPopupTabBarSupportsMinimizationAPI)

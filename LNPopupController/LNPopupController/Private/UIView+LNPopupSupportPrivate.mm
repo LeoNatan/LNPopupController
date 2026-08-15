@@ -562,6 +562,7 @@ static const void* LNPopupWindowIsLocked = &LNPopupWindowIsLocked;
 			if([tested isDescendantOfView:allowedView])
 			{
 				isAllowed = YES;
+				break;
 			}
 		}
 		

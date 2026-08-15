@@ -832,7 +832,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	
 	if(neededInsets.bottom != MAX(safe.bottom, childAdditive.bottom))
 	{
-		_LNPopupSupportSetPopupInsetsForViewController(self, self.popupBar, YES, neededInsets);
+		_LNPopupSupportSetPopupInsetsForViewController(self, self.popupBar, NO, neededInsets);
 	}
 }
 
