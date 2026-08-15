@@ -1,5 +1,8 @@
 name: "Bug Report"
-description: "Report an issue."
+description: | 
+  Report an issue.
+  
+  Only humans should apply. If I detect LLM slop, the issue will be closed immediately.
 labels: [bug]
 body:
   - type: textarea

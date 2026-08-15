@@ -1,5 +1,8 @@
 name: "Feature Request / Enhancement"
-description: "Suggest an idea for this project."
+description: | 
+  Suggest an idea for this project.
+  
+  Only humans should apply. If I detect LLM slop, the issue will be closed immediately.
 labels: [enhancement]
 body:
   - type: textarea
