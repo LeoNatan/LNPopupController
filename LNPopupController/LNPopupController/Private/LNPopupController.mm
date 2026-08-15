@@ -1202,7 +1202,7 @@ __attribute__((objc_direct_members))
 			BOOL hasPassedHeighThreshold = _stateBeforeDismissStarted == LNPopupPresentationStateBarPresented ? barTransitionPercent > LNPopupBarGestureHeightPercentThreshold : barTransitionPercent < (1.0 - LNPopupBarGestureHeightPercentThreshold);
 			CGFloat panVelocity = [pgr velocityInView:_containerController.view].y;
 			
-			if(panVelocity < 0)
+			if(panVelocity <= 0)
 			{
 				if(_stateBeforeDismissStarted == LNPopupPresentationStateOpen && barTransitionPercent < 0.5)
 				{
@@ -1213,7 +1213,7 @@ __attribute__((objc_direct_members))
 					targetState = LNPopupPresentationStateOpen;
 				}
 			}
-			else if(panVelocity > 0)
+			else if(panVelocity > 0 && barTransitionPercent != 1.0)
 			{
 				targetState = LNPopupPresentationStateBarPresented;
 			}
