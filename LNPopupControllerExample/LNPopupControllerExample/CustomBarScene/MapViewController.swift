@@ -33,8 +33,9 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	private var popupContentVC: LocationsController!
 
 #if LNPOPUP
-	lazy var resize = UIBarButtonItem(image: UIImage(systemName: "rectangle.expand.vertical"), style: .plain, target: navigationController!.popupBar.customBarViewController!, action: #selector(ManualLayoutCustomBarViewController.animateSize(_:)))
-	lazy var resizeGroup = UIBarButtonItemGroup(barButtonItems: [resize], representativeItem: nil)
+	lazy var expand = UIBarButtonItem(image: UIImage(systemName: "rectangle.expand.vertical"), style: .plain, target: navigationController!.popupBar.customBarViewController!, action: #selector(animateSize(_:)))
+	lazy var compress = UIBarButtonItem(image: UIImage(systemName: "rectangle.compress.vertical"), style: .plain, target: navigationController!.popupBar.customBarViewController!, action: #selector(animateSize(_:)))
+	lazy var resizeGroup = UIBarButtonItemGroup(barButtonItems: [expand, compress], representativeItem: nil)
 	
 	lazy var presentDismiss = [
 		UIBarButtonItem(image: UIImage(systemName: "dock.arrow.up.rectangle"), style: .plain, target: self, action: #selector(MapViewController.presentButtonTapped(_:))),
@@ -54,6 +55,13 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			galleryBarButton.image = nil
 		}
 		
+		compress.isHidden = true
+		if #available(iOS 26.0, *) {
+			compress.identifier = "resize"
+			expand.identifier = "resize"
+		}
+		
+		
 #if LNPOPUP
 		resetBarButtonItems()
 #endif
@@ -70,11 +78,8 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	
 #if LNPOPUP
 	func resetBarButtonItems() {
-		let canResize = navigationController!.popupBar.customBarViewController!.responds(to: resize.action!)
-		if canResize, #unavailable(iOS 16.0) {
-			presentDismiss.append(resize)
-		}
-		
+		let canResize = navigationController!.popupBar.customBarViewController is ManualLayoutCustomBarViewController
+
 		if #available(iOS 16.0, *) {
 			var groups = [presentDismissGroup]
 			if canResize {
@@ -84,8 +89,6 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		} else {
 			navigationItem.leftBarButtonItems = presentDismiss
 		}
-		
-		resize.image = UIImage(systemName: "rectangle.expand.vertical")
 	}
 #endif
 	
@@ -133,7 +136,11 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			navigationController!.popupBar.customBarViewController = ManualLayoutCustomBarViewController()
 		}
 		
-		if #unavailable(iOS 27.0) {
+		if #available(iOS 27.0, *) {
+			let glass = UIGlassEffect.shiny
+			glass.isInteractive = true
+			navigationController!.popupBar.standardAppearance.floatingBackgroundEffect = glass
+		} else {
 			navigationController!.popupBar.standardAppearance.isFloatingBarShineEnabled = true
 		}
 		
@@ -151,7 +158,8 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		
 		navigationController!.presentPopupBar(with: self.popupContentVC, animated: animated)
 		
-		resize.target = navigationController!.popupBar.customBarViewController!
+		expand.target = self
+		compress.target = self
 		
 		resetBarButtonItems()
 #endif
@@ -181,4 +189,34 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 		return !LNPopupSettingsHasOS26Glass()
 	}
 #endif
+	
+	var idx = 0
+	@IBAction
+	func animateSize(_ sender: UIBarButtonItem) {
+		idx = 1 - idx;
+		
+		sender.isEnabled = false
+		let changes = {
+			self.navigationController!.popupBar.customBarViewController!.preferredContentSize = CGSize(width: 0, height: 70 + self.idx * 100)
+			if self.idx == 0 {
+				self.expand.isHidden = false
+				self.compress.isHidden = true
+			} else {
+				self.expand.isHidden = true
+				self.compress.isHidden = false
+			}
+		}
+		
+		let completion = {
+			sender.isEnabled = true
+		}
+		
+		if #available(iOS 18.0, *) {
+			UIView.animate(.interactiveSpring(duration: 0.5), changes: changes, completion: completion)
+		} else {
+			UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 500, initialSpringVelocity: 0.0, animations: changes) { _ in
+				completion()
+			}
+		}
+	}
 }

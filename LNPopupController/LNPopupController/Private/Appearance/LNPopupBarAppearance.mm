@@ -477,3 +477,12 @@ static NSArray* __notifiedProperties = nil;
 }
 
 @end
+
+@implementation UIGlassEffect (LNPopup)
+
++ (instancetype)shinyGlass
+{
+	return [_LNPopupBorrowedGlassEffect shineEffect];
+}
+
+@end

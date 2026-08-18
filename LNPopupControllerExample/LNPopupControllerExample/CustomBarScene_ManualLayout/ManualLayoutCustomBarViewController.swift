@@ -63,23 +63,6 @@ class ManualLayoutCustomBarViewController: LNPopupCustomBarViewController {
 		self.preferredContentSize = CGSize(width: 0, height: 70)
 	}
 	
-	var idx = 0
-	@IBAction
-	func animateSize(_ sender: UIBarButtonItem) {
-		idx = 1 - idx;
-		
-		let changes = {
-			self.preferredContentSize = CGSize(width: 0, height: 70 + self.idx * 100)
-			sender.image = self.idx == 0 ? UIImage(systemName: "rectangle.expand.vertical") : UIImage(systemName: "rectangle.compress.vertical")
-		}
-		
-		if #available(iOS 18.0, *) {
-			UIView.animate(.easeInOut, changes: changes)
-		} else {
-			UIView.animate(withDuration: 0.5, delay: 0.0, usingSpringWithDamping: 500, initialSpringVelocity: 0.0, animations: changes)
-		}
-	}
-	
 	public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
 		super.traitCollectionDidChange(previousTraitCollection)
 	}

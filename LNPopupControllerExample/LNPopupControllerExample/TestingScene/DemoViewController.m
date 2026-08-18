@@ -809,7 +809,19 @@
 		targetVC.popupBar.standardAppearance = appearance;
 	}
 	
-	targetVC.popupBar.standardAppearance.floatingBarShineEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingShineEnabled];
+	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingShineEnabled])
+	{
+		if(@available(iOS 27.0, *))
+		{
+			UIGlassEffect* glass = UIGlassEffect.shinyGlass;
+			glass.interactive = YES;
+			targetVC.popupBar.standardAppearance.floatingBackgroundEffect = glass;
+		}
+		else
+		{
+			targetVC.popupBar.standardAppearance.floatingBarShineEnabled = YES;
+		}
+	}
 	
 	targetVC.popupBar.standardAppearance.marqueeScrollEnabled = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeEnabled];
 	targetVC.popupBar.standardAppearance.coordinateMarqueeScroll = [NSUserDefaults.settingDefaults boolForKey:PopupSettingMarqueeCoordinationEnabled];

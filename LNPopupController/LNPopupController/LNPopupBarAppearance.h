@@ -11,6 +11,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface UIGlassEffect (LNPopup)
+
+@property (class, nonatomic, strong, readonly) UIGlassEffect* shinyGlass NS_SWIFT_NAME(shiny);
+
+@end
+
 NS_SWIFT_UI_ACTOR
 /// An object for customizing the appearance of popup bars.
 ///
@@ -107,10 +113,12 @@ NS_SWIFT_UI_ACTOR
 
 /// Enables outer shine on a floating popup bar.
 ///
+/// Bar shine is no longer supported on iOS 27. Instead, use `UIGlassEffect.shiny` for `floatingBackgroundEffect`.
+///
 /// Defaults to `false`.
 ///
 /// Shine is only supported on iOS 26.0 and later.
-@property (nonatomic, assign, getter=isFloatingBarShineEnabled) BOOL floatingBarShineEnabled;
+@property (nonatomic, assign, getter=isFloatingBarShineEnabled) BOOL floatingBarShineEnabled LN_DEPRECATED_API_OS("Bar shine is no longer supported on iOS 27. Use UIGlassEffect.shiny instead.", ios(2.0, 27.0));
 
 /// Reset floating background and shadow properties to their defaults.
 - (void)configureWithDefaultFloatingBackground;
