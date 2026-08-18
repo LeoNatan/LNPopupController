@@ -2420,6 +2420,11 @@ id __LNPopupEmptyBlurFilter(void)
 	}
 	
 	[_containerController _ln_updatePopupBarContainerInsets];
+	
+	if(layout)
+	{
+		[_containerController.view layoutIfNeeded];
+	}
 }
 
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar

@@ -217,6 +217,21 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 	}
 }
 
+- (CGFloat)_ln_whatsMyConcentricRadius
+{
+	static CGFloat (*orig)(UIView*, SEL, UIRectCorner);
+	static SEL sel;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		Class cls = UIView.class;
+		sel = NSSelectorFromString(LNPopupHiddenString("_containerConcentricRadiusForCorner:"));
+		Method m = LNSwizzleClassGetInstanceMethod(cls, sel);
+		orig = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+	});
+	
+	return orig(self, sel, UIRectCornerAllCorners);
+}
+
 - (UIViewController*)_ln_closestController
 {
 	static NSString* const key = LNPopupHiddenString("_viewControllerForAncestor");

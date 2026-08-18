@@ -40,7 +40,17 @@
 		CGRect superFrameInWindow = [contentView.window convertRect:contentView.superview.bounds fromView:contentView.superview];
 		
 		LNPopupViewCorners corners = {};
-		CGSize corner = CGSizeMake(contentView.window.screen._ln_cornerRadius, contentView.window.screen._ln_cornerRadius);
+		CGFloat radius;
+		if(@available(iOS 27, *))
+		{
+			radius = contentView.window._ln_whatsMyConcentricRadius;
+		}
+		else
+		{
+			radius = contentView.window.screen._ln_cornerRadius;
+		}
+		CGSize corner = CGSizeMake(radius, radius);
+		
 		if(frameInWindow.origin.x == 0)
 		{
 			if(superFrameInWindow.origin.y == 0)

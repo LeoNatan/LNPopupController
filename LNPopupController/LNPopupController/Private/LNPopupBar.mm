@@ -2396,15 +2396,17 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
-	if([keyPath isEqualToString:@"preferredContentSize"] == YES && object == _customBarViewController)
+	if([keyPath isEqualToString:@"preferredContentSize"] == YES)
 	{
-		[self._barDelegate _popupBarMetricsDidChange:self];
-	}
-	
-	if([keyPath isEqualToString:@"preferredContentSize"] == YES && object == _swiftuiImageController)
-	{
-		[self _layoutImageView];
-		[self _setNeedsTitleLayoutByRemovingLabels:NO];
+		if(object == _customBarViewController)
+		{
+			[self._barDelegate _popupBarMetricsDidChange:self];
+		}
+		else if(object == _swiftuiImageController)
+		{
+			[self _layoutImageView];
+			[self _setNeedsTitleLayoutByRemovingLabels:NO];
+		}
 	}
 }
 
