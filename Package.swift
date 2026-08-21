@@ -2,7 +2,7 @@
 // LNPopupController:4.5.6
 
 import PackageDescription
-import Foundation.NSFileManager
+import Foundation
 
 let packageBase = URL(filePath: Context.packageDirectory, directoryHint: .isDirectory)
 
