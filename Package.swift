@@ -2,6 +2,11 @@
 // LNPopupController:4.5.6
 
 import PackageDescription
+import PackageDescription
+
+#if os(Linux)
+var settings: [PackageDescription.CSetting] = []
+#else
 import Foundation.NSFileManager
 
 let packageBase = URL(filePath: Context.packageDirectory, directoryHint: .isDirectory)
@@ -28,6 +33,7 @@ if let enumerator = FileManager.default.enumerator(at: start, includingPropertie
 		} catch { fatalError(error.localizedDescription) }
 	}
 }
+#endif
 
 //if true {
 //	fatalError(settings.map { String(describing: $0) }.joined(separator: " "))
