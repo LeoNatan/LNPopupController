@@ -140,7 +140,7 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 			
 			NSUInteger sidebarLayout = [[parentForPopupBar valueForKey:sidebarLayoutKey] unsignedIntegerValue];
 			
-			if(sidebarLayout == 0)
+			if(sidebarLayout == 0 || LNPopupBar.isCatalystApp)
 			{
 				CGFloat extra = 0.0;
 				if(ln_unavailable(iOS 27.0, *)) {
