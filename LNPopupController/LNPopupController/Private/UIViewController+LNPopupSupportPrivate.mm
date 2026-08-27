@@ -716,6 +716,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	if(popupBar.os26TransitionView != nil)
 	{
 		[parentForPopupBar insertSubview:popupBar.os26TransitionView aboveSubview:popupBar];
+		popupBar.os26TransitionView.frame = popupBar.frame;
 	}
 	
 	if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
@@ -1140,6 +1141,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
 		{
 			[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
+			self._ln_popupController_nocreate.popupBar.os26TransitionView.frame = self._ln_popupController_nocreate.popupBar.frame;
 		}
 		
 		if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
@@ -2124,6 +2126,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
 	{
 		[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
+		self._ln_popupController_nocreate.popupBar.os26TransitionView.frame = self._ln_popupController_nocreate.popupBar.frame;
 	}
 	
 	if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)

@@ -234,6 +234,15 @@ __attribute__((objc_direct_members))
 #if TARGET_OS_MACCATALYST
 		_catalystHelper = [_LNPopupCatalystHelper new];
 #endif
+		
+		if(@available(iOS 26.0, *))
+		{
+			if([_containerController isKindOfClass:UITabBarController.class] && _containerController.bottomDockingViewForPopupBar == nil)
+			{
+				UITabBar* bar = [_containerController tabBar];
+				bar.minimizationDelegate = self;
+			}
+		}
 	}
 	
 	return self;
@@ -1719,13 +1728,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 	
 	if(@available(iOS 26.0, *))
 	{
-		__weak decltype(self) weakSelf = self;
-		
 		if([_containerController isKindOfClass:UITabBarController.class] && _containerController.bottomDockingViewForPopupBar == nil)
 		{
 			UITabBar* bar = [_containerController tabBar];
-			bar.minimizationDelegate = self;
-			
 			value = self.popupBar.inheritsBottomBarMetrics && bar._ln_wantsMinimizedPopupBar ? LNPopupBarEnvironmentInline : LNPopupBarEnvironmentRegular;
 		}
 	}
@@ -1818,11 +1823,8 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			[_bottomBar _ln_triggerBarAppearanceRefreshIfNeededTriggeringLayout:YES];
 			_containerController._ln_bottomBarExtension_nocreate.alpha = 1.0;
 			
-			CGRect barFrame = self.popupBar.frame;
-			barFrame.size.height = _LNPopupBarHeightForPopupBar(self.popupBar);
+			CGRect barFrame = [self _frameForClosedPopupBarForBarHeight:_LNPopupBarHeightForPopupBar(self.popupBar)];
 			self.popupBar.frame = barFrame;
-			
-			self.popupBar.frame = [self _frameForClosedPopupBar];
 			
 			[self.popupBar setNeedsLayout];
 			[self.popupBar layoutIfNeeded];
