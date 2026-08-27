@@ -82,7 +82,8 @@ static BOOL __ln_hackApplied = NO;
 {
 	if(@available(iOS 27, *))
 	{
-		CGRect (^hostedElementLayoutResolver)(NSInteger element) = [self valueForKey:LNPopupHiddenString("_hostedElementLayoutResolver")];
+		static NSString* key = LNPopupHiddenString("_hostedElementLayoutResolver");
+		CGRect (^hostedElementLayoutResolver)(NSInteger element) = [self valueForKey:key];
 		return hostedElementLayoutResolver(2);
 	}
 	
