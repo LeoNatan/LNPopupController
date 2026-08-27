@@ -16,7 +16,7 @@ struct PlayerViewMac: View, PlaybackStateContainer {
 	@State var playbackState = PlaybackState()
 	
 	func imageToUse() -> UIImage {
-		playbackState.popupItem?.image ?? UIImage(named: "NotPlaying")!
+		playbackState.popupItem?.image ?? UIImage(named: "AppIconPopupBarLarge")!
 	}
 	
 	@ViewBuilder
