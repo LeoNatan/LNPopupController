@@ -22,7 +22,7 @@
 	{
 		if(@available(iOS 27.0, *))
 		{
-			if(popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone && UIDeviceOrientationIsPortrait(UIDevice.currentDevice.orientation))
+			if(popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone && UIInterfaceOrientationIsPortrait(popupBar.window.windowScene.interfaceOrientation))
 			{
 				barInsets = NSDirectionalEdgeInsetsMake(0, 8, 0, 8);
 			}
