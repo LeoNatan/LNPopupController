@@ -43,7 +43,14 @@ void LNApplyTitleWithSettings(UIViewController* self)
 	
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDisableDemoSceneColors] == NO)
 	{
-		self.popupItem.image = [UIImage imageNamed:@"genre17"];
+		if([NSUserDefaults.settingDefaults integerForKey:PopupSettingTransitionType] == 2)
+		{
+			self.popupItem.image = [UIImage imageNamed:@"genre17"];
+		}
+		else
+		{
+			self.popupItem.image = [UIImage imageNamed:@"genre12"];
+		}
 	}
 	else
 	{

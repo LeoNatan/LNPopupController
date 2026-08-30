@@ -64,6 +64,14 @@
           }
         },
         {
+          "fill-specializations" : [
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "srgb:0.00000,0.00000,0.00000,0.50000"
+              }
+            }
+          ],
           "glass" : false,
           "image-name" : "Image.png",
           "name" : "Image",
