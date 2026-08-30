@@ -863,6 +863,12 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 			self._ln_popupController_nocreate.popupBar.backgroundView.alpha = self._ln_popupController_nocreate.popupBar.resolvedIsFloating ? 0.0 : 1.0;
 		}
 		
+		if(self._ln_ignoringLayoutDuringTransition == NO && self._ln_popupController_nocreate.popupContentView.superview == nil)
+		{
+			//First layout after presentation; add the popup views to the hierarchy before computing frames, so they are set in the correct coordinate space.
+			[self _layoutPopupBarOrderForUse];
+		}
+		
 		if(self._ln_ignoringLayoutDuringTransition == NO && self._ln_popupController_nocreate.popupControllerInternalState != LNPopupPresentationStateBarHidden)
 		{
 			[self._ln_popupController_nocreate _setContentToState:self._ln_popupController_nocreate.popupControllerInternalState animated:NO];

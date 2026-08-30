@@ -355,10 +355,19 @@ __attribute__((objc_direct_members))
 		contentFrame.origin.y -= offset;
 	}
 	
-	if([self.popupContentView isDescendantOfView:controllerForContent.view] == NO)
+	//Only convert when the content view is in a hierarchy; converting through a nil superview yields CGRectZero.
+	if(self.popupContentView.superview != nil && [self.popupContentView isDescendantOfView:controllerForContent.view] == NO)
 	{
 		contentFrame = [self.popupContentView.superview convertRect:contentFrame fromView:controllerForContent.view];
 	}
+	
+#if DEBUG
+	if(self.popupContentView.superview == nil && UIView.inheritedAnimationDuration > 0.0)
+	{
+		os_log_t customLog = __LNPopupFrameworkLogger("Layout");
+		os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: Popup content view frame computed inside an animation before the view was added to a superview; the frame may animate from the wrong origin.", __LNPopupFrameworkName());
+	}
+#endif
 	
 	self.popupContentView.frame = contentFrame;
 	
