@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _LNPopupTransitionAnimator : NSObject
 
-- (instancetype)initWithTransitionView:(nullable _LNPopupTransitionView*)transitionView userView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView effectiveInteractionStyle:(LNPopupInteractionStyle)interactionStyle;
+- (instancetype)initWithTransitionView:(nullable _LNPopupTransitionView*)transitionView userView:(UIView*)view popupBar:(LNPopupBar*)popupBar popupContentView:(LNPopupContentView*)popupContentView effectiveInteractionStyle:(LNPopupInteractionStyle)interactionStyle allowContentTransition:(BOOL)allowContentTransition;
 
 @property (nonatomic, strong, readonly) UIView* view;
 @property (nonatomic, strong, readonly) LNPopupBar* popupBar;

@@ -20,7 +20,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 	CGFloat _alphaBefore;
 }
 
-- (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView effectiveInteractionStyle:(LNPopupInteractionStyle)interactionStyle
+- (instancetype)initWithTransitionView:(_LNPopupTransitionView *)transitionView userView:(UIView *)view popupBar:(LNPopupBar *)popupBar popupContentView:(LNPopupContentView *)popupContentView effectiveInteractionStyle:(LNPopupInteractionStyle)interactionStyle allowContentTransition:(BOOL)allowContentTransition
 {
 	self = [super init];
 	
@@ -39,7 +39,7 @@ static const void* _LNPopupOpenCloseTransitionViewKey = &_LNPopupOpenCloseTransi
 		
 		if(@available(iOS 26.0, *))
 		{
-			_wantsContentTransition = LNPopupEnvironmentHasGlass() && popupContentView.allowsContentTransition;
+			_wantsContentTransition = allowContentTransition && LNPopupEnvironmentHasGlass() && popupContentView.allowsContentTransition;
 			
 			if(_wantsContentTransition)
 			{

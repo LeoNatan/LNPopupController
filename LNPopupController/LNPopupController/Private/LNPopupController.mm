@@ -355,7 +355,7 @@ __attribute__((objc_direct_members))
 		contentFrame.origin.y -= offset;
 	}
 	
-	if([self.popupContentView isDescendantOfView:controllerForContent.view] == NO)
+	if([self.popupContentView isDescendantOfView:controllerForContent.view] == NO && self.popupContentView.superview != nil)
 	{
 		contentFrame = [self.popupContentView.superview convertRect:contentFrame fromView:controllerForContent.view];
 	}
@@ -523,15 +523,16 @@ __attribute__((objc_direct_members))
 - (void)animateOpenTransitionIfNeededWithAnimator:(UIViewPropertyAnimator*)animator customTransitionView:(_LNPopupTransitionView*)customTransitionView userViewForTransition:(UIView*)userView otherAnimations:(void(^)(void))otherAnimations
 {
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(_containerController.popupInteractionStyle, _popupControllerPublicState, nullptr);
+	BOOL allowContentTransition = self.popupControllerPublicState != LNPopupPresentationStateBarHidden;
 	
 	_LNPopupTransitionOpenAnimator* handler;
 	if([userView conformsToProtocol:@protocol(LNPopupTransitionView)])
 	{
-		handler = [[_LNPopupTransitionPreferredOpenAnimator alloc] initWithTransitionView:customTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView effectiveInteractionStyle:resolvedStyle];
+		handler = [[_LNPopupTransitionPreferredOpenAnimator alloc] initWithTransitionView:allowContentTransition ? customTransitionView : nil userView:allowContentTransition ? userView : nil popupBar:self.popupBar popupContentView:self.popupContentView effectiveInteractionStyle:resolvedStyle allowContentTransition:allowContentTransition];
 	}
 	else
 	{
-		handler = [[_LNPopupTransitionGenericOpenAnimator alloc] initWithTransitionView:customTransitionView userView:userView popupBar:self.popupBar popupContentView:self.popupContentView effectiveInteractionStyle:resolvedStyle];
+		handler = [[_LNPopupTransitionGenericOpenAnimator alloc] initWithTransitionView:allowContentTransition ? customTransitionView : nil userView:allowContentTransition ? userView : nil popupBar:self.popupBar popupContentView:self.popupContentView effectiveInteractionStyle:resolvedStyle allowContentTransition:allowContentTransition];
 	}
 	
 	[handler animateWithAnimator:animator otherAnimations:otherAnimations];

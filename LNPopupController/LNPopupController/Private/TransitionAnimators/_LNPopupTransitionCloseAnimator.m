@@ -18,7 +18,7 @@
 {
 	BOOL isAutomatic = NO;
 	LNPopupInteractionStyle resolvedStyle = _LNPopupResolveInteractionStyleFromInteractionStyle(containerController.popupInteractionStyle, containerController.popupPresentationState, &isAutomatic);
-	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView effectiveInteractionStyle:isAutomatic ? LNPopupInteractionStyleAutomatic : resolvedStyle];
+	self = [super initWithTransitionView:transitionView userView:view popupBar:popupBar popupContentView:popupContentView effectiveInteractionStyle:isAutomatic ? LNPopupInteractionStyleAutomatic : resolvedStyle allowContentTransition:YES];
 	
 	if(self)
 	{
