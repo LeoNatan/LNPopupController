@@ -44,29 +44,27 @@ BOOL __ln_popup_suppressViewControllerLifecycle = NO;
 
 @end
 
-#ifndef LNPopupControllerEnforceStrictClean
+static void __LNSetOS26BarTransitionViewFrame(_LNPopupTransitionView* transitionView, LNPopupBar* popupBar, CGRect popupBarFrame)
+{
+	CGFloat maxY = CGRectGetMaxY(popupBarFrame);
+	
+	transitionView.frame = CGRectMake(popupBarFrame.origin.x, maxY - popupBar.contentView.bounds.size.height, popupBarFrame.size.width, popupBar.contentView.bounds.size.height);
+}
 
 //_accessibilitySpeakThisViewController
 static UIViewController* (*__orig_uiVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiNVCA_aSTVC)(id, SEL);
 static UIViewController* (*__orig_uiTBCA_aSTVC)(id, SEL);
 
-#endif
-
 static NSTimeInterval __ln_tabBarTransitionDuration(UIViewController* vc, NSUInteger transition)
 {
-#ifndef LNPopupControllerEnforceStrictClean
 	//durationForTransition:
 	static SEL dFT = NSSelectorFromString(LNPopupHiddenString("durationForTransition:"));
 	static NSTimeInterval (*specialized_objc_msgSend)(id, SEL, NSUInteger) = reinterpret_cast<decltype(specialized_objc_msgSend)>(objc_msgSend);
 	
 	return specialized_objc_msgSend(vc, dFT, transition);
-#else
-	return 0.35;
-#endif
 }
 
-#ifndef LNPopupControllerEnforceStrictClean
 static id __accessibilityBundleLoadObserver;
 __attribute__((constructor))
 static void __accessibilityBundleLoadHandler(void)
@@ -104,13 +102,11 @@ static void __accessibilityBundleLoadHandler(void)
 		__accessibilityBundleLoadObserver = nil;
 	}];
 }
-#endif
 
 @implementation NSObject (SwiftUISupport)
 
 - (BOOL)_ln_isObjectFromSwiftUI
 {
-#ifndef LNPopupControllerEnforceStrictClean
 	static NSString* className = LNPopupHiddenString("UIHostingView");
 	Class cls = self.class;
 	while(cls != nil)
@@ -125,9 +121,6 @@ static void __accessibilityBundleLoadHandler(void)
 	
 	static NSString* key = LNPopupHiddenString("_isFromSwiftUI");
 	return [self.class respondsToSelector:NSSelectorFromString(key)] && [[self.class valueForKey:key] boolValue];
-#else
-	return NO;
-#endif
 }
 
 @end
@@ -199,7 +192,6 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 							@selector(presentViewController:animated:completion:),
 							@selector(_ln_presentViewController:animated:completion:));
 			
-#ifndef LNPopupControllerEnforceStrictClean
 			NSString* selName = LNPopupHiddenString("_viewControllerUnderlapsStatusBar");
 			LNSwizzleMethod(self,
 							NSSelectorFromString(selName),
@@ -231,19 +223,16 @@ UIRectEdge __ln_hideBarEdge = UIRectEdgeNone;
 			LNSwizzleMethod(self,
 							NSSelectorFromString(selName),
 							@selector(_ln_sPVC:));
-#endif
 		});
 	}
 }
 
 - (void)_ln_updateSafeAreaInsets
 {
-#ifndef LNPopupControllerEnforceStrictClean
 	static SEL sel = NSSelectorFromString(LNPopupHiddenString("_updateContentOverlayInsetsForSelfAndChildren"));
 	static void(*objc_msgSend_uCOIFSAC)(id, SEL) = reinterpret_cast<decltype(objc_msgSend_uCOIFSAC)>(objc_msgSend);
 	
 	objc_msgSend_uCOIFSAC(self, sel);
-#endif
 }
 
 - (BOOL)_ln_shouldIgnorePopupBarInsets
@@ -510,8 +499,6 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	[self didChangeValueForKey:@"popupPresentationState"];
 }
 
-#ifndef LNPopupControllerEnforceStrictClean
-
 //_accessibilitySpeakThisViewController
 - (UIViewController*)_aSTVC
 {
@@ -676,7 +663,6 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	
 	return [self _vCUSB];
 }
-#endif
 
 - (void)_layoutPopupBarOrderForTransition
 {
@@ -716,7 +702,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	if(popupBar.os26TransitionView != nil)
 	{
 		[parentForPopupBar insertSubview:popupBar.os26TransitionView aboveSubview:popupBar];
-		popupBar.os26TransitionView.frame = popupBar.frame;
+		__LNSetOS26BarTransitionViewFrame(popupBar.os26TransitionView, popupBar, popupBar.frame);
 	}
 	
 	if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
@@ -1141,7 +1127,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
 		{
 			[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
-			self._ln_popupController_nocreate.popupBar.os26TransitionView.frame = self._ln_popupController_nocreate.popupBar.frame;
+			__LNSetOS26BarTransitionViewFrame(self._ln_popupController_nocreate.popupBar.os26TransitionView, self._ln_popupController_nocreate.popupBar, self._ln_popupController_nocreate.popupBar.frame);
 		}
 		
 		if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
@@ -1339,7 +1325,6 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 							@selector(_ln_setTabBarHidden:animated:));
 		}
 		
-#ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
 		
 		selName = LNPopupHiddenString("_hideBarWithTransition:isExplicit:duration:reason:");
@@ -1382,7 +1367,6 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_ln_pTB));
-#endif
 	});
 }
 
@@ -1471,8 +1455,6 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	
 	[self _ln_setViewControllers:viewControllers animated:animated];
 }
-
-#ifndef LNPopupControllerEnforceStrictClean
 
 //_accessibilitySpeakThisViewController
 - (UIViewController*)_aSTVC
@@ -2078,8 +2060,6 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	}
 }
 
-#endif
-
 @end
 
 #pragma mark - UINavigationController
@@ -2126,7 +2106,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	if(self._ln_popupController_nocreate.popupBar.os26TransitionView != nil)
 	{
 		[self.view insertSubview:self._ln_popupController_nocreate.popupBar.os26TransitionView aboveSubview:self._ln_popupController_nocreate.popupBar];
-		self._ln_popupController_nocreate.popupBar.os26TransitionView.frame = self._ln_popupController_nocreate.popupBar.frame;
+		__LNSetOS26BarTransitionViewFrame(self._ln_popupController_nocreate.popupBar.os26TransitionView, self._ln_popupController_nocreate.popupBar, self._ln_popupController_nocreate.popupBar.frame);
 	}
 	
 	if(self._ln_popupController_nocreate.popupContentView.transitionView != nil)
@@ -2430,7 +2410,6 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 						@selector(setViewControllers:animated:),
 						@selector(_ln_setViewControllers:animated:));
 		
-#ifndef LNPopupControllerEnforceStrictClean
 		NSString* selName;
 		
 		selName = LNPopupHiddenString("_setToolbarHidden:edge:duration:");
@@ -2447,7 +2426,6 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		LNSwizzleMethod(self,
 						NSSelectorFromString(selName),
 						@selector(_uLFSBAIO));
-#endif
 	});
 }
 
@@ -2533,8 +2511,6 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	
 	return [self _ln_setViewControllers:viewControllers animated:animated];
 }
-
-#ifndef LNPopupControllerEnforceStrictClean
 
 //_accessibilitySpeakThisViewController
 - (UIViewController*)_aSTVC
@@ -2766,8 +2742,6 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 	
 	[self _layoutPopupBarOrderForUse];
 }
-
-#endif
 
 - (void)_ln_setNavigationBarHidden:(BOOL)hidden animated:(BOOL)animated
 {
