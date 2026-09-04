@@ -1855,9 +1855,9 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			}
 		};
 		
-		CGFloat animationDuration = LNPopupBarTransitionDuration;
+		CGFloat animationDuration = animated ? LNPopupBarTransitionDuration : 0.0;
 #if DEBUG
-		if(__LNEnableSlowTransitionsDebug())
+		if(animated && __LNEnableSlowTransitionsDebug())
 		{
 			animationDuration = 4.0;
 		}

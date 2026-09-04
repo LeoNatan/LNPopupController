@@ -46,7 +46,7 @@
 {
 	[super setBounds:bounds];
 	
-	if(_wrappedWidthConstraint.constant == bounds.size.width || _target == bounds.size.width)
+	if(_wrappedWidthConstraint.constant != _target && _target == bounds.size.width)
 	{
 		return;
 	}
@@ -64,15 +64,16 @@
 		_percent = 0.0;
 		_start = _wrappedWidthConstraint.constant;
 		_target = bounds.size.width;
-		_step = 1 / (0.5 * UIView.inheritedAnimationDuration * 60);
 		_displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(_tick)];
+		CGFloat max = UIScreen.mainScreen.maximumFramesPerSecond;
+		_step = 1 / (UIView.inheritedAnimationDuration * max * 0.5);
 		if(@available(iOS 15.0, *))
 		{
-			_displayLink.preferredFrameRateRange = CAFrameRateRangeMake(60, 60, 60);
+			_displayLink.preferredFrameRateRange = CAFrameRateRangeMake(max, max, max);
 		}
 		else
 		{
-			_displayLink.preferredFramesPerSecond = 60;
+			_displayLink.preferredFramesPerSecond = max;
 		}
 		[_displayLink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSRunLoopCommonModes];
 	}
@@ -86,8 +87,10 @@
 	
 	[self layoutSubviews];
 	
-	if(_percent > 1.0)
+	if(_percent >= 1.0)
 	{
+		_target = 0.0;
+		
 		[_displayLink invalidate];
 		_displayLink = nil;
 		

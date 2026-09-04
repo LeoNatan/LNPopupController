@@ -16,7 +16,7 @@ CGFloat _ln_clamp(CGFloat v, CGFloat lo, CGFloat hi)
 
 CGFloat _ln_smoothstep(CGFloat a, CGFloat b, CGFloat x)
 {
-	float t = _ln_clamp((x - a)/(b - a), 0, 1);
+	float t = _ln_clamp((x - a)/(b - a), 0.0, 1.0);
 	return t * t * (3.0 - (2.0 * t));
 }
 
