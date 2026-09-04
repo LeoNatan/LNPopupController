@@ -214,6 +214,29 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 		LNSwizzleMethod(self,
 						NSSelectorFromString(sel),
 						@selector(_ln__dMFW:tW:));
+		
+		if(@available(iOS 26.0, *))
+		{
+			Class cls = NSClassFromString(LNPopupHiddenString("_UIFlexInteraction"));
+			SEL sel = @selector(gestureRecognizerShouldBegin:);
+			Method m = class_getInstanceMethod(cls, sel);
+			BOOL (*orig)(id, SEL, UIGestureRecognizer*) = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
+			method_setImplementation(m, imp_implementationWithBlock(^ (id<UIInteraction> self, UIGestureRecognizer* gr) {
+				LNPopupController* presenting = self.view.traitCollection.__presentingPopupController;
+				
+				if([self.view isDescendantOfView:presenting.popupContentView])
+				{
+					return orig(self, sel, gr);
+				}
+				
+				if(presenting.popupControllerPublicState == LNPopupPresentationStateOpen)
+				{
+					return NO;
+				}
+				
+				return orig(self, sel, gr);
+			}));
+		}
 	}
 }
 

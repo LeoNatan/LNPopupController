@@ -21,6 +21,16 @@ CF_EXTERN_C_BEGIN
 extern BOOL __LNEnableSlowTransitionsDebug(void);
 #endif
 
+@class LNPopupController;
+
+@interface __LNPopupControllerPresentationEnvironmentTrait : NSObject <UIObjectTraitDefinition> @end
+
+@interface UITraitCollection (__LNPopupControllerPresentationEnvironmentSupport)
+
+@property (nonatomic, readonly) LNPopupController* __presentingPopupController;
+
+@end
+
 @interface LNPopupController : NSObject <_LNPopupBarDelegate>
 
 - (instancetype)initWithContainerViewController:(__kindof UIViewController*)containerController;

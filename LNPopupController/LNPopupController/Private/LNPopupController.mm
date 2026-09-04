@@ -1723,6 +1723,10 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)_presentPopupBarWithContentViewController:(UIViewController*)contentViewController openPopup:(BOOL)open animated:(BOOL)animated completion:(void(^)(void))completionBlock
 {
+	if(@available(iOS 17.0, *))
+	{
+		[_containerController.traitOverrides setObject:self forTrait:__LNPopupControllerPresentationEnvironmentTrait.class];
+	}
 	_containerController.popupContentViewController = contentViewController;
 	
 	NSInteger value = LNPopupBarEnvironmentRegular;
@@ -2341,6 +2345,11 @@ id __LNPopupEmptyBlurFilter(void)
 				
 				_popupControllerInternalState = LNPopupPresentationStateBarHidden;
 				
+				if(@available(iOS 17.0, *))
+				{
+					[_containerController.traitOverrides setObject:nil forTrait:__LNPopupControllerPresentationEnvironmentTrait.class];
+				}
+				
 				if(completionBlock != nil) { completionBlock(); }
 			}];
 			[_runningBarAnimation addCompletion:^(UIViewAnimatingPosition finalPosition) {
@@ -2762,6 +2771,34 @@ static os_log_t __LNPopupFrameworkLogger(const char* category)
 - (void)_popupItem_update_userInfo
 {
 	
+}
+
+@end
+
+@implementation __LNPopupControllerPresentationEnvironmentTrait
+
++ (LNPopupController*)defaultValue
+{
+	return nil;
+}
+
++ (NSString *)name
+{
+	return @"__LNPopupControllerPresentationEnvironmentTrait";
+}
+
++ (NSString *)identifier
+{
+	return @"com.LeoNatan.LNPopupController.__LNPopupControllerPresentationEnvironmentTrait";
+}
+
+@end
+
+@implementation UITraitCollection (__LNPopupControllerPresentationEnvironmentSupport)
+
+- (LNPopupController*)__presentingPopupController
+{
+	return [self objectForTrait:__LNPopupControllerPresentationEnvironmentTrait.class];
 }
 
 @end
