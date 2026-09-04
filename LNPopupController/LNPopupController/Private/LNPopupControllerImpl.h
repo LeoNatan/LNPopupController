@@ -27,7 +27,7 @@ extern BOOL __LNEnableSlowTransitionsDebug(void);
 
 @interface UITraitCollection (__LNPopupControllerPresentationEnvironmentSupport)
 
-@property (nonatomic, readonly) LNPopupController* __presentingPopupController;
+@property (nonatomic, readonly) LNPopupController* __presentingPopupController API_AVAILABLE(ios(17.0));
 
 @end
 

@@ -348,18 +348,6 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	return __LNEdgeInsetsSum(user, popup);
 }
 
-- (UIEdgeInsets)_ln_popupSafeAreaInsetsForChildController
-{
-	UIViewController* vc = self;
-	while(vc != nil && vc._ln_popupController_nocreate == nil)
-	{
-		vc = vc.parentViewController;
-	}
-	
-	CGRect barFrame = vc._ln_popupController_nocreate.popupBar.frame;
-	return UIEdgeInsetsMake(0, 0, barFrame.size.height, 0);
-}
-
 //setParentViewController:
 - (void)_ln_sPVC:(UIViewController*)parentViewController
 {
@@ -1089,6 +1077,8 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		return [NSStringFromClass(obj.class) containsString:className];
 	}];
 	
+	NSDirectionalEdgeInsets margins = [self _ln_popupBarMarginsForPopupBar:popupBar];
+	
 	if(idx == NSNotFound)
 	{
 		superFallback();
@@ -1103,7 +1093,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		BOOL placeAboveTabBar = NO;
 		if(@available(iOS 27.0, *))
 		{
-			placeAboveTabBar = self._ln_isFloatingTabBar == NO;
+			placeAboveTabBar = self._ln_isFloatingTabBar == NO || margins.leading > 0 || margins.trailing > 0;
 		}
 		
 		UIView* tabBarContainer = [self.view.subviews objectAtIndex:idx];
@@ -1136,7 +1126,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 		}
 	}
 	
-	popupBar._hackyMarginsInSuperviewSemanticContext = [self _ln_popupBarMarginsForPopupBar:popupBar];
+	popupBar._hackyMarginsInSuperviewSemanticContext = margins;
 	[popupBar layoutIfNeeded];
 }
 
