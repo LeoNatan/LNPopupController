@@ -113,11 +113,11 @@ NS_SWIFT_UI_ACTOR
 
 /// Enables outer shine on a floating popup bar.
 ///
-/// Bar shine is no longer supported on iOS 27. Instead, use `UIGlassEffect.shiny` for `floatingBackgroundEffect`.
+/// Bar shine through this property is no longer supported on iOS 27. Instead, set `floatingBackgroundEffect` to a `UIGlassEffect.shiny` effect.
 ///
 /// Defaults to `false`.
 ///
-/// Shine is only supported on iOS 26.0 and later.
+/// Shine is only supported on iOS 26.0.
 @property (nonatomic, assign, getter=isFloatingBarShineEnabled) BOOL floatingBarShineEnabled LN_DEPRECATED_API_OS("Bar shine is no longer supported on iOS 27. Use UIGlassEffect.shiny instead.", ios(2.0, 27.0));
 
 /// Reset floating background and shadow properties to their defaults.
