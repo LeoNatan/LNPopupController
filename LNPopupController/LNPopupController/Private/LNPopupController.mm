@@ -32,13 +32,24 @@
 #import "_LNPopupCatalystHelper.h"
 #endif
 
-#ifdef DEBUG
+static os_log_t __LNPopupFrameworkLogger(const char* category);
+
+#if DEBUG
 #import "LNPopupDebug.h"
 
 BOOL __LNEnableSlowTransitionsDebug(void)
 {
 	return [__LNDebugUserDefaults() boolForKey:@"__LNPopupEnableSlowTransitionsDebug"];
 }
+
+#define DEBUG_120HZ_HACK 0
+
+#if DEBUG_120HZ_HACK
+
+static os_log_t __LN120HZLog = __LNPopupFrameworkLogger("120hz Hack");
+
+#endif
+
 #endif
 
 static NSString* hostedElementKey = LNPopupHiddenString("visualProvider.hostedElements");
@@ -2010,8 +2021,6 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 
 - (void)_openPopupAnimated:(BOOL)animated allowFeedbackGeneration:(BOOL)allowFeedbackGeneration forceFeedbackGenerationAtStart:(BOOL)forceFeedbackAtStart completion:(void(^)(void))completionBlock
 {
-	[self _start120HzHack];
-	
 #if TARGET_OS_MACCATALYST
 	[_catalystHelper startHidingToolbarWithScene:self.popupBar.window.windowScene];
 #endif
@@ -2622,7 +2631,7 @@ static os_log_t __LNPopupFrameworkLogger(const char* category)
 			if(UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPhone && UIScreen.mainScreen.maximumFramesPerSecond > 60 && [[NSBundle.mainBundle objectForInfoDictionaryKey:@"CADisableMinimumFrameDurationOnPhone"] boolValue] == NO)
 			{
 				os_log_t customLog = __LNPopupFrameworkLogger("ProMotion");
-				os_log_with_type(customLog, OS_LOG_TYPE_DEBUG, "%{public}@: This device supports ProMotion, but %{public}s does not enable the full range of refresh rates by setting the “CADisableMinimumFrameDurationOnPhone” Info.plist key to “true”. See https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro", __LNPopupFrameworkName(), NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
+				os_log_with_type(customLog, OS_LOG_TYPE_ERROR, "%{public}@: This device supports ProMotion, but %{public}s does not enable the full range of refresh rates by setting the “CADisableMinimumFrameDurationOnPhone” Info.plist key to “true”. See https://developer.apple.com/documentation/quartzcore/optimizing_promotion_refresh_rates_for_iphone_13_pro_and_ipad_pro", __LNPopupFrameworkName(), NSBundle.mainBundle.bundleURL.lastPathComponent.UTF8String);
 			}
 		}
 	});
@@ -2634,8 +2643,15 @@ static os_log_t __LNPopupFrameworkLogger(const char* category)
 	
 	if(_displayLinkFor120Hz != nil)
 	{
+#if DEBUG_120HZ_HACK
+		os_log_debug(__LN120HZLog, "Start of 120hz hack ignored");
+#endif
 		return;
 	}
+
+#if DEBUG_120HZ_HACK
+	os_log_debug(__LN120HZLog, "Starting 120hz hack");
+#endif
 	
 	_displayLinkFor120Hz = [CADisplayLink displayLinkWithTarget:self selector:@selector(_120HzTick)];
 	CGFloat max = UIScreen.mainScreen.maximumFramesPerSecond;
@@ -2652,6 +2668,9 @@ static os_log_t __LNPopupFrameworkLogger(const char* category)
 
 - (void)_end120HzHack
 {
+#if DEBUG_120HZ_HACK
+	os_log_debug(__LN120HZLog, "Ending 120hz hack");
+#endif
 	[_displayLinkFor120Hz invalidate];
 	_displayLinkFor120Hz = nil;
 }
@@ -2677,7 +2696,12 @@ static os_log_t __LNPopupFrameworkLogger(const char* category)
 	return view.window.safeAreaInsets.top;
 }
 
-- (void)_120HzTick {}
+- (void)_120HzTick
+{
+#if DEBUG_120HZ_HACK
+	os_log_debug(__LN120HZLog, "120hz hack tick");
+#endif
+}
 
 - (NSString*)_stateDescription:(LNPopupPresentationState)state
 {
