@@ -277,14 +277,17 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	_highlightView.alpha = 0.0;
 	[highlightEffectView.contentView addSubview:_highlightView];
 	[_effectView.contentView addSubview:highlightEffectView];
-#else
+#endif
+
+	UIImageSymbolConfiguration* imageConfig = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
+	UIImage* image = [[UIImage systemImageNamed:@"chevron.down" withConfiguration:imageConfig] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+	
 	if(@available(iOS 15.0, *))
 	{
 		UIButtonConfiguration* config = [UIButtonConfiguration grayButtonConfiguration];
-		config.image = [UIImage systemImageNamed:@"chevron.down"];
+		config.image = image;
 		self.configuration = config;
 	}
-#endif
 	
 	[self addTarget:self action:@selector(_didTouchDown) forControlEvents:UIControlEventTouchDown];
 	[self addTarget:self action:@selector(_didTouchDragExit) forControlEvents:UIControlEventTouchDragExit];
@@ -306,8 +309,6 @@ static CGFloat LNPopupCloseButtonGrabberWidth(void)
 	
 	if(ln_unavailable(iOS 15.0, *))
 	{
-		UIImageSymbolConfiguration* config = [UIImageSymbolConfiguration configurationWithPointSize:15 weight:UIImageSymbolWeightHeavy scale:UIImageSymbolScaleSmall];
-		UIImage* image = [[UIImage systemImageNamed:@"chevron.down" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 		[self setImage:image forState:UIControlStateNormal];
 	}
 }
