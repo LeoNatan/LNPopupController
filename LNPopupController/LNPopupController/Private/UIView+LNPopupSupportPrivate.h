@@ -69,7 +69,7 @@ NSDirectionalEdgeInsets _LNDirectionalEdgeInsetsFromEdgeInsets(UIView* forView, 
 @property (nonatomic, getter=_ln_corners, setter=_ln_setCorners:) LNPopupViewCorners corners;
 @property (nonatomic, readonly) CGFloat _ln_simulatedCornerRadiusFromCorners;
 
-- (CGFloat)_ln_whatsMyConcentricRadius;
+- (CGFloat)_ln_whatsMyConcentricRadiusForCorner:(UIRectCorner)corner;
 
 @end
 

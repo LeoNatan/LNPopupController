@@ -240,7 +240,7 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 	}
 }
 
-- (CGFloat)_ln_whatsMyConcentricRadius
+- (CGFloat)_ln_whatsMyConcentricRadiusForCorner:(UIRectCorner)corner
 {
 	static CGFloat (*orig)(UIView*, SEL, UIRectCorner);
 	static SEL sel;
@@ -252,7 +252,7 @@ static const void* LNPopupBarBackgroundViewForceAnimatedKey = &LNPopupBarBackgro
 		orig = reinterpret_cast<decltype(orig)>(method_getImplementation(m));
 	});
 	
-	return orig(self, sel, UIRectCornerAllCorners);
+	return orig(self, sel, corner);
 }
 
 - (UIViewController*)_ln_closestController
