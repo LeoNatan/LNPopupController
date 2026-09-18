@@ -512,6 +512,46 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	[self _common_uLFSBAIO];
 }
 
+static
+UIEdgeInsets __LNViewControllerContentMargins(UIViewController* vc)
+{
+	UIEdgeInsets rv;
+	if(@available(iOS 27.1, *))
+	{
+		static SEL contentMarginsSEL = NSSelectorFromString(LNPopupHiddenString("_contentMargins"));
+		static UIEdgeInsets (*contentMarginsFunc)(id, SEL) = reinterpret_cast<decltype(contentMarginsFunc)>(objc_msgSend);
+		rv = contentMarginsFunc(vc, contentMarginsSEL);
+	}
+	else
+	{
+		static SEL contentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_contentMargin"));
+		static CGFloat (*contentMarginFunc)(id, SEL) = reinterpret_cast<decltype(contentMarginFunc)>(objc_msgSend);
+		CGFloat contentMargin = contentMarginFunc(vc, contentMarginSEL);
+		rv.left = contentMargin;
+		rv.right = contentMargin;
+	}
+	return rv;
+}
+
+static
+UIEdgeInsets __LNViewControllerSetContentMargins(UIViewController* vc, UIEdgeInsets contentMargins)
+{
+	UIEdgeInsets rv;
+	if(@available(iOS 27.1, *))
+	{
+		static SEL setContentMarginsSEL = NSSelectorFromString(LNPopupHiddenString("_setContentMargins:"));
+		static void (*setContentMarginsFunc)(id, SEL, UIEdgeInsets) = reinterpret_cast<decltype(setContentMarginsFunc)>(objc_msgSend);
+		setContentMarginsFunc(vc, setContentMarginsSEL, contentMargins);
+	}
+	else
+	{
+		static SEL setContentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentMargin:"));
+		static void (*setContentMarginFunc)(id, SEL, CGFloat) = reinterpret_cast<decltype(setContentMarginFunc)>(objc_msgSend);
+		setContentMarginFunc(vc, setContentMarginSEL, contentMargins.left);
+	}
+	return rv;
+}
+
 //_updateContentOverlayInsetsFromParentIfNecessary (iOS 15 and above)
 - (void)_uCOIFPIN
 {
@@ -522,44 +562,39 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	}
 #endif
 	
-	static SEL contentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_contentMargin"));
-	static SEL setContentMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentMargin:"));
 	static SEL _setContentOverlayInsets_andLeftMargin_rightMarginSEL = NSSelectorFromString(LNPopupHiddenString("_setContentOverlayInsets:andLeftMargin:rightMargin:"));
-	
-	static CGFloat (*contentMarginFunc)(id, SEL) = reinterpret_cast<decltype(contentMarginFunc)>(objc_msgSend);
-	static void (*setContentMarginFunc)(id, SEL, CGFloat) = reinterpret_cast<decltype(setContentMarginFunc)>(objc_msgSend);
 	static void (*_setContentOverlayInsets_andLeftMargin_rightMarginFunc)(id, SEL, UIEdgeInsets, CGFloat, CGFloat) = reinterpret_cast<decltype(_setContentOverlayInsets_andLeftMargin_rightMarginFunc)>(objc_msgSend);
 	
 	if(self.popupPresentationContainerViewController != nil)
 	{
-		CGFloat contentMargin;
+		UIEdgeInsets contentMargins;
 		UIEdgeInsets insets;
 		
 		if(self.popupPresentationContainerViewController.popupOpensOverSplitViewController && self.popupPresentationContainerViewController.splitViewController != nil)
 		{
-			contentMargin = contentMarginFunc(self.popupPresentationContainerViewController.splitViewController, contentMarginSEL);
+			contentMargins = __LNViewControllerContentMargins(self.popupPresentationContainerViewController.splitViewController);
 			insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.splitViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController.splitViewController).bottom, 0));
 		}
 		else
 		{
-			contentMargin = contentMarginFunc(self.popupPresentationContainerViewController, contentMarginSEL);
+			contentMargins = __LNViewControllerContentMargins(self.popupPresentationContainerViewController);
 			insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
 		}
-		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
-		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
+		__LNViewControllerSetContentMargins(self, contentMargins);
 		
 		self.view.insetsLayoutMarginsFromSafeArea = YES;
 		self.viewRespectsSystemMinimumLayoutMargins = NO;
-		self.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
+		self.view.layoutMargins = contentMargins;
 		
 		LNPopupContentView* containingContentView = self.popupPresentationContainerViewController.popupContentView;
 #if !TARGET_OS_MACCATALYST
-		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(containingContentView.layoutController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
-		setContentMarginFunc(containingContentView.layoutController, setContentMarginSEL, contentMargin);
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(containingContentView.layoutController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
+		__LNViewControllerSetContentMargins(containingContentView.layoutController, contentMargins);
 		
 		containingContentView.layoutController.view.insetsLayoutMarginsFromSafeArea = YES;
 		containingContentView.layoutController.viewRespectsSystemMinimumLayoutMargins = NO;
-		containingContentView.layoutController.view.layoutMargins = UIEdgeInsetsMake(0, contentMargin, 0, contentMargin);
+		containingContentView.layoutController.view.layoutMargins = contentMargins;
 #endif
 		
 		[containingContentView _ln_updateSafeAreaInsets:insets];
@@ -570,7 +605,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	if([self respondsToSelector:@selector(_ln_popupUIRequiresZeroInsets)] && self._ln_popupUIRequiresZeroInsets == YES)
 	{
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, UIEdgeInsetsZero, 0, 0);
-		setContentMarginFunc(self, setContentMarginSEL, 0);
+		__LNViewControllerSetContentMargins(self, UIEdgeInsetsZero);
 		
 		return;
 	}
@@ -593,12 +628,12 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 		//Trigger an update for the popup content view controller.
 //		if(self.popupContentViewController != nil)
 //		{
-//			CGFloat contentMargin = contentMarginFunc(self, contentMarginSEL);
+//			UIEdgeInsets contentMargins = __LNViewControllerContentMargins(self);
 //			
 //			UIEdgeInsets insets = __LNEdgeInsetsSum(self.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self).bottom, 0));
 //			
-//			_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self.popupContentViewController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
-//			setContentMarginFunc(self.popupContentViewController, setContentMarginSEL, contentMargin);
+//			_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self.popupContentViewController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
+//			__LNViewControllerSetContentMargins(self.popupContentViewController, contentMargins);
 //		}
 	}
 	
@@ -606,11 +641,11 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 	{
 		//Work around Apple bugs
 		
-		CGFloat contentMargin = contentMarginFunc(self.parentViewController, contentMarginSEL);
+		UIEdgeInsets contentMargins = __LNViewControllerContentMargins(self.parentViewController);
 		UIEdgeInsets insets = self.parentViewController.view.safeAreaInsets;
 		
-		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargin, contentMargin);
-		setContentMarginFunc(self, setContentMarginSEL, contentMargin);
+		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
+		__LNViewControllerSetContentMargins(self, contentMargins);
 	}
 	
 	if(self.popupContentViewController && LNPopupBar.isCatalystApp)
