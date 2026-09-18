@@ -515,7 +515,7 @@ UIEdgeInsets _LNPopupChildAdditiveSafeAreas(__kindof UIViewController* self)
 static
 UIEdgeInsets __LNViewControllerContentMargins(UIViewController* vc)
 {
-	UIEdgeInsets rv;
+	UIEdgeInsets rv = UIEdgeInsetsZero;
 	if(@available(iOS 27.1, *))
 	{
 		static SEL contentMarginsSEL = NSSelectorFromString(LNPopupHiddenString("_contentMargins"));
