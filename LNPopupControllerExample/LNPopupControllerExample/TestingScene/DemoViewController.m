@@ -313,6 +313,11 @@
 //	[settings didMoveToParentViewController:self];
 }
 
+//- (UIVerticalBarBehavior)preferredVerticalBarBehavior
+//{
+//	return UIVerticalBarBehaviorDisabled;
+//}
+
 - (void)updateNavigationBarTitlePositionForTraitCollection:(UITraitCollection*)traitCollection
 {
 	if(@available(iOS 18.0, *))

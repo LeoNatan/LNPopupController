@@ -515,6 +515,15 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 		return 0.0;
 	}
 	
+	if(@available(iOS 27.1, *))
+	{
+		if(self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
+		{
+			//Adjustment for iPhone Duo with an edge bar
+			return 10.0;
+		}
+	}
+	
 	if(popupBar.resolvedIsCustom && popupBar.customBarWantsFullBarWidth)
 	{
 		return 0.0;

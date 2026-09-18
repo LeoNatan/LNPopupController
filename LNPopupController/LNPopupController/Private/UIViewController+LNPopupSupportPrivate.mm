@@ -2189,8 +2189,34 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 
 - (UIView*)_ln_glassViewFromFloatingBarContainerView:(UIView*)floatingBarContainerView
 {
+	BOOL(^inBarEdge)(UIView*) = nil;
+	if(@available(iOS 27.1, *))
+	{
+		if(self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
+		{
+			auto reservedRegion = UIEdgeInsetsInsetRect(floatingBarContainerView.bounds, floatingBarContainerView.safeAreaInsets);
+			
+			inBarEdge = ^BOOL(UIView* _Nonnull viewToTest)
+			{
+				if([viewToTest isDescendantOfView:floatingBarContainerView] == NO)
+				{
+					return NO;
+				}
+				
+				CGRect frameInReserved = [floatingBarContainerView convertRect:viewToTest.bounds fromView:viewToTest];
+				if(CGRectContainsRect(reservedRegion, frameInReserved))
+				{
+					viewToTest.layer.superlayer.backgroundColor = UIColor.redColor.CGColor;
+					return YES;
+				}
+				
+				return NO;
+			};
+		}
+	}
+	
 	auto test = ^BOOL(UIView * _Nonnull viewToTest) {
-		return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"];
+		return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"] && (inBarEdge ? inBarEdge(viewToTest) : true);
 	};
 	
 	UIView* glassView = [floatingBarContainerView _ln_firstSubviewPassingTest:test includingSelf:YES];
