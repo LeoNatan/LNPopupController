@@ -55,14 +55,13 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			galleryBarButton.image = nil
 		}
 		
+#if LNPOPUP
 		compress.isHidden = true
 		if #available(iOS 26.0, *) {
 			compress.identifier = "resize"
 			expand.identifier = "resize"
 		}
-		
-		
-#if LNPOPUP
+
 		resetBarButtonItems()
 #endif
 		
@@ -188,7 +187,6 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 	override var shouldFadePopupBarOnDismiss: Bool {
 		return !LNPopupSettingsHasOS26Glass()
 	}
-#endif
 	
 	var idx = 0
 	@IBAction
@@ -219,4 +217,5 @@ class MapViewController: UIViewController, UISearchBarDelegate {
 			}
 		}
 	}
+#endif
 }

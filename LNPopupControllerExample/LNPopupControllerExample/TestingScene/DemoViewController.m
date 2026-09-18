@@ -616,12 +616,12 @@
 
 #if LNPOPUP
 	targetVC.popupOpensOverSplitViewController = [NSUserDefaults.settingDefaults boolForKey:PopupSettingEnableOpenOverSplitView];
-#endif
 	
 	if(![self.splitViewController isKindOfClass:LNSplitViewControllerSecondaryPopup.class])
 	{
 		targetVC.popupOpensOverSplitViewController = NO;
 	}
+#endif
 	
 	return targetVC;
 }
