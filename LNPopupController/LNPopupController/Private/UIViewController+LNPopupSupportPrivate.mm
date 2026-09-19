@@ -1283,6 +1283,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 
 - (CGFloat)_ln_popupOffsetForPopupBar:(LNPopupBar *)popupBar
 {
+#if defined(__IPHONE_27_1)
 	if(@available(iOS 27.1, *))
 	{
 		if(self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
@@ -1290,6 +1291,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 			return [super _ln_popupOffsetForPopupBar:popupBar];
 		}
 	}
+#endif
 	
 	if(self.bottomDockingViewForPopupBar != nil)
 	{
@@ -1326,10 +1328,12 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 - (CGRect)defaultFrameForBottomDockingView_internal
 {
 	BOOL hasEdgeBar = NO;
+#if defined(__IPHONE_27_1)
 	if(@available(iOS 27.1, *))
 	{
 		hasEdgeBar = self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified;
 	}
+#endif
 	
 	if(self.bottomDockingViewForPopupBar != nil || (LNPopupEnvironmentHasGlass() && self._isTabBarHiddenDuringTransition) || hasEdgeBar)
 	{
@@ -2205,6 +2209,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 - (UIView*)_ln_glassViewFromFloatingBarContainerView:(UIView*)floatingBarContainerView
 {
 	BOOL(^inBarEdge)(UIView*) = nil;
+#if defined(__IPHONE_27_1)
 	if(@available(iOS 27.1, *))
 	{
 		if(self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
@@ -2229,6 +2234,7 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 			};
 		}
 	}
+#endif
 	
 	auto test = ^BOOL(UIView * _Nonnull viewToTest) {
 		return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"] && (inBarEdge ? inBarEdge(viewToTest) : true);

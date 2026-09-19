@@ -515,6 +515,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 		return 0.0;
 	}
 	
+#if defined(__IPHONE_27_1)
 	if(@available(iOS 27.1, *))
 	{
 		if(self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
@@ -523,6 +524,7 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 			return 10.0;
 		}
 	}
+#endif
 	
 	if(popupBar.resolvedIsCustom && popupBar.customBarWantsFullBarWidth)
 	{
