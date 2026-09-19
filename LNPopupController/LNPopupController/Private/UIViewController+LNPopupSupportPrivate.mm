@@ -1283,6 +1283,14 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 
 - (CGFloat)_ln_popupOffsetForPopupBar:(LNPopupBar *)popupBar
 {
+	if(@available(iOS 27.1, *))
+	{
+		if(self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
+		{
+			return [super _ln_popupOffsetForPopupBar:popupBar];
+		}
+	}
+	
 	if(self.bottomDockingViewForPopupBar != nil)
 	{
 		return [super _ln_popupOffsetForPopupBar:popupBar];
@@ -1317,7 +1325,13 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 
 - (CGRect)defaultFrameForBottomDockingView_internal
 {
-	if(self.bottomDockingViewForPopupBar != nil || (LNPopupEnvironmentHasGlass() && self._isTabBarHiddenDuringTransition))
+	BOOL hasEdgeBar = NO;
+	if(@available(iOS 27.1, *))
+	{
+		hasEdgeBar = self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified;
+	}
+	
+	if(self.bottomDockingViewForPopupBar != nil || (LNPopupEnvironmentHasGlass() && self._isTabBarHiddenDuringTransition) || hasEdgeBar)
 	{
 		return super.defaultFrameForBottomDockingView_internal;
 	}
@@ -2040,15 +2054,16 @@ static void* LNSplitViewControllerAdjustsLayout = &LNSplitViewControllerAdjustsL
 
 - (void)_ln_setTabBarHidden:(BOOL)hidden animated:(BOOL)animated API_AVAILABLE(ios(18.0))
 {
-	if(self.isTabBarHidden == hidden)
-	{
-		return;
-	}
-	
 	void(^superCall)(void) = ^
 	{
 		[self _ln_setTabBarHidden:hidden animated:animated];
 	};
+	
+	if(self.isTabBarHidden == hidden)
+	{
+		superCall();
+		return;
+	}
 	
 	if(hidden)
 	{

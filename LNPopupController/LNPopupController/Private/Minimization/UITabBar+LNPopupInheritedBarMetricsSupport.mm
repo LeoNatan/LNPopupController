@@ -154,7 +154,8 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 	
 	if(__LNPopupTabBarSupportsMinimizationAPI && popupBar.inheritsBottomBarMetrics && [self _ln_isFloatingTabBar] == NO)
 	{
-		CGRect proposedMinimizedFrame = self.tabBar._ln_proposedFrameForPopupBar;
+		CGRect proposedInTabBarCoordinates = self.tabBar._ln_proposedFrameForPopupBar;
+		CGRect proposedMinimizedFrame = [popupBar convertRect:proposedInTabBarCoordinates fromView:self.tabBar];
 		if(proposedMinimizedFrame.size.height == 0)
 		{
 			return NSDirectionalEdgeInsetsZero;
@@ -163,7 +164,7 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
 				
 		CGFloat ltrLeading = proposedMinimizedFrame.origin.x;
-		CGFloat ltrTrailing = self.tabBar.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;
+		CGFloat ltrTrailing = self.tabBar.superview.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;
 		
 		UIUserInterfaceLayoutDirection layoutDirection = [UIView userInterfaceLayoutDirectionForSemanticContentAttribute:popupBar.semanticContentAttribute];
 		if(layoutDirection == UIUserInterfaceLayoutDirectionLeftToRight)
