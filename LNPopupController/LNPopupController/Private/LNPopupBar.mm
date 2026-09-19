@@ -1086,6 +1086,21 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 	BOOL needsLeftPadding = leadingSpace < 15 && firstCustomAndUnhidden == NO && leftViewFirst && [self _isBarButtonViewPadded:leftViewFirst inEdge:UIRectEdgeLeft] == NO;
 	BOOL needsRightPadding = trailingSpace < 15 && lastCustomAndUnhidden == NO && rightViewLast && [self _isBarButtonViewPadded:rightViewLast inEdge:UIRectEdgeRight] == NO;
 	
+	if(@available(iOS 27.1, *))
+	{
+		//Custom bar button items on iOS 27.1 and newer are no longer padded.
+		
+		if(firstCustomAndUnhidden)
+		{
+			needsLeftPadding = YES;
+		}
+		
+		if(lastCustomAndUnhidden)
+		{
+			needsRightPadding = YES;
+		}
+	}
+	
 	static constexpr CGFloat padding = 16;
 	
 	CGRect bounds = CGRectMake(0, 0, _contentView.bounds.size.width, LNPopupBarToolbarHeight);
@@ -1986,6 +2001,21 @@ static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenStr
 	BOOL firstRightFirstSystemAndUnhidden = rightFirst != nil && isRightHidden == NO && [self _isBarButtonViewStandardItem:rightFirst] && leftViewLast == nil;
 	CGFloat extraLeftPadding = lastLeftLastSystemAndUnhidden ? 8 : leftViewLast && [self _isBarButtonViewPadded:leftViewLast inEdge:UIRectEdgeRight] == NO ? -8 : 0;
 	CGFloat extraRightPadding = firstRightFirstSystemAndUnhidden ? 8 : rightViewFirst && [self _isBarButtonViewPadded:rightViewFirst inEdge:UIRectEdgeLeft] == NO ? -8 : 0;
+	
+	if(@available(iOS 27.1, *))
+	{
+		//Bar system button items on iOS 27.1 and newer are no longer padded.
+		
+		if(lastLeftLastSystemAndUnhidden)
+		{
+			extraLeftPadding = -8;
+		}
+		
+		if(firstRightFirstSystemAndUnhidden)
+		{
+			extraRightPadding = -8;
+		}
+	}
 	
 	CGRect leftViewFrame = CGRectZero;
 	if(leftViewLast != nil)
