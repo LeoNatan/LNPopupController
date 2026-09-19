@@ -180,17 +180,6 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 @end
 
-@interface LNPopupBar () <_LNPopupToolbarLayoutDelegate>
-
-- (void)_windowWillRotate:(NSNotification*)note;
-- (void)_windowDidRotate:(NSNotification*)note;
-- (UIFont*)_titleFont;
-- (UIColor*)_titleColor;
-- (UIFont*)_subtitleFont;
-- (UIColor*)_subtitleColor;
-
-@end
-
 @interface _LNPopupToolbar : UIToolbar
 
 @property (nonatomic) CGFloat itemSpacing;
@@ -200,6 +189,29 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 - (BOOL)_isViewDescendantOfToolbarItem:(UIView*)view;
 - (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem;
+
+@end
+
+@protocol _LNPopupLayoutBarLayoutDelegate <NSObject>
+
+- (void)_layoutBarDidLayoutSubviews;
+
+@end
+
+@interface _LNPopupLayoutBar: UINavigationBar
+
+@property (nonatomic, weak) id<_LNPopupLayoutBarLayoutDelegate> _layoutDelegate;
+
+@end
+
+@interface LNPopupBar () <_LNPopupToolbarLayoutDelegate, _LNPopupLayoutBarLayoutDelegate>
+
+- (void)_windowWillRotate:(NSNotification*)note;
+- (void)_windowDidRotate:(NSNotification*)note;
+- (UIFont*)_titleFont;
+- (UIColor*)_titleColor;
+- (UIFont*)_subtitleFont;
+- (UIColor*)_subtitleColor;
 
 @end
 

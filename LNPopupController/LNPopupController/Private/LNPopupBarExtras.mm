@@ -318,6 +318,17 @@ static void __setupFunction(void)
 
 @end
 
+@implementation _LNPopupLayoutBar
+
+- (void)layoutSubviews
+{
+	[super layoutSubviews];
+	
+	[__layoutDelegate _layoutBarDidLayoutSubviews];
+}
+
+@end
+
 /**
  A helper view for view controllers without real bottom bars.
  */

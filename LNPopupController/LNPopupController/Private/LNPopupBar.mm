@@ -258,7 +258,7 @@ __attribute__((objc_direct_members))
 	
 	BOOL _animatesItemSetter;
 	
-	UINavigationBar* _layoutBar;
+	_LNPopupLayoutBar* _layoutBar;
 }
 
 static BOOL __animatesItemSetter = NO;
@@ -397,7 +397,8 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 			rightView.frame = CGRectMake(0, 0, 44, 44);
 			item.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightView];
 			
-			_layoutBar = [UINavigationBar new];
+			_layoutBar = [_LNPopupLayoutBar new];
+			_layoutBar._layoutDelegate = self;
 			_layoutBar.userInteractionEnabled = NO;
 			_layoutBar.hidden = YES;
 			[_layoutBar setItems:@[item]];
@@ -2699,6 +2700,20 @@ static CGSize LNMakeSizeWithAspectRatioInsideSize(CGSize aspectRatio, CGSize siz
 	}
 	
 	[self setNeedsLayout];
+}
+
+#pragma mark _LNPopupLayoutBarLayoutDelegate
+
+- (void)_layoutBarDidLayoutSubviews
+{
+	if(_inLayout)
+	{
+		return;
+	}
+	
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self setNeedsLayout];
+	});
 }
 
 @end
