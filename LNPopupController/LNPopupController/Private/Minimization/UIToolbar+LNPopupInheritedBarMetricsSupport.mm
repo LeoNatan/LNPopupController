@@ -20,9 +20,12 @@
 	NSDirectionalEdgeInsets barInsets = NSDirectionalEdgeInsetsZero;
 	NSDirectionalEdgeInsets floatingLayoutMargins = popupBar.floatingLayoutMargins;
 	
+	BOOL hasBarEdge = NO;
+	
 #if defined(__IPHONE_27_1)
 	if(@available(iOS 27.1, *))
 	{
+		hasBarEdge = controller.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified;
 		if(controller.traitCollection.verticalBarEdge == UIVerticalBarEdgeLeading)
 		{
 			barInsets.leading = UIScreen._ln_barEdgeInset - floatingLayoutMargins.leading;
@@ -38,7 +41,7 @@
 	{
 		if(@available(iOS 27.0, *))
 		{
-			if(popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone && controller.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && UIInterfaceOrientationIsPortrait(popupBar.window.windowScene.interfaceOrientation))
+			if(hasBarEdge == NO && popupBar.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone && controller.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact && UIInterfaceOrientationIsPortrait(popupBar.window.windowScene.interfaceOrientation))
 			{
 				barInsets = NSDirectionalEdgeInsetsMake(0, 8, 0, 8);
 			}
