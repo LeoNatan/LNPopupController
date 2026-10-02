@@ -552,6 +552,15 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 			}];
 		}
 		
+		if(@available(iOS 27.1, *))
+		{
+			UIHingeInteraction* interaction = [[UIHingeInteraction alloc] initWithUpdateHandler:^(UIHingeInteraction * _Nonnull interaction, UIHingeInteractionUpdate * _Nonnull update) {
+				LNPopupBar* bar = interaction.view;
+				[bar._barDelegate _popupBarHingeInteractionDidUpdate:bar];
+			}];
+			[self addInteraction:interaction];
+		}
+		
 		[self _setNeedsRecalcActiveAppearanceChain];
 	}
 	

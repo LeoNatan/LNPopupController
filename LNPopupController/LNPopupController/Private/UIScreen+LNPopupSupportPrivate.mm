@@ -11,6 +11,11 @@
 
 @implementation UIScreen (LNPopupSupportPrivate)
 
++ (CGFloat)_ln_barEdgeInset
+{
+	return 84.0;
+}
+
 - (CGFloat)_ln_cornerRadius
 {
 	static NSString* const key = LNPopupHiddenString("_displayCornerRadius");

@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIScreen (LNPopupSupportPrivate)
 
+@property (class, nonatomic, readonly) CGFloat _ln_barEdgeInset;
 @property (nonatomic, readonly) CGFloat _ln_cornerRadius;
 
 @end

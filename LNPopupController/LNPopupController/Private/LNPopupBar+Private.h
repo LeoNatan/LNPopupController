@@ -39,6 +39,8 @@ extern LNPopupBarStyle _LNPopupResolveBarStyleFromBarStyle(LNPopupBarStyle style
 
 - (void)_popupBarInheritsBottomBarMetricsDidChange:(LNPopupBar*)popupBar;
 
+- (void)_popupBarHingeInteractionDidUpdate:(LNPopupBar*)popupBar;
+
 @end
 
 @protocol _LNPopupBarLayoutDelegate <NSObject>

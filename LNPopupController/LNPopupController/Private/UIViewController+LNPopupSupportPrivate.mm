@@ -17,6 +17,7 @@
 #import "_LNPopupTitlesPagingController.h"
 #import "LNForwardingDelegate.h"
 #import "LNPopupContentView+Private.h"
+#import "UIScreen+LNPopupSupportPrivate.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -2290,15 +2291,27 @@ static void* LNTabBarControllerWantsForcedAnimatedPopupBarLayout = &LNTabBarCont
 
 - (UIView*)_ln_glassViewFromFloatingBarContainerView:(UIView*)floatingBarContainerView
 {
-	BOOL(^inBarEdge)(UIView*) = nil;
+	BOOL(^outsideBarEdge)(UIView*) = nil;
 #if defined(__IPHONE_27_1)
 	if(@available(iOS 27.1, *))
 	{
 		if(self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
 		{
-			auto reservedRegion = UIEdgeInsetsInsetRect(floatingBarContainerView.bounds, floatingBarContainerView.safeAreaInsets);
+			NSDirectionalEdgeInsets barEdgeDirectionalInsets = {};
 			
-			inBarEdge = ^BOOL(UIView* _Nonnull viewToTest)
+			if(self.traitCollection.verticalBarEdge == UIVerticalBarEdgeLeading)
+			{
+				barEdgeDirectionalInsets.leading = UIScreen._ln_barEdgeInset;
+			}
+			else if(self.traitCollection.verticalBarEdge == UIVerticalBarEdgeTrailing)
+			{
+				barEdgeDirectionalInsets.trailing = UIScreen._ln_barEdgeInset;
+			}
+			
+			UIEdgeInsets barEdgeInsets = _LNEdgeInsetsFromDirectionalEdgeInsets(self.view, barEdgeDirectionalInsets);
+			auto reservedRegion = UIEdgeInsetsInsetRect(floatingBarContainerView.bounds, barEdgeInsets);
+			
+			outsideBarEdge = ^BOOL(UIView* _Nonnull viewToTest)
 			{
 				if([viewToTest isDescendantOfView:floatingBarContainerView] == NO)
 				{
@@ -2306,9 +2319,8 @@ static void* LNTabBarControllerWantsForcedAnimatedPopupBarLayout = &LNTabBarCont
 				}
 				
 				CGRect frameInReserved = [floatingBarContainerView convertRect:viewToTest.bounds fromView:viewToTest];
-				if(CGRectContainsRect(reservedRegion, frameInReserved))
+				if(CGRectContainsPoint(reservedRegion, CGPointMake(CGRectGetMidX(frameInReserved), CGRectGetMidY(frameInReserved))))
 				{
-					viewToTest.layer.superlayer.backgroundColor = UIColor.redColor.CGColor;
 					return YES;
 				}
 				
@@ -2319,7 +2331,7 @@ static void* LNTabBarControllerWantsForcedAnimatedPopupBarLayout = &LNTabBarCont
 #endif
 	
 	auto test = ^BOOL(UIView * _Nonnull viewToTest) {
-		return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"] && (inBarEdge ? inBarEdge(viewToTest) : true);
+		return [NSStringFromClass(viewToTest.class) containsString:@"GlassInteraction"] && (outsideBarEdge ? outsideBarEdge(viewToTest) : true);
 	};
 	
 	UIView* glassView = [floatingBarContainerView _ln_firstSubviewPassingTest:test includingSelf:YES];

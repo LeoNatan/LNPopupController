@@ -152,6 +152,22 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		}
 	}
 	
+	NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
+	
+#if defined(__IPHONE_27_1)
+	if(@available(iOS 27.1, *))
+	{
+		if(self.traitCollection.verticalBarEdge == UIVerticalBarEdgeLeading)
+		{
+			barInsets.leading = self.tabBar.bounds.size.width + 16 - floatingLayoutMargins.leading;
+		}
+		else if(self.traitCollection.verticalBarEdge == UIVerticalBarEdgeTrailing)
+		{
+			barInsets.trailing = self.tabBar.bounds.size.width + 16 - floatingLayoutMargins.trailing;
+		}
+	}
+#endif
+	
 	if(__LNPopupTabBarSupportsMinimizationAPI && popupBar.inheritsBottomBarMetrics && [self _ln_isFloatingTabBar] == NO)
 	{
 		CGRect proposedInTabBarCoordinates = self.tabBar._ln_proposedFrameForPopupBar;
@@ -160,8 +176,6 @@ static const void* __LNPopupTabBarMinimizationDelegateKey = &__LNPopupTabBarMini
 		{
 			return NSDirectionalEdgeInsetsZero;
 		}
-		
-		NSDirectionalEdgeInsets floatingLayoutMargins = self.popupBar.floatingLayoutMargins;
 				
 		CGFloat ltrLeading = proposedMinimizedFrame.origin.x;
 		CGFloat ltrTrailing = self.tabBar.superview.bounds.size.width - proposedMinimizedFrame.size.width - proposedMinimizedFrame.origin.x;

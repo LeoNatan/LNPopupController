@@ -2448,6 +2448,15 @@ id __LNPopupEmptyBlurFilter(void)
 	}
 }
 
+- (void)_popupBarHingeInteractionDidUpdate:(LNPopupBar *)popupBar
+{
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+		[UIView animateWithDuration:0.3 delay:0.0 usingSpringWithDamping:500 initialSpringVelocity:0.0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent animations:^{
+			[_containerController _ln_layoutPopupBarAndContent];
+		} completion:nil];
+	});
+}
+
 - (void)_popupBarStyleDidChange:(LNPopupBar*)bar
 {
 	[self _updateBarExtensionStyleFromPopupBar];
