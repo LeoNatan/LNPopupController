@@ -164,6 +164,13 @@
 			_barStyleButton.symbolAnimationEnabled = YES;
 		}
 		_barStyleButton.title = nil;
+		
+#if defined(__IPHONE_27_1)
+		if(@available(iOS 27.1, *))
+		{
+			_barStyleButton.axisBehavior = [NSUserDefaults.settingDefaults integerForKey:PopupSettingDuoBarButtonItemAxisBehavior];
+		}
+#endif
 	}
 	
 #if LNPOPUP
@@ -313,10 +320,12 @@
 //	[settings didMoveToParentViewController:self];
 }
 
-//- (UIVerticalBarBehavior)preferredVerticalBarBehavior
-//{
-//	return UIVerticalBarBehaviorDisabled;
-//}
+#if defined(__IPHONE_27_1)
+- (UIVerticalBarBehavior)preferredVerticalBarBehavior
+{
+	return [NSUserDefaults.settingDefaults integerForKey:PopupSettingDuoVerticalBarBehavior];
+}
+#endif
 
 - (void)updateNavigationBarTitlePositionForTraitCollection:(UITraitCollection*)traitCollection
 {
