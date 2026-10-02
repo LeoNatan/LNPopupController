@@ -1855,7 +1855,7 @@ static void __LNPopupControllerDeeplyEnumerateSubviewsUsingBlock(UIView* view, v
 			
 			[self.popupBar.customBarViewController _userFacing_viewIsAppearing:animated];
 			
-			_LNPopupSupportSetPopupInsetsForViewController(_containerController, self.popupBar, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height - [_containerController _ln_popupOffsetForPopupBar:self.popupBar], 0));
+			_LNPopupSupportSetPopupInsetsForViewController(_containerController, self.popupBar, YES, UIEdgeInsetsMake(0, 0, barFrame.size.height - [_containerController _ln_popupOffsetForPopupBar:self.popupBar] + [_containerController _ln_safeAreaCorrectiveOffset:self.popupBar], 0));
 			
 			if(open)
 			{

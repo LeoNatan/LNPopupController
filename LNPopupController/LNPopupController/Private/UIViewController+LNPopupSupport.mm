@@ -561,6 +561,16 @@ static const void* _LNPopupContentControllerDiscoveredTransitionView = &_LNPopup
 #endif
 }
 
+- (CGFloat)_ln_safeAreaCorrectiveOffset:(LNPopupBar*)popupBar
+{
+	return 0;
+}
+
+- (BOOL)_ln_wantsForcedAnimatedPopupBarLayout
+{
+	return NO;
+}
+
 - (CGRect)defaultFrameForBottomDockingView_internal
 {
 	CGFloat safeAreaAddition = self.view.safeAreaInsets.bottom - _LNPopupSafeAreaInsets(self).bottom;
