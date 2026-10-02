@@ -162,7 +162,7 @@
 		[self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 	}
 	
-	if([segue.identifier isEqualToString:@"Settings"] && UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad)
+	if([segue.identifier isEqualToString:@"Settings"])
 	{
 		segue.destinationViewController.modalPresentationStyle = UIModalPresentationPopover;
 		if(@available(iOS 16.0, *))
