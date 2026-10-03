@@ -31,8 +31,9 @@ Check the demo project for many common use cases of the framework in various sce
 ### Features
 
 * Supports iOS 27 & iOS 26 glass design, while maintaining an appropriate look and feel on previous iOS versions
-* Supports window resize on iPadOS and Mac Catalyst and iOS resize under iPhone Duo and iPhone Mirroring
 * Full support for iOS, iPadOS and Mac Catalyst (*Mac Catalyst* with *Optimize for Mac* or *Scaled to Match iPad*,  and *Designed for iPad*)
+    * Supports window resize on iPadOS, Mac Catalyst and iOS, on iPhone Duo and in iPhone Mirroring
+    * iPhone Duo is fully supported when targetting iOS 27.1 SDK and later
 * Available for iOS 13 and later, as an SPM package for Swift and Objective C
 * Good citizen in a modern UIKit world
 * For SwiftUI, check out the [LNPopupUI library](https://github.com/LeoNatan/LNPopupUI)
