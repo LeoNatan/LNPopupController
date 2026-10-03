@@ -717,6 +717,36 @@
 			break;
 	}
 	
+	if(@available(iOS 27.1, *))
+	{
+		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDuoEmbedContentInArrangementView])
+		{
+			UIOverlayArrangement* overlayArrangement = UIOverlayArrangement.overlayArrangement;
+			overlayArrangement.axes = UIAxisHorizontal;
+			
+			UIOverlayArrangementViewProperties* props = [UIOverlayArrangementViewProperties new];
+			props.edge = NSDirectionalRectEdgeLeading;
+			[overlayArrangement setViewProperties:props forPlacement:UIArrangementViewControllerViewPlacementPrimary];
+			
+			UIArrangementViewController* ar = [PopupArrangementViewController new];
+			[ar updateArrangement:overlayArrangement];
+			
+			[ar setViewController:demoVC forPlacement:UIArrangementViewControllerViewPlacementPrimary];
+			
+			
+			UIViewController* another = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingMap"];
+			
+//			UIViewController* another = [self.storyboard instantiateViewControllerWithIdentifier:@"VerticalGroupedPagedScrollingColors"];
+
+//			ScrollingColorsViewController* another = [self.storyboard instantiateViewControllerWithIdentifier:@"ScrollingColors"];
+//			another.isVertical = YES;
+			
+			[ar setViewController:another forPlacement:UIArrangementViewControllerViewPlacementSecondary];
+			
+			demoVC = ar;
+		}
+	}
+	
 	self.tabBarController.adjustsTabBarLayoutForPopupBar = [NSUserDefaults.settingDefaults boolForKey:PopupSettingAdjustsTabBarLayout];
 	
 	if([NSUserDefaults.settingDefaults boolForKey:PopupSettingInvertDemoSceneColors])

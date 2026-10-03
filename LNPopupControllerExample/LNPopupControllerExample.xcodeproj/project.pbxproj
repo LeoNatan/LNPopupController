@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3901289526CFC1D60002612D /* LNPopupControllerExampleSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */; };
+		39201CA93071B67900E84F51 /* PopupArrangementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39201CA83071B67900E84F51 /* PopupArrangementViewController.swift */; };
+		39201CAA3071B67900E84F51 /* PopupArrangementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39201CA83071B67900E84F51 /* PopupArrangementViewController.swift */; };
 		39277A091B58228000293F95 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A081B58228000293F95 /* main.m */; };
 		39277A0C1B58228000293F95 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 39277A0B1B58228000293F95 /* AppDelegate.m */; };
 		39277A151B58228000293F95 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39277A131B58228000293F95 /* Main.storyboard */; };
@@ -145,6 +147,7 @@
 /* Begin PBXFileReference section */
 		3901289326CFC1D60002612D /* LNPopupControllerExampleSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNPopupControllerExampleSupport.h; sourceTree = "<group>"; };
 		3901289426CFC1D60002612D /* LNPopupControllerExampleSupport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNPopupControllerExampleSupport.m; sourceTree = "<group>"; };
+		39201CA83071B67900E84F51 /* PopupArrangementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupArrangementViewController.swift; sourceTree = "<group>"; };
 		39277A041B58228000293F95 /* LNPopupControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LNPopupControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39277A081B58228000293F95 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		39277A0A1B58228000293F95 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -344,6 +347,7 @@
 				39B645EC2CA5AA1300AB038B /* PageCardViewController.swift */,
 				39B645E92CA5A97B00AB038B /* ScrollingColorsPageViewController.swift */,
 				39B645EF2CA61B0200AB038B /* ScrollingMapViewController.swift */,
+				39201CA83071B67900E84F51 /* PopupArrangementViewController.swift */,
 			);
 			name = "Demo - Testing Scene (Objective-C)";
 			path = TestingScene;
@@ -573,6 +577,7 @@
 				39988C762AA1557F00C3BB04 /* SafeSystemImages.m in Sources */,
 				393F23271E16C192000E969D /* CustomMapBarViewController.swift in Sources */,
 				393C9BD1302D03FB00156261 /* PlayerViewMac.swift in Sources */,
+				39201CAA3071B67900E84F51 /* PopupArrangementViewController.swift in Sources */,
 				39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */,
 				39F031B42E8FC2770079F2FD /* CustomContainerController.swift in Sources */,
 				39277A0C1B58228000293F95 /* AppDelegate.m in Sources */,
@@ -610,6 +615,7 @@
 				39FAFC3724E71A6C008BBC2D /* DemoAlbumTableViewController.swift in Sources */,
 				39FAFC3824E71A6C008BBC2D /* DemoMusicPlayerController.swift in Sources */,
 				39FAFC3924E71A6C008BBC2D /* CustomMapBarViewController.swift in Sources */,
+				39201CA93071B67900E84F51 /* PopupArrangementViewController.swift in Sources */,
 				39FAFC3B24E71A6C008BBC2D /* LNSplitViewController.m in Sources */,
 				39FAFC3C24E71A6C008BBC2D /* AppDelegate.m in Sources */,
 				39F031B32E8FC2770079F2FD /* CustomContainerController.swift in Sources */,

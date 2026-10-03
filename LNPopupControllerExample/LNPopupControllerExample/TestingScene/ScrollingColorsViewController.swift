@@ -9,9 +9,11 @@
 import UIKit
 import LNPopupController
 
+@objc public
 class ScrollingColorsViewController: UICollectionViewController {
 	var colors: [UIColor] = []
 	
+	public
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -33,6 +35,7 @@ class ScrollingColorsViewController: UICollectionViewController {
 	}
 	
 #if LNPOPUP
+	public
 	override func viewDidMove(toPopupContainerContentView popupContentView: LNPopupContentView?) {
 		super.viewDidMove(toPopupContainerContentView: popupContentView)
 		
@@ -48,18 +51,20 @@ class ScrollingColorsViewController: UICollectionViewController {
 	}
 #endif
 	
+	public
 	override func viewSafeAreaInsetsDidChange() {
 		super.viewSafeAreaInsetsDidChange()
 	}
 	
-	var isVertical: Bool {
-		UserDefaults.settings.integer(forKey: .useScrollingPopupContent) == 10
-	}
+	@objc public
+	var isVertical: Bool = (UserDefaults.settings.integer(forKey: .useScrollingPopupContent) == 10)
 	
+	public
 	override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		isVertical ? 1000 : 30
 	}
 	
+	public
 	override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCell", for: indexPath)
 		cell.contentView.backgroundColor = colors[indexPath.item]
