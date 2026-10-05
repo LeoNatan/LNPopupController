@@ -717,6 +717,7 @@
 			break;
 	}
 	
+#if defined(__IPHONE_27_1)
 	if(@available(iOS 27.1, *))
 	{
 		if([NSUserDefaults.settingDefaults boolForKey:PopupSettingDuoEmbedContentInArrangementView])
@@ -746,6 +747,7 @@
 			demoVC = ar;
 		}
 	}
+#endif
 	
 	self.tabBarController.adjustsTabBarLayoutForPopupBar = [NSUserDefaults.settingDefaults boolForKey:PopupSettingAdjustsTabBarLayout];
 	
