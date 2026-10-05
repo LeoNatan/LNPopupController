@@ -552,6 +552,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 			}];
 		}
 		
+#if defined(__IPHONE_27_1)
 		if(@available(iOS 27.1, *))
 		{
 			UIHingeInteraction* interaction = [[UIHingeInteraction alloc] initWithUpdateHandler:^(UIHingeInteraction * _Nonnull interaction, UIHingeInteractionUpdate * _Nonnull update) {
@@ -560,6 +561,7 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 			}];
 			[self addInteraction:interaction];
 		}
+#endif
 		
 		[self _setNeedsRecalcActiveAppearanceChain];
 	}
