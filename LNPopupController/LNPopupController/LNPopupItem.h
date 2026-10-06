@@ -56,23 +56,15 @@ NS_SWIFT_UI_ACTOR
 - (void)setBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)barButtonItems animated:(BOOL)animated;
 
 /// An array of custom bar button items to display on the leading side of the popup bar.
-///
-/// For prominent popup bars, these buttons are positioned on the trailing side, before items in ``trailingBarButtonItems``.
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* leadingBarButtonItems;
 
 /// Sets the leading bar button items of the popup bar, optionally animating the transition to the new items.
-///
-/// For prominent popup bars, these buttons are positioned on the trailing side, before items in ``trailingBarButtonItems``.
 - (void)setLeadingBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)leadingBarButtonItems animated:(BOOL)animated;
 
 /// An array of custom bar button items to display on the trailing side of the popup bar.
-///
-/// For prominent popup bars, this property is equivalent to ``barButtonItems``.
 @property(nullable, nonatomic, copy) NSArray<UIBarButtonItem*>* trailingBarButtonItems;
 
 /// Sets the trailing bar button items of the popup bar, optionally animating the transition to the new items.
-///
-/// For prominent popup bars, this property is equivalent to ``setBarButtonItems:animated:``.
 - (void)setTrailingBarButtonItems:(nullable NSArray<UIBarButtonItem*>*)trailingBarButtonItems animated:(BOOL)animated;
 
 /// The user information dictionary associated with the popup item.

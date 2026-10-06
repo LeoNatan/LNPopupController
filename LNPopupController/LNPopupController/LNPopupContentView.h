@@ -1,5 +1,5 @@
 //
-//  LNPopupItem.h
+//  LNPopupContentView.h
 //  LNPopupController
 //
 //  Created by Léo Natan on 2015-09-23.

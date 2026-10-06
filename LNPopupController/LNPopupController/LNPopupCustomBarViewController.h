@@ -1,5 +1,5 @@
 //
-//  LNPopupBarContentViewController.h
+//  LNPopupCustomBarViewController.h
 //  LNPopupController
 //
 //  Created by Léo Natan on 2016-12-30.
@@ -49,12 +49,12 @@ NS_SWIFT_UI_ACTOR
 /// Called by the framework when the popup bar's popup item changes. For changes to specific fields of popup item, implement ``popupItemDidUpdate()``.
 - (void)popupItemDidChange:(LNPopupItem*)previousPopupItem;
 
-/// Called by the framework no notify the popup bar content view controller that the custom bar is about to move to a popup bar.
+/// Called by the framework to notify the popup bar content view controller that the custom bar is about to move to a popup bar.
 ///
 /// - Parameter newPopupBar: The new popup bar
 - (void)willMoveToPopupBar:(nullable LNPopupBar*)newPopupBar;
 
-/// Called by the framework no notify the popup bar content view controller that the custom bar has moved to a popup bar.
+/// Called by the framework to notify the popup bar content view controller that the custom bar has moved to a popup bar.
 - (void)didMoveToPopupBar;
 
 /// Called by the framework to notify the popup bar content view controller that the active appearance has changed.

@@ -59,7 +59,7 @@ typedef NS_ENUM(NSInteger, LNPopupCloseButtonStyle) {
 	LNPopupCloseButtonStyleFlat LN_DEPRECATED_API("Use LNPopupCloseButtonStyle.grabber instead.") = LNPopupCloseButtonStyleGrabber
 } NS_SWIFT_NAME(LNPopupCloseButton.Style);
 
-/// Available styles for the popup close button.
+/// Popup close button positioning.
 typedef NS_ENUM(NSInteger, LNPopupCloseButtonPositioning) {
 	/// The default close button positioning, most suitable for the button style.
 	LNPopupCloseButtonPositioningDefault,
@@ -89,7 +89,7 @@ NS_SWIFT_UI_ACTOR
 ///
 /// The value of this property only has effect if the system positions the popup close button.
 ///
-/// Defaults to ``LNPopupCloseButton/Style/default``.
+/// Defaults to ``LNPopupCloseButton/Positioning/default``.
 @property (nonatomic, assign) LNPopupCloseButtonPositioning positioning UI_APPEARANCE_SELECTOR;
 
 /// The effective popup close button style used by the system. (read-only)
@@ -102,12 +102,16 @@ NS_SWIFT_UI_ACTOR
 /// Use this property's value to determine, at runtime, what close button positioning the system has chosen to use.
 @property (nonatomic, assign, readonly) LNPopupCloseButtonPositioning effectivePositioning;
 
+@end
+
+@interface LNPopupCloseButton (Deprecations)
+
 /// The button’s background view. (read-only)
 ///
 /// The value of this property will be `nil` if `style` is set to any value other than ``LNPopupCloseButton/Style/round``.
 ///
 /// Although this property is read-only, its own properties are read/write. Use these properties to configure the appearance and behavior of the button’s background view.
-@property (nonatomic, strong, readonly) UIVisualEffectView* backgroundView;
+@property (nonatomic, strong, readonly) UIVisualEffectView* backgroundView LN_DEPRECATED_API_OS("The background view is only available for the deprecated round close button style.", ios(2.0, 26.0));
 
 @end
 

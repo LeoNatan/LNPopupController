@@ -247,7 +247,7 @@ NS_SWIFT_UI_ACTOR
 ///
 ///	The behavior of this property depends on the value of the presenting popup bar's ``LNPopupBar/usesContentControllersAsDataSource``.
 ///
-/// When **`true`**, this property returns unique instance of ``LNPopupItem``, created to represent the view controller when it is presented in a popup. The `LNPopupItem` object is created the first time the property is accessed. Therefore, you should not access this property if you are not using popup presentation to display the view controller. ``UIKit/UIViewController/popupItemDidChange(_:)`` will never be called in mode.
+/// When **`true`**, this property returns unique instance of ``LNPopupItem``, created to represent the view controller when it is presented in a popup. The `LNPopupItem` object is created the first time the property is accessed. Therefore, you should not access this property if you are not using popup presentation to display the view controller. ``UIKit/UIViewController/popupItemDidChange(_:)`` will never be called in this mode.
 ///
 /// When **`false`**, this property reflects the currently displayed popup item in the presenting popup bar. If the popup item changes, ``UIKit/UIViewController/popupItemDidChange(_:)`` is called to notify the content controller of the change.
 ///
@@ -288,7 +288,7 @@ NS_SWIFT_UI_ACTOR
 ///
 /// **The returned view must be part of the content controller's view hierarchy** or it will be ignored by the system and no transition will take place.
 ///
-/// The default implementation of this method returns an instance of `LNPopupImageView`, if in the popup content view hierarchy, or `nil` and no transition is performed. If more than one instance of `LNPopupImageView` exist, which one is returned automatically is undefined behavior, and you should implemented the method and return the correct instance.
+/// The default implementation of this method returns an instance of `LNPopupImageView`, if in the popup content view hierarchy, or `nil` and no transition is performed. If more than one instance of `LNPopupImageView` exist, which one is returned automatically is undefined behavior, and you should implement the method and return the correct instance.
 ///
 /// - Note: Transitions are only available for prominent and floating popup bar styles with drag interaction style. Any other combination will result in no transition and this method will not be called by the system.
 ///
@@ -380,7 +380,7 @@ NS_SWIFT_UI_ACTOR
 
 @interface UIViewController (LNPopupCustomContainerDeprecated)
 
-/// The insets for the bottom docking view from bottom of the container controller's view. By default, this returns ` UIEdgeInsets.zero`. Currently, only the bottom inset is respected.
+/// The insets for the bottom docking view from bottom of the container controller's view. By default, this returns `UIEdgeInsets.zero`. Currently, only the bottom inset is respected.
 ///
 /// The system calculates the position of the popup bar and the bottom docking view by summing the bottom docking view's height and the bottom of the insets.
 @property (nonatomic, readonly) UIEdgeInsets insetsForBottomDockingView LN_DEPRECATED_API_OS("No longer supported on iOS 26.0 and later.", ios(2.0, 26.0));

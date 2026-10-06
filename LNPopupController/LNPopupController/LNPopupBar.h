@@ -52,7 +52,7 @@ typedef NS_ENUM(NSInteger, LNPopupBarProgressViewStyle) {
 	/// Progress view on bottom
 	LNPopupBarProgressViewStyleBottom,
 	
-	/// Progress view on bottom
+	/// Progress view on top
     LNPopupBarProgressViewStyleTop,
 	
 	/// No progress view
@@ -185,7 +185,7 @@ NS_SWIFT_UI_ACTOR
 
 /// A semantic description of the bar items, used to determine the order of bar items when switching between left-to-right and right-to-left layouts.
 ///
-/// Defaults to `UIUISemanticContentAttribute.playback`.
+/// Defaults to `UISemanticContentAttribute.playback`.
 ///
 /// See also `UIView.semanticContentAttribute`
 @property (nonatomic) UISemanticContentAttribute barItemsSemanticContentAttribute;

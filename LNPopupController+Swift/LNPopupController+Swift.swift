@@ -14,7 +14,7 @@ import SwiftUI
 
 public
 extension Double {
-	/// The default popup snap percent. See `LNPopupInteractionStyle.customizedSnap(percent:)` for more information.
+	/// The default popup snap percent. See `UIViewController.PopupInteractionStyle.customizedSnap(percent:)` for more information.
 	static var defaultPopupSnapPercent: Double {
 		return __LNSnapPercentDefault
 	}
@@ -46,7 +46,7 @@ extension UIViewController {
 	}
 
 	
-	/// The popup bar interaction style.
+	/// The popup interaction style.
 	var popupInteractionStyle: PopupInteractionStyle {
 		get {
 			switch __popupInteractionStyle {
