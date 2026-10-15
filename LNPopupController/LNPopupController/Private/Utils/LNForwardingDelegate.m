@@ -12,7 +12,7 @@
 
 @implementation LNForwardingDelegate
 {
-	NSMutableDictionary<NSString*, NSMethodSignature*>* _lookupTable;
+	NSMutableDictionary<NSString*, NSMethodSignature*>* _forwardedDelegateLookupTable;
 }
 
 - (instancetype)init
@@ -21,7 +21,7 @@
 	
 	if(self)
 	{
-		_lookupTable = [NSMutableDictionary new];
+		_forwardedDelegateLookupTable = [NSMutableDictionary new];
 	}
 	
 	return self;
@@ -60,6 +60,13 @@
 		return ms;
 	}
 	
+	//Use lookup table in all cases. If we've seen the signature before in the forwarded delegate, but it was released in the meantime, this will ensure we don't crash. If an unseen method is attempted, the runtime will go to respondsToSelector: first, and that will fail since the forwarded delegate is no more.
+	NSMethodSignature* hit = [_forwardedDelegateLookupTable objectForKey:NSStringFromSelector(aSelector)];
+	if(hit != nil)
+	{
+		return hit;
+	}
+
 	if([self.forwardedDelegate respondsToSelector:aSelector] == NO)
 	{
 		return nil;
@@ -67,13 +74,9 @@
 	
 	if([self.forwardedDelegate respondsToSelector:@selector(methodSignatureForSelector:)])
 	{
-		return [self.forwardedDelegate methodSignatureForSelector:aSelector];
-	}
-	
-	NSMethodSignature* hit = [_lookupTable objectForKey:NSStringFromSelector(aSelector)];
-	if(hit != nil)
-	{
-		return hit;
+		NSMethodSignature* rv = [self.forwardedDelegate methodSignatureForSelector:aSelector];
+		_forwardedDelegateLookupTable[NSStringFromSelector(aSelector)] = rv;
+		return rv;
 	}
 	
 	//Swift retarded bullshit
@@ -93,7 +96,7 @@
 		{
 			const char* encoding = method_getTypeEncoding(m);
 			NSMethodSignature* rv = [NSMethodSignature signatureWithObjCTypes:encoding];
-			_lookupTable[NSStringFromSelector(aSelector)] = rv;
+			_forwardedDelegateLookupTable[NSStringFromSelector(aSelector)] = rv;
 			return rv;
 		}
 	}

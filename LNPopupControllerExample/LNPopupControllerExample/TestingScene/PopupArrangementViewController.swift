@@ -8,6 +8,7 @@
 
 import UIKit
 
+#if LNPOPUP
 #if canImport(UIKit, _version: 9127.0.85)
 @available(iOS 27.1, *) @objc public
 class PopupArrangementViewController: UIArrangementViewController {
@@ -31,4 +32,5 @@ class PopupArrangementViewController: UIArrangementViewController {
 		viewController(for: .primary)?.popupItem ?? super.popupItem
 	}
 }
+#endif
 #endif
