@@ -581,6 +581,22 @@ UIEdgeInsets __LNViewControllerSetContentMargins(UIViewController* vc, UIEdgeIns
 			contentMargins = __LNViewControllerContentMargins(self.popupPresentationContainerViewController);
 			insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
 		}
+		
+		if(@available(iOS 27.1, *))
+		{
+			//Starting with iOS 27.1, UIKit lays out bars around the status bar in new ways: beside it, in the same row (wide iPhone, portrait), or below it in a vertical bar (iPhone Duo). The container's insets carry none of this, so let UIKit update the content controller first, then keep its top, left and right insets and only adjust the bottom for the popup bar.
+			[self _uCOIFPIN];
+			
+			static SEL contentOverlayInsetsSEL = NSSelectorFromString(LNPopupHiddenString("_contentOverlayInsets"));
+			if([self respondsToSelector:contentOverlayInsetsSEL])
+			{
+				static UIEdgeInsets (*contentOverlayInsetsFunc)(id, SEL) = reinterpret_cast<decltype(contentOverlayInsetsFunc)>(objc_msgSend);
+				UIEdgeInsets systemInsets = contentOverlayInsetsFunc(self, contentOverlayInsetsSEL);
+				insets.top = systemInsets.top;
+				insets.left = systemInsets.left;
+				insets.right = systemInsets.right;
+			}
+		}
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
 		__LNViewControllerSetContentMargins(self, contentMargins);
 		
