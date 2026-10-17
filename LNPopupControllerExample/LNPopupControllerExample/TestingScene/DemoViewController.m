@@ -711,8 +711,55 @@
 			LNApplyTitleWithSettings(demoVC);
 			break;
 
+		case -10:
+		{
+			UIViewController* vc = [UIViewController new];
+			UIView* _leadingLayoutView = [UIView new];
+			_leadingLayoutView.frame = CGRectMake(0, 0, 44, 44);
+			vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_leadingLayoutView];
+			if(@available(iOS 27.1, *))
+			{
+				vc.navigationItem.leftBarButtonItem.axisBehavior = UIBarButtonItemAxisBehaviorVerticalPreferred;
+			}
+			
+			UIView* _trailingLayoutView = [UIView new];
+			_trailingLayoutView.frame = CGRectMake(0, 0, 44, 44);
+			vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_trailingLayoutView];
+			if(@available(iOS 27.1, *))
+			{
+				vc.navigationItem.rightBarButtonItem.axisBehavior = UIBarButtonItemAxisBehaviorVerticalPreferred;
+			}
+			
+			demoVC = [[UINavigationController alloc] initWithRootViewController:vc];
+			break;
+		}
+		case -11:
+		{
+			if(@available(iOS 18.0, *))
+			{
+				UITabBarController* tab = [[UITabBarController alloc] initWithTabs:@[
+					[[UITab alloc] initWithTitle:@"1" image:[UIImage systemImageNamed:@"1.circle.fill"] identifier:@"1" viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
+					return [[UINavigationController alloc] initWithRootViewController:[UIViewController new]];
+				}],
+					[[UITab alloc] initWithTitle:@"2" image:[UIImage systemImageNamed:@"2.circle.fill"] identifier:@"2" viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
+					return [UIViewController new];
+				}],
+					[[UITab alloc] initWithTitle:@"3" image:[UIImage systemImageNamed:@"3.circle.fill"] identifier:@"3" viewControllerProvider:^UIViewController * _Nonnull(__kindof UITab * _Nonnull tab) {
+					return [UIViewController new];
+				}],
+				]];
+				tab.view.backgroundColor = UIColor.clearColor;
+				
+				demoVC = tab;
+			}
+			else
+			{
+				demoVC = [DemoPopupContentViewController new];
+			}
+			break;
+		}
+			
 		default:
-			wantsGlassBackground = NO;
 			demoVC = [DemoPopupContentViewController new];
 			break;
 	}
@@ -783,9 +830,9 @@
 	
 	targetVC.popupInteractionStyle = [[NSUserDefaults.settingDefaults objectForKey:PopupSettingInteractionStyle] unsignedIntegerValue];
 
-	if(targetVC.effectivePopupInteractionStyle == LNPopupInteractionStyleScroll && [NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent] == 0)
+	if(targetVC.effectivePopupInteractionStyle == LNPopupInteractionStyleScroll && [NSUserDefaults.settingDefaults integerForKey:PopupSettingUseScrollingPopupContent] <= 0)
 	{
-		targetVC.popupInteractionStyle = LNPopupInteractionStyleSnap;
+		targetVC.popupInteractionStyle = LNPopupInteractionStyleAutomatic;
 	}
 
 	targetVC.popupContentView.popupCloseButtonStyle = closeButtonStyle;
