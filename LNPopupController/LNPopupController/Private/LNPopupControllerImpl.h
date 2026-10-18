@@ -44,6 +44,8 @@ extern BOOL __LNEnableSlowTransitionsDebug(void);
 @property (nonatomic) LNPopupPresentationState popupControllerInternalState;
 @property (nonatomic) LNPopupPresentationState popupControllerTargetState;
 
+@property (nonatomic, readonly) BOOL stateAllowsLayout;
+
 @property (nonatomic, weak) id<LNPopupPresentationDelegate> userPopupPresentationDelegate;
 
 @property (nonatomic, strong) __kindof UIViewController* currentContentController;

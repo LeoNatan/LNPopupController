@@ -391,6 +391,11 @@ __attribute__((objc_direct_members))
 	return _ln_smoothstep(0.0, 1.0, percent);
 }
 
+- (BOOL)stateAllowsLayout
+{
+	return self.popupControllerPublicState != self.popupControllerTargetState || self.popupControllerTargetState != LNPopupPresentationStateBarHidden;
+}
+
 - (void)_setContentToState:(LNPopupPresentationState)state
 {
 	[self _setContentToState:state animated:YES];

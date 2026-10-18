@@ -927,6 +927,11 @@ void __LNViewControllerCopySystemSafeAreaGeometry(UIViewController* source, UIVi
 
 - (void)_layoutPopupBarOrderForUse
 {
+	if(self._ln_popupController_nocreate.stateAllowsLayout == NO)
+	{
+		return;
+	}
+	
 	UIView* bottomBar = self.bottomDockingViewForPopup_internalOrDeveloper;
 	LNPopupBar* popupBar = self._ln_popupController_nocreate.popupBar;
 	UIView* parentForPopupBar = bottomBar.superview != nil ? bottomBar.superview : self.view;
@@ -1430,6 +1435,11 @@ static void* LNTabBarControllerWantsForcedAnimatedPopupBarLayout = &LNTabBarCont
 
 - (void)_layoutPopupBarOrderForUse
 {
+	if(self._ln_popupController_nocreate.stateAllowsLayout == NO)
+	{
+		return;
+	}
+	
 	if(self.bottomDockingViewForPopupBar != nil)
 	{
 		//Custom bottom docking view, ignore.
@@ -2493,6 +2503,11 @@ static void* LNTabBarControllerWantsForcedAnimatedPopupBarLayout = &LNTabBarCont
 
 - (void)_layoutPopupBarOrderForUse
 {
+	if(self._ln_popupController_nocreate.stateAllowsLayout == NO)
+	{
+		return;
+	}
+	
 	if(self.bottomDockingViewForPopupBar != nil)
 	{
 		//Custom bottom docking view, ignore.
@@ -3211,6 +3226,11 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 - (void)_layoutPopupBarOrderForUse
 {
 	[super _layoutPopupBarOrderForUse];
+
+	if(self._ln_popupController_nocreate.stateAllowsLayout == NO)
+	{
+		return;
+	}
 	
 	if(@available(iOS 14.0, *))
 	{
@@ -3221,6 +3241,11 @@ static void* wrapperDelegateKey = &wrapperDelegateKey;
 - (void)_layoutPopupBarOrderForTransition
 {
 	[super _layoutPopupBarOrderForTransition];
+	
+	if(self._ln_popupController_nocreate.popupControllerTargetState == LNPopupPresentationStateBarHidden)
+	{
+		return;
+	}
 	
 	if(@available(iOS 14.0, *))
 	{
