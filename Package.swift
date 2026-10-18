@@ -1,5 +1,5 @@
 // swift-tools-version:6.2
-// LNPopupController:4.5.16
+// LNPopupController:4.6.0
 
 import PackageDescription
 import Foundation
