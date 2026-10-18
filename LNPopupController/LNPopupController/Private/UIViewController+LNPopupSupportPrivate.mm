@@ -553,6 +553,223 @@ UIEdgeInsets __LNViewControllerSetContentMargins(UIViewController* vc, UIEdgeIns
 	return rv;
 }
 
+#if defined(__IPHONE_27_1)
+typedef struct
+{
+	ptrdiff_t bitOffset;
+	NSUInteger bitWidth;
+} __LNIvarBitfield;
+
+static const __LNIvarBitfield __LNIvarBitfieldNotFound = { -1, 0 };
+
+static __LNIvarBitfield __LNIvarBitfieldNamed(Class cls, NSString* ivarName, NSString* fieldName)
+{
+	Ivar ivar = class_getInstanceVariable(cls, ivarName.UTF8String);
+	const char* encoding = ivar != NULL ? ivar_getTypeEncoding(ivar) : NULL;
+	const char* cursor = encoding != NULL ? strchr(encoding, '=') : NULL;
+	if(cursor == NULL)
+	{
+		return __LNIvarBitfieldNotFound;
+	}
+	
+	const char* fieldNameUTF8 = fieldName.UTF8String;
+	size_t fieldNameLength = strlen(fieldNameUTF8);
+	ptrdiff_t offset32 = 0;
+	ptrdiff_t offset64 = 0;
+	
+	cursor++;
+	while(*cursor == '"')
+	{
+		const char* nameStart = cursor + 1;
+		const char* nameEnd = strchr(nameStart, '"');
+		if(nameEnd == NULL || nameEnd[1] != 'b')
+		{
+			return __LNIvarBitfieldNotFound;
+		}
+		
+		char* widthEnd = NULL;
+		long width = strtol(nameEnd + 2, &widthEnd, 10);
+		if(widthEnd == nameEnd + 2 || width <= 0 || width > 32)
+		{
+			return __LNIvarBitfieldNotFound;
+		}
+		
+		if(offset32 / 32 != (offset32 + width - 1) / 32)
+		{
+			offset32 = (offset32 / 32 + 1) * 32;
+		}
+		if(offset64 / 64 != (offset64 + width - 1) / 64)
+		{
+			offset64 = (offset64 / 64 + 1) * 64;
+		}
+		
+		if((size_t)(nameEnd - nameStart) == fieldNameLength && strncmp(nameStart, fieldNameUTF8, fieldNameLength) == 0)
+		{
+			if(offset32 != offset64)
+			{
+				return __LNIvarBitfieldNotFound;
+			}
+			
+			return { ivar_getOffset(ivar) * 8 + offset32, (NSUInteger)width };
+		}
+		
+		offset32 += width;
+		offset64 += width;
+		cursor = widthEnd;
+	}
+	
+	return __LNIvarBitfieldNotFound;
+}
+
+static NSUInteger __LNIvarBitfieldRead(id object, __LNIvarBitfield bitfield)
+{
+	const uint8_t* bytes = (const uint8_t*)(__bridge void*)object;
+	NSUInteger rv = 0;
+	for(NSUInteger idx = 0; idx < bitfield.bitWidth; idx++)
+	{
+		ptrdiff_t bit = bitfield.bitOffset + idx;
+		rv |= (NSUInteger)((bytes[bit / 8] >> (bit % 8)) & 0x1) << idx;
+	}
+	return rv;
+}
+
+static void __LNIvarBitfieldWrite(id object, __LNIvarBitfield bitfield, NSUInteger value)
+{
+	uint8_t* bytes = (uint8_t*)(__bridge void*)object;
+	for(NSUInteger idx = 0; idx < bitfield.bitWidth; idx++)
+	{
+		ptrdiff_t bit = bitfield.bitOffset + idx;
+		uint8_t mask = (uint8_t)(0x1 << (bit % 8));
+		bytes[bit / 8] = ((value >> idx) & 0x1) ? (bytes[bit / 8] | mask) : (bytes[bit / 8] & ~mask);
+	}
+}
+
+typedef struct
+{
+	uint64_t packedInsets;
+	uint8_t flags;
+} __LNClippedSafeAreaCornerInsets;
+
+static
+void __LNViewControllerCopySystemSafeAreaGeometry(UIViewController* source, UIViewController* target)
+{
+	if(@available(iOS 27.1, *))
+	{
+		UIView* sourceView = source.viewIfLoaded;
+		UIView* targetView = target.viewIfLoaded;
+		if(sourceView == nil || targetView == nil)
+		{
+			return;
+		}
+		
+		BOOL geometryChanged = NO;
+		BOOL verticalBarEligibleEdgesChanged = NO;
+		
+		//_verticalBarEligibleEdges
+		static SEL vBEESEL = NSSelectorFromString(LNPopupHiddenString("_verticalBarEligibleEdges"));
+		static NSUInteger (*vBEEFunc)(id, SEL) = reinterpret_cast<decltype(vBEEFunc)>(objc_msgSend);
+		//_viewControllerFlags.verticalBarEligibleEdges
+		static __LNIvarBitfield vBEEBitfield = __LNIvarBitfieldNamed(UIViewController.class, LNPopupHiddenString("_viewControllerFlags"), LNPopupHiddenString("verticalBarEligibleEdges"));
+		if(vBEEBitfield.bitOffset >= 0 && [source respondsToSelector:vBEESEL])
+		{
+			NSUInteger sourceEdges = vBEEFunc(source, vBEESEL);
+			NSUInteger targetEdges = vBEEFunc(target, vBEESEL);
+			
+			if(sourceEdges != targetEdges && __LNIvarBitfieldRead(source, vBEEBitfield) == sourceEdges && __LNIvarBitfieldRead(target, vBEEBitfield) == targetEdges)
+			{
+				__LNIvarBitfieldWrite(target, vBEEBitfield, sourceEdges);
+				geometryChanged = YES;
+				verticalBarEligibleEdgesChanged = YES;
+			}
+		}
+		
+		//_viewFlags.sceneSafeAreaAlignedEdges
+		static __LNIvarBitfield sSAAEBitfield = __LNIvarBitfieldNamed(UIView.class, LNPopupHiddenString("_viewFlags"), LNPopupHiddenString("sceneSafeAreaAlignedEdges"));
+		if(sSAAEBitfield.bitOffset >= 0)
+		{
+			NSUInteger sourceEdges = __LNIvarBitfieldRead(sourceView, sSAAEBitfield);
+			NSUInteger previousEdges = __LNIvarBitfieldRead(targetView, sSAAEBitfield);
+			if(sourceEdges != previousEdges)
+			{
+				__LNIvarBitfieldWrite(targetView, sSAAEBitfield, sourceEdges);
+				
+				static SEL sSAAEDCSEL = NSSelectorFromString(LNPopupHiddenString("_sceneSafeAreaAlignedEdgesDidChange"));
+				static void (*sSAAEDCFunc)(id, SEL) = reinterpret_cast<decltype(sSAAEDCFunc)>(objc_msgSend);
+				if([targetView respondsToSelector:sSAAEDCSEL])
+				{
+					sSAAEDCFunc(targetView, sSAAEDCSEL);
+				}
+				
+				static SEL vSSAAEDCFPESEL = NSSelectorFromString(LNPopupHiddenString("_viewSceneSafeAreaAlignedEdgesDidChangeFromPreviousEdges:"));
+				static void (*vSSAAEDCFPEFunc)(id, SEL, NSUInteger) = reinterpret_cast<decltype(vSSAAEDCFPEFunc)>(objc_msgSend);
+				if([target respondsToSelector:vSSAAEDCFPESEL])
+				{
+					vSSAAEDCFPEFunc(target, vSSAAEDCFPESEL, previousEdges);
+				}
+				
+				geometryChanged = YES;
+			}
+		}
+		
+		static SEL cSACISEL = NSSelectorFromString(LNPopupHiddenString("_clippedSafeAreaCornerInsets"));
+		static __LNClippedSafeAreaCornerInsets (*cSACIFunc)(id, SEL) = reinterpret_cast<decltype(cSACIFunc)>(objc_msgSend);
+		static SEL sCSACISEL = NSSelectorFromString(LNPopupHiddenString("_setClippedSafeAreaCornerInsets:"));
+		static void (*sCSACIFunc)(id, SEL, __LNClippedSafeAreaCornerInsets) = reinterpret_cast<decltype(sCSACIFunc)>(objc_msgSend);
+		//_clippedSafeAreaCornerInsetsForFrame:inSuperview:ignoreViewController:
+		static SEL cSACIFFISIVCSEL = NSSelectorFromString(LNPopupHiddenString("_clippedSafeAreaCornerInsetsForFrame:inSuperview:ignoreViewController:"));
+		static __LNClippedSafeAreaCornerInsets (*cSACIFFISIVCFunc)(id, SEL, CGRect, UIView*, BOOL) = reinterpret_cast<decltype(cSACIFFISIVCFunc)>(objc_msgSend);
+		if([sourceView respondsToSelector:cSACISEL] && [targetView respondsToSelector:sCSACISEL])
+		{
+			__LNClippedSafeAreaCornerInsets sourceCornerInsets;
+			UIWindow* window = sourceView.window;
+			if(window != nil && [targetView respondsToSelector:cSACIFFISIVCSEL])
+			{
+				CGRect sourceFrameInWindow = [window convertRect:sourceView.bounds fromView:sourceView];
+				sourceCornerInsets = cSACIFFISIVCFunc(targetView, cSACIFFISIVCSEL, sourceFrameInWindow, window, YES);
+			}
+			else
+			{
+				sourceCornerInsets = cSACIFunc(sourceView, cSACISEL);
+			}
+			
+			__LNClippedSafeAreaCornerInsets targetCornerInsets = cSACIFunc(targetView, cSACISEL);
+			if(sourceCornerInsets.packedInsets != targetCornerInsets.packedInsets || sourceCornerInsets.flags != targetCornerInsets.flags)
+			{
+				sCSACIFunc(targetView, sCSACISEL, sourceCornerInsets);
+				geometryChanged = YES;
+			}
+		}
+		
+		if(geometryChanged)
+		{
+			static SEL sVDCOIACSEL = NSSelectorFromString(LNPopupHiddenString("_setViewDelegateContentOverlayInsetsAreClean:"));
+			static void (*sVDCOIACFunc)(id, SEL, BOOL) = reinterpret_cast<decltype(sVDCOIACFunc)>(objc_msgSend);
+			for(UIViewController* child in target.childViewControllers)
+			{
+				UIView* childView = child.viewIfLoaded;
+				if(childView == nil || [childView respondsToSelector:sVDCOIACSEL] == NO)
+				{
+					continue;
+				}
+				
+				sVDCOIACFunc(childView, sVDCOIACSEL, NO);
+				[childView setNeedsLayout];
+			}
+		}
+		
+		if(verticalBarEligibleEdgesChanged)
+		{
+			static SEL tODCSEL = NSSelectorFromString(LNPopupHiddenString("_traitOverridesDidChange"));
+			static void (*tODCFunc)(id, SEL) = reinterpret_cast<decltype(tODCFunc)>(objc_msgSend);
+			if([target respondsToSelector:tODCSEL])
+			{
+				tODCFunc(target, tODCSEL);
+			}
+		}
+	}
+}
+#endif
+
 //_updateContentOverlayInsetsFromParentIfNecessary (iOS 15 and above)
 - (void)_uCOIFPIN
 {
@@ -570,20 +787,27 @@ UIEdgeInsets __LNViewControllerSetContentMargins(UIViewController* vc, UIEdgeIns
 	{
 		UIEdgeInsets contentMargins;
 		UIEdgeInsets insets;
+		UIViewController* insetsSourceController;
 		
 		if(self.popupPresentationContainerViewController.popupOpensOverSplitViewController && self.popupPresentationContainerViewController.splitViewController != nil)
 		{
+			insetsSourceController = self.popupPresentationContainerViewController.splitViewController;
 			contentMargins = __LNViewControllerContentMargins(self.popupPresentationContainerViewController.splitViewController);
 			insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.splitViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController.splitViewController).bottom, 0));
 		}
 		else
 		{
+			insetsSourceController = self.popupPresentationContainerViewController;
 			contentMargins = __LNViewControllerContentMargins(self.popupPresentationContainerViewController);
 			insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
 		}
+
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
 		__LNViewControllerSetContentMargins(self, contentMargins);
-		
+#if defined(__IPHONE_27_1)
+        __LNViewControllerCopySystemSafeAreaGeometry(insetsSourceController, self);
+#endif
+
 		self.view.insetsLayoutMarginsFromSafeArea = YES;
 		self.viewRespectsSystemMinimumLayoutMargins = NO;
 		self.view.layoutMargins = contentMargins;
@@ -592,6 +816,9 @@ UIEdgeInsets __LNViewControllerSetContentMargins(UIViewController* vc, UIEdgeIns
 #if !TARGET_OS_MACCATALYST
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(containingContentView.layoutController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
 		__LNViewControllerSetContentMargins(containingContentView.layoutController, contentMargins);
+#if defined(__IPHONE_27_1)
+		__LNViewControllerCopySystemSafeAreaGeometry(insetsSourceController, containingContentView.layoutController);
+#endif
 		
 		containingContentView.layoutController.view.insetsLayoutMarginsFromSafeArea = YES;
 		containingContentView.layoutController.viewRespectsSystemMinimumLayoutMargins = NO;

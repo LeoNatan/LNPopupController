@@ -41,6 +41,7 @@
 		39A3B58B230D400B00E10425 /* LNSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A3B58A230D400B00E10425 /* LNSplitViewController.m */; };
 		39A8BE90300B4358001B1E10 /* LNPopupController.icon in Resources */ = {isa = PBXBuildFile; fileRef = 39A8BE8F300B4358001B1E10 /* LNPopupController.icon */; };
 		39A8BE91300B4358001B1E10 /* LNPopupController.icon in Resources */ = {isa = PBXBuildFile; fileRef = 39A8BE8F300B4358001B1E10 /* LNPopupController.icon */; };
+		39A8CA2730845BA9008EC6F6 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 39A8CA2630845BA9008EC6F6 /* SwiftUIIntrospect */; };
 		39B0DFE62B1819A9008CCF36 /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFE92B1819A9008CCF36 /* MapScene.storyboard */; };
 		39B0DFE72B1819A9008CCF36 /* MapScene.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFE92B1819A9008CCF36 /* MapScene.storyboard */; };
 		39B0DFEA2B1819BC008CCF36 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B0DFED2B1819BC008CCF36 /* Settings.storyboard */; };
@@ -219,6 +220,7 @@
 				39BF83D32B554AE800917649 /* LNPreviewToContextMenu in Frameworks */,
 				39C3E086300AA36E00D2288A /* LNPopupController.framework in Frameworks */,
 				3980E7FC26DEBCAF00AC0728 /* LoremIpsum in Frameworks */,
+				39A8CA2730845BA9008EC6F6 /* SwiftUIIntrospect in Frameworks */,
 				39DDA0AE230D5F63007DCCD8 /* MapKit.framework in Frameworks */,
 				39D6C8B32B2D01E600F53E70 /* LNTouchVisualizer in Frameworks */,
 			);
@@ -431,6 +433,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				39A8CA2530845B9C008EC6F6 /* PBXTargetDependency */,
 				39C3E089300AA37C00D2288A /* PBXTargetDependency */,
 				39114EDD26E2BF8B004FC75B /* PBXTargetDependency */,
 				39114EDF26E2BF8B004FC75B /* PBXTargetDependency */,
@@ -443,6 +446,7 @@
 				3980E7FB26DEBCAF00AC0728 /* LoremIpsum */,
 				39D6C8B22B2D01E600F53E70 /* LNTouchVisualizer */,
 				39BF83D22B554AE800917649 /* LNPreviewToContextMenu */,
+				39A8CA2630845BA9008EC6F6 /* SwiftUIIntrospect */,
 			);
 			productName = LNPopupControllerExample;
 			productReference = 39277A041B58228000293F95 /* LNPopupControllerExample.app */;
@@ -503,6 +507,7 @@
 				3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */,
 				39114ED726E2BF7A004FC75B /* XCRemoteSwiftPackageReference "LNPreviewToContextMenu" */,
 				39D6C8B12B2D01E600F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */,
+				39A8CA2330845B5D008EC6F6 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 			);
 			productRefGroup = 39277A051B58228000293F95 /* Products */;
 			projectDirPath = "";
@@ -649,6 +654,10 @@
 			isa = PBXTargetDependency;
 			platformFilter = ios;
 			productRef = 39114EDE26E2BF8B004FC75B /* LNPreviewToContextMenu */;
+		};
+		39A8CA2530845B9C008EC6F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 39A8CA2430845B9C008EC6F6 /* SwiftUIIntrospect */;
 		};
 		39C3E089300AA37C00D2288A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1009,6 +1018,14 @@
 				kind = branch;
 			};
 		};
+		39A8CA2330845B5D008EC6F6 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 27.1.0;
+			};
+		};
 		39D6C8B12B2D01E600F53E70 /* XCRemoteSwiftPackageReference "LNTouchVisualizer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/LeoNatan/LNTouchVisualizer.git";
@@ -1042,6 +1059,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3980E7FA26DEBCAF00AC0728 /* XCRemoteSwiftPackageReference "LoremIpsum" */;
 			productName = LoremIpsum;
+		};
+		39A8CA2430845B9C008EC6F6 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39A8CA2330845B5D008EC6F6 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
+			productName = SwiftUIIntrospect;
+		};
+		39A8CA2630845BA9008EC6F6 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39A8CA2330845B5D008EC6F6 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
+			productName = SwiftUIIntrospect;
 		};
 		39BF83D22B554AE800917649 /* LNPreviewToContextMenu */ = {
 			isa = XCSwiftPackageProductDependency;

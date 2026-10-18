@@ -1078,8 +1078,8 @@ LNPopupBarProgressViewStyle _LNPopupResolveProgressViewStyleFromProgressViewStyl
 		leftFirstItem = self.trailingBarButtonItems.firstObject;
 		rightLastItem = self.leadingBarButtonItems.lastObject;
 	}
-	leftFirst = [_toolbar _viewForBarButtonItem:leftFirstItem];
-	rightLast = [_toolbar _viewForBarButtonItem:rightLastItem];
+	leftFirst = [_LNPopupToolbar _viewForBarButtonItem:leftFirstItem];
+	rightLast = [_LNPopupToolbar _viewForBarButtonItem:rightLastItem];
 	
 	BOOL isFirstHidden = NO;
 	BOOL isLastHidden = NO;
@@ -1920,8 +1920,8 @@ static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenStr
 {
 	NSArray<UIBarButtonItem*>* filtered = [barButtonItems filteredArrayUsingPredicate:_LNNonSpaceAndNonHiddenItemsPredicate(true)];
 	
-	if(leftmostView != NULL) { *leftmostView = [_toolbar _viewForBarButtonItem:filtered.firstObject]; }
-	if(rightmostView != NULL) { *rightmostView = [_toolbar _viewForBarButtonItem:filtered.lastObject]; }
+	if(leftmostView != NULL) { *leftmostView = [_LNPopupToolbar _viewForBarButtonItem:filtered.firstObject]; }
+	if(rightmostView != NULL) { *rightmostView = [_LNPopupToolbar _viewForBarButtonItem:filtered.lastObject]; }
 }
 
 - (BOOL)_needSwiftUIFixesForBarButtonItemView:(UIView*)view
@@ -1957,8 +1957,8 @@ static Class systemBarButtonItemButtonClass = NSClassFromString(LNPopupHiddenStr
 		leftLastItem = self.trailingBarButtonItems.lastObject;
 		rightFirstItem = self.leadingBarButtonItems.firstObject;
 	}
-	leftLast = [_toolbar _viewForBarButtonItem:leftLastItem];
-	rightFirst = [_toolbar _viewForBarButtonItem:rightFirstItem];
+	leftLast = [_LNPopupToolbar _viewForBarButtonItem:leftLastItem];
+	rightFirst = [_LNPopupToolbar _viewForBarButtonItem:rightFirstItem];
 	
 #if DEBUG
 	if(_LNEnableBarButtonLayoutDebug())

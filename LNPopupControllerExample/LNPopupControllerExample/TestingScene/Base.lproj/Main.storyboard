@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25406" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25408" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25406"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -486,7 +486,7 @@
         <!--Split View Controller Primary Popup-->
         <scene sceneID="0aA-gd-S0Z">
             <objects>
-                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="over" behavior="overlay" primaryEdge="trailing" primaryBackgroundStyle="sidebar" id="NWj-M1-Csm" customClass="LNSplitViewControllerPrimaryPopup" sceneMemberID="viewController">
+                <splitViewController modalPresentationStyle="fullScreen" allowDoubleColumnStyle="YES" preferredDisplayMode="over" behavior="overlay" primaryBackgroundStyle="sidebar" id="NWj-M1-Csm" customClass="LNSplitViewControllerPrimaryPopup" sceneMemberID="viewController">
                     <connections>
                         <segue destination="GHH-ob-Ng8" kind="relationship" relationship="masterViewController" id="IDA-Po-Fia"/>
                         <segue destination="l54-z5-xcG" kind="relationship" relationship="detailViewController" id="04d-1K-Lzo"/>
@@ -807,10 +807,10 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGreenColor">
-            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

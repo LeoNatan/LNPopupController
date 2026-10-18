@@ -184,7 +184,7 @@ static void __setupFunction(void)
 	}
 }
 
-- (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem
++ (UIView*)_viewForBarButtonItem:(UIBarButtonItem*)barButtonItem
 {
 	UIView* itemView = [barButtonItem valueForKey:@"view"];
 	
@@ -205,7 +205,7 @@ static void __setupFunction(void)
 	
 	for(UIBarButtonItem* item in self.items)
 	{
-		UIView* view = [self _viewForBarButtonItem:item];
+		UIView* view = [_LNPopupToolbar _viewForBarButtonItem:item];
 		if(view == nil)
 		{
 			continue;

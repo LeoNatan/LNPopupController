@@ -38,10 +38,10 @@ class DemoMusicPlayerController<PlatformPlayerView: View & PlaybackStateContaine
 		rv.translatesAutoresizingMaskIntoConstraints = false
 		background.addSubview(rv)
 		NSLayoutConstraint.activate([
-			rv.leadingAnchor.constraint(equalTo: background.safeAreaLayoutGuide.leadingAnchor),
-			rv.trailingAnchor.constraint(equalTo: background.safeAreaLayoutGuide.trailingAnchor),
-			rv.topAnchor.constraint(equalTo: background.safeAreaLayoutGuide.topAnchor),
-			rv.bottomAnchor.constraint(equalTo: background.safeAreaLayoutGuide.bottomAnchor)
+			rv.leadingAnchor.constraint(equalTo: background.leadingAnchor),
+			rv.trailingAnchor.constraint(equalTo: background.trailingAnchor),
+			rv.topAnchor.constraint(equalTo: background.topAnchor),
+			rv.bottomAnchor.constraint(equalTo: background.bottomAnchor)
 		])
 		
 		return rv
@@ -177,10 +177,25 @@ class DemoMusicPlayerController<PlatformPlayerView: View & PlaybackStateContaine
 			
 			popupCloseButton.translatesAutoresizingMaskIntoConstraints = false
 			
-			NSLayoutConstraint.activate([
-				popupCloseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-				popupCloseButton.topAnchor.constraint(equalTo: vibrancyView.contentView.topAnchor, constant: 4),
-			])
+			let legacy = { [self] in
+				NSLayoutConstraint.activate([
+					popupCloseButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+					popupCloseButton.topAnchor.constraint(equalTo: vibrancyView.layoutMarginsGuide.topAnchor, constant: 4),
+				])
+			}
+			
+#if canImport(UIKit, _version: 9127.0.85)
+			if #available(iOS 27.2, *) {
+				NSLayoutConstraint.activate([
+					popupCloseButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+					popupCloseButton.topAnchor.constraint(equalTo: vibrancyView.layoutGuide(for: .bar(onEdge: UIRectEdge.top, extent: 0.0)).topAnchor, constant: 4),
+				])
+			} else {
+				legacy()
+			}
+#else
+			legacy()
+#endif
 		}
 	}
 	

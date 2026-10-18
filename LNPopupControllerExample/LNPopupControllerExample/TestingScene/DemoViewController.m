@@ -717,18 +717,22 @@
 			UIView* _leadingLayoutView = [UIView new];
 			_leadingLayoutView.frame = CGRectMake(0, 0, 44, 44);
 			vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_leadingLayoutView];
+#if defined(__IPHONE_27_1)
 			if(@available(iOS 27.1, *))
 			{
 				vc.navigationItem.leftBarButtonItem.axisBehavior = UIBarButtonItemAxisBehaviorVerticalPreferred;
 			}
+#endif
 			
 			UIView* _trailingLayoutView = [UIView new];
 			_trailingLayoutView.frame = CGRectMake(0, 0, 44, 44);
 			vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_trailingLayoutView];
+#if defined(__IPHONE_27_1)
 			if(@available(iOS 27.1, *))
 			{
 				vc.navigationItem.rightBarButtonItem.axisBehavior = UIBarButtonItemAxisBehaviorVerticalPreferred;
 			}
+#endif
 			
 			demoVC = [[UINavigationController alloc] initWithRootViewController:vc];
 			break;

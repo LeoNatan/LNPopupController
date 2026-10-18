@@ -201,6 +201,14 @@ void LNApplyTitleWithSettings(UIViewController* self)
 		
 		NSLayoutYAxisAnchor* anchorToUse = isCloseButtonHidden ? self.view.safeAreaLayoutGuide.topAnchor : popupContentView.popupCloseButton.bottomAnchor;
 		
+#if defined(__IPHONE_27_1)
+		if(@available(iOS 27.1, *))
+		if(self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified && popupContentView.effectivePopupCloseButtonPositioning != LNPopupCloseButtonPositioningCenter)
+		{
+			anchorToUse = self.view.safeAreaLayoutGuide.topAnchor;
+		}
+#endif
+		
 		[self.view addSubview:_preferredTransitionView];
 		[NSLayoutConstraint activateConstraints:@[
 			leading,
@@ -501,6 +509,13 @@ void LNApplyTitleWithSettings(UIViewController* self)
 //	return YES;
 	return NO;
 }
+
+#if defined(__IPHONE_27_1)
+- (UIVerticalBarBehavior)preferredVerticalBarBehavior
+{
+	return [NSUserDefaults.settingDefaults integerForKey:PopupSettingDuoVerticalBarBehavior];
+}
+#endif
 
 @end
 

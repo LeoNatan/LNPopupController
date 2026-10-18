@@ -51,6 +51,8 @@ NS_SWIFT_UI_ACTOR
 /// The effective popup close button positioning used by the system. (read-only)
 ///
 /// Use this property's value to determine, at runtime, what the result of `LNPopupCloseButtonPositioning.default` is.
+///
+/// - Note: On devices with a vertical bar, such as the iPhone Duo, `.leading` and `.trailing` values result in a close button positioned at the top of the vertical bar. This can be controlled by `UIViewController.preferredVerticalBarBehavior` in your popup content view controller.
 @property (nonatomic, assign, readonly) LNPopupCloseButtonPositioning effectivePopupCloseButtonPositioning;
 
 /// The popup close button. (read-only)

@@ -9,6 +9,7 @@
 import SwiftUI
 import AVKit
 #if LNPOPUP
+import SwiftUIIntrospect
 import LNPopupController
 
 @available(iOS 26.0, *)
@@ -53,6 +54,10 @@ struct PlayerViewMac: View, PlaybackStateContainer {
 	@ViewBuilder
 	func slider() -> some View {
 		Slider(value: $playbackState.progress)
+			.introspect(.slider, on: .iOS(.v26, .v27), customize: { slider in
+				slider.preferredBehavioralStyle = .pad
+				slider.sliderStyle = .thumbless
+			})
 			.simultaneousGesture(DragGesture(minimumDistance: 0.0).onChanged { _ in
 				playbackState.isUserScrubbing = true
 			} .onEnded { _ in
@@ -164,6 +169,10 @@ struct PlayerViewMac: View, PlaybackStateContainer {
 					Slider(value: $playbackState.volume)
 						.padding(.vertical, 2)
 						.controlSize(.small)
+						.introspect(.slider, on: .iOS(.v26, .v27), customize: { slider in
+							slider.preferredBehavioralStyle = .pad
+							slider.sliderStyle = .thumbless
+						})
 					ZStack {
 						Image(systemName: volumeImageName())
 						Image(systemName: "speaker.wave.3.fill").opacity(0.0)

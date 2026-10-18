@@ -15,8 +15,34 @@
 #import "_LNPopupCatalystHelper.h"
 
 #if !TARGET_OS_MACCATALYST
-@implementation _LNPopupContentViewLayoutController @end
+@implementation _LNPopupContentViewLayoutEmptyController
+
+#if defined(__IPHONE_27_1)
+@synthesize preferredVerticalBarBehavior=_preferredVerticalBarBehavior;
+
+- (void)setPreferredVerticalBarBehavior:(UIVerticalBarBehavior)preferredVerticalBarBehavior
+{
+	_preferredVerticalBarBehavior = preferredVerticalBarBehavior;
+	
+	[self setNeedsUpdateOfVerticalBarConfiguration];
+}
 #endif
+
+@end
+
+@implementation _LNPopupContentViewLayoutController
+
+- (void)viewDidLayoutSubviews
+{
+	[super viewDidLayoutSubviews];
+	
+	[self._layoutDelegate _layoutBarDidLayoutSubviews];
+}
+
+@end
+#endif
+
+@interface LNPopupContentView () <_LNPopupLayoutBarLayoutDelegate> @end
 
 @implementation LNPopupContentView
 {
@@ -27,8 +53,8 @@
 	NSLayoutConstraint* _popupCloseButtonTrailingConstraint;
 	
 #if !TARGET_OS_MACCATALYST
-	UIView* _leadingLayoutView;
-	UIView* _trailingLayoutView;
+	UIBarButtonItem* _leadingBarItem;
+	UIBarButtonItem* _trailingBarItem;
 #endif
 }
 
@@ -165,17 +191,25 @@
 #if !TARGET_OS_MACCATALYST
 		if(LNPopupEnvironmentHasGlass())
 		{
-			auto vc = [UIViewController new];
-			_leadingLayoutView = [UIView new];
-			_leadingLayoutView.frame = CGRectMake(0, 0, 44, 44);
-			vc.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_leadingLayoutView];
-			_trailingLayoutView = [UIView new];
-			_trailingLayoutView.frame = CGRectMake(0, 0, 44, 44);
-			vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_trailingLayoutView];
+			auto vc = [_LNPopupContentViewLayoutEmptyController new];
+			_leadingBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"inset.filled.leadingthird.square"] style:UIBarButtonItemStylePlain target:nil action:nil];
+			_trailingBarItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"inset.filled.trailingthird.square"] style:UIBarButtonItemStylePlain target:nil action:nil];
+			
+#if defined(__IPHONE_27_1)
+			if(@available(iOS 27.1, *))
+			{
+				_leadingBarItem.axisBehavior = UIBarButtonItemAxisBehaviorVerticalPreferred;
+				_trailingBarItem.axisBehavior = UIBarButtonItemAxisBehaviorVerticalPreferred;
+			}
+#endif
+			
+			vc.navigationItem.leftBarButtonItem = _leadingBarItem;
+			vc.navigationItem.rightBarButtonItem = _trailingBarItem;
 			
 			_layoutController = [[_LNPopupContentViewLayoutController alloc] initWithRootViewController:vc];
 			_layoutController.view.userInteractionEnabled = NO;
-//			_layoutController.view.alpha = 0.3;
+			_layoutController.view.alpha = 0.3;
+			_layoutController._layoutDelegate = self;
 			_layoutController.view.hidden = YES;
 			[self addSubview:_layoutController.view];
 		}
@@ -183,6 +217,27 @@
 	}
 	
 	return self;
+}
+
+- (void)_updateLayoutAxisBehaviorFromContentController
+{
+#if !TARGET_OS_MACCATALYST
+	if(_currentPopupContentViewController == nil)
+	{
+		return;
+	}
+	
+	if(LNPopupEnvironmentHasGlass())
+	{
+#if defined(__IPHONE_27_1)
+		if(@available(iOS 27.1, *))
+		{
+			_LNPopupContentViewLayoutEmptyController* vc = (id)_layoutController.topViewController;
+			vc.preferredVerticalBarBehavior = _currentPopupContentViewController.preferredVerticalBarBehavior;
+		}
+#endif
+	}
+#endif
 }
 
 - (void)pressesEnded:(NSSet<UIPress *> *)presses withEvent:(UIPressesEvent *)event
@@ -226,8 +281,8 @@
 #if !TARGET_OS_MACCATALYST
 	if(LNPopupEnvironmentHasGlass())
 	{
-		_layoutController.view.frame = self.bounds;
-		[_layoutController.navigationBar _ln_removeInteractionsFromSubviewTree];
+		_layoutController.view.frame = _contentView.frame;
+		[_layoutController.view _ln_removeInteractionsFromSubviewTree];
 	}
 #endif
 }
@@ -355,31 +410,55 @@
 		return;
 	}
 	
-	switch(self.effectivePopupCloseButtonPositioning)
+	dispatch_block_t leadingOrVerticalTop = ^ {
+		_popupCloseButtonLeadingConstraint.active = YES;
+		_popupCloseButtonCenterConstraint.active = NO;
+		_popupCloseButtonTrailingConstraint.active = NO;
+	};
+	
+	BOOL hasVerticalEdge = NO;
+	
+#if defined(__IPHONE_27_1) && !TARGET_OS_MACCATALYST
+	if(@available(iOS 27.1, *))
+	if(_layoutController.topViewController.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
 	{
-		default:
-		case LNPopupCloseButtonPositioningLeading:
-			_popupCloseButtonLeadingConstraint.active = YES;
-			_popupCloseButtonCenterConstraint.active = NO;
-			_popupCloseButtonTrailingConstraint.active = NO;
-			break;
-		case LNPopupCloseButtonPositioningCenter:
-			_popupCloseButtonLeadingConstraint.active = NO;
-			_popupCloseButtonCenterConstraint.active = YES;
-			_popupCloseButtonTrailingConstraint.active = NO;
-			break;
-		case LNPopupCloseButtonPositioningTrailing:
-			_popupCloseButtonLeadingConstraint.active = NO;
-			_popupCloseButtonCenterConstraint.active = NO;
-			_popupCloseButtonTrailingConstraint.active = YES;
-			break;
+		hasVerticalEdge = YES;
 	}
+#endif
 	
 	if(self.currentPopupContentViewController == nil)
 	{
 		return;
 	}
-		
+	
+	else
+	{
+		switch(self.effectivePopupCloseButtonPositioning)
+		{
+			default:
+			case LNPopupCloseButtonPositioningLeading:
+				leadingOrVerticalTop();
+				break;
+			case LNPopupCloseButtonPositioningCenter:
+				_popupCloseButtonLeadingConstraint.active = NO;
+				_popupCloseButtonCenterConstraint.active = YES;
+				_popupCloseButtonTrailingConstraint.active = NO;
+				break;
+			case LNPopupCloseButtonPositioningTrailing:
+				if(hasVerticalEdge)
+				{
+					leadingOrVerticalTop();
+				}
+				else
+				{
+					_popupCloseButtonLeadingConstraint.active = NO;
+					_popupCloseButtonCenterConstraint.active = NO;
+					_popupCloseButtonTrailingConstraint.active = YES;
+				}
+				break;
+		}
+	}
+	
 	NSDirectionalEdgeInsets layoutMargins = self.currentPopupContentViewController.view.directionalLayoutMargins;
 	CGFloat topConstant = 0.0;
 	CGFloat leadingConstant = 0.0;
@@ -392,58 +471,108 @@
 #else
 	if(LNPopupEnvironmentHasGlass())
 	{
-		[UIView performWithoutAnimation:^{
-			[_layoutController.view layoutIfNeeded];
-		}];
-		
-		CGRect leadingFrame = [self convertRect:_leadingLayoutView.bounds fromView:_leadingLayoutView];
-		CGRect trailingFrame = [self convertRect:_trailingLayoutView.bounds fromView:_trailingLayoutView];
-	
-		NSDirectionalEdgeInsets cornerAdaptionMargin = NSDirectionalEdgeInsetsZero;
 		if(@available(iOS 26.0, *))
 		{
-			UIEdgeInsets insets = [self.window edgeInsetsForLayoutRegion:[UIViewLayoutRegion marginsLayoutRegionWithCornerAdaptation:UIViewLayoutRegionAdaptivityAxisHorizontal]];
+			[UIView performWithoutAnimation:^{
+				_layoutController.view.frame = _contentView.frame;
+				[_layoutController.view layoutIfNeeded];
+			}];
 			
-			BOOL hasWindowControls = insets.left != insets.right;
-			if(insets.left > 30 && hasWindowControls)
+			BOOL hasVerticalBarEdge = NO;
+			CGRect leadingFrame;
+			
+#if defined(__IPHONE_27_1)
+			if(@available(iOS 27.1, *))
+			if(_layoutController.topViewController.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified)
 			{
-				insets.left += 10;
+				hasVerticalBarEdge = YES;
+				
+				UIView* view = [_LNPopupToolbar _viewForBarButtonItem:_leadingBarItem];
+				if(view.window == nil)
+				{
+					leadingFrame = [_layoutController.navigationBar.topItem.overflowPresentationSource frameInView:self];
+				}
+				else
+				{
+					leadingFrame = [self convertRect:view.bounds fromView:view];
+				}
+				
+				leadingConstant = leadingFrame.origin.x - 4;
+				
+				if(self.effectivePopupCloseButtonPositioning == LNPopupCloseButtonPositioningCenter)
+				{
+#if defined(__IPHONE_27_2)
+					if(@available(iOS 27.2, *))
+					{
+						topConstant = [self edgeInsetsForLayoutRegion:[UIViewLayoutRegion layoutRegionForBarOnEdge:UIRectEdgeTop]].top;
+					}
+					else
+					{
+#endif
+						topConstant = 24;
+#if defined(__IPHONE_27_2)
+					}
+#endif
+				}
+				else
+				{
+					topConstant = leadingFrame.origin.y - 4;
+				}
 			}
-			else
+#endif
+			
+			if(hasVerticalBarEdge == NO)
 			{
-				insets.left = 0;
+				UIView* leadingView = [_LNPopupToolbar _viewForBarButtonItem:_leadingBarItem];
+				leadingFrame = [self convertRect:leadingView.bounds fromView:leadingView];
+				UIView* trailingView = [_LNPopupToolbar _viewForBarButtonItem:_trailingBarItem];
+				CGRect trailingFrame = [self convertRect:trailingView.bounds fromView:trailingView];
+				
+				NSDirectionalEdgeInsets cornerAdaptionMargin = NSDirectionalEdgeInsetsZero;
+				
+				UIEdgeInsets insets = [self.window edgeInsetsForLayoutRegion:[UIViewLayoutRegion marginsLayoutRegionWithCornerAdaptation:UIViewLayoutRegionAdaptivityAxisHorizontal]];
+				
+				BOOL hasWindowControls = insets.left != insets.right;
+				if(insets.left > 30 && hasWindowControls)
+				{
+					insets.left += 10;
+				}
+				else
+				{
+					insets.left = 0;
+				}
+				
+				if(insets.right > 30 && hasWindowControls)
+				{
+					insets.right += 10;
+				}
+				else
+				{
+					insets.right = 0;
+				}
+				
+				CGRect frameInWindow = [self.window convertRect:self.bounds fromView:self];
+				
+				insets.left -= frameInWindow.origin.x;
+				
+				cornerAdaptionMargin = _LNDirectionalEdgeInsetsFromEdgeInsets(self, insets);
+				
+				if(leadingFrame.origin.x < trailingFrame.origin.x)
+				{
+					//LTR
+					leadingConstant = MAX(cornerAdaptionMargin.leading, leadingFrame.origin.x - 4);
+					trailingConstant = MAX(cornerAdaptionMargin.trailing, self.bounds.size.width - trailingFrame.origin.x - trailingFrame.size.width - 4);
+				}
+				else
+				{
+					//RTL
+					trailingConstant = MAX(cornerAdaptionMargin.trailing, trailingFrame.origin.x - 4);
+					leadingConstant = MAX(cornerAdaptionMargin.leading, self.bounds.size.width - leadingFrame.origin.x - leadingFrame.size.width - 4);
+				}
+				
+				topConstant = leadingFrame.origin.y - 4;
 			}
-			
-			if(insets.right > 30 && hasWindowControls)
-			{
-				insets.right += 10;
-			}
-			else
-			{
-				insets.right = 0;
-			}
-			
-			CGRect frameInWindow = [self.window convertRect:self.bounds fromView:self];
-			
-			insets.left -= frameInWindow.origin.x;
-			
-			cornerAdaptionMargin = _LNDirectionalEdgeInsetsFromEdgeInsets(self, insets);
 		}
-		
-		if(leadingFrame.origin.x < trailingFrame.origin.x)
-		{
-			//LTR
-			leadingConstant = MAX(cornerAdaptionMargin.leading, leadingFrame.origin.x - 4);
-			trailingConstant = MAX(cornerAdaptionMargin.trailing, self.bounds.size.width - trailingFrame.origin.x - trailingFrame.size.width - 4);
-		}
-		else
-		{
-			//RTL
-			trailingConstant = MAX(cornerAdaptionMargin.trailing, trailingFrame.origin.x - 4);
-			leadingConstant = MAX(cornerAdaptionMargin.leading, self.bounds.size.width - leadingFrame.origin.x - leadingFrame.size.width - 4);
-		}
-		
-		topConstant = leadingFrame.origin.y - 4;
 	}
 	else
 	{
@@ -554,6 +683,13 @@
 		
 		_effectView.effect = effectToUse;
 	}
+}
+
+#pragma mark _LNPopupLayoutBarLayoutDelegate
+
+- (void)_layoutBarDidLayoutSubviews
+{
+	[self _repositionPopupCloseButtonAnimated:NO];
 }
 
 @end

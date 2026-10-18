@@ -11,7 +11,19 @@
 #import "UIView+LNPopupSupportPrivate.h"
 
 #if !TARGET_OS_MACCATALYST
-@interface _LNPopupContentViewLayoutController : UINavigationController @end
+@interface _LNPopupContentViewLayoutEmptyController : UIViewController
+
+#if defined(__IPHONE_27_1)
+@property (nonatomic, readwrite) UIVerticalBarBehavior preferredVerticalBarBehavior API_AVAILABLE(ios(27.1), tvos(27.1), visionos(27.1));
+#endif
+
+@end
+
+@interface _LNPopupContentViewLayoutController : UINavigationController
+
+@property (nonatomic, weak) id<_LNPopupLayoutBarLayoutDelegate> _layoutDelegate;
+
+@end
 #endif
 
 @interface LNPopupContentView ()
@@ -25,7 +37,7 @@
 @property (nonatomic, strong) UIVisualEffectView* effectView;
 @property (nonatomic, strong, readonly) UIView* contentView;
 #if !TARGET_OS_MACCATALYST
-@property (nonatomic, strong, readonly, getter=_layoutController) UINavigationController* layoutController;
+@property (nonatomic, strong, readonly, getter=_layoutController) _LNPopupContentViewLayoutController* layoutController;
 #endif
 
 - (UIVisualEffect*)_currentEffect;
