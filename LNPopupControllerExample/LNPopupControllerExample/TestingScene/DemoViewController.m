@@ -991,7 +991,15 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-	segue.destinationViewController.hidesBottomBarWhenPushed = self.isInSearchTab == NO &&
+	BOOL shouldHideBottom = YES;
+#if defined(__IPHONE_27_1)
+	if(@available(iOS 27.1, *))
+	{
+		shouldHideBottom = self.traitCollection.verticalBarEdge == UIVerticalBarEdgeUnspecified;
+	}
+#endif
+	
+	segue.destinationViewController.hidesBottomBarWhenPushed = shouldHideBottom && self.isInSearchTab == NO &&
 #if LNPOPUP
 	[NSUserDefaults.settingDefaults boolForKey:PopupSettingHidesBottomBarWhenPushed];
 #else
