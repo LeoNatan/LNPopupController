@@ -3,7 +3,7 @@
 //  LNPopupControllerExample
 //
 //  Created by Léo Natan on 4/10/26.
-//  Copyright © 2026 Léo Natan. All rights reserved.
+//  Copyright © 2015-2026 Léo Natan. All rights reserved.
 //
 
 import UIKit

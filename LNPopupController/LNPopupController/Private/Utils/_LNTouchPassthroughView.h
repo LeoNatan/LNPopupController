@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Léo Natan on 7/7/26.
-//  Copyright © 2026 Léo Natan. All rights reserved.
+//  Copyright © 2015-2026 Léo Natan. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

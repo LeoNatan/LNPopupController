@@ -3,7 +3,7 @@
 //  LNPopupController
 //
 //  Created by Léo Natan on 2025-03-24.
-//  Copyright © 2015-2025 Léo Natan. All rights reserved.
+//  Copyright © 2015-2026 Léo Natan. All rights reserved.
 //
 
 #import "LNPopupImageView+Private.h"
