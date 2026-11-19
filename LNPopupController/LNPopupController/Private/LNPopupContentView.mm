@@ -586,6 +586,7 @@
 				CGRect frameInWindow = [self.window convertRect:self.bounds fromView:self];
 				
 				insets.left -= frameInWindow.origin.x;
+				insets.right -= self.window.bounds.size.width - CGRectGetMaxX(frameInWindow);
 				
 				cornerAdaptionMargin = _LNDirectionalEdgeInsetsFromEdgeInsets(self, insets);
 				

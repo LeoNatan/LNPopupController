@@ -2428,6 +2428,47 @@ static void* LNTabBarControllerWantsForcedAnimatedPopupBarLayout = &LNTabBarCont
 
 #pragma mark - UINavigationController
 
+//Ensure the the popup content view remains on top, over the column container.
+@interface __LNPopupColumnContainerViewSupport : NSObject @end
+@implementation __LNPopupColumnContainerViewSupport
+
+static BOOL __ln_isPromotingPopupContentViews = NO;
+
+- (void)didAddSubview:(UIView*)subview
+{
+	Class superclass = LNDynamicSubclassSuper(self, __LNPopupColumnContainerViewSupport.class);
+	struct objc_super super = {.receiver = self, .super_class = superclass};
+	void (*super_class)(struct objc_super*, SEL, UIView*) = reinterpret_cast<decltype(super_class)>(objc_msgSendSuper);
+	super_class(&super, _cmd, subview);
+
+	if(__ln_isPromotingPopupContentViews || [subview isKindOfClass:LNPopupContentView.class])
+	{
+		return;
+	}
+
+	__ln_isPromotingPopupContentViews = YES;
+
+	UIView* _self = (UIView*)self;
+	for(UIView* view in _self.subviews.copy)
+	{
+		if([view isKindOfClass:LNPopupContentView.class] == NO)
+		{
+			continue;
+		}
+
+		LNPopupContentView* popupContentView = (LNPopupContentView*)view;
+		[_self bringSubviewToFront:popupContentView];
+		if(popupContentView.transitionView.superview == _self)
+		{
+			[_self bringSubviewToFront:popupContentView.transitionView];
+		}
+	}
+
+	__ln_isPromotingPopupContentViews = NO;
+}
+
+@end
+
 @implementation UINavigationController (LNPopupSupportPrivate)
 
 - (void)_layoutModernNavigationControllerFloatingPopupWithSuperFallback:(void(^)(void))superFallback
@@ -2457,6 +2498,8 @@ static void* LNTabBarControllerWantsForcedAnimatedPopupBarLayout = &LNTabBarCont
 					return [NSStringFromClass(viewToTest.class) hasSuffix:columnContainerView];
 				} includingSelf:YES];
 				target = newTarget;
+
+				LNDynamicSubclass(target, __LNPopupColumnContainerViewSupport.class);
 			}
 			
 			[target addSubview:self._ln_popupController_nocreate.popupContentView];
