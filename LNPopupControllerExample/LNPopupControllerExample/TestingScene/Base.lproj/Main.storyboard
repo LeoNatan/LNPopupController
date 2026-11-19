@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25408" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="25507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="cyK-Q5-zYP">
     <device id="retina6_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25406"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="25506"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -19,6 +19,7 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="SEF-81-WTq" customClass="DemoGalleryControllerTableView">
                         <rect key="frame" x="0.0" y="0.0" width="440" height="956"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                         <sections>
                             <tableViewSection headerTitle="Standard Scenes" footerTitle="Presents a standard test scene with a popup bar." id="u0a-MD-vX0">
                                 <cells>
@@ -292,7 +293,10 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="dSO-ot-Xul" kind="presentation" id="rsJ-QZ-A9c"/>
+                                            <segue destination="dSO-ot-Xul" kind="presentation" id="rsJ-QZ-A9c">
+                                                <segue key="commit" inheritsFrom="parent" id="A63-ap-V9u"/>
+                                                <segue key="preview" inheritsFrom="commit" id="1BG-IY-eeB"/>
+                                            </segue>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -306,7 +310,7 @@
                     <navigationItem key="navigationItem" title="LNPopupController" largeTitleDisplayMode="always" id="JYD-6c-4Kf">
                         <barButtonItem key="rightBarButtonItem" title="Settings" image="gears" id="PjS-ok-m0Q">
                             <connections>
-                                <segue destination="Rxt-Jt-GTT" kind="presentation" identifier="Settings" modalPresentationStyle="formSheet" id="hNg-w3-Zdw"/>
+                                <segue destination="Rxt-Jt-GTT" kind="presentation" identifier="Settings" modalPresentationStyle="pageSheet" id="hNg-w3-Zdw"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -335,7 +339,7 @@
                                 <rect key="frame" x="16" y="78" width="408" height="828"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1234" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egj-1g-EKA">
-                                        <rect key="frame" x="71" y="349.33333333333331" width="266.33333333333337" height="129.66666666666669"/>
+                                        <rect key="frame" x="71" y="349.33333333333331" width="266.33333333333331" height="129.66666666666669"/>
                                         <fontDescription key="fontDescription" name="GillSans-Bold" family="Gill Sans" pointSize="112"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -787,6 +791,7 @@
         <segue reference="08s-5F-WiR"/>
         <segue reference="7V8-5m-eAW"/>
         <segue reference="SIC-fE-4sh"/>
+        <segue reference="rsJ-QZ-A9c"/>
         <segue reference="eqV-Tq-eJl"/>
         <segue reference="1U6-NV-9t4"/>
         <segue reference="cRg-Ru-N9x"/>
@@ -808,6 +813,9 @@
         </systemColor>
         <systemColor name="systemGreenColor">
             <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemGroupedBackgroundColor">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
