@@ -49,6 +49,7 @@
 - (void)_applyBackgroundEffectWithContentViewController:(UIViewController*)vc popupBar:(LNPopupBar*)popupBar;
 
 - (void)_repositionPopupCloseButton;
+- (void)_updateLayoutAxisBehaviorFromContentController;
 - (void)_repositionPopupCloseButtonAnimated:(BOOL)animated;
 
 @property (nonatomic, getter=_applyScreenCorners, setter=_setApplyScreenCorners:) BOOL applyScreenCorners;

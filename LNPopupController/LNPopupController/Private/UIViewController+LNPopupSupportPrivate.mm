@@ -18,6 +18,7 @@
 #import "LNForwardingDelegate.h"
 #import "LNPopupContentView+Private.h"
 #import "UIScreen+LNPopupSupportPrivate.h"
+#import "LNPopupVerticalBarSupport.h"
 
 #import <objc/runtime.h>
 #import <os/log.h>
@@ -672,10 +673,11 @@ void __LNViewControllerCopySystemSafeAreaGeometry(UIViewController* source, UIVi
 		static __LNIvarBitfield vBEEBitfield = __LNIvarBitfieldNamed(UIViewController.class, LNPopupHiddenString("_viewControllerFlags"), LNPopupHiddenString("verticalBarEligibleEdges"));
 		if(vBEEBitfield.bitOffset >= 0 && [source respondsToSelector:vBEESEL])
 		{
-			NSUInteger sourceEdges = vBEEFunc(source, vBEESEL);
+			BOOL forcingHorizontalStatusBarAxis = _LNPopupIsForcingHorizontalStatusBarAxis();
+			NSUInteger sourceEdges = forcingHorizontalStatusBarAxis ? 0 : vBEEFunc(source, vBEESEL);
 			NSUInteger targetEdges = vBEEFunc(target, vBEESEL);
 			
-			if(sourceEdges != targetEdges && __LNIvarBitfieldRead(source, vBEEBitfield) == sourceEdges && __LNIvarBitfieldRead(target, vBEEBitfield) == targetEdges)
+			if(sourceEdges != targetEdges && (forcingHorizontalStatusBarAxis || __LNIvarBitfieldRead(source, vBEEBitfield) == sourceEdges) && __LNIvarBitfieldRead(target, vBEEBitfield) == targetEdges)
 			{
 				__LNIvarBitfieldWrite(target, vBEEBitfield, sourceEdges);
 				geometryChanged = YES;
@@ -802,10 +804,24 @@ void __LNViewControllerCopySystemSafeAreaGeometry(UIViewController* source, UIVi
 			insets = __LNEdgeInsetsSum(self.popupPresentationContainerViewController.view.safeAreaInsets, UIEdgeInsetsMake(0, 0, - _LNPopupSafeAreaInsets(self.popupPresentationContainerViewController).bottom, 0));
 		}
 
+#if defined(__IPHONE_27_1)
+		BOOL forcesHorizontalStatusBarAxis = NO;
+		if(@available(iOS 27.1, *))
+		{
+			forcesHorizontalStatusBarAxis = _LNPopupResolvedVerticalBarBehavior(self) == UIVerticalBarBehaviorDisabled;
+			if(forcesHorizontalStatusBarAxis)
+			{
+				insets = _LNPopupInsetsAdjustedForHorizontalStatusBarAxis(insetsSourceController.view, insets);
+			}
+		}
+#endif
+		
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(self, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
 		__LNViewControllerSetContentMargins(self, contentMargins);
 #if defined(__IPHONE_27_1)
-        __LNViewControllerCopySystemSafeAreaGeometry(insetsSourceController, self);
+		_LNPopupPerformForcingHorizontalStatusBarAxis(forcesHorizontalStatusBarAxis, ^{
+			__LNViewControllerCopySystemSafeAreaGeometry(insetsSourceController, self);
+		});
 #endif
 
 		self.view.insetsLayoutMarginsFromSafeArea = YES;
@@ -817,7 +833,9 @@ void __LNViewControllerCopySystemSafeAreaGeometry(UIViewController* source, UIVi
 		_setContentOverlayInsets_andLeftMargin_rightMarginFunc(containingContentView.layoutController, _setContentOverlayInsets_andLeftMargin_rightMarginSEL, insets, contentMargins.left, contentMargins.right);
 		__LNViewControllerSetContentMargins(containingContentView.layoutController, contentMargins);
 #if defined(__IPHONE_27_1)
-		__LNViewControllerCopySystemSafeAreaGeometry(insetsSourceController, containingContentView.layoutController);
+		_LNPopupPerformForcingHorizontalStatusBarAxis(forcesHorizontalStatusBarAxis, ^{
+			__LNViewControllerCopySystemSafeAreaGeometry(insetsSourceController, containingContentView.layoutController);
+		});
 #endif
 		
 		containingContentView.layoutController.view.insetsLayoutMarginsFromSafeArea = YES;

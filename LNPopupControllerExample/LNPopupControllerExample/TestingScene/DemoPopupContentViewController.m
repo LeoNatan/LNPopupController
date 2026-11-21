@@ -496,6 +496,12 @@ void LNApplyTitleWithSettings(UIViewController* self)
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
+	//For cuter animation
+	if([NSUserDefaults.settingDefaults integerForKey:PopupSettingDuoPopupContentVerticalBarBehavior] == 1)
+	{
+		return UIStatusBarStyleDefault;
+	}
+	
 	return self.view.traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight ? UIStatusBarStyleDarkContent : UIStatusBarStyleLightContent;
 }
 
@@ -513,7 +519,7 @@ void LNApplyTitleWithSettings(UIViewController* self)
 #if defined(__IPHONE_27_1)
 - (UIVerticalBarBehavior)preferredVerticalBarBehavior
 {
-	return [NSUserDefaults.settingDefaults integerForKey:PopupSettingDuoVerticalBarBehavior];
+	return [NSUserDefaults.settingDefaults integerForKey:PopupSettingDuoPopupContentVerticalBarBehavior];
 }
 #endif
 

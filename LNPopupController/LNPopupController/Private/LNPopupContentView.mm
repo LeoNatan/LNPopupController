@@ -13,6 +13,7 @@
 #import "UIScreen+LNPopupSupportPrivate.h"
 #import "_LNPopupBase64Utils.hh"
 #import "_LNPopupCatalystHelper.h"
+#import "LNPopupVerticalBarSupport.h"
 
 #if !TARGET_OS_MACCATALYST
 @implementation _LNPopupContentViewLayoutEmptyController
@@ -239,6 +240,10 @@
 		{
 			_LNPopupContentViewLayoutEmptyController* vc = (id)_layoutController.topViewController;
 			vc.preferredVerticalBarBehavior = _currentPopupContentViewController.preferredVerticalBarBehavior;
+			
+			BOOL isDisabled = _LNPopupResolvedVerticalBarBehavior(_currentPopupContentViewController) == UIVerticalBarBehaviorDisabled;
+			_LNPopupSetVerticalBarDisabled(_currentPopupContentViewController, isDisabled);
+			_LNPopupSetVerticalBarDisabled(_layoutController, isDisabled);
 		}
 #endif
 	}

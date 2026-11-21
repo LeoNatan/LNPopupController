@@ -491,6 +491,8 @@ Status bar management of the popup content view controller is respected and appl
 
 Home indicator visibility control is respected and applied when appropriate.
 
+On devices with a vertical bar, such as the iPhone Duo, the vertical bar behavior (`preferredVerticalBarBehavior`) of the popup content view controller is respected and applied when appropriate.
+
 #### Context Menu Interactions
 
 Context menus are supported. Add a `UIContextMenuInteraction` interaction object to the popup bar, and it will behave as expected.

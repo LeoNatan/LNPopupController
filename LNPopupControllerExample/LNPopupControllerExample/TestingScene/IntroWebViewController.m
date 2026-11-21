@@ -30,11 +30,6 @@
 
 @implementation IntroWebViewController
 
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
-	return UIStatusBarStyleDefault;
-}
-
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
@@ -131,16 +126,28 @@
 #endif
 }
 
-#if TARGET_OS_MACCATALYST
 - (void)viewDidMoveToPopupContainerContentView:(LNPopupContentView *)popupContentView
 {
 	[super viewDidMoveToPopupContainerContentView:popupContentView];
 	
+#if TARGET_OS_MACCATALYST
 	LNPopupItemSetStandardMusicControls(self.popupItem, self.popupPresentationContainerViewController.popupBar, YES, NO, self.traitCollection, nil, nil, nil);
 	[self setNeedsPopupButtonsUpdateAnimated:NO];
 	self.popupItem.progress = (float) arc4random() / UINT32_MAX;
+#else
+	if(@available(iOS 27.1, *))
+	{
+		[popupContentView addInteraction:[[UIHingeInteraction alloc] initWithUpdateHandler:^(UIHingeInteraction* interaction, UIHingeInteractionUpdate* update) {
+			if(update.hinge.status != UIHingeStatusUnknown)
+			{
+				popupContentView.popupCloseButtonPositioning = LNPopupCloseButtonPositioningLeading;
+			}
+		}]];
+	}
+#endif
 }
 
+#if TARGET_OS_MACCATALYST
 - (void)setNeedsPopupButtonsUpdateAnimated:(BOOL)animated
 {
 	[self.popupItem.leadingBarButtonItems enumerateObjectsUsingBlock:^(UIBarButtonItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -183,6 +190,16 @@
 	[super viewSafeAreaInsetsDidChange];
 	
 	_webView.scrollView.scrollIndicatorInsets = self.view.safeAreaInsets;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+	return UIStatusBarStyleLightContent;
+}
+
+- (UIVerticalBarBehavior)preferredVerticalBarBehavior
+{
+	return UIVerticalBarBehaviorDisabled;
 }
 
 @end
