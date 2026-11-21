@@ -84,7 +84,28 @@ static BOOL __ln_hackApplied = NO;
 	{
 		static NSString* key = LNPopupHiddenString("_hostedElementLayoutResolver");
 		CGRect (^hostedElementLayoutResolver)(NSInteger element) = [self valueForKey:key];
-		return hostedElementLayoutResolver(2);
+		CGRect rv = hostedElementLayoutResolver(2);
+
+		//Fix open landscape iPhone Duo with vertical bar disabled layout bug 🤦‍♂️
+		CGRect containerBounds = self.superview.bounds;
+		BOOL isWideOnPhone = self.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone && (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular || containerBounds.size.width > containerBounds.size.height);
+		BOOL hasVerticalBarEdge = NO;
+#if defined(__IPHONE_27_1)
+		if(@available(iOS 27.1, *))
+		{
+			hasVerticalBarEdge = self.traitCollection.verticalBarEdge != UIVerticalBarEdgeUnspecified;
+		}
+#endif
+		CGRect searchFieldFrame = hostedElementLayoutResolver(1);
+		if(isWideOnPhone && hasVerticalBarEdge == NO && CGRectIsEmpty(rv) == NO && CGRectIsEmpty(searchFieldFrame) == NO && CGRectGetMaxY(rv) <= CGRectGetMinY(searchFieldFrame))
+		{
+			CGFloat minX = MIN(CGRectGetMinX(rv), CGRectGetMinX(searchFieldFrame));
+			CGFloat maxX = MAX(CGRectGetMaxX(rv), CGRectGetMaxX(searchFieldFrame));
+			rv.origin.x = minX;
+			rv.size.width = maxX - minX;
+		}
+
+		return rv;
 	}
 	
 	return [[self valueForKey:__LNFrameForHostedAccessoryViewKey] CGRectValue];

@@ -722,10 +722,10 @@ void __LNViewControllerCopySystemSafeAreaGeometry(UIViewController* source, UIVi
 		{
 			__LNClippedSafeAreaCornerInsets sourceCornerInsets;
 			UIWindow* window = sourceView.window;
-			if(window != nil && [targetView respondsToSelector:cSACIFFISIVCSEL])
+			if(window != nil && [sourceView respondsToSelector:cSACIFFISIVCSEL])
 			{
 				CGRect sourceFrameInWindow = [window convertRect:sourceView.bounds fromView:sourceView];
-				sourceCornerInsets = cSACIFFISIVCFunc(targetView, cSACIFFISIVCSEL, sourceFrameInWindow, window, YES);
+				sourceCornerInsets = cSACIFFISIVCFunc(sourceView, cSACIFFISIVCSEL, sourceFrameInWindow, window, YES);
 			}
 			else
 			{
