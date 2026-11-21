@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en" data-slop-level="3">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LNPopupController ✨ Slopified</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="dist/slopstrap.css">
+<style>
+:root { color-scheme: dark; }
+body { background: #020617; color: #e2e8f0; }
+.lnp-gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.lnp-shot { width: 100%; max-width: 100%; border-radius: 18px; border: 1px solid rgba(255,255,255,.12); display: block; }
+.lnp-phone { max-width: 320px; margin-inline: auto; }
+.lnp-fineprint { font-size: .78rem; opacity: .55; }
+.lnp-list { display: grid; gap: .6rem; padding: 0; margin: 0; list-style: none; }
+.lnp-list li { min-width: 0; }
+.slop-card, .slop-terminal { min-width: 0; }
+pre.slop-code { overflow-x: auto; }
+.lnp-marquee-reverse .slop-marquee-track { animation-direction: reverse; }
+</style>
+
+</head>
+<body class="slop-body slop-grid-bg">
+
+<div class="slop-orb-layer" aria-hidden="true">
+  <div class="slop-orb slop-orb-purple"></div>
+  <div class="slop-orb slop-orb-cyan"></div>
+  <div class="slop-orb slop-orb-pink"></div>
+  <div class="slop-orb slop-orb-emerald"></div>
+</div>
+
+<div class="slop-content-layer">
+
+<header class="slop-navbar">
+  <div class="slop-container slop-navbar-inner lnp-gutter">
+    <a class="slop-brand" href="https://github.com/LeoNatan/LNPopupController"><span class="slop-brand-mark">▁</span> LNPopupController</a>
+    <ul class="slop-nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#install">Install</a></li>
+    </ul>
+    <span class="slop-status"><span class="slop-dot slop-dot-green"></span> All popups operational</span>
+  </div>
+</header>
+
+<section class="slop-section slop-center">
+  <div class="slop-container lnp-gutter slop-stack">
+    <div class="slop-row-center"><div class="slop-pill slop-pill-shimmer">🚀 Now with iOS 27 glass™ · v4.6.3 just dropped</div></div>
+    <h1 class="slop-h1">The <span class="slop-text-gradient">mini-player</span> framework that <span class="slop-serif-emphasis slop-text-gradient-hot">redefines</span> the <span class="slop-underline slop-underline-squiggle slop-underline-animated">bottom of your screen</span></h1>
+    <p class="slop-lead slop-sparkle">It's not just a popup bar — it's a paradigm shift in how humanity experiences view controllers.</p>
+    <p class="slop-muted">Present any <span class="slop-mono">UIViewController</span> as a popup of any other <span class="slop-mono">UIViewController</span>. Just like the Apple Music mini-player, but you're allowed to have it.</p>
+    <div class="slop-row-center">
+      <a class="slop-btn slop-btn-primary slop-btn-lg" href="https://github.com/LeoNatan/LNPopupController">Start popping for free →</a>
+      <a class="slop-btn slop-btn-rainbow slop-btn-lg" href="#install">Book a demo with our Popup Success Team</a>
+    </div>
+    <p class="lnp-fineprint">No credit card required. No credit card accepted. It's MIT.</p>
+  </div>
+</section>
+
+<section class="slop-section-sm">
+  <div class="slop-container lnp-gutter slop-stack">
+    <p class="slop-center slop-muted slop-mono">TRUSTED BY 10,000+ VIEW CONTROLLERS AT COMPANIES WE MADE UP</p>
+    <div data-slop-marquee></div>
+  </div>
+</section>
+
+<section class="slop-section-sm">
+  <div class="slop-container lnp-gutter">
+    <div class="slop-grid-4">
+      <div class="slop-card slop-stat-card slop-border-l-purple">
+        <div class="slop-stat-value" data-slop-count="3142">0</div>
+        <div class="slop-stat-label">GitHub stars ⭐</div>
+        <div class="slop-stat-delta">↑ Every single one earned</div>
+      </div>
+      <div class="slop-card slop-stat-card slop-border-l-cyan">
+        <div class="slop-stat-value" data-slop-count="1190">0</div>
+        <div class="slop-stat-label">Commits of pure vibes</div>
+        <div class="slop-stat-delta">↑ Since 2015, before vibes existed</div>
+      </div>
+      <div class="slop-card slop-stat-card slop-border-l-emerald">
+        <div class="slop-stat-value" data-slop-count="13">0</div>
+        <div class="slop-stat-label">Minimum iOS version</div>
+        <div class="slop-stat-delta">↑ Backwards compatibility as a lifestyle</div>
+      </div>
+      <div class="slop-card slop-stat-card slop-border-l-pink">
+        <div class="slop-stat-value" data-slop-count="100">0</div>
+        <div class="slop-stat-label">% of bars that are popup bars</div>
+        <div class="slop-stat-delta">↑ Statistically, on our homepage</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slop-section" id="features">
+  <div class="slop-container lnp-gutter slop-stack">
+    <div class="slop-center slop-stack">
+      <span class="slop-badge slop-badge-ai">✨ AI-ADJACENT</span>
+      <h2 class="slop-h2">Everything you need to <span class="slop-serif-emphasis">disrupt</span> the <span class="slop-text-gradient">safe area</span></h2>
+      <p class="slop-lead">We asked ourselves: what if the bottom 64 points of your app could feel <span class="slop-underline slop-underline-rainbow">alive</span>?</p>
+    </div>
+
+    <div class="slop-bento">
+      <div class="slop-card slop-card-beam slop-bento-7 slop-stack">
+        <div class="slop-icon-box">🎵</div>
+        <h3 class="slop-h3">Popup Bars, Reimagined™</h3>
+        <p class="slop-muted">Floating, compact, glass. Docked to your tab bar, your toolbar, or the raw void at the bottom of the screen. Swipe up to present, swipe down to dismiss, tap the close button to feel something.</p>
+        <img class="lnp-shot" src="https://raw.githubusercontent.com/LeoNatan/LNPopupController/master/Supplements/intro-mac.png" alt="LNPopupController running on Mac Catalyst with a popup bar over a music app">
+      </div>
+      <div class="slop-card slop-bento-5 slop-stack">
+        <div class="slop-icon-box slop-icon-cyan">🫧</div>
+        <h3 class="slop-h3">Minimization, but make it <span class="slop-serif-emphasis">liquid</span></h3>
+        <p class="slop-muted">The bar shrinks when you scroll. It's not hiding — it's practicing mindfulness.</p>
+        <img class="lnp-shot lnp-phone" src="https://raw.githubusercontent.com/LeoNatan/LNPopupController/master/Supplements/floating_minimize.gif" alt="Floating popup bar minimizing into the tab bar while scrolling">
+      </div>
+
+      <div class="slop-card slop-bento-4 slop-border-l-amber slop-stack">
+        <div class="slop-icon-box slop-icon-amber">↔️</div>
+        <h3 class="slop-h3">Full Right-to-Left</h3>
+        <p class="slop-muted">Hebrew, Arabic, and every other language that reads the correct way around. Our popup bar is fluent in both directions — it's not just localized, it's emotionally bilingual.</p>
+      </div>
+      <div class="slop-card slop-bento-4 slop-border-l-emerald slop-stack">
+        <div class="slop-icon-box slop-icon-emerald">📱</div>
+        <h3 class="slop-h3">iPhone Duo™ Ready</h3>
+        <p class="slop-muted">Two screens. One popup bar. Fully supported when targeting the iOS 27.1 SDK and later. We folded so your layout doesn't have to.</p>
+      </div>
+      <div class="slop-card slop-bento-4 slop-border-l-pink slop-stack">
+        <div class="slop-icon-box slop-icon-pink">🖱️</div>
+        <h3 class="slop-h3">Pointer Interactions</h3>
+        <p class="slop-muted">Hover your iPad cursor over the bar and it glows. Like this website, but tasteful.</p>
+      </div>
+
+      <div class="slop-card slop-bento-6 slop-border-l-gradient slop-stack">
+        <div class="slop-icon-box slop-icon-indigo">🧠</div>
+        <h3 class="slop-h3">Popup Item Paging</h3>
+        <p class="slop-muted">Swipe sideways on the bar to move between items with a data source. Your users will think it's magic. It's <span class="slop-mono">LNPopupItem</span>.</p>
+      </div>
+      <div class="slop-card slop-bento-6 slop-border-l-rainbow slop-stack">
+        <div class="slop-icon-box">⚡</div>
+        <h3 class="slop-h3">ProMotion at 120Hz</h3>
+        <p class="slop-muted">Every frame of the transition is rendered at the speed of thought. Thought, in this case, being 120 times per second.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slop-section-sm">
+  <div class="slop-container lnp-gutter slop-stack">
+    <div class="slop-alert slop-border-l-cyan"><span class="slop-dot slop-dot-cyan"></span> <strong>Heads up:</strong> for SwiftUI, there's LNPopupUI. It's not a different library — it's the same journey, declaratively.</div>
+    <div class="slop-alert slop-border-l-amber"><span class="slop-dot slop-dot-amber"></span> <strong>Pro tip:</strong> present the popup bar on the outermost container controller. The README has said this since 2015. Nobody reads the README. You're reading a landing page instead. We get it.</div>
+  </div>
+</section>
+
+<section class="slop-section" id="install">
+  <div class="slop-container lnp-gutter">
+    <div class="slop-grid-2">
+      <div class="slop-stack">
+        <span class="slop-badge slop-badge-cyan">🔌 ZERO-CONFIG*</span>
+        <h2 class="slop-h2">Ship a mini-player in <span class="slop-serif-emphasis slop-text-gradient">three</span> lines</h2>
+        <p class="slop-lead">Our proprietary <span class="slop-mono">presentPopupBar</span> engine leverages cutting-edge Objective-C categories to synergize your tab bar controller with your content controller.</p>
+        <ul class="lnp-list slop-muted">
+          <li>✅ Swift Package Manager</li>
+          <li>✅ Swift and Objective-C</li>
+          <li>✅ iOS, iPadOS, Mac Catalyst</li>
+          <li>✅ Safe area insets maintained, like a responsible adult</li>
+        </ul>
+        <p class="lnp-fineprint">*Config is optional. Config is also extensive. See the README's 30-item table of contents.</p>
+      </div>
+      <div class="slop-terminal slop-card-beam">
+        <div class="slop-terminal-header">
+          <div class="slop-traffic-lights"><span></span><span></span><span></span></div>
+          <span class="slop-mono">NowPlaying.swift</span>
+          <button class="slop-btn slop-btn-ghost slop-btn-sm" data-slop-copy="#cmd">Copy</button>
+        </div>
+<pre class="slop-code" id="cmd">import LNPopupController
+
+nowPlaying.popupItem.title = "Disrupting the Safe Area"
+nowPlaying.popupItem.subtitle = "Dr. Sarah Chen ft. UITabBar"
+tabBarController?.presentPopupBar(with: nowPlaying)</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slop-section" id="pricing">
+  <div class="slop-container lnp-gutter slop-stack">
+    <div class="slop-center slop-stack">
+      <h2 class="slop-h2">Pricing that <span class="slop-serif-emphasis">scales</span> with your <span class="slop-text-gradient-animated">ambition</span></h2>
+      <div class="slop-row-center">
+        <span class="slop-muted">Monthly</span>
+        <button class="slop-switch" role="switch" aria-checked="false" aria-label="Toggle yearly billing" data-slop-billing-toggle><span class="slop-switch-thumb"></span></button>
+        <span class="slop-muted">Yearly (save 0%)</span>
+      </div>
+    </div>
+    <div class="slop-grid-3">
+      <div class="slop-card slop-pricing-card slop-stack">
+        <h3 class="slop-h3">Hobbyist</h3>
+        <div class="slop-price" data-price-monthly="$0" data-price-yearly="$0">$0</div>
+        <ul class="lnp-list slop-muted">
+          <li>✓ One popup bar</li>
+          <li>✓ Unlimited popup bars</li>
+          <li>✓ MIT license</li>
+        </ul>
+        <a class="slop-btn slop-btn-ghost slop-w-full" href="https://github.com/LeoNatan/LNPopupController">Get started</a>
+      </div>
+      <div class="slop-card slop-card-beam slop-pricing-card slop-pricing-popular slop-stack">
+        <span class="slop-badge slop-badge-popular slop-pricing-popular-tag">🔥 MOST POPULAR</span>
+        <h3 class="slop-h3">Pro Max Ultra</h3>
+        <div class="slop-price" data-price-monthly="$0" data-price-yearly="$0">$0</div>
+        <ul class="lnp-list slop-muted">
+          <li>✓ Everything in Hobbyist</li>
+          <li>✓ The exact same code</li>
+          <li>✓ A purple border around this card</li>
+          <li>✓ Priority GitHub issue (you can type faster)</li>
+        </ul>
+        <a class="slop-btn slop-btn-primary slop-w-full" href="https://github.com/LeoNatan/LNPopupController">Upgrade to Pro Max Ultra</a>
+      </div>
+      <div class="slop-card slop-pricing-card slop-stack">
+        <h3 class="slop-h3">Enterprise</h3>
+        <div class="slop-price" data-price-monthly="$0" data-price-yearly="$0">$0</div>
+        <ul class="lnp-list slop-muted">
+          <li>✓ Everything in Pro Max Ultra</li>
+          <li>✓ SOC 2 vibes</li>
+          <li>✓ A dedicated sponsor button</li>
+        </ul>
+        <a class="slop-btn slop-btn-rainbow slop-w-full" href="https://paypal.me/LeoNatan25">Contact sales (donate)</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slop-section">
+  <div class="slop-container lnp-gutter slop-stack">
+    <h2 class="slop-h2 slop-center">Loved by people who <span class="slop-serif-emphasis">definitely</span> exist</h2>
+    <div data-slop-testimonials="3"></div>
+  </div>
+</section>
+
+<section class="slop-section-sm">
+  <div class="slop-container lnp-gutter slop-stack">
+    <p class="slop-center slop-muted slop-mono">ALSO TRUSTED BY THE SAME COMPANIES, NOW SCROLLING THE OTHER WAY</p>
+    <div class="lnp-marquee-reverse" data-slop-marquee></div>
+  </div>
+</section>
+
+<section class="slop-section-sm">
+  <div class="slop-container lnp-gutter">
+    <div class="slop-card slop-card-beam slop-center slop-stack">
+      <h2 class="slop-h2 slop-sparkle-after">Ready to <span class="slop-serif-emphasis">pop</span>?</h2>
+      <p class="slop-lead">Join the thousands of apps whose users never once thought about the popup bar, because it just worked.</p>
+      <div class="slop-ai-bar">
+        <input id="lnp-ai" type="text" placeholder="Describe your dream mini-player…" aria-label="Describe your dream mini-player">
+        <button class="slop-btn slop-btn-primary slop-btn-sm" id="lnp-ai-go" type="button">Generate ✨</button>
+      </div>
+      <p class="slop-muted" id="lnp-ai-out" aria-live="polite">Our AI will analyze your prompt and recommend LNPopupController.</p>
+      <div class="slop-progress"><div class="slop-progress-bar" style="width: 87%"></div></div>
+      <p class="lnp-fineprint">87% of the way to popup enlightenment</p>
+    </div>
+  </div>
+</section>
+
+<footer class="slop-section-sm slop-center">
+  <div class="slop-container lnp-gutter slop-stack">
+    <p class="slop-muted">LNPopupController by Léo Natan · MIT · <a href="https://github.com/LeoNatan/LNPopupController">GitHub</a></p>
+    <p class="lnp-fineprint">Built with Slopstrap. Testimonials, logos and the status dot are fictional, as is any implied affiliation. The popup bar is real.</p>
+  </div>
+</footer>
+
+</div>
+
+<script src="dist/slopstrap.js"></script>
+<script>
+(function () {
+  var go = document.getElementById('lnp-ai-go');
+  var out = document.getElementById('lnp-ai-out');
+  var input = document.getElementById('lnp-ai');
+  go.addEventListener('click', function (e) {
+    var q = (input.value || 'a mini-player').trim();
+    out.textContent = 'Thinking deeply about "' + q + '"… Recommendation: LNPopupController. Confidence: 100%.';
+    var r = go.getBoundingClientRect();
+    if (window.Slopstrap && Slopstrap.sparkleBurst) Slopstrap.sparkleBurst(r.left + r.width / 2, r.top + r.height / 2, 24);
+  });
+})();
+</script>
+</body>
+</html>

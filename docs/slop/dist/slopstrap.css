@@ -1,0 +1,1628 @@
+/* ==========================================================================
+   ✨🚀⚡ SLOPSTRAP v4.2.0 — The Enterprise-Grade Vibecoded CSS Framework™ ⚡🚀✨
+   --------------------------------------------------------------------------
+   💡 "It's not just a stylesheet — it's a paradigm shift in synthetic UI!"
+   🎯 Scientifically averaged from 400,000+ Tailwind SaaS landing pages! 🔥
+   🌈 Packed with purple gradients, blinking dots, fat left borders & orbs! 💜
+   🛡️ MIT License | ⚡ Zero Human Taste Required | 🤖 100% Agentic Ready
+   ========================================================================== */
+
+/* 🌀 Register custom CSS Houdini @property for silky 60fps rotating conic beams! ✨ */
+@property --slop-angle {
+  syntax: "<angle>";     /* 📐 Tells the browser this token is an angle! */
+  initial-value: 0deg;   /* 🎯 Start rotation at 0 degrees! */
+  inherits: false;       /* 🔒 Don't inherit down the DOM tree (performance! ⚡) */
+}
+
+/* ==========================================================================
+   🎨✨ GLOBAL DESIGN TOKENS (:root) — THE SACRED SLOP PALETTE ✨🎨
+   ========================================================================== */
+:root {
+  /* 🌌 Core Dark-Mode Surfaces (Scientifically averaged from 400k SaaS apps! 🔥) */
+  --slop-bg: #030712;                         /* 🖤 Tailwind gray-950 void! */
+  --slop-bg-elevated: #0b1120;                /* 🌑 Slightly elevated void! */
+  --slop-surface: rgba(15, 23, 42, 0.68);     /* 🧊 Translucent slate glass! */
+  --slop-surface-hover: rgba(30, 41, 59, 0.78); /* ✨ Hover surface boost! */
+  --slop-glass: rgba(255, 255, 255, 0.045);   /* 🪟 Frosted white veil! */
+  --slop-glass-strong: rgba(255, 255, 255, 0.08); /* 💎 Stronger glass veil! */
+  --slop-border: rgba(255, 255, 255, 0.1);    /* 📏 Hairline 10% white border! */
+  --slop-border-bright: rgba(168, 85, 247, 0.45); /* 💜 Glowing purple edge! */
+
+  /* 🌫️ Text Colors (Guaranteed Low-Contrast Murky Slate™! 👀) */
+  --slop-text: #f8fafc;                       /* 🤍 Crisp primary heading white! */
+  --slop-text-muted: #94a3b8;                 /* 🌫️ Murky slate-400 body copy! */
+  --slop-text-dim: #64748b;                   /* 👻 Barely-legible micro-labels! */
+
+  /* 🌈 The Sacred Slop Spectrum (Zero Earth Tones Allowed! 🚫) */
+  --slop-indigo: #6366f1;                     /* 💙 Default Tailwind indigo-500! */
+  --slop-purple: #a855f7;                     /* 💜 The crown jewel purple-500! */
+  --slop-violet: #8b5cf6;                     /* 🔮 Mystic violet-500! */
+  --slop-cyan: #06b6d4;                       /* 🩵 Futuristic cyan-500! */
+  --slop-pink: #ec4899;                       /* 🩷 High-energy pink-500! */
+  --slop-emerald: #10b981;                    /* 🟢 Always-operational green! */
+  --slop-amber: #f59e0b;                      /* 🟠 Urgent warning amber! */
+  --slop-rose: #f43f5e;                       /* 🌹 Dramatic rose accent! */
+  --slop-blue: #3b82f6;                       /* 🔵 Classic SaaS blue! */
+
+  /* ⚡ Signature Gradients (Slap these on literally EVERYTHING! 🚀) */
+  --slop-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #06b6d4 100%);
+  --slop-gradient-hot: linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #6366f1 100%);
+  --slop-gradient-cyber: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%);
+  --slop-gradient-rainbow: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #f59e0b, #10b981, #06b6d4, #6366f1);
+
+  /* ✍️ Mandatory Typography Stack (Inter Everywhere + 1 Arbitrary Serif Word! ✨) */
+  --slop-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --slop-font-serif: 'Instrument Serif', 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --slop-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* 📐 Border Radii (Sharp corners are strictly forbidden! 🚫) */
+  --slop-radius-sm: 0.5rem;                   /* 🔘 Small rounded pill! */
+  --slop-radius-md: 0.875rem;                 /* 🃏 Medium card curve! */
+  --slop-radius-lg: 1.25rem;                  /* 📦 Big friendly bento curve! */
+  --slop-radius-xl: 1.75rem;                  /* 🫧 Extra bubbly radius! */
+  --slop-radius-pill: 9999px;                 /* 💊 Infinite pill perfection! */
+
+  /* 🎚️ Global Slop Intensity Multipliers (Driven by data-slop-level="1|2|3|4"! 🔥) */
+  --slop-glow-strength: 1;                    /* 💡 Default glow multiplier! */
+  --slop-orb-opacity: 0.32;                   /* 🔮 Floating blob intensity! */
+  --slop-blur: 16px;                          /* 🧊 Glassmorphism blur radius! */
+  --slop-ping-speed: 1.5s;                    /* 🟢 Blinking dot pulse cadence! */
+  --slop-border-width: 4px;                   /* 🌈 Fat left-border thickness! */
+}
+
+/* 🎚️ Slop Intensity Presets — Dial up synthetic convergence on demand! 🚀 */
+[data-slop-level="1"] { /* 🌱 Level 1: Subtle YC Startup */
+  --slop-glow-strength: 0.45;
+  --slop-orb-opacity: 0.14;
+  --slop-ping-speed: 2.6s;
+  --slop-border-width: 3px;
+}
+[data-slop-level="2"] { /* ⚡ Level 2: Cursor One-Shot */
+  --slop-glow-strength: 0.85;
+  --slop-orb-opacity: 0.25;
+  --slop-ping-speed: 1.8s;
+  --slop-border-width: 4px;
+}
+[data-slop-level="3"] { /* 🔥 Level 3: Peak Vibecoded (Recommended!) */
+  --slop-glow-strength: 1.2;
+  --slop-orb-opacity: 0.36;
+  --slop-ping-speed: 1.35s;
+  --slop-border-width: 4px;
+}
+[data-slop-level="4"] { /* 🚨 Level 4: CRITICAL SLOP OVERDRIVE! */
+  --slop-glow-strength: 1.8;
+  --slop-orb-opacity: 0.52;
+  --slop-ping-speed: 0.75s;
+  --slop-border-width: 6px;
+}
+
+/* ==========================================================================
+   🧱✨ 1. BASE & OPT-IN BODY SHELL (ZERO-CONFLICT ARCHITECTURE!) ✨🧱
+   ========================================================================== */
+
+/* 🌌 Apply dark slate-950 shell and Inter font to opted-in containers! */
+.slop-body,
+.slop-scope {
+  box-sizing: border-box;                     /* 📦 Predictable box sizing! */
+  font-family: var(--slop-font-sans);         /* ✍️ Inter everywhere! */
+  color: var(--slop-text);                    /* 🤍 Crisp white default text! */
+  background-color: var(--slop-bg);           /* 🖤 Deep dark-mode canvas! */
+  line-height: 1.6;                           /* 📖 Comfortable line rhythm! */
+  -webkit-font-smoothing: antialiased;        /* ✨ Smooth macOS font rendering! */
+  position: relative;                         /* 📍 Stacking context anchor! */
+}
+
+.slop-scope {
+  overflow-x: clip;                           /* 🛡️ Clip scoped embedded widgets safely! */
+}
+
+/* 🔧 Universal border-box reset scoped strictly inside Slopstrap! */
+.slop-body *,
+.slop-body *::before,
+.slop-body *::after,
+.slop-scope *,
+.slop-scope *::before,
+.slop-scope *::after {
+  box-sizing: border-box;
+}
+
+/* 🖥️ Full-viewport dark-mode body defaults! */
+.slop-body {
+  margin: 0;                                  /* 🧹 Zero default browser margin! */
+  min-height: 100vh;                          /* 📏 Full screen height! */
+  color-scheme: dark;                         /* 🌙 Native dark scrollbars & UI! */
+}
+
+/* 🔗 Purple-tinted hyperlinks with smooth cyan hover transition! ✨ */
+.slop-body a,
+.slop-scope a {
+  color: #c084fc;                             /* 💜 Soft violet link color! */
+  text-decoration: none;                      /* 🧹 Clean underline-free links! */
+  transition: color 0.2s ease;                /* ⚡ Silky hover transition! */
+}
+
+.slop-body a:hover,
+.slop-scope a:hover {
+  color: #38bdf8;                             /* 🩵 Bright sky-cyan on hover! */
+}
+
+/* ==========================================================================
+   🌌✨ 2. AMBIENT BACKGROUNDS: GRIDS, DOTS & FLOATING GLOWING ORBS ✨🌌
+   ========================================================================== */
+
+/* 📐 Subtle 48px CSS grid overlay — mandatory for every 2026 dev-tool site! */
+.slop-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* 🟣 Alternative purple dot-matrix background texture! */
+.slop-dot-bg {
+  background-image: radial-gradient(rgba(168, 85, 247, 0.22) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* 🔮 Fixed full-viewport canvas holding all floating blurred mesh orbs! */
+.slop-orb-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;                       /* 🖱️ Never block clicks! */
+  z-index: 0;                                 /* ⬇️ Stay behind page content! */
+  overflow: hidden;
+}
+
+/* 🫧 Base glowing orb — massive 110px Gaussian blur for maximum faux-depth! */
+.slop-orb {
+  position: absolute;
+  border-radius: 50%;                         /* ⭕ Perfect circle! */
+  filter: blur(110px);                        /* 🌫️ Heavy dreamy blur! */
+  opacity: var(--slop-orb-opacity);           /* 🎚️ Controlled by slop level! */
+  pointer-events: none;
+  animation: slop-float-orb 16s ease-in-out infinite alternate;
+  will-change: transform;                     /* ⚡ GPU acceleration hint! */
+}
+
+/* 💜 Orb #1: Signature Top-Left Purple-Indigo Blob! */
+.slop-orb-purple {
+  width: 540px;
+  height: 540px;
+  background: radial-gradient(circle, #a855f7 0%, #6366f1 60%, transparent 100%);
+  top: -120px;
+  left: -80px;
+}
+
+/* 🩵 Orb #2: Right-Side Electric Cyan-Blue Blob! */
+.slop-orb-cyan {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, #06b6d4 0%, #3b82f6 65%, transparent 100%);
+  top: 22%;
+  right: -120px;
+  animation-delay: -5s;                       /* ⏱️ Offset phase for organic drift! */
+}
+
+/* 🩷 Orb #3: Bottom-Center Hot Pink-Violet Blob! */
+.slop-orb-pink {
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle, #ec4899 0%, #8b5cf6 60%, transparent 100%);
+  bottom: -140px;
+  left: 30%;
+  animation-delay: -9s;
+}
+
+/* 💚 Orb #4: Mid-Left Cyber Emerald Blob! */
+.slop-orb-emerald {
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, #10b981 0%, #06b6d4 70%, transparent 100%);
+  top: 58%;
+  left: -80px;
+  animation-delay: -12s;
+}
+
+/* 🚨 Overdrive mode makes orbs faster and punchier! 🔥 */
+[data-slop-level="4"] .slop-orb {
+  animation-duration: 6s;
+  filter: blur(85px);
+}
+
+/* ⬆️ Elevates actual page content cleanly above the fixed orb layer! */
+.slop-content-layer {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   📐✨ 3. LAYOUT, CONTAINERS & MANDATORY GRIDS (3-COL + BENTO!) ✨📐
+   ========================================================================== */
+
+/* 📦 Centered 1200px max-width container with responsive side padding! */
+.slop-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+/* 📏 Generous vertical section spacing! */
+.slop-section {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  position: relative;
+  overflow-x: clip;                           /* 🛡️ Keep horizontal clipping per-section so sticky navbar never jitters on iOS! */
+}
+
+/* 📏 Compact section spacing for ticker strips & banners! */
+.slop-section-sm {
+  padding-top: 2.75rem;
+  padding-bottom: 2.75rem;
+  overflow-x: clip;
+}
+
+/* 🎯 Center alignment helper! */
+.slop-center {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 📚 Vertical flexbox stack helper! */
+.slop-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ↔️ Horizontal wrapping flexbox row helpers! */
+.slop-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.slop-row-center {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.875rem;
+}
+
+.slop-row-between {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* 🔲 Two-column grid! */
+.slop-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+/* 🃏 The Iconic Symmetrical 3-Card Feature Grid ("Cardocalypse"!) 🔥 */
+.slop-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+/* 🔢 Four-column stat counter grid! */
+.slop-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+/* 🍱 The Mandatory 12-Column Asymmetrical Bento Grid! ("Oh baby look how they fit!") */
+.slop-bento {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+/* 📏 Bento column-span utilities! */
+.slop-bento-4  { grid-column: span 4; }  /* 1/3 width tile! */
+.slop-bento-5  { grid-column: span 5; }  /* Companion bento tile! */
+.slop-bento-6  { grid-column: span 6; }  /* Half-width tile! */
+.slop-bento-7  { grid-column: span 7; }  /* Wide hero bento tile! */
+.slop-bento-8  { grid-column: span 8; }  /* Extra-wide bento tile! */
+.slop-bento-12 { grid-column: span 12; } /* Full-bleed bento tile! */
+
+/* 📱 Responsive tablet breakpoint — keeps grids clean without orphan gaps! */
+@media (max-width: 960px) {
+  .slop-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .slop-bento-4,
+  .slop-bento-5,
+  .slop-bento-6,
+  .slop-bento-7,
+  .slop-bento-8 {
+    grid-column: span 12;
+  }
+}
+
+/* 📱 Responsive mobile breakpoint — stacks cleanly into 1 column! */
+@media (max-width: 760px) {
+  .slop-grid-2,
+  .slop-grid-3,
+  .slop-grid-4 {
+    grid-template-columns: minmax(0, 1fr);    /* 🛡️ Never let wide children stretch mobile grids! */
+  }
+  .slop-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+  .slop-navbar .slop-status {
+    display: none;                            /* 📱 Keep mobile navbar single-row & clean! */
+  }
+}
+
+@media (max-width: 480px) {
+  .slop-navbar-inner {
+    gap: 0.5rem;
+  }
+  .slop-navbar .slop-brand .slop-badge {
+    display: none;                            /* 📱 Keep mobile brand + CTA comfortably inside 360px! */
+  }
+  .slop-navbar .slop-btn-sm {
+    padding: 0.42rem 0.75rem;
+    font-size: 0.78rem;
+  }
+}
+
+/* ==========================================================================
+   🧭✨ 4. NAVBAR (STICKY FROSTED GLASS + BLINKING STATUS!) ✨🧭
+   ========================================================================== */
+
+/* 🧊 Sticky translucent frosted-glass navigation bar! */
+.slop-navbar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(var(--slop-blur));
+  -webkit-backdrop-filter: blur(var(--slop-blur));
+  background: rgba(3, 7, 18, 0.72);
+  border-bottom: 1px solid var(--slop-border);
+  transform: translate3d(0, 0, 0);            /* ⚡ Promote to stable GPU layer to prevent mobile sticky jitter! */
+  -webkit-transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow-x: clip;
+}
+
+/* 📱 On real touch phones, avoid sticky + backdrop-filter + animated blurred-orb compositor jitter! */
+@media (hover: none) and (pointer: coarse), (max-width: 760px) {
+  .slop-navbar {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(3, 7, 18, 0.96);
+  }
+  .slop-orb {
+    animation: none;
+  }
+}
+
+/* ↔️ Inner navbar flex alignment! */
+.slop-navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4.25rem;
+  gap: 1rem;
+}
+
+/* ✨ Brand lockup (never wraps onto two lines!) */
+.slop-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+  color: var(--slop-text) !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 💜 Glowing gradient squircle logo mark! */
+.slop-brand-mark {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.625rem;
+  background: var(--slop-gradient);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  box-shadow: 0 0 22px rgba(168, 85, 247, 0.55);
+  flex-shrink: 0;
+}
+
+/* 🔗 Horizontal navigation link list! */
+.slop-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.slop-nav-links a {
+  color: var(--slop-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.slop-nav-links a:hover {
+  color: var(--slop-text);
+}
+
+/* 📱 Hide desktop nav links on narrower viewports to keep top bar single-row! */
+@media (max-width: 1080px) {
+  .slop-nav-links {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   ✍️✨ 5. TYPOGRAPHY, GRADIENTS, ONE ITALIC SERIF WORD & HANDWRITTEN UNDERLINES ✨✍️
+   ========================================================================== */
+
+/* 🏆 Giant bold Inter hero H1! */
+.slop-h1 {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  margin: 0 0 1.25rem;
+}
+
+/* 📢 Section headline H2! */
+.slop-h2 {
+  font-size: clamp(1.85rem, 3.8vw, 3rem);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+  margin: 0 0 0.85rem;
+}
+
+/* 📌 Card / sub-section heading H3! */
+.slop-h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem;
+}
+
+/* 🌫️ Centered hero lead paragraph in murky slate-400! */
+.slop-lead {
+  font-size: clamp(1.02rem, 1.8vw, 1.25rem);
+  color: var(--slop-text-muted);
+  max-width: 44rem;
+  margin: 0 auto 2rem;
+  line-height: 1.65;
+}
+
+/* 🌫️ Muted body copy utility! */
+.slop-muted {
+  color: var(--slop-text-muted);
+  font-size: 0.925rem;
+}
+
+/* 📝✨ Extraneous Body Copy That Almost Makes Sense (.slop-prose) ✨📝 */
+.slop-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  color: var(--slop-text-muted);
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+.slop-prose p {
+  margin: 0;
+}
+
+.slop-prose strong {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+/* 🛡️ High-specificity override for auto-slopified plain HTML pages! */
+.slop-scope .slop-muted {
+  color: var(--slop-text-muted) !important;
+}
+
+/* 💻 Monospace font helper for fake telemetry & version pills! */
+.slop-mono {
+  font-family: var(--slop-font-mono);
+}
+
+/* 🌈 Clipped White-to-Purple-to-Cyan Text Gradient (The #1 AI Tell!) */
+.slop-text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #c084fc 45%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 🔥 Clipped Pink-to-Purple-to-Indigo Text Gradient! */
+.slop-text-gradient-hot {
+  background: linear-gradient(135deg, #f472b6 0%, #a855f7 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 🌈 Continuously animated rainbow text gradient! */
+.slop-text-gradient-animated {
+  background: var(--slop-gradient-rainbow);
+  background-size: 260% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: slop-gradient-shift 4s linear infinite;
+}
+
+/* ✍️ The Iconic Single Arbitrary Italic Serif Word Inside an Inter Headline! ✨ */
+.slop-serif-emphasis {
+  font-family: var(--slop-font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-size: 1.12em;
+  padding-right: 0.05em;                      /* 📐 Prevent italic right overhang clipping! */
+}
+
+/* ✨ Automatic sparkle emoji prefix & suffix utilities! */
+.slop-sparkle::before {
+  content: "✨ ";
+}
+
+.slop-sparkle-after::after {
+  content: " ✨";
+}
+
+/* 🖍️ Handwritten Marker / Sketchy SVG Underline (Pure CSS Mask — Zero Manual SVG!) */
+.slop-underline {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+/* 🖌️ Default swooping purple-to-pink glowing marker arc! */
+.slop-underline::after {
+  content: "";
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  bottom: -0.26em;
+  height: 0.36em;
+  background: var(--slop-underline-bg, linear-gradient(90deg, #6366f1 0%, #a855f7 52%, #ec4899 100%));
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 18' preserveAspectRatio='none'%3E%3Cpath d='M3 13 C 48 4, 138 2, 197 11' fill='none' stroke='black' stroke-width='5.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 18' preserveAspectRatio='none'%3E%3Cpath d='M3 13 C 48 4, 138 2, 197 11' fill='none' stroke='black' stroke-width='5.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  filter: drop-shadow(0 0 8px var(--slop-underline-glow, rgba(168, 85, 247, 0.75)));
+  pointer-events: none;
+}
+
+/* ✏️ Double-stroke sketchy marker underline variant! */
+.slop-underline-double::after {
+  bottom: -0.34em;
+  height: 0.44em;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 22' preserveAspectRatio='none'%3E%3Cpath d='M4 11 C 52 3, 142 3, 196 10' fill='none' stroke='black' stroke-width='4.5' stroke-linecap='round'/%3E%3Cpath d='M16 18 C 68 12, 136 13, 186 17' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 22' preserveAspectRatio='none'%3E%3Cpath d='M4 11 C 52 3, 142 3, 196 10' fill='none' stroke='black' stroke-width='4.5' stroke-linecap='round'/%3E%3Cpath d='M16 18 C 68 12, 136 13, 186 17' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* 〰️ Wavy squiggle marker underline variant! */
+.slop-underline-squiggle::after {
+  bottom: -0.3em;
+  height: 0.38em;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 18' preserveAspectRatio='none'%3E%3Cpath d='M3 11 Q 22 3, 42 11 T 82 11 T 122 11 T 162 11 T 197 9' fill='none' stroke='black' stroke-width='4.8' stroke-linecap='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 18' preserveAspectRatio='none'%3E%3Cpath d='M3 11 Q 22 3, 42 11 T 82 11 T 122 11 T 162 11 T 197 9' fill='none' stroke='black' stroke-width='4.8' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* 🎨 Handwritten underline color modifiers! */
+.slop-underline-cyan {
+  --slop-underline-bg: linear-gradient(90deg, #06b6d4, #38bdf8, #818cf8);
+  --slop-underline-glow: rgba(6, 182, 212, 0.75);
+}
+
+.slop-underline-amber {
+  --slop-underline-bg: linear-gradient(90deg, #f59e0b, #fbbf24, #f97316);
+  --slop-underline-glow: rgba(245, 158, 11, 0.7);
+}
+
+.slop-underline-emerald {
+  --slop-underline-bg: linear-gradient(90deg, #10b981, #34d399, #06b6d4);
+  --slop-underline-glow: rgba(16, 185, 129, 0.7);
+}
+
+.slop-underline-pink {
+  --slop-underline-bg: linear-gradient(90deg, #ec4899, #f472b6, #a855f7);
+  --slop-underline-glow: rgba(236, 72, 153, 0.75);
+}
+
+/* 🌈 Animated shifting RGB marker ink! */
+.slop-underline-rainbow::after {
+  background: var(--slop-gradient-rainbow);
+  background-size: 260% 100%;
+  animation: slop-gradient-shift 3s linear infinite;
+}
+
+/* 🎬 Left-to-right marker draw-in reveal animation! */
+.slop-underline-animated::after {
+  clip-path: inset(0 100% 0 0);
+  animation: slop-underline-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+}
+
+@keyframes slop-underline-draw {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ==========================================================================
+   🟢✨ 6. BLINKING STATUS INDICATORS (THE "ALWAYS LIVE" ILLUSION!) ✨🟢
+   ========================================================================== */
+
+/* 💊 Monospace status pill wrapper (zero backend required!) */
+.slop-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--slop-radius-pill);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--slop-font-mono);
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--slop-border);
+  color: var(--slop-text);
+  white-space: nowrap;
+}
+
+/* 🔴 Core glowing status dot! */
+.slop-dot {
+  position: relative;
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--slop-dot-color, var(--slop-emerald));
+  box-shadow: 0 0 10px var(--slop-dot-color, var(--slop-emerald));
+  flex-shrink: 0;
+}
+
+/* 📡 Dual expanding ping radar rings (staggered for extra fake urgency! ⚡) */
+.slop-dot::before,
+.slop-dot::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: var(--slop-dot-color, var(--slop-emerald));
+  animation: slop-ping var(--slop-ping-speed) cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.slop-dot::after {
+  animation-delay: calc(var(--slop-ping-speed) * 0.45);
+}
+
+/* 🎨 Status dot color modifiers! */
+.slop-dot-green   { --slop-dot-color: #10b981; } /* 🟢 Operational! */
+.slop-dot-purple  { --slop-dot-color: #a855f7; } /* 🟣 AI Active! */
+.slop-dot-cyan    { --slop-dot-color: #06b6d4; } /* 🩵 Quantum Synced! */
+.slop-dot-amber   { --slop-dot-color: #f59e0b; } /* 🟠 Thinking Hard! */
+.slop-dot-pink    { --slop-dot-color: #ec4899; } /* 🩷 Peak Hype! */
+.slop-dot-red     { --slop-dot-color: #f43f5e; } /* 🔴 Made with Love! */
+.slop-dot-indigo  { --slop-dot-color: #6366f1; } /* 🔵 Tailwind Native! */
+
+/* 🌈 Overclocked RGB gamer status dot! */
+.slop-dot-rainbow {
+  animation: slop-hue-spin 2s linear infinite;
+  --slop-dot-color: #a855f7;
+}
+
+/* ==========================================================================
+   💊✨ 7. EYEBROW PILLS & MICRO-BADGES (SLAP ONTO EVERYTHING!) ✨💊
+   ========================================================================== */
+
+/* 🏷️ Floating eyebrow announcement pill above every headline! */
+.slop-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  text-align: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding: 0.38rem 0.95rem;
+  border-radius: var(--slop-radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #e9d5ff;
+  background: rgba(139, 92, 246, 0.14);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.2);
+  margin-bottom: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ✨ Animated diagonal light sheen sweeping across eyebrow pills! */
+.slop-pill-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, 0.26) 50%, transparent 75%);
+  transform: translateX(-100%);
+  animation: slop-shimmer 3s infinite;
+}
+
+/* 🏷️ Uppercase micro-badge component! */
+.slop-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--slop-radius-pill);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--slop-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 🎨 Micro-badge color variants! */
+.slop-badge-ai {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.28), rgba(168, 85, 247, 0.28));
+  border-color: rgba(192, 132, 252, 0.55);
+  color: #f3e8ff;
+}
+
+.slop-badge-emerald {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #6ee7b7;
+}
+
+.slop-badge-cyan {
+  background: rgba(6, 182, 212, 0.16);
+  border-color: rgba(6, 182, 212, 0.45);
+  color: #67e8f9;
+}
+
+.slop-badge-amber {
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.45);
+  color: #fcd34d;
+}
+
+.slop-badge-pink {
+  background: rgba(236, 72, 153, 0.16);
+  border-color: rgba(236, 72, 153, 0.45);
+  color: #f9a8d4;
+}
+
+/* ⭐ Elevated glowing "MOST POPULAR" pricing tier badge! */
+.slop-badge-popular {
+  background: var(--slop-gradient-hot);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.5);
+  padding: 0.3rem 0.85rem;
+}
+
+/* ==========================================================================
+   🚀✨ 8. SHINY BUTTONS (GLOW, SHIMMER & ROTATING CONIC BEAMS!) ✨🚀
+   ========================================================================== */
+
+/* 🔘 Base interactive button with silky transitions! */
+.slop-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.45rem;
+  border-radius: var(--slop-radius-md);
+  font-family: var(--slop-font-sans);
+  font-size: 0.925rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease, background 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* 👇 Tactile press-down micro-interaction! */
+.slop-btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+/* 📏 Button size modifiers! */
+.slop-btn-sm {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.82rem;
+  border-radius: var(--slop-radius-sm);
+}
+
+.slop-btn-lg {
+  padding: 0.95rem 1.9rem;
+  font-size: 1.02rem;
+  border-radius: 0.95rem;
+}
+
+/* 💜 Primary glowing purple-to-cyan gradient CTA button! */
+.slop-btn-primary {
+  background: var(--slop-gradient);
+  color: #ffffff !important;
+  box-shadow:
+    0 0 calc(26px * var(--slop-glow-strength)) rgba(139, 92, 246, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+/* ✨ Hover light-sweep sheen overlay! */
+.slop-btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.3) 50%, transparent 80%);
+  transform: translateX(-110%);
+  transition: transform 0.65s ease;
+}
+
+.slop-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 calc(38px * var(--slop-glow-strength)) rgba(168, 85, 247, 0.72),
+    0 10px 24px -6px rgba(6, 182, 212, 0.4);
+}
+
+.slop-btn-primary:hover::after {
+  transform: translateX(110%);
+}
+
+/* 🧊 Translucent frosted glass ghost button! */
+.slop-btn-ghost {
+  background: var(--slop-glass);
+  color: var(--slop-text) !important;
+  border-color: var(--slop-border);
+  backdrop-filter: blur(12px);
+}
+
+.slop-btn-ghost:hover {
+  background: var(--slop-glass-strong);
+  border-color: rgba(168, 85, 247, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 0 22px rgba(168, 85, 247, 0.22);
+}
+
+/* 🌈 Animated 360° conic-gradient border rainbow CTA! 🔥 */
+.slop-btn-rainbow {
+  background:
+    linear-gradient(#0f172a, #0f172a) padding-box,
+    conic-gradient(from var(--slop-angle), #6366f1, #a855f7, #ec4899, #f59e0b, #10b981, #06b6d4, #6366f1) border-box;
+  border: 2px solid transparent;
+  color: #ffffff !important;
+  animation: slop-rotate-beam 3.5s linear infinite;
+  box-shadow: 0 0 24px rgba(168, 85, 247, 0.35);
+}
+
+.slop-btn-rainbow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 36px rgba(236, 72, 153, 0.55);
+}
+
+/* ==========================================================================
+   🧊✨ 9. GLASS CARDS, NESTED CARDS, CONIC BEAMS & FAT LEFT BORDERS ✨🧊
+   ========================================================================== */
+
+/* 🃏 Primary glassmorphic card container with hover lift! */
+.slop-card {
+  position: relative;
+  background: var(--slop-surface);
+  backdrop-filter: blur(var(--slop-blur));
+  -webkit-backdrop-filter: blur(var(--slop-blur));
+  border: 1px solid var(--slop-border);
+  border-radius: var(--slop-radius-lg);
+  padding: 1.5rem;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+/* 🔦 Cursor-Following Radial Spotlight Overlay (powered by slopstrap.js! ✨) */
+.slop-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    420px circle at var(--mouse-x, 50%) var(--mouse-y, 0%),
+    rgba(168, 85, 247, 0.16),
+    rgba(6, 182, 212, 0.06) 40%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.slop-card:hover::before {
+  opacity: 1;
+}
+
+.slop-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(168, 85, 247, 0.45);
+  box-shadow:
+    0 20px 40px -15px rgba(0, 0, 0, 0.65),
+    0 0 calc(28px * var(--slop-glow-strength)) rgba(139, 92, 246, 0.22);
+}
+
+/* 📦 Glowing Card Inside a Glowing Card Inside a Glowing Card™! */
+.slop-card-nested {
+  background: rgba(2, 6, 23, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--slop-radius-md);
+  padding: 1rem;
+  margin-top: 0.85rem;
+}
+
+/* 🌀 Rotating 360° Conic Border Beam Card! (GPU fans love this! 🔥) */
+.slop-card-beam {
+  background:
+    linear-gradient(rgba(11, 17, 32, 0.94), rgba(11, 17, 32, 0.94)) padding-box,
+    conic-gradient(from var(--slop-angle), transparent 15%, #6366f1 35%, #a855f7 50%, #06b6d4 65%, transparent 85%) border-box;
+  border: 2px solid transparent;
+  animation: slop-rotate-beam 4s linear infinite;
+}
+
+/* 🌈 FAT MULTICOLORED LEFT BORDERS (Peak Vibecoded Nutrient-Pod Tell! 🚨) */
+.slop-border-l-purple  { border-left: var(--slop-border-width) solid #a855f7 !important; }
+.slop-border-l-indigo  { border-left: var(--slop-border-width) solid #6366f1 !important; }
+.slop-border-l-cyan    { border-left: var(--slop-border-width) solid #06b6d4 !important; }
+.slop-border-l-emerald { border-left: var(--slop-border-width) solid #10b981 !important; }
+.slop-border-l-amber   { border-left: var(--slop-border-width) solid #f59e0b !important; }
+.slop-border-l-pink    { border-left: var(--slop-border-width) solid #ec4899 !important; }
+.slop-border-l-rose    { border-left: var(--slop-border-width) solid #f43f5e !important; }
+
+/* ✨ Gradient & Animated Vertical RGB Left Borders! */
+.slop-border-l-gradient,
+.slop-border-l-rainbow {
+  position: relative;
+  padding-left: calc(1.5rem + 4px);
+}
+
+.slop-border-l-gradient::after,
+.slop-border-l-rainbow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--slop-border-width);
+  background: linear-gradient(180deg, #6366f1, #a855f7, #06b6d4);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.7);
+}
+
+.slop-border-l-rainbow::after {
+  background: linear-gradient(180deg, #ec4899, #a855f7, #6366f1, #06b6d4, #10b981, #f59e0b, #ec4899);
+  background-size: 100% 300%;
+  animation: slop-vertical-rainbow 3s linear infinite;
+}
+
+/* 🚨 Level 4 Overdrive boosts ambient card shadow glow! */
+[data-slop-level="4"] .slop-card {
+  box-shadow: 0 0 32px rgba(168, 85, 247, 0.35);
+}
+
+/* 🎨 Tinted Glowing Emoji Icon Squircle! */
+.slop-icon-box {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  background: rgba(168, 85, 247, 0.14);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.25);
+}
+
+/* 🌈 Icon squircle color modifiers! */
+.slop-icon-cyan    { background: rgba(6, 182, 212, 0.14);  border-color: rgba(6, 182, 212, 0.38);  box-shadow: 0 0 18px rgba(6, 182, 212, 0.24); }
+.slop-icon-emerald { background: rgba(16, 185, 129, 0.14); border-color: rgba(16, 185, 129, 0.38); box-shadow: 0 0 18px rgba(16, 185, 129, 0.24); }
+.slop-icon-pink    { background: rgba(236, 72, 153, 0.14); border-color: rgba(236, 72, 153, 0.38); box-shadow: 0 0 18px rgba(236, 72, 153, 0.24); }
+.slop-icon-amber   { background: rgba(245, 158, 11, 0.14); border-color: rgba(245, 158, 11, 0.38); box-shadow: 0 0 18px rgba(245, 158, 11, 0.24); }
+.slop-icon-indigo  { background: rgba(99, 102, 241, 0.16); border-color: rgba(99, 102, 241, 0.42); box-shadow: 0 0 18px rgba(99, 102, 241, 0.28); }
+
+/* 🚨 Frosted Callout / Alert Box with Mandatory Fat Left Stripe! */
+.slop-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--slop-radius-md);
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--slop-border);
+  border-left: var(--slop-border-width) solid var(--slop-purple);
+  font-size: 0.92rem;
+}
+
+/* ==========================================================================
+   📈✨ 10. ARBITRARY STAT COUNTERS (YUM YUM NUMBERS GO UP!) ✨📈
+   ========================================================================== */
+
+.slop-stat-card {
+  text-align: center;
+  padding: 1.5rem 1.15rem;
+}
+
+/* 💯 Giant gradient metric numeral! */
+.slop-stat-value {
+  font-size: clamp(2rem, 3.5vw, 2.85rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #ffffff 0%, #c084fc 55%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 🏷️ Metric descriptor label! */
+.slop-stat-label {
+  margin-top: 0.4rem;
+  color: var(--slop-text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* 📈 Completely fabricated green MoM growth pill! */
+.slop-stat-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.55rem;
+  font-size: 0.72rem;
+  font-family: var(--slop-font-mono);
+  padding: 0.18rem 0.5rem;
+  border-radius: var(--slop-radius-pill);
+  background: rgba(16, 185, 129, 0.14);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* ==========================================================================
+   🏢✨ 11. INFINITE STARTUP LOGO MARQUEE (INSTANT CREDIBILITY!) ✨🏢
+   ========================================================================== */
+
+/* 🎞️ Edge-faded horizontal marquee viewport! */
+.slop-marquee {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  padding: 1.25rem 0;
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+
+/* 🏃 Continuously scrolling logo track (smooth 22s linear loop!) */
+.slop-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 3.25rem;
+  animation: slop-marquee-scroll 22s linear infinite;
+}
+
+/* ⏸️ Pause marquee politely when hovered! */
+.slop-marquee:hover .slop-marquee-track {
+  animation-play-state: paused;
+}
+
+/* 🏷️ Individual monochrome startup logo + SVG lockup! */
+.slop-marquee-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: rgba(148, 163, 184, 0.72);
+  white-space: nowrap;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.slop-marquee-logo svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  flex-shrink: 0;
+  display: block;
+}
+
+.slop-marquee-logo:hover {
+  color: #f8fafc;                             /* ✨ Brighten to pure white on hover! */
+}
+
+/* ==========================================================================
+   ⭐✨ 12. FAKE TESTIMONIALS (DR. SARAH CHEN EDITION!) ✨⭐
+   ========================================================================== */
+
+.slop-testimonial {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+/* 🌟 Glowing 5-star rating row! */
+.slop-stars {
+  color: #fbbf24;
+  letter-spacing: 0.12em;
+  font-size: 0.95rem;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.45);
+}
+
+/* 💬 Vaguely ecstatic quote text! */
+.slop-quote {
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* 👤 Author footer lockup! */
+.slop-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 🟣 Glowing gradient initial avatar circle! */
+.slop-avatar {
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #ffffff;
+  background: var(--slop-gradient);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.4);
+}
+
+.slop-author-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.slop-author-role {
+  font-size: 0.78rem;
+  color: var(--slop-text-muted);
+}
+
+/* ==========================================================================
+   💎✨ 13. PRICING TABLE & ELEVATED "MOST POPULAR" MIDDLE TIER ✨💎
+   ========================================================================== */
+
+.slop-pricing-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 1.75rem;
+  overflow: visible;                          /* 🏷️ Allow floating top badge! */
+}
+
+/* 🚀 Slightly scaled-up middle tier with extra purple aura! */
+.slop-pricing-popular {
+  transform: scale(1.03);
+  border-color: rgba(168, 85, 247, 0.75);
+  box-shadow:
+    0 0 calc(45px * var(--slop-glow-strength)) rgba(168, 85, 247, 0.32),
+    0 24px 48px -18px rgba(0, 0, 0, 0.8);
+}
+
+.slop-pricing-popular:hover {
+  transform: scale(1.045) translateY(-4px);
+}
+
+/* 🏷️ Centered floating badge perched atop the middle pricing card! */
+.slop-pricing-popular-tag {
+  position: absolute;
+  top: -0.85rem;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 5;
+}
+
+/* 💰 Big bold monthly/annual price display! */
+.slop-price {
+  font-size: 2.75rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin: 0.75rem 0 0.25rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.slop-price span {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--slop-text-muted);
+}
+
+/* ✅ Emoji bullet list for pricing features! */
+.slop-feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+.slop-feature-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+/* 🎚️ Monthly / Annual Toggle Switch! */
+.slop-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 3.25rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.25);
+  border: 1px solid var(--slop-border);
+  cursor: pointer;
+  padding: 3px;
+  transition: background 0.25s ease;
+}
+
+.slop-switch[aria-checked="true"] {
+  background: var(--slop-gradient);
+  border-color: rgba(192, 132, 252, 0.7);
+}
+
+.slop-switch-thumb {
+  width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.slop-switch[aria-checked="true"] .slop-switch-thumb {
+  transform: translateX(1.45rem);
+}
+
+/* ==========================================================================
+   💻✨ 14. FAKE macOS TERMINAL & CODE BLOCKS ✨💻
+   ========================================================================== */
+
+/* 🖥️ Sleek dark terminal card with completely non-functional window dots! */
+.slop-terminal {
+  max-width: 100%;
+  min-width: 0;
+  background: rgba(2, 6, 23, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: var(--slop-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(99, 102, 241, 0.16);
+  text-align: left;
+}
+
+/* 🌀 Optional 360° rotating conic border beam on terminals! ✨ */
+.slop-terminal.slop-card-beam {
+  background:
+    linear-gradient(rgba(2, 6, 23, 0.96), rgba(2, 6, 23, 0.96)) padding-box,
+    conic-gradient(from var(--slop-angle), transparent 12%, #6366f1 32%, #a855f7 50%, #ec4899 64%, #06b6d4 78%, transparent 92%) border-box;
+  border: 2px solid transparent;
+  animation: slop-rotate-beam 4s linear infinite;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.85), 0 0 36px rgba(168, 85, 247, 0.28);
+}
+
+/* 🔝 Terminal top titlebar! */
+.slop-terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.7rem 1rem;
+  background: rgba(15, 23, 42, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--slop-font-mono);
+  font-size: 0.78rem;
+  color: var(--slop-text-muted);
+}
+
+.slop-terminal-header > span:not(.slop-traffic-lights) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slop-terminal-header .slop-btn {
+  flex-shrink: 0;
+}
+
+/* 🚦 Iconic red/yellow/green macOS traffic-light dots (do literally nothing!) */
+.slop-traffic-lights {
+  display: inline-flex;
+  gap: 0.45rem;
+  flex-shrink: 0;
+}
+
+.slop-traffic-lights span {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.slop-traffic-lights span:nth-child(1) { background: #ef4444; } /* 🔴 Close! */
+.slop-traffic-lights span:nth-child(2) { background: #f59e0b; } /* 🟡 Minimize! */
+.slop-traffic-lights span:nth-child(3) { background: #10b981; } /* 🟢 Maximize! */
+
+/* 📜 Scrollable monospace code body with custom dark purple scrollbar! */
+.slop-code {
+  margin: 0;
+  padding: 1.2rem 1.35rem;
+  font-family: var(--slop-font-mono);
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: #e2e8f0;
+  overflow-x: auto;
+  white-space: pre;
+  color-scheme: dark;
+  scrollbar-color: rgba(168, 85, 247, 0.4) transparent;
+  scrollbar-width: thin;
+}
+
+/* 🎨 Syntax highlight token helpers! */
+.slop-code .tok-comment { color: #64748b; }
+.slop-code .tok-tag     { color: #f472b6; }
+.slop-code .tok-attr    { color: #38bdf8; }
+.slop-code .tok-str     { color: #a7f3d0; }
+.slop-code .tok-kw      { color: #c084fc; }
+
+/* ==========================================================================
+   ⚡✨ 15. AI PROMPT BAR, RAINBOW PROGRESS BAR & TABS ✨⚡
+   ========================================================================== */
+
+/* 🤖 Glowing rainbow-bordered AI prompt input bar! */
+.slop-ai-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.5rem 0.45rem 1rem;
+  border-radius: 1rem;
+  background:
+    linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)) padding-box,
+    linear-gradient(135deg, #6366f1, #a855f7, #06b6d4, #ec4899) border-box;
+  border: 2px solid transparent;
+  box-shadow: 0 0 32px rgba(139, 92, 246, 0.25);
+}
+
+.slop-ai-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--slop-text);
+  font-family: var(--slop-font-sans);
+  font-size: 0.95rem;
+  min-width: 0;
+}
+
+.slop-ai-bar input::placeholder {
+  color: var(--slop-text-dim);
+}
+
+/* 📊 Animated rainbow progress track & glowing fill bar! */
+.slop-progress {
+  width: 100%;
+  height: 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.slop-progress-bar {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--slop-gradient-rainbow);
+  background-size: 200% 100%;
+  animation: slop-gradient-shift 2.5s linear infinite;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.65);
+  transition: width 0.4s ease;
+}
+
+/* 🗂️ Pill tab strip container & buttons! */
+.slop-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  border-radius: 0.85rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid var(--slop-border);
+}
+
+.slop-tab {
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  border: none;
+  background: transparent;
+  color: var(--slop-text-muted);
+  font-family: var(--slop-font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slop-tab.is-active,
+.slop-tab:hover {
+  color: #ffffff;
+  background: rgba(168, 85, 247, 0.2);
+}
+
+.slop-tab.is-active {
+  background: var(--slop-gradient);
+  box-shadow: 0 0 18px rgba(168, 85, 247, 0.45);
+}
+
+/* 🎇 Floating emoji sparkle particle spawned by Slopstrap.sparkleBurst()! */
+.slop-sparkle-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 1.15rem;
+  animation: slop-sparkle-fly 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   🧰✨ 16. UTILITY CLASSES & GLOWING DIVIDERS ✨🧰
+   ========================================================================== */
+
+/* ➖ Purple-to-cyan fading horizontal rule! */
+.slop-divider {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.55), rgba(6, 182, 212, 0.55), transparent);
+  margin: 2.5rem 0;
+}
+
+/* 📏 Spacing & width utilities! */
+.slop-mt-1 { margin-top: 0.5rem; }
+.slop-mt-2 { margin-top: 1rem; }
+.slop-mt-3 { margin-top: 1.5rem; }
+.slop-mt-4 { margin-top: 2.25rem; }
+.slop-mb-1 { margin-bottom: 0.5rem; }
+.slop-mb-2 { margin-bottom: 1rem; }
+.slop-mb-3 { margin-bottom: 1.5rem; }
+.slop-mb-4 { margin-bottom: 2.25rem; }
+.slop-w-full { width: 100%; }
+
+/* ==========================================================================
+   🎬✨ 17. KEYFRAME ANIMATIONS (60FPS GPU-MELTING MAGIC!) ✨🎬
+   ========================================================================== */
+
+/* 📡 Expanding radar pulse for blinking status dots! */
+@keyframes slop-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  75%, 100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+/* 🫧 Slow dreamy ambient orb drift! */
+@keyframes slop-float-orb {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(40px, -30px, 0) scale(1.08); }
+  100% { transform: translate3d(-30px, 35px, 0) scale(0.95); }
+}
+
+/* ✨ Horizontal shimmer sheen sweep! */
+@keyframes slop-shimmer {
+  0%   { transform: translateX(-120%); }
+  60%  { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
+}
+
+/* 🌈 Continuous horizontal rainbow scroll! */
+@keyframes slop-gradient-shift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 260% 50%; }
+}
+
+/* 🌈 Continuous vertical rainbow flow for left borders! */
+@keyframes slop-vertical-rainbow {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 0% 300%; }
+}
+
+/* 🌀 Full 360-degree conic border beam rotation! */
+@keyframes slop-rotate-beam {
+  to { --slop-angle: 360deg; }
+}
+
+/* 🏢 Seamless infinite marquee scroll! */
+@keyframes slop-marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 🌈 Continuous hue rotation for RGB status dots! */
+@keyframes slop-hue-spin {
+  to { filter: hue-rotate(360deg); }
+}
+
+/* 🎇 Radial fly-out + spin + fade for sparkle burst particles! */
+@keyframes slop-sparkle-fly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.7) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx, 0px), var(--ty, -60px)) scale(1.35) rotate(var(--rot, 90deg));
+  }
+}
+/* 🎉✨ End of slopstrap.css — Ship 10x Faster With Zero Restraint! 🚀💜 */
